@@ -51,8 +51,69 @@
     window.addEventListener("scroll", onScroll, { passive: true });
   }
 
+  initBottomNav();
   initHeroSlider(reduce);
 })();
+
+function initBottomNav() {
+  const nav = document.querySelector("[data-bottom-nav]");
+  if (!nav) return;
+
+  const sectionLinks = Array.from(nav.querySelectorAll("[data-nav-section]"));
+  if (!sectionLinks.length) return;
+
+  const sections = sectionLinks
+    .map((link) => {
+      const id = link.getAttribute("data-nav-section");
+      const el = id ? document.getElementById(id) : null;
+      return el ? { id, el, link } : null;
+    })
+    .filter(Boolean);
+
+  const setActive = (id) => {
+    for (const link of sectionLinks) {
+      const match = link.getAttribute("data-nav-section") === id;
+      link.classList.toggle("is-active", match);
+      if (match) link.setAttribute("aria-current", "page");
+      else link.removeAttribute("aria-current");
+    }
+  };
+
+  const updateFromScroll = () => {
+    const marker = window.innerHeight * 0.38;
+    let current = sections[0]?.id || "contenu";
+
+    for (const section of sections) {
+      const top = section.el.getBoundingClientRect().top;
+      if (top <= marker) current = section.id;
+    }
+
+    // Near top of page → Explorer
+    if (window.scrollY < 80) current = "contenu";
+
+    setActive(current);
+  };
+
+  sectionLinks.forEach((link) => {
+    link.addEventListener("click", (e) => {
+      const id = link.getAttribute("data-nav-section");
+      if (!id) return;
+      const target = document.getElementById(id);
+      if (!target) return;
+
+      e.preventDefault();
+      setActive(id);
+      target.scrollIntoView({ behavior: "smooth", block: "start" });
+      if (history.replaceState) {
+        history.replaceState(null, "", id === "contenu" ? "#" : `#${id}`);
+      }
+    });
+  });
+
+  updateFromScroll();
+  window.addEventListener("scroll", updateFromScroll, { passive: true });
+  window.addEventListener("resize", updateFromScroll, { passive: true });
+}
 
 function initHeroSlider(reduceMotion) {
   const root = document.querySelector("[data-hero-slider]");

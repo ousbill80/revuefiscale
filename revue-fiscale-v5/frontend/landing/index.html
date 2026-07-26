@@ -11,14 +11,14 @@
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,500;9..144,600;9..144,700&family=Outfit:wght@400;500;600;700&display=swap" rel="stylesheet" />
-  <link rel="stylesheet" href="/styles.css?v=rf-top-info-2" />
+  <link rel="stylesheet" href="/styles.css?v=rf-bottom-nav-2" />
 </head>
 <body>
   <a class="skip" href="#contenu">Aller au contenu</a>
 
-  <header class="top">
+  <header class="top" data-top>
     <p class="top__info">
-      <span>Propulsé par <strong>2AàZ</strong>, cabinet d’expertise comptable enregistré à l’Ordre des experts-comptables</span>
+      <span>Propulsé par <strong>2AàZ</strong>, cabinet d’expertise comptable inscrit à l’Ordre</span>
       <span class="top__info-sep" aria-hidden="true">·</span>
       <span>Accompagnement par des experts fiscalistes</span>
     </p>
@@ -34,15 +34,57 @@
         <a href="#pour-qui">Pour qui</a>
         <a href="#contact">Contact</a>
       </nav>
-      <div class="top__actions" role="group" aria-label="Accès espace">
+      <div class="top__actions top__actions--desktop" role="group" aria-label="Accès espace">
         <a class="top__cta top__cta--primary" href="/app/?inscription">S’inscrire gratuitement</a>
         <a class="top__cta top__cta--ghost" href="/app/">Se connecter</a>
+      </div>
+      <div class="top__mobile" role="group" aria-label="Actions mobiles">
+        <a class="top__cta top__cta--primary top__cta--short" href="/app/?inscription">S’inscrire</a>
       </div>
     </div>
   </header>
 
+  <nav class="bottom-nav" aria-label="Navigation mobile" data-bottom-nav>
+    <a class="bottom-nav__item is-active" href="#contenu" data-nav-section="contenu" aria-current="page">
+      <svg class="bottom-nav__icon" viewBox="0 0 24 24" width="22" height="22" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round">
+        <circle cx="11" cy="11" r="7"></circle>
+        <path d="M20 20l-3.5-3.5"></path>
+      </svg>
+      <span class="bottom-nav__label">Explorer</span>
+    </a>
+    <a class="bottom-nav__item" href="#avantages" data-nav-section="avantages">
+      <svg class="bottom-nav__icon" viewBox="0 0 24 24" width="22" height="22" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round">
+        <path d="M12 3l1.8 5.5H19l-4.4 3.2 1.7 5.3L12 13.8 7.7 17l1.7-5.3L5 8.5h5.2L12 3z"></path>
+      </svg>
+      <span class="bottom-nav__label">Avantages</span>
+    </a>
+    <a class="bottom-nav__item" href="#parcours" data-nav-section="parcours">
+      <svg class="bottom-nav__icon" viewBox="0 0 24 24" width="22" height="22" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round">
+        <circle cx="6" cy="6" r="2.25"></circle>
+        <circle cx="18" cy="12" r="2.25"></circle>
+        <circle cx="6" cy="18" r="2.25"></circle>
+        <path d="M8.2 7.2l7.6 3.6M8.2 16.8l7.6-3.6"></path>
+      </svg>
+      <span class="bottom-nav__label">Parcours</span>
+    </a>
+    <a class="bottom-nav__item" href="#contact" data-nav-section="contact">
+      <svg class="bottom-nav__icon" viewBox="0 0 24 24" width="22" height="22" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round">
+        <rect x="3.5" y="5.5" width="17" height="13" rx="2"></rect>
+        <path d="M4 7.5l8 5.5 8-5.5"></path>
+      </svg>
+      <span class="bottom-nav__label">Contact</span>
+    </a>
+    <a class="bottom-nav__item" href="/app/" data-nav-external>
+      <svg class="bottom-nav__icon" viewBox="0 0 24 24" width="22" height="22" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round">
+        <circle cx="12" cy="8" r="3.25"></circle>
+        <path d="M5.5 19.5c1.6-3.2 4-4.8 6.5-4.8s4.9 1.6 6.5 4.8"></path>
+      </svg>
+      <span class="bottom-nav__label">Connexion</span>
+    </a>
+  </nav>
+
   <main id="contenu">
-    <section class="hero" aria-roledescription="carrousel" aria-label="Messages d’accueil">
+    <section class="hero" id="hero" aria-roledescription="carrousel" aria-label="Messages d’accueil">
       <div class="hero__atmosphere" aria-hidden="true">
         <div class="hero__grain"></div>
         <div class="hero__wash"></div>
@@ -454,6 +496,6 @@
     </div>
   </footer>
 
-  <script src="/main.js?v=rf-juxtapose-3" defer></script>
+  <script src="/main.js?v=rf-bottom-nav-2" defer></script>
 </body>
 </html>
