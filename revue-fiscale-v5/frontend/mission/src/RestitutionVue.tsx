@@ -78,6 +78,48 @@ type ControlesFecOut = {
   cree_le: string | null;
 };
 
+type LigneRevueAnalytique = {
+  compte: string;
+  libelle: string | null;
+  solde_n: number;
+  solde_n1: number;
+  variation: number;
+  variation_pct: number | null;
+  sens: string;
+  classement: "apparition" | "disparition" | "variation_forte" | "stable";
+};
+
+type RevueAnalytiqueOut = {
+  disponible: boolean;
+  exercice_n: number;
+  exercice_n1: number;
+  mission_n1_id: number | null;
+  lignes: LigneRevueAnalytique[];
+  totaux_par_classe: Array<{
+    classe: number;
+    total_n: number;
+    total_n1: number;
+    variation: number;
+  }>;
+};
+
+const REVUE_ANALYTIQUE_MAX_LIGNES = 30;
+
+function badgeAnalytique(
+  classement: LigneRevueAnalytique["classement"],
+): { label: string; classe: string } | null {
+  if (classement === "apparition") {
+    return { label: "Apparition", classe: "apparition" };
+  }
+  if (classement === "disparition") {
+    return { label: "Disparition", classe: "disparition" };
+  }
+  if (classement === "variation_forte") {
+    return { label: "Variation forte", classe: "forte" };
+  }
+  return null;
+}
+
 type Props = {
   restitution: Restitution;
   jeton?: string | null;
@@ -243,6 +285,8 @@ export function RestitutionVue({
   const [noteDraft, setNoteDraft] = useState<Record<string, string>>({});
   const [pieces, setPieces] = useState<PieceMissionOpt[]>([]);
   const [fiabSource, setFiabSource] = useState<ControlesFecOut | null>(null);
+  const [revueAnalytique, setRevueAnalytique] =
+    useState<RevueAnalytiqueOut | null>(null);
   const [collaborateursLocaux, setCollaborateursLocaux] = useState<
     CollaborateurOpt[]
   >([]);
@@ -331,6 +375,28 @@ export function RestitutionVue({
         if (!cancelled) setFiabSource(out?.disponible ? out : null);
       } catch {
         if (!cancelled) setFiabSource(null);
+      }
+    })();
+    return () => {
+      cancelled = true;
+    };
+  }, [jeton, r.mission_id]);
+
+  useEffect(() => {
+    if (!jeton || !r.mission_id) {
+      setRevueAnalytique(null);
+      return;
+    }
+    let cancelled = false;
+    void (async () => {
+      try {
+        const out = await api<RevueAnalytiqueOut>(
+          `/api/v1/missions/${r.mission_id}/revue-analytique`,
+          { jeton },
+        );
+        if (!cancelled) setRevueAnalytique(out ?? null);
+      } catch {
+        if (!cancelled) setRevueAnalytique(null);
       }
     })();
     return () => {
@@ -1661,6 +1727,112 @@ export function RestitutionVue({
                   </li>
                 ))}
               </ul>
+            </div>
+          )}
+          {revueAnalytique && (
+            <div
+              className="rest-analytique"
+              role="note"
+              aria-label="Revue analytique N / N-1"
+            >
+              <div className="rest-analytique-head">
+                <h4 className="rest-analytique-titre">
+                  Revue analytique {revueAnalytique.exercice_n} /{" "}
+                  {revueAnalytique.exercice_n1}
+                </h4>
+                <span className="rest-analytique-meta">
+                  Comparaison des soldes avec l'exercice précédent du même
+                  client — chaque variation significative appelle une
+                  explication.
+                </span>
+              </div>
+              {!revueAnalytique.disponible ? (
+                <p className="rest-analytique-vide">
+                  Aucun exercice antérieur comparable
+                </p>
+              ) : (
+                <>
+                  <table className="rest-analytique-table">
+                    <thead>
+                      <tr>
+                        <th>Compte</th>
+                        <th>Libellé</th>
+                        <th className="num">{revueAnalytique.exercice_n}</th>
+                        <th className="num">{revueAnalytique.exercice_n1}</th>
+                        <th className="num">Variation FCFA</th>
+                        <th className="num">%</th>
+                        <th />
+                      </tr>
+                    </thead>
+                    <tbody>
+                      {revueAnalytique.lignes
+                        .slice(0, REVUE_ANALYTIQUE_MAX_LIGNES)
+                        .map((l) => {
+                          const badge = badgeAnalytique(l.classement);
+                          return (
+                            <tr key={l.compte}>
+                              <td>
+                                <code className="rest-analytique-compte">
+                                  {l.compte}
+                                </code>
+                              </td>
+                              <td className="rest-analytique-libelle">
+                                {l.libelle || "—"}
+                              </td>
+                              <td className="num">{fmtMontant(l.solde_n)}</td>
+                              <td className="num">{fmtMontant(l.solde_n1)}</td>
+                              <td
+                                className={`num rest-analytique-variation ${
+                                  l.variation < 0 ? "negatif" : ""
+                                }`}
+                              >
+                                {l.variation > 0 ? "+" : ""}
+                                {fmtMontant(l.variation)}
+                              </td>
+                              <td className="num">
+                                {l.variation_pct != null
+                                  ? `${l.variation_pct > 0 ? "+" : ""}${l.variation_pct.toLocaleString("fr-FR")} %`
+                                  : "—"}
+                              </td>
+                              <td>
+                                {badge ? (
+                                  <span
+                                    className={`rest-analytique-badge ${badge.classe}`}
+                                  >
+                                    {badge.label}
+                                  </span>
+                                ) : null}
+                              </td>
+                            </tr>
+                          );
+                        })}
+                    </tbody>
+                  </table>
+                  {revueAnalytique.lignes.length >
+                    REVUE_ANALYTIQUE_MAX_LIGNES && (
+                    <p className="rest-analytique-compteur">
+                      {REVUE_ANALYTIQUE_MAX_LIGNES} premières lignes affichées
+                      sur {revueAnalytique.lignes.length} comptes comparés.
+                    </p>
+                  )}
+                  {revueAnalytique.totaux_par_classe.length > 0 && (
+                    <ul className="rest-analytique-totaux">
+                      {revueAnalytique.totaux_par_classe.map((t) => (
+                        <li key={t.classe}>
+                          <span className="rest-analytique-totaux-classe">
+                            Classe {t.classe}
+                          </span>
+                          <span className="rest-analytique-totaux-montants">
+                            {fmtMontant(t.total_n)} vs {fmtMontant(t.total_n1)}{" "}
+                            ({t.variation > 0 ? "+" : ""}
+                            {fmtMontant(t.variation)})
+                          </span>
+                        </li>
+                      ))}
+                    </ul>
+                  )}
+                </>
+              )}
             </div>
           )}
           {tachesBloquees.length > 0 && (

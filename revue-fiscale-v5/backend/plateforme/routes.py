@@ -1874,6 +1874,33 @@ def api_source_depuis_piece(
     return out.model_dump(mode="json")
 
 
+@router.get("/missions/{mission_id}/revue-analytique")
+def api_revue_analytique_mission(
+    mission_id: int,
+    utilisateur: UtilisateurDep,
+    session: Annotated[Session, Depends(session_abonne)],
+) -> dict:
+    """Revue analytique N / N-1 — comparaison des soldes avec l'exercice
+    précédent du même contribuable (lecture seule, jamais bloquant).
+
+    disponible=false si pas de mission N-1 ou pas de soldes comparables.
+    """
+    from backend.plateforme.revue_analytique import (
+        ErreurRevueAnalytique,
+        revue_analytique_mission,
+    )
+
+    exiger_capacite(utilisateur, "lire")
+    try:
+        return revue_analytique_mission(
+            session, utilisateur.tenant_id, mission_id
+        )
+    except ErreurRevueAnalytique as e:
+        raise HTTPException(
+            status_code=status.HTTP_404_NOT_FOUND, detail=str(e)
+        ) from e
+
+
 @router.get("/missions/{mission_id}/controles-fec")
 def api_controles_fec_mission(
     mission_id: int,
