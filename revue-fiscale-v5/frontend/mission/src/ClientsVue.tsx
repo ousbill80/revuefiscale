@@ -1,4 +1,5 @@
 import {
+  useEffect,
   useMemo,
   useState,
   type Dispatch,
@@ -1214,6 +1215,19 @@ type FicheProps = {
 };
 
 type FiltreMissionsFiche = "toutes" | "actives" | "cloturees";
+type FicheTab = "overview" | "missions";
+
+function hashFicheTab(clientId: number, tab: FicheTab): string {
+  return tab === "missions"
+    ? `#fiche-${clientId}-missions`
+    : `#fiche-${clientId}-overview`;
+}
+
+function tabDepuisHash(clientId: number): FicheTab {
+  const h = window.location.hash;
+  if (h === `#fiche-${clientId}-missions`) return "missions";
+  return "overview";
+}
 
 export function ClientFicheVue({
   jeton,
@@ -1230,6 +1244,33 @@ export function ClientFicheVue({
   const [filtreMissions, setFiltreMissions] =
     useState<FiltreMissionsFiche>("toutes");
   const [modeEdition, setModeEdition] = useState(false);
+  const [ficheTab, setFicheTab] = useState<FicheTab>(() =>
+    tabDepuisHash(clientDetail.id),
+  );
+
+  useEffect(() => {
+    setFicheTab(tabDepuisHash(clientDetail.id));
+  }, [clientDetail.id]);
+
+  useEffect(() => {
+    const attendu = hashFicheTab(clientDetail.id, ficheTab);
+    if (window.location.hash !== attendu) {
+      window.history.replaceState(null, "", attendu);
+    }
+  }, [clientDetail.id, ficheTab]);
+
+  useEffect(() => {
+    function onHashChange() {
+      setFicheTab(tabDepuisHash(clientDetail.id));
+    }
+    window.addEventListener("hashchange", onHashChange);
+    return () => window.removeEventListener("hashchange", onHashChange);
+  }, [clientDetail.id]);
+
+  function changerFicheTab(tab: FicheTab) {
+    setFicheTab(tab);
+    window.history.replaceState(null, "", hashFicheTab(clientDetail.id, tab));
+  }
 
   const completude = useMemo(
     () => completudeIdentite(identiteDepuisEdit(clientEdit)),
@@ -1262,6 +1303,7 @@ export function ClientFicheVue({
     (clientDetail.cree_par != null ? `utilisateur #${clientDetail.cree_par}` : null);
 
   function ouvrirEditionManquants() {
+    changerFicheTab("overview");
     setModeEdition(true);
     window.requestAnimationFrame(() => {
       const premiere = completude.clesManquantes[0];
@@ -1337,361 +1379,426 @@ export function ClientFicheVue({
       </header>
 
       <div
-        className={`completude-bar clients-fiche-completude${completude.complet ? " ok" : " is-incomplet"}`}
+        className="tabs clients-fiche-tabs"
+        role="tablist"
+        aria-label="Sections de la fiche client"
       >
-        <div className="completude-meta">
-          <span>
-            Identité légale {completude.ok}/{completude.total}
-          </span>
-          <strong>{completude.pct}%</strong>
-        </div>
-        <div className="completude-track" aria-hidden="true">
-          <i style={{ width: `${completude.pct}%` }} />
-        </div>
-        {!completude.complet && (
-          <div className="clients-manquants-bandeau">
-            <p className="completude-miss clients-manquants-liste">
-              Manquant :{" "}
-              {completude.manquants.map((lib) => (
-                <span key={lib} className="clients-manquant-pill">
-                  {lib}
-                </span>
-              ))}
-            </p>
-            {!estLecteur && (
-              <button
-                type="button"
-                className="btn btn-ghost btn-sm clients-manquants-cta"
-                disabled={busy}
-                onClick={ouvrirEditionManquants}
-              >
-                Compléter les infos manquantes
-              </button>
+        <button
+          type="button"
+          id={`fiche-${clientDetail.id}-tab-overview`}
+          className={`tab${ficheTab === "overview" ? " active" : ""}`}
+          role="tab"
+          aria-selected={ficheTab === "overview"}
+          aria-controls={`fiche-${clientDetail.id}-panel-overview`}
+          tabIndex={ficheTab === "overview" ? 0 : -1}
+          onClick={() => changerFicheTab("overview")}
+        >
+          Vue d’ensemble
+        </button>
+        <button
+          type="button"
+          id={`fiche-${clientDetail.id}-tab-missions`}
+          className={`tab${ficheTab === "missions" ? " active" : ""}`}
+          role="tab"
+          aria-selected={ficheTab === "missions"}
+          aria-controls={`fiche-${clientDetail.id}-panel-missions`}
+          tabIndex={ficheTab === "missions" ? 0 : -1}
+          onClick={() => changerFicheTab("missions")}
+        >
+          Missions
+          {clientDetail.nb_missions > 0 ? (
+            <span className="clients-fiche-tab-count" aria-hidden="true">
+              {clientDetail.nb_missions}
+            </span>
+          ) : null}
+        </button>
+      </div>
+
+      {ficheTab === "overview" ? (
+        <div
+          className="clients-fiche-tab-panel"
+          id={`fiche-${clientDetail.id}-panel-overview`}
+          role="tabpanel"
+          aria-labelledby={`fiche-${clientDetail.id}-tab-overview`}
+        >
+          <div
+            className={`completude-bar clients-fiche-completude${completude.complet ? " ok" : " is-incomplet"}`}
+          >
+            <div className="completude-meta">
+              <span>
+                Identité légale {completude.ok}/{completude.total}
+              </span>
+              <strong>{completude.pct}%</strong>
+            </div>
+            <div className="completude-track" aria-hidden="true">
+              <i style={{ width: `${completude.pct}%` }} />
+            </div>
+            {!completude.complet && (
+              <div className="clients-manquants-bandeau">
+                <p className="completude-miss clients-manquants-liste">
+                  Manquant :{" "}
+                  {completude.manquants.map((lib) => (
+                    <span key={lib} className="clients-manquant-pill">
+                      {lib}
+                    </span>
+                  ))}
+                </p>
+                {!estLecteur && (
+                  <button
+                    type="button"
+                    className="btn btn-ghost btn-sm clients-manquants-cta"
+                    disabled={busy}
+                    onClick={ouvrirEditionManquants}
+                  >
+                    Compléter les infos manquantes
+                  </button>
+                )}
+              </div>
             )}
           </div>
-        )}
-      </div>
 
-      <dl className="clients-identite-resume" aria-label="Résumé d’identité">
-        <div>
-          <dt>Type</dt>
-          <dd>
-            <span className={`clients-badge clients-badge-${formeNorm}`}>
-              {formeLbl}
-            </span>
-            {clientDetail.forme_juridique
-              ? ` ${clientDetail.forme_juridique}`
-              : ""}
-          </dd>
-        </div>
-        <div
-          className={
-            valeurResumeManquante("ncc", !!clientDetail.ncc?.trim())
-              ? "is-manquant"
-              : undefined
-          }
-        >
-          <dt>NCC</dt>
-          <dd>{clientDetail.ncc?.trim() || "À compléter"}</dd>
-        </div>
-        {formeNorm === "pm" && (
-          <div
-            className={
-              valeurResumeManquante("rccm", !!clientDetail.rccm?.trim())
-                ? "is-manquant"
-                : undefined
-            }
-          >
-            <dt>RCCM</dt>
-            <dd>{clientDetail.rccm?.trim() || "À compléter"}</dd>
-          </div>
-        )}
-        <div
-          className={
-            valeurResumeManquante(
-              "regime_fiscal",
-              !!clientDetail.regime_fiscal?.trim(),
-            )
-              ? "is-manquant"
-              : undefined
-          }
-        >
-          <dt>Régime</dt>
-          <dd>
-            {clientDetail.regime_fiscal?.trim()
-              ? libelleRegime(clientDetail.regime_fiscal)
-              : "À compléter"}
-          </dd>
-        </div>
-        {formeNorm === "pm" && (
-          <div
-            className={
-              valeurResumeManquante(
-                "capital_social",
-                clientDetail.capital_social != null &&
-                  clientDetail.capital_social !== "",
-              )
-                ? "is-manquant"
-                : undefined
-            }
-          >
-            <dt>Capital</dt>
-            <dd>
-              {clientDetail.capital_social != null &&
-              clientDetail.capital_social !== ""
-                ? `${Number(clientDetail.capital_social).toLocaleString("fr-FR")} XOF`
-                : "À compléter"}
-            </dd>
-          </div>
-        )}
-        <div>
-          <dt>Clôture</dt>
-          <dd>{libelleMoisCloture(clientDetail.mois_cloture ?? 12)}</dd>
-        </div>
-        <div
-          className={
-            valeurResumeManquante(
-              "activite_principale",
-              !!clientDetail.activite_principale?.trim(),
-            )
-              ? "is-manquant"
-              : undefined
-          }
-        >
-          <dt>Secteur / activité</dt>
-          <dd>{clientDetail.activite_principale?.trim() || "À compléter"}</dd>
-        </div>
-        <div
-          className={
-            valeurResumeManquante("commune", !!clientDetail.commune?.trim())
-              ? "is-manquant"
-              : undefined
-          }
-        >
-          <dt>Commune</dt>
-          <dd>{clientDetail.commune?.trim() || "À compléter"}</dd>
-        </div>
-        <div
-          className={
-            valeurResumeManquante(
-              "siege_social",
-              !!clientDetail.siege_social?.trim(),
-            )
-              ? "is-manquant"
-              : undefined
-          }
-        >
-          <dt>Adresse</dt>
-          <dd>{clientDetail.siege_social?.trim() || "À compléter"}</dd>
-        </div>
-        <div
-          className={
-            valeurResumeManquante(
-              "centre_impots",
-              !!clientDetail.centre_impots?.trim(),
-            )
-              ? "is-manquant"
-              : undefined
-          }
-        >
-          <dt>Centre des impôts</dt>
-          <dd>{clientDetail.centre_impots?.trim() || "À compléter"}</dd>
-        </div>
-      </dl>
-
-      <PiecesContribuablePanel
-        jeton={jeton}
-        contribuableId={clientDetail.id}
-        disabled={estLecteur || busy}
-        edit={clientEdit}
-        setEdit={setClientEdit}
-        modeConformite
-      />
-
-      <RegistreRisquesVue
-        jeton={jeton}
-        contribuableId={clientDetail.id}
-        estLecteur={estLecteur}
-      />
-
-      <div className="panel dense clients-fiche-panel" id="clients-fiche-edition">
-        <div className="clients-fiche-section-head">
-          <div>
-            <p className="picker-kicker">Identité légale</p>
-            <p className="picker-hint">
-              {estLecteur
-                ? "Lecture seule — rôle lecteur."
-                : modeEdition
-                  ? "Modifiez puis enregistrez — les champs rouges sont à compléter."
-                  : "Consultez le résumé ou passez en édition."}
-            </p>
-          </div>
-          {!estLecteur && (
-            <Tooltip
-              label={
-                modeEdition
-                  ? "Revenir au résumé (sans enregistrer)."
-                  : "Modifier la fiche contribuable."
+          <dl className="clients-identite-resume" aria-label="Résumé d’identité">
+            <div>
+              <dt>Type</dt>
+              <dd>
+                <span className={`clients-badge clients-badge-${formeNorm}`}>
+                  {formeLbl}
+                </span>
+                {clientDetail.forme_juridique
+                  ? ` ${clientDetail.forme_juridique}`
+                  : ""}
+              </dd>
+            </div>
+            <div
+              className={
+                valeurResumeManquante("ncc", !!clientDetail.ncc?.trim())
+                  ? "is-manquant"
+                  : undefined
               }
             >
-              <button
-                type="button"
-                className="btn btn-ghost btn-sm"
-                disabled={busy}
-                onClick={() => setModeEdition((v) => !v)}
-              >
-                {modeEdition ? "Fermer l’édition" : "Éditer"}
-              </button>
-            </Tooltip>
-          )}
-        </div>
-
-        {peutEditer ? (
-          <>
-            <IdentiteLegaleForm
-              prefix="edit"
-              edit={clientEdit}
-              setEdit={setClientEdit}
-              disabled={busy}
-              champsManquants={completude.clesManquantes}
-            />
-            <div className="cta-row clients-fiche-cta">
-              <button
-                type="button"
-                className="btn btn-primary"
-                disabled={busy || !apiMin.ok}
-                onClick={() => {
-                  onSauver();
-                  setModeEdition(false);
-                }}
-              >
-                Enregistrer
-              </button>
-              {!completude.complet && (
-                <p className="clients-fiche-nudge clients-fiche-nudge-inline">
-                  Vous pouvez enregistrer le minimum API ; les champs encore
-                  vides resteront signalés en rouge.
-                </p>
-              )}
+              <dt>NCC</dt>
+              <dd>{clientDetail.ncc?.trim() || "À compléter"}</dd>
             </div>
-          </>
-        ) : (
-          !completude.complet &&
-          !estLecteur && (
-            <p className="clients-fiche-nudge">
-              Fiche incomplète —{" "}
-              <button
-                type="button"
-                className="linkish"
-                onClick={ouvrirEditionManquants}
+            {formeNorm === "pm" && (
+              <div
+                className={
+                  valeurResumeManquante("rccm", !!clientDetail.rccm?.trim())
+                    ? "is-manquant"
+                    : undefined
+                }
               >
-                compléter les infos manquantes
-              </button>
-              .
-            </p>
-          )
-        )}
-      </div>
-
-      <div className="clients-fiche-missions-head">
-        <div>
-          <h3 className="section-title clients-fiche-missions-title">
-            Missions du contribuable
-          </h3>
-          <p className="clients-panel-hint">
-            {clientDetail.nb_missions} mission
-            {clientDetail.nb_missions !== 1 ? "s" : ""}
-            {nbActives > 0 ? ` · ${nbActives} active${nbActives > 1 ? "s" : ""}` : ""}
-          </p>
-        </div>
-        {missions.length > 0 && (
-          <div
-            className="clients-missions-filtres"
-            role="group"
-            aria-label="Filtrer les missions"
-          >
-            {(
-              [
-                ["toutes", "Toutes"],
-                ["actives", "Actives"],
-                ["cloturees", "Clôturées"],
-              ] as const
-            ).map(([id, label]) => (
-              <button
-                key={id}
-                type="button"
-                className={`clients-missions-filtre${filtreMissions === id ? " is-active" : ""}`}
-                aria-pressed={filtreMissions === id}
-                onClick={() => setFiltreMissions(id)}
+                <dt>RCCM</dt>
+                <dd>{clientDetail.rccm?.trim() || "À compléter"}</dd>
+              </div>
+            )}
+            <div
+              className={
+                valeurResumeManquante(
+                  "regime_fiscal",
+                  !!clientDetail.regime_fiscal?.trim(),
+                )
+                  ? "is-manquant"
+                  : undefined
+              }
+            >
+              <dt>Régime</dt>
+              <dd>
+                {clientDetail.regime_fiscal?.trim()
+                  ? libelleRegime(clientDetail.regime_fiscal)
+                  : "À compléter"}
+              </dd>
+            </div>
+            {formeNorm === "pm" && (
+              <div
+                className={
+                  valeurResumeManquante(
+                    "capital_social",
+                    clientDetail.capital_social != null &&
+                      clientDetail.capital_social !== "",
+                  )
+                    ? "is-manquant"
+                    : undefined
+                }
               >
-                {label}
-              </button>
-            ))}
-          </div>
-        )}
-      </div>
+                <dt>Capital</dt>
+                <dd>
+                  {clientDetail.capital_social != null &&
+                  clientDetail.capital_social !== ""
+                    ? `${Number(clientDetail.capital_social).toLocaleString("fr-FR")} XOF`
+                    : "À compléter"}
+                </dd>
+              </div>
+            )}
+            <div>
+              <dt>Clôture</dt>
+              <dd>{libelleMoisCloture(clientDetail.mois_cloture ?? 12)}</dd>
+            </div>
+            <div
+              className={
+                valeurResumeManquante(
+                  "activite_principale",
+                  !!clientDetail.activite_principale?.trim(),
+                )
+                  ? "is-manquant"
+                  : undefined
+              }
+            >
+              <dt>Secteur / activité</dt>
+              <dd>{clientDetail.activite_principale?.trim() || "À compléter"}</dd>
+            </div>
+            <div
+              className={
+                valeurResumeManquante("commune", !!clientDetail.commune?.trim())
+                  ? "is-manquant"
+                  : undefined
+              }
+            >
+              <dt>Commune</dt>
+              <dd>{clientDetail.commune?.trim() || "À compléter"}</dd>
+            </div>
+            <div
+              className={
+                valeurResumeManquante(
+                  "siege_social",
+                  !!clientDetail.siege_social?.trim(),
+                )
+                  ? "is-manquant"
+                  : undefined
+              }
+            >
+              <dt>Adresse</dt>
+              <dd>{clientDetail.siege_social?.trim() || "À compléter"}</dd>
+            </div>
+            <div
+              className={
+                valeurResumeManquante(
+                  "centre_impots",
+                  !!clientDetail.centre_impots?.trim(),
+                )
+                  ? "is-manquant"
+                  : undefined
+              }
+            >
+              <dt>Centre des impôts</dt>
+              <dd>{clientDetail.centre_impots?.trim() || "À compléter"}</dd>
+            </div>
+          </dl>
 
-      <div className="panel dense clients-panel">
-        {missionsFiltrees.length > 0 ? (
-          <ul className="clients-missions-list">
-            {missionsFiltrees.map((m) => (
-              <li key={m.id}>
+          <PiecesContribuablePanel
+            jeton={jeton}
+            contribuableId={clientDetail.id}
+            disabled={estLecteur || busy}
+            edit={clientEdit}
+            setEdit={setClientEdit}
+            modeConformite
+          />
+
+          <RegistreRisquesVue
+            jeton={jeton}
+            contribuableId={clientDetail.id}
+            estLecteur={estLecteur}
+          />
+
+          <div className="panel dense clients-fiche-panel" id="clients-fiche-edition">
+            <div className="clients-fiche-section-head">
+              <div>
+                <p className="picker-kicker">Identité légale</p>
+                <p className="picker-hint">
+                  {estLecteur
+                    ? "Lecture seule — rôle lecteur."
+                    : modeEdition
+                      ? "Modifiez puis enregistrez — les champs rouges sont à compléter."
+                      : "Consultez le résumé ou passez en édition."}
+                </p>
+              </div>
+              {!estLecteur && (
                 <Tooltip
-                  label={`Ouvrir la mission #${m.id} · exercice ${m.exercice}`}
-                  side="bottom"
+                  label={
+                    modeEdition
+                      ? "Revenir au résumé (sans enregistrer)."
+                      : "Modifier la fiche contribuable."
+                  }
                 >
                   <button
                     type="button"
-                    className="clients-mission-row"
-                    onClick={() => onOuvrirMission(m.id)}
+                    className="btn btn-ghost btn-sm"
+                    disabled={busy}
+                    onClick={() => setModeEdition((v) => !v)}
                   >
-                    <span className="clients-mission-id">#{m.id}</span>
-                    <span className="clients-mission-ex">
-                      Exercice {m.exercice}
-                      <span className="clients-mission-date">
-                        {formaterDateCourte(m.cree_le)}
-                      </span>
-                    </span>
-                    <span className={`badge statut-${m.statut}`}>
-                      {libelleStatut(m.statut)}
-                    </span>
-                    <span className="clients-mission-open">
-                      Ouvrir <span aria-hidden="true">→</span>
-                    </span>
+                    {modeEdition ? "Fermer l’édition" : "Éditer"}
                   </button>
                 </Tooltip>
-              </li>
-            ))}
-          </ul>
-        ) : missions.length > 0 ? (
-          <div className="clients-empty clients-empty-compact">
-            <p className="clients-empty-title">Aucune mission pour ce filtre</p>
-            <p className="clients-empty-body">
-              Changez le filtre ou lancez une nouvelle mission.
-            </p>
+              )}
+            </div>
+
+            {peutEditer ? (
+              <>
+                <IdentiteLegaleForm
+                  prefix="edit"
+                  edit={clientEdit}
+                  setEdit={setClientEdit}
+                  disabled={busy}
+                  champsManquants={completude.clesManquantes}
+                />
+                <div className="cta-row clients-fiche-cta">
+                  <button
+                    type="button"
+                    className="btn btn-primary"
+                    disabled={busy || !apiMin.ok}
+                    onClick={() => {
+                      onSauver();
+                      setModeEdition(false);
+                    }}
+                  >
+                    Enregistrer
+                  </button>
+                  {!completude.complet && (
+                    <p className="clients-fiche-nudge clients-fiche-nudge-inline">
+                      Vous pouvez enregistrer le minimum API ; les champs encore
+                      vides resteront signalés en rouge.
+                    </p>
+                  )}
+                </div>
+              </>
+            ) : (
+              !completude.complet &&
+              !estLecteur && (
+                <p className="clients-fiche-nudge">
+                  Fiche incomplète —{" "}
+                  <button
+                    type="button"
+                    className="linkish"
+                    onClick={ouvrirEditionManquants}
+                  >
+                    compléter les infos manquantes
+                  </button>
+                  .
+                </p>
+              )
+            )}
           </div>
-        ) : (
-          <div className="clients-empty clients-empty-compact">
-            <p className="clients-empty-title">Aucune mission pour ce client</p>
-            <p className="clients-empty-body">
-              {estLecteur
-                ? "Les missions liées apparaîtront ici."
-                : "Un contribuable peut porter plusieurs missions (exercices, campagnes)."}
-            </p>
-            {!estLecteur && (
-              <div className="clients-empty-actions">
+        </div>
+      ) : (
+        <div
+          className="clients-fiche-tab-panel"
+          id={`fiche-${clientDetail.id}-panel-missions`}
+          role="tabpanel"
+          aria-labelledby={`fiche-${clientDetail.id}-tab-missions`}
+        >
+          <div className="clients-fiche-missions-head">
+            <div>
+              <h3 className="section-title clients-fiche-missions-title">
+                Missions du contribuable
+              </h3>
+              <p className="clients-panel-hint">
+                {clientDetail.nb_missions} mission
+                {clientDetail.nb_missions !== 1 ? "s" : ""}
+                {nbActives > 0
+                  ? ` · ${nbActives} active${nbActives > 1 ? "s" : ""}`
+                  : ""}
+              </p>
+            </div>
+            <div className="clients-fiche-missions-actions">
+              {missions.length > 0 && (
+                <div
+                  className="clients-missions-filtres"
+                  role="group"
+                  aria-label="Filtrer les missions"
+                >
+                  {(
+                    [
+                      ["toutes", "Toutes"],
+                      ["actives", "Actives"],
+                      ["cloturees", "Clôturées"],
+                    ] as const
+                  ).map(([id, label]) => (
+                    <button
+                      key={id}
+                      type="button"
+                      className={`clients-missions-filtre${filtreMissions === id ? " is-active" : ""}`}
+                      aria-pressed={filtreMissions === id}
+                      onClick={() => setFiltreMissions(id)}
+                    >
+                      {label}
+                    </button>
+                  ))}
+                </div>
+              )}
+              {!estLecteur && missions.length > 0 && (
                 <button
                   type="button"
-                  className="btn btn-primary btn-sm"
+                  className="btn btn-ghost btn-sm"
                   onClick={onNouvelleMission}
                 >
                   Nouvelle mission
                 </button>
+              )}
+            </div>
+          </div>
+
+          <div className="panel dense clients-panel">
+            {missionsFiltrees.length > 0 ? (
+              <ul className="clients-missions-list">
+                {missionsFiltrees.map((m) => (
+                  <li key={m.id}>
+                    <Tooltip
+                      label={`Ouvrir la mission #${m.id} · exercice ${m.exercice}`}
+                      side="bottom"
+                    >
+                      <button
+                        type="button"
+                        className="clients-mission-row"
+                        onClick={() => onOuvrirMission(m.id)}
+                      >
+                        <span className="clients-mission-id">#{m.id}</span>
+                        <span className="clients-mission-ex">
+                          Exercice {m.exercice}
+                          <span className="clients-mission-date">
+                            {formaterDateCourte(m.cree_le)}
+                          </span>
+                        </span>
+                        <span className={`badge statut-${m.statut}`}>
+                          {libelleStatut(m.statut)}
+                        </span>
+                        <span className="clients-mission-open">
+                          Ouvrir <span aria-hidden="true">→</span>
+                        </span>
+                      </button>
+                    </Tooltip>
+                  </li>
+                ))}
+              </ul>
+            ) : missions.length > 0 ? (
+              <div className="clients-empty clients-empty-compact">
+                <p className="clients-empty-title">Aucune mission pour ce filtre</p>
+                <p className="clients-empty-body">
+                  Changez le filtre ou lancez une nouvelle mission.
+                </p>
+              </div>
+            ) : (
+              <div className="clients-empty clients-empty-compact">
+                <p className="clients-empty-title">Aucune mission pour ce client</p>
+                <p className="clients-empty-body">
+                  {estLecteur
+                    ? "Les missions liées apparaîtront ici."
+                    : "Un contribuable peut porter plusieurs missions (exercices, campagnes)."}
+                </p>
+                {!estLecteur && (
+                  <div className="clients-empty-actions">
+                    <button
+                      type="button"
+                      className="btn btn-primary btn-sm"
+                      onClick={onNouvelleMission}
+                    >
+                      Nouvelle mission
+                    </button>
+                  </div>
+                )}
               </div>
             )}
           </div>
-        )}
-      </div>
+        </div>
+      )}
     </div>
   );
 }

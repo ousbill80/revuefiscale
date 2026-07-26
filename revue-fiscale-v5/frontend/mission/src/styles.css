@@ -7344,6 +7344,56 @@ h2.section-title {
   gap: 0.85rem;
 }
 
+.clients-fiche-tabs {
+  position: sticky;
+  top: calc(var(--topbar-h) + var(--safe-top));
+  z-index: 25;
+  margin: 0;
+  background: var(--bg);
+  box-shadow: 0 1px 0 var(--line-soft);
+}
+
+.clients-fiche-tabs .tab {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.4rem;
+}
+
+.clients-fiche-tab-count {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 1.35rem;
+  height: 1.2rem;
+  padding: 0 0.35rem;
+  border-radius: 999px;
+  font-size: 0.68rem;
+  font-weight: 700;
+  font-variant-numeric: tabular-nums;
+  color: var(--muted);
+  background: var(--line-soft);
+}
+
+.clients-fiche-tabs .tab.active .clients-fiche-tab-count {
+  color: var(--accent-deep);
+  background: var(--accent-soft);
+}
+
+.clients-fiche-tab-panel {
+  display: flex;
+  flex-direction: column;
+  gap: 0.85rem;
+  min-width: 0;
+}
+
+.clients-fiche-missions-actions {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.45rem 0.65rem;
+}
+
 .clients-fiche-completude {
   margin: 0;
 }
