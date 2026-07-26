@@ -41,8 +41,8 @@ def test_pdf_vers_images_sans_pdftoppm():
         images, avis = _pdf_vers_images(b"%PDF-1.4\n%%EOF\n")
     assert images == []
     assert avis is not None
-    assert "pdftoppm" in avis.casefold()
-    assert "poppler" in poppler_outils.MESSAGE_PDFTOPPM_ABSENT.casefold()
+    assert avis == poppler_outils.MESSAGE_PDFTOPPM_ABSENT
+    assert "scan" in poppler_outils.MESSAGE_PDFTOPPM_ABSENT.casefold()
 
 
 def test_proposer_propage_avertissement_pdftoppm(session, tenant_pdf):
@@ -100,7 +100,8 @@ def test_proposer_propage_avertissement_pdftoppm(session, tenant_pdf):
 
         assert prop["disponible"] is False
         avis = " ".join(prop.get("avertissements") or [])
-        msg = (prop.get("message") or "").casefold()
-        assert "pdftoppm" in avis.casefold() or "pdftoppm" in msg
+        msg = prop.get("message") or ""
+        attendu = poppler_outils.MESSAGE_PDFTOPPM_ABSENT
+        assert attendu in avis or attendu in msg
 
     effacer_contexte_tenant(session)

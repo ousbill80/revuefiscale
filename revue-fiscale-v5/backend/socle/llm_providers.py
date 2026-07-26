@@ -37,6 +37,9 @@ KindErreur = Literal[
 # Statuts HTTP qui déclenchent un essai sur le fournisseur suivant
 _STATUTS_FAILOVER = frozenset({401, 403, 408, 429, 500, 502, 503, 504})
 
+# Budget minimal de sortie — évite les JSON d'extraction tronqués.
+MIN_COMPLETION_TOKENS = 4096
+
 
 def classifier_erreur_http(status: int | None, detail: str = "") -> KindErreur:
     """Classe une erreur fournisseur sans exposer de secret."""
@@ -318,11 +321,15 @@ def _appeler_un(
         if capacite == "vision" and effort == "max":
             effort = "high"
         corps["reasoning_effort"] = effort
-        # Sortie JSON : budget réduit en low (latence) ; high/max plus généreux
+        # Sortie JSON : jamais sous MIN_COMPLETION_TOKENS (réponses tronquées
+        # sinon) ; high/max + vision plus généreux.
         if effort == "low":
-            corps["max_completion_tokens"] = 4096 if capacite == "vision" else 2048
+            corps["max_completion_tokens"] = MIN_COMPLETION_TOKENS
         else:
-            corps["max_completion_tokens"] = 8192 if capacite == "vision" else 4096
+            corps["max_completion_tokens"] = max(
+                MIN_COMPLETION_TOKENS,
+                8192 if capacite == "vision" else 4096,
+            )
     else:
         corps["temperature"] = temperature
 

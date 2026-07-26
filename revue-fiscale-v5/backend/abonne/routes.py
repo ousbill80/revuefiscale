@@ -3,6 +3,7 @@ from __future__ import annotations
 
 import mimetypes
 import re
+from pathlib import Path
 from typing import Annotated, Any, Literal
 from urllib.parse import quote
 
@@ -74,6 +75,76 @@ from backend.plateforme.rbac import exiger_capacite
 
 router = APIRouter(prefix="/api/v1", tags=["abonne"])
 router_client = APIRouter(prefix="/api/v1/client", tags=["portail-client"])
+
+# ─── Upload pièces : plafond taille + whitelist formats (magic bytes) ─────
+
+# Plafond configurable par fichier uploadé (25 Mo).
+TAILLE_MAX_PIECE_OCTETS = 25 * 1024 * 1024
+
+MESSAGE_FICHIER_TROP_VOLUMINEUX = "Fichier trop volumineux (max 25 Mo)."
+MESSAGE_FORMAT_NON_SUPPORTE = (
+    "Format non pris en charge : PDF ou image (PNG/JPEG) uniquement."
+)
+
+# Signatures binaires acceptées (whitelist stricte).
+_MAGIC_FORMATS: tuple[tuple[bytes, str], ...] = (
+    (b"%PDF", "pdf"),
+    (b"\x89PNG\r\n\x1a\n", "png"),
+    (b"\xff\xd8\xff", "jpeg"),
+)
+_FORMATS_PAR_EXTENSION: dict[str, str] = {
+    ".pdf": "pdf",
+    ".png": "png",
+    ".jpg": "jpeg",
+    ".jpeg": "jpeg",
+    ".webp": "webp",
+}
+_FORMATS_PAR_CONTENT_TYPE: dict[str, str] = {
+    "application/pdf": "pdf",
+    "image/png": "png",
+    "image/jpeg": "jpeg",
+    "image/jpg": "jpeg",
+    "image/webp": "webp",
+}
+
+
+def _format_reel_piece(brut: bytes) -> str | None:
+    """Format détecté depuis les magic bytes — None si hors whitelist."""
+    for magic, fmt in _MAGIC_FORMATS:
+        if brut.startswith(magic):
+            return fmt
+    # WEBP : conteneur RIFF avec tag WEBP à l'offset 8
+    if brut[:4] == b"RIFF" and brut[8:12] == b"WEBP":
+        return "webp"
+    return None
+
+
+def _verifier_format_piece(
+    nom_fichier: str, content_type: str | None, brut: bytes
+) -> None:
+    """Refuse tout contenu hors whitelist ou incohérent avec nom/content-type."""
+    fmt = _format_reel_piece(brut)
+    if fmt is None:
+        raise HTTPException(
+            status_code=status.HTTP_400_BAD_REQUEST,
+            detail=MESSAGE_FORMAT_NON_SUPPORTE,
+        )
+    ext = Path(nom_fichier or "").suffix.lower()
+    if ext:
+        attendu = _FORMATS_PAR_EXTENSION.get(ext)
+        if attendu is None or attendu != fmt:
+            raise HTTPException(
+                status_code=status.HTTP_400_BAD_REQUEST,
+                detail=MESSAGE_FORMAT_NON_SUPPORTE,
+            )
+    ct = (content_type or "").split(";")[0].strip().lower()
+    if ct and ct != "application/octet-stream":
+        attendu_ct = _FORMATS_PAR_CONTENT_TYPE.get(ct)
+        if attendu_ct is None or attendu_ct != fmt:
+            raise HTTPException(
+                status_code=status.HTTP_400_BAD_REQUEST,
+                detail=MESSAGE_FORMAT_NON_SUPPORTE,
+            )
 
 
 class ContribuablePatchIn(BaseModel):
@@ -286,6 +357,12 @@ async def api_deposer_piece_contribuable(
             detail="fournir un fichier (champ fichier)",
         )
     brut = await fichier.read()
+    if len(brut) > TAILLE_MAX_PIECE_OCTETS:
+        raise HTTPException(
+            status_code=status.HTTP_413_REQUEST_ENTITY_TOO_LARGE,
+            detail=MESSAGE_FICHIER_TROP_VOLUMINEUX,
+        )
+    _verifier_format_piece(fichier.filename, fichier.content_type, brut)
     # forcer_type=1 : conserve la saisie manuelle même si « autre »
     forcer = str(form.get("forcer_type") or "").strip().lower() in {
         "1",

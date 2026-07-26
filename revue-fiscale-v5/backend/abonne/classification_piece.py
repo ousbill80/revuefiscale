@@ -266,9 +266,10 @@ def _classer_par_vision(
     ]
     t0 = time.perf_counter()
     try:
-        # Classif courte : timeout plus bas que l'extraction complète
+        # Classif courte : timeout plus bas que l'extraction complète,
+        # mais suffisant pour la vision multi-page (scans lourds).
         timeout_classif = min(
-            60.0, float(config.llm_vision_timeout_seconds or 180.0)
+            90.0, float(config.llm_vision_timeout_seconds or 180.0)
         )
         contenu_llm, provider_id, _ = llm_providers.appeler_chat(
             messages,
@@ -298,13 +299,23 @@ def _classer_par_vision(
             return None, 0.0, None
 
     typ = str(data.get("type_piece") or "").strip().lower()
-    if typ not in TYPES_PIECE:
-        return None, 0.0, None
+    type_invalide = typ not in TYPES_PIECE
+    if type_invalide:
+        # Type hors référentiel : ne pas avaler silencieusement — repli « autre »
+        logger.warning(
+            "classif_vision_type_invalide type=%r nom=%s — repli sur « autre »",
+            typ,
+            nom,
+        )
+        typ = "autre"
     try:
         conf = float(data.get("confiance") or 0.7)
     except (TypeError, ValueError):
         conf = 0.7
     conf = max(0.0, min(conf, 0.95))
+    if type_invalide:
+        # Repli : confiance basse pour ne pas écraser les heuristiques nom/texte
+        conf = min(conf, 0.3)
     logger.info(
         "classif_vision ok type=%s conf=%.2f provider=%s duree_ms=%s",
         typ,

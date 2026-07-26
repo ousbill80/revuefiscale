@@ -22,6 +22,10 @@ TYPES_PIECE_CONTRIBUABLE = frozenset(
     {"dfe", "rccm", "bail", "cie", "sodeci", "autre"}
 )
 
+# Plafond configurable par pièce (25 Mo) — défense en profondeur, l'endpoint
+# HTTP applique le même plafond avec un statut 413.
+TAILLE_MAX_PIECE_OCTETS = 25 * 1024 * 1024
+
 
 class ErreurPieceContribuable(Exception):
     """Échec métier pièces contribuable."""
@@ -54,6 +58,11 @@ def deposer_piece(
     """
     from backend.abonne.classification_piece import classer_piece
 
+    if not contenu:
+        raise ErreurPieceContribuable("fichier vide")
+    if len(contenu) > TAILLE_MAX_PIECE_OCTETS:
+        raise ErreurPieceContribuable("Fichier trop volumineux (max 25 Mo).")
+
     brut_type = (type_piece or "").strip().lower()
     if brut_type == "auto":
         brut_type = "autre"
@@ -79,8 +88,6 @@ def deposer_piece(
 
     if tp not in TYPES_PIECE_CONTRIBUABLE:
         raise ErreurPieceContribuable(f"type_piece invalide : {type_piece}")
-    if not contenu:
-        raise ErreurPieceContribuable("fichier vide")
     sid = (session_upload or "").strip() or None
     if contribuable_id is None and not sid:
         raise ErreurPieceContribuable(

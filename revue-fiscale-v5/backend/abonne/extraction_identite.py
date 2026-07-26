@@ -271,6 +271,19 @@ _MARQUEURS_SANS_TEXTE = (
 
 _EXT_IMAGES = {".png", ".jpg", ".jpeg", ".webp", ".tif", ".tiff", ".gif"}
 
+# Plafond d'une image envoyée telle quelle à la vision (octets).
+# Pillow absent des dépendances → pas de redimensionnement serveur :
+# au-delà, avertissement explicite remonté jusqu'à l'UI.
+MAX_OCTETS_IMAGE_VISION = 4_000_000
+
+# Garde-fou coût / latence : nombre maximal de pièces par analyse IA.
+MAX_PIECES_PAR_ANALYSE = 10
+
+MESSAGE_AUCUN_CONTENU_EXPLOITABLE = (
+    "Aucun contenu exploitable dans les pièces (ni texte ni image analysable). "
+    "Saisissez manuellement les champs."
+)
+
 
 class ErreurExtractionIdentite(Exception):
     """Échec extraction / conformité."""
@@ -571,11 +584,14 @@ def _preparer_corpus_pieces(
     list[tuple[str, bytes]],
     bool,
     list[str],
+    bool,
 ]:
-    """Retourne pieces, corpus, images, besoin_vision, avertissements.
+    """Retourne pieces, corpus, images, besoin_vision, avertissements, exploitable.
 
     Toutes les pièces sont lues ensemble. PDF scan / texte partiel → rasterisation
-    + vision stricte. Texte riche OK sans image.
+    + vision stricte. Texte riche OK sans image. ``exploitable`` = au moins un
+    texte réel ou une image analysable (sinon : ne pas appeler le LLM texte avec
+    des marqueurs d'erreur comme corpus).
     """
     pieces = pieces_par_ids(session, piece_ids)
     if not pieces:
@@ -584,6 +600,7 @@ def _preparer_corpus_pieces(
     images: list[tuple[str, bytes]] = []
     besoin_vision = False
     avertissements: list[str] = []
+    contenu_exploitable = False
 
     for p in pieces:
         _, brut = lire_contenu_piece(session, int(p["id"]))
@@ -591,36 +608,74 @@ def _preparer_corpus_pieces(
         suffixe = Path(nom).suffix.lower()
         texte = _extraire_texte_fichier(nom, brut)
         extrait = texte[:12000]
-        # Le type déclaré peut être faux — on le signale comme indice seulement
-        blocs.append(
-            f"--- piece_id={p['id']} type_declare={p['type_piece']} "
-            f"(peut être incorrect) fichier={nom} ---\n{extrait}"
-        )
 
         if suffixe in _EXT_IMAGES:
             besoin_vision = True
-            if len(brut) <= 4_000_000:
+            if len(brut) <= MAX_OCTETS_IMAGE_VISION:
                 images.append((llm_providers.mime_depuis_nom(nom), brut))
+                contenu_exploitable = True
+            else:
+                avertissements.append(
+                    f"Image {nom} trop lourde "
+                    f"({len(brut) / 1_000_000:.1f} Mo) — "
+                    "non analysée par la vision."
+                )
+                extrait = "[Image trop lourde — non analysée.]"
         elif suffixe == ".pdf":
-            partiel = _texte_partiel_identite(texte)
-            if partiel:
+            sans_texte = _texte_insuffisant(texte)
+            if sans_texte or _texte_partiel_identite(texte):
                 besoin_vision = True
                 # DFE CI multi-pages (couverture + identification + annexes)
                 pages, avis = _pdf_vers_images(brut)
                 images.extend(pages)
                 if avis and avis not in avertissements:
                     avertissements.append(avis)
-                if not _texte_insuffisant(texte) and pages:
+                if pages:
+                    contenu_exploitable = True
+                if sans_texte:
+                    # Jamais le marqueur d'erreur comme corpus LLM texte
+                    # (risque d'hallucination depuis le nom du fichier).
+                    if pages:
+                        extrait = (
+                            "[PDF scanné : lecture via les images jointes.]"
+                        )
+                    else:
+                        extrait = (
+                            "[PDF scanné non analysable "
+                            "(conversion en image indisponible).]"
+                        )
+                        avertissements.append(
+                            f"PDF scanné {nom} sans texte extractible et "
+                            "sans conversion en image — pièce non analysée."
+                        )
+                elif pages:
                     avertissements.append(
                         "Texte PDF partiel : lecture combinée texte + images."
                     )
+            if not sans_texte:
+                contenu_exploitable = True
+        elif not _texte_insuffisant(texte):
+            contenu_exploitable = True
+
+        # Le type déclaré peut être faux — on le signale comme indice seulement
+        blocs.append(
+            f"--- piece_id={p['id']} type_declare={p['type_piece']} "
+            f"(peut être incorrect) fichier={nom} ---\n{extrait}"
+        )
 
     if besoin_vision and not images:
         msg = poppler_outils.MESSAGE_VISION_SANS_IMAGE
         if msg not in avertissements:
             avertissements.append(msg)
 
-    return pieces, "\n\n".join(blocs), images, besoin_vision, avertissements
+    return (
+        pieces,
+        "\n\n".join(blocs),
+        images,
+        besoin_vision,
+        avertissements,
+        contenu_exploitable,
+    )
 
 
 def _parser_json_llm(contenu: str) -> dict[str, Any]:
@@ -781,6 +836,12 @@ def _normaliser_citations(
             confiance = float(conf) if conf is not None else None
         except (TypeError, ValueError):
             confiance = None
+        if confiance is not None:
+            # Borne [0, 1] ; NaN → None (comparaison NaN != NaN)
+            if confiance != confiance:
+                confiance = None
+            else:
+                confiance = max(0.0, min(1.0, confiance))
         out.append(
             {
                 "champ": champ,
@@ -870,6 +931,8 @@ def proposer_identite(
     )
     if not ids:
         raise ErreurExtractionIdentite("aucune pièce à analyser")
+    if len(ids) > MAX_PIECES_PAR_ANALYSE:
+        raise ErreurExtractionIdentite("Maximum 10 pièces par analyse.")
 
     if not llm_configure():
         prop_id = _enregistrer_proposition(
@@ -899,9 +962,14 @@ def proposer_identite(
         }
 
     t0 = time.perf_counter()
-    pieces, corpus, images, besoin_vision, avertissements = _preparer_corpus_pieces(
-        session, ids
-    )
+    (
+        pieces,
+        corpus,
+        images,
+        besoin_vision,
+        avertissements,
+        contenu_exploitable,
+    ) = _preparer_corpus_pieces(session, ids)
     logger.info(
         "proposer_identite_prep pieces=%s images=%s vision=%s duree_ms=%s",
         len(pieces),
@@ -909,6 +977,35 @@ def proposer_identite(
         besoin_vision,
         int((time.perf_counter() - t0) * 1000),
     )
+    if not contenu_exploitable:
+        msg = MESSAGE_AUCUN_CONTENU_EXPLOITABLE
+        if avertissements:
+            msg = f"{msg} {' ; '.join(avertissements)}"
+        prop_id = _enregistrer_proposition(
+            session,
+            tenant_id,
+            piece_ids=ids,
+            champs={},
+            citations=[],
+            statut="indisponible",
+            message=msg,
+            contribuable_id=contribuable_id,
+            session_upload=session_upload,
+        )
+        return {
+            "disponible": False,
+            "statut": "indisponible",
+            "proposition_id": prop_id,
+            "champs": {c: None for c in CHAMPS_IDENTITE},
+            "champs_manquants": list(CHAMPS_IDENTITE),
+            "citations": [],
+            "message": _message_sans_provider(msg),
+            "piece_ids": ids,
+            "provider": None,
+            "failover_depuis": [],
+            "avertissements": avertissements,
+            "poppler": poppler_outils.etat_poppler(),
+        }
     user = (
         f"Pièces ({len(pieces)}) :\n\n{corpus}\n\n"
         f"Champs attendus : {', '.join(CHAMPS_IDENTITE)}"
@@ -1044,9 +1141,30 @@ def verifier_conformite(
             "poppler": poppler_outils.etat_poppler(),
         }
 
-    _, corpus, images, besoin_vision, avertissements = _preparer_corpus_pieces(
-        session, ids
-    )
+    (
+        _,
+        corpus,
+        images,
+        besoin_vision,
+        avertissements,
+        contenu_exploitable,
+    ) = _preparer_corpus_pieces(session, ids)
+    if not contenu_exploitable:
+        msg = MESSAGE_AUCUN_CONTENU_EXPLOITABLE
+        if avertissements:
+            msg = f"{msg} {' ; '.join(avertissements)}"
+        return {
+            "disponible": False,
+            "statut": "indisponible",
+            "ok": None,
+            "ecarts": [],
+            "message": _message_sans_provider(msg),
+            "piece_ids": ids,
+            "provider": None,
+            "failover_depuis": [],
+            "avertissements": avertissements,
+            "poppler": poppler_outils.etat_poppler(),
+        }
     saisis = {
         k: champs_saisis.get(k)
         for k in CHAMPS_IDENTITE
