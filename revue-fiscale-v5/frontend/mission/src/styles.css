@@ -9398,6 +9398,31 @@ tr.row-active td {
 .rest-ctrl-cloture-synthese { margin: 0 0 0.6rem; font-size: 0.78rem; }
 .rest-ctrl-cloture-actions { display: inline-flex; flex-wrap: wrap; align-items: center; gap: 0.5rem; }
 
+/* Comparatif déterministe entre deux exécutions d'une mission. */
+.rest-comparatif { margin: 0.75rem 0 1rem; padding: 0.85rem 1rem; border: 1px solid var(--line, #e5e7eb); border-radius: 10px; background: var(--surface-soft, #f8fafc); }
+.rest-comparatif-head { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 0.6rem; margin-bottom: 0.55rem; }
+.rest-comparatif-titre { margin: 0; font-size: 0.95rem; font-weight: 800; color: var(--ink, #0f172a); }
+.rest-comparatif-execs { margin-left: 0.5rem; font-size: 0.78rem; font-weight: 700; color: var(--ink-soft, #475569); border: 1px solid var(--line, #e5e7eb); border-radius: 999px; padding: 0.1rem 0.55rem; background: var(--surface, #fff); }
+.rest-comparatif-synthese { margin: 0 0 0.7rem; display: flex; flex-wrap: wrap; align-items: center; gap: 0.4rem; font-size: 0.78rem; }
+.rest-comparatif-badge { font-size: 0.72rem; font-weight: 700; }
+.rest-comparatif-badge.amelioration { border-color: #15803d; color: #15803d; background: #f0fdf4; }
+.rest-comparatif-badge.degradation { border-color: #b91c1c; color: #991b1b; background: #fef2f2; }
+.rest-comparatif-badge.inchange { border-color: #b45309; color: #92400e; background: #fffbeb; }
+.rest-comparatif-bloc { margin: 0 0 0.7rem; padding: 0.55rem 0.7rem; border: 1px solid var(--line-soft, #f1f5f9); border-radius: 8px; background: var(--surface, #fff); }
+.rest-comparatif-bloc.amelioration { border-left: 3px solid #16a34a; }
+.rest-comparatif-bloc.degradation { border-left: 3px solid #dc2626; }
+.rest-comparatif-bloc.inchange { border-left: 3px solid #d97706; }
+.rest-comparatif-bloc.neutre { border-left: 3px solid #94a3b8; }
+.rest-comparatif-bloc-titre { margin: 0 0 0.45rem; font-size: 0.85rem; font-weight: 800; color: var(--ink, #0f172a); }
+.rest-comparatif-bloc.amelioration .rest-comparatif-bloc-titre { color: #15803d; }
+.rest-comparatif-bloc.degradation .rest-comparatif-bloc-titre { color: #b91c1c; }
+.rest-comparatif-bloc.inchange .rest-comparatif-bloc-titre { color: #b45309; }
+.rest-comparatif-items { list-style: none; margin: 0; padding: 0; display: grid; gap: 0.35rem; }
+.rest-comparatif-item { display: flex; flex-wrap: wrap; align-items: baseline; gap: 0.35rem 0.7rem; font-size: 0.82rem; color: var(--ink, #0f172a); }
+.rest-comparatif-regle { font-family: var(--font-mono, ui-monospace, monospace); font-size: 0.72rem; color: var(--muted, #64748b); border: 1px solid var(--line-soft, #f1f5f9); border-radius: 5px; padding: 0 0.3rem; background: var(--surface-soft, #f8fafc); }
+.rest-comparatif-transition { font-weight: 700; }
+.rest-comparatif-montants { font-size: 0.76rem; }
+
 /* Suivi de circularisation — réponses client à la demande de renseignements. */
 .rest-suivi { margin: 0.75rem 0 1rem; padding: 0.85rem 1rem; border: 1px solid var(--line, #e5e7eb); border-radius: 10px; background: var(--surface-soft, #f8fafc); }
 .rest-suivi-head { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 0.6rem; margin-bottom: 0.55rem; }

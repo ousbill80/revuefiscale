@@ -190,6 +190,46 @@ type SuiviOut = {
   synthese: SuiviSynthese;
 };
 
+/* Comparatif déterministe entre deux exécutions d'une mission. */
+type ComparatifItem = {
+  regle_id: string;
+  avant: string | null;
+  apres: string | null;
+  montant_avant: string | null;
+  montant_apres: string | null;
+};
+
+type ComparatifOut = {
+  execution_a: { id: number; date: string | null };
+  execution_b: { id: number; date: string | null };
+  ameliorations: ComparatifItem[];
+  degradations: ComparatifItem[];
+  inchanges_a_risque: ComparatifItem[];
+  nouveaux: ComparatifItem[];
+  disparus: ComparatifItem[];
+  synthese: {
+    ameliorations: number;
+    degradations: number;
+    inchanges_a_risque: number;
+    nouveaux: number;
+    disparus: number;
+    delta_montant_anomalies: string;
+  };
+};
+
+const LIBELLES_STATUT_COMPARATIF: Record<string, string> = {
+  conforme: "Conforme",
+  anomalie: "Anomalie",
+  sous_seuil: "Sous seuil",
+  non_verifiable: "Non vérifiable",
+  hors_perimetre: "Hors périmètre",
+};
+
+function libelleStatutComparatif(statut: string | null): string {
+  if (!statut) return "—";
+  return LIBELLES_STATUT_COMPARATIF[statut] ?? statut;
+}
+
 const STATUTS_SUIVI: Array<{ value: SuiviStatut; label: string }> = [
   { value: "en_attente", label: "En attente" },
   { value: "recu", label: "Reçu" },
@@ -443,6 +483,10 @@ export function RestitutionVue({
   const [demandeErr, setDemandeErr] = useState<string | null>(null);
   const [dossierBusy, setDossierBusy] = useState(false);
   const [dossierErr, setDossierErr] = useState<string | null>(null);
+  const [comparatifOuvert, setComparatifOuvert] = useState(false);
+  const [comparatif, setComparatif] = useState<ComparatifOut | null>(null);
+  const [comparatifErr, setComparatifErr] = useState<string | null>(null);
+  const [comparatifBusy, setComparatifBusy] = useState(false);
   const [suiviOuvert, setSuiviOuvert] = useState(false);
   const [suivi, setSuivi] = useState<SuiviOut | null>(null);
   const [suiviErr, setSuiviErr] = useState<string | null>(null);
@@ -861,6 +905,26 @@ export function RestitutionVue({
       );
     } finally {
       setDossierBusy(false);
+    }
+  }
+
+  async function chargerComparatif(): Promise<void> {
+    if (!jeton || !r.mission_id || comparatifBusy) return;
+    setComparatifBusy(true);
+    setComparatifErr(null);
+    try {
+      const out = await api<ComparatifOut>(
+        `/api/v1/missions/${r.mission_id}/comparatif-executions`,
+        { jeton },
+      );
+      setComparatif(out ?? null);
+    } catch (e) {
+      setComparatif(null);
+      setComparatifErr(
+        e instanceof Error ? e.message : "comparatif indisponible",
+      );
+    } finally {
+      setComparatifBusy(false);
     }
   }
 
@@ -1579,6 +1643,20 @@ export function RestitutionVue({
               Note de synthèse
             </button>
           </Tooltip>
+          <Tooltip label="Comparatif déterministe entre les deux dernières exécutions : constats améliorés, dégradés, inchangés à risque, nouveaux et disparus — avec évolution des montants.">
+            <button
+              type="button"
+              className="btn btn-ghost btn-sm rest-comparatif-btn"
+              onClick={() => {
+                setComparatifOuvert((o) => !o);
+                if (!comparatifOuvert) void chargerComparatif();
+              }}
+              disabled={!jeton || comparatifBusy}
+              aria-expanded={comparatifOuvert}
+            >
+              {comparatifBusy ? "Comparatif…" : "Comparer les exécutions"}
+            </button>
+          </Tooltip>
           <Tooltip label={PROCESS_TIPS.audit}>
             <button
               type="button"
@@ -1736,6 +1814,177 @@ export function RestitutionVue({
               Annuler
             </button>
           </div>
+        </section>
+      )}
+
+      {comparatifOuvert && (
+        <section
+          className="rest-comparatif"
+          aria-label="Comparatif entre deux exécutions"
+        >
+          <div className="rest-comparatif-head">
+            <h3 className="rest-comparatif-titre label-with-tip">
+              Comparatif des exécutions
+              {comparatif && (
+                <span className="rest-comparatif-execs">
+                  Exécution #{comparatif.execution_a.id} → #
+                  {comparatif.execution_b.id}
+                </span>
+              )}
+              <InfoTip
+                label="Comparaison déterministe des conclusions règle par règle entre l'avant-dernière et la dernière exécution : ce qui s'est amélioré après les réponses client, ce qui s'est dégradé, ce qui reste à instruire."
+                ariaLabel="Aide : comparatif des exécutions"
+              />
+            </h3>
+            <button
+              type="button"
+              className="btn btn-ghost btn-sm"
+              onClick={() => setComparatifOuvert(false)}
+            >
+              Fermer
+            </button>
+          </div>
+          {comparatifBusy && <p className="muted">Comparaison en cours…</p>}
+          {comparatifErr && (
+            <p className="rest-lettre-err" role="alert">
+              Comparatif indisponible : {comparatifErr}
+            </p>
+          )}
+          {comparatif && (
+            <>
+              <p className="rest-comparatif-synthese">
+                <span className="badge rest-comparatif-badge amelioration">
+                  {comparatif.synthese.ameliorations} amélioration
+                  {comparatif.synthese.ameliorations > 1 ? "s" : ""}
+                </span>{" "}
+                <span className="badge rest-comparatif-badge degradation">
+                  {comparatif.synthese.degradations} dégradation
+                  {comparatif.synthese.degradations > 1 ? "s" : ""}
+                </span>{" "}
+                <span className="badge rest-comparatif-badge inchange">
+                  {comparatif.synthese.inchanges_a_risque} inchangé
+                  {comparatif.synthese.inchanges_a_risque > 1 ? "s" : ""} à
+                  risque
+                </span>{" "}
+                <span className="muted">
+                  · {comparatif.synthese.nouveaux} nouveau
+                  {comparatif.synthese.nouveaux > 1 ? "x" : ""} ·{" "}
+                  {comparatif.synthese.disparus} disparu
+                  {comparatif.synthese.disparus > 1 ? "s" : ""} · Δ montant
+                  anomalies :{" "}
+                  {fmtMontant(comparatif.synthese.delta_montant_anomalies)}
+                </span>
+              </p>
+              {(
+                [
+                  {
+                    cle: "amelioration",
+                    titre: "Améliorations",
+                    items: comparatif.ameliorations,
+                    vide: "Aucune amélioration entre les deux exécutions.",
+                  },
+                  {
+                    cle: "degradation",
+                    titre: "Dégradations",
+                    items: comparatif.degradations,
+                    vide: "Aucune dégradation entre les deux exécutions.",
+                  },
+                  {
+                    cle: "inchange",
+                    titre: "Inchangés à risque",
+                    items: comparatif.inchanges_a_risque,
+                    vide: "Aucun constat toujours à risque dans les deux exécutions.",
+                  },
+                ] as const
+              ).map((bloc) => (
+                <div
+                  key={bloc.cle}
+                  className={`rest-comparatif-bloc ${bloc.cle}`}
+                >
+                  <h4 className="rest-comparatif-bloc-titre">
+                    {bloc.titre} ({bloc.items.length})
+                  </h4>
+                  {bloc.items.length === 0 ? (
+                    <p className="muted">{bloc.vide}</p>
+                  ) : (
+                    <ul className="rest-comparatif-items">
+                      {bloc.items.map((it) => (
+                        <li
+                          key={`${bloc.cle}:${it.regle_id}`}
+                          className="rest-comparatif-item"
+                        >
+                          <span className="rest-comparatif-regle">
+                            {it.regle_id}
+                          </span>
+                          <span className="rest-comparatif-transition">
+                            {libelleStatutComparatif(it.avant)} →{" "}
+                            {libelleStatutComparatif(it.apres)}
+                          </span>
+                          <span className="rest-comparatif-montants muted">
+                            {it.montant_avant !== null
+                              ? fmtMontant(it.montant_avant)
+                              : "—"}{" "}
+                            →{" "}
+                            {it.montant_apres !== null
+                              ? fmtMontant(it.montant_apres)
+                              : "—"}
+                          </span>
+                        </li>
+                      ))}
+                    </ul>
+                  )}
+                </div>
+              ))}
+              {(comparatif.nouveaux.length > 0 ||
+                comparatif.disparus.length > 0) && (
+                <div className="rest-comparatif-bloc neutre">
+                  <h4 className="rest-comparatif-bloc-titre">
+                    Nouveaux et disparus
+                  </h4>
+                  <ul className="rest-comparatif-items">
+                    {comparatif.nouveaux.map((it) => (
+                      <li
+                        key={`nouveau:${it.regle_id}`}
+                        className="rest-comparatif-item"
+                      >
+                        <span className="rest-comparatif-regle">
+                          {it.regle_id}
+                        </span>
+                        <span className="rest-comparatif-transition">
+                          Nouveau constat :{" "}
+                          {libelleStatutComparatif(it.apres)}
+                        </span>
+                        <span className="rest-comparatif-montants muted">
+                          {it.montant_apres !== null
+                            ? fmtMontant(it.montant_apres)
+                            : "—"}
+                        </span>
+                      </li>
+                    ))}
+                    {comparatif.disparus.map((it) => (
+                      <li
+                        key={`disparu:${it.regle_id}`}
+                        className="rest-comparatif-item"
+                      >
+                        <span className="rest-comparatif-regle">
+                          {it.regle_id}
+                        </span>
+                        <span className="rest-comparatif-transition">
+                          Constat disparu (était{" "}
+                          {libelleStatutComparatif(it.avant)})
+                        </span>
+                        <span className="rest-comparatif-montants muted">
+                          {it.montant_avant !== null
+                            ? fmtMontant(it.montant_avant)
+                            : "—"}
+                        </span>
+                      </li>
+                    ))}
+                  </ul>
+                </div>
+              )}
+            </>
+          )}
         </section>
       )}
 

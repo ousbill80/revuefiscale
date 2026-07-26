@@ -1841,6 +1841,47 @@ def api_obtenir_note_synthese(
         ) from e
 
 
+# ── Comparatif entre deux exécutions d'une mission ─────────────────
+
+
+@router.get("/missions/{mission_id}/comparatif-executions")
+def api_comparatif_executions(
+    mission_id: int,
+    utilisateur: UtilisateurDep,
+    session: Annotated[Session, Depends(session_abonne)],
+    execution_a: int | None = None,
+    execution_b: int | None = None,
+) -> dict:
+    """Comparatif déterministe entre deux exécutions (défaut : N-1 → N).
+
+    404 si mission hors tenant (RLS) ou exécution inconnue de la mission ;
+    409 si la mission compte moins de deux exécutions.
+    """
+    from backend.plateforme.comparatif_executions import (
+        ErreurComparatifExecutions,
+        comparer_executions,
+    )
+
+    exiger_capacite(utilisateur, "lire")
+    try:
+        return comparer_executions(
+            session,
+            utilisateur.tenant_id,
+            mission_id,
+            execution_a=execution_a,
+            execution_b=execution_b,
+        )
+    except ErreurComparatifExecutions as e:
+        msg = str(e)
+        if "introuvable" in msg:
+            code = status.HTTP_404_NOT_FOUND
+        elif "au moins deux exécutions" in msg:
+            code = status.HTTP_409_CONFLICT
+        else:
+            code = status.HTTP_400_BAD_REQUEST
+        raise HTTPException(status_code=code, detail=msg) from e
+
+
 # ── Commentaire IA de revue analytique ─────────────────────────────
 
 
