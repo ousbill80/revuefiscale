@@ -9101,6 +9101,21 @@ tr.row-active td {
 .risques-score-alertes-titre { margin: 0 0 0.25rem; font-size: 0.78rem; font-weight: 600; color: var(--amber, #b45309); text-transform: uppercase; letter-spacing: 0.03em; }
 .risques-score-alertes ul { list-style: disc; margin: 0; padding-left: 1.1rem; display: grid; gap: 0.15rem; font-size: 0.8rem; }
 
+/* ── Provision pour risques fiscaux (registre) ────────────────── */
+.provision-panneau { margin: 0.6rem 0 0.75rem; padding: 0.65rem 0.8rem; border: 1px solid var(--line, #e5e7eb); border-left: 3px solid var(--accent, #0f766e); border-radius: var(--radius, 8px); background: var(--surface, #fff); font-size: 0.84rem; }
+.provision-panneau h4 { margin: 0 0 0.5rem; font-size: 0.92rem; }
+.provision-table { width: 100%; border-collapse: collapse; margin: 0.35rem 0 0.55rem; font-size: 0.82rem; }
+.provision-table th, .provision-table td { padding: 0.3rem 0.45rem; border-bottom: 1px solid var(--line-soft, #f1f5f9); text-align: left; }
+.provision-table th { font-size: 0.74rem; text-transform: uppercase; letter-spacing: 0.03em; color: var(--muted, #64748b); }
+.provision-table tfoot td { border-top: 1px solid var(--line, #e5e7eb); border-bottom: none; font-weight: 600; }
+.provision-montant { text-align: right !important; font-variant-numeric: tabular-nums; white-space: nowrap; }
+.provision-passifs { margin-top: 0.4rem; }
+.provision-passifs p { margin: 0 0 0.2rem; }
+.provision-passifs ul { list-style: disc; margin: 0; padding-left: 1.1rem; display: grid; gap: 0.15rem; }
+.provision-ecriture { margin-top: 0.55rem; }
+.provision-ecriture p { margin: 0 0 0.2rem; }
+.provision-hypotheses { list-style: disc; margin: 0.45rem 0 0; padding-left: 1.1rem; display: grid; gap: 0.15rem; }
+
 /* ── Data Room (fiche client) ─────────────────────────────────── */
 .dataroom { display: flex; flex-direction: column; gap: 0.85rem; }
 .dataroom-erreur { margin: 0; padding: 0.5rem 0.6rem; border-radius: 6px; background: var(--warn-soft, #fef2f2); color: var(--warn-ink, #991b1b); border: 1px solid color-mix(in srgb, var(--warn, #b42318) 30%, transparent); font-size: 0.82rem; }

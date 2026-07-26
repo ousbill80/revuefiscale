@@ -1386,6 +1386,34 @@ def api_score_risque_contribuable(
     )
 
 
+@router.get("/contribuables/{contribuable_id}/provision-risques")
+def api_provision_risques_contribuable(
+    contribuable_id: int,
+    utilisateur: UtilisateurDep,
+    session: Annotated[Session, Depends(session_abonne)],
+) -> dict:
+    """Provision pour risques fiscaux proposée (déterministe, SYSCOHADA).
+
+    Risques ouverts « probables » provisionnés pénalités incluses ;
+    « possibles » listés en passifs éventuels. Proposition indicative à
+    valider par l'expert-comptable. 404 si fiche hors tenant (RLS).
+    """
+    from backend.plateforme.provision_risques import (
+        ErreurProvisionRisques,
+        calculer_provision,
+    )
+
+    exiger_capacite(utilisateur, "lire")
+    try:
+        return calculer_provision(
+            session, utilisateur.tenant_id, contribuable_id
+        )
+    except ErreurProvisionRisques as e:
+        raise HTTPException(
+            status_code=status.HTTP_404_NOT_FOUND, detail=str(e)
+        ) from e
+
+
 # ── Data Room : mémoire client + timeline ──────────────────────────
 
 

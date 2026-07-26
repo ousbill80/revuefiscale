@@ -96,6 +96,30 @@ export function tipInterpretationScoreRisque(s: ScoreRisque): string {
   ].join("\n");
 }
 
+export type ProvisionLigne = {
+  risque_id: number;
+  titre: string;
+  impot: string;
+  exercice: number;
+  probabilite: string;
+  statut: string;
+  base_droit_simple: string;
+  penalites_interets: string;
+  montant_provisionnable: string;
+};
+
+export type ProvisionRisques = {
+  contribuable_id: number;
+  lignes: ProvisionLigne[];
+  total_provision: string;
+  passifs_eventuels: { risque_id: number; titre: string; montant_estime: string }[];
+  ecriture_proposee: {
+    libelle: string;
+    lignes: { compte: string; intitule: string; sens: "debit" | "credit"; montant: string }[];
+  };
+  hypotheses: string[];
+};
+
 type Props = {
   jeton: string;
   contribuableId: number;
@@ -135,6 +159,9 @@ export function RegistreRisquesVue({
   });
 
   const [score, setScore] = useState<ScoreRisque | null>(null);
+  const [provision, setProvision] = useState<ProvisionRisques | null>(null);
+  const [provisionVisible, setProvisionVisible] = useState(false);
+  const [provisionEnCours, setProvisionEnCours] = useState(false);
   const [exportEnCours, setExportEnCours] = useState(false);
   const [rapportEnCours, setRapportEnCours] = useState(false);
 
@@ -223,6 +250,27 @@ export function RegistreRisquesVue({
       setErr(e instanceof Error ? e.message : String(e));
     } finally {
       setExportEnCours(false);
+    }
+  }
+
+  async function basculerProvision() {
+    if (provisionVisible) {
+      setProvisionVisible(false);
+      return;
+    }
+    setProvisionEnCours(true);
+    setErr(null);
+    try {
+      const p = await api<ProvisionRisques>(
+        `/api/v1/contribuables/${contribuableId}/provision-risques`,
+        { jeton },
+      );
+      setProvision(p);
+      setProvisionVisible(true);
+    } catch (e) {
+      setErr(e instanceof Error ? e.message : String(e));
+    } finally {
+      setProvisionEnCours(false);
     }
   }
 
@@ -441,6 +489,19 @@ export function RegistreRisquesVue({
           <button
             type="button"
             className="btn ghost btn-xs"
+            onClick={() => void basculerProvision()}
+            disabled={provisionEnCours || risques.length === 0}
+            title="Provision pour risques fiscaux proposée (risques ouverts probables, pénalités incluses) — indicatif"
+          >
+            {provisionEnCours
+              ? "Calcul…"
+              : provisionVisible
+                ? "Masquer provision"
+                : "Provision"}
+          </button>
+          <button
+            type="button"
+            className="btn ghost btn-xs"
             onClick={() => void charger()}
             disabled={busy}
           >
@@ -502,6 +563,116 @@ export function RegistreRisquesVue({
               </ul>
             </div>
           )}
+        </div>
+      )}
+      {provisionVisible && provision && (
+        <div
+          className="provision-panneau"
+          aria-label="Provision pour risques fiscaux proposée"
+        >
+          <h4>Provision pour risques fiscaux (proposition)</h4>
+          {provision.lignes.length === 0 ? (
+            <p className="muted">
+              Aucun risque ouvert « probable » : aucune provision à
+              proposer.
+            </p>
+          ) : (
+            <table className="provision-table">
+              <thead>
+                <tr>
+                  <th>Risque</th>
+                  <th>Impôt</th>
+                  <th>Exercice</th>
+                  <th>Droit simple</th>
+                  <th>Pénalités + intérêts</th>
+                  <th>Provisionnable</th>
+                </tr>
+              </thead>
+              <tbody>
+                {provision.lignes.map((l) => (
+                  <tr key={l.risque_id}>
+                    <td>
+                      <TexteJuridique texte={l.titre} />
+                    </td>
+                    <td>{l.impot}</td>
+                    <td>{l.exercice}</td>
+                    <td className="provision-montant">
+                      {fmtMontant(l.base_droit_simple)}
+                    </td>
+                    <td className="provision-montant">
+                      {fmtMontant(l.penalites_interets)}
+                    </td>
+                    <td className="provision-montant">
+                      <strong>{fmtMontant(l.montant_provisionnable)}</strong>
+                    </td>
+                  </tr>
+                ))}
+              </tbody>
+              <tfoot>
+                <tr>
+                  <td colSpan={5}>Total provision proposée</td>
+                  <td className="provision-montant">
+                    <strong>{fmtMontant(provision.total_provision)}</strong>
+                  </td>
+                </tr>
+              </tfoot>
+            </table>
+          )}
+          {provision.passifs_eventuels.length > 0 && (
+            <div className="provision-passifs">
+              <p>
+                <strong>Passifs éventuels</strong> (risques ouverts «
+                possibles » — non provisionnés, à mentionner en annexe) :
+              </p>
+              <ul>
+                {provision.passifs_eventuels.map((p) => (
+                  <li key={p.risque_id}>
+                    <TexteJuridique texte={p.titre} /> —{" "}
+                    {fmtMontant(p.montant_estime)}
+                  </li>
+                ))}
+              </ul>
+            </div>
+          )}
+          {provision.lignes.length > 0 && (
+            <div className="provision-ecriture">
+              <p>
+                <strong>Écriture proposée</strong> —{" "}
+                {provision.ecriture_proposee.libelle}
+              </p>
+              <table className="provision-table">
+                <thead>
+                  <tr>
+                    <th>Compte</th>
+                    <th>Intitulé</th>
+                    <th>Débit</th>
+                    <th>Crédit</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {provision.ecriture_proposee.lignes.map((l) => (
+                    <tr key={`${l.compte}-${l.sens}`}>
+                      <td>{l.compte}</td>
+                      <td>{l.intitule}</td>
+                      <td className="provision-montant">
+                        {l.sens === "debit" ? fmtMontant(l.montant) : ""}
+                      </td>
+                      <td className="provision-montant">
+                        {l.sens === "credit" ? fmtMontant(l.montant) : ""}
+                      </td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </div>
+          )}
+          <ul className="provision-hypotheses">
+            {provision.hypotheses.map((h) => (
+              <li key={h} className="muted small">
+                {h}
+              </li>
+            ))}
+          </ul>
         </div>
       )}
       {err && <p className="status err">{err}</p>}
