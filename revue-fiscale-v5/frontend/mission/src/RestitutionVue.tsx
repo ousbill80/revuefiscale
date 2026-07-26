@@ -378,6 +378,8 @@ export function RestitutionVue({
   const [cadrageErr, setCadrageErr] = useState<string | null>(null);
   const [lettreBusy, setLettreBusy] = useState(false);
   const [lettreErr, setLettreErr] = useState<string | null>(null);
+  const [demandeBusy, setDemandeBusy] = useState(false);
+  const [demandeErr, setDemandeErr] = useState<string | null>(null);
   const [noteOuverte, setNoteOuverte] = useState(false);
   const [noteVersions, setNoteVersions] = useState<NoteSyntheseVersion[]>([]);
   const [noteVersionSel, setNoteVersionSel] = useState<number | null>(null);
@@ -670,6 +672,34 @@ export function RestitutionVue({
       );
     } finally {
       setLettreBusy(false);
+    }
+  }
+
+  async function telechargerDemandeRenseignements() {
+    if (!jeton || !r.mission_id || demandeBusy) return;
+    setDemandeBusy(true);
+    setDemandeErr(null);
+    try {
+      const denom = (
+        r.identification?.contribuable_denomination || "client"
+      )
+        .normalize("NFKD")
+        .replace(/[\u0300-\u036f]/g, "")
+        .replace(/[^A-Za-z0-9]+/g, "_")
+        .replace(/^_+|_+$/g, "")
+        .toUpperCase() || "CLIENT";
+      const exo = r.identification?.exercice ?? "exercice";
+      await telecharger(
+        `/api/v1/missions/${r.mission_id}/demande-renseignements.docx`,
+        jeton,
+        `demande_renseignements_${denom}_${exo}.docx`,
+      );
+    } catch (e) {
+      setDemandeErr(
+        e instanceof Error ? e.message : "téléchargement impossible",
+      );
+    } finally {
+      setDemandeBusy(false);
     }
   }
 
@@ -1246,6 +1276,21 @@ export function RestitutionVue({
           {lettreErr && (
             <span className="rest-lettre-err" role="alert">
               {lettreErr}
+            </span>
+          )}
+          <Tooltip label="Demande de renseignements et de documents au client — questions de la revue analytique et pièces manquantes, numérotées pour réponse">
+            <button
+              type="button"
+              className="btn btn-ghost btn-sm rest-demande-btn"
+              onClick={() => void telechargerDemandeRenseignements()}
+              disabled={demandeBusy || !jeton}
+            >
+              {demandeBusy ? "Demande…" : "Demande de renseignements"}
+            </button>
+          </Tooltip>
+          {demandeErr && (
+            <span className="rest-lettre-err" role="alert">
+              {demandeErr}
             </span>
           )}
           <Tooltip label="Note de synthèse de mission (executive summary IA) pour l'associé signataire — versionnée, chaque constat cite sa règle. Consultative : l'humain valide.">

@@ -525,6 +525,45 @@ def api_lettre_mission_docx(
     )
 
 
+@router.get("/missions/{mission_id}/demande-renseignements.docx")
+def api_demande_renseignements_docx(
+    mission_id: int,
+    utilisateur: UtilisateurDep,
+    session: Annotated[Session, Depends(session_abonne)],
+) -> Response:
+    """Livrable Word — demande de renseignements et de documents au client."""
+    from backend.moteur.journal import append_journal
+    from backend.plateforme.demande_renseignements import (
+        ErreurDemandeRenseignements,
+        generer_demande_renseignements,
+    )
+
+    exiger_capacite(utilisateur, "lire")
+    try:
+        contenu, nom_fichier, stats = generer_demande_renseignements(
+            session, utilisateur.tenant_id, mission_id
+        )
+    except ErreurDemandeRenseignements as e:
+        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail=str(e)) from e
+    append_journal(
+        session,
+        tenant_id=utilisateur.tenant_id,
+        mission_id=mission_id,
+        acteur=utilisateur.email,
+        action="telechargement_demande_renseignements",
+        charge_utile=dict(stats),
+    )
+    return Response(
+        content=contenu,
+        media_type=(
+            "application/vnd.openxmlformats-officedocument.wordprocessingml.document"
+        ),
+        headers={
+            "Content-Disposition": f'attachment; filename="{nom_fichier}"'
+        },
+    )
+
+
 @router.patch("/missions/{mission_id}/cadrage", response_model=MissionOut)
 def api_patcher_cadrage_mission(
     mission_id: int,
