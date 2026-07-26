@@ -7915,6 +7915,16 @@ h2.section-title {
   color: var(--muted, #667085);
 }
 
+.clients-pieces-msg-succes {
+  display: inline-block;
+  padding: 0.45rem 0.7rem;
+  border-radius: 8px;
+  background: #ecfdf3;
+  border: 1px solid #a6f4c5;
+  color: #067647;
+  font-weight: 600;
+}
+
 .clients-pieces-extract-progress {
   margin-top: 0.55rem;
   display: grid;

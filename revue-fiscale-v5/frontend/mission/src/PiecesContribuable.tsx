@@ -501,7 +501,7 @@ export function PiecesContribuablePanel({
         /* trace non bloquante */
       }
     }
-    setMsg("Brouillon appliqué.");
+    setMsg("Enregistrement effectué avec succès.");
   }
 
   async function verifier() {
@@ -857,7 +857,7 @@ export function PiecesContribuablePanel({
       )}
 
       {msg && !err && (
-        <p className="clients-pieces-msg" role="status">
+        <p className="clients-pieces-msg clients-pieces-msg-succes" role="status">
           {msg}
         </p>
       )}
