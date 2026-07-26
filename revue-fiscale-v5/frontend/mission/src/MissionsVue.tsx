@@ -1,13 +1,9 @@
 import { useMemo, useState } from "react";
 import { Tooltip } from "./Tooltip";
+import { estMissionActive, libelleStatut } from "./statuts";
 
-const STATUTS_CLOTURE = new Set([
-  "cloturee",
-  "cloture",
-  "clôturée",
-  "terminee",
-  "terminée",
-]);
+// Ré-export pour les consommateurs existants (App.tsx, ClientsVue.tsx).
+export { estMissionActive, libelleStatut } from "./statuts";
 
 export type MissionRow = {
   id: number;
@@ -22,22 +18,6 @@ export type MissionRow = {
   perimetre_impots?: string[] | null;
   revue_partielle?: boolean;
 };
-
-export function libelleStatut(statut: string): string {
-  const map: Record<string, string> = {
-    cadrage: "Cadrage",
-    ouverte: "Ouverte",
-    en_cours: "En cours",
-    cloturee: "Clôturée",
-    cloture: "Clôturée",
-    terminee: "Terminée",
-  };
-  return map[statut.toLowerCase()] ?? statut;
-}
-
-export function estMissionActive(statut: string): boolean {
-  return !STATUTS_CLOTURE.has(statut.toLowerCase());
-}
 
 type Synthese = "toutes" | "actives" | "cloturees";
 

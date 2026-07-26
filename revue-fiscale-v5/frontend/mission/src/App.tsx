@@ -1,5 +1,12 @@
-import { useEffect, useMemo, useState, type FormEvent, type ReactNode } from "react";
-import { ApiError, api, apiUpload, telecharger } from "./api";
+import {
+  useEffect,
+  useMemo,
+  useRef,
+  useState,
+  type FormEvent,
+  type ReactNode,
+} from "react";
+import { AUTH_EXPIREE_EVENT, ApiError, api, apiUpload, telecharger } from "./api";
 import {
   analyserBalanceCsv,
   analyserBalanceJson,
@@ -284,6 +291,47 @@ function lireSidebarCollapsed(): boolean {
   }
 }
 
+const SESSION_STORAGE_KEY = "rf-session";
+
+/** Session persistée (localStorage) — restaurée au boot, nettoyée au logout / 401. */
+function lireSessionStockee(): SessionAuth | null {
+  try {
+    const brut = localStorage.getItem(SESSION_STORAGE_KEY);
+    if (!brut) return null;
+    const s = JSON.parse(brut) as Partial<SessionAuth> | null;
+    if (
+      s &&
+      typeof s.jeton === "string" &&
+      s.jeton.length > 0 &&
+      typeof s.tenant_id === "number" &&
+      typeof s.email === "string" &&
+      typeof s.tenant_denomination === "string" &&
+      typeof s.role === "string"
+    ) {
+      return s as SessionAuth;
+    }
+  } catch {
+    /* ignore */
+  }
+  return null;
+}
+
+/** Deep-link applicatif écrit par la fiche client : `#fiche-{id}-{overview|missions}`. */
+function lireVueDeepLink(): { type: "fiche"; id: number } | null {
+  try {
+    const m = /^#fiche-(\d+)(?:-(overview|missions))?$/.exec(
+      window.location.hash || "",
+    );
+    if (m) {
+      const id = Number(m[1]);
+      if (Number.isFinite(id) && id > 0) return { type: "fiche", id };
+    }
+  } catch {
+    /* ignore */
+  }
+  return null;
+}
+
 type AuthTab = "conn" | "prov" | "invite";
 
 /** Deep-links auth : mail invitation (`?invitation=`) ou CTA inscription (`?inscription`). */
@@ -318,7 +366,7 @@ function lireAuthDeepLink(): { tab: AuthTab; inviteToken: string } {
 
 export function App() {
   const mobile = useMobile();
-  const [session, setSession] = useState<SessionAuth | null>(null);
+  const [session, setSession] = useState<SessionAuth | null>(lireSessionStockee);
   const [vue, setVue] = useState<Vue>("dashboard");
   const [authDeep] = useState(lireAuthDeepLink);
   const [authTab, setAuthTab] = useState<AuthTab>(authDeep.tab);
@@ -850,6 +898,70 @@ export function App() {
     }
   }, []);
 
+  // Persistance session : sync localStorage (écrite à la connexion, purgée au logout).
+  useEffect(() => {
+    try {
+      if (session) {
+        localStorage.setItem(SESSION_STORAGE_KEY, JSON.stringify(session));
+      } else {
+        localStorage.removeItem(SESSION_STORAGE_KEY);
+      }
+    } catch {
+      /* ignore */
+    }
+  }, [session]);
+
+  // Boot : vérifie la session restaurée via un appel léger, puis charge les données.
+  useEffect(() => {
+    const s = lireSessionStockee();
+    if (!s) return;
+    void (async () => {
+      try {
+        await api<QuotaResume>("/api/v1/quota", { jeton: s.jeton });
+        await chargerDashboard(s.jeton);
+      } catch (err) {
+        if (err instanceof ApiError && err.status === 401) {
+          logout();
+        }
+      }
+    })();
+  }, []);
+
+  // Jeton expiré/révoqué (401 signalé par api.ts) : nettoyer la session.
+  useEffect(() => {
+    if (!session) return;
+    const onExpiree = () => {
+      logout();
+      setAuthStatus({ msg: "Session expirée — reconnectez-vous.", err: true });
+    };
+    window.addEventListener(AUTH_EXPIREE_EVENT, onExpiree);
+    return () => window.removeEventListener(AUTH_EXPIREE_EVENT, onExpiree);
+  }, [session]);
+
+  // Deep-link #fiche-{id}-{section} : restaurer la vue après login / restauration.
+  const deepLinkApplique = useRef(false);
+  useEffect(() => {
+    if (!session || deepLinkApplique.current) return;
+    deepLinkApplique.current = true;
+    const dl = lireVueDeepLink();
+    if (dl?.type === "fiche") {
+      void ouvrirClient(dl.id);
+    }
+  }, [session]);
+
+  // Navigation à chaud sur hashchange (l'onglet overview/missions est géré par la fiche).
+  useEffect(() => {
+    if (!session) return;
+    const onHash = () => {
+      const dl = lireVueDeepLink();
+      if (!dl) return;
+      if (vue === "client" && clientDetail?.id === dl.id) return;
+      void ouvrirClient(dl.id);
+    };
+    window.addEventListener("hashchange", onHash);
+    return () => window.removeEventListener("hashchange", onHash);
+  }, [session, vue, clientDetail?.id]);
+
   useEffect(() => {
     if (!session?.jeton || contribIdExistant == null) {
       setPointsOuverts([]);
@@ -955,6 +1067,12 @@ export function App() {
     }
   }
   function logout() {
+    deepLinkApplique.current = false;
+    try {
+      localStorage.removeItem(SESSION_STORAGE_KEY);
+    } catch {
+      /* ignore */
+    }
     setSession(null);
     setRestitution(null);
     setMissionId(null);
@@ -2161,6 +2279,28 @@ export function App() {
     { id: "cabinet", label: "Cabinet" },
   ];
 
+  /** Destinations pouce (mobile) — labels courts ; Équipe / Nouvelle restent dans le drawer. */
+  const bottomNavIds: Vue[] = [
+    "dashboard",
+    "missions",
+    "clients",
+    "facturation",
+    "compte",
+  ];
+  const bottomNavItems = bottomNavIds
+    .map((id) => navItems.find((n) => n.id === id))
+    .filter((n): n is (typeof navItems)[number] => !!n && !n.hide)
+    .map((n) =>
+      n.id === "dashboard" ? { ...n, label: "Accueil" } : n,
+    );
+
+  function navItemActif(id: Vue): boolean {
+    return (
+      vue === id ||
+      (id === "clients" && (vue === "client" || vue === "client-nouveau"))
+    );
+  }
+
   async function naviguer(
     v: Vue,
     opts?: { filtreStatut?: string; filtreExercice?: string },
@@ -2170,12 +2310,16 @@ export function App() {
   }
 
   const dashStats = useMemo(() => {
+    // Actives = non clôturées (cadrage + en_cours) — cf. src/statuts.ts,
+    // aligné sur les 3 statuts canoniques du backend.
     const actives = missions.filter((m) => estMissionActive(m.statut));
     const cloturees = missions.length - actives.length;
     const parStatut = new Map<string, number>();
     for (const m of missions) {
       parStatut.set(m.statut, (parStatut.get(m.statut) ?? 0) + 1);
     }
+    const enCours = parStatut.get("en_cours") ?? 0;
+    const cadrage = parStatut.get("cadrage") ?? 0;
     const quotaPct =
       quota && quota.missions_incluses > 0
         ? Math.min(
@@ -2188,7 +2332,7 @@ export function App() {
     const restant = quota
       ? Math.max(0, quota.missions_incluses - quota.missions_utilisees)
       : null;
-    return { actives, cloturees, parStatut, quotaPct, restant };
+    return { actives, cloturees, enCours, cadrage, parStatut, quotaPct, restant };
   }, [missions, quota]);
 
   return (
@@ -2863,10 +3007,7 @@ export function App() {
                     <p className="nav-label">{g.label}</p>
                     <div className="sidebar-group-items">
                       {items.map((n) => {
-                        const active =
-                          vue === n.id ||
-                          (n.id === "clients" &&
-                            (vue === "client" || vue === "client-nouveau"));
+                        const active = navItemActif(n.id);
                         return (
                           <button
                             key={n.id}
@@ -2874,6 +3015,7 @@ export function App() {
                             className={`side-nav-item${active ? " active" : ""}${n.accent ? " accent" : ""}`}
                             title={sidebarCollapsed ? n.label : undefined}
                             aria-label={n.label}
+                            aria-current={active ? "page" : undefined}
                             onClick={() => void naviguer(n.id)}
                           >
                             <span className="nav-ico-wrap" aria-hidden="true">
@@ -3183,13 +3325,16 @@ export function App() {
                     onClick={() => void naviguer("missions", { filtreStatut: "" })}
                   >
                     <div className="metric-top">
-                      <div className="k">En cours</div>
+                      <div className="k">Actives</div>
                       <span className="metric-hint" aria-hidden="true">
                         →
                       </span>
                     </div>
                     <div className="v">{dashStats.actives.length}</div>
-                    <div className="metric-foot">À traiter</div>
+                    <div className="metric-foot">
+                      {dashStats.enCours} en cours · {dashStats.cadrage} en
+                      cadrage
+                    </div>
                   </button>
                 </Tooltip>
                 <Tooltip
@@ -3197,7 +3342,7 @@ export function App() {
                     quota?.bloque
                       ? "Capacité épuisée — contactez le billing ou attendez la prochaine période."
                       : quota
-                        ? `${dashStats.restant} mission${dashStats.restant !== 1 ? "s" : ""} restante${dashStats.restant !== 1 ? "s" : ""} sur l’abonnement (${dashStats.quotaPct} % utilisés).`
+                        ? `${dashStats.restant} mission${dashStats.restant !== 1 ? "s" : ""} restante${dashStats.restant !== 1 ? "s" : ""} sur l’abonnement (${dashStats.quotaPct} % utilisés). Le quota compte les missions créées sur le mois en cours, tous statuts confondus — pas le total des missions listées.`
                         : "Quota indisponible."
                   }
                 >
@@ -3239,7 +3384,7 @@ export function App() {
                         ? "Bloqué"
                         : quota?.alerte_80
                           ? "Alerte capacité"
-                          : "Capacité abonnement"}
+                          : "Créées ce mois-ci"}
                     </div>
                   </button>
                 </Tooltip>
@@ -3476,6 +3621,7 @@ export function App() {
             <ClientCreationVue
               jeton={session.jeton}
               busy={busy}
+              clients={clients}
               onRetour={() => void naviguer("clients")}
               onCreer={creerClientSeul}
               onCreerPuisMission={creerClientPuisMission}
@@ -5205,6 +5351,33 @@ export function App() {
             onClick={() => setDrawerOpen(false)}
             aria-hidden={!drawerOpen}
           />
+
+          <nav
+            className={`bottom-nav${vue === "nouvelle" ? " is-wizard-hidden" : ""}`}
+            aria-label="Navigation principale"
+            aria-hidden={vue === "nouvelle"}
+          >
+            {bottomNavItems.map((n) => {
+              const active = navItemActif(n.id);
+              return (
+                <button
+                  key={n.id}
+                  type="button"
+                  className={`bottom-nav-item${active ? " is-active" : ""}`}
+                  aria-label={n.label}
+                  aria-current={active ? "page" : undefined}
+                  disabled={vue === "nouvelle"}
+                  tabIndex={vue === "nouvelle" ? -1 : undefined}
+                  onClick={() => void naviguer(n.id)}
+                >
+                  <span className="bottom-nav-ico" aria-hidden="true">
+                    {n.icon}
+                  </span>
+                  <span className="bottom-nav-label">{n.label}</span>
+                </button>
+              );
+            })}
+          </nav>
 
           {mobile && vue === "nouvelle" && (
             <div className="dock on" aria-label="Actions">

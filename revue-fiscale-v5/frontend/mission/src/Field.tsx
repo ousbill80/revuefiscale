@@ -17,6 +17,8 @@ type FieldProps = {
   trailing?: ReactNode;
   /** Champ identité requis encore vide — signal visuel rouge. */
   manquant?: boolean;
+  /** Avertissement doux (format atypique, doublon…) — orange, non bloquant. */
+  avertissement?: ReactNode;
 } & Omit<
   InputHTMLAttributes<HTMLInputElement>,
   "id" | "value" | "onChange" | "className"
@@ -33,12 +35,14 @@ export function Field({
   trailing,
   required,
   manquant,
+  avertissement,
   ...rest
 }: FieldProps) {
   const filled = String(value ?? "").length > 0;
+  const averti = !manquant && !!avertissement;
   return (
     <div
-      className={`field${filled ? " is-filled" : ""}${manquant ? " is-manquant" : ""}`}
+      className={`field${filled ? " is-filled" : ""}${manquant ? " is-manquant" : ""}${averti ? " is-averti" : ""}`}
     >
       <div className="field-control">
         <input
@@ -69,6 +73,11 @@ export function Field({
       {hint ? <p className="field-hint">{hint}</p> : null}
       {manquant ? (
         <p className="field-manquant-msg">À compléter</p>
+      ) : null}
+      {averti ? (
+        <p className="field-averti-msg" role="status">
+          {avertissement}
+        </p>
       ) : null}
     </div>
   );

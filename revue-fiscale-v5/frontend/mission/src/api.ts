@@ -11,6 +11,18 @@ export class ApiError extends Error {
   }
 }
 
+/** Signale une session expirée (401) — App écoute cet événement pour nettoyer la session. */
+export const AUTH_EXPIREE_EVENT = "rf:auth-expiree";
+
+function signalerAuthExpiree(status: number): void {
+  if (status !== 401) return;
+  try {
+    window.dispatchEvent(new Event(AUTH_EXPIREE_EVENT));
+  } catch {
+    /* ignore */
+  }
+}
+
 function detailMessage(data: unknown, fallback: string): string {
   if (data && typeof data === "object" && "detail" in data) {
     const d = (data as { detail: unknown }).detail;
@@ -51,6 +63,7 @@ export async function api<T>(
     }
   }
   if (!res.ok) {
+    signalerAuthExpiree(res.status);
     throw new ApiError(detailMessage(data, res.statusText), res.status);
   }
   return data as T;
@@ -86,6 +99,7 @@ export async function apiUpload<T>(
     }
   }
   if (!res.ok) {
+    signalerAuthExpiree(res.status);
     throw new ApiError(detailMessage(data, res.statusText), res.status);
   }
   return data as T;
@@ -121,6 +135,7 @@ export async function apiBlob(
     } catch {
       /* ignore */
     }
+    signalerAuthExpiree(res.status);
     throw new ApiError(detail, res.status);
   }
   const blob = await res.blob();

@@ -400,3 +400,34 @@ export function libelleMoisCloture(mois: string | number | null | undefined): st
   const v = String(mois);
   return MOIS_CLOTURE.find((m) => m.value === v)?.label ?? `Mois ${v}`;
 }
+
+/**
+ * Formats indicatifs CI — avertissements doux UI uniquement, non bloquants.
+ * Le backend (contribuable_identite.py) n'impose aucun format NCC/RCCM :
+ * il vérifie seulement la présence. Ces regex signalent une saisie atypique.
+ */
+/** NCC pratique CI : 7 chiffres + 1 lettre majuscule (ex. 1234567A). */
+export const NCC_FORMAT_CI = /^\d{7}[A-Z]$/;
+/**
+ * RCCM OHADA : CI-<greffe>-<code>-<année>-<lettre+chiffres>-<n° d'ordre>
+ * (ex. CI-ABJ-03-2023-B16-00003). Tolère l'ancien format sans code
+ * (ex. CI-ABJ-2010-B-12345).
+ */
+export const RCCM_FORMAT_OHADA =
+  /^CI-[A-Z]{2,5}-(?:\d{2}-)?\d{4}-[A-Z]\d{0,2}-\d{3,6}$/;
+
+/** Avertissement non bloquant si le NCC saisi s'écarte du format CI usuel. */
+export function avertissementFormatNcc(brut: string): string | null {
+  const v = brut.trim().toUpperCase();
+  if (!v) return null;
+  if (NCC_FORMAT_CI.test(v)) return null;
+  return "Format NCC inhabituel — attendu : 7 chiffres + 1 lettre (ex. 1234567A). Vérifiez la DFE.";
+}
+
+/** Avertissement non bloquant si le RCCM s'écarte du format OHADA usuel. */
+export function avertissementFormatRccm(brut: string): string | null {
+  const v = brut.trim().toUpperCase().replace(/\s+/g, "");
+  if (!v) return null;
+  if (RCCM_FORMAT_OHADA.test(v)) return null;
+  return "Format RCCM inhabituel — attendu type OHADA : CI-ABJ-03-2023-B16-00003.";
+}

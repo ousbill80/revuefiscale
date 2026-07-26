@@ -1848,6 +1848,18 @@ body {
   .app-frame.sidebar-collapsed .sidebar-quota {
     padding: 0.55rem 0.6rem;
   }
+
+  .bottom-nav {
+    display: flex;
+  }
+
+  .bottom-nav.is-wizard-hidden {
+    display: none;
+  }
+
+  .app-main {
+    padding-bottom: calc(4.75rem + var(--safe-bottom));
+  }
 }
 
 @keyframes fadein {
@@ -2903,6 +2915,30 @@ textarea {
   margin: 0.25rem 0 0;
   font-size: 0.68rem;
   font-weight: 650;
+  color: var(--warn-ink);
+}
+
+/* Avertissement doux (format atypique / doublon) — orange, non bloquant. */
+.field.is-averti .field-input {
+  border-color: color-mix(in srgb, #d97706 55%, var(--line));
+  background: color-mix(in srgb, #fffbeb 70%, #fff);
+  box-shadow: 0 0 0 1px color-mix(in srgb, #d97706 20%, transparent);
+}
+
+.field.is-averti .field-label {
+  color: #b45309;
+}
+
+.field-averti-msg {
+  margin: 0.25rem 0 0;
+  font-size: 0.68rem;
+  font-weight: 650;
+  color: #b45309;
+}
+
+.cta-hint-manquants {
+  font-size: 0.74rem;
+  font-weight: 600;
   color: var(--warn-ink);
 }
 
@@ -5128,6 +5164,91 @@ h2.section-title {
   min-height: var(--touch);
 }
 
+/* ── Bottom nav mobile (style Airbnb, teal marque) ── */
+.bottom-nav {
+  --bottom-nav-h: 3.5rem;
+  display: none;
+  position: fixed;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  z-index: 35;
+  align-items: stretch;
+  justify-content: space-around;
+  gap: 0;
+  min-height: calc(var(--bottom-nav-h) + var(--safe-bottom));
+  padding: 0.35rem max(0.25rem, var(--safe-right))
+    calc(0.2rem + var(--safe-bottom)) max(0.25rem, var(--safe-left));
+  background: var(--surface-solid);
+  border-top: 1px solid var(--line);
+  box-shadow: 0 -1px 0 rgba(15, 23, 42, 0.02);
+}
+
+.bottom-nav-item {
+  appearance: none;
+  flex: 1 1 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 0.18rem;
+  min-width: 0;
+  min-height: var(--bottom-nav-h);
+  margin: 0;
+  padding: 0.2rem 0.15rem;
+  border: none;
+  border-radius: var(--radius-sm);
+  background: transparent;
+  color: var(--muted);
+  cursor: pointer;
+  font-family: var(--font-ui);
+  -webkit-tap-highlight-color: transparent;
+}
+
+.bottom-nav-item:focus-visible {
+  outline: 2px solid var(--teal);
+  outline-offset: 2px;
+}
+
+.bottom-nav-ico {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 1.35rem;
+  height: 1.35rem;
+  color: inherit;
+}
+
+.bottom-nav-ico .nav-ico {
+  width: 1.35rem;
+  height: 1.35rem;
+  stroke: currentColor;
+  fill: none;
+  stroke-width: 1.75;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+
+.bottom-nav-label {
+  font-size: 0.625rem;
+  font-weight: 650;
+  letter-spacing: 0.01em;
+  line-height: 1.15;
+  max-width: 100%;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.bottom-nav-item.is-active {
+  color: var(--teal);
+}
+
+.bottom-nav-item.is-active .bottom-nav-label {
+  font-weight: 750;
+  color: var(--teal-deep);
+}
+
 .rapport {
   margin-top: 0.75rem;
   padding: 0.85rem;
@@ -6314,6 +6435,7 @@ h2.section-title {
   }
   .dock {
     padding-bottom: calc(0.75rem + var(--safe-bottom, env(safe-area-inset-bottom, 0px)));
+    z-index: 45;
   }
   .wizard {
     padding-bottom: calc(5.5rem + var(--safe-bottom, env(safe-area-inset-bottom, 0px)));

@@ -13,6 +13,8 @@ import {
   MOIS_CLOTURE,
   REGIMES_FISCAUX,
   SECTEURS_ACTIVITE,
+  avertissementFormatNcc,
+  avertissementFormatRccm,
   composerActivite,
   completudeIdentite,
   decomposerActivite,
@@ -96,8 +98,12 @@ export function identiteDepuisClient(c: ClientRow): IdentiteLegale {
     forme,
     rccm: c.rccm ?? "",
     dfe: c.dfe ?? "",
-    regime_fiscal: c.regime_fiscal ?? "",
-    forme_juridique: c.forme_juridique ?? "",
+    // Mêmes défauts que l'état d'édition de la fiche (App.tsx setClientEdit /
+    // etatInitialClientEdit) : régime "reel", forme juridique SA/EI, clôture 12.
+    // Indispensable pour que completudeIdentite donne le même score N/11 en
+    // liste et en fiche pour un même client.
+    regime_fiscal: c.regime_fiscal || "reel",
+    forme_juridique: c.forme_juridique || (forme === "pp" ? "EI" : "SA"),
     siege_social: c.siege_social ?? "",
     commune: c.commune ?? "",
     centre_impots: c.centre_impots ?? "",
@@ -667,6 +673,16 @@ type IdentiteFormProps = {
   disabled?: boolean;
   /** Clés identité encore vides — bordure rouge + message. */
   champsManquants?: ReadonlySet<string> | ReadonlyArray<string>;
+  /**
+   * Mode création : le rouge « À compléter » n'apparaît qu'après blur du
+   * champ (touched) ou tentative de soumission — formulaire vierge neutre.
+   * En édition d'une fiche existante incomplète, le rouge reste immédiat.
+   */
+  creation?: boolean;
+  /** Tentative de soumission — force l'affichage des manquants en création. */
+  forcerManquants?: boolean;
+  /** Portefeuille chargé — détection doublon NCC (avertissement doux). */
+  clientsExistants?: ClientRow[];
 };
 
 function estChampManquant(
@@ -683,9 +699,44 @@ function IdentiteLegaleForm({
   setEdit,
   disabled = false,
   champsManquants,
+  creation = false,
+  forcerManquants = false,
+  clientsExistants,
 }: IdentiteFormProps) {
   const { secteur, precision } = decomposerActivite(edit.activite_principale);
-  const miss = (cle: string) => estChampManquant(cle, champsManquants);
+  const [touches, setTouches] = useState<ReadonlySet<string>>(
+    () => new Set<string>(),
+  );
+  const toucher = (cle: string) =>
+    setTouches((prev) =>
+      prev.has(cle) ? prev : new Set(prev).add(cle),
+    );
+  const miss = (cle: string) =>
+    estChampManquant(cle, champsManquants) &&
+    (!creation || forcerManquants || touches.has(cle));
+
+  // Validations douces au blur — non bloquantes, le backend reste juge.
+  const [nccWarn, setNccWarn] = useState<string | null>(null);
+  const [rccmWarn, setRccmWarn] = useState<string | null>(null);
+
+  function verifierNcc() {
+    toucher("ncc");
+    const avert: string[] = [];
+    const format = avertissementFormatNcc(edit.ncc);
+    if (format) avert.push(format);
+    const saisi = edit.ncc.trim().toUpperCase();
+    if (creation && saisi && clientsExistants?.length) {
+      const doublon = clientsExistants.find(
+        (c) => (c.ncc ?? "").trim().toUpperCase() === saisi,
+      );
+      if (doublon) {
+        avert.push(
+          `Un client avec ce NCC existe déjà : ${doublon.denomination}.`,
+        );
+      }
+    }
+    setNccWarn(avert.length ? avert.join(" ") : null);
+  }
 
   function majActivite(nextSecteur: string, nextPrecision: string) {
     setEdit((s) => ({
@@ -744,6 +795,7 @@ function IdentiteLegaleForm({
           onChange={(e) =>
             setEdit((s) => ({ ...s, denomination: e.target.value }))
           }
+          onBlur={() => toucher("denomination")}
           required
           manquant={miss("denomination")}
           autoComplete="organization"
@@ -759,8 +811,10 @@ function IdentiteLegaleForm({
           value={edit.ncc}
           disabled={disabled}
           onChange={(e) => setEdit((s) => ({ ...s, ncc: e.target.value }))}
+          onBlur={verifierNcc}
           required
           manquant={miss("ncc")}
+          avertissement={nccWarn}
           autoComplete="off"
           spellCheck={false}
           tip={PROCESS_TIPS.ncc}
@@ -785,8 +839,13 @@ function IdentiteLegaleForm({
               onChange={(e) =>
                 setEdit((s) => ({ ...s, rccm: e.target.value }))
               }
+              onBlur={() => {
+                toucher("rccm");
+                setRccmWarn(avertissementFormatRccm(edit.rccm));
+              }}
               required
               manquant={miss("rccm")}
+              avertissement={rccmWarn}
               spellCheck={false}
               hint="Registre de commerce et du crédit mobilier."
             />
@@ -802,6 +861,7 @@ function IdentiteLegaleForm({
                 }))
               }
               options={FORMES_JURIDIQUES_PM}
+              onBlur={() => toucher("forme_juridique")}
               required
               manquant={miss("forme_juridique")}
               hint="Statut juridique — OHADA / pratique CI."
@@ -821,6 +881,7 @@ function IdentiteLegaleForm({
                 value: r.value,
                 label: r.label,
               }))}
+              onBlur={() => toucher("regime_fiscal")}
               required
               manquant={miss("regime_fiscal")}
               hint="Régime déclaré — recopié dans le profil de mission."
@@ -840,6 +901,7 @@ function IdentiteLegaleForm({
                   capital_social: e.target.value,
                 }))
               }
+              onBlur={() => toucher("capital_social")}
               required
               manquant={miss("capital_social")}
               trailing="XOF"
@@ -857,6 +919,7 @@ function IdentiteLegaleForm({
                 }))
               }
               options={MOIS_CLOTURE}
+              onBlur={() => toucher("mois_cloture")}
               required
               manquant={miss("mois_cloture")}
               hint="Mois de clôture — exercice décalé vs année civile."
@@ -868,6 +931,7 @@ function IdentiteLegaleForm({
               disabled={disabled}
               onChange={(e) => majActivite(e.target.value, precision)}
               options={SECTEURS_ACTIVITE}
+              onBlur={() => toucher("activite_principale")}
               required
               manquant={miss("activite_principale")}
               hint="Cadrage revue — recopié dans le profil de mission."
@@ -920,6 +984,7 @@ function IdentiteLegaleForm({
                 value: r.value,
                 label: r.label,
               }))}
+              onBlur={() => toucher("regime_fiscal")}
               required
               manquant={miss("regime_fiscal")}
               hint="Régime déclaré — recopié dans le profil de mission."
@@ -936,6 +1001,7 @@ function IdentiteLegaleForm({
                 }))
               }
               options={MOIS_CLOTURE}
+              onBlur={() => toucher("mois_cloture")}
               required
               manquant={miss("mois_cloture")}
               hint="Mois de clôture — exercice décalé vs année civile."
@@ -947,6 +1013,7 @@ function IdentiteLegaleForm({
               disabled={disabled}
               onChange={(e) => majActivite(e.target.value, precision)}
               options={SECTEURS_ACTIVITE}
+              onBlur={() => toucher("activite_principale")}
               required
               manquant={miss("activite_principale")}
               hint="Cadrage revue — défaut profil mission."
@@ -994,6 +1061,7 @@ function IdentiteLegaleForm({
             onChange={(e) =>
               setEdit((s) => ({ ...s, commune: e.target.value }))
             }
+            onBlur={() => toucher("commune")}
             required
             manquant={miss("commune")}
             tip={PROCESS_TIPS.siegeEffectif}
@@ -1010,6 +1078,7 @@ function IdentiteLegaleForm({
                 siege_social: e.target.value,
               }))
             }
+            onBlur={() => toucher("siege_social")}
             required={edit.forme === "pm"}
             manquant={miss("siege_social")}
             hint="Quartier, voie, immeuble — siège effectif, pas un libellé vague."
@@ -1025,6 +1094,7 @@ function IdentiteLegaleForm({
                 centre_impots: e.target.value,
               }))
             }
+            onBlur={() => toucher("centre_impots")}
             required
             manquant={miss("centre_impots")}
             tip={PROCESS_TIPS.centreImpots}
@@ -1073,6 +1143,8 @@ function CompletudeBar({ edit }: { edit: ClientEditState }) {
 type CreationProps = {
   jeton: string;
   busy: boolean;
+  /** Portefeuille chargé — détection doublon NCC (avertissement doux). */
+  clients?: ClientRow[];
   onRetour: () => void;
   onCreer: (
     payload: ClientEditState,
@@ -1087,6 +1159,7 @@ type CreationProps = {
 export function ClientCreationVue({
   jeton,
   busy,
+  clients,
   onRetour,
   onCreer,
   onCreerPuisMission,
@@ -1096,6 +1169,7 @@ export function ClientCreationVue({
   );
   const [sessionUpload] = useState(() => nouvelleSessionUpload());
   const [erreurLocale, setErreurLocale] = useState<string | null>(null);
+  const [soumissionTentee, setSoumissionTentee] = useState(false);
 
   const completude = useMemo(
     () => completudeIdentite(identiteDepuisEdit(edit)),
@@ -1113,6 +1187,7 @@ export function ClientCreationVue({
     e.preventDefault();
     setErreurLocale(null);
     if (!apiMin.ok) {
+      setSoumissionTentee(true);
       setErreurLocale(
         `Identité minimale incomplète : ${apiMin.manquants.join(", ")}.`,
       );
@@ -1162,6 +1237,9 @@ export function ClientCreationVue({
           setEdit={setEdit}
           disabled={busy}
           champsManquants={completude.clesManquantes}
+          creation
+          forcerManquants={soumissionTentee}
+          clientsExistants={clients}
         />
 
         {erreurLocale && (
@@ -1171,23 +1249,24 @@ export function ClientCreationVue({
         )}
 
         <div className="cta-row clients-fiche-cta clients-creation-cta">
-          <button
-            type="submit"
-            className="btn btn-primary"
-            disabled={busy || !apiMin.ok}
-          >
+          <button type="submit" className="btn btn-primary" disabled={busy}>
             Enregistrer le client
           </button>
           <Tooltip label="Créer la fiche puis ouvrir le wizard mission prérempli.">
             <button
               type="button"
               className="btn btn-ghost"
-              disabled={busy || !apiMin.ok}
+              disabled={busy}
               onClick={(e) => void soumettre(e, "mission")}
             >
               Enregistrer et lancer une mission
             </button>
           </Tooltip>
+          {!apiMin.ok && (
+            <span className="cta-hint cta-hint-manquants">
+              Manque : {apiMin.manquants.join(" · ")}
+            </span>
+          )}
         </div>
         {!completude.complet && apiMin.ok && (
           <p className="clients-creation-hint-manquants">
@@ -1652,7 +1731,12 @@ export function ClientFicheVue({
                   >
                     Enregistrer
                   </button>
-                  {!completude.complet && (
+                  {!apiMin.ok && (
+                    <span className="cta-hint cta-hint-manquants">
+                      Manque : {apiMin.manquants.join(" · ")}
+                    </span>
+                  )}
+                  {!completude.complet && apiMin.ok && (
                     <p className="clients-fiche-nudge clients-fiche-nudge-inline">
                       Vous pouvez enregistrer le minimum API ; les champs encore
                       vides resteront signalés en rouge.
