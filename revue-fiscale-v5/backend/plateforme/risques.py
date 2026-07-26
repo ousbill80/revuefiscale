@@ -413,6 +413,241 @@ def resume_risques_contribuable(
         }
 
 
+_POIDS_PROBABILITE: Final[dict[str, int]] = {
+    "probable": 12,
+    "possible": 7,
+    "faible": 3,
+}
+_LIBELLES_NIVEAU: Final[dict[str, str]] = {
+    "aucun": "Aucun risque ouvert",
+    "faible": "Risque faible",
+    "modere": "Risque modéré",
+    "eleve": "Risque élevé",
+    "critique": "Risque critique",
+}
+_JOURS_DORMANT: Final[int] = 90
+_SCORE_MAX: Final[int] = 100
+
+
+def _points_enjeu(cumul: Decimal) -> int:
+    if cumul <= 0:
+        return 0
+    if cumul < Decimal("1000000"):
+        return 5
+    if cumul < Decimal("5000000"):
+        return 10
+    if cumul < Decimal("20000000"):
+        return 15
+    return 20
+
+
+def _en_date(valeur: Any) -> date | None:
+    if valeur is None or valeur == "":
+        return None
+    if isinstance(valeur, datetime):
+        return valeur.date()
+    if isinstance(valeur, date):
+        return valeur
+    try:
+        return date.fromisoformat(str(valeur)[:10])
+    except ValueError:
+        return None
+
+
+def calculer_score_risque(donnees: dict[str, Any]) -> dict[str, Any]:
+    """Score déterministe 0–100 du risque client (pure, testable).
+
+    ``donnees`` : {
+        "risques": [{statut, probabilite, montant_estime,
+                     penalites_estimees, derniere_revue, cree_le,
+                     exercice_origine, nb_actions}],
+        "actions_en_retard": int,
+        "actions_refusees": int,
+        "aujourd_hui": date (optionnel, défaut date du jour),
+    }
+    """
+    aujourd_hui = _en_date(donnees.get("aujourd_hui")) or date.today()
+    risques = list(donnees.get("risques") or [])
+    non_clos = [
+        r for r in risques
+        if str(r.get("statut") or "ouvert") in STATUTS_NON_CLOS
+    ]
+
+    # Exposition — poids par probabilité des risques non clos.
+    pts_exposition = sum(
+        _POIDS_PROBABILITE.get(
+            str(r.get("probabilite") or "possible").lower(), 7
+        )
+        for r in non_clos
+    )
+
+    # Enjeu financier — cumul montant + pénalités des risques non clos.
+    cumul = Decimal("0")
+    for r in non_clos:
+        for cle in ("montant_estime", "penalites_estimees"):
+            v = r.get(cle)
+            if v is not None and v != "":
+                cumul += Decimal(str(v))
+    pts_enjeu = _points_enjeu(cumul)
+
+    # Suivi en retard — +8 pts / action en retard, plafonné à 24.
+    retards = int(donnees.get("actions_en_retard") or 0)
+    pts_retards = min(retards * 8, 24)
+
+    # Risques dormants — sans revue depuis > 90 jours.
+    dormants = 0
+    for r in non_clos:
+        ref = _en_date(r.get("derniere_revue")) or _en_date(r.get("cree_le"))
+        if ref is None or (aujourd_hui - ref).days > _JOURS_DORMANT:
+            dormants += 1
+    pts_dormants = min(dormants * 5, 20)
+
+    # Actions refusées — +4 pts chacune, plafonné à 12.
+    refusees = int(donnees.get("actions_refusees") or 0)
+    pts_refusees = min(refusees * 4, 12)
+
+    score = min(
+        pts_exposition + pts_enjeu + pts_retards + pts_dormants + pts_refusees,
+        _SCORE_MAX,
+    )
+
+    if not non_clos:
+        niveau = "aucun"
+    elif score < 20:
+        niveau = "faible"
+    elif score < 40:
+        niveau = "modere"
+    elif score < 70:
+        niveau = "eleve"
+    else:
+        niveau = "critique"
+
+    facteurs = [
+        {
+            "code": "exposition",
+            "libelle": "Exposition (risques non clos)",
+            "points": pts_exposition,
+            "detail": f"{len(non_clos)} risque(s) non clos",
+        },
+        {
+            "code": "enjeu_financier",
+            "libelle": "Enjeu financier",
+            "points": pts_enjeu,
+            "detail": f"{cumul:,.0f} FCFA en jeu".replace(",", " "),
+        },
+        {
+            "code": "actions_retard",
+            "libelle": "Suivi en retard",
+            "points": pts_retards,
+            "detail": f"{retards} action(s) en retard",
+        },
+        {
+            "code": "dormants",
+            "libelle": "Risques dormants (> 90 j sans revue)",
+            "points": pts_dormants,
+            "detail": f"{dormants} risque(s) dormant(s)",
+        },
+        {
+            "code": "actions_refusees",
+            "libelle": "Actions refusées par le client",
+            "points": pts_refusees,
+            "detail": f"{refusees} action(s) refusée(s)",
+        },
+    ]
+
+    alertes: list[str] = []
+    probables_sans_action = sum(
+        1
+        for r in non_clos
+        if str(r.get("probabilite") or "").lower() == "probable"
+        and int(r.get("nb_actions") or 0) == 0
+    )
+    if probables_sans_action:
+        alertes.append(
+            f"{probables_sans_action} risque(s) probable(s) sans action "
+            "de suivi — proposer une action corrective"
+        )
+    if retards:
+        alertes.append(
+            f"{retards} action(s) en retard — relancer le client"
+        )
+    if dormants:
+        alertes.append(
+            f"{dormants} risque(s) sans revue depuis plus de "
+            f"{_JOURS_DORMANT} jours — planifier une revue"
+        )
+    prescriptibles = sum(
+        1
+        for r in non_clos
+        if int(r.get("exercice_origine") or aujourd_hui.year)
+        <= aujourd_hui.year - 3
+    )
+    if prescriptibles:
+        alertes.append(
+            f"{prescriptibles} risque(s) d'exercices ≤ N-3 — vérifier "
+            "la prescription (art. L171 s. LPF)"
+        )
+    if refusees:
+        alertes.append(
+            f"{refusees} action(s) refusée(s) — documenter l'acceptation "
+            "du risque par le client"
+        )
+
+    return {
+        "score": score,
+        "niveau": niveau,
+        "libelle_niveau": _LIBELLES_NIVEAU[niveau],
+        "facteurs": facteurs,
+        "alertes": alertes,
+        "exposition_totale": str(cumul),
+    }
+
+
+def score_risque_contribuable(
+    session: Session, tenant_id: int, contribuable_id: int
+) -> dict[str, Any]:
+    """Score de risque agrégé d'un contribuable (calcul déterministe)."""
+    with contexte_tenant(session, tenant_id):
+        rows = session.execute(
+            text(
+                "SELECT r.statut, r.probabilite, r.montant_estime, "
+                "r.penalites_estimees, r.derniere_revue, r.cree_le, "
+                "r.exercice_origine, "
+                "(SELECT count(*) FROM action_risque a "
+                " WHERE a.risque_id = r.id) AS nb_actions "
+                "FROM risque r WHERE r.contribuable_id = :c"
+            ),
+            {"c": contribuable_id},
+        ).mappings().all()
+        retards = session.execute(
+            text(
+                "SELECT count(*) FROM action_risque a "
+                "JOIN risque r ON r.id = a.risque_id "
+                "WHERE r.contribuable_id = :c "
+                "AND a.echeance IS NOT NULL AND a.echeance < CURRENT_DATE "
+                "AND a.statut IN ('acceptee', 'en_cours', 'preuve_deposee')"
+            ),
+            {"c": contribuable_id},
+        ).scalar_one()
+        refusees = session.execute(
+            text(
+                "SELECT count(*) FROM action_risque a "
+                "JOIN risque r ON r.id = a.risque_id "
+                "WHERE r.contribuable_id = :c AND a.statut = 'refusee'"
+            ),
+            {"c": contribuable_id},
+        ).scalar_one()
+    resultat = calculer_score_risque(
+        {
+            "risques": [dict(r) for r in rows],
+            "actions_en_retard": int(retards or 0),
+            "actions_refusees": int(refusees or 0),
+        }
+    )
+    resultat["contribuable_id"] = contribuable_id
+    return resultat
+
+
 def creer_risques_depuis_anomalies(
     session: Session,
     tenant_id: int,

@@ -8940,3 +8940,27 @@ tr.row-active td {
 .dash-retards { margin-top: 1rem; }
 .dash-retards-list { margin: 0.4rem 0 0; padding-left: 1.1rem; font-size: 0.85rem; }
 .risques-resume-bandeau { border-left-color: var(--teal, #0f766e); }
+
+/* Carte de scoring risque client — déterministe (registre des risques). */
+.risques-score-carte { margin: 0.6rem 0 0.75rem; padding: 0.65rem 0.8rem; border: 1px solid var(--line, #e5e7eb); border-left: 3px solid var(--muted, #64748b); border-radius: var(--radius, 8px); background: var(--surface, #fff); font-size: 0.85rem; }
+.risques-score-carte.niveau-faible { border-left-color: var(--accent, #0f766e); }
+.risques-score-carte.niveau-modere { border-left-color: var(--amber, #b45309); }
+.risques-score-carte.niveau-eleve { border-left-color: #d97706; }
+.risques-score-carte.niveau-critique { border-left-color: var(--warn, #b42318); }
+.risques-score-head { display: flex; flex-wrap: wrap; align-items: baseline; gap: 0.6rem; }
+.risques-score-valeur { font-size: 1.05rem; font-variant-numeric: tabular-nums; }
+.risques-score-badge { display: inline-block; padding: 0.1rem 0.5rem; border-radius: 999px; font-size: 0.72rem; font-weight: 600; border: 1px solid var(--line, #e5e7eb); background: var(--line-soft, #f1f5f9); color: var(--muted, #64748b); }
+.risques-score-badge.niveau-faible { background: var(--accent-soft, #ecfdf8); color: var(--accent-deep, #115e59); border-color: color-mix(in srgb, var(--accent, #0f766e) 25%, transparent); }
+.risques-score-badge.niveau-modere { background: var(--amber-soft, #fffbeb); color: var(--amber, #b45309); border-color: color-mix(in srgb, var(--amber, #b45309) 25%, transparent); }
+.risques-score-badge.niveau-eleve { background: #fff7ed; color: #c2410c; border-color: color-mix(in srgb, #ea580c 30%, transparent); }
+.risques-score-badge.niveau-critique { background: var(--warn-soft, #fef2f2); color: var(--warn-ink, #991b1b); border-color: color-mix(in srgb, var(--warn, #b42318) 30%, transparent); }
+.risques-score-jauge { margin-top: 0.45rem; height: 6px; border-radius: 999px; background: var(--line-soft, #f1f5f9); overflow: hidden; }
+.risques-score-jauge-remplie { height: 100%; border-radius: 999px; background: var(--muted, #64748b); transition: width 0.3s ease; }
+.risques-score-jauge-remplie.niveau-faible { background: var(--accent, #0f766e); }
+.risques-score-jauge-remplie.niveau-modere { background: #f59e0b; }
+.risques-score-jauge-remplie.niveau-eleve { background: #ea580c; }
+.risques-score-jauge-remplie.niveau-critique { background: var(--warn, #b42318); }
+.risques-score-facteurs { list-style: none; margin: 0.5rem 0 0; padding: 0; display: grid; gap: 0.15rem; font-size: 0.8rem; }
+.risques-score-alertes { margin-top: 0.55rem; padding: 0.5rem 0.6rem; border-radius: 6px; background: var(--amber-soft, #fffbeb); border: 1px solid color-mix(in srgb, var(--amber, #b45309) 20%, transparent); }
+.risques-score-alertes-titre { margin: 0 0 0.25rem; font-size: 0.78rem; font-weight: 600; color: var(--amber, #b45309); text-transform: uppercase; letter-spacing: 0.03em; }
+.risques-score-alertes ul { list-style: disc; margin: 0; padding-left: 1.1rem; display: grid; gap: 0.15rem; font-size: 0.8rem; }

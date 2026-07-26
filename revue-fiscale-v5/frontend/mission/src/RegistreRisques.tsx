@@ -27,6 +27,15 @@ export type ActionRisqueRow = {
   responsable_label?: string | null;
 };
 
+export type ScoreRisque = {
+  score: number;
+  niveau: "aucun" | "faible" | "modere" | "eleve" | "critique";
+  libelle_niveau: string;
+  facteurs: { code: string; libelle: string; points: number; detail: string }[];
+  alertes: string[];
+  exposition_totale: string;
+};
+
 type Props = {
   jeton: string;
   contribuableId: number;
@@ -65,6 +74,8 @@ export function RegistreRisquesVue({
     echeance: "",
   });
 
+  const [score, setScore] = useState<ScoreRisque | null>(null);
+
   const charger = useCallback(async () => {
     setBusy(true);
     setErr(null);
@@ -79,6 +90,16 @@ export function RegistreRisquesVue({
       setRisques([]);
     } finally {
       setBusy(false);
+    }
+    // Score : silencieux si l'API échoue.
+    try {
+      const s = await api<ScoreRisque>(
+        `/api/v1/contribuables/${contribuableId}/risques/score`,
+        { jeton },
+      );
+      setScore(s && typeof s.score === "number" ? s : null);
+    } catch {
+      setScore(null);
     }
   }, [contribuableId, jeton]);
 
@@ -207,6 +228,60 @@ export function RegistreRisquesVue({
           Actualiser
         </button>
       </header>
+      {score && (
+        <div
+          className={`risques-score-carte niveau-${score.niveau}`}
+          aria-label="Score de risque du client"
+        >
+          <div className="risques-score-head">
+            <span className={`risques-score-badge niveau-${score.niveau}`}>
+              {score.libelle_niveau}
+            </span>
+            <strong className="risques-score-valeur">
+              {score.score}/100
+            </strong>
+            <span className="muted small">
+              Exposition : {fmtMontant(score.exposition_totale)}
+            </span>
+          </div>
+          <div
+            className="risques-score-jauge"
+            role="progressbar"
+            aria-valuenow={score.score}
+            aria-valuemin={0}
+            aria-valuemax={100}
+          >
+            <div
+              className={`risques-score-jauge-remplie niveau-${score.niveau}`}
+              style={{ width: `${Math.min(score.score, 100)}%` }}
+            />
+          </div>
+          {score.facteurs.some((f) => f.points > 0) && (
+            <ul className="risques-score-facteurs">
+              {score.facteurs
+                .filter((f) => f.points > 0)
+                .map((f) => (
+                  <li key={f.code}>
+                    {f.libelle} — <strong>+{f.points} pts</strong>{" "}
+                    <span className="muted">({f.detail})</span>
+                  </li>
+                ))}
+            </ul>
+          )}
+          {score.alertes.length > 0 && (
+            <div className="risques-score-alertes">
+              <p className="risques-score-alertes-titre">
+                Actions recommandées
+              </p>
+              <ul>
+                {score.alertes.map((a) => (
+                  <li key={a}>{a}</li>
+                ))}
+              </ul>
+            </div>
+          )}
+        </div>
+      )}
       {err && <p className="status err">{err}</p>}
       {risques.length === 0 && !busy && (
         <p className="muted">

@@ -1029,6 +1029,19 @@ def api_resume_risques_contribuable(
     )
 
 
+@router.get("/contribuables/{contribuable_id}/risques/score")
+def api_score_risque_contribuable(
+    contribuable_id: int,
+    utilisateur: UtilisateurDep,
+    session: Annotated[Session, Depends(session_abonne)],
+) -> dict:
+    from backend.plateforme.risques import score_risque_contribuable
+
+    return score_risque_contribuable(
+        session, utilisateur.tenant_id, contribuable_id
+    )
+
+
 @router.post("/risques", status_code=status.HTTP_201_CREATED)
 def api_creer_risque(
     corps: RisqueIn,
