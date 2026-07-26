@@ -227,6 +227,7 @@ export function RestitutionVue({
   >([]);
   const [patchErr, setPatchErr] = useState<string | null>(null);
   const [patchBusyId, setPatchBusyId] = useState<number | null>(null);
+  const [validerBusyId, setValiderBusyId] = useState<number | null>(null);
   const [actionErrId, setActionErrId] = useState<number | null>(null);
   const [pointBusyId, setPointBusyId] = useState<number | null>(null);
   const [pointMsg, setPointMsg] = useState<{
@@ -328,6 +329,25 @@ export function RestitutionVue({
     }
   }
 
+  async function validerConclusion(conclusionId: number) {
+    if (!jeton || estLecteur) return;
+    setValiderBusyId(conclusionId);
+    setPatchErr(null);
+    setActionErrId(null);
+    try {
+      await api(
+        `/api/v1/missions/${r.mission_id}/conclusions/${conclusionId}/validation`,
+        { method: "POST", jeton },
+      );
+      onRestitutionRefresh?.();
+    } catch (err) {
+      setActionErrId(conclusionId);
+      setPatchErr(err instanceof Error ? err.message : String(err));
+    } finally {
+      setValiderBusyId(null);
+    }
+  }
+
   async function patchTache(
     tacheId: number,
     corps: {
@@ -380,6 +400,11 @@ export function RestitutionVue({
     }
     return [...map.entries()].sort(([a], [b]) => a.localeCompare(b));
   }, [tachesServeur]);
+
+  const tachesBloquees = useMemo(
+    () => tachesServeur.filter((t) => t.statut === "bloquee"),
+    [tachesServeur],
+  );
 
   const tacheParRegle = useMemo(() => {
     const m = new Map<string, (typeof tachesServeur)[0]>();
@@ -1489,6 +1514,51 @@ export function RestitutionVue({
               Priorités et pipeline — montants au Passage, suivi dans Risques.
             </p>
           </header>
+          {tachesBloquees.length > 0 && (
+            <div className="taches-bloquees-panneau" role="alert">
+              <p className="taches-bloquees-titre">
+                {tachesBloquees.length} tâche
+                {tachesBloquees.length > 1 ? "s" : ""} bloquée
+                {tachesBloquees.length > 1 ? "s" : ""} en attente
+              </p>
+              <ul className="taches-bloquees-liste">
+                {tachesBloquees.map((t) => (
+                  <li key={t.id} className="taches-bloquees-item">
+                    <code>{t.regle_id || `tâche #${t.id}`}</code>
+                    {t.impot ? (
+                      <span className="taches-bloquees-impot">{t.impot}</span>
+                    ) : null}
+                    <span className="taches-bloquees-motif">
+                      {t.piece_attendue
+                        ? `Pièce attendue : ${t.piece_attendue}`
+                        : "Motif non renseigné — complétez la pièce attendue."}
+                    </span>
+                    <button
+                      type="button"
+                      className="btn btn-ghost btn-sm"
+                      onClick={() => {
+                        const el = t.regle_id
+                          ? document.getElementById(
+                              `rest-regle-${t.regle_id}`,
+                            )
+                          : null;
+                        if (el) {
+                          el.scrollIntoView({
+                            behavior: scrollPref(),
+                            block: "center",
+                          });
+                        } else {
+                          allerSection("risques");
+                        }
+                      }}
+                    >
+                      Voir la tâche
+                    </button>
+                  </li>
+                ))}
+              </ul>
+            </div>
+          )}
           <div className="rest-split">
             <div>
               <ul className="rest-priority">
@@ -1737,6 +1807,7 @@ export function RestitutionVue({
               return (
                 <li
                   key={c.regle_id}
+                  id={`rest-regle-${c.regle_id}`}
                   className={`rest-risque-card risque-${(c.niveau_risque || "").toLowerCase()}`}
                 >
                   <div className="rest-risque-top">
@@ -1809,9 +1880,34 @@ export function RestitutionVue({
                       </label>
                       {c.amendee_par && (
                         <span className="rest-maj">
-                          Validé par {c.amendee_par}
+                          Évalué par {c.amendee_par}
                         </span>
                       )}
+                      {c.statut === "anomalie" &&
+                        (c.valide_par ? (
+                          <span className="rest-maj">
+                            Validée par {c.valide_par}
+                            {c.valide_le
+                              ? ` le ${fmtHorodatage(c.valide_le)}`
+                              : ""}
+                          </span>
+                        ) : (
+                          !estLecteur &&
+                          c.id != null && (
+                            <Tooltip label="Second regard (« 4 yeux ») — requis sur chaque anomalie avant clôture du dossier.">
+                              <button
+                                type="button"
+                                className="btn btn-ghost btn-sm"
+                                disabled={
+                                  validerBusyId === c.id || !c.amendee_par
+                                }
+                                onClick={() => void validerConclusion(c.id!)}
+                              >
+                                Valider
+                              </button>
+                            </Tooltip>
+                          )
+                        ))}
                       {!estLecteur && conclusionSensible(c) && (
                         <button
                           type="button"

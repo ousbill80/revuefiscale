@@ -582,6 +582,41 @@ def changer_statut_mission(
                 f"{', '.join(sorted(autorises)) or 'aucune'})"
             )
 
+        if cible == STATUT_CLOTUREE:
+            exec_id = session.execute(
+                text("SELECT max(id) FROM execution WHERE mission_id = :m"),
+                {"m": mission_id},
+            ).scalar_one_or_none()
+            if exec_id is not None:
+                n_non_eval = session.execute(
+                    text(
+                        "SELECT count(*) FROM conclusion "
+                        "WHERE execution_id = :e AND amendee_par IS NULL"
+                    ),
+                    {"e": exec_id},
+                ).scalar_one()
+                if int(n_non_eval) > 0:
+                    raise ErreurMission(
+                        f"Clôture refusée : {n_non_eval} conclusion(s) non "
+                        "évaluée(s) — statuez sur chaque contrôle (anomalie, "
+                        "conforme, sous seuil ou non vérifiable motivé) avant "
+                        "de clôturer."
+                    )
+                n_anomalies = session.execute(
+                    text(
+                        "SELECT count(*) FROM conclusion "
+                        "WHERE execution_id = :e AND statut = 'anomalie' "
+                        "AND valide_par IS NULL"
+                    ),
+                    {"e": exec_id},
+                ).scalar_one()
+                if int(n_anomalies) > 0:
+                    raise ErreurMission(
+                        f"Clôture refusée : {n_anomalies} anomalie(s) non "
+                        "validée(s) — faites valider chaque anomalie avant "
+                        "clôture."
+                    )
+
         if actuel == STATUT_CLOTUREE and cible != STATUT_CLOTUREE:
             autre = session.execute(
                 text(

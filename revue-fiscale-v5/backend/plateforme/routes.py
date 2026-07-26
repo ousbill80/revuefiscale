@@ -3,7 +3,15 @@ from __future__ import annotations
 
 from typing import Annotated, Literal
 
-from fastapi import APIRouter, Depends, File, HTTPException, UploadFile, status
+from fastapi import (
+    APIRouter,
+    Depends,
+    File,
+    HTTPException,
+    Response,
+    UploadFile,
+    status,
+)
 from pydantic import BaseModel, Field
 from sqlalchemy import text
 from sqlalchemy.orm import Session
@@ -878,6 +886,29 @@ def api_patcher_conclusion(
         raise _http_erreur_conclusion(e) from e
 
 
+@router.post("/missions/{mission_id}/conclusions/{conclusion_id}/validation")
+def api_valider_conclusion(
+    mission_id: int,
+    conclusion_id: int,
+    utilisateur: UtilisateurDep,
+    session: Annotated[Session, Depends(session_abonne)],
+) -> dict:
+    """Validation « 4 yeux » — second regard sur une conclusion évaluée."""
+    from backend.plateforme.conclusions import ErreurConclusion, valider_conclusion
+
+    exiger_capacite(utilisateur, "executer_mission")
+    try:
+        return valider_conclusion(
+            session,
+            utilisateur.tenant_id,
+            mission_id,
+            conclusion_id,
+            validateur=utilisateur.email,
+        )
+    except ErreurConclusion as e:
+        raise _http_erreur_conclusion(e) from e
+
+
 MSG_POINT_OUVERT_GONE = (
     "point_ouvert écriture dépréciée après R4 — utiliser /api/v1/risques"
 )
@@ -1027,6 +1058,34 @@ def api_lister_risques_contribuable(
         )
     except ErreurRisque as e:
         raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST, detail=str(e)) from e
+
+
+@router.get("/contribuables/{contribuable_id}/risques/export.csv")
+def api_exporter_risques_csv(
+    contribuable_id: int,
+    utilisateur: UtilisateurDep,
+    session: Annotated[Session, Depends(session_abonne)],
+) -> Response:
+    """Registre des risques au format CSV Excel FR (UTF-8 BOM, « ; »)."""
+    from backend.plateforme.risques import ErreurRisque, exporter_risques_csv
+
+    try:
+        nom, contenu = exporter_risques_csv(
+            session, utilisateur.tenant_id, contribuable_id
+        )
+    except ErreurRisque as e:
+        msg = str(e)
+        code = (
+            status.HTTP_404_NOT_FOUND
+            if "introuvable" in msg
+            else status.HTTP_400_BAD_REQUEST
+        )
+        raise HTTPException(status_code=code, detail=msg) from e
+    return Response(
+        content=contenu,
+        media_type="text/csv; charset=utf-8",
+        headers={"Content-Disposition": f'attachment; filename="{nom}"'},
+    )
 
 
 @router.get("/contribuables/{contribuable_id}/risques/resume")

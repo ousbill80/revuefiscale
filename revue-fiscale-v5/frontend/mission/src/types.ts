@@ -37,6 +37,8 @@ export type ConclusionRestitution = {
   statut?: string | null;
   piece_mission_id?: number | null;
   amendee_par?: string | null;
+  valide_par?: string | null;
+  valide_le?: string | null;
 };
 
 export type IdentificationRestitution = {

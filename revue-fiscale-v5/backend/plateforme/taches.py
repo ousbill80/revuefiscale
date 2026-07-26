@@ -355,7 +355,9 @@ def patcher_tache(
         ):
             session.execute(
                 text(
-                    "UPDATE conclusion SET statut = :st, amendee_par = :a "
+                    "UPDATE conclusion SET statut = :st, amendee_par = :a, "
+                    "valide_par = CASE WHEN statut = :st THEN valide_par END, "
+                    "valide_le = CASE WHEN statut = :st THEN valide_le END "
                     "WHERE id = :cid"
                 ),
                 {"st": nouveau_statut, "a": acteur, "cid": int(cid)},

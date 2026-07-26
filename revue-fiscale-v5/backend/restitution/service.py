@@ -101,7 +101,8 @@ def _charger_conclusions(
     rows = session.execute(
         text(
             "SELECT c.id, rv.regle_id, c.montant, c.sens, c.niveau_risque, "
-            "c.commentaire, c.statut, c.piece_mission_id, c.amendee_par "
+            "c.commentaire, c.statut, c.piece_mission_id, c.amendee_par, "
+            "c.valide_par, c.valide_le "
             "FROM conclusion c "
             "JOIN regle_version rv ON rv.id = c.regle_version_id "
             "WHERE c.execution_id = :e "
@@ -127,6 +128,12 @@ def _charger_conclusions(
                     else None
                 ),
                 "amendee_par": r.get("amendee_par"),
+                "valide_par": r.get("valide_par"),
+                "valide_le": (
+                    r["valide_le"].isoformat()
+                    if r.get("valide_le") is not None
+                    else None
+                ),
             }
         )
     return out

@@ -24,6 +24,28 @@ def _skip_si_absente(session) -> None:
         pytest.skip("migration 020 non appliquée — make migrate")
 
 
+def _evaluer_et_valider_conclusions(client, headers, mid) -> None:
+    """Garde de clôture : statue puis valide chaque conclusion via l'API."""
+    rest = client.get(f"/api/v1/missions/{mid}/restitution", headers=headers)
+    assert rest.status_code == 200, rest.text
+    for c in rest.json().get("conclusions", []):
+        if c.get("id") is None:
+            continue
+        statut = c.get("statut") or "anomalie"
+        p = client.patch(
+            f"/api/v1/missions/{mid}/conclusions/{c['id']}",
+            headers=headers,
+            json={"statut": statut},
+        )
+        assert p.status_code == 200, p.text
+        if statut == "anomalie":
+            v = client.post(
+                f"/api/v1/missions/{mid}/conclusions/{c['id']}/validation",
+                headers=headers,
+            )
+            assert v.status_code == 200, v.text
+
+
 def _contrib(client: TestClient, h: dict, ncc: str) -> int:
     c = client.post(
         "/api/v1/contribuables",
@@ -234,6 +256,7 @@ def test_cloture_cree_risque_depuis_anomalie(session, client_cab):
     if int(n_anom) == 0:
         pytest.skip("aucune anomalie sur cette exécution — jeu de règles")
 
+    _evaluer_et_valider_conclusions(client, h, mission_id)
     st = client.patch(
         f"/api/v1/missions/{mission_id}/statut",
         headers=h,

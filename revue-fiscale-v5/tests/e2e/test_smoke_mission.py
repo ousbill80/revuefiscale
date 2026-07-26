@@ -27,6 +27,28 @@ FIXTURES = Path(__file__).resolve().parents[2] / "fixtures"
 BALANCE_JSON = FIXTURES / "balance_fictif_commerce.json"
 
 
+def _evaluer_et_valider_conclusions(client, headers, mid) -> None:
+    """Garde de clôture : statue puis valide chaque conclusion via l'API."""
+    rest = client.get(f"/api/v1/missions/{mid}/restitution", headers=headers)
+    assert rest.status_code == 200, rest.text
+    for c in rest.json().get("conclusions", []):
+        if c.get("id") is None:
+            continue
+        statut = c.get("statut") or "anomalie"
+        p = client.patch(
+            f"/api/v1/missions/{mid}/conclusions/{c['id']}",
+            headers=headers,
+            json={"statut": statut},
+        )
+        assert p.status_code == 200, p.text
+        if statut == "anomalie":
+            v = client.post(
+                f"/api/v1/missions/{mid}/conclusions/{c['id']}/validation",
+                headers=headers,
+            )
+            assert v.status_code == 200, v.text
+
+
 def _assurer_version(session) -> None:
     if derniere_version_publiee(session) is not None:
         return
@@ -151,7 +173,8 @@ def test_smoke_mission_parcours_complet(client_smoke, session):
     assert isinstance(body.get("a_confirmer_regles"), list)
     assert body.get("identification", {}).get("statut") == "en_cours"
 
-    # 9b. Clôture dossier
+    # 9b. Clôture dossier (garde : conclusions évaluées + anomalies validées)
+    _evaluer_et_valider_conclusions(client, h, mid)
     clot = client.patch(
         f"/api/v1/missions/{mid}/statut",
         headers=h,

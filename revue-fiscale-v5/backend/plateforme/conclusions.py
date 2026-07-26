@@ -17,6 +17,7 @@ class ErreurConclusion(Exception):
 
 def _serialiser(row: dict[str, Any]) -> dict[str, Any]:
     montant = row.get("montant")
+    valide_le = row.get("valide_le")
     return {
         "id": int(row["id"]),
         "execution_id": int(row["execution_id"]),
@@ -34,6 +35,12 @@ def _serialiser(row: dict[str, Any]) -> dict[str, Any]:
             else None
         ),
         "amendee_par": row.get("amendee_par"),
+        "valide_par": row.get("valide_par"),
+        "valide_le": (
+            valide_le.isoformat()
+            if hasattr(valide_le, "isoformat")
+            else valide_le
+        ),
     }
 
 
@@ -48,7 +55,7 @@ def lire_conclusion(
             text(
                 "SELECT c.id, c.execution_id, c.regle_version_id, c.montant, c.sens, "
                 "c.niveau_risque, c.commentaire, c.statut, c.piece_mission_id, "
-                "c.amendee_par, e.mission_id, rv.regle_id "
+                "c.amendee_par, c.valide_par, c.valide_le, e.mission_id, rv.regle_id "
                 "FROM conclusion c "
                 "JOIN execution e ON e.id = c.execution_id "
                 "JOIN regle_version rv ON rv.id = c.regle_version_id "
@@ -86,7 +93,7 @@ def patcher_conclusion(
             text(
                 "SELECT c.id, c.execution_id, c.regle_version_id, c.montant, c.sens, "
                 "c.niveau_risque, c.commentaire, c.statut, c.piece_mission_id, "
-                "c.amendee_par, e.mission_id, rv.regle_id "
+                "c.amendee_par, c.valide_par, c.valide_le, e.mission_id, rv.regle_id "
                 "FROM conclusion c "
                 "JOIN execution e ON e.id = c.execution_id "
                 "JOIN regle_version rv ON rv.id = c.regle_version_id "
@@ -137,11 +144,23 @@ def patcher_conclusion(
                     )
                 nouvelle_piece = pid
 
-        session.execute(
-            text(
+        statut_change = champs["statut"] and nouveau_statut != str(
+            ancien.get("statut") or "anomalie"
+        )
+        if statut_change:
+            # Ré-amendement : la validation « 4 yeux » tombe.
+            sql = (
+                "UPDATE conclusion SET statut = :st, piece_mission_id = :p, "
+                "amendee_par = :a, valide_par = NULL, valide_le = NULL "
+                "WHERE id = :cid"
+            )
+        else:
+            sql = (
                 "UPDATE conclusion SET statut = :st, piece_mission_id = :p, "
                 "amendee_par = :a WHERE id = :cid"
-            ),
+            )
+        session.execute(
+            text(sql),
             {
                 "st": nouveau_statut,
                 "p": nouvelle_piece,
@@ -180,6 +199,69 @@ def patcher_conclusion(
                     int(nouvelle_piece) if nouvelle_piece is not None else None
                 ),
             },
+        )
+
+        return lire_conclusion(session, tenant_id, mission_id, conclusion_id)
+
+
+def valider_conclusion(
+    session: Session,
+    tenant_id: int,
+    mission_id: int,
+    conclusion_id: int,
+    validateur: str,
+) -> dict[str, Any]:
+    """Validation « 4 yeux » : second regard sur une conclusion évaluée."""
+    with contexte_tenant(session, tenant_id):
+        row = session.execute(
+            text(
+                "SELECT c.id, c.statut, c.amendee_par, c.valide_par, "
+                "e.mission_id, rv.regle_id "
+                "FROM conclusion c "
+                "JOIN execution e ON e.id = c.execution_id "
+                "JOIN regle_version rv ON rv.id = c.regle_version_id "
+                "WHERE c.id = :cid AND e.mission_id = :mid"
+            ),
+            {"cid": conclusion_id, "mid": mission_id},
+        ).mappings().one_or_none()
+        if row is None:
+            raise ErreurConclusion(
+                f"conclusion {conclusion_id} introuvable pour mission {mission_id}"
+            )
+        if not row.get("amendee_par"):
+            raise ErreurConclusion(
+                f"conclusion {conclusion_id} non évaluée — statuez sur le "
+                "contrôle (anomalie, conforme, sous seuil ou non vérifiable "
+                "motivé) avant de la valider"
+            )
+
+        session.execute(
+            text(
+                "UPDATE conclusion SET valide_par = :v, valide_le = now() "
+                "WHERE id = :cid"
+            ),
+            {"v": validateur, "cid": conclusion_id},
+        )
+        session.flush()
+
+        charge: dict[str, Any] = {
+            "conclusion_id": conclusion_id,
+            "regle_id": str(row["regle_id"]),
+            "statut": str(row.get("statut") or "anomalie"),
+            "amendee_par": row.get("amendee_par"),
+        }
+        if validateur == row.get("amendee_par"):
+            charge["avertissement"] = (
+                "auto-validation : le validateur est aussi l'auteur de "
+                "l'amendement — traçabilité seulement, aucun blocage"
+            )
+        append_journal(
+            session,
+            tenant_id=tenant_id,
+            mission_id=mission_id,
+            acteur=validateur,
+            action="validation_conclusion",
+            charge_utile=charge,
         )
 
         return lire_conclusion(session, tenant_id, mission_id, conclusion_id)

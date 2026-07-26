@@ -1,6 +1,6 @@
 /** Registre des risques d'un contribuable — post-mission (docs/25). */
 import { useCallback, useEffect, useMemo, useState } from "react";
-import { api, apiUpload } from "./api";
+import { api, apiUpload, telecharger } from "./api";
 import { TexteJuridique } from "./TexteJuridique";
 
 export type RisqueRow = {
@@ -123,6 +123,7 @@ export function RegistreRisquesVue({
   });
 
   const [score, setScore] = useState<ScoreRisque | null>(null);
+  const [exportEnCours, setExportEnCours] = useState(false);
 
   const [preuveRisqueId, setPreuveRisqueId] = useState<number | null>(null);
   const [preuveFichier, setPreuveFichier] = useState<File | null>(null);
@@ -180,6 +181,23 @@ export function RegistreRisquesVue({
     }
     return [...m.entries()].sort(([a], [b]) => a.localeCompare(b));
   }, [risques]);
+
+  async function exporterCsv() {
+    setExportEnCours(true);
+    setErr(null);
+    try {
+      const jour = new Date().toISOString().slice(0, 10);
+      await telecharger(
+        `/api/v1/contribuables/${contribuableId}/risques/export.csv`,
+        jeton,
+        `risques_client_${contribuableId}_${jour}.csv`,
+      );
+    } catch (e) {
+      setErr(e instanceof Error ? e.message : String(e));
+    } finally {
+      setExportEnCours(false);
+    }
+  }
 
   async function patchRisque(
     id: number,
@@ -348,14 +366,24 @@ export function RegistreRisquesVue({
             <strong>{fmtMontant(String(cumulOuverts))}</strong>
           </p>
         </div>
-        <button
-          type="button"
-          className="btn ghost btn-xs"
-          onClick={() => void charger()}
-          disabled={busy}
-        >
-          Actualiser
-        </button>
+        <div className="registre-actions-row">
+          <button
+            type="button"
+            className="btn ghost btn-xs"
+            onClick={() => void exporterCsv()}
+            disabled={exportEnCours || risques.length === 0}
+          >
+            {exportEnCours ? "Export…" : "Exporter CSV"}
+          </button>
+          <button
+            type="button"
+            className="btn ghost btn-xs"
+            onClick={() => void charger()}
+            disabled={busy}
+          >
+            Actualiser
+          </button>
+        </div>
       </header>
       {score && (
         <div

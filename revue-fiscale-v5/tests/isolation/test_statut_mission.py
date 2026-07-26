@@ -39,6 +39,28 @@ def _assurer_version(session) -> None:
     publier_version(session, lib, "statut@test.ci")
 
 
+def _evaluer_et_valider_conclusions(client, headers, mid) -> None:
+    """Garde de clôture : statue puis valide chaque conclusion via l'API."""
+    rest = client.get(f"/api/v1/missions/{mid}/restitution", headers=headers)
+    assert rest.status_code == 200, rest.text
+    for c in rest.json().get("conclusions", []):
+        if c.get("id") is None:
+            continue
+        statut = c.get("statut") or "anomalie"
+        p = client.patch(
+            f"/api/v1/missions/{mid}/conclusions/{c['id']}",
+            headers=headers,
+            json={"statut": statut},
+        )
+        assert p.status_code == 200, p.text
+        if statut == "anomalie":
+            v = client.post(
+                f"/api/v1/missions/{mid}/conclusions/{c['id']}/validation",
+                headers=headers,
+            )
+            assert v.status_code == 200, v.text
+
+
 def _cabinet(session):
     email = f"statut.{uuid.uuid4().hex[:8]}@demo.local"
     r = provisionner_cabinet(
@@ -138,6 +160,7 @@ def test_statut_auto_en_cours_puis_cloture_reouverture(session):
     assert rest.status_code == 200
     assert rest.json()["identification"]["statut"] == "en_cours"
 
+    _evaluer_et_valider_conclusions(client, h, mid)
     clot = client.patch(
         f"/api/v1/missions/{mid}/statut",
         headers=h,

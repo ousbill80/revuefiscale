@@ -693,6 +693,103 @@ def score_risque_contribuable(
     return resultat
 
 
+_LIBELLES_PROBABILITE: Final[dict[str, str]] = {
+    "probable": "Probable",
+    "possible": "Possible",
+    "faible": "Faible",
+}
+_LIBELLES_STATUT_RISQUE: Final[dict[str, str]] = {
+    "ouvert": "Ouvert",
+    "en_traitement": "En traitement",
+    "resolu": "Résolu",
+    "accepte": "Accepté (client)",
+    "prescrit": "Prescrit",
+}
+
+
+def _fmt_date_fr(iso: str | None) -> str:
+    if not iso:
+        return ""
+    try:
+        return datetime.fromisoformat(str(iso)).strftime("%d/%m/%Y")
+    except ValueError:
+        return str(iso)
+
+
+def exporter_risques_csv(
+    session: Session,
+    tenant_id: int,
+    contribuable_id: int,
+) -> tuple[str, str]:
+    """CSV Excel FR (UTF-8 BOM, séparateur « ; ») — tous statuts inclus.
+
+    Retourne (nom_fichier, contenu).
+    """
+    import csv
+    import io
+    import re
+
+    with contexte_tenant(session, tenant_id):
+        denomination = session.execute(
+            text("SELECT denomination FROM contribuable WHERE id = :c"),
+            {"c": contribuable_id},
+        ).scalar_one_or_none()
+    if denomination is None:
+        raise ErreurRisque(f"contribuable {contribuable_id} introuvable")
+
+    lignes = lister_risques(session, tenant_id, contribuable_id=contribuable_id)
+
+    buf = io.StringIO()
+    w = csv.writer(buf, delimiter=";", lineterminator="\r\n")
+    w.writerow(
+        [
+            "Identifiant",
+            "Impôt",
+            "Exercice d'origine",
+            "Libellé",
+            "Référence légale",
+            "Probabilité",
+            "Statut",
+            "Montant estimé (FCFA)",
+            "Pénalités estimées (FCFA)",
+            "Exposition totale (FCFA)",
+            "Créé le",
+            "Dernière revue",
+        ]
+    )
+    for r in lignes:
+        montant = (
+            Decimal(r["montant_estime"])
+            if r.get("montant_estime") is not None
+            else Decimal(0)
+        )
+        penalites = (
+            Decimal(r["penalites_estimees"])
+            if r.get("penalites_estimees") is not None
+            else Decimal(0)
+        )
+        w.writerow(
+            [
+                r["id"],
+                r["impot"],
+                r["exercice_origine"],
+                r["libelle"],
+                r.get("reference_legale") or "",
+                _LIBELLES_PROBABILITE.get(r["probabilite"], r["probabilite"]),
+                _LIBELLES_STATUT_RISQUE.get(r["statut"], r["statut"]),
+                r.get("montant_estime") or "",
+                r.get("penalites_estimees") or "",
+                str(montant + penalites),
+                _fmt_date_fr(r.get("cree_le")),
+                _fmt_date_fr(r.get("derniere_revue")),
+            ]
+        )
+
+    slug = re.sub(r"[^A-Za-z0-9]+", "_", str(denomination)).strip("_") or "client"
+    nom = f"risques_{slug}_{date.today().isoformat()}.csv"
+    return nom, "\ufeff" + buf.getvalue()
+
+
 def creer_risques_depuis_anomalies(
     session: Session,
     tenant_id: int,

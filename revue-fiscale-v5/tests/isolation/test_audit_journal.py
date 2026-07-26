@@ -56,6 +56,28 @@ def _login_cabinet(session, *, suffix: str):
     return client, {"Authorization": f"Bearer {login.json()['jeton']}"}, r.tenant_id
 
 
+def _evaluer_et_valider_conclusions(client, headers, mid) -> None:
+    """Garde de clôture : statue puis valide chaque conclusion via l'API."""
+    rest = client.get(f"/api/v1/missions/{mid}/restitution", headers=headers)
+    assert rest.status_code == 200, rest.text
+    for c in rest.json().get("conclusions", []):
+        if c.get("id") is None:
+            continue
+        statut = c.get("statut") or "anomalie"
+        p = client.patch(
+            f"/api/v1/missions/{mid}/conclusions/{c['id']}",
+            headers=headers,
+            json={"statut": statut},
+        )
+        assert p.status_code == 200, p.text
+        if statut == "anomalie":
+            v = client.post(
+                f"/api/v1/missions/{mid}/conclusions/{c['id']}/validation",
+                headers=headers,
+            )
+            assert v.status_code == 200, v.text
+
+
 def _mission_avec_parcours(client, headers) -> int:
     c = client.post(
         "/api/v1/contribuables",
@@ -98,6 +120,7 @@ def _mission_avec_parcours(client, headers) -> int:
     )
     assert ex.status_code == 200, ex.text
 
+    _evaluer_et_valider_conclusions(client, headers, mid)
     clot = client.patch(
         f"/api/v1/missions/{mid}/statut",
         headers=headers,
