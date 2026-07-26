@@ -85,3 +85,41 @@ def calculer_agregats(soldes: dict[str, Decimal]) -> dict[str, Decimal]:
         # Marqueur explicite : cette cle ne doit pas etre prise pour verite fiscale.
         "FRAIS_GENERAUX": frais,  # A CONFIRMER
     }
+
+
+def comptes_par_agregat(soldes: dict[str, Decimal]) -> dict[str, tuple[str, ...]]:
+    """Composition de chaque agregat : comptes contributeurs (tracabilite).
+
+    Miroir exact des filtres de ``calculer_agregats`` — aucun calcul de montant,
+    uniquement la liste des comptes qui alimentent chaque agregat, pour la
+    piste d audit des conclusions (« d ou vient ce montant ? »).
+    """
+    ca = tuple(sorted(k for k in soldes if _prefixe_dans(k, 701, 707)))
+
+    postes_13 = tuple(sorted(k for k in soldes if k.startswith("13")))
+    if postes_13:
+        benefice = postes_13
+    else:
+        benefice = tuple(
+            sorted(k for k in soldes if k.startswith("7") or k.startswith("6"))
+        )
+
+    comptes_891 = tuple(sorted(k for k in soldes if k.startswith("891")))
+    resultat_avant_impot = tuple(sorted({*benefice, *comptes_891}))
+
+    frais = tuple(
+        sorted(
+            k
+            for k in soldes
+            if _prefixe_dans(k, 60, 65)
+            and not k.startswith("68")
+            and not _est_achat(k)
+        )
+    )
+
+    return {
+        "CA": ca,
+        "BENEFICE_COMPTABLE": benefice,
+        "RESULTAT_AVANT_IMPOT": resultat_avant_impot,
+        "FRAIS_GENERAUX": frais,  # A CONFIRMER (meme reserve que le montant)
+    }

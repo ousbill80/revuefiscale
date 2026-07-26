@@ -9216,3 +9216,16 @@ tr.row-active td {
 .sources-dataroom-utiliser { padding: 0.35rem 0.75rem; border: 1px solid var(--accent, #0f766e); border-radius: 7px; background: var(--surface, #fff); color: var(--accent-deep, #115e59); font-size: 0.78rem; font-weight: 600; cursor: pointer; }
 .sources-dataroom-utiliser:hover:not(:disabled) { background: color-mix(in srgb, var(--accent, #0f766e) 8%, var(--surface, #fff)); }
 .sources-dataroom-utiliser:disabled { cursor: default; opacity: 0.75; background: color-mix(in srgb, var(--accent, #0f766e) 12%, var(--surface, #fff)); }
+
+/* Restitution — comptes à l'origine d'une conclusion (piste d'audit) */
+.rest-comptes-source { margin: 0.35rem 0 0.5rem; padding: 0.45rem 0.6rem; border: 1px solid var(--line, #e5e7eb); border-radius: 8px; background: var(--surface-soft, #f8fafc); }
+.rest-comptes-titre { cursor: pointer; font-size: 0.8rem; font-weight: 600; color: var(--accent-deep, #115e59); user-select: none; }
+.rest-comptes-titre:hover { color: var(--accent, #0f766e); }
+.rest-comptes-liste { list-style: none; margin: 0.45rem 0 0; padding: 0; display: grid; gap: 0.3rem; }
+.rest-comptes-item { display: flex; flex-wrap: wrap; align-items: baseline; gap: 0.55rem; padding: 0.25rem 0.35rem; border-bottom: 1px solid var(--line-soft, #f1f5f9); font-size: 0.8rem; }
+.rest-comptes-item:last-child { border-bottom: none; }
+.rest-comptes-numero { padding: 0.05rem 0.4rem; border-radius: 5px; background: var(--surface, #fff); border: 1px solid var(--line, #e5e7eb); font-size: 0.76rem; font-weight: 700; color: var(--ink, #0f172a); }
+.rest-comptes-libelle { flex: 1 1 10rem; min-width: 0; color: var(--ink-soft, #475569); overflow-wrap: anywhere; }
+.rest-comptes-solde { font-variant-numeric: tabular-nums; font-weight: 600; color: var(--ink, #0f172a); white-space: nowrap; }
+.rest-comptes-sens { font-weight: 400; font-style: italic; color: var(--muted, #64748b); }
+.rest-comptes-note { margin: 0.4rem 0 0; font-size: 0.72rem; font-style: italic; color: var(--muted, #64748b); }

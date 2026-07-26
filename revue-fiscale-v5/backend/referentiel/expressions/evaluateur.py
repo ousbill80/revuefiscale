@@ -19,6 +19,11 @@ class Contexte:
     soldes: dict[str, Decimal] = field(default_factory=dict)
     agregats: dict[str, Decimal] = field(default_factory=dict)
     reponses: dict[str, object] = field(default_factory=dict)
+    # Composition des agregats (nom MAJUSCULE -> comptes contributeurs) —
+    # sert uniquement a la tracabilite, jamais au calcul lui-meme.
+    comptes_par_agregat: dict[str, tuple[str, ...]] = field(default_factory=dict)
+    # Piste d audit : comptes reellement lus pendant l evaluation.
+    comptes_utilises: set[str] = field(default_factory=set)
 
 
 def _dec(v: object) -> Decimal:
@@ -42,16 +47,22 @@ def _evaluer(noeud: object, ctx: Contexte) -> object:
         case Reference(genre, cle):
             if genre == "solde":
                 # Resolution des sous-comptes : solde(66) agrege 661, 663, 664...
-                total = sum(
-                    (v for k, v in ctx.soldes.items() if k == cle or k.startswith(cle)),
+                correspondants = [
+                    k for k in ctx.soldes if k == cle or k.startswith(cle)
+                ]
+                if not correspondants:
+                    raise ErreurEvaluation(f"compte {cle} absent des donnees de la mission")
+                ctx.comptes_utilises.update(correspondants)
+                return sum(
+                    (ctx.soldes[k] for k in correspondants),
                     Decimal(0),
                 )
-                if not any(k == cle or k.startswith(cle) for k in ctx.soldes):
-                    raise ErreurEvaluation(f"compte {cle} absent des donnees de la mission")
-                return total
             if genre == "agregat":
                 if cle.upper() not in {k.upper() for k in ctx.agregats}:
                     raise ErreurEvaluation(f"agregat {cle} non defini")
+                ctx.comptes_utilises.update(
+                    ctx.comptes_par_agregat.get(cle.upper(), ())
+                )
                 return next(v for k, v in ctx.agregats.items() if k.upper() == cle.upper())
             if genre == "reponse":
                 if cle not in ctx.reponses:

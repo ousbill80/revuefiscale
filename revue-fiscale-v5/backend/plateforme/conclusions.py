@@ -18,6 +18,9 @@ class ErreurConclusion(Exception):
 def _serialiser(row: dict[str, Any]) -> dict[str, Any]:
     montant = row.get("montant")
     valide_le = row.get("valide_le")
+    comptes_source = row.get("comptes_source")
+    if not isinstance(comptes_source, list):
+        comptes_source = []
     return {
         "id": int(row["id"]),
         "execution_id": int(row["execution_id"]),
@@ -41,6 +44,7 @@ def _serialiser(row: dict[str, Any]) -> dict[str, Any]:
             if hasattr(valide_le, "isoformat")
             else valide_le
         ),
+        "comptes_source": comptes_source,
     }
 
 
@@ -55,7 +59,8 @@ def lire_conclusion(
             text(
                 "SELECT c.id, c.execution_id, c.regle_version_id, c.montant, c.sens, "
                 "c.niveau_risque, c.commentaire, c.statut, c.piece_mission_id, "
-                "c.amendee_par, c.valide_par, c.valide_le, e.mission_id, rv.regle_id "
+                "c.amendee_par, c.valide_par, c.valide_le, c.comptes_source, "
+                "e.mission_id, rv.regle_id "
                 "FROM conclusion c "
                 "JOIN execution e ON e.id = c.execution_id "
                 "JOIN regle_version rv ON rv.id = c.regle_version_id "

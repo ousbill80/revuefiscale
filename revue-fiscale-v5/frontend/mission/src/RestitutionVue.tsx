@@ -1838,6 +1838,40 @@ export function RestitutionVue({
                   {c.commentaire && (
                     <p className="rest-comment">{c.commentaire}</p>
                   )}
+                  {!!c.comptes_source?.length && (
+                    <details className="rest-comptes-source">
+                      <summary className="rest-comptes-titre">
+                        Comptes à l’origine ({c.comptes_source.length})
+                      </summary>
+                      <ul className="rest-comptes-liste">
+                        {c.comptes_source.map((cs) => (
+                          <li key={cs.compte} className="rest-comptes-item">
+                            <code className="rest-comptes-numero">
+                              {cs.compte}
+                            </code>
+                            <span className="rest-comptes-libelle">
+                              {cs.libelle || "—"}
+                            </span>
+                            <span className="rest-comptes-solde">
+                              {cs.solde != null
+                                ? `${fmtMontant(cs.solde)} FCFA`
+                                : "—"}
+                              {cs.sens ? (
+                                <em className="rest-comptes-sens">
+                                  {" "}
+                                  ({cs.sens})
+                                </em>
+                              ) : null}
+                            </span>
+                          </li>
+                        ))}
+                      </ul>
+                      <p className="rest-comptes-note">
+                        Soldes figés au moment de l’exécution de la revue —
+                        piste d’audit du montant conclu.
+                      </p>
+                    </details>
+                  )}
                   {c.id != null && (
                     <div className="rest-conclusion-valide">
                       <label className="rest-statut">

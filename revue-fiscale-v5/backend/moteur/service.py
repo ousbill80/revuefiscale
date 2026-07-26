@@ -18,28 +18,83 @@ from backend.moteur.selection import selectionner_regles
 from backend.plateforme.contexte import contexte_tenant
 from backend.referentiel.depot import lire_regles_version
 from backend.referentiel.expressions import Contexte
-from backend.socle.agregats import calculer_agregats, solde_naturel
+from backend.socle.agregats import (
+    calculer_agregats,
+    comptes_par_agregat,
+    solde_naturel,
+)
 
 
 class ErreurMoteur(Exception):
     """Echec d execution du moteur."""
 
 
-def _charger_soldes(session: Session, mission_id: int) -> dict[str, Decimal]:
+def _charger_soldes(
+    session: Session, mission_id: int
+) -> tuple[dict[str, Decimal], dict[str, dict[str, Any]]]:
+    """Retourne (soldes naturels, infos comptes) depuis solde_compte.
+
+    ``infos`` porte libelle / debit / credit par compte — sert uniquement a la
+    piste d audit des conclusions (comptes a l origine), jamais au calcul.
+    """
     rows = session.execute(
         text(
-            "SELECT compte, debit, credit FROM solde_compte WHERE mission_id = :m"
+            "SELECT compte, libelle, debit, credit "
+            "FROM solde_compte WHERE mission_id = :m"
         ),
         {"m": mission_id},
     ).mappings().all()
     if not rows:
         raise ErreurMoteur(f"aucun solde pour la mission {mission_id}")
-    return {
-        str(r["compte"]): solde_naturel(
-            str(r["compte"]), Decimal(r["debit"]), Decimal(r["credit"])
+    soldes: dict[str, Decimal] = {}
+    infos: dict[str, dict[str, Any]] = {}
+    for r in rows:
+        compte = str(r["compte"])
+        debit = Decimal(r["debit"])
+        credit = Decimal(r["credit"])
+        soldes[compte] = solde_naturel(compte, debit, credit)
+        infos[compte] = {
+            "libelle": r["libelle"],
+            "debit": debit,
+            "credit": credit,
+        }
+    return soldes, infos
+
+
+def comptes_source_conclusion(
+    comptes_utilises: tuple[str, ...] | list[str],
+    soldes: dict[str, Decimal],
+    infos: dict[str, dict[str, Any]],
+) -> list[dict[str, Any]]:
+    """Piste d audit sérialisable : {compte, libelle, solde, sens} par compte.
+
+    - ``solde`` : solde naturel (chaîne, déterministe) du compte.
+    - ``sens`` : sens comptable brut du solde (debiteur / crediteur / nul),
+      dérivé de debit - credit — jamais un jugement fiscal.
+    """
+    out: list[dict[str, Any]] = []
+    for compte in sorted({str(c) for c in comptes_utilises}):
+        if compte not in soldes:
+            continue
+        info = infos.get(compte, {})
+        debit = Decimal(str(info.get("debit", 0)))
+        credit = Decimal(str(info.get("credit", 0)))
+        brut = debit - credit
+        if brut > 0:
+            sens = "debiteur"
+        elif brut < 0:
+            sens = "crediteur"
+        else:
+            sens = "nul"
+        out.append(
+            {
+                "compte": compte,
+                "libelle": info.get("libelle"),
+                "solde": str(soldes[compte]),
+                "sens": sens,
+            }
         )
-        for r in rows
-    }
+    return out
 
 
 def executer_mission(
@@ -103,9 +158,14 @@ def executer_mission(
                 },
             )
 
-        soldes = _charger_soldes(session, mission_id)
+        soldes, infos_comptes = _charger_soldes(session, mission_id)
         agregats = calculer_agregats(soldes)
-        ctx = Contexte(soldes=soldes, agregats=agregats, reponses=reponses)
+        ctx = Contexte(
+            soldes=soldes,
+            agregats=agregats,
+            reponses=reponses,
+            comptes_par_agregat=comptes_par_agregat(soldes),
+        )
 
         profil_brut = mission["profil"]
         profil: dict[str, object] | None = None
@@ -174,9 +234,9 @@ def executer_mission(
                 text(
                     "INSERT INTO conclusion "
                     "(tenant_id, execution_id, regle_version_id, montant, sens, "
-                    "niveau_risque, reponses, commentaire, statut) "
+                    "niveau_risque, reponses, commentaire, statut, comptes_source) "
                     "VALUES (:t, :e, :rv, :mt, :sens, :nr, CAST(:rep AS jsonb), "
-                    ":com, :st) RETURNING id"
+                    ":com, :st, CAST(:cs AS jsonb)) RETURNING id"
                 ),
                 {
                     "t": tenant_id,
@@ -188,6 +248,12 @@ def executer_mission(
                     "rep": json.dumps(reponses, ensure_ascii=False, default=str),
                     "com": c.detail,
                     "st": statut,
+                    "cs": json.dumps(
+                        comptes_source_conclusion(
+                            c.comptes_utilises, soldes, infos_comptes
+                        ),
+                        ensure_ascii=False,
+                    ),
                 },
             ).scalar_one()
             upsert_tache(

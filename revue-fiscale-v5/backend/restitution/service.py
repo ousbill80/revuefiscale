@@ -102,7 +102,7 @@ def _charger_conclusions(
         text(
             "SELECT c.id, rv.regle_id, c.montant, c.sens, c.niveau_risque, "
             "c.commentaire, c.statut, c.piece_mission_id, c.amendee_par, "
-            "c.valide_par, c.valide_le "
+            "c.valide_par, c.valide_le, c.comptes_source "
             "FROM conclusion c "
             "JOIN regle_version rv ON rv.id = c.regle_version_id "
             "WHERE c.execution_id = :e "
@@ -133,6 +133,11 @@ def _charger_conclusions(
                     r["valide_le"].isoformat()
                     if r.get("valide_le") is not None
                     else None
+                ),
+                "comptes_source": (
+                    r["comptes_source"]
+                    if isinstance(r.get("comptes_source"), list)
+                    else []
                 ),
             }
         )

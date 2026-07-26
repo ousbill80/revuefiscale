@@ -34,6 +34,9 @@ class ConclusionCalculee:
     niveau_risque: str
     detail: str | None = None
     inevaluable: bool = False
+    # Piste d audit : comptes reellement lus pendant l evaluation de la regle
+    # (references solde(...) + composition des agregats references).
+    comptes_utilises: tuple[str, ...] = ()
 
 
 def statut_brouillon_conclusion(
@@ -66,9 +69,23 @@ def calculer_regle(
     *,
     sens_par_defaut: str = "reintegration",
 ) -> ConclusionCalculee:
-    """Pour une regle : evalue condition ; si vraie, evalue resultat."""
+    """Pour une regle : evalue condition ; si vraie, evalue resultat.
+
+    L evaluation trace les comptes reellement lus (piste d audit) dans un
+    contexte propre a la regle — le contexte appelant n est jamais mute.
+    """
+    ctx_regle = Contexte(
+        soldes=ctx.soldes,
+        agregats=ctx.agregats,
+        reponses=ctx.reponses,
+        comptes_par_agregat=ctx.comptes_par_agregat,
+    )
+
+    def _comptes() -> tuple[str, ...]:
+        return tuple(sorted(ctx_regle.comptes_utilises))
+
     try:
-        condition = evaluer(regle.condition_declenchement, ctx)
+        condition = evaluer(regle.condition_declenchement, ctx_regle)
     except ErreurEvaluation as e:
         return ConclusionCalculee(
             regle_version_id=regle.regle_version_id,
@@ -79,6 +96,7 @@ def calculer_regle(
             niveau_risque=regle.niveau_risque,
             detail=f"condition inevaluable : {e}",
             inevaluable=True,
+            comptes_utilises=_comptes(),
         )
 
     if not isinstance(condition, bool):
@@ -91,6 +109,7 @@ def calculer_regle(
             niveau_risque=regle.niveau_risque,
             detail="condition non booleenne",
             inevaluable=True,
+            comptes_utilises=_comptes(),
         )
 
     if not condition:
@@ -101,10 +120,11 @@ def calculer_regle(
             montant=None,
             sens=None,
             niveau_risque=regle.niveau_risque,
+            comptes_utilises=_comptes(),
         )
 
     try:
-        resultat = evaluer(regle.expression_resultat, ctx)
+        resultat = evaluer(regle.expression_resultat, ctx_regle)
     except ErreurEvaluation as e:
         return ConclusionCalculee(
             regle_version_id=regle.regle_version_id,
@@ -115,6 +135,7 @@ def calculer_regle(
             niveau_risque=regle.niveau_risque,
             detail=f"resultat inevaluable : {e}",
             inevaluable=True,
+            comptes_utilises=_comptes(),
         )
 
     if isinstance(resultat, bool):
@@ -129,4 +150,5 @@ def calculer_regle(
         montant=montant,
         sens=sens_par_defaut if montant is not None else None,
         niveau_risque=regle.niveau_risque,
+        comptes_utilises=_comptes(),
     )

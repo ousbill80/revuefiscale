@@ -27,6 +27,14 @@ export type ScoreRisque = {
   avertissement: string;
 };
 
+/** Compte comptable à l'origine d'une conclusion (piste d'audit). */
+export type CompteSourceConclusion = {
+  compte: string;
+  libelle?: string | null;
+  solde?: string | number | null;
+  sens?: string | null;
+};
+
 export type ConclusionRestitution = {
   id?: number;
   regle_id: string;
@@ -39,6 +47,7 @@ export type ConclusionRestitution = {
   amendee_par?: string | null;
   valide_par?: string | null;
   valide_le?: string | null;
+  comptes_source?: CompteSourceConclusion[] | null;
 };
 
 export type IdentificationRestitution = {
