@@ -179,6 +179,106 @@ def test_rapport_pdf_donnees_consolidees(session, client_cab):
     assert len(donnees["edite_le"].split("/")) == 3
 
 
+def test_endpoint_risques_expose_chiffrage_penalites(session, client_cab):
+    """Champ additionnel chiffrage_penalites — structure existante intacte."""
+    client, h = client_cab
+    cid = _contrib(client, h, "CI-RAP-05")
+
+    created = client.post(
+        "/api/v1/risques",
+        headers=h,
+        json={
+            "contribuable_id": cid,
+            "impot": "TVA",
+            "libelle": "TVA collectée omise",
+            "exercice_origine": 2024,
+            "montant_estime": 1000000,
+        },
+    )
+    assert created.status_code == 201, created.text
+
+    r = client.get(f"/api/v1/contribuables/{cid}/risques", headers=h)
+    assert r.status_code == 200, r.text
+    rows = r.json()
+    assert len(rows) == 1
+    row = rows[0]
+    from decimal import Decimal
+
+    # Structure existante intacte.
+    assert Decimal(row["montant_estime"]) == Decimal("1000000")
+    assert row["statut"] == "ouvert"
+    ch = row["chiffrage_penalites"]
+    assert ch is not None
+    droit = Decimal(ch["droit_simple"])
+    interet = Decimal(ch["interet_retard"])
+    penalite = Decimal(ch["penalite_assiette"])
+    assert droit == Decimal("1000000")
+    # Pénalité d'assiette 25 % (bonne foi présumée).
+    assert penalite == Decimal("250000")
+    # Intérêt 0,5 %/mois, jamais au-delà du plafond de 50 %.
+    assert Decimal("0") <= interet <= droit * Decimal("0.5")
+    assert Decimal(ch["total_estime"]) == droit + interet + penalite
+    assert ch["caractere"] == "bonne_foi"
+    assert any("indicatif" in hyp.lower() for hyp in ch["hypotheses"])
+    # Risque non chiffré → chiffrage null, pas d'erreur.
+    sans = client.post(
+        "/api/v1/risques",
+        headers=h,
+        json={
+            "contribuable_id": cid,
+            "impot": "BIC",
+            "libelle": "Risque non chiffré",
+            "exercice_origine": 2024,
+        },
+    )
+    assert sans.status_code == 201, sans.text
+    rows = client.get(
+        f"/api/v1/contribuables/{cid}/risques", headers=h
+    ).json()
+    par_impot = {x["impot"]: x for x in rows}
+    assert par_impot["BIC"]["chiffrage_penalites"] is None
+
+
+def test_rapport_donnees_chiffrage_indicatif(session, client_cab):
+    from backend.plateforme.rapport_risques import construire_donnees_rapport
+
+    client, h = client_cab
+    cid = _contrib(client, h, "CI-RAP-06")
+    created = client.post(
+        "/api/v1/risques",
+        headers=h,
+        json={
+            "contribuable_id": cid,
+            "impot": "TVA",
+            "libelle": "Risque chiffré",
+            "exercice_origine": 2024,
+            "montant_estime": 1000000,
+        },
+    )
+    assert created.status_code == 201, created.text
+
+    me = client.get("/api/v1/moi", headers=h)
+    tid = int(me.json()["tenant_id"])
+    donnees = construire_donnees_rapport(session, tid, cid)
+    from decimal import Decimal
+
+    ch = donnees["chiffrage_indicatif"]
+    # Assiette 25 % au minimum : les pénalités estimées sont > 0.
+    assert ch["penalites_interets_ouverts"] >= Decimal("250000")
+    assert ch["exposition_totale_avec_penalites"] == (
+        donnees["exposition_totale"] + ch["penalites_interets_totaux"]
+    )
+    # Clés historiques inchangées.
+    assert donnees["exposition_ouverte"] == Decimal("1000000")
+
+    # PDF : magic + libellés du chiffrage indicatif.
+    r = client.get(
+        f"/api/v1/contribuables/{cid}/risques/rapport.pdf", headers=h
+    )
+    assert r.status_code == 200
+    assert r.content.startswith(b"%PDF")
+
+
 def test_rapport_pdf_cross_tenant_404(session, client_cab):
     client, h = client_cab
     cid = _contrib(client, h, "CI-RAP-03")

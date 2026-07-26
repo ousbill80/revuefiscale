@@ -3,6 +3,16 @@ import { useCallback, useEffect, useMemo, useState } from "react";
 import { api, apiUpload, telecharger } from "./api";
 import { TexteJuridique } from "./TexteJuridique";
 
+export type ChiffragePenalites = {
+  droit_simple: string;
+  interet_retard: string;
+  penalite_assiette: string;
+  total_estime: string;
+  mois_retard: number;
+  caractere: string;
+  hypotheses: string[];
+};
+
 export type RisqueRow = {
   id: number;
   contribuable_id: number;
@@ -14,6 +24,8 @@ export type RisqueRow = {
   exercice_origine: number;
   reference_legale?: string | null;
   motif_acceptation?: string | null;
+  /** Chiffrage indicatif pénalités + intérêts (déterministe, backend). */
+  chiffrage_penalites?: ChiffragePenalites | null;
 };
 
 export type PreuveResolutionRow = {
@@ -170,6 +182,20 @@ export function RegistreRisquesVue({
     return risques
       .filter((r) => r.statut === "ouvert" || r.statut === "en_traitement")
       .reduce((acc, r) => acc + (Number(r.montant_estime) || 0), 0);
+  }, [risques]);
+
+  /** Droits simples + pénalités + intérêts (chiffrage indicatif backend). */
+  const cumulOuvertsAvecPenalites = useMemo(() => {
+    return risques
+      .filter((r) => r.statut === "ouvert" || r.statut === "en_traitement")
+      .reduce(
+        (acc, r) =>
+          acc +
+          (Number(r.chiffrage_penalites?.total_estime) ||
+            Number(r.montant_estime) ||
+            0),
+        0,
+      );
   }, [risques]);
 
   const parImpot = useMemo(() => {
@@ -383,6 +409,16 @@ export function RegistreRisquesVue({
             Survit aux missions — cumul ouvert :{" "}
             <strong>{fmtMontant(String(cumulOuverts))}</strong>
           </p>
+          {cumulOuvertsAvecPenalites > cumulOuverts && (
+            <p
+              className="muted small"
+              title="Intérêt de retard 0,5 %/mois plafonné à 50 % du droit simple, pénalité d'assiette 25 % — à valider par l'associé."
+            >
+              Total estimé pénalités et intérêts inclus :{" "}
+              <strong>{fmtMontant(String(cumulOuvertsAvecPenalites))}</strong>{" "}
+              (chiffrage indicatif, à valider par l'associé)
+            </p>
+          )}
         </div>
         <div className="registre-actions-row">
           <button

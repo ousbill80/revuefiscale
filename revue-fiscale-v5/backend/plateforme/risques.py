@@ -9,6 +9,7 @@ from sqlalchemy import text
 from sqlalchemy.orm import Session
 
 from backend.plateforme.contexte import contexte_tenant
+from backend.plateforme.penalites import chiffrer_risque
 
 STATUTS_RISQUE: Final[frozenset[str]] = frozenset(
     {"ouvert", "en_traitement", "resolu", "accepte", "prescrit"}
@@ -33,7 +34,7 @@ def _serialiser(row: dict[str, Any]) -> dict[str, Any]:
     revue = row.get("derniere_revue")
     accepte_le = row.get("accepte_le")
     prescrit_le = row.get("prescrit_le")
-    return {
+    serialise = {
         "id": int(row["id"]),
         "contribuable_id": int(row["contribuable_id"]),
         "origine_conclusion_id": (
@@ -78,6 +79,10 @@ def _serialiser(row: dict[str, Any]) -> dict[str, Any]:
         "maj_le": maj.isoformat() if hasattr(maj, "isoformat") else maj,
         "contribuable_denomination": row.get("contribuable_denomination"),
     }
+    # Chiffrage indicatif pénalités + intérêts de retard (déterministe,
+    # calculé à la volée — aucun champ en base, à valider par l'associé).
+    serialise["chiffrage_penalites"] = chiffrer_risque(serialise)
+    return serialise
 
 
 _SELECT_RISQUE = (

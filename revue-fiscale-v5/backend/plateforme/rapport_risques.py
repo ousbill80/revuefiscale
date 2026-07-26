@@ -90,6 +90,16 @@ def _exposition(risque: dict[str, Any]) -> Decimal:
     return total
 
 
+def _penalites_interets_chiffres(risque: dict[str, Any]) -> Decimal:
+    """Intérêts + pénalité d'assiette du chiffrage indicatif (0 si absent)."""
+    chiffrage = risque.get("chiffrage_penalites")
+    if not chiffrage:
+        return Decimal("0")
+    return Decimal(str(chiffrage["interet_retard"])) + Decimal(
+        str(chiffrage["penalite_assiette"])
+    )
+
+
 def construire_donnees_rapport(
     session: Session, tenant_id: int, contribuable_id: int
 ) -> dict[str, Any]:
@@ -132,15 +142,20 @@ def construire_donnees_rapport(
 
     exposition_ouverte = Decimal("0")
     exposition_traitee = Decimal("0")
+    penalites_interets_ouverts = Decimal("0")
+    penalites_interets_traites = Decimal("0")
     par_impot: dict[str, dict[str, Any]] = {}
     par_statut: dict[str, dict[str, Any]] = {}
     for r in risques:
         expo = _exposition(r)
         statut = str(r["statut"])
+        pen_int = _penalites_interets_chiffres(r)
         if statut in STATUTS_NON_CLOS:
             exposition_ouverte += expo
+            penalites_interets_ouverts += pen_int
         else:
             exposition_traitee += expo
+            penalites_interets_traites += pen_int
 
         imp = par_impot.setdefault(
             str(r["impot"]),
@@ -203,6 +218,24 @@ def construire_donnees_rapport(
         "exposition_ouverte": exposition_ouverte,
         "exposition_traitee": exposition_traitee,
         "exposition_totale": exposition_ouverte + exposition_traitee,
+        # Chiffrage indicatif pénalités + intérêts de retard (déterministe,
+        # backend/plateforme/penalites.py) — à valider par l'associé.
+        "chiffrage_indicatif": {
+            "penalites_interets_ouverts": penalites_interets_ouverts,
+            "penalites_interets_traites": penalites_interets_traites,
+            "penalites_interets_totaux": (
+                penalites_interets_ouverts + penalites_interets_traites
+            ),
+            "exposition_ouverte_avec_penalites": (
+                exposition_ouverte + penalites_interets_ouverts
+            ),
+            "exposition_totale_avec_penalites": (
+                exposition_ouverte
+                + exposition_traitee
+                + penalites_interets_ouverts
+                + penalites_interets_traites
+            ),
+        },
         "par_impot": sorted(
             par_impot.values(),
             key=lambda x: x["exposition"],
@@ -258,6 +291,23 @@ def rendre_rapport_risques_pdf(donnees: dict[str, Any]) -> bytes:
         "Exposition totale : "
         + formater_montant_fcfa(donnees["exposition_totale"])
     )
+    chiffrage = donnees.get("chiffrage_indicatif") or {}
+    if chiffrage:
+        ligne(
+            "Pénalités et intérêts de retard estimés (indicatif) : "
+            + formater_montant_fcfa(chiffrage["penalites_interets_totaux"])
+        )
+        ligne(
+            "Exposition totale pénalités incluses (indicatif) : "
+            + formater_montant_fcfa(
+                chiffrage["exposition_totale_avec_penalites"]
+            )
+        )
+        ligne(
+            "Chiffrage indicatif (intérêt 0,5 %/mois plafonné à 50 %, "
+            "assiette 25 %) — à valider par l'associé.",
+            delta=16,
+        )
     score = donnees.get("score") or {}
     ligne(
         f"Score de risque : {score.get('score')} / 100 — "
@@ -301,6 +351,16 @@ def rendre_rapport_risques_pdf(donnees: dict[str, Any]) -> bytes:
             + (f" — {ref}" if ref else ""),
             delta=16,
         )
+        pen_int = _penalites_interets_chiffres(r)
+        if pen_int > 0:
+            total_avec = _exposition(r) + pen_int
+            ligne(
+                "    Pénalités + intérêts estimés (indicatif) : "
+                + formater_montant_fcfa(pen_int)
+                + " — total estimé "
+                + formater_montant_fcfa(total_avec),
+                delta=16,
+            )
     y -= 6
 
     ligne("Historique de résolution (preuves)", gras=True)
