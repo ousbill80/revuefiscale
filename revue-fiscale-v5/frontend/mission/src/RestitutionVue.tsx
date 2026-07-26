@@ -165,6 +165,45 @@ type CommentaireAnalytiqueDetail = CommentaireAnalytiqueVersion & {
   contenu: CommentaireContenu | null;
 };
 
+/* Suivi de circularisation — réponses client à la demande de renseignements. */
+type SuiviStatut = "en_attente" | "recu" | "sans_objet";
+
+type SuiviItem = {
+  cle_item: string;
+  libelle: string;
+  statut: SuiviStatut;
+  date_relance: string | null;
+  note: string | null;
+  maj_le: string | null;
+};
+
+type SuiviSynthese = {
+  total: number;
+  en_attente: number;
+  recu: number;
+  sans_objet: number;
+  a_relancer: number;
+};
+
+type SuiviOut = {
+  items: SuiviItem[];
+  synthese: SuiviSynthese;
+};
+
+const STATUTS_SUIVI: Array<{ value: SuiviStatut; label: string }> = [
+  { value: "en_attente", label: "En attente" },
+  { value: "recu", label: "Reçu" },
+  { value: "sans_objet", label: "Sans objet" },
+];
+
+function itemARelancer(it: SuiviItem): boolean {
+  return (
+    it.statut === "en_attente" &&
+    !!it.date_relance &&
+    it.date_relance <= new Date().toISOString().slice(0, 10)
+  );
+}
+
 /* Contrôle qualité de pré-clôture — déterministe et consultatif. */
 type ControleCloturePoint = {
   code: string;
@@ -402,6 +441,11 @@ export function RestitutionVue({
   const [lettreErr, setLettreErr] = useState<string | null>(null);
   const [demandeBusy, setDemandeBusy] = useState(false);
   const [demandeErr, setDemandeErr] = useState<string | null>(null);
+  const [suiviOuvert, setSuiviOuvert] = useState(false);
+  const [suivi, setSuivi] = useState<SuiviOut | null>(null);
+  const [suiviErr, setSuiviErr] = useState<string | null>(null);
+  const [suiviBusyCle, setSuiviBusyCle] = useState<string | null>(null);
+  const [suiviNotes, setSuiviNotes] = useState<Record<string, string>>({});
   const [ctrlClotureOuvert, setCtrlClotureOuvert] = useState(false);
   const [ctrlCloture, setCtrlCloture] = useState<ControleClotureOut | null>(
     null,
@@ -759,6 +803,96 @@ export function RestitutionVue({
       setDemandeBusy(false);
     }
   }
+
+  async function chargerSuivi(): Promise<void> {
+    if (!jeton || !r.mission_id) return;
+    try {
+      const out = await api<SuiviOut>(
+        `/api/v1/missions/${r.mission_id}/suivi-renseignements`,
+        { jeton },
+      );
+      setSuivi(out ?? null);
+      setSuiviErr(null);
+      const notes: Record<string, string> = {};
+      for (const it of out?.items ?? []) notes[it.cle_item] = it.note ?? "";
+      setSuiviNotes(notes);
+    } catch (e) {
+      setSuivi(null);
+      setSuiviErr(e instanceof Error ? e.message : "suivi indisponible");
+    }
+  }
+
+  async function majSuiviItem(
+    item: SuiviItem,
+    champs: Partial<{
+      statut: SuiviStatut;
+      date_relance: string | null;
+      note: string | null;
+    }>,
+  ): Promise<void> {
+    if (!jeton || !r.mission_id || suiviBusyCle) return;
+    setSuiviBusyCle(item.cle_item);
+    setSuiviErr(null);
+    try {
+      const out = await api<{ item: SuiviItem; synthese: SuiviSynthese }>(
+        `/api/v1/missions/${r.mission_id}/suivi-renseignements/${encodeURIComponent(item.cle_item)}`,
+        {
+          jeton,
+          method: "PATCH",
+          json: {
+            statut: champs.statut ?? item.statut,
+            date_relance:
+              champs.date_relance !== undefined
+                ? champs.date_relance
+                : item.date_relance,
+            note: champs.note !== undefined ? champs.note : item.note,
+          },
+        },
+      );
+      setSuivi((prev) =>
+        prev
+          ? {
+              synthese: out.synthese,
+              items: prev.items.map((it) =>
+                it.cle_item === out.item.cle_item ? out.item : it,
+              ),
+            }
+          : prev,
+      );
+    } catch (e) {
+      setSuiviErr(
+        e instanceof Error ? e.message : "mise à jour du suivi impossible",
+      );
+    } finally {
+      setSuiviBusyCle(null);
+    }
+  }
+
+  useEffect(() => {
+    if (!jeton || !r.mission_id) {
+      setSuivi(null);
+      return;
+    }
+    let cancelled = false;
+    void (async () => {
+      try {
+        const out = await api<SuiviOut>(
+          `/api/v1/missions/${r.mission_id}/suivi-renseignements`,
+          { jeton },
+        );
+        if (cancelled) return;
+        setSuivi(out ?? null);
+        const notes: Record<string, string> = {};
+        for (const it of out?.items ?? []) notes[it.cle_item] = it.note ?? "";
+        setSuiviNotes(notes);
+      } catch {
+        if (!cancelled) setSuivi(null);
+      }
+    })();
+    return () => {
+      cancelled = true;
+    };
+  }, [jeton, r.mission_id]);
 
   useEffect(() => {
     if (!jeton || !r.mission_id) {
@@ -1350,6 +1484,30 @@ export function RestitutionVue({
               {demandeErr}
             </span>
           )}
+          {suivi && suivi.synthese.total > 0 && (
+            <Tooltip label="Suivi des réponses client à la demande de renseignements : marquez chaque item reçu / sans objet, planifiez les relances.">
+              <button
+                type="button"
+                className="btn btn-ghost btn-sm rest-suivi-btn"
+                onClick={() => {
+                  setSuiviOuvert((o) => !o);
+                  if (!suiviOuvert) void chargerSuivi();
+                }}
+                aria-expanded={suiviOuvert}
+              >
+                <span
+                  className={`rest-suivi-compteur${
+                    suivi.synthese.a_relancer > 0 ? " relance" : ""
+                  }`}
+                >
+                  {suivi.synthese.recu}/{suivi.synthese.total} reçues
+                  {suivi.synthese.a_relancer > 0
+                    ? ` · ${suivi.synthese.a_relancer} à relancer`
+                    : ""}
+                </span>
+              </button>
+            </Tooltip>
+          )}
           <Tooltip label="Note de synthèse de mission (executive summary IA) pour l'associé signataire — versionnée, chaque constat cite sa règle. Consultative : l'humain valide.">
             <button
               type="button"
@@ -1503,6 +1661,132 @@ export function RestitutionVue({
               Annuler
             </button>
           </div>
+        </section>
+      )}
+
+      {suiviOuvert && (
+        <section
+          className="rest-suivi"
+          aria-label="Suivi des réponses client"
+        >
+          <div className="rest-suivi-head">
+            <h3 className="rest-suivi-titre label-with-tip">
+              Suivi des réponses client
+              <InfoTip
+                label="Circularisation de la demande de renseignements : la liste reprend les items du document (questions analytiques + pièces attendues). Statuts et relances sont enregistrés par mission."
+                ariaLabel="Aide : suivi des réponses client"
+              />
+            </h3>
+            <div className="rest-suivi-outils">
+              {suivi && (
+                <span className="muted">
+                  {suivi.synthese.recu} reçue{suivi.synthese.recu > 1 ? "s" : ""} ·{" "}
+                  {suivi.synthese.en_attente} en attente ·{" "}
+                  {suivi.synthese.sans_objet} sans objet
+                  {suivi.synthese.a_relancer > 0
+                    ? ` · ${suivi.synthese.a_relancer} à relancer`
+                    : ""}
+                </span>
+              )}
+              <button
+                type="button"
+                className="btn btn-ghost btn-sm"
+                onClick={() => setSuiviOuvert(false)}
+              >
+                Fermer
+              </button>
+            </div>
+          </div>
+          {suiviErr && (
+            <p className="rest-lettre-err" role="alert">
+              {suiviErr}
+            </p>
+          )}
+          {suivi && suivi.items.length === 0 && (
+            <p className="muted">
+              Aucun item demandable : générez d'abord le commentaire
+              analytique ou exécutez la mission.
+            </p>
+          )}
+          {suivi && suivi.items.length > 0 && (
+            <ul className="rest-suivi-items">
+              {suivi.items.map((it) => {
+                const relance = itemARelancer(it);
+                return (
+                  <li
+                    key={it.cle_item}
+                    className={`rest-suivi-item ${it.statut}${
+                      relance ? " a-relancer" : ""
+                    }`}
+                  >
+                    <div className="rest-suivi-libelle">
+                      <span className="rest-suivi-cle">{it.cle_item}</span>
+                      {it.libelle}
+                      {relance && (
+                        <span className="badge rest-suivi-badge-relance">
+                          À relancer
+                        </span>
+                      )}
+                    </div>
+                    <div className="rest-suivi-controles">
+                      <label className="rest-suivi-champ">
+                        Statut{" "}
+                        <select
+                          value={it.statut}
+                          disabled={estLecteur || suiviBusyCle === it.cle_item}
+                          onChange={(e) =>
+                            void majSuiviItem(it, {
+                              statut: e.target.value as SuiviStatut,
+                            })
+                          }
+                        >
+                          {STATUTS_SUIVI.map((s) => (
+                            <option key={s.value} value={s.value}>
+                              {s.label}
+                            </option>
+                          ))}
+                        </select>
+                      </label>
+                      <label className="rest-suivi-champ">
+                        Relance{" "}
+                        <input
+                          type="date"
+                          value={it.date_relance ?? ""}
+                          disabled={estLecteur || suiviBusyCle === it.cle_item}
+                          onChange={(e) =>
+                            void majSuiviItem(it, {
+                              date_relance: e.target.value || null,
+                            })
+                          }
+                        />
+                      </label>
+                      <label className="rest-suivi-champ rest-suivi-note">
+                        Note{" "}
+                        <input
+                          type="text"
+                          placeholder="ex : reçu par mail le…"
+                          value={suiviNotes[it.cle_item] ?? ""}
+                          disabled={estLecteur || suiviBusyCle === it.cle_item}
+                          onChange={(e) =>
+                            setSuiviNotes((prev) => ({
+                              ...prev,
+                              [it.cle_item]: e.target.value,
+                            }))
+                          }
+                          onBlur={(e) => {
+                            const note = e.target.value.trim() || null;
+                            if (note !== (it.note ?? null)) {
+                              void majSuiviItem(it, { note });
+                            }
+                          }}
+                        />
+                      </label>
+                    </div>
+                  </li>
+                );
+              })}
+            </ul>
+          )}
         </section>
       )}
 

@@ -120,6 +120,74 @@ def _conclusions_non_verifiables(
     ]
 
 
+def _questions_du_commentaire(
+    commentaire: dict[str, Any] | None,
+) -> list[dict[str, Any]]:
+    """Questions client du commentaire analytique — [{poste, question, gravite}]."""
+    questions: list[dict[str, Any]] = []
+    if commentaire is None:
+        return questions
+    for item in commentaire.get("explications") or []:
+        if not isinstance(item, dict):
+            continue
+        question = str(item.get("question_a_poser_au_client") or "").strip()
+        if not question:
+            continue
+        questions.append(
+            {
+                "poste": str(item.get("poste") or "").strip(),
+                "question": question,
+                "gravite": str(item.get("gravite") or "").strip(),
+            }
+        )
+    return questions
+
+
+def _motif_conclusion(c: dict[str, Any]) -> tuple[str, str]:
+    """(regle_id, motif) d'une conclusion non vérifiable — même choix que le DOCX."""
+    regle_id = str(c.get("regle_id") or "").strip() or A_COMPLETER
+    libelle = str(c.get("libelle") or "").strip()
+    commentaire = str(c.get("commentaire") or "").strip()
+    if libelle and libelle != regle_id:
+        motif = libelle
+    elif commentaire:
+        motif = commentaire
+    else:
+        motif = libelle or A_COMPLETER
+    return regle_id, motif
+
+
+def collecter_items(
+    session: Session, mission_id: int
+) -> list[dict[str, str]]:
+    """Items demandables au client — [{cle_item, libelle}] pour le suivi.
+
+    MÊMES sources et même ordre que le livrable .docx : questions du
+    dernier commentaire analytique disponible (``analytique:{poste}``)
+    puis conclusions ``non_verifiable`` (``piece:{regle_id}``). Contexte
+    tenant déjà posé par l'appelant. Clés dédoublonnées (suffixe ``:n``)
+    pour garantir un identifiant stable par item.
+    """
+    items: list[dict[str, str]] = []
+    vues: dict[str, int] = {}
+
+    def _ajouter(cle: str, libelle: str) -> None:
+        n = vues.get(cle, 0) + 1
+        vues[cle] = n
+        items.append(
+            {"cle_item": cle if n == 1 else f"{cle}:{n}", "libelle": libelle}
+        )
+
+    commentaire = _dernier_commentaire_disponible(session, mission_id)
+    for q in _questions_du_commentaire(commentaire):
+        poste = q["poste"] or A_COMPLETER
+        _ajouter(f"analytique:{poste}", f"Poste {poste} — {q['question']}")
+    for c in _conclusions_non_verifiables(session, mission_id):
+        regle_id, motif = _motif_conclusion(c)
+        _ajouter(f"piece:{regle_id}", f"[{regle_id}] — {motif}")
+    return items
+
+
 def collecter_donnees_demande(
     session: Session, tenant_id: int, mission_id: int
 ) -> dict[str, Any]:
@@ -155,23 +223,7 @@ def collecter_donnees_demande(
         {"t": tenant_id},
     ).mappings().one_or_none()
 
-    questions: list[dict[str, Any]] = []
-    if commentaire is not None:
-        for item in commentaire.get("explications") or []:
-            if not isinstance(item, dict):
-                continue
-            question = str(
-                item.get("question_a_poser_au_client") or ""
-            ).strip()
-            if not question:
-                continue
-            questions.append(
-                {
-                    "poste": str(item.get("poste") or "").strip(),
-                    "question": question,
-                    "gravite": str(item.get("gravite") or "").strip(),
-                }
-            )
+    questions = _questions_du_commentaire(commentaire)
 
     return {
         "mission": {"id": int(row["id"]), "exercice": row["exercice"]},
@@ -272,18 +324,10 @@ def rendre_demande_docx(donnees: dict[str, Any]) -> bytes:
         )
         for c in conclusions:
             numero += 1
-            regle_id = str(c.get("regle_id") or "").strip() or A_COMPLETER
-            libelle = str(c.get("libelle") or "").strip()
-            commentaire = str(c.get("commentaire") or "").strip()
             # Intitulé/motif : libellé de la règle s'il est renseigné (et
             # pas un simple écho de l'identifiant), sinon le motif du
             # moteur (commentaire de la conclusion).
-            if libelle and libelle != regle_id:
-                motif = libelle
-            elif commentaire:
-                motif = commentaire
-            else:
-                motif = libelle or A_COMPLETER
+            regle_id, motif = _motif_conclusion(c)
             doc.add_paragraph(
                 f"{numero}. [{regle_id}] — {motif} : merci de fournir la "
                 "réponse ou la pièce justificative correspondante."

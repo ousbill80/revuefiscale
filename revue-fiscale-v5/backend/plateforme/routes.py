@@ -1,6 +1,7 @@
 """Routes plateforme : provisionnement, auth, sante tenant."""
 from __future__ import annotations
 
+import datetime
 from typing import Annotated, Literal
 
 from fastapi import (
@@ -565,6 +566,87 @@ def api_demande_renseignements_docx(
             "Content-Disposition": f'attachment; filename="{nom_fichier}"'
         },
     )
+
+
+class SuiviRenseignementPatchIn(BaseModel):
+    """Mise à jour du suivi d'un item de la demande de renseignements."""
+
+    statut: Literal["en_attente", "recu", "sans_objet"]
+    date_relance: datetime.date | None = None
+    note: str | None = Field(default=None, max_length=2000)
+
+
+@router.get("/missions/{mission_id}/suivi-renseignements")
+def api_suivi_renseignements(
+    mission_id: int,
+    utilisateur: UtilisateurDep,
+    session: Annotated[Session, Depends(session_abonne)],
+) -> dict:
+    """Suivi de circularisation : items demandés + statuts + synthèse."""
+    from backend.plateforme.suivi_renseignements import (
+        ErreurSuiviIntrouvable,
+        lister_items,
+        synthese_depuis_items,
+    )
+
+    exiger_capacite(utilisateur, "lire")
+    try:
+        items = lister_items(session, utilisateur.tenant_id, mission_id)
+    except ErreurSuiviIntrouvable as e:
+        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail=str(e)) from e
+    return {"items": items, "synthese": synthese_depuis_items(items)}
+
+
+@router.patch("/missions/{mission_id}/suivi-renseignements/{cle_item}")
+def api_patcher_suivi_renseignements(
+    mission_id: int,
+    cle_item: str,
+    corps: SuiviRenseignementPatchIn,
+    utilisateur: UtilisateurDep,
+    session: Annotated[Session, Depends(session_abonne)],
+) -> dict:
+    """Marque un item reçu / en attente / sans objet (relance, note)."""
+    from backend.moteur.journal import append_journal
+    from backend.plateforme.suivi_renseignements import (
+        ErreurSuiviIntrouvable,
+        ErreurSuiviRenseignements,
+        lister_items,
+        maj_item,
+        synthese_depuis_items,
+    )
+
+    exiger_capacite(utilisateur, "executer_mission")
+    try:
+        item = maj_item(
+            session,
+            utilisateur.tenant_id,
+            mission_id,
+            cle_item,
+            statut=corps.statut,
+            date_relance=corps.date_relance,
+            note=corps.note,
+        )
+    except ErreurSuiviIntrouvable as e:
+        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail=str(e)) from e
+    except ErreurSuiviRenseignements as e:
+        raise HTTPException(
+            status_code=status.HTTP_400_BAD_REQUEST, detail=str(e)
+        ) from e
+    append_journal(
+        session,
+        tenant_id=utilisateur.tenant_id,
+        mission_id=mission_id,
+        acteur=utilisateur.email,
+        action="maj_suivi_renseignements",
+        charge_utile={
+            "cle_item": item["cle_item"],
+            "statut": item["statut"],
+            "date_relance": item["date_relance"],
+            "note_renseignee": bool(item["note"]),
+        },
+    )
+    items = lister_items(session, utilisateur.tenant_id, mission_id)
+    return {"item": item, "synthese": synthese_depuis_items(items)}
 
 
 @router.patch("/missions/{mission_id}/cadrage", response_model=MissionOut)
