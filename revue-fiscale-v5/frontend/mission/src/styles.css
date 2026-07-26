@@ -7467,7 +7467,7 @@ h2.section-title {
 }
 
 .clients-fiche-tabs {
-  grid-template-columns: repeat(5, 1fr);
+  grid-template-columns: repeat(3, 1fr);
   position: sticky;
   top: calc(var(--topbar-h) + var(--safe-top));
   z-index: 25;

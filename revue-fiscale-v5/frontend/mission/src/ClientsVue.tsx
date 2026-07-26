@@ -1340,12 +1340,10 @@ type FicheProps = {
 };
 
 type FiltreMissionsFiche = "toutes" | "actives" | "cloturees";
-type FicheTab = "overview" | "identite" | "pieces" | "risques" | "missions";
+type FicheTab = "overview" | "risques" | "missions";
 
 const FICHE_TABS: ReadonlyArray<{ id: FicheTab; label: string }> = [
   { id: "overview", label: "Vue d’ensemble" },
-  { id: "identite", label: "Identité" },
-  { id: "pieces", label: "Pièces" },
   { id: "risques", label: "Risques" },
   { id: "missions", label: "Missions" },
 ];
@@ -1358,7 +1356,10 @@ function tabDepuisHash(clientId: number): FicheTab {
   const m = new RegExp(
     `^#fiche-${clientId}-(overview|identite|pieces|risques|missions)$`,
   ).exec(window.location.hash || "");
-  return (m?.[1] as FicheTab) ?? "overview";
+  const brut = m?.[1];
+  // Rétro-compat : identité et pièces vivent dans la vue d'ensemble.
+  if (brut === "risques" || brut === "missions") return brut;
+  return "overview";
 }
 
 export function ClientFicheVue({
@@ -1484,7 +1485,7 @@ export function ClientFicheVue({
     (clientDetail.cree_par != null ? `utilisateur #${clientDetail.cree_par}` : null);
 
   function ouvrirEditionManquants() {
-    changerFicheTab("identite");
+    changerFicheTab("overview");
     setModeEdition(true);
     window.requestAnimationFrame(() => {
       const premiere = completude.clesManquantes[0];
@@ -1771,8 +1772,6 @@ export function ClientFicheVue({
         >
           {barreCompletude}
 
-          {resumeIdentite}
-
           <div
             className="clients-fiche-compteurs"
             role="group"
@@ -1790,11 +1789,15 @@ export function ClientFicheVue({
                 </span>
               </button>
             </Tooltip>
-            <Tooltip label="Voir les pièces du contribuable (upload, extraction).">
+            <Tooltip label="Aller aux pièces du contribuable (upload, extraction).">
               <button
                 type="button"
                 className="clients-fiche-compteur"
-                onClick={() => changerFicheTab("pieces")}
+                onClick={() =>
+                  document
+                    .getElementById(`fiche-${clientDetail.id}-panel-pieces`)
+                    ?.scrollIntoView({ behavior: "smooth", block: "start" })
+                }
               >
                 <strong>{nbPieces ?? "—"}</strong>
                 <span>pièce{(nbPieces ?? 0) !== 1 ? "s" : ""}</span>
@@ -1811,50 +1814,7 @@ export function ClientFicheVue({
               </button>
             </Tooltip>
           </div>
-        </div>
-      )}
 
-      {ficheTab === "pieces" && (
-        <div
-          className="clients-fiche-tab-panel"
-          id={`fiche-${clientDetail.id}-panel-pieces`}
-          role="tabpanel"
-          aria-labelledby={`fiche-${clientDetail.id}-tab-pieces`}
-        >
-          <PiecesContribuablePanel
-            jeton={jeton}
-            contribuableId={clientDetail.id}
-            disabled={estLecteur || busy}
-            edit={clientEdit}
-            setEdit={setClientEdit}
-            modeConformite
-          />
-        </div>
-      )}
-
-      {ficheTab === "risques" && (
-        <div
-          className="clients-fiche-tab-panel"
-          id={`fiche-${clientDetail.id}-panel-risques`}
-          role="tabpanel"
-          aria-labelledby={`fiche-${clientDetail.id}-tab-risques`}
-        >
-          <RegistreRisquesVue
-            jeton={jeton}
-            contribuableId={clientDetail.id}
-            estLecteur={estLecteur}
-          />
-        </div>
-      )}
-
-      {ficheTab === "identite" && (
-        <div
-          className="clients-fiche-tab-panel"
-          id={`fiche-${clientDetail.id}-panel-identite`}
-          role="tabpanel"
-          aria-labelledby={`fiche-${clientDetail.id}-tab-identite`}
-        >
-          {barreCompletude}
           <div className="panel dense clients-fiche-panel" id="clients-fiche-edition">
             <div className="clients-fiche-section-head">
               <div>
@@ -1940,6 +1900,32 @@ export function ClientFicheVue({
               </>
             )}
           </div>
+
+          <div id={`fiche-${clientDetail.id}-panel-pieces`}>
+            <PiecesContribuablePanel
+              jeton={jeton}
+              contribuableId={clientDetail.id}
+              disabled={estLecteur || busy}
+              edit={clientEdit}
+              setEdit={setClientEdit}
+              modeConformite
+            />
+          </div>
+        </div>
+      )}
+
+      {ficheTab === "risques" && (
+        <div
+          className="clients-fiche-tab-panel"
+          id={`fiche-${clientDetail.id}-panel-risques`}
+          role="tabpanel"
+          aria-labelledby={`fiche-${clientDetail.id}-tab-risques`}
+        >
+          <RegistreRisquesVue
+            jeton={jeton}
+            contribuableId={clientDetail.id}
+            estLecteur={estLecteur}
+          />
         </div>
       )}
 
