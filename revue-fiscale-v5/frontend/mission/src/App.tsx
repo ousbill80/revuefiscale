@@ -6,7 +6,14 @@ import {
   type FormEvent,
   type ReactNode,
 } from "react";
-import { AUTH_EXPIREE_EVENT, ApiError, api, apiUpload, telecharger } from "./api";
+import {
+  AUTH_EXPIREE_EVENT,
+  ApiError,
+  api,
+  apiUpload,
+  fmtMontant,
+  telecharger,
+} from "./api";
 import {
   analyserBalanceCsv,
   analyserBalanceJson,
@@ -285,6 +292,45 @@ type QuotaResume = {
   bloque: boolean;
 };
 
+/** Réponse GET /api/v1/pilotage — cockpit portefeuille de l'associé. */
+type PilotagePortefeuille = {
+  exposition_par_client: Array<{
+    contribuable_id: number;
+    denomination: string;
+    exposition_ouverte: string;
+    nb_risques_ouverts: number;
+    score: number;
+    niveau: string;
+  }>;
+  missions_a_cloturer: Array<{
+    mission_id: number;
+    contribuable_id: number;
+    denomination: string;
+    exercice: number;
+    derniere_execution_le: string | null;
+    jours_inactivite: number;
+  }>;
+  alertes_source: Array<{
+    mission_id: number;
+    contribuable_id: number;
+    denomination: string;
+    exercice: number;
+    codes_alerte: string[];
+    controle_le: string | null;
+  }>;
+  risques_en_retard: {
+    total: number;
+    top: Array<{
+      risque_id: number;
+      contribuable_id: number;
+      denomination: string;
+      libelle: string;
+      montant_estime: string;
+      echeance: string | null;
+    }>;
+  };
+};
+
 function useMobile(max = 720) {
   const [mobile, setMobile] = useState(
     () => window.matchMedia(`(max-width: ${max}px)`).matches,
@@ -488,6 +534,7 @@ export function App() {
       risque_libelle?: string | null;
     }>
   >([]);
+  const [pilotage, setPilotage] = useState<PilotagePortefeuille | null>(null);
   const [balanceJson, setBalanceJson] = useState(BALANCE_DEMO);
   const [balanceFile, setBalanceFile] = useState<File | null>(null);
   const [balanceSource, setBalanceSource] = useState<"json" | "fichier">("json");
@@ -1057,6 +1104,14 @@ export function App() {
         if (!cancelled) setActionsRetard(Array.isArray(list) ? list : []);
       } catch {
         if (!cancelled) setActionsRetard([]);
+      }
+      try {
+        const p = await api<PilotagePortefeuille>("/api/v1/pilotage", {
+          jeton: session.jeton,
+        });
+        if (!cancelled) setPilotage(p);
+      } catch {
+        if (!cancelled) setPilotage(null);
       }
     })();
     return () => {
@@ -3640,6 +3695,169 @@ export function App() {
                       </li>
                     ))}
                   </ul>
+                </section>
+              )}
+
+              {pilotage && (
+                <section
+                  className="pilotage-zone"
+                  aria-label="Pilotage portefeuille"
+                >
+                  <div className="pilotage-head">
+                    <h3 className="pilotage-title">Pilotage portefeuille</h3>
+                    <p className="pilotage-sub">
+                      Risque cumulé, missions qui traînent, fiabilité des
+                      sources.
+                    </p>
+                  </div>
+                  <div className="pilotage-grid">
+                    <article className="panel dense pilotage-card">
+                      <h4 className="pilotage-card-title">
+                        Exposition par client
+                        <span className="pilotage-count">
+                          {pilotage.exposition_par_client.length}
+                        </span>
+                      </h4>
+                      <ul className="pilotage-list">
+                        {pilotage.exposition_par_client.map((e) => (
+                          <li key={e.contribuable_id}>
+                            <button
+                              type="button"
+                              className="pilotage-row"
+                              onClick={() =>
+                                void ouvrirClient(e.contribuable_id)
+                              }
+                            >
+                              <span className="pilotage-row-nom">
+                                {e.denomination}
+                              </span>
+                              <span className="pilotage-row-meta">
+                                {e.nb_risques_ouverts} risque
+                                {e.nb_risques_ouverts !== 1 ? "s" : ""} ·
+                                score {e.score}
+                              </span>
+                              <span className="pilotage-row-montant">
+                                {fmtMontant(e.exposition_ouverte)} FCFA
+                              </span>
+                            </button>
+                          </li>
+                        ))}
+                        {!pilotage.exposition_par_client.length && (
+                          <li className="pilotage-vide">
+                            Aucun risque ouvert au portefeuille.
+                          </li>
+                        )}
+                      </ul>
+                    </article>
+
+                    <article className="panel dense pilotage-card">
+                      <h4 className="pilotage-card-title">
+                        Missions inactives &gt;30 j
+                        <span className="pilotage-count">
+                          {pilotage.missions_a_cloturer.length}
+                        </span>
+                      </h4>
+                      <ul className="pilotage-list">
+                        {pilotage.missions_a_cloturer.map((m) => (
+                          <li key={m.mission_id}>
+                            <button
+                              type="button"
+                              className="pilotage-row"
+                              onClick={() => void ouvrirMission(m.mission_id)}
+                            >
+                              <span className="pilotage-row-nom">
+                                {m.denomination}
+                              </span>
+                              <span className="pilotage-row-meta">
+                                Exercice {m.exercice}
+                              </span>
+                              <span className="pilotage-row-alerte">
+                                {m.jours_inactivite} j d&apos;inactivité
+                              </span>
+                            </button>
+                          </li>
+                        ))}
+                        {!pilotage.missions_a_cloturer.length && (
+                          <li className="pilotage-vide">
+                            Aucune mission en cours inactive.
+                          </li>
+                        )}
+                      </ul>
+                    </article>
+
+                    <article className="panel dense pilotage-card">
+                      <h4 className="pilotage-card-title">
+                        Alertes fiabilité source
+                        <span className="pilotage-count">
+                          {pilotage.alertes_source.length}
+                        </span>
+                      </h4>
+                      <ul className="pilotage-list">
+                        {pilotage.alertes_source.map((a) => (
+                          <li key={a.mission_id}>
+                            <button
+                              type="button"
+                              className="pilotage-row"
+                              onClick={() => void ouvrirMission(a.mission_id)}
+                            >
+                              <span className="pilotage-row-nom">
+                                {a.denomination}
+                              </span>
+                              <span className="pilotage-row-meta">
+                                Exercice {a.exercice}
+                              </span>
+                              <span className="pilotage-row-alerte">
+                                {a.codes_alerte.join(", ")}
+                              </span>
+                            </button>
+                          </li>
+                        ))}
+                        {!pilotage.alertes_source.length && (
+                          <li className="pilotage-vide">
+                            Aucune alerte sur les sources FEC contrôlées.
+                          </li>
+                        )}
+                      </ul>
+                    </article>
+
+                    <article className="panel dense pilotage-card">
+                      <h4 className="pilotage-card-title">
+                        Risques en retard
+                        <span className="pilotage-count warn">
+                          {pilotage.risques_en_retard.total}
+                        </span>
+                      </h4>
+                      <ul className="pilotage-list">
+                        {pilotage.risques_en_retard.top.map((r) => (
+                          <li key={r.risque_id}>
+                            <button
+                              type="button"
+                              className="pilotage-row"
+                              onClick={() =>
+                                void ouvrirClient(r.contribuable_id)
+                              }
+                            >
+                              <span className="pilotage-row-nom">
+                                {r.denomination}
+                              </span>
+                              <span className="pilotage-row-meta">
+                                {r.libelle}
+                                {r.echeance ? ` · éch. ${r.echeance}` : ""}
+                              </span>
+                              <span className="pilotage-row-montant">
+                                {fmtMontant(r.montant_estime)} FCFA
+                              </span>
+                            </button>
+                          </li>
+                        ))}
+                        {!pilotage.risques_en_retard.total && (
+                          <li className="pilotage-vide">
+                            Aucun risque avec échéance dépassée.
+                          </li>
+                        )}
+                      </ul>
+                    </article>
+                  </div>
                 </section>
               )}
 

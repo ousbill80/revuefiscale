@@ -1933,3 +1933,20 @@ def api_controles_fec_mission(
         if dernier["cree_le"] is not None
         else None,
     }
+
+
+@router.get("/pilotage")
+def api_pilotage_portefeuille(
+    utilisateur: UtilisateurDep,
+    session: Annotated[Session, Depends(session_abonne)],
+) -> dict:
+    """Cockpit associé — pilotage du portefeuille (lecture seule).
+
+    Quatre volets : exposition ouverte par client, missions en cours
+    inactives > 30 jours, alertes fiabilité des sources FEC et risques
+    en retard de traitement. Tout est calculé sous contexte_tenant.
+    """
+    from backend.plateforme.pilotage import pilotage_portefeuille
+
+    exiger_capacite(utilisateur, "lire")
+    return pilotage_portefeuille(session, utilisateur.tenant_id)

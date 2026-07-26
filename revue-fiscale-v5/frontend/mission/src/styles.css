@@ -9284,3 +9284,22 @@ tr.row-active td {
 .rest-analytique-totaux li { display: inline-flex; align-items: baseline; gap: 0.4rem; padding: 0.25rem 0.55rem; border: 1px solid var(--line-soft, #f1f5f9); border-radius: 8px; background: var(--surface, #fff); font-size: 0.74rem; }
 .rest-analytique-totaux-classe { font-weight: 700; color: var(--ink, #0f172a); white-space: nowrap; }
 .rest-analytique-totaux-montants { font-variant-numeric: tabular-nums; color: var(--ink-soft, #475569); white-space: nowrap; }
+
+/* ── Pilotage portefeuille (tableau de bord associé) ─────────────── */
+.pilotage-zone { margin: 1rem 0 0.5rem; }
+.pilotage-head { margin-bottom: 0.6rem; }
+.pilotage-title { margin: 0; font-size: 1rem; font-weight: 800; color: var(--ink, #0f172a); }
+.pilotage-sub { margin: 0.15rem 0 0; font-size: 0.78rem; color: var(--muted, #64748b); }
+.pilotage-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 0.75rem; }
+.pilotage-card { display: flex; flex-direction: column; min-width: 0; }
+.pilotage-card-title { display: flex; align-items: center; justify-content: space-between; gap: 0.5rem; margin: 0 0 0.5rem; font-size: 0.8rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.04em; color: var(--ink-soft, #1e293b); }
+.pilotage-count { display: inline-flex; align-items: center; justify-content: center; min-width: 1.5rem; padding: 0.05rem 0.45rem; border-radius: 999px; background: var(--accent-soft, #ecfdf8); color: var(--accent-deep, #115e59); font-size: 0.74rem; font-weight: 800; }
+.pilotage-count.warn { background: #fef2f2; color: #b91c1c; }
+.pilotage-list { list-style: none; margin: 0; padding: 0; display: flex; flex-direction: column; gap: 0.25rem; }
+.pilotage-row { display: flex; flex-wrap: wrap; align-items: baseline; gap: 0.25rem 0.55rem; width: 100%; padding: 0.4rem 0.5rem; border: 1px solid var(--line-soft, #f1f5f9); border-radius: 8px; background: var(--surface, #fff); text-align: left; font: inherit; cursor: pointer; }
+.pilotage-row:hover { border-color: var(--accent, #0f766e); background: var(--accent-soft, #ecfdf8); }
+.pilotage-row-nom { font-weight: 700; font-size: 0.82rem; color: var(--ink, #0f172a); overflow-wrap: anywhere; }
+.pilotage-row-meta { font-size: 0.74rem; color: var(--muted, #64748b); overflow-wrap: anywhere; }
+.pilotage-row-montant { margin-left: auto; font-size: 0.78rem; font-weight: 700; font-variant-numeric: tabular-nums; white-space: nowrap; color: var(--ink-soft, #1e293b); }
+.pilotage-row-alerte { margin-left: auto; font-size: 0.74rem; font-weight: 700; white-space: nowrap; color: #b91c1c; }
+.pilotage-vide { padding: 0.5rem 0.6rem; border: 1px dashed var(--line, #e5e7eb); border-radius: 8px; font-size: 0.78rem; color: var(--muted, #64748b); }
