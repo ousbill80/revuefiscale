@@ -1827,6 +1827,7 @@ td .empty-state {
   line-height: 1.4;
   letter-spacing: 0.01em;
   text-align: left;
+  white-space: pre-line;
   box-shadow: var(--shadow-sm);
   pointer-events: none;
   opacity: 0;

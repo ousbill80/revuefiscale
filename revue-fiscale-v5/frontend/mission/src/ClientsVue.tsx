@@ -31,7 +31,12 @@ import {
   PiecesContribuablePanel,
   nouvelleSessionUpload,
 } from "./PiecesContribuable";
-import { RegistreRisquesVue } from "./RegistreRisques";
+import { DataRoomPanel } from "./DataRoomPanel";
+import {
+  RegistreRisquesVue,
+  tipInterpretationScoreRisque,
+  type ScoreRisque as ScoreRisqueContribuable,
+} from "./RegistreRisques";
 import {
   estMissionActive,
   libelleStatut,
@@ -1340,12 +1345,13 @@ type FicheProps = {
 };
 
 type FiltreMissionsFiche = "toutes" | "actives" | "cloturees";
-type FicheTab = "overview" | "risques" | "missions";
+type FicheTab = "overview" | "risques" | "missions" | "dataroom";
 
 const FICHE_TABS: ReadonlyArray<{ id: FicheTab; label: string }> = [
   { id: "overview", label: "Vue d’ensemble" },
   { id: "risques", label: "Risques" },
   { id: "missions", label: "Missions" },
+  { id: "dataroom", label: "Data Room" },
 ];
 
 function hashFicheTab(clientId: number, tab: FicheTab): string {
@@ -1354,11 +1360,12 @@ function hashFicheTab(clientId: number, tab: FicheTab): string {
 
 function tabDepuisHash(clientId: number): FicheTab {
   const m = new RegExp(
-    `^#fiche-${clientId}-(overview|identite|pieces|risques|missions)$`,
+    `^#fiche-${clientId}-(overview|identite|pieces|risques|missions|dataroom)$`,
   ).exec(window.location.hash || "");
   const brut = m?.[1];
   // Rétro-compat : identité et pièces vivent dans la vue d'ensemble.
-  if (brut === "risques" || brut === "missions") return brut;
+  if (brut === "risques" || brut === "missions" || brut === "dataroom")
+    return brut;
   return "overview";
 }
 
@@ -1420,6 +1427,28 @@ export function ClientFicheVue({
   // Compteurs pièces / risques (informative — masqués si l'API échoue).
   const [nbPieces, setNbPieces] = useState<number | null>(null);
   const [nbRisques, setNbRisques] = useState<number | null>(null);
+  // Score registre (déterministe, API existante) — header fiche.
+  const [scoreRisque, setScoreRisque] =
+    useState<ScoreRisqueContribuable | null>(null);
+
+  useEffect(() => {
+    let annule = false;
+    void (async () => {
+      try {
+        const s = await api<ScoreRisqueContribuable>(
+          `/api/v1/contribuables/${clientDetail.id}/risques/score`,
+          { jeton },
+        );
+        if (!annule)
+          setScoreRisque(s && typeof s.score === "number" ? s : null);
+      } catch {
+        if (!annule) setScoreRisque(null);
+      }
+    })();
+    return () => {
+      annule = true;
+    };
+  }, [clientDetail.id, jeton]);
 
   useEffect(() => {
     if (ficheTab !== "overview") return;
@@ -1716,6 +1745,34 @@ export function ClientFicheVue({
             </p>
           )}
         </div>
+        {scoreRisque && (
+          <Tooltip
+            className="tip-score-risque"
+            label={tipInterpretationScoreRisque(scoreRisque)}
+          >
+            <button
+              type="button"
+              className={`clients-head-score niveau-${scoreRisque.niveau}`}
+              aria-label={
+                scoreRisque.plage
+                  ? `Score risque ${scoreRisque.score} sur 100 — ${scoreRisque.libelle_niveau} (${scoreRisque.plage})`
+                  : `Score risque ${scoreRisque.score} sur 100 — ${scoreRisque.libelle_niveau}`
+              }
+              onClick={() => changerFicheTab("risques")}
+            >
+              <span className="clients-head-score-kicker">Score</span>
+              <strong className="clients-head-score-valeur">
+                {scoreRisque.score}
+                <span aria-hidden="true">/100</span>
+              </strong>
+              <span
+                className={`clients-head-score-badge niveau-${scoreRisque.niveau}`}
+              >
+                {scoreRisque.libelle_niveau}
+              </span>
+            </button>
+          </Tooltip>
+        )}
         <div className="page-actions">
           <Tooltip label="Retour au portefeuille clients.">
             <button type="button" className="btn btn-ghost" onClick={onRetour}>
@@ -1922,6 +1979,21 @@ export function ClientFicheVue({
           aria-labelledby={`fiche-${clientDetail.id}-tab-risques`}
         >
           <RegistreRisquesVue
+            jeton={jeton}
+            contribuableId={clientDetail.id}
+            estLecteur={estLecteur}
+          />
+        </div>
+      )}
+
+      {ficheTab === "dataroom" && (
+        <div
+          className="clients-fiche-tab-panel"
+          id={`fiche-${clientDetail.id}-panel-dataroom`}
+          role="tabpanel"
+          aria-labelledby={`fiche-${clientDetail.id}-tab-dataroom`}
+        >
+          <DataRoomPanel
             jeton={jeton}
             contribuableId={clientDetail.id}
             estLecteur={estLecteur}

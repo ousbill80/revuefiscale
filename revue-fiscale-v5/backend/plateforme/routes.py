@@ -3,7 +3,7 @@ from __future__ import annotations
 
 from typing import Annotated, Literal
 
-from fastapi import APIRouter, Depends, HTTPException, status
+from fastapi import APIRouter, Depends, File, HTTPException, UploadFile, status
 from pydantic import BaseModel, Field
 from sqlalchemy import text
 from sqlalchemy.orm import Session
@@ -1042,6 +1042,240 @@ def api_score_risque_contribuable(
     )
 
 
+# ── Data Room : mémoire client + timeline ──────────────────────────
+
+
+class MemoireEntreeIn(BaseModel):
+    type_entree: Literal["fait", "contexte", "alerte", "note"]
+    contenu: str = Field(min_length=1, max_length=4000)
+
+
+@router.get("/contribuables/{contribuable_id}/memoire")
+def api_lister_memoire_client(
+    contribuable_id: int,
+    utilisateur: UtilisateurDep,
+    session: Annotated[Session, Depends(session_abonne)],
+    type_entree: str | None = None,
+) -> list[dict]:
+    from backend.plateforme.memoire_client import (
+        ErreurMemoireClient,
+        lister_memoire,
+    )
+
+    try:
+        return lister_memoire(
+            session,
+            utilisateur.tenant_id,
+            contribuable_id,
+            type_entree=type_entree,
+        )
+    except ErreurMemoireClient as e:
+        raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST, detail=str(e)) from e
+
+
+@router.post(
+    "/contribuables/{contribuable_id}/memoire",
+    status_code=status.HTTP_201_CREATED,
+)
+def api_ajouter_memoire_client(
+    contribuable_id: int,
+    corps: MemoireEntreeIn,
+    utilisateur: UtilisateurDep,
+    session: Annotated[Session, Depends(session_abonne)],
+) -> dict:
+    from backend.moteur.journal import append_journal
+    from backend.plateforme.memoire_client import (
+        ErreurMemoireClient,
+        ajouter_entree_memoire,
+    )
+
+    exiger_capacite(utilisateur, "ecrire_contribuable")
+    try:
+        entree = ajouter_entree_memoire(
+            session,
+            utilisateur.tenant_id,
+            contribuable_id,
+            type_entree=corps.type_entree,
+            contenu=corps.contenu,
+            source_type="manuel",
+            auteur=utilisateur.email,
+        )
+    except ErreurMemoireClient as e:
+        msg = str(e)
+        code = (
+            status.HTTP_404_NOT_FOUND
+            if "introuvable" in msg
+            else status.HTTP_400_BAD_REQUEST
+        )
+        raise HTTPException(status_code=code, detail=msg) from e
+    append_journal(
+        session,
+        tenant_id=utilisateur.tenant_id,
+        mission_id=None,
+        acteur=utilisateur.email,
+        action="ajout_memoire_client",
+        charge_utile={
+            "contribuable_id": contribuable_id,
+            "entree_id": entree["id"],
+            "type_entree": entree["type_entree"],
+        },
+    )
+    return entree
+
+
+@router.delete("/contribuables/{contribuable_id}/memoire/{entree_id}")
+def api_desactiver_memoire_client(
+    contribuable_id: int,
+    entree_id: int,
+    utilisateur: UtilisateurDep,
+    session: Annotated[Session, Depends(session_abonne)],
+) -> dict:
+    from backend.moteur.journal import append_journal
+    from backend.plateforme.memoire_client import (
+        ErreurMemoireClient,
+        desactiver_entree_memoire,
+    )
+
+    exiger_capacite(utilisateur, "ecrire_contribuable")
+    try:
+        entree = desactiver_entree_memoire(
+            session,
+            utilisateur.tenant_id,
+            contribuable_id,
+            entree_id,
+        )
+    except ErreurMemoireClient as e:
+        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail=str(e)) from e
+    append_journal(
+        session,
+        tenant_id=utilisateur.tenant_id,
+        mission_id=None,
+        acteur=utilisateur.email,
+        action="retrait_memoire_client",
+        charge_utile={
+            "contribuable_id": contribuable_id,
+            "entree_id": entree_id,
+        },
+    )
+    return entree
+
+
+@router.get("/contribuables/{contribuable_id}/timeline")
+def api_timeline_contribuable(
+    contribuable_id: int,
+    utilisateur: UtilisateurDep,
+    session: Annotated[Session, Depends(session_abonne)],
+    limite: int = 50,
+) -> list[dict]:
+    from backend.plateforme.memoire_client import timeline_contribuable
+
+    return timeline_contribuable(
+        session, utilisateur.tenant_id, contribuable_id, limite=limite
+    )
+
+
+# ── Data Room : synthèse IA client ─────────────────────────────────
+
+
+@router.post(
+    "/contribuables/{contribuable_id}/syntheses",
+    status_code=status.HTTP_201_CREATED,
+)
+def api_generer_synthese_client(
+    contribuable_id: int,
+    utilisateur: UtilisateurDep,
+    session: Annotated[Session, Depends(session_abonne)],
+) -> dict:
+    from backend.moteur.journal import append_journal
+    from backend.plateforme.memoire_client import alimenter_memoire
+    from backend.plateforme.synthese_client import (
+        ErreurSyntheseClient,
+        generer_synthese,
+    )
+
+    exiger_capacite(utilisateur, "ecrire_contribuable")
+    try:
+        synthese = generer_synthese(
+            session,
+            utilisateur.tenant_id,
+            contribuable_id,
+            auteur=utilisateur.email,
+        )
+    except ErreurSyntheseClient as e:
+        msg = str(e)
+        code = (
+            status.HTTP_404_NOT_FOUND
+            if "introuvable" in msg
+            else status.HTTP_400_BAD_REQUEST
+        )
+        raise HTTPException(status_code=code, detail=msg) from e
+    append_journal(
+        session,
+        tenant_id=utilisateur.tenant_id,
+        mission_id=None,
+        acteur=utilisateur.email,
+        action="generation_synthese_client",
+        charge_utile={
+            "contribuable_id": contribuable_id,
+            "synthese_id": synthese["id"],
+            "version": synthese["version"],
+            "statut": synthese["statut"],
+        },
+    )
+    if synthese["statut"] == "disponible":
+        resume = str((synthese.get("contenu") or {}).get("resume") or "")
+        contenu_memoire = (
+            f"Synthèse IA v{synthese['version']} générée"
+            + (f" — {resume}" if resume else "")
+        )[:4000]
+        alimenter_memoire(
+            session,
+            utilisateur.tenant_id,
+            contribuable_id,
+            type_entree="contexte",
+            contenu=contenu_memoire,
+            source_type="synthese",
+            source_ref=f"synthese:{synthese['id']}",
+        )
+    return synthese
+
+
+@router.get("/contribuables/{contribuable_id}/syntheses")
+def api_lister_syntheses_client(
+    contribuable_id: int,
+    utilisateur: UtilisateurDep,
+    session: Annotated[Session, Depends(session_abonne)],
+) -> list[dict]:
+    from backend.plateforme.synthese_client import lister_syntheses
+
+    return lister_syntheses(
+        session, utilisateur.tenant_id, contribuable_id
+    )
+
+
+@router.get("/contribuables/{contribuable_id}/syntheses/{synthese_id}")
+def api_obtenir_synthese_client(
+    contribuable_id: int,
+    synthese_id: int,
+    utilisateur: UtilisateurDep,
+    session: Annotated[Session, Depends(session_abonne)],
+) -> dict:
+    from backend.plateforme.synthese_client import (
+        ErreurSyntheseClient,
+        obtenir_synthese,
+    )
+
+    try:
+        return obtenir_synthese(
+            session,
+            utilisateur.tenant_id,
+            contribuable_id,
+            synthese_id,
+        )
+    except ErreurSyntheseClient as e:
+        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail=str(e)) from e
+
+
 @router.post("/risques", status_code=status.HTTP_201_CREATED)
 def api_creer_risque(
     corps: RisqueIn,
@@ -1127,6 +1361,136 @@ def api_patcher_risque(
             else status.HTTP_400_BAD_REQUEST
         )
         raise HTTPException(status_code=code, detail=msg) from e
+
+
+# ── Preuves de résolution des risques (verdict IA consultatif) ─────
+
+
+class ResolutionRisqueIn(BaseModel):
+    preuve_id: int
+    motif_forcage: str | None = Field(default=None, max_length=2000)
+
+
+@router.post(
+    "/risques/{risque_id}/preuves",
+    status_code=status.HTTP_201_CREATED,
+)
+async def api_deposer_preuve_resolution(
+    risque_id: int,
+    utilisateur: UtilisateurDep,
+    session: Annotated[Session, Depends(session_abonne)],
+    fichier: Annotated[UploadFile, File(...)],
+) -> dict:
+    """Dépose le justificatif puis l'analyse (synchrone, consultatif)."""
+    from backend.moteur.journal import append_journal
+    from backend.plateforme.preuve_resolution import (
+        ErreurPreuveResolution,
+        analyser_preuve,
+        enregistrer_preuve,
+    )
+
+    exiger_capacite(utilisateur, "ecrire_contribuable")
+    brut = await fichier.read()
+    try:
+        preuve = enregistrer_preuve(
+            session,
+            utilisateur.tenant_id,
+            risque_id,
+            nom_fichier=fichier.filename or "preuve",
+            content_type=fichier.content_type,
+            brut=brut,
+            auteur=utilisateur.email,
+        )
+    except ErreurPreuveResolution as e:
+        msg = str(e)
+        if "introuvable" in msg:
+            code = status.HTTP_404_NOT_FOUND
+        elif "volumineux" in msg:
+            code = status.HTTP_413_REQUEST_ENTITY_TOO_LARGE
+        else:
+            code = status.HTTP_400_BAD_REQUEST
+        raise HTTPException(status_code=code, detail=msg) from e
+    preuve = analyser_preuve(
+        session, utilisateur.tenant_id, int(preuve["id"])
+    )
+    append_journal(
+        session,
+        tenant_id=utilisateur.tenant_id,
+        mission_id=None,
+        acteur=utilisateur.email,
+        action="depot_preuve_resolution",
+        charge_utile={
+            "risque_id": risque_id,
+            "preuve_id": preuve["id"],
+            "verdict_ia": preuve.get("verdict_ia"),
+        },
+    )
+    return preuve
+
+
+@router.get("/risques/{risque_id}/preuves")
+def api_lister_preuves_resolution(
+    risque_id: int,
+    utilisateur: UtilisateurDep,
+    session: Annotated[Session, Depends(session_abonne)],
+) -> list[dict]:
+    from backend.plateforme.preuve_resolution import (
+        ErreurPreuveResolution,
+        lister_preuves,
+    )
+
+    try:
+        return lister_preuves(session, utilisateur.tenant_id, risque_id)
+    except ErreurPreuveResolution as e:
+        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail=str(e)) from e
+
+
+@router.post("/risques/{risque_id}/resolution")
+def api_resoudre_risque_avec_preuve(
+    risque_id: int,
+    corps: ResolutionRisqueIn,
+    utilisateur: UtilisateurDep,
+    session: Annotated[Session, Depends(session_abonne)],
+) -> dict:
+    from backend.moteur.journal import append_journal
+    from backend.plateforme.preuve_resolution import (
+        ErreurPreuveResolution,
+        resoudre_risque_avec_preuve,
+    )
+    from backend.plateforme.risques import ErreurRisque
+
+    exiger_capacite(utilisateur, "ecrire_contribuable")
+    try:
+        resultat = resoudre_risque_avec_preuve(
+            session,
+            utilisateur.tenant_id,
+            risque_id,
+            preuve_id=corps.preuve_id,
+            acteur=utilisateur.email,
+            motif_forcage=corps.motif_forcage,
+        )
+    except (ErreurPreuveResolution, ErreurRisque) as e:
+        msg = str(e)
+        code = (
+            status.HTTP_404_NOT_FOUND
+            if "introuvable" in msg
+            else status.HTTP_400_BAD_REQUEST
+        )
+        raise HTTPException(status_code=code, detail=msg) from e
+    append_journal(
+        session,
+        tenant_id=utilisateur.tenant_id,
+        mission_id=None,
+        acteur=utilisateur.email,
+        action="resolution_risque_avec_preuve",
+        charge_utile={
+            "risque_id": risque_id,
+            "preuve_id": corps.preuve_id,
+            "verdict_ia": (resultat.get("preuve") or {}).get("verdict_ia"),
+            "decision": (resultat.get("preuve") or {}).get("decision"),
+        },
+    )
+    return resultat
 
 
 class ActionRisqueIn(BaseModel):

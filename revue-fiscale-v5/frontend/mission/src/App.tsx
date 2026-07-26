@@ -318,12 +318,12 @@ function lireSessionStockee(): SessionAuth | null {
 
 /**
  * Deep-link applicatif écrit par la fiche client :
- * `#fiche-{id}-{overview|identite|pieces|risques|missions}`.
+ * `#fiche-{id}-{overview|identite|pieces|risques|missions|dataroom}`.
  * `#fiche-{id}` et `#fiche-{id}-overview` restent valides (rétro-compat).
  */
 function lireVueDeepLink(): { type: "fiche"; id: number } | null {
   try {
-    const m = /^#fiche-(\d+)(?:-(overview|identite|pieces|risques|missions))?$/.exec(
+    const m = /^#fiche-(\d+)(?:-(overview|identite|pieces|risques|missions|dataroom))?$/.exec(
       window.location.hash || "",
     );
     if (m) {

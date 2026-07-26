@@ -1,6 +1,7 @@
 /** Registre des risques d'un contribuable — post-mission (docs/25). */
 import { useCallback, useEffect, useMemo, useState } from "react";
-import { api } from "./api";
+import { api, apiUpload } from "./api";
+import { TexteJuridique } from "./TexteJuridique";
 
 export type RisqueRow = {
   id: number;
@@ -13,6 +14,26 @@ export type RisqueRow = {
   exercice_origine: number;
   reference_legale?: string | null;
   motif_acceptation?: string | null;
+};
+
+export type PreuveResolutionRow = {
+  id: number;
+  risque_id: number;
+  nom_fichier: string;
+  format: string;
+  verdict_ia: "probante" | "insuffisante" | "sans_rapport" | "indisponible" | null;
+  justification_ia: string | null;
+  decision: "acceptee" | "forcee" | null;
+  motif_forcage: string | null;
+  auteur: string | null;
+  cree_le: string | null;
+};
+
+const LIBELLES_VERDICT: Record<string, string> = {
+  probante: "Probante",
+  insuffisante: "Insuffisante",
+  sans_rapport: "Sans rapport",
+  indisponible: "Indisponible",
 };
 
 export type ActionRisqueRow = {
@@ -31,10 +52,37 @@ export type ScoreRisque = {
   score: number;
   niveau: "aucun" | "faible" | "modere" | "eleve" | "critique";
   libelle_niveau: string;
+  /** Fourchette du niveau (ex. « 20–39 ») — fournie par le moteur ; absente si « aucun ». */
+  plage?: string | null;
   facteurs: { code: string; libelle: string; points: number; detail: string }[];
   alertes: string[];
   exposition_totale: string;
 };
+
+/**
+ * Texte d’interprétation du score registre (pastille fiche client).
+ * Plages uniquement si le moteur les renvoie — pas de seuils inventés côté UI.
+ */
+export function tipInterpretationScoreRisque(s: ScoreRisque): string {
+  if (s.niveau === "aucun") {
+    return [
+      "Aucun risque ouvert dans le registre.",
+      "Score d’exposition agrégée : 0/100 (risques non clos, enjeu, suivi).",
+      "Ouvrir l’onglet Risques pour consulter le registre.",
+    ].join("\n");
+  }
+  const plage =
+    typeof s.plage === "string" && s.plage.trim() ? ` (${s.plage})` : "";
+  const suite =
+    s.alertes.length > 0
+      ? "Ouvrir Risques : traiter les points ouverts et les actions signalées."
+      : "Ouvrir l’onglet Risques pour suivre et traiter les points ouverts.";
+  return [
+    `Score ${s.score}/100 — ${s.libelle_niveau}${plage}.`,
+    "Exposition agrégée du registre : risques non clos, enjeu financier et qualité du suivi.",
+    suite,
+  ].join("\n");
+}
 
 type Props = {
   jeton: string;
@@ -75,6 +123,15 @@ export function RegistreRisquesVue({
   });
 
   const [score, setScore] = useState<ScoreRisque | null>(null);
+
+  const [preuveRisqueId, setPreuveRisqueId] = useState<number | null>(null);
+  const [preuveFichier, setPreuveFichier] = useState<File | null>(null);
+  const [preuveAnalyseEnCours, setPreuveAnalyseEnCours] = useState(false);
+  const [preuve, setPreuve] = useState<PreuveResolutionRow | null>(null);
+  const [motifForcage, setMotifForcage] = useState("");
+  const [resolutionEnCours, setResolutionEnCours] = useState(false);
+  const [preuvesVuesId, setPreuvesVuesId] = useState<number | null>(null);
+  const [preuvesVues, setPreuvesVues] = useState<PreuveResolutionRow[]>([]);
 
   const charger = useCallback(async () => {
     setBusy(true);
@@ -137,6 +194,78 @@ export function RegistreRisquesVue({
         json: corps,
       });
       await charger();
+    } catch (e) {
+      setErr(e instanceof Error ? e.message : String(e));
+    }
+  }
+
+  function ouvrirPanneauPreuve(risqueId: number) {
+    if (estLecteur) return;
+    setPreuveRisqueId((prev) => (prev === risqueId ? null : risqueId));
+    setPreuveFichier(null);
+    setPreuve(null);
+    setMotifForcage("");
+  }
+
+  async function analyserPreuve(risqueId: number) {
+    if (estLecteur || !preuveFichier) return;
+    setPreuveAnalyseEnCours(true);
+    setErr(null);
+    try {
+      const p = await apiUpload<PreuveResolutionRow>(
+        `/api/v1/risques/${risqueId}/preuves`,
+        preuveFichier,
+        jeton,
+      );
+      setPreuve(p);
+    } catch (e) {
+      setErr(e instanceof Error ? e.message : String(e));
+    } finally {
+      setPreuveAnalyseEnCours(false);
+    }
+  }
+
+  async function resoudreAvecPreuve(risqueId: number) {
+    if (estLecteur || !preuve) return;
+    const forcage = preuve.verdict_ia !== "probante";
+    if (forcage && !motifForcage.trim()) return;
+    setResolutionEnCours(true);
+    setErr(null);
+    try {
+      await api(`/api/v1/risques/${risqueId}/resolution`, {
+        method: "POST",
+        jeton,
+        json: {
+          preuve_id: preuve.id,
+          motif_forcage: forcage ? motifForcage.trim() : null,
+        },
+      });
+      setPreuveRisqueId(null);
+      setPreuveFichier(null);
+      setPreuve(null);
+      setMotifForcage("");
+      await charger();
+    } catch (e) {
+      setErr(e instanceof Error ? e.message : String(e));
+    } finally {
+      setResolutionEnCours(false);
+    }
+  }
+
+  async function voirPreuves(risqueId: number) {
+    if (preuvesVuesId === risqueId) {
+      setPreuvesVuesId(null);
+      setPreuvesVues([]);
+      return;
+    }
+    setErr(null);
+    try {
+      const list = await api<PreuveResolutionRow[]>(
+        `/api/v1/risques/${risqueId}/preuves`,
+        { jeton },
+      );
+      setPreuvesVuesId(risqueId);
+      setPreuvesVues(Array.isArray(list) ? list : []);
     } catch (e) {
       setErr(e instanceof Error ? e.message : String(e));
     }
@@ -275,7 +404,9 @@ export function RegistreRisquesVue({
               </p>
               <ul>
                 {score.alertes.map((a) => (
-                  <li key={a}>{a}</li>
+                  <li key={a}>
+                    <TexteJuridique texte={a} />
+                  </li>
                 ))}
               </ul>
             </div>
@@ -301,11 +432,15 @@ export function RegistreRisquesVue({
                 <div className="registre-item-main">
                   <span className="badge">{r.statut}</span>
                   <span className="badge ghost">{r.probabilite}</span>
-                  <strong>{r.libelle}</strong>
+                  <strong>
+                    <TexteJuridique texte={r.libelle} />
+                  </strong>
                   <span className="muted">{fmtMontant(r.montant_estime)}</span>
                 </div>
                 {r.reference_legale && (
-                  <p className="muted small">Réf. {r.reference_legale}</p>
+                  <p className="muted small">
+                    Réf. <TexteJuridique texte={r.reference_legale} />
+                  </p>
                 )}
                 {!estLecteur && (
                   <div className="registre-actions-row">
@@ -313,6 +448,10 @@ export function RegistreRisquesVue({
                       value={r.statut}
                       onChange={(e) => {
                         const st = e.target.value;
+                        if (st === "resolu") {
+                          ouvrirPanneauPreuve(r.id);
+                          return;
+                        }
                         if (st === "accepte") {
                           const motif =
                             motifAccepte.trim() ||
@@ -342,6 +481,144 @@ export function RegistreRisquesVue({
                     >
                       {ouvertId === r.id ? "Masquer actions" : "Actions"}
                     </button>
+                    {r.statut !== "resolu" && (
+                      <button
+                        type="button"
+                        className="btn ghost btn-xs"
+                        onClick={() => ouvrirPanneauPreuve(r.id)}
+                      >
+                        {preuveRisqueId === r.id
+                          ? "Annuler la résolution"
+                          : "Résoudre (preuve)"}
+                      </button>
+                    )}
+                  </div>
+                )}
+                {r.statut === "resolu" && (
+                  <button
+                    type="button"
+                    className="btn ghost btn-xs"
+                    onClick={() => void voirPreuves(r.id)}
+                  >
+                    {preuvesVuesId === r.id
+                      ? "Masquer les preuves"
+                      : "Preuves de résolution"}
+                  </button>
+                )}
+                {preuvesVuesId === r.id && (
+                  <ul className="registre-preuve-liste">
+                    {preuvesVues.length === 0 && (
+                      <li className="muted">Aucune preuve enregistrée.</li>
+                    )}
+                    {preuvesVues.map((p) => (
+                      <li key={p.id}>
+                        <span
+                          className={`registre-preuve-verdict verdict-${p.verdict_ia ?? "indisponible"}`}
+                        >
+                          {LIBELLES_VERDICT[p.verdict_ia ?? "indisponible"] ??
+                            p.verdict_ia}
+                        </span>{" "}
+                        <strong>{p.nom_fichier}</strong>
+                        {p.decision && (
+                          <span className="muted">
+                            {" "}
+                            · décision{" "}
+                            {p.decision === "forcee" ? "forcée" : "acceptée"}
+                            {p.motif_forcage ? ` — ${p.motif_forcage}` : ""}
+                          </span>
+                        )}
+                        {p.cree_le && (
+                          <span className="muted small">
+                            {" "}
+                            · {p.cree_le.slice(0, 10)}
+                          </span>
+                        )}
+                        {p.justification_ia && (
+                          <p className="muted small">{p.justification_ia}</p>
+                        )}
+                      </li>
+                    ))}
+                  </ul>
+                )}
+                {!estLecteur && preuveRisqueId === r.id && (
+                  <div className="registre-preuve-panneau">
+                    <p className="registre-preuve-titre">
+                      <strong>Preuve de résolution</strong> — justificatif
+                      obligatoire (PDF, PNG, JPEG ou WEBP — 25 Mo max)
+                    </p>
+                    <div className="registre-preuve-actions">
+                      <input
+                        type="file"
+                        accept=".pdf,.png,.jpg,.jpeg,.webp"
+                        onChange={(e) => {
+                          setPreuveFichier(e.target.files?.[0] ?? null);
+                          setPreuve(null);
+                        }}
+                      />
+                      <button
+                        type="button"
+                        className="btn btn-primary btn-xs"
+                        disabled={!preuveFichier || preuveAnalyseEnCours}
+                        onClick={() => void analyserPreuve(r.id)}
+                      >
+                        {preuveAnalyseEnCours
+                          ? "Analyse en cours…"
+                          : "Analyser la preuve"}
+                      </button>
+                    </div>
+                    {preuve && (
+                      <div className="registre-preuve-resultat">
+                        <span
+                          className={`registre-preuve-verdict verdict-${preuve.verdict_ia ?? "indisponible"}`}
+                        >
+                          {LIBELLES_VERDICT[
+                            preuve.verdict_ia ?? "indisponible"
+                          ] ?? preuve.verdict_ia}
+                        </span>
+                        {preuve.justification_ia && (
+                          <p className="registre-preuve-justification">
+                            {preuve.justification_ia}
+                          </p>
+                        )}
+                        <p className="registre-preuve-bandeau">
+                          Verdict consultatif généré par IA — la décision vous
+                          appartient.
+                        </p>
+                        {preuve.verdict_ia === "probante" ? (
+                          <button
+                            type="button"
+                            className="btn btn-primary btn-xs"
+                            disabled={resolutionEnCours}
+                            onClick={() => void resoudreAvecPreuve(r.id)}
+                          >
+                            {resolutionEnCours
+                              ? "Résolution…"
+                              : "Confirmer la résolution"}
+                          </button>
+                        ) : (
+                          <>
+                            <textarea
+                              className="registre-preuve-motif"
+                              placeholder="Motif de résolution malgré le verdict (obligatoire)"
+                              value={motifForcage}
+                              onChange={(e) => setMotifForcage(e.target.value)}
+                            />
+                            <button
+                              type="button"
+                              className="btn btn-xs registre-preuve-forcer"
+                              disabled={
+                                resolutionEnCours || !motifForcage.trim()
+                              }
+                              onClick={() => void resoudreAvecPreuve(r.id)}
+                            >
+                              {resolutionEnCours
+                                ? "Résolution…"
+                                : "Forcer la résolution"}
+                            </button>
+                          </>
+                        )}
+                      </div>
+                    )}
                   </div>
                 )}
                 {ouvertId === r.id && (

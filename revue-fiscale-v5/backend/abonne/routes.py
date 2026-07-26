@@ -1,6 +1,7 @@
 """Routes espace abonne et portail client."""
 from __future__ import annotations
 
+import logging
 import mimetypes
 import re
 from pathlib import Path
@@ -72,6 +73,8 @@ from backend.abonne.service import (
 from backend.plateforme.dependances import SessionDep, UtilisateurDep, session_abonne
 from backend.plateforme.quotas import lire_quota_periode
 from backend.plateforme.rbac import exiger_capacite
+
+logger = logging.getLogger(__name__)
 
 router = APIRouter(prefix="/api/v1", tags=["abonne"])
 router_client = APIRouter(prefix="/api/v1/client", tags=["portail-client"])
@@ -371,7 +374,7 @@ async def api_deposer_piece_contribuable(
         "yes",
     }
     try:
-        return deposer_piece(
+        piece = deposer_piece(
             session,
             utilisateur.tenant_id,
             type_piece=tp if tp != "auto" else "autre",
@@ -387,6 +390,45 @@ async def api_deposer_piece_contribuable(
         raise HTTPException(
             status_code=status.HTTP_400_BAD_REQUEST, detail=str(e)
         ) from e
+    if piece.get("contribuable_id") is not None:
+        from backend.moteur.journal import append_journal
+        from backend.plateforme.memoire_client import alimenter_memoire
+
+        contribuable_ref = int(piece["contribuable_id"])
+        try:
+            with session.begin_nested():
+                append_journal(
+                    session,
+                    tenant_id=utilisateur.tenant_id,
+                    mission_id=None,
+                    acteur=utilisateur.email,
+                    action="depot_piece_contribuable",
+                    charge_utile={
+                        "contribuable_id": contribuable_ref,
+                        "piece_id": piece["id"],
+                        "type_piece": piece["type_piece"],
+                        "nom_fichier": piece["nom_fichier"],
+                    },
+                )
+        except Exception:
+            logger.warning(
+                "journalisation dépôt pièce ignorée (pièce %s)",
+                piece["id"],
+                exc_info=True,
+            )
+        alimenter_memoire(
+            session,
+            utilisateur.tenant_id,
+            contribuable_ref,
+            type_entree="fait",
+            contenu=(
+                f"Pièce « {piece['nom_fichier']} » déposée au coffre "
+                f"documentaire (type : {piece['type_piece']})."
+            ),
+            source_type="extraction",
+            source_ref=f"piece:{piece['id']}",
+        )
+    return piece
 
 
 @router.patch("/pieces-contribuable/{piece_id}/type")
@@ -554,6 +596,40 @@ def api_marquer_proposition_appliquee(
         raise HTTPException(
             status_code=status.HTTP_400_BAD_REQUEST, detail=str(e)
         ) from e
+    try:
+        from sqlalchemy import text as sql_text
+
+        from backend.plateforme.memoire_client import alimenter_memoire
+
+        with session.begin_nested():
+            prop = session.execute(
+                sql_text(
+                    "SELECT contribuable_id, champs_proposes "
+                    "FROM proposition_identite WHERE id = :id"
+                ),
+                {"id": corps.proposition_id},
+            ).mappings().one_or_none()
+        if prop is not None and prop["contribuable_id"] is not None:
+            champs = sorted((prop["champs_proposes"] or {}).keys())
+            alimenter_memoire(
+                session,
+                utilisateur.tenant_id,
+                int(prop["contribuable_id"]),
+                type_entree="fait",
+                contenu=(
+                    "Identité extraite appliquée au formulaire — champs : "
+                    + (", ".join(champs) if champs else "aucun")
+                    + "."
+                ),
+                source_type="extraction",
+                source_ref=f"proposition:{corps.proposition_id}",
+            )
+    except Exception:
+        logger.warning(
+            "alimentation mémoire client ignorée (proposition %s)",
+            corps.proposition_id,
+            exc_info=True,
+        )
     return {"ok": True, "proposition_id": corps.proposition_id, "statut": "applique"}
 
 

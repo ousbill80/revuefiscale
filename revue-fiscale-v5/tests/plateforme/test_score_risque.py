@@ -170,6 +170,7 @@ def test_niveaux_seuils():
         }
     )
     assert (r["score"], r["niveau"]) == (3, "faible")
+    assert r["plage"] == "0–19"
     # 2 probables + 1 possible = 31 → modéré
     r = calculer_score_risque(
         {
@@ -182,3 +183,25 @@ def test_niveaux_seuils():
         }
     )
     assert (r["score"], r["niveau"]) == (31, "modere")
+    assert r["plage"] == "20–39"
+
+
+def test_plages_niveaux_documentees():
+    vide = calculer_score_risque({"risques": [], "aujourd_hui": AUJOURD_HUI})
+    assert vide["plage"] is None
+    critique = calculer_score_risque(
+        {
+            "risques": [
+                _risque(
+                    probabilite="probable",
+                    montant_estime="50000000",
+                    derniere_revue="2020-01-01",
+                )
+                for _ in range(10)
+            ],
+            "actions_en_retard": 5,
+            "actions_refusees": 5,
+            "aujourd_hui": AUJOURD_HUI,
+        }
+    )
+    assert critique["plage"] == "70–100"

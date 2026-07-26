@@ -220,7 +220,28 @@ def creer_risque(
             },
         ).scalar_one()
         session.flush()
-        return _lire(session, int(rid))
+        resultat = _lire(session, int(rid))
+
+    from backend.plateforme.memoire_client import alimenter_memoire
+
+    exposition = (
+        f"exposition estimée {montant_estime:,.0f} FCFA".replace(",", " ")
+        if montant_estime is not None
+        else "exposition non chiffrée"
+    )
+    alimenter_memoire(
+        session,
+        tenant_id,
+        contribuable_id,
+        type_entree="alerte",
+        contenu=(
+            f"Risque créé : {lib} — exercice {int(exercice_origine)} — "
+            f"{exposition}."
+        ),
+        source_type="risque",
+        source_ref=f"risque:{resultat['id']}",
+    )
+    return resultat
 
 
 def patcher_risque(
@@ -236,6 +257,7 @@ def patcher_risque(
     penalites_estimees: object | None = ...,
     derniere_revue: object | None = ...,
     libelle: object | None = ...,
+    avec_preuve: bool = False,
 ) -> dict[str, Any]:
     champs = {
         "statut": statut is not ...,
@@ -288,6 +310,19 @@ def patcher_risque(
             raise ErreurRisque(
                 "motif_acceptation obligatoire quand statut=accepte"
             )
+
+        if (
+            nouveau_statut == "resolu"
+            and ancien.get("statut") != "resolu"
+            and not avec_preuve
+        ):
+            from backend.plateforme.preuve_resolution import (
+                MESSAGE_PREUVE_REQUISE,
+                compter_preuves,
+            )
+
+            if compter_preuves(session, risque_id) == 0:
+                raise ErreurRisque(MESSAGE_PREUVE_REQUISE)
 
         prob = str(ancien.get("probabilite") or "possible")
         if champs["probabilite"]:
@@ -424,6 +459,15 @@ _LIBELLES_NIVEAU: Final[dict[str, str]] = {
     "modere": "Risque modéré",
     "eleve": "Risque élevé",
     "critique": "Risque critique",
+}
+# Fourchettes affichables — miroir exact des seuils de ``calculer_score_risque``.
+# ``aucun`` : pas de plage (absence de risques non clos, pas un palier de score).
+_PLAGES_NIVEAU: Final[dict[str, str | None]] = {
+    "aucun": None,
+    "faible": "0–19",
+    "modere": "20–39",
+    "eleve": "40–69",
+    "critique": "70–100",
 }
 _JOURS_DORMANT: Final[int] = 90
 _SCORE_MAX: Final[int] = 100
@@ -597,6 +641,7 @@ def calculer_score_risque(donnees: dict[str, Any]) -> dict[str, Any]:
         "score": score,
         "niveau": niveau,
         "libelle_niveau": _LIBELLES_NIVEAU[niveau],
+        "plage": _PLAGES_NIVEAU[niveau],
         "facteurs": facteurs,
         "alertes": alertes,
         "exposition_totale": str(cumul),

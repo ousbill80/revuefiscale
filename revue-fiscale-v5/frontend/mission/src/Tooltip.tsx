@@ -18,7 +18,7 @@ type Side = "top" | "bottom";
 type Align = "center" | "left" | "right";
 
 type TooltipProps = {
-  /** Texte process / aide — court (≤ 2 lignes à l’écran). */
+  /** Texte process / aide — concis ; multi-ligne via ``\\n`` (pre-line). */
   label: string;
   children: ReactNode;
   side?: Side;

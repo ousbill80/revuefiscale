@@ -561,6 +561,30 @@ def changer_statut_mission(
         result["risques_crees"] = nb_r
         result["points_ouverts_crees"] = 0
 
+        from backend.plateforme.memoire_client import alimenter_memoire
+
+        with contexte_tenant(session, tenant_id):
+            fiche = session.execute(
+                text(
+                    "SELECT contribuable_id, exercice "
+                    "FROM mission WHERE id = :m"
+                ),
+                {"m": mission_id},
+            ).mappings().one_or_none()
+        if fiche is not None:
+            alimenter_memoire(
+                session,
+                tenant_id,
+                int(fiche["contribuable_id"]),
+                type_entree="contexte",
+                contenu=(
+                    f"Mission #{mission_id} (exercice {fiche['exercice']}) "
+                    f"clôturée — {nb_r} risque(s) créé(s) depuis les anomalies."
+                ),
+                source_type="mission",
+                source_ref=f"mission:{mission_id}",
+            )
+
     return result
 
 
