@@ -9317,3 +9317,8 @@ tr.row-active td {
 .echeancier-badge.depasse { background: #fef2f2; color: #b91c1c; border-color: #fecaca; }
 .echeancier-vide { padding: 0.5rem 0.6rem; border: 1px dashed var(--line, #e5e7eb); border-radius: 8px; font-size: 0.78rem; color: var(--muted, #64748b); }
 .echeancier-note { margin: 0.55rem 0 0; font-size: 0.72rem; font-style: italic; color: var(--muted, #64748b); }
+
+/* ── Pilotage — carte « Échéances déclaratives » ─────────────────── */
+.pilotage-badge { margin-left: auto; display: inline-flex; align-items: center; padding: 0.1rem 0.5rem; border: 1px solid transparent; border-radius: 999px; font-size: 0.7rem; font-weight: 800; white-space: nowrap; }
+.pilotage-badge.imminent { background: #fffbeb; color: #92400e; border-color: #fde68a; }
+.pilotage-badge.depasse { background: #fef2f2; color: #b91c1c; border-color: #fecaca; }

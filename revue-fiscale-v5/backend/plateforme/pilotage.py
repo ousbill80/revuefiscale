@@ -6,12 +6,18 @@ retard de traitement. Aucune écriture — tout passe par contexte_tenant.
 """
 from __future__ import annotations
 
+from datetime import date
 from typing import Any, Final
 
 from sqlalchemy import text
 from sqlalchemy.orm import Session
 
 from backend.plateforme.contexte import contexte_tenant
+from backend.plateforme.echeancier_fiscal import (
+    STATUT_DEPASSEE,
+    STATUT_IMMINENTE,
+    prochaines_echeances,
+)
 from backend.plateforme.risques import calculer_score_risque
 
 # Statuts de risque considérés comme exposition ouverte. « en_retard »
@@ -31,6 +37,10 @@ _STATUTS_ACTION_SUIVIS: Final[tuple[str, ...]] = (
 JOURS_INACTIVITE_MISSION: Final[int] = 30
 TOP_EXPOSITION: Final[int] = 10
 TOP_RETARDS: Final[int] = 5
+# Volet échéances déclaratives : horizon court (30 j) et plafond de
+# lignes affichées — le compteur total reste exhaustif.
+HORIZON_ECHEANCES_JOURS: Final[int] = 30
+TOP_ECHEANCES: Final[int] = 15
 
 
 def _decimal_str(valeur: Any) -> str:
@@ -240,14 +250,61 @@ def _risques_en_retard(session: Session) -> dict[str, Any]:
     return {"total": len(rows), "top": top}
 
 
+def _echeances_portefeuille(session: Session) -> dict[str, Any]:
+    """Obligations déclaratives imminentes ou dépassées du portefeuille.
+
+    Parcourt les contribuables du tenant (même périmètre RLS que les
+    autres volets), projette leurs échéances indicatives sur 30 jours
+    via ``prochaines_echeances`` et n'agrège que les statuts
+    « imminente » et « depassee ». Régime vide ou inconnu → contribuable
+    ignoré silencieusement (la fonction pure renvoie une liste vide).
+    """
+    rows = session.execute(
+        text(
+            "SELECT id, denomination, regime_fiscal, mois_cloture "
+            "FROM contribuable ORDER BY id"
+        )
+    ).mappings().all()
+    aujourd_hui = date.today()
+    lignes: list[dict[str, Any]] = []
+    for r in rows:
+        mois_cloture = (
+            int(r["mois_cloture"]) if r["mois_cloture"] is not None else None
+        )
+        for e in prochaines_echeances(
+            r["regime_fiscal"],
+            aujourd_hui,
+            horizon_jours=HORIZON_ECHEANCES_JOURS,
+            mois_cloture=mois_cloture,
+        ):
+            if e["statut"] not in (STATUT_IMMINENTE, STATUT_DEPASSEE):
+                continue
+            lignes.append(
+                {
+                    "contribuable_id": int(r["id"]),
+                    "denomination": str(r["denomination"]),
+                    "code": str(e["code"]),
+                    "libelle": str(e["libelle"]),
+                    "date_limite": str(e["date_limite"]),
+                    "jours_restants": int(e["jours_restants"]),
+                    "statut": str(e["statut"]),
+                }
+            )
+    lignes.sort(
+        key=lambda x: (x["date_limite"], x["denomination"], x["code"])
+    )
+    return {"total": len(lignes), "lignes": lignes[:TOP_ECHEANCES]}
+
+
 def pilotage_portefeuille(
     session: Session, tenant_id: int
 ) -> dict[str, Any]:
-    """Cockpit associé — quatre volets, lecture seule sous RLS."""
+    """Cockpit associé — cinq volets, lecture seule sous RLS."""
     with contexte_tenant(session, tenant_id):
         return {
             "exposition_par_client": _exposition_par_client(session),
             "missions_a_cloturer": _missions_a_cloturer(session),
             "alertes_source": _alertes_source(session),
             "risques_en_retard": _risques_en_retard(session),
+            "echeances_portefeuille": _echeances_portefeuille(session),
         }

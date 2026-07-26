@@ -72,7 +72,9 @@ def cab(session):
     return _provisionner(session)
 
 
-def _contrib(client: TestClient, h: dict, nom: str) -> int:
+def _contrib(
+    client: TestClient, h: dict, nom: str, regime: str = "reel"
+) -> int:
     ref = uuid.uuid4().hex[:8].upper()
     r = client.post(
         "/api/v1/contribuables",
@@ -83,7 +85,7 @@ def _contrib(client: TestClient, h: dict, nom: str) -> int:
             "rccm": f"RCCM-{ref}",
             "dfe": f"DFE-{ref}",
             "forme": "pm",
-            "regime_fiscal": "reel",
+            "regime_fiscal": regime,
             "forme_juridique": "SA",
             "siege_social": "Abidjan",
         },
@@ -127,6 +129,7 @@ def test_pilotage_structure_complete(session, cab):
         "missions_a_cloturer",
         "alertes_source",
         "risques_en_retard",
+        "echeances_portefeuille",
     }
     assert isinstance(corps["exposition_par_client"], list)
     assert isinstance(corps["missions_a_cloturer"], list)
@@ -135,6 +138,10 @@ def test_pilotage_structure_complete(session, cab):
     assert set(retards) == {"total", "top"}
     assert retards["total"] == 0
     assert retards["top"] == []
+    echeances = corps["echeances_portefeuille"]
+    assert set(echeances) == {"total", "lignes"}
+    assert echeances["total"] == 0
+    assert echeances["lignes"] == []
 
 
 def test_exposition_cumulee_risques_ouverts(session, cab):
@@ -238,6 +245,62 @@ def test_missions_inactives_et_alertes_source(session, cab):
     assert "equilibre_pieces" not in alertes[0]["codes_alerte"]
 
 
+def test_echeances_portefeuille_tee_depassee(session, cab, monkeypatch):
+    from datetime import date as _date
+
+    # Date de référence gelée : le 26/07, la déclaration TEE mensuelle
+    # du 10/07 est dépassée depuis 16 jours et reste visible (< 30 j).
+    class _DateFixe(_date):
+        @classmethod
+        def today(cls):
+            return _date(2026, 7, 26)
+
+    monkeypatch.setattr("backend.plateforme.pilotage.date", _DateFixe)
+
+    client, h, _tid = cab
+    cid = _contrib(client, h, "Entreprenant TEE Pilotage", regime="tee")
+    # Régime inconnu du référentiel → contribuable ignoré silencieusement.
+    cid_vide = _contrib(
+        client, h, "Sans Régime Pilotage", regime="hors_referentiel"
+    )
+
+    r = client.get("/api/v1/pilotage", headers=h)
+    assert r.status_code == 200, r.text
+    volet = r.json()["echeances_portefeuille"]
+    assert set(volet) == {"total", "lignes"}
+    lignes = volet["lignes"]
+    assert volet["total"] >= len(lignes) >= 1
+    assert len(lignes) <= 15
+    # Structure de chaque ligne + tri par date croissante.
+    for ligne in lignes:
+        assert set(ligne) == {
+            "contribuable_id",
+            "denomination",
+            "code",
+            "libelle",
+            "date_limite",
+            "jours_restants",
+            "statut",
+        }
+        assert ligne["statut"] in {"imminente", "depassee"}
+    assert [x["date_limite"] for x in lignes] == sorted(
+        x["date_limite"] for x in lignes
+    )
+    depassees_tee = [
+        x
+        for x in lignes
+        if x["contribuable_id"] == cid
+        and x["code"] == "tee_mensuelle"
+        and x["statut"] == "depassee"
+    ]
+    assert depassees_tee, lignes
+    assert depassees_tee[0]["denomination"] == "Entreprenant TEE Pilotage"
+    assert depassees_tee[0]["date_limite"] == "2026-07-10"
+    assert depassees_tee[0]["jours_restants"] == -16
+    # Le contribuable sans régime ne produit aucune ligne.
+    assert all(x["contribuable_id"] != cid_vide for x in lignes)
+
+
 def test_isolation_cross_tenant(session, cab):
     client_a, h_a, _tid_a = cab
     cid = _contrib(client_a, h_a, "Confidentiel Tenant A")
@@ -260,4 +323,7 @@ def test_isolation_cross_tenant(session, cab):
     assert corps_b["missions_a_cloturer"] == []
     assert corps_b["alertes_source"] == []
     assert corps_b["risques_en_retard"] == {"total": 0, "top": []}
+    # Le volet échéances est lui aussi cloisonné : le contribuable du
+    # tenant A (régime réel → échéances mensuelles) ne fuit pas.
+    assert corps_b["echeances_portefeuille"] == {"total": 0, "lignes": []}
     assert "Confidentiel Tenant A" not in rb.text

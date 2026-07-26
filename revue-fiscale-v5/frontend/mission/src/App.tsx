@@ -329,7 +329,25 @@ type PilotagePortefeuille = {
       echeance: string | null;
     }>;
   };
+  echeances_portefeuille: {
+    total: number;
+    lignes: Array<{
+      contribuable_id: number;
+      denomination: string;
+      code: string;
+      libelle: string;
+      date_limite: string;
+      jours_restants: number;
+      statut: string;
+    }>;
+  };
 };
+
+/** Date ISO (aaaa-mm-jj) → jj/mm/aaaa ; valeur inattendue renvoyée telle quelle. */
+function fmtDateFr(iso: string): string {
+  const m = /^(\d{4})-(\d{2})-(\d{2})/.exec(iso);
+  return m ? `${m[3]}/${m[2]}/${m[1]}` : iso;
+}
 
 function useMobile(max = 720) {
   const [mobile, setMobile] = useState(
@@ -3853,6 +3871,59 @@ export function App() {
                         {!pilotage.risques_en_retard.total && (
                           <li className="pilotage-vide">
                             Aucun risque avec échéance dépassée.
+                          </li>
+                        )}
+                      </ul>
+                    </article>
+
+                    <article className="panel dense pilotage-card">
+                      <h4 className="pilotage-card-title">
+                        Échéances déclaratives
+                        <span
+                          className={
+                            pilotage.echeances_portefeuille.total
+                              ? "pilotage-count warn"
+                              : "pilotage-count"
+                          }
+                        >
+                          {pilotage.echeances_portefeuille.total}
+                        </span>
+                      </h4>
+                      <ul className="pilotage-list">
+                        {pilotage.echeances_portefeuille.lignes.map((e) => (
+                          <li
+                            key={`${e.contribuable_id}-${e.code}-${e.date_limite}`}
+                          >
+                            <button
+                              type="button"
+                              className="pilotage-row"
+                              onClick={() =>
+                                void ouvrirClient(e.contribuable_id)
+                              }
+                            >
+                              <span className="pilotage-row-nom">
+                                {fmtDateFr(e.date_limite)} · {e.denomination}
+                              </span>
+                              <span className="pilotage-row-meta">
+                                {e.libelle}
+                              </span>
+                              <span
+                                className={
+                                  e.statut === "depassee"
+                                    ? "pilotage-badge depasse"
+                                    : "pilotage-badge imminent"
+                                }
+                              >
+                                {e.statut === "depassee"
+                                  ? "Dépassé"
+                                  : "Imminent"}
+                              </span>
+                            </button>
+                          </li>
+                        ))}
+                        {!pilotage.echeances_portefeuille.total && (
+                          <li className="pilotage-vide">
+                            Aucune échéance déclarative imminente sur 30 jours.
                           </li>
                         )}
                       </ul>
