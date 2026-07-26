@@ -143,16 +143,16 @@ def _verifier_fichier(
     from backend.abonne.routes import (
         _FORMATS_PAR_CONTENT_TYPE,
         _FORMATS_PAR_EXTENSION,
-        MESSAGE_FICHIER_TROP_VOLUMINEUX,
         MESSAGE_FORMAT_NON_SUPPORTE,
-        TAILLE_MAX_PIECE_OCTETS,
+        MESSAGE_PREUVE_TROP_VOLUMINEUSE,
+        TAILLE_MAX_PREUVE_OCTETS,
         _format_reel_piece,
     )
 
     if not brut:
         raise ErreurPreuveResolution("fichier vide")
-    if len(brut) > TAILLE_MAX_PIECE_OCTETS:
-        raise ErreurPreuveResolution(MESSAGE_FICHIER_TROP_VOLUMINEUX)
+    if len(brut) > TAILLE_MAX_PREUVE_OCTETS:
+        raise ErreurPreuveResolution(MESSAGE_PREUVE_TROP_VOLUMINEUSE)
     fmt = _format_reel_piece(brut)
     if fmt is None:
         raise ErreurPreuveResolution(MESSAGE_FORMAT_NON_SUPPORTE)

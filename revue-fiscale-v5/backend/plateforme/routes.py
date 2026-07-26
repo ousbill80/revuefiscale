@@ -410,12 +410,23 @@ def api_creer_mission(
     from backend.plateforme.missions import (
         STATUT_CADRAGE,
         ErreurMission,
+        ErreurMissionDoublon,
         QuotaEpuise,
         creer_mission,
         lire_mission,
     )
 
     exiger_capacite(utilisateur, "creer_mission")
+
+    if corps.type_engagement is None:
+        raise HTTPException(
+            status_code=status.HTTP_400_BAD_REQUEST,
+            detail=(
+                "Le type d'engagement est requis — choisissez-le à l'étape "
+                "Mission (« Autre » reste possible, mais doit être sélectionné "
+                "explicitement)."
+            ),
+        )
 
     try:
         mid = creer_mission(
@@ -436,6 +447,8 @@ def api_creer_mission(
         )
     except QuotaEpuise as e:
         raise HTTPException(status_code=status.HTTP_403_FORBIDDEN, detail=str(e)) from e
+    except ErreurMissionDoublon as e:
+        raise HTTPException(status_code=status.HTTP_409_CONFLICT, detail=str(e)) from e
     except ErreurMission as e:
         raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST, detail=str(e)) from e
 

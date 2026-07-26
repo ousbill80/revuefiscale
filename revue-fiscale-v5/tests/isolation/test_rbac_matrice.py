@@ -136,6 +136,7 @@ def test_rbac_lecteur_reviseur_admin(session):
         headers=h_rev,
         json={
             "contribuable_id": cid,
+            "type_engagement": "autre",
             "exercice": 2025,
             "profil": {"regime": "reel", "forme_juridique": "SA"},
         },

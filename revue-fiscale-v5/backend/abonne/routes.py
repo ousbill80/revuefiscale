@@ -8,7 +8,15 @@ from pathlib import Path
 from typing import Annotated, Any, Literal
 from urllib.parse import quote
 
-from fastapi import APIRouter, Depends, HTTPException, Query, Request, status
+from fastapi import (
+    APIRouter,
+    BackgroundTasks,
+    Depends,
+    HTTPException,
+    Query,
+    Request,
+    status,
+)
 from fastapi.responses import Response
 from pydantic import BaseModel, Field
 from sqlalchemy.orm import Session
@@ -81,12 +89,19 @@ router_client = APIRouter(prefix="/api/v1/client", tags=["portail-client"])
 
 # ─── Upload pièces : plafond taille + whitelist formats (magic bytes) ─────
 
-# Plafond configurable par fichier uploadé (25 Mo).
-TAILLE_MAX_PIECE_OCTETS = 25 * 1024 * 1024
+# Plafond par pièce contribuable (200 Mo) — FEC/XLSX volumineux acceptés.
+TAILLE_MAX_PIECE_OCTETS = 200 * 1024 * 1024
+# Plafond distinct pour les preuves de résolution (25 Mo) — inchangé.
+TAILLE_MAX_PREUVE_OCTETS = 25 * 1024 * 1024
 
-MESSAGE_FICHIER_TROP_VOLUMINEUX = "Fichier trop volumineux (max 25 Mo)."
+MESSAGE_FICHIER_TROP_VOLUMINEUX = "Fichier trop volumineux (max 200 Mo)."
+MESSAGE_PREUVE_TROP_VOLUMINEUSE = "Fichier trop volumineux (max 25 Mo)."
 MESSAGE_FORMAT_NON_SUPPORTE = (
     "Format non pris en charge : PDF ou image (PNG/JPEG) uniquement."
+)
+MESSAGE_FORMAT_PIECE_NON_SUPPORTE = (
+    "Format non pris en charge : PDF, image (PNG/JPEG/WEBP), "
+    "XLSX, CSV ou FEC uniquement."
 )
 
 # Signatures binaires acceptées (whitelist stricte).
@@ -124,21 +139,26 @@ def _format_reel_piece(brut: bytes) -> str | None:
 
 def _verifier_format_piece(
     nom_fichier: str, content_type: str | None, brut: bytes
-) -> None:
+) -> str:
     """Refuse tout contenu hors whitelist ou incohérent avec nom/content-type."""
+    from backend.abonne.formats_piece import detecter_format_tabulaire
+
     fmt = _format_reel_piece(brut)
     if fmt is None:
-        raise HTTPException(
-            status_code=status.HTTP_400_BAD_REQUEST,
-            detail=MESSAGE_FORMAT_NON_SUPPORTE,
-        )
+        fmt_tab = detecter_format_tabulaire(nom_fichier, brut)
+        if fmt_tab is None:
+            raise HTTPException(
+                status_code=status.HTTP_400_BAD_REQUEST,
+                detail=MESSAGE_FORMAT_PIECE_NON_SUPPORTE,
+            )
+        return fmt_tab
     ext = Path(nom_fichier or "").suffix.lower()
     if ext:
         attendu = _FORMATS_PAR_EXTENSION.get(ext)
         if attendu is None or attendu != fmt:
             raise HTTPException(
                 status_code=status.HTTP_400_BAD_REQUEST,
-                detail=MESSAGE_FORMAT_NON_SUPPORTE,
+                detail=MESSAGE_FORMAT_PIECE_NON_SUPPORTE,
             )
     ct = (content_type or "").split(";")[0].strip().lower()
     if ct and ct != "application/octet-stream":
@@ -146,8 +166,9 @@ def _verifier_format_piece(
         if attendu_ct is None or attendu_ct != fmt:
             raise HTTPException(
                 status_code=status.HTTP_400_BAD_REQUEST,
-                detail=MESSAGE_FORMAT_NON_SUPPORTE,
+                detail=MESSAGE_FORMAT_PIECE_NON_SUPPORTE,
             )
+    return fmt
 
 
 class ContribuablePatchIn(BaseModel):
@@ -310,9 +331,47 @@ class ModifierTypePieceIn(BaseModel):
     type_piece: str = Field(min_length=2, max_length=20)
 
 
+def _generer_synthese_arriere_plan(tenant_id: int, contribuable_id: int) -> None:
+    """Synthèse IA automatique après dépôt — best-effort, session dédiée."""
+    from sqlalchemy import text
+
+    from backend.db import Fabrique
+    from backend.plateforme.contexte import contexte_tenant
+    from backend.plateforme.synthese_client import generer_synthese
+
+    session = Fabrique()
+    try:
+        with contexte_tenant(session, tenant_id):
+            en_cours = session.execute(
+                text(
+                    "SELECT 1 FROM synthese_client "
+                    "WHERE contribuable_id = :c AND statut = 'en_cours' "
+                    "LIMIT 1"
+                ),
+                {"c": contribuable_id},
+            ).scalar_one_or_none()
+        if en_cours is not None:
+            session.rollback()
+            return
+        generer_synthese(
+            session, tenant_id, contribuable_id, auteur="systeme"
+        )
+        session.commit()
+    except Exception:
+        session.rollback()
+        logger.warning(
+            "synthèse automatique ignorée (contribuable %s)",
+            contribuable_id,
+            exc_info=True,
+        )
+    finally:
+        session.close()
+
+
 @router.post("/pieces-contribuable", status_code=status.HTTP_201_CREATED)
 async def api_deposer_piece_contribuable(
     request: Request,
+    background_tasks: BackgroundTasks,
     utilisateur: UtilisateurDep,
     session: Annotated[Session, Depends(session_abonne)],
     type_piece: str = Query("auto"),
@@ -427,6 +486,11 @@ async def api_deposer_piece_contribuable(
             ),
             source_type="extraction",
             source_ref=f"piece:{piece['id']}",
+        )
+        background_tasks.add_task(
+            _generer_synthese_arriere_plan,
+            utilisateur.tenant_id,
+            contribuable_ref,
         )
     return piece
 

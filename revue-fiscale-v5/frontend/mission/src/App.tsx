@@ -26,6 +26,7 @@ import {
   composerActivite,
   completudeIdentite,
   decomposerActivite,
+  identiteApiMinimale,
   type FormePersonne,
 } from "./legalite";
 import {
@@ -131,11 +132,11 @@ const STEPS = [
 ] as const;
 
 const TYPES_ENGAGEMENT = [
-  { value: "autre", label: "Autre" },
   { value: "preventive", label: "Revue préventive" },
   { value: "cac", label: "Commissariat aux comptes" },
   { value: "due_diligence", label: "Due diligence" },
   { value: "assistance_controle", label: "Assistance à contrôle" },
+  { value: "autre", label: "Autre" },
 ] as const;
 
 /** Source primaire alimentant solde_compte — une seule à l’import. */
@@ -437,7 +438,14 @@ export function App() {
   const [secteur, setSecteur] = useState("");
   const [typeEntite, setTypeEntite] = useState("");
   const [crossBorder, setCrossBorder] = useState(false);
-  const [typeEngagement, setTypeEngagement] = useState("autre");
+  const [typeEngagement, setTypeEngagement] = useState("");
+  const [prescriptionConfirmee, setPrescriptionConfirmee] = useState(false);
+  const [etapeRetour, setEtapeRetour] = useState<number | null>(null);
+  const [missionCreee, setMissionCreee] = useState<{
+    id: number;
+    cid: number;
+    exercice: number;
+  } | null>(null);
   const [perimetreImpots, setPerimetreImpots] = useState<string[]>([]);
   const [exclusionsDeclarees, setExclusionsDeclarees] = useState("");
   const [seuilSignification, setSeuilSignification] = useState("");
@@ -1106,7 +1114,10 @@ export function App() {
     setAnnexeType("autre");
     setAnnexeDrag(false);
     setSourceActiveFigee(false);
-    setTypeEngagement("autre");
+    setTypeEngagement("");
+    setPrescriptionConfirmee(false);
+    setEtapeRetour(null);
+    setMissionCreee(null);
     setPerimetreImpots([]);
     setExclusionsDeclarees("");
     setSeuilSignification("");
@@ -1151,6 +1162,38 @@ export function App() {
     () => completudeIdentite(identiteCourante),
     [identiteCourante],
   );
+
+  const apiMin = useMemo(
+    () => identiteApiMinimale(identiteCourante),
+    [identiteCourante],
+  );
+
+  /** C1a — nouveau contribuable dont le NCC/RCCM appartient déjà au portefeuille. */
+  const conflitFiche = useMemo(() => {
+    if (contribIdExistant != null || !clients.length) return null;
+    const norm = (v?: string | null) => (v ?? "").trim().toUpperCase();
+    const ncc = norm(contribNcc);
+    const rccm = contribForme === "pm" ? norm(contribRccm) : "";
+    for (const c of clients) {
+      if (ncc && norm(c.ncc) === ncc) {
+        return { champ: "NCC", valeur: contribNcc.trim(), client: c };
+      }
+      if (rccm && norm(c.rccm) === rccm) {
+        return { champ: "RCCM", valeur: contribRccm.trim(), client: c };
+      }
+    }
+    return null;
+  }, [clients, contribIdExistant, contribNcc, contribRccm, contribForme]);
+
+  const anneeCourante = new Date().getFullYear();
+  const exerciceFutur = Number(exercice) > anneeCourante;
+  const exercicePrescrit =
+    !exerciceFutur && Number(exercice) < anneeCourante - 3;
+  const etape1Ok = apiMin.ok && !conflitFiche;
+  const etape2Ok =
+    !exerciceFutur &&
+    (!exercicePrescrit || prescriptionConfirmee) &&
+    !!typeEngagement;
 
   const balanceAnalyseJson = useMemo(
     () => analyserBalanceJson(balanceJson),
@@ -1421,14 +1464,33 @@ export function App() {
     setRestitution(null);
     setAuditJournal(null);
     setMissionId(null);
+    setEtapeRetour(null);
     setStep(4);
     const jeton = session.jeton;
+    let etapeEnCours = 1;
     try {
-      if (!completude.complet) {
+      if (!apiMin.ok) {
         throw new Error(
-          `Identité légale incomplète : ${completude.manquants.join(", ")}.`,
+          `Identité minimale incomplète : ${apiMin.manquants.join(", ")}.`,
         );
       }
+      if (conflitFiche) {
+        throw new Error(
+          `Cette entreprise existe déjà : « ${conflitFiche.client.denomination} » (#${conflitFiche.client.id}) — utilisez la fiche existante à l'étape Client.`,
+        );
+      }
+      etapeEnCours = 2;
+      if (!typeEngagement) {
+        throw new Error(
+          "Type d'engagement non choisi — sélectionnez-le à l'étape Mission.",
+        );
+      }
+      if (exerciceFutur) {
+        throw new Error(
+          `L'exercice ${exercice} n'est pas encore clos — une revue fiscale porte sur un exercice achevé.`,
+        );
+      }
+      etapeEnCours = 1;
       const payloadIdentite = {
         denomination: contribNom.trim(),
         ncc: contribNcc.trim(),
@@ -1469,41 +1531,59 @@ export function App() {
         setContribIdExistant(cid);
       }
 
-      setMissionStatus({ msg: "Création de la mission…", err: false });
-      const profil: Record<string, string | boolean> = {
-        regime,
-        forme_juridique: payloadIdentite.forme_juridique,
-      };
-      const secteurProfil = (contribActivite.trim() || secteur.trim());
-      if (secteurProfil) profil.secteur = secteurProfil;
-      if (typeEntite.trim()) profil.type_entite = typeEntite.trim();
-      if (crossBorder) profil.cross_border = true;
+      etapeEnCours = 2;
+      let mission: { id: number; version_referentiel_id: number };
+      if (
+        missionCreee &&
+        missionCreee.cid === cid &&
+        missionCreee.exercice === Number(exercice)
+      ) {
+        // Mission déjà créée lors d'une tentative précédente — on la réutilise
+        // au lieu de créer un doublon (la contrainte serveur le refuserait).
+        setMissionStatus({
+          msg: `Reprise de la mission #${missionCreee.id} déjà créée…`,
+          err: false,
+        });
+        mission = { id: missionCreee.id, version_referentiel_id: versionEpinglee?.id ?? 0 };
+      } else {
+        setMissionStatus({ msg: "Création de la mission…", err: false });
+        const profil: Record<string, string | boolean> = {
+          regime,
+          forme_juridique: payloadIdentite.forme_juridique,
+        };
+        const secteurProfil = (contribActivite.trim() || secteur.trim());
+        if (secteurProfil) profil.secteur = secteurProfil;
+        if (typeEntite.trim()) profil.type_entite = typeEntite.trim();
+        if (crossBorder) profil.cross_border = true;
 
-      const mission = await api<{ id: number; version_referentiel_id: number }>(
-        "/api/v1/missions",
-        {
-          method: "POST",
-          jeton,
-          json: {
-            contribuable_id: cid,
-            exercice: Number(exercice),
-            profil,
-            type_engagement: typeEngagement || "autre",
-            perimetre_impots:
-              perimetreImpots.length > 0 ? perimetreImpots : null,
-            exclusions_declarees: exclusionsDeclarees.trim() || null,
-            seuil_signification: seuilSignification.trim()
-              ? Number(seuilSignification)
-              : null,
-            objectifs: objectifsLibelles
-              .map((l) => l.trim())
-              .filter(Boolean)
-              .map((libelle) => ({ libelle })),
+        mission = await api<{ id: number; version_referentiel_id: number }>(
+          "/api/v1/missions",
+          {
+            method: "POST",
+            jeton,
+            json: {
+              contribuable_id: cid,
+              exercice: Number(exercice),
+              profil,
+              type_engagement: typeEngagement,
+              perimetre_impots:
+                perimetreImpots.length > 0 ? perimetreImpots : null,
+              exclusions_declarees: exclusionsDeclarees.trim() || null,
+              seuil_signification: seuilSignification.trim()
+                ? Number(seuilSignification)
+                : null,
+              objectifs: objectifsLibelles
+                .map((l) => l.trim())
+                .filter(Boolean)
+                .map((libelle) => ({ libelle })),
+            },
           },
-        },
-      );
+        );
+        setMissionCreee({ id: mission.id, cid, exercice: Number(exercice) });
+        setVersionEpinglee({ id: mission.version_referentiel_id });
+      }
       setMissionId(mission.id);
-      setVersionEpinglee({ id: mission.version_referentiel_id });
+      etapeEnCours = 3;
 
       if (!peutLancerRevue) {
         throw new Error(
@@ -1616,6 +1696,25 @@ export function App() {
         err: false,
       });
       void chargerDashboard(jeton);
+      try {
+        const q = await api<QuotaResume>("/api/v1/quota", { jeton });
+        setQuota(q);
+        if (q.bloque) {
+          setMissionStatus((prev) =>
+            prev && !prev.err
+              ? {
+                  msg:
+                    `${prev.msg} · Quota missions atteint ` +
+                    `(${q.missions_utilisees}/${q.missions_incluses}) — ` +
+                    "cette mission était la dernière incluse de la période.",
+                  err: false,
+                }
+              : prev,
+          );
+        }
+      } catch {
+        /* quota indicatif — silencieux */
+      }
     } catch (err) {
       let msg = err instanceof Error ? err.message : String(err);
       if (err instanceof ApiError && err.status === 403) {
@@ -1626,7 +1725,12 @@ export function App() {
             "Contactez l’admin billing ou attendez la prochaine période. " +
             `(${err.message})`;
         }
+      } else if (err instanceof ApiError && err.status === 409) {
+        msg = `${err.message} Votre paramétrage est conservé — « Revenir au paramétrage » pour l'ajuster.`;
+      } else if (err instanceof ApiError && err.status === 400) {
+        msg = `Création refusée : ${err.message}`;
       }
+      setEtapeRetour(etapeEnCours);
       setMissionStatus({ msg, err: true });
     } finally {
       setBusy(false);
@@ -3937,6 +4041,32 @@ export function App() {
                       />
                     </div>
 
+                    {conflitFiche && (
+                      <div className="conflit-fiche" role="alert">
+                        <p className="conflit-fiche-titre">
+                          Cette entreprise existe déjà : «{" "}
+                          {conflitFiche.client.denomination} » (#
+                          {conflitFiche.client.id})
+                        </p>
+                        <p className="conflit-fiche-detail">
+                          Le {conflitFiche.champ} «{" "}
+                          {conflitFiche.valeur} » est déjà rattaché à cette
+                          fiche de votre portefeuille. Utilisez la fiche
+                          existante — votre paramétrage de mission est
+                          conservé.
+                        </p>
+                        <button
+                          type="button"
+                          className="btn btn-primary btn-sm"
+                          onClick={() =>
+                            chargerContribuableDansWizard(conflitFiche.client)
+                          }
+                        >
+                          Utiliser la fiche existante
+                        </button>
+                      </div>
+                    )}
+
                     {contribForme === "pm" && (
                       <div className="legal-block">
                         <div className="legal-block-head">
@@ -4188,16 +4318,27 @@ export function App() {
                       <button
                         type="button"
                         className="btn btn-primary"
-                        disabled={!completude.complet}
+                        disabled={!etape1Ok}
                         onClick={() => setStep(2)}
                       >
                         Continuer
                       </button>
-                      {!completude.complet && (
+                      {conflitFiche ? (
                         <span className="cta-hint">
-                          Complétez l’identité légale pour avancer.
+                          Doublon {conflitFiche.champ} — utilisez la fiche
+                          existante ou corrigez l’identifiant.
                         </span>
-                      )}
+                      ) : !apiMin.ok ? (
+                        <span className="cta-hint">
+                          Minimum requis : {apiMin.manquants.join(" · ")}.
+                        </span>
+                      ) : !completude.complet ? (
+                        <span className="cta-hint">
+                          Identité {completude.ok}/{completude.total} —
+                          complétez avant lancement :{" "}
+                          {completude.manquants.join(" · ")}.
+                        </span>
+                      ) : null}
                     </div>
                   </>
                 )}
@@ -4227,7 +4368,11 @@ export function App() {
                         label="Exercice"
                         type="number"
                         value={exercice}
-                        onChange={(e) => setExercice(Number(e.target.value))}
+                        onChange={(e) => {
+                          setExercice(Number(e.target.value));
+                          setPrescriptionConfirmee(false);
+                        }}
+                        manquant={exerciceFutur}
                         tip={PROCESS_TIPS.exercice}
                         hint="Année fiscale contrôlée — détermine le millésime du référentiel."
                       />
@@ -4260,6 +4405,33 @@ export function App() {
                         hint="Optionnel — précise le profil pour le moteur."
                       />
                     </div>
+                    {exerciceFutur && (
+                      <p className="status err" role="alert">
+                        L’exercice {exercice} n’est pas encore clos — une revue
+                        fiscale porte sur un exercice achevé.
+                      </p>
+                    )}
+                    {exercicePrescrit && (
+                      <label className="check check-card exercice-prescrit">
+                        <input
+                          type="checkbox"
+                          checked={prescriptionConfirmee}
+                          onChange={(e) =>
+                            setPrescriptionConfirmee(e.target.checked)
+                          }
+                        />
+                        <span>
+                          <strong>
+                            Exercice antérieur à N-3 : en principe prescrit
+                            (art. L171 s. LPF)
+                          </strong>
+                          <small>
+                            Confirmez que la revue est volontaire (contentieux,
+                            contrôle en cours…).
+                          </small>
+                        </span>
+                      </label>
+                    )}
                     <label className="check check-card">
                       <input
                         type="checkbox"
@@ -4364,8 +4536,10 @@ export function App() {
                           value={typeEngagement}
                           onChange={(e) => setTypeEngagement(e.target.value)}
                           options={[...TYPES_ENGAGEMENT]}
+                          required
+                          manquant={!typeEngagement}
                           tip={PROCESS_TIPS.typeEngagement}
-                          hint="Contexte métier — n’altère aucune formule."
+                          hint="Choix explicite requis — « Autre » reste possible. N’altère aucune formule."
                         />
                         <Field
                           id="seuil-signification"
@@ -4390,7 +4564,8 @@ export function App() {
                           />
                         </p>
                         <p className="field-hint">
-                          Aucun coché = tous les impôts du référentiel.
+                          Aucun impôt coché = tous les impôts du référentiel
+                          (revue complète).
                         </p>
                         <div
                           className="impot-chips"
@@ -4532,10 +4707,20 @@ export function App() {
                       <button
                         type="button"
                         className="btn btn-primary"
+                        disabled={!etape2Ok}
                         onClick={() => setStep(3)}
                       >
                         Continuer
                       </button>
+                      {!etape2Ok && (
+                        <span className="cta-hint">
+                          {exerciceFutur
+                            ? "Exercice futur — choisissez un exercice achevé."
+                            : exercicePrescrit && !prescriptionConfirmee
+                              ? "Exercice a priori prescrit — cochez la confirmation."
+                              : "Choisissez le type d’engagement."}
+                        </span>
+                      )}
                     </div>
                   </>
                 )}
@@ -5335,6 +5520,15 @@ export function App() {
                       </>
                     )}
                     <div className="cta-row desktop-only wizard-cta">
+                      {missionStatus?.err && !restitution && (
+                        <button
+                          type="button"
+                          className="btn btn-primary"
+                          onClick={() => setStep(etapeRetour ?? 2)}
+                        >
+                          Revenir au paramétrage
+                        </button>
+                      )}
                       <button
                         type="button"
                         className="btn btn-ghost"
@@ -5399,7 +5593,7 @@ export function App() {
                   type="button"
                   className="btn btn-primary"
                   disabled={
-                    step === 1 && !completude.complet
+                    (step === 1 && !etape1Ok) || (step === 2 && !etape2Ok)
                   }
                   onClick={() => setStep(step + 1)}
                 >
@@ -5417,13 +5611,24 @@ export function App() {
                 </button>
               )}
               {step === 4 && (
-                <button
-                  type="button"
-                  className="btn btn-primary"
-                  onClick={resetMission}
-                >
-                  Nouvelle mission
-                </button>
+                <>
+                  {missionStatus?.err && !restitution && (
+                    <button
+                      type="button"
+                      className="btn btn-primary"
+                      onClick={() => setStep(etapeRetour ?? 2)}
+                    >
+                      Revenir au paramétrage
+                    </button>
+                  )}
+                  <button
+                    type="button"
+                    className={`btn ${missionStatus?.err && !restitution ? "btn-ghost" : "btn-primary"}`}
+                    onClick={resetMission}
+                  >
+                    Nouvelle mission
+                  </button>
+                </>
               )}
             </div>
           )}

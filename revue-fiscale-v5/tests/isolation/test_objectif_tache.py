@@ -136,6 +136,7 @@ def test_taches_apres_execute_et_patch(session, client_cabinet):
         headers=h,
         json={
             "contribuable_id": cid,
+            "type_engagement": "autre",
             "exercice": 2024,
             "profil": {"regime": "reel", "forme_juridique": "SA"},
             "perimetre_impots": ["BIC", "TVA"],
@@ -213,6 +214,7 @@ def test_cloture_cree_points_ouverts_anomalies(session, client_cabinet):
         headers=h,
         json={
             "contribuable_id": cid,
+            "type_engagement": "autre",
             "exercice": 2024,
             "profil": {"regime": "reel", "forme_juridique": "SA"},
         },
@@ -266,6 +268,7 @@ def test_tache_rls_inter_cabinets(session, client_cabinet):
         headers=h,
         json={
             "contribuable_id": cid,
+            "type_engagement": "autre",
             "exercice": 2024,
             "profil": {"regime": "reel", "forme_juridique": "SA"},
         },
@@ -312,6 +315,7 @@ def test_effet_croise_projette_bloquee_par(session, client_cabinet):
         headers=h,
         json={
             "contribuable_id": cid,
+            "type_engagement": "autre",
             "exercice": 2024,
             "profil": {"regime": "reel", "forme_juridique": "SA"},
         },

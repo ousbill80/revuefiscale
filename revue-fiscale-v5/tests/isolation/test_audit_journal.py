@@ -79,6 +79,7 @@ def _mission_avec_parcours(client, headers) -> int:
         headers=headers,
         json={
             "contribuable_id": cid,
+            "type_engagement": "autre",
             "exercice": 2025,
             "profil": {"regime": "reel", "forme_juridique": "SA"},
         },

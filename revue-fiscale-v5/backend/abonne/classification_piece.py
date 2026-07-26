@@ -343,6 +343,26 @@ def classer_piece(
     impose = (type_impose or "").strip().lower()
     forcer_manuel = impose in TYPES_PIECE and impose != "autre"
 
+    from backend.abonne.formats_piece import detecter_format_tabulaire
+
+    fmt_tab = detecter_format_tabulaire(nom_fichier, contenu)
+    if fmt_tab is not None and not forcer_manuel:
+        # Formats tabulaires (fec/csv/xlsx) : jamais de vision ni de LLM.
+        logger.info(
+            "classif_piece_tabulaire format=%s nom=%s", fmt_tab, nom_fichier
+        )
+        return {
+            "type_piece": "autre",
+            "type_detecte": "autre",
+            "type_source": f"format_{fmt_tab}",
+            "type_confiance": 1.0,
+            "type_detecte_auto": True,
+            "motif": (
+                f"document {fmt_tab.upper()} — classification déterministe, "
+                "sans analyse visuelle"
+            ),
+        }
+
     texte = _extraire_texte_rapide(nom_fichier, contenu)
     typ_nom, conf_nom = classer_par_nom(nom_fichier)
     typ_txt, conf_txt = classer_par_texte(texte)

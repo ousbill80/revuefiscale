@@ -138,6 +138,7 @@ def test_api_mission_403_si_quota_epuise(session):
         headers={"Authorization": f"Bearer {jeton}"},
         json={
             "contribuable_id": int(cid),
+            "type_engagement": "autre",
             "exercice": 2025,
             "profil": {"regime": "reel", "forme_juridique": "SA"},
         },

@@ -265,6 +265,7 @@ def test_patch_conclusion_statut_et_piece(session, client_cabinet, tmp_path, mon
         headers=h,
         json={
             "contribuable_id": cid,
+            "type_engagement": "autre",
             "exercice": 2024,
             "profil": {"regime": "reel", "forme_juridique": "SA"},
         },

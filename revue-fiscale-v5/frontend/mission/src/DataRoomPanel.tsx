@@ -176,6 +176,7 @@ export function DataRoomPanel({
   const [synthese, setSynthese] = useState<SyntheseDetail | null>(null);
   const [analyseEnCours, setAnalyseEnCours] = useState(false);
   const [errSynthese, setErrSynthese] = useState<string | null>(null);
+  const [syntheseMajEnCours, setSyntheseMajEnCours] = useState(false);
 
   const chargerPieces = useCallback(async () => {
     try {
@@ -315,6 +316,44 @@ export function DataRoomPanel({
     [entrees, filtreTypeEntree],
   );
 
+  async function surveillerSynthese() {
+    if (syntheseMajEnCours) return;
+    const idsTerminesConnus = new Set(
+      versions
+        .filter((v) => v.statut === "disponible" || v.statut === "echec")
+        .map((v) => v.id),
+    );
+    setSyntheseMajEnCours(true);
+    const debut = Date.now();
+    try {
+      while (Date.now() - debut < 90_000) {
+        await new Promise((r) => setTimeout(r, 5_000));
+        let liste: SyntheseVersion[] = [];
+        try {
+          liste = await api<SyntheseVersion[]>(
+            `/api/v1/contribuables/${contribuableId}/syntheses`,
+            { jeton },
+          );
+        } catch {
+          continue;
+        }
+        const terminee = (Array.isArray(liste) ? liste : []).some(
+          (v) =>
+            !idsTerminesConnus.has(v.id) &&
+            (v.statut === "disponible" || v.statut === "echec"),
+        );
+        if (terminee) {
+          await chargerVersions();
+          await chargerMemoire();
+          await chargerTimeline();
+          return;
+        }
+      }
+    } finally {
+      setSyntheseMajEnCours(false);
+    }
+  }
+
   async function uploaderPieces(fichiers: FileList | null) {
     if (!fichiers || fichiers.length === 0 || uploadEnCours) return;
     const liste = Array.from(fichiers);
@@ -346,6 +385,8 @@ export function DataRoomPanel({
       await chargerPieces();
       await chargerMemoire();
       await chargerTimeline();
+      await chargerVersions();
+      void surveillerSynthese();
     }
     if (derniereErreur) {
       setUploadErr(
@@ -487,6 +528,11 @@ export function DataRoomPanel({
             </p>
           </div>
           <div className="dataroom-synthese-actions">
+            {syntheseMajEnCours && (
+              <span className="picker-hint">
+                Synthèse en cours de mise à jour…
+              </span>
+            )}
             {versions.length > 0 && (
               <label className="dataroom-filtre">
                 <span>Version</span>
@@ -629,7 +675,7 @@ export function DataRoomPanel({
               <input
                 type="file"
                 multiple
-                accept=".pdf,.png,.jpg,.jpeg,.webp"
+                accept=".pdf,.png,.jpg,.jpeg,.webp,.xlsx,.csv,.fec,.txt"
                 disabled={uploadEnCours}
                 onChange={(e) => {
                   void uploaderPieces(e.target.files);
@@ -637,8 +683,8 @@ export function DataRoomPanel({
                 }}
               />
               <span className="dataroom-coffre-upload-hint">
-                PDF, PNG, JPEG, WEBP — 25 Mo max. Type détecté
-                automatiquement.
+                PDF, PNG, JPEG, WEBP, XLSX, CSV, FEC — 200 Mo max. Type
+                détecté automatiquement.
               </span>
             </label>
             {uploadEnCours && (

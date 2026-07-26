@@ -92,6 +92,7 @@ def test_statut_auto_en_cours_puis_cloture_reouverture(session):
         headers=h,
         json={
             "contribuable_id": cid,
+            "type_engagement": "autre",
             "exercice": 2025,
             "profil": {"regime": "reel", "forme_juridique": "SA"},
         },

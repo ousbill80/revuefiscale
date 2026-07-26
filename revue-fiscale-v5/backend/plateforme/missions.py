@@ -2,10 +2,12 @@
 from __future__ import annotations
 
 import json
+from datetime import date
 from decimal import Decimal, InvalidOperation
 from typing import Any, Final
 
 from sqlalchemy import text
+from sqlalchemy.exc import IntegrityError
 from sqlalchemy.orm import Session
 
 from backend.plateforme.contexte import contexte_tenant
@@ -86,6 +88,10 @@ class ErreurMission(Exception):
 
 class QuotaEpuise(ErreurMission):
     """Quota missions atteint — mapped to HTTP 403."""
+
+
+class ErreurMissionDoublon(ErreurMission):
+    """Mission active déjà existante pour ce client / exercice — HTTP 409."""
 
 
 def valider_type_engagement(valeur: object | None) -> str:
@@ -236,6 +242,13 @@ def creer_mission(
     except ErreurProfil as e:
         raise ErreurMission(str(e)) from e
 
+    annee_courante = date.today().year
+    if int(exercice) > annee_courante:
+        raise ErreurMission(
+            f"L'exercice {exercice} n'est pas encore clos — une revue fiscale "
+            "porte sur un exercice achevé."
+        )
+
     type_ok = valider_type_engagement(type_engagement)
     perimetre_ok = valider_perimetre_impots(perimetre_impots)
     seuil_ok = valider_seuil_signification(seuil_signification)
@@ -254,36 +267,65 @@ def creer_mission(
             raise QuotaEpuise(str(e)) from e
 
         contrib = session.execute(
-            text("SELECT id FROM contribuable WHERE id = :c"),
+            text("SELECT id, denomination FROM contribuable WHERE id = :c"),
             {"c": contribuable_id},
-        ).scalar_one_or_none()
+        ).mappings().one_or_none()
         if contrib is None:
             raise ErreurMission(f"contribuable {contribuable_id} introuvable")
+        denomination = str(contrib["denomination"] or f"client #{contribuable_id}")
 
-        mission_id = session.execute(
+        doublon = session.execute(
             text(
-                "INSERT INTO mission "
-                "(tenant_id, contribuable_id, exercice, profil, version_referentiel_id, "
-                "statut, type_engagement, perimetre_impots, exclusions_declarees, "
-                "seuil_signification) "
-                "VALUES (:t, :c, :e, CAST(:p AS jsonb), :v, :s, :te, "
-                "CAST(:pi AS jsonb), :ex, :seuil) RETURNING id"
+                "SELECT id FROM mission "
+                "WHERE contribuable_id = :c AND exercice = :e AND statut <> :cl "
+                "ORDER BY id DESC LIMIT 1"
             ),
-            {
-                "t": tenant_id,
-                "c": contribuable_id,
-                "e": exercice,
-                "p": json.dumps(profil_ok, ensure_ascii=False),
-                "v": version_id,
-                "s": STATUT_CADRAGE,
-                "te": type_ok,
-                "pi": json.dumps(perimetre_ok) if perimetre_ok is not None else None,
-                "ex": exclusions,
-                "seuil": seuil_ok,
-            },
-        ).scalar_one()
+            {"c": contribuable_id, "e": exercice, "cl": STATUT_CLOTUREE},
+        ).scalar_one_or_none()
+        if doublon is not None:
+            raise ErreurMissionDoublon(
+                f"Une mission existe déjà pour « {denomination} » sur "
+                f"l'exercice {exercice} (mission #{doublon}). "
+                "Ouvrez-la depuis l'onglet Missions."
+            )
+
+        try:
+            mission_id = session.execute(
+                text(
+                    "INSERT INTO mission "
+                    "(tenant_id, contribuable_id, exercice, profil, version_referentiel_id, "
+                    "statut, type_engagement, perimetre_impots, exclusions_declarees, "
+                    "seuil_signification) "
+                    "VALUES (:t, :c, :e, CAST(:p AS jsonb), :v, :s, :te, "
+                    "CAST(:pi AS jsonb), :ex, :seuil) RETURNING id"
+                ),
+                {
+                    "t": tenant_id,
+                    "c": contribuable_id,
+                    "e": exercice,
+                    "p": json.dumps(profil_ok, ensure_ascii=False),
+                    "v": version_id,
+                    "s": STATUT_CADRAGE,
+                    "te": type_ok,
+                    "pi": json.dumps(perimetre_ok) if perimetre_ok is not None else None,
+                    "ex": exclusions,
+                    "seuil": seuil_ok,
+                },
+            ).scalar_one()
+        except IntegrityError as e:
+            raise ErreurMissionDoublon(
+                f"Une mission existe déjà pour « {denomination} » sur "
+                f"l'exercice {exercice}. Ouvrez-la depuis l'onglet Missions."
+            ) from e
         session.flush()
         mid = int(mission_id)
+
+    if isinstance(objectifs, (list, tuple)):
+        objectifs = [
+            o
+            for o in objectifs
+            if isinstance(o, dict) and str(o.get("libelle") or "").strip()
+        ]
 
     if objectifs is not None:
         try:
@@ -514,7 +556,10 @@ def changer_statut_mission(
 
     with contexte_tenant(session, tenant_id):
         row = session.execute(
-            text("SELECT id, statut FROM mission WHERE id = :m"),
+            text(
+                "SELECT id, statut, contribuable_id, exercice "
+                "FROM mission WHERE id = :m"
+            ),
             {"m": mission_id},
         ).mappings().one_or_none()
         if row is None:
@@ -536,6 +581,27 @@ def changer_statut_mission(
                 f"(autorisées depuis {actuel} : "
                 f"{', '.join(sorted(autorises)) or 'aucune'})"
             )
+
+        if actuel == STATUT_CLOTUREE and cible != STATUT_CLOTUREE:
+            autre = session.execute(
+                text(
+                    "SELECT id FROM mission "
+                    "WHERE contribuable_id = :c AND exercice = :e "
+                    "AND statut <> :cl AND id <> :m "
+                    "ORDER BY id DESC LIMIT 1"
+                ),
+                {
+                    "c": row["contribuable_id"],
+                    "e": row["exercice"],
+                    "cl": STATUT_CLOTUREE,
+                    "m": mission_id,
+                },
+            ).scalar_one_or_none()
+            if autre is not None:
+                raise ErreurMission(
+                    f"Réouverture impossible : la mission #{autre} est déjà "
+                    f"active pour ce client sur l'exercice {row['exercice']}."
+                )
 
         session.execute(
             text("UPDATE mission SET statut = :s WHERE id = :m"),

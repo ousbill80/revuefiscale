@@ -115,6 +115,7 @@ def test_smoke_mission_parcours_complet(client_smoke, session):
         headers=h,
         json={
             "contribuable_id": cid,
+            "type_engagement": "autre",
             "exercice": 2025,
             "profil": {"regime": "reel", "forme_juridique": "SA"},
         },
@@ -224,6 +225,7 @@ def test_smoke_lecteur_lecture_seule(session):
             headers=h,
             json={
                 "contribuable_id": int(cid),
+                "type_engagement": "autre",
                 "exercice": 2025,
                 "profil": {"regime": "reel", "forme_juridique": "SA"},
             },

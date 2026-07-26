@@ -22,9 +22,9 @@ TYPES_PIECE_CONTRIBUABLE = frozenset(
     {"dfe", "rccm", "bail", "cie", "sodeci", "autre"}
 )
 
-# Plafond configurable par pièce (25 Mo) — défense en profondeur, l'endpoint
+# Plafond configurable par pièce (200 Mo) — défense en profondeur, l'endpoint
 # HTTP applique le même plafond avec un statut 413.
-TAILLE_MAX_PIECE_OCTETS = 25 * 1024 * 1024
+TAILLE_MAX_PIECE_OCTETS = 200 * 1024 * 1024
 
 
 class ErreurPieceContribuable(Exception):
@@ -61,7 +61,7 @@ def deposer_piece(
     if not contenu:
         raise ErreurPieceContribuable("fichier vide")
     if len(contenu) > TAILLE_MAX_PIECE_OCTETS:
-        raise ErreurPieceContribuable("Fichier trop volumineux (max 25 Mo).")
+        raise ErreurPieceContribuable("Fichier trop volumineux (max 200 Mo).")
 
     brut_type = (type_piece or "").strip().lower()
     if brut_type == "auto":

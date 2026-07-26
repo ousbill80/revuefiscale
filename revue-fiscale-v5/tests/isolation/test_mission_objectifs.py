@@ -171,6 +171,7 @@ def test_objectifs_lecteur_403_ecriture(session, client_cabinet):
         headers=h_admin,
         json={
             "contribuable_id": cid,
+            "type_engagement": "autre",
             "exercice": 2025,
             "profil": {"regime": "reel", "forme_juridique": "SA"},
             "objectifs": [{"libelle": "Visible lecteur"}],

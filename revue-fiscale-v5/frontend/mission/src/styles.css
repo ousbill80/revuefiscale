@@ -9180,3 +9180,13 @@ tr.row-active td {
 .juridique-tooltip-texte { color: var(--ink, #0f172a); }
 .juridique-tooltip-texte.is-interpretation { color: var(--muted, #64748b); }
 .juridique-tooltip-prudence { font-style: italic; color: var(--muted, #64748b); border-top: 1px solid var(--line-soft, #f1f5f9); padding-top: 0.3rem; }
+
+/* Wizard — conflit de fiche (NCC/RCCM déjà au portefeuille) */
+.conflit-fiche { display: grid; gap: 0.4rem; margin: 0.35rem 0 0.75rem; padding: 0.7rem 0.85rem; border: 1px solid color-mix(in srgb, var(--warn, #b42318) 35%, transparent); border-left: 4px solid var(--warn, #b42318); border-radius: 8px; background: var(--warn-soft, #fef2f2); }
+.conflit-fiche-titre { margin: 0; font-size: 0.88rem; font-weight: 700; color: var(--warn-ink, #991b1b); }
+.conflit-fiche-detail { margin: 0; font-size: 0.8rem; line-height: 1.45; color: var(--ink, #0f172a); }
+.conflit-fiche .btn { justify-self: start; }
+
+/* Wizard — confirmation exercice a priori prescrit (N-3) */
+.check-card.exercice-prescrit { border-color: color-mix(in srgb, var(--warn, #b42318) 30%, transparent); background: var(--warn-soft, #fef2f2); }
+.check-card.exercice-prescrit strong { color: var(--warn-ink, #991b1b); }

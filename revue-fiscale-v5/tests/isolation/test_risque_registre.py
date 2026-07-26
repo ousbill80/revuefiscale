@@ -197,6 +197,7 @@ def test_cloture_cree_risque_depuis_anomalie(session, client_cab):
         headers=h,
         json={
             "contribuable_id": cid,
+            "type_engagement": "autre",
             "exercice": 2024,
             "profil": {"regime": "reel", "forme_juridique": "SA"},
         },
