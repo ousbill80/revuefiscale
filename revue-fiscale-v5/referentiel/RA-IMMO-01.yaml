@@ -1,0 +1,37 @@
+reference_source: CGI 2026 — docs client 6/9/10 (propositions metier)
+date_effet: '2026-01-01'
+effets_croises: []
+a_confirmer:
+- date d effet 01/01/2026
+- valeurs issues docs client 6/9/10 — a valider metier
+formule_plafonnement: sans objet
+questions_generees:
+- id: q_montant
+  texte: Anomalie immo a signaler ?
+  type: montant
+profils_applicables:
+- Entreprises au regime reel
+nature: sans_objet
+identifiant: RA-IMMO-01
+impot: RA
+reference_legale: Revue analytique — Investissements incorporels et corporels (doc client 6)
+comptes_declencheurs:
+- '20'
+- '21'
+- '22'
+- '23'
+condition_declenchement: solde(20) > 0 ou solde(21) > 0 ou solde(22) > 0 ou solde(23) > 0
+conditions_fond: Investissements incorporels et corporels
+resultat: reponse(q_montant)
+niveau_risque: moyen
+cas_test:
+  soldes:
+    '20': '0'
+    '21': '50000000'
+    '22': '0'
+    '23': '0'
+  agregats: {}
+  reponses:
+    q_montant: '1000000'
+  declenche_attendu: true
+  montant_attendu: '1000000'

@@ -1,0 +1,452 @@
+<!DOCTYPE HTML><HTML><HEAD><META HTTP-EQUIV="Content-Type" CONTENT="text/html; charset=UTF-8">
+<TITLE>Code des impots -323</TITLE><LINK REL="STYLESHEET" HREF="/cicgi.css" CHARSET="ISO-8859-1" TYPE="text/css">
+<style type="text/css">
+body {margin-left: 5px;	margin-top: 0px; margin-right: .5em;margin-bottom: 0px;background-color:#fafafa ;}
+.Liste-Numerote {font-size: 12pt;font-weight: regular;font-style: italic;color: #000000;text-transform: none;margin-left:8px ;margin-bottom:8px ;margin-top:4px ;margin-right:10px ;font-family:Georgia, "Times New Roman", Times, serif}
+li {list-style-type: none; margin-left:0px ; padding-left:0em ; }
+.Paratext {font-size: 12pt;font-weight: regular;font-style: italic;color: #000000;text-decoration: none;vertical-align: baseline;text-transform: none;margin-left:0px ;font-family:Georgia, "Times New Roman", Times, serif}
+.Normal {font-size: 12pt;font-weight: regular;font-style: italic;color: #000000;text-decoration: none;vertical-align: baseline;text-transform: none;margin-left:0px ;font-family:Georgia, "Times New Roman", Times, serif}
+ul {list-style-type: none; margin-left:0px ; padding-left:0em ;  }
+.Liste2-Enumeree {font-size: 12pt;font-weight: regular;font-style: italic;color: #000000;text-decoration: none;vertical-align: baseline;text-transform: none;list-style-type:none ;margin-left:16px ;margin-bottom:8px;margin-right:10px;font-family:Georgia, "Times New Roman", Times, serif}
+P.Liste2-Enumeree {font-size: 12pt;font-weight: regular;font-style: italic;color: #000000;text-decoration: none;vertical-align: baseline;text-transform: none;list-style-type:none ;margin-left:16px ;margin-bottom:8px;margin-right:10px;font-family:Georgia, "Times New Roman", Times, serif}
+.Entete {font-size: 13pt;font-weight: regular;font-style: italic;color:#000000 ;text-decoration: none;vertical-align: baseline;text-transform: none;margin-left:8px ;font-family:Georgia, "Times New Roman", Times, serif}
+table, TABLE {border-width:1px; width:99% ;border-collapse:collapse;border-color: #9ecaed;box-shadow: 0 0 10px #9ecaed;}
+tr,td {text-align:left;vertical-align:bottom;border:1px solid #9ecaed;padding:.2em;marging-left:.2em}
+th, TH{text-align:center;vertical-align:middle;padding:.2em;}
+P.TableauEntete {font-size: 13pt;font-weight: regular;font-style: italic;color: #000000;font-family:Georgia, "Times New Roman"}
+P.TableauCelluleLeft, P.TableauCellule {text-align:right;margin-right:1em;font-size: 13pt;font-weight: regular;font-style: italic;color: #000000;font-family:Georgia, "Times New Roman"}
+P.TableauCelluleRight {text-align:left;margin-left:1em;font-size: 13pt;font-weight: regular;font-style: italic;color: #000000;font-family:Georgia, "Times New Roman"}
+.ui-buttonh {padding: .1em .1em ; border: 1px solid #dadada;border-radius: 4px; box-shadow: 0 0 4px #9ecaed;color:#FF3300 ;margin-left:8px ;margin-right:8px ;margin-bottom:2px ;margin-top:2px ;text-decoration:none ;font-size:12pt ;font-family:"Times New Roman"}   
+.ui-button {padding: .1em .1em ; border: 1px solid #dadada;border-radius: 4px; box-shadow: 0 0 4px #9ecaed;color:#FF3300 ;margin-left:8px ;margin-right:8px ;margin-bottom:2px ;margin-top:2px ;text-decoration:none ;font-size:12pt ;font-family:"Times New Roman"}   
+H3 {display: block;text-align: center;text-indent: 0pt;margin-top: 10pt;margin-bottom: 10pt;margin-right: 10pt;margin-left: 10pt;font-size: 12pt;font-weight: Bold;font-style: Regular;color: #00A000;text-decoration: none;vertical-align: baseline;text-transform: none;font-family: "Times New Roman";}
+H4 {display: block;text-align: left;text-indent: 0pt;margin-top: 10pt;margin-bottom: 6pt;margin-right: 10pt;margin-left: 10pt;font-size: 12pt;font-weight: Bold;font-style: Regular;color: #000000;text-decoration: none;vertical-align: baseline;text-transform: none;font-family: "Times New Roman";}
+H5 {display: block;text-align: left;text-indent: 0pt;margin-top: 10pt;margin-bottom: 6pt;margin-right: 10pt;margin-left: 10pt;font-size: 11pt;font-weight: Bold;font-style: Regular;color: #000000;text-decoration: none;vertical-align: baseline;text-transform: none;font-family: "Times New Roman";}
+H6.NoArticle {display: block;text-align: left;text-indent: 0pt;margin-top: 14pt;margin-bottom: 0pt;margin-right: 0pt;margin-left: 0pt;font-size: 14pt;font-weight: regular;font-style: Regular;color: #00a000;text-decoration: none;vertical-align: baseline;text-transform: none;font-family: "Times New Roman";}
+H2 {text-align:center;font-size:16pt;font-family:Georgia, "Times New Roman", Times, serif}
+P.ParaText {font-size: 12pt;font-weight: regular;font-style: italic;color: #000000;	text-decoration: none;vertical-align: baseline;text-transform: none;font-family:Georgia, "Times New Roman", Times, serif;}
+H2.Section,P.Section {font-size:12pt;font-weight:bold;font-style:Regular;color:#008000;font-family:Georgia,"Times New Roman"}
+P.Paragraphe, p.Paragraphe {Text-Align:center;Text-decoration:none;font-size:12pt;font-weight:bold;font-style:Normal;color:#00A000;font-family:Georgia,"Times New Roman"}
+H2.Livre,P.Livre {text-align:center;font-size:16pt;font-weight:bold;font-style:Regular;color:#008000;font-family:Georgia,"Times New Roman"}
+P.Partie,H2.Partie,P.TitreSub {text-align:center;font-size:14pt;font-weight:bold;font-style:Regular;color:#008000;font-family:Georgia,"Times New Roman"}
+H2.ChapitreNo,H2.TitreNo {text-align:center;font-size:14pt;font-weight:bold;font-style:Regular;color:#008000;font-family:Georgia,"Times New Roman"}
+H2.Chapitre, h2.Chapitre {text-align:center;font-size:14pt;font-weight:bold;font-style:Regular;color:#008000;font-family:Georgia,"Times New Roman"}
+H2.TitreNo {text-align:center;font-size:14pt;font-weight:bold;font-style:Regular;color:#008000;font-family:Georgia,"Times New Roman"}
+h3.Sous-Section, H3.Sous-Section, h3.Sous-section, h2.Section {font-size:12pt;font-weight:bold;font-style:Italic;color:#008000;font-family:Georgia,"Times New Roman"}
+hr,HR { display: block; width:90%;  margin-top: 0.5em; margin-bottom: 0.5em; margin-left: auto;  margin-right: auto;  border-style: inset; border-width: 1px;}
+P.TitreSub {text-align:center;font-size:14pt;font-weight:bold;font-style:Regular;color:#008000;font-family:Georgia,"Times New Roman"}
+.Reference {display: block;text-align: left;text-indent: 0pt;margin-top: 10pt;margin-bottom: 6pt;margin-right: 10pt;margin-left: 10pt;font-size: 14pt;font-weight: Bold;font-style: Regular;color: #7F5434;text-decoration: none;vertical-align: baseline;text-transform: none;font-family: "Times New Roman";}
+.ludwig,blockquote {padding-left:1em;background-color:#fafafa;font-size:12pt;font-weight:100;font-style:italic;}
+#articleList {position:absolute ;	z-index: 1 ;left: 10px ;top: 80px ;height:340px;width: 620px;border: 2px solid #cacaca ;border-radius: 5px ;background-color:#fafafa ;    box-shadow: 0 0 12px #333333;	margin-left:0px ;	padding: .3em .3em ;		overflow:hidden ;	visibility:hidden ;  }			
+#articleList h3 { text-align: center; margin: 0; }		
+
+.historique {
+  display:none ;
+  padding: .1em .3em ;
+  border: solid 2px #dadada;
+  border-radius: 7px;
+  box-shadow: 0 0 5px #9ecaed;  
+  
+}
+.histText {
+    display: block;
+    font-family: ;"Times New Roman"
+	padding: .1em .3em ;
+    margin: 1em 0px;
+	font-style:italic;
+	color:#000000;
+	overflow:auto;
+}
+.highlight {
+  font-weight:bold ;
+  color:#000000 ;
+  background-color:#FFFFCC ;
+  }
+.articleList-scroll {
+	overflow-x:hidden ;
+	overflow-y:scroll ;
+	scrollbar-width:thin ;
+	scrollbar-color:blue orange ;
+}
+
+#contenu {
+	overflow-x:hidden ;
+    overflow-y:scroll ;
+	scrollbar-width:thin ;
+	scrollbar-color:blue orange ;
+}		
+
+table, TABLE {
+ text-align:center; 
+    margin-left:.5em; 
+    margin-right:.5em; 
+    border:1px solid #000000;	
+	border-collapse:collapse ;
+    border-color: #9ecaed;
+    box-shadow: 0 0 10px #9ecaed;
+	
+   }
+  tr,td {text-align:left;}
+  
+
+
+ </style>
+ 
+<script src="/js/iscroll.js"></script>
+<script src="/js/jquery.js"></script>   
+<script src="/js/jquery-ui-1.10.3.custom.js"></script>    	    
+<script src="/js/jquery.ui.draggable.js" type="text/javascript"></script>			
+<script src="/js/jquery.ui.core.js"></script> 			
+<script src="/js/jquery.ui.widget.js"></script>			
+<script src="/js/jquery.ui.position.js"></script>			
+<script src="/js/jquery.ui.menu.js"></script>    		
+<script type="text/javascript" src="./xpages.js"></script>
+/* VERSION POUR PAGE HTML SUR SITE DGI.CGICI.COM */
+<script language="javascript">
+ function showButton(id) {
+    var x = document.getElementById(id) ;
+	if(x.style.display === "none") {
+	   x.style.display = "block" ;
+	  } else {
+	   x.style.display = "none" ;
+	   }
+	 }   
+	 var pagenumber="323";
+function loadpage(page, art) {
+      showHideHistoric(art);
+	  return false;
+	  } 
+function loadArticle(page, art) { var artno = art ;var pgno=page;scrolltoelementTag(pgno,artno) ;return false ;} 
+
+</script>
+</HEAD>
+<BODY><div ID="wrapper"><div ID="scroller">
+
+
+
+<H2 CLASS="Section">
+Section VI - Les poursuites</H2>
+
+<H3 CLASS="Sous-section">
+I - Le commandement</H3>
+<span id="#A5114"></span>
+<H6 CLASS="NoArticle">
+Art. 114 
+ &nbsp;&nbsp;&nbsp;&nbsp; <a href="#" onClick="loadpage('323','h245114');return false;" class="ui-button"  title="Consultez l'historique">2024...</a></H6>
+<P CLASS="ParaText">
+Tout recours aux voies d&apos;ex&eacute;cution d&eacute;crites aux articles <a class='ui-button' href='' onClick="loadArticle('323','5118');return false;">118</a> et suivants du pr&eacute;sent Livre doit &ecirc;tre pr&eacute;c&eacute;d&eacute; de la notification au d&eacute;biteur d&apos;un commandement de payer qui comporte appr&eacute;ciation de 3 % des sommes dues. Les commandements d&eacute;cern&eacute;s par les comptables publics sont ex&eacute;cutoires de plein droit. <FONT COLOR='#000000'>Ils sont notifiés par les agents de poursuite par voie électronique ou par pli recommandé avec avis de réception ou par remise en mains propres au débiteur.</FONT></P>
+
+<H6 CLASS="Modification">
+Loi n<b>&deg;-</b> 2003-206 du 7 juillet 2003, an. fiscale,Art. 34; loi n° 2024-1109 du 18 déc. 2024, an. fiscale, art. 20-2..</H6>
+<P CLASS="ParaText"><FONT COLOR='#000000'>
+Lorsque le d&eacute;biteur est inaccessible, le commandement de payer est signifi&eacute; &agrave; l&apos;un de ses collaborateurs, &agrave; son repr&eacute;sentant ou son mandataire, ou encore &agrave; la mairie de sa commune de rattachement ou &agrave; la sous-pr&eacute;fecture si celui-ci ne r&eacute;side pas sur un p&eacute;rim&egrave;tre communal. La personne qui re&ccedil;oit le commandement pour le compte du d&eacute;biteur en fait la d&eacute;charge ou en accuse r&eacute;ception.</FONT> </P>
+<H6 CLASS="Modification">
+Loi n&deg; 2019-1080 du 18 d&eacute;cembre 2019, an. fiscale,Art. 11-1.</H6>
+<P CLASS="ParaText">
+L&apos;inaccessibilit&eacute; doit &ecirc;tre constat&eacute;e par proc&egrave;s-verbal dress&eacute; soit par voie d&apos;huissier, soit par un officier de Police judiciaire. </P>
+
+
+<H6 CLASS="Modification">
+Ord. n<b>&deg;-</b> 2008-381 du 18 d&eacute;cembre 2008,Art.31.</H6>
+<P CLASS="ParaText">
+A d&eacute;faut de paiement dans les dix jours de la r&eacute;ception du commandement, lorsque celui-ci a &eacute;t&eacute; notifi&eacute; en mains propres, ou &agrave; la mairie ou encore dans les 15 jours de l&apos;envoi du pli recommand&eacute; lorsque la notification a &eacute;t&eacute; faite par ce mode, le comptable public peut proc&eacute;der au recouvrement forc&eacute; par toutes voies de droit.</P>
+
+<H6 CLASS="Modification">
+Loi n<b>&deg;-</b> 2004-271 du 15 avril 2004, an. fiscale,Art. 30-4; Loi n&deg; 2017-870 du 27 d&eacute;cembre 2017, an. fiscaleArt. 10-5;ord. n&deg; 2018-145 du 14 f&eacute;vrier 2018,Art. 1.</H6>
+
+
+
+<P CLASS="Paragraphe">
+Le sursis aux poursuites</P>
+
+<span id="#A5115"></span>
+<H6 CLASS="NoArticle">
+Art. 115</H6>
+<P CLASS="ParaText">
+Le contribuable qui n&apos;a pas acquitt&eacute; sa dette dans les dix jours de la r&eacute;ception du commandement peut demander au comptable public un sursis aux poursuites.</P>
+<P CLASS="ParaText">
+La demande doit &ecirc;tre &eacute;crite et motiv&eacute;e.</P>
+
+<span id="#A5116"></span>
+<H6 CLASS="NoArticle">
+Art. 116</H6>
+<P CLASS="ParaText">
+L&apos;octroi du b&eacute;n&eacute;fice du sursis aux poursuites est subordonn&eacute; :</P>
+<P CLASS="Liste2-Enumeree">
+-au paiement imm&eacute;diat d&apos;au moins 25 % des sommes exigibles;</P>
+<P CLASS="Liste2-Enumeree">
+-&agrave; l&apos;engagement &eacute;crit, assorti de garanties, de payer le reliquat dans un d&eacute;lai qui ne peut exc&eacute;der six mois.</P>
+
+<span id="#A5117"></span>
+<H6 CLASS="NoArticle">
+Art. 117</H6>
+<P CLASS="ParaText">
+Le non-respect des engagements pris par le contribuable &agrave; l&apos;effet de b&eacute;n&eacute;ficier du sursis aux poursuites entra&icirc;ne l&apos;exercice imm&eacute;diat des poursuites.</P>
+
+
+
+<H3 CLASS="Sous-section">
+II - Le recouvrement par voie d&apos;avis &agrave; tiers d&eacute;tenteur et par voie d&apos;opposition</H3>
+<span id="#A5118"></span>
+<H6 CLASS="NoArticle">
+Art. 118 <a href="#" onClick="loadpage('323','h245118');return false;" class="ui-button"  title="Consultez l'historique">2024...</a></H6>
+<P CLASS="ParaText">
+Les tiers d&eacute;tenteurs de deniers provenant du chef de redevables, d&eacute;biteurs &agrave; quelque titre que ce soit de sommes d&apos;argent &agrave; la caisse des comptables publics ou assimil&eacute;s sont tenus, sur la demande qui leur en est faite, de payer en l&apos;acquit des redevables et sur le montant des fonds qu&apos;ils doivent ou qui sont entre leurs mains, jusqu&apos;&agrave; concurrence de tout ou partie, les sommes dues par ces derniers.</P>
+<P CLASS="ParaText">
+La demande des comptables publics ou assimil&eacute;s prend la forme d&apos;un avis &agrave; tiers d&eacute;tenteur.</P>
+<P CLASS="ParaText"><FONT COLOR='#000000'>
+En ce qui concerne les avis à tiers détenteur délivrés aux banques et établissements financiers, ils doivent l’être conformément aux informations issues du fichier central des comptes bancaires et assimilés.</FONT></P>
+<H6 CLASS="Modification">
+Loi n° 2024-1109 du 18 déc. 2024, an. fiscale, art. 30-1.</H6>
+<P CLASS="ParaText">
+Les quittances remises par les comptables publics ou assimil&eacute;s pour les sommes l&eacute;gitimement dues sont allou&eacute;es en compte aux tiers d&eacute;tenteurs.</P>
+<P CLASS="ParaText">
+Ont notamment la qualit&eacute; de tiers d&eacute;tenteurs au sens de la pr&eacute;sente disposition, tous fermiers, locataires, clients, receveurs, &eacute;conomes et autres d&eacute;positaires, d&eacute;biteurs ou d&eacute;tenteurs de fonds provenant du chef des redevables ainsi que les g&eacute;rants, administrateurs, directeurs ou liquidateurs de personnes morales pour les sommes dues par celles-ci.</P>
+<P CLASS="ParaText">
+L&apos;avis &agrave; tiers d&eacute;tenteur appr&eacute;hende toutes les sommes dont le tiers est d&eacute;tenteur ou d&eacute;biteur au moment o&ugrave; il le re&ccedil;oit, ainsi que toutes celles dont il deviendra d&eacute;tenteur ou d&eacute;biteur dans les six mois qui suivent sa date de r&eacute;ception.</P>
+<P CLASS="ParaText">
+L&apos;avis &agrave; tiers d&eacute;tenteur s&apos;&eacute;tend aux cr&eacute;ances conditionnelles, ou &agrave; terme, que le contribuable poss&egrave;de &agrave; l&apos;encontre du tiers d&eacute;biteur, quelle que soit la date &agrave; laquelle ces cr&eacute;ances deviendront effectivement exigibles.</P>
+
+<span id="#A5119"></span>
+<H6 CLASS="NoArticle">
+Art. 119</H6>
+<P CLASS="ParaText">
+Les tiers d&eacute;tenteurs qui, requis de payer en l&apos;acquit des redevables, s&apos;abstiennent de le faire deviennent solidairement responsables des sommes dont les redevables ont &eacute;lud&eacute; le versement. Ces sommes sont major&eacute;es de 50 000 francs par jour de retard.</P>
+
+<span id="#A5120"></span>
+<H6 CLASS="NoArticle">
+Art. 120</H6>
+<P CLASS="ParaText">
+Le comptable public peut constater sur place la nature des diligences men&eacute;es en vue de l&apos;ex&eacute;cution de l&apos;avis &agrave; tiers d&eacute;tenteur en demandant la production de toutes justifications n&eacute;cessaires.</P>
+
+<span id="#A5121"></span>
+<H6 CLASS="NoArticle">
+Art. 121 &nbsp;&nbsp;&nbsp;&nbsp;<a href="#" onClick="loadpage('323','h205121');return false;" class="ui-button"   title="Consultez l'historique">2020...</a></H6>
+<P CLASS="ParaText">
+En mati&egrave;re de contribution fonci&egrave;re, les contribuables convaincus d&apos;opposition &agrave; ex&eacute;cution d&apos;un avis &agrave; tiers d&eacute;tenteur notifi&eacute; &agrave; leurs locataires, sont passibles des sanctions pr&eacute;vues par l&apos;article <a class='ui-button' href='' onClick="loadArticle('323','5171');return false;">171</a> du pr&eacute;sent Livre.</P>
+<P CLASS="ParaText"><FONT COLOR='#000000'>
+Ces m&ecirc;mes sanctions sont applicables quelle que soit la nature de l&apos;imp&ocirc;t mis en recouvrement. Elles s&apos;appliquent &eacute;galement aux propri&eacute;taires qui expulsent un locataire ayant ex&eacute;cut&eacute; de bonne foi une opposition &agrave; paiement de loyer.</FONT></P>
+<H6 CLASS="Modification">
+ Ord. n&deg; 2008-381 du 18 d&eacute;cembre 2008, an. fiscale,Art.32;<FONT COLOR='#000000'> loi n&deg; 2020-972 du 23 d&eacute;c. 2020, an. fiscale,Art. 25-1.</FONT></H6>
+<P CLASS="ParaText">
+Nonobstant les dispositions de l&apos;article 180 du pr&eacute;sent Livre, l&apos;action en justice dans<FONT COLOR='#000000'> ces cas </FONT>est engag&eacute;e par le Directeur g&eacute;n&eacute;ral des Imp&ocirc;ts ou le Directeur g&eacute;n&eacute;ral du Tr&eacute;sor et de la Comptabilit&eacute; publique.</P>
+<H6 CLASS="Modification">
+Loi n&deg; 2002-156 du 15 mars 2002, an. fiscale,Art. 32;<FONT COLOR='#000000'> loi n&deg; 2020-972 du 23 d&eacute;c. 2020, an. fiscale,Art. 25-2.</FONT></H6>
+
+
+<H6 CLASS="NoArticle"><FONT COLOR='#000000'> 
+Art. 121 bis </FONT></H6>
+<P CLASS="ParaText"><FONT COLOR='#000000'> 
+Il est institué un fichier des comptes bancaires et assimilés, géré par la Direction générale des Impôts qui permet l'identification de tous les comptes bancaires ouverts sur le territoire ivoirien. Ce fichier issu du traitement des déclarations transmises par les établissements bancaires en Côte d’Ivoire, indique les opérations d’ouverture, de modification et de clôture de compte et contient obligatoirement les informations ci-après :</FONT></P>
+<P CLASS="Liste1-Enumeree"><FONT COLOR='#000000'> 
+–	nom et adresse de la banque gestionnaire du ou des comptes ;</FONT></P>
+<P CLASS="Liste1-Enumeree"><FONT COLOR='#000000'> 
+–	identité du ou des titulaires ;</FONT></P>
+<P CLASS="Liste1-Enumeree"><FONT COLOR='#000000'> 
+–	les caractéristiques essentielles du compte (numéro, type de compte, etc.) ;</FONT></P>
+<P CLASS="Liste1-Enumeree"><FONT COLOR='#000000'> 
+–	date et nature de l’opération déclarée.</FONT></P>
+<P CLASS="ParaText"><FONT COLOR='#000000'> 
+Toutefois, il est précisé que ce fichier ne comporte ni les opérations effectuées ni le solde des comptes.</FONT></P>
+<H6 CLASS="Modification">
+Loi n° 2024-1109 du 18 déc. 2024, an. fiscale, art. 30-2.</H6>
+
+<H6 CLASS="NoArticle"><FONT COLOR='#000000'> 
+Art. 121 ter </FONT></H6>
+<P CLASS="ParaText"><FONT COLOR='#000000'> 
+Le fichier central des comptes bancaires et assimilés qui ne comporte ni les opérations effectuées ni le solde des comptes est renseigné et actualisé par les établissements bancaires gestionnaires.</FONT></P>
+<P CLASS="ParaText"><FONT COLOR='#000000'> 
+Les modalités d’application du présent dispositif sont fixées par arrêté du Ministre en charge du Budget. </FONT></P>
+<H6 CLASS="Modification">
+Loi n° 2024-1109 du 18 déc. 2024, an. fiscale, art. 30-2.</H6>
+
+
+
+
+<H3 CLASS="Sous-section">
+III - Mesures conservatoires et saisies</H3>
+<span id="#A5122"></span>
+<H6 CLASS="NoArticle">
+Art. 122</H6>
+<P CLASS="ParaText">
+Les mesures conservatoires et de saisie-vente ci-apr&egrave;s sont applicables pour le recouvrement des imp&ocirc;ts, taxes, redevances et pr&eacute;l&egrave;vements de toute nature pr&eacute;vus par le Code g&eacute;n&eacute;ral des Imp&ocirc;ts ou tout autre texte.</P>
+<P CLASS="Paragraphe">
+A - Saisie mobili&egrave;re</P>
+<P CLASS="ParaText">
+Peuvent faire l&apos;objet de saisie par l&apos;Administration, les biens meubles corporels, les fruits et les r&eacute;coltes du contribuable, que ces biens soient d&eacute;tenus par lui ou par un tiers.</P>
+<P CLASS="ParaText">
+La proc&eacute;dure est pr&eacute;c&eacute;d&eacute;e d&apos;un commandement de payer d&eacute;cern&eacute; au contribuable dans les conditions d&eacute;finies &agrave; l&apos;article <a class='ui-button' href='' onClick="loadArticle('323','5114');return false;">114</a> du pr&eacute;sent Livre.</P>
+<P CLASS="ParaText">
+La proc&eacute;dure de saisie entra&icirc;ne une majoration des cr&eacute;ances existantes de 5 %.</P>
+<P CLASS="ParaText">
+La saisie et la vente des marchandises sont effectu&eacute;es respectivement dans les conditions pr&eacute;vues aux articles <a class='ui-button' href='' onClick="loadArticle('323','5128');return false;">128</a> et <a class='ui-button' href='' onClick="loadArticle('323','5129');return false;">129</a> du pr&eacute;sent Livre.</P>
+<P CLASS="ParaText">
+Les biens insaisissables selon le droit commun ne sont pas concern&eacute;s par la saisie mobili&egrave;re.</P>
+<P CLASS="Paragraphe">
+B - Saisie immobili&egrave;re</P>
+<P CLASS="ParaText">
+Peuvent faire l&apos;objet de saisie par l&apos;Administration, les biens immeubles du contribuable.</P>
+<P CLASS="ParaText">
+La proc&eacute;dure ne peut &ecirc;tre engag&eacute;e que si le Tr&eacute;sor dispose d&apos;une hypoth&egrave;que sur l&apos;immeuble, inscrite dans les conditions et modalit&eacute;s pr&eacute;vues &agrave; l&apos;article <a class='ui-button' href='' onClick="loadArticle('323','5152');return false;">152</a> du pr&eacute;sent Livre.</P>
+<P CLASS="ParaText">
+Elle doit &ecirc;tre pr&eacute;c&eacute;d&eacute;e de la signification au contribuable d&apos;un commandement aux fins de paiement dans les conditions pr&eacute;vues &agrave; l&apos;article <a class='ui-button' href='' onClick="loadArticle('323','5114');return false;">114</a> du pr&eacute;sent Livre.</P>
+<P CLASS="ParaText">
+La proc&eacute;dure de saisie entra&icirc;ne une majoration des cr&eacute;ances existantes de 5 %.</P>
+<P CLASS="ParaText">
+A d&eacute;faut de paiement, la vente de l&apos;immeuble est r&eacute;alis&eacute;e aux ench&egrave;res publiques, apr&egrave;s accomplissement des formalit&eacute;s prescrites par la loi.</P>
+<P CLASS="ParaText">
+Les ventes de biens meubles et immeubles saisis sont pr&eacute;c&eacute;d&eacute;es des formalit&eacute;s de publicit&eacute; selon les usages en vigueur en mati&egrave;re de vente publique.</P>
+<P CLASS="ParaText">
+Les r&eacute;clamations en mati&egrave;re de saisie mobili&egrave;re ou immobili&egrave;re sont introduites et examin&eacute;es conform&eacute;ment aux dispositions des articles <a class='ui-button' href='' onClick="loadArticle('323','5208');return false;">208</a> et suivants du pr&eacute;sent Livre.</P>
+
+<H6 CLASS="Modification">
+Loi n<b>&deg;-</b> 2005-161 du 27 avril 2005, an. fiscale,Art. 21-8.</H6>
+
+
+
+
+<H3 CLASS="Sous-section">
+IV - Fermeture de magasins et &eacute;tablissements - Interdiction d&apos;exercer - Saisie des biens meubles</H3>
+<span id="#A5123"></span>
+<H6 CLASS="NoArticle">
+Art. 123</H6>
+<P CLASS="ParaText">
+La fermeture des &eacute;tablissements ainsi que l&apos;interdiction d&apos;exercer un commerce peuvent, sans pr&eacute;judice des sanctions p&eacute;nales encourues en la mati&egrave;re, &ecirc;tre ordonn&eacute;es pour une dur&eacute;e allant jusqu&apos;&agrave; cinq ann&eacute;es par arr&ecirc;t&eacute; du Ministre des Finances apr&egrave;s avis de la commission mixte paritaire dans les cas suivants :</P>
+<P CLASS="Liste2-Enumeree">
+-obstacle, emp&ecirc;chement ou r&eacute;sistance &agrave; l&apos;action des agents asserment&eacute;s de la Direction g&eacute;n&eacute;rale des Imp&ocirc;ts et de la Direction g&eacute;n&eacute;rale du Tr&eacute;sor et de la Comptabilit&eacute; publique dans le cadre de l&apos;exercice de leurs fonctions;</P>
+<P CLASS="Liste2-Enumeree">
+-d&eacute;faut de paiement dans les dix jours suivant la date de la signification d&apos;un commandement de payer.</P>
+<P CLASS="ParaText">
+L&apos;interdiction d&apos;exercer, qui vise aussi bien les personnes physiques que morales, peut &eacute;galement s&apos;appliquer aux dirigeants des personnes morales.</P>
+
+<span id="#A5124"></span>
+<H6 CLASS="NoArticle">
+Art. 124</H6>
+<P CLASS="ParaText">
+L&apos;application des mesures de fermeture ou d&apos;interdiction d&apos;exercer vis&eacute;es ci-dessus peut &ecirc;tre lev&eacute;e lorsqu&apos;elle est ordonn&eacute;e pour d&eacute;faut de paiement, moyennant le versement pr&eacute;alable, outre le montant de l&apos;imp&ocirc;t, des p&eacute;nalit&eacute;s et des frais de poursuite, d&apos;un suppl&eacute;ment &eacute;gal au montant des droits, ou en cas de r&eacute;cidive, au double de ce montant.</P>
+<P CLASS="ParaText">
+Si le contribuable n&apos;&eacute;tablit pas sa bonne foi, les majorations et suppl&eacute;ments pr&eacute;vus au pr&eacute;sent article sont doubl&eacute;s.</P>
+
+<span id="#A5125"></span>
+<H6 CLASS="NoArticle">
+Art. 125</H6>
+<P CLASS="ParaText">
+Lorsque la mesure de fermeture est ordonn&eacute;e pour entrave &agrave; l&apos;action des agents, une amende fiscale de 300 000 francs non susceptible de faire l&apos;objet d&apos;une att&eacute;nuation gracieuse, est exigible.</P>
+
+<span id="#A5126"></span>
+<H6 CLASS="NoArticle">
+Art. 126</H6>
+<P CLASS="ParaText">
+La fermeture peut &eacute;galement &ecirc;tre ordonn&eacute;e par :</P>
+<P CLASS="Liste2-Enumeree">
+-le Directeur g&eacute;n&eacute;ral des Imp&ocirc;ts et le Directeur g&eacute;n&eacute;ral du Tr&eacute;sor et de la Comptabilit&eacute; publique pour une dur&eacute;e de soixante jours francs, renouvelable sur d&eacute;cision du Ministre des Finances;</P>
+<P CLASS="Liste2-Enumeree">
+-les comptables de la Direction g&eacute;n&eacute;rale des Imp&ocirc;ts et de la Direction g&eacute;n&eacute;rale du Tr&eacute;sor et de la Comptabilit&eacute; publique, en cas de d&eacute;faut de paiement, pour une dur&eacute;e de vingt jours francs, renouvelable sur d&eacute;cision du Directeur g&eacute;n&eacute;ral des Imp&ocirc;ts ou du Directeur g&eacute;n&eacute;ral du Tr&eacute;sor et de la Comptabilit&eacute; publique.</P>
+<P CLASS="Liste2-Enumeree">
+Ils sont tenus de d&eacute;cerner au pr&eacute;alable au contribuable, un avis de fermeture, au moins soixante-douze (72) heures avant la fermeture effective;</P>
+
+<H6 CLASS="Modification">
+Ord. n<b>&deg;-</b> 2008-381 du 18 d&eacute;cembre 2008,Art. 33.</H6>
+<P CLASS="Liste2-Enumeree">
+-les chefs de services d&apos;assiette, en cas d&apos;obstacle, emp&ecirc;chement ou r&eacute;sistance &agrave; leur action, ou &agrave; l&apos;action des agents plac&eacute;s sous leur autorit&eacute;, pour une dur&eacute;e de dix jours francs, renouvelable sur d&eacute;cision du Directeur g&eacute;n&eacute;ral des Imp&ocirc;ts;</P>
+<P CLASS="Liste2-Enumeree">
+-les agents des Imp&ocirc;ts ayant au moins le grade d&apos;inspecteur en pr&eacute;sence d&apos;un officier de police judiciaire &agrave; l&apos;occasion des proc&eacute;dures pr&eacute;vues aux articles <a class='ui-button' href='' onClick="loadArticle('323','5012');return false;">12</a>, <a class='ui-button' href='' onClick="loadArticle('323','5013');return false;">13</a> et <a class='ui-button' href='' onClick="loadArticle('323','5067');return false;">67</a> du pr&eacute;sent Livre en cas de :</P>
+<P CLASS="Liste2-Enumeree">
+1-D&eacute;faut de pr&eacute;sentation de la comptabilit&eacute;, des documents comptables, de livres et registres et de tous autres documents que les contribuables sont astreints &agrave; fournir.</P>
+<P CLASS="Liste2-Enumeree">
+2-D&eacute;faut de d&eacute;claration fiscale d&apos;existence.</P>
+<P CLASS="Liste2-Enumeree">
+3-Pr&eacute;sentation des documents vis&eacute;s au 1 et au 2 ci-dessus qui comportent des anomalies graves.</P>
+<P CLASS="ParaText">
+La dur&eacute;e de fermeture ne peut exc&eacute;der dix jours sauf prorogation par le Directeur g&eacute;n&eacute;ral des Imp&ocirc;ts.</P>
+
+
+<H6 CLASS="Modification">
+Loi n<b>&deg;-</b> 2005-161 du 27 avril 2005, an. fiscale,Art. 27-1.</H6>
+
+
+<span id="#A5127"></span>
+<H6 CLASS="NoArticle">
+Art. 127</H6>
+<P CLASS="ParaText">
+Concomitamment ou ind&eacute;pendamment de la fermeture des magasins et &eacute;tablissements, il peut &ecirc;tre proc&eacute;d&eacute;, dans les dix jours de la signification d&apos;un commandement de payer, &agrave; la saisie des biens meubles et marchandises qu&apos;ils contiennent, ainsi que des autres biens meubles appartenant au contribuable d&eacute;biteur.</P>
+
+<span id="#A5128"></span>
+<H6 CLASS="NoArticle">
+Art. 128</H6>
+<P CLASS="ParaText">
+La fermeture des locaux, ou la saisie des marchandises et des biens meubles, est effectu&eacute;e par un agent de poursuite des Imp&ocirc;ts ou du Tr&eacute;sor d&eacute;sign&eacute; &agrave; cet effet.</P>
+<P CLASS="ParaText">
+Il est assist&eacute; &agrave; sa demande par les autorit&eacute;s ayant pouvoir de police. Le contribuable est d&eacute;sign&eacute; en qualit&eacute; de gardien.</P>
+<P CLASS="ParaText">
+Il est dress&eacute; proc&egrave;s-verbal de fermeture ou de saisie.</P>
+
+<span id="#A5129"></span>
+<H6 CLASS="NoArticle">
+Art. 129</H6>
+<P CLASS="ParaText">
+Les ventes d&apos;objets saisis ne peuvent s&apos;effectuer qu&apos;en vertu d&apos;une autorisation sp&eacute;ciale du Directeur g&eacute;n&eacute;ral des Imp&ocirc;ts ou du Directeur g&eacute;n&eacute;ral du Tr&eacute;sor et de la Comptabilit&eacute; publique, d&eacute;livr&eacute;e &agrave; la demande du comptable.</P>
+<P CLASS="ParaText">
+Les ventes ne peuvent avoir lieu que vingt et un jours apr&egrave;s la saisie.</P>
+<P CLASS="ParaText">
+En ce qui concerne les fruits et les r&eacute;coltes, ainsi que les biens qui ne peuvent &ecirc;tre conserv&eacute;s sans courir le risque de d&eacute;t&eacute;rioration ou d&apos;obsolescence, la vente est effectu&eacute;e dans les 10 jours qui suivent la saisie.</P>
+
+<H6 CLASS="Modification">
+Loi n<b>&deg;-</b> 2005-161 du 27 avril 2005, an. fiscale,Art. 21-11.</H6>
+
+
+
+
+<!-- Old wrapper body -->
+<span class="historique" ID="h245114">
+<div class="histText">
+
+<BR> 
+<BR>Art. 114 
+<BR> 
+<p>Tout recours aux voies d'ex&eacute;cution d&eacute;crites aux articles 118 et suivants du pr&eacute;sent Livre doit &ecirc;tre pr&eacute;c&eacute;d&eacute; de la notification au d&eacute;biteur d'un commandement de payer qui comporte appr&eacute;ciation de 3 % des sommes dues. Les commandements d&eacute;cern&eacute;s par les comptables publics sont ex&eacute;cutoires de plein droit. Ils sont notifi&eacute;s par les agents de poursuite par pli recommand&eacute; avec avis de r&eacute;ception ou par remise en mains propres au d&eacute;biteur.</p>
+<p>Loi n&deg;- 2003-206 du 7 juillet 2003, an. fiscale,Art. 34.</p>
+<p>Lorsque le d&eacute;biteur est inaccessible, le commandement de payer est signifi&eacute; &agrave; l'un de ses collaborateurs, &agrave; son repr&eacute;sentant ou son mandataire, ou encore &agrave; la mairie de sa commune de rattachement ou &agrave; la sous-pr&eacute;fecture si celui-ci ne r&eacute;side pas sur un p&eacute;rim&egrave;tre communal. La personne qui re&ccedil;oit le commandement pour le compte du d&eacute;biteur en fait la d&eacute;charge ou en accuse r&eacute;ception. </p>
+<p>Loi n&deg; 2019-1080 du 18 d&eacute;cembre 2019, an. fiscale,Art. 11-1.</p>
+<p>L'inaccessibilit&eacute; doit &ecirc;tre constat&eacute;e par proc&egrave;s-verbal dress&eacute; soit par voie d'huissier, soit par un officier de Police judiciaire. </p>
+<p>Ord. n&deg;- 2008-381 du 18 d&eacute;cembre 2008,Art.31.</p>
+<p>A d&eacute;faut de paiement dans les dix jours de la r&eacute;ception du commandement, lorsque celui-ci a &eacute;t&eacute; notifi&eacute; en mains propres, ou &agrave; la mairie ou encore dans les 15 jours de l'envoi du pli recommand&eacute; lorsque la notification a &eacute;t&eacute; faite par ce mode, le comptable public peut proc&eacute;der au recouvrement forc&eacute; par toutes voies de droit.</p>
+<p>Loi n&deg;- 2004-271 du 15 avril 2004, an. fiscale,Art. 30-4; Loi n&deg; 2017-870 du 27 d&eacute;cembre 2017, an. fiscaleArt. 10-5;ord. n&deg; 2018-145 du 14 f&eacute;vrier 2018,Art. 1.</p>
+<BR>
+<BR><BR><BR></div></span><finh245114>
+
+<span class="historique" ID="h245118">
+<div class="histText">
+
+<BR> 
+<BR>Art. 118
+<BR> 
+  Les tiers d&eacute;tenteurs de deniers provenant du chef de redevables, d&eacute;biteurs &agrave; quelque titre que ce soit de sommes d'argent &agrave; la caisse des comptables publics ou assimil&eacute;s sont tenus, sur la demande qui leur en est faite, de payer en l'acquit des redevables et sur le montant des fonds qu'ils doivent ou qui sont entre leurs mains, jusqu'&agrave; concurrence de tout ou partie, les sommes dues par ces derniers.</p>
+<p>La demande des comptables publics ou assimil&eacute;s prend la forme d'un avis &agrave; tiers d&eacute;tenteur.</p>
+<p>Les quittances remises par les comptables publics ou assimil&eacute;s pour les sommes l&eacute;gitimement dues sont allou&eacute;es en compte aux tiers d&eacute;tenteurs.</p>
+<p>Ont notamment la qualit&eacute; de tiers d&eacute;tenteurs au sens de la pr&eacute;sente disposition, tous fermiers, locataires, clients, receveurs, &eacute;conomes et autres d&eacute;positaires, d&eacute;biteurs ou d&eacute;tenteurs de fonds provenant du chef des redevables ainsi que les g&eacute;rants, administrateurs, directeurs ou liquidateurs de personnes morales pour les sommes dues par celles-ci.</p>
+<p>L'avis &agrave; tiers d&eacute;tenteur appr&eacute;hende toutes les sommes dont le tiers est d&eacute;tenteur ou d&eacute;biteur au moment o&ugrave; il le re&ccedil;oit, ainsi que toutes celles dont il deviendra d&eacute;tenteur ou d&eacute;biteur dans les six mois qui suivent sa date de r&eacute;ception.</p>
+<p>L'avis &agrave; tiers d&eacute;tenteur s'&eacute;tend aux cr&eacute;ances conditionnelles, ou &agrave; terme, que le contribuable poss&egrave;de &agrave; l'encontre du tiers d&eacute;biteur, quelle que soit la date &agrave; laquelle ces cr&eacute;ances deviendront effectivement exigibles.</p>
+<p>&nbsp;</p>
+<BR> 
+<BR><BR><BR></div></span><finh245118>
+
+<span class="historique" ID="h205121">
+<div class="histText">
+
+<BR> 
+<BR>Art. 121 
+<BR> 
+<BR>En mati&egrave;re de contribution fonci&egrave;re, les contribuables convaincus d'opposition &agrave; ex&eacute;cution d'un avis &agrave; tiers d&eacute;tenteur notifi&eacute; &agrave; leurs locataires, sont passibles des sanctions pr&eacute;vues par l'article171du pr&eacute;sent Livre. 
+<BR> 
+<BR>Ces m&ecirc;mes sanctions sont applicables quelle que soit la nature de l'imp&ocirc;t mis en recouvrement.  
+<BR> Ord. n °-2008-381 du 18 d&eacute;cembre 2008,Art.32. 
+<BR> 
+<BR>Nonobstant les dispositions de l'article180du pr&eacute;sent Livre, l'action en justice dans ce cas est engag&eacute;e par le Directeur g&eacute;n&eacute;ral des Imp&ocirc;ts ou le Directeur g&eacute;n&eacute;ral du Tr&eacute;sor et de la Comptabilit&eacute; publique.  
+<BR>Loi n °-2002-156 du 15 mars 2002, an. fiscale,Art. 32. 
+<BR>
+<BR><BR><BR></div></span><finh205121>
+</div></div> <!-- wrapper -->
+	  <div id="articleList"><div id="contenu" style='height:auto; background-color:#FFFFCC'>&nbsp;</div>
+      </div><p>&nbsp;</p><p>&nbsp;</p><p>&nbsp;</p><p>&nbsp;</p><p>&nbsp;</p><p>&nbsp;</p><p>&nbsp;</p><p>&nbsp;</p><p>&nbsp;</p><p>&nbsp;</p>
+	  <p>&nbsp;</p><p>&nbsp;</p><p>&nbsp;</p><p>&nbsp;</p><p>&nbsp;</p><p>&nbsp;</p></BODY></HTML>
+	  

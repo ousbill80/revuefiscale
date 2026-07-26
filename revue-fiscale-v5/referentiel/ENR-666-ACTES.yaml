@@ -1,0 +1,41 @@
+reference_source: CGI 2026 — docs client 6/9/10 (propositions metier)
+date_effet: '2026-01-01'
+effets_croises: []
+a_confirmer:
+- date d effet 01/01/2026
+- valeurs issues docs client 6/9/10 — a valider metier
+formule_plafonnement: sans objet
+questions_generees:
+- id: q_acte_non_enregistre
+  texte: Acte non enregistre ?
+  type: booleen
+- id: q_montant
+  texte: Droits dus estimes ?
+  type: montant
+profils_applicables:
+- Entreprises au regime reel
+nature: sans_objet
+identifiant: ENR-666-ACTES
+impot: ENR
+reference_legale: CGI 2026, art. 666 et s. — droits d enregistrement
+comptes_declencheurs:
+- '101'
+- '105'
+- '106'
+- '11'
+condition_declenchement: (solde(101) > 0 ou solde(105) > 0) et reponse(q_acte_non_enregistre) = vrai
+conditions_fond: Acte soumis a enregistrement non enregistre ?
+resultat: reponse(q_montant)
+niveau_risque: moyen
+cas_test:
+  soldes:
+    '101': '50000000'
+    '105': '0'
+    '106': '0'
+    '11': '0'
+  agregats: {}
+  reponses:
+    q_acte_non_enregistre: true
+    q_montant: '2500000'
+  declenche_attendu: true
+  montant_attendu: '2500000'

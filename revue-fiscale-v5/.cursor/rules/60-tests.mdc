@@ -1,0 +1,55 @@
+---
+description: Harnais de tests — règles, isolation, évaluation du copilote
+globs: ["tests/**", "**/test_*.py", "**/*.test.ts"]
+alwaysApply: false
+---
+
+# Tests
+
+## Harnais de règles — `tests/regles/`
+
+**Une règle sans cas de test n'est pas livrée.** Un fichier par règle, nommé d'après son
+identifiant : `BIC-CHG-18G-DONS.yaml`. Chaque cas comprend les données d'entrée, les réponses aux
+questions, le résultat attendu, et **le cas limite** qui fait basculer la règle.
+
+## Isolation — `tests/isolation/` — bloquant en CI
+
+Pour chaque table cloisonnée :
+
+- Lecture avec le contexte du tenant A → ne voit que A
+- Lecture avec le contexte du tenant B → ne voit que B
+- **Lecture sans contexte → zéro ligne**, jamais toutes
+- Tentative d'écriture d'une ligne portant le `tenant_id` d'un autre → refusée
+- Le rôle applicatif n'a ni `BYPASSRLS` ni la propriété des tables
+
+Ce test échoue → le déploiement s'arrête. Pas d'exception.
+
+## Test du principe directeur
+
+Un test formel démontre qu'une modification de seuil effectuée **depuis la console éditoriale**
+produit le bon résultat **sans recompilation**. C'est le contrat de recette de l'architecture.
+
+## Test d'épinglage
+
+Une mission épinglée sur la version N doit produire le même résultat après publication de la
+version N+1. Sans ce test, la reproductibilité n'est pas garantie.
+
+## Évaluation du copilote — `tests/eval/`
+
+50 à 100 cas écrits par le fiscaliste 2AàZ, dont **une vingtaine de pièges** : texte abrogé, régime
+français inapplicable, article inexistant.
+
+| Métrique | Seuil de blocage |
+|---|---|
+| Taux de récupération | Toute baisse |
+| Exactitude de citation | Toute baisse |
+| Abstention correcte | Toute baisse |
+| **Taux d'invention** | **Zéro toléré** |
+
+Rejeu à chaque changement de modèle, d'instructions, de découpage, de paramètre ou de corpus.
+**Une régression bloque le déploiement.**
+
+## Non-régression du moteur
+
+Un jeu de missions de référence rejoué à chaque modification. Résultat identique **au centime près**.
+C'est le sens du mot déterministe.

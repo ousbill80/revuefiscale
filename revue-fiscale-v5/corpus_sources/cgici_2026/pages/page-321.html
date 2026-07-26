@@ -1,0 +1,682 @@
+<!DOCTYPE HTML><HTML><HEAD><META HTTP-EQUIV="Content-Type" CONTENT="text/html; charset=UTF-8">
+<TITLE>Code des impots -332</TITLE><LINK REL="STYLESHEET" HREF="/cicgi.css" CHARSET="ISO-8859-1" TYPE="text/css">
+<style type="text/css">
+body {margin-left: 5px;	margin-top: 0px; margin-right: .5em;margin-bottom: 0px;background-color:#fafafa ;}
+.Liste-Numerote {font-size: 12pt;font-weight: regular;font-style: italic;color: #000000;text-transform: none;margin-left:8px ;margin-bottom:8px ;margin-top:4px ;margin-right:10px ;font-family:Georgia, "Times New Roman", Times, serif}
+li {list-style-type: none; margin-left:0px ; padding-left:0em ; }
+.Paratext {font-size: 12pt;font-weight: regular;font-style: italic;color: #000000;text-decoration: none;vertical-align: baseline;text-transform: none;margin-left:0px ;font-family:Georgia, "Times New Roman", Times, serif}
+.Normal {font-size: 12pt;font-weight: regular;font-style: italic;color: #000000;text-decoration: none;vertical-align: baseline;text-transform: none;margin-left:0px ;font-family:Georgia, "Times New Roman", Times, serif}
+ul {list-style-type: none; margin-left:0px ; padding-left:0em ;  }
+.Liste2-Enumeree {font-size: 12pt;font-weight: regular;font-style: italic;color: #000000;text-decoration: none;vertical-align: baseline;text-transform: none;list-style-type:none ;margin-left:16px ;margin-bottom:8px;margin-right:10px;font-family:Georgia, "Times New Roman", Times, serif}
+P.Liste2-Enumeree {font-size: 12pt;font-weight: regular;font-style: italic;color: #000000;text-decoration: none;vertical-align: baseline;text-transform: none;list-style-type:none ;margin-left:16px ;margin-bottom:8px;margin-right:10px;font-family:Georgia, "Times New Roman", Times, serif}
+.Entete {font-size: 13pt;font-weight: regular;font-style: italic;color:#000000 ;text-decoration: none;vertical-align: baseline;text-transform: none;margin-left:8px ;font-family:Georgia, "Times New Roman", Times, serif}
+table, TABLE {border-width:1px; width:99% ;border-collapse:collapse;border-color: #9ecaed;box-shadow: 0 0 10px #9ecaed;}
+tr,td {text-align:left;vertical-align:bottom;border:1px solid #9ecaed;padding:.2em;marging-left:.2em}
+th, TH{text-align:center;vertical-align:middle;padding:.2em;}
+P.TableauEntete {font-size: 13pt;font-weight: regular;font-style: italic;color: #000000;font-family:Georgia, "Times New Roman"}
+P.TableauCelluleLeft, P.TableauCellule {text-align:right;margin-right:1em;font-size: 13pt;font-weight: regular;font-style: italic;color: #000000;font-family:Georgia, "Times New Roman"}
+P.TableauCelluleRight {text-align:left;margin-left:1em;font-size: 13pt;font-weight: regular;font-style: italic;color: #000000;font-family:Georgia, "Times New Roman"}
+.ui-buttonh {padding: .1em .1em ; border: 1px solid #dadada;border-radius: 4px; box-shadow: 0 0 4px #9ecaed;color:#FF3300 ;margin-left:8px ;margin-right:8px ;margin-bottom:2px ;margin-top:2px ;text-decoration:none ;font-size:12pt ;font-family:"Times New Roman"}   
+.ui-button {padding: .1em .1em ; border: 1px solid #dadada;border-radius: 4px; box-shadow: 0 0 4px #9ecaed;color:#FF3300 ;margin-left:8px ;margin-right:8px ;margin-bottom:2px ;margin-top:2px ;text-decoration:none ;font-size:12pt ;font-family:"Times New Roman"}   
+H3 {display: block;text-align: center;text-indent: 0pt;margin-top: 10pt;margin-bottom: 10pt;margin-right: 10pt;margin-left: 10pt;font-size: 12pt;font-weight: Bold;font-style: Regular;color: #00A000;text-decoration: none;vertical-align: baseline;text-transform: none;font-family: "Times New Roman";}
+H4 {display: block;text-align: left;text-indent: 0pt;margin-top: 10pt;margin-bottom: 6pt;margin-right: 10pt;margin-left: 10pt;font-size: 12pt;font-weight: Bold;font-style: Regular;color: #000000;text-decoration: none;vertical-align: baseline;text-transform: none;font-family: "Times New Roman";}
+H5 {display: block;text-align: left;text-indent: 0pt;margin-top: 10pt;margin-bottom: 6pt;margin-right: 10pt;margin-left: 10pt;font-size: 11pt;font-weight: Bold;font-style: Regular;color: #000000;text-decoration: none;vertical-align: baseline;text-transform: none;font-family: "Times New Roman";}
+H6.NoArticle {display: block;text-align: left;text-indent: 0pt;margin-top: 14pt;margin-bottom: 0pt;margin-right: 0pt;margin-left: 0pt;font-size: 14pt;font-weight: regular;font-style: Regular;color: #00a000;text-decoration: none;vertical-align: baseline;text-transform: none;font-family: "Times New Roman";}
+H2 {text-align:center;font-size:16pt;font-family:Georgia, "Times New Roman", Times, serif}
+P.ParaText {font-size: 12pt;font-weight: regular;font-style: italic;color: #000000;	text-decoration: none;vertical-align: baseline;text-transform: none;font-family:Georgia, "Times New Roman", Times, serif;}
+H2.Section,P.Section {font-size:12pt;font-weight:bold;font-style:Regular;color:#008000;font-family:Georgia,"Times New Roman"}
+P.Paragraphe, p.Paragraphe {Text-Align:center;Text-decoration:none;font-size:12pt;font-weight:bold;font-style:Normal;color:#00A000;font-family:Georgia,"Times New Roman"}
+H2.Livre,P.Livre {text-align:center;font-size:16pt;font-weight:bold;font-style:Regular;color:#008000;font-family:Georgia,"Times New Roman"}
+P.Partie,H2.Partie,P.TitreSub {text-align:center;font-size:14pt;font-weight:bold;font-style:Regular;color:#008000;font-family:Georgia,"Times New Roman"}
+H2.ChapitreNo,H2.TitreNo {text-align:center;font-size:14pt;font-weight:bold;font-style:Regular;color:#008000;font-family:Georgia,"Times New Roman"}
+H2.Chapitre, h2.Chapitre {text-align:center;font-size:14pt;font-weight:bold;font-style:Regular;color:#008000;font-family:Georgia,"Times New Roman"}
+H2.TitreNo {text-align:center;font-size:14pt;font-weight:bold;font-style:Regular;color:#008000;font-family:Georgia,"Times New Roman"}
+h3.Sous-Section, H3.Sous-Section, h3.Sous-section, h2.Section {font-size:12pt;font-weight:bold;font-style:Italic;color:#008000;font-family:Georgia,"Times New Roman"}
+hr,HR { display: block; width:90%;  margin-top: 0.5em; margin-bottom: 0.5em; margin-left: auto;  margin-right: auto;  border-style: inset; border-width: 1px;}
+P.TitreSub {text-align:center;font-size:14pt;font-weight:bold;font-style:Regular;color:#008000;font-family:Georgia,"Times New Roman"}
+.Reference {display: block;text-align: left;text-indent: 0pt;margin-top: 10pt;margin-bottom: 6pt;margin-right: 10pt;margin-left: 10pt;font-size: 14pt;font-weight: Bold;font-style: Regular;color: #7F5434;text-decoration: none;vertical-align: baseline;text-transform: none;font-family: "Times New Roman";}
+.ludwig,blockquote {padding-left:1em;background-color:#fafafa;font-size:12pt;font-weight:100;font-style:italic;}
+#articleList {position:absolute ;	z-index: 1 ;left: 10px ;top: 80px ;height:340px;width: 620px;border: 2px solid #cacaca ;border-radius: 5px ;background-color:#fafafa ;    box-shadow: 0 0 12px #333333;	margin-left:0px ;	padding: .3em .3em ;		overflow:hidden ;	visibility:hidden ;  }			
+#articleList h3 { text-align: center; margin: 0; }		
+
+.historique {
+  display:none ;
+  padding: .1em .3em ;
+  border: solid 2px #dadada;
+  border-radius: 7px;
+  box-shadow: 0 0 5px #9ecaed;  
+  
+}
+.histText {
+    display: block;
+    font-family: ;"Times New Roman"
+	padding: .1em .3em ;
+    margin: 1em 0px;
+	font-style:italic;
+	color:#000000;
+	overflow:auto;
+}
+.highlight {
+  font-weight:bold ;
+  color:#000000 ;
+  background-color:#FFFFCC ;
+  }
+.articleList-scroll {
+	overflow-x:hidden ;
+	overflow-y:scroll ;
+	scrollbar-width:thin ;
+	scrollbar-color:blue orange ;
+}
+
+#contenu {
+	overflow-x:hidden ;
+    overflow-y:scroll ;
+	scrollbar-width:thin ;
+	scrollbar-color:blue orange ;
+}		
+
+table, TABLE {
+ text-align:center; 
+    margin-left:.5em; 
+    margin-right:.5em; 
+    border:1px solid #000000;	
+	border-collapse:collapse ;
+    border-color: #9ecaed;
+    box-shadow: 0 0 10px #9ecaed;
+	
+   }
+  tr,td {text-align:left;}
+  
+
+
+ </style>
+ 
+<script src="/js/iscroll.js"></script>
+<script src="/js/jquery.js"></script>   
+<script src="/js/jquery-ui-1.10.3.custom.js"></script>    	    
+<script src="/js/jquery.ui.draggable.js" type="text/javascript"></script>			
+<script src="/js/jquery.ui.core.js"></script> 			
+<script src="/js/jquery.ui.widget.js"></script>			
+<script src="/js/jquery.ui.position.js"></script>			
+<script src="/js/jquery.ui.menu.js"></script>    		
+<script type="text/javascript" src="./xpages.js"></script>
+/* VERSION POUR PAGE HTML SUR SITE DGI.CGICI.COM */
+<script language="javascript">
+ function showButton(id) {
+    var x = document.getElementById(id) ;
+	if(x.style.display === "none") {
+	   x.style.display = "block" ;
+	  } else {
+	   x.style.display = "none" ;
+	   }
+	 }   
+	 var pagenumber="332";
+function loadpage(page, art) {
+      showHideHistoric(art);
+	  return false;
+	  } 
+function loadArticle(page, art) { var artno = art ;var pgno=page;scrolltoelementTag(pgno,artno) ;return false ;} 
+
+</script>
+</HEAD>
+<BODY><div ID="wrapper"><div ID="scroller">
+
+
+<H2 CLASS="TitreNo">
+Titre III</H2>
+<H2 CLASS="TitreNo">
+Sanctions</H2>
+
+
+<H2 CLASS="ChapitreNo">
+
+<HR width="90%">
+
+
+Chapitre premier</H2>
+
+
+<H2 CLASS="Chapitre">
+Sanctions fiscales
+<HR width="90%">
+
+
+</H2>
+<P CLASS="Section">
+Retard dans le paiement des imp&ocirc;ts et taxes</P>
+<span id="#A5161"></span>
+<H6 CLASS="NoArticle">
+Art. 161 <a href="#" onClick="loadpage('332','h245161');return false;" class="ui-button"   title="Consultez l'historique">2024...</a></H6>
+<P CLASS="Liste2-Enumeree">
+1<b>&deg;-</b>Sans pr&eacute;judice des autres sanctions pr&eacute;vues par le pr&eacute;sent Livre, toute somme non acquitt&eacute;e dans les d&eacute;lais l&eacute;gaux est passible d&apos;un int&eacute;r&ecirc;t de retard de 5 %. Chaque mois ou fraction de mois de retard suppl&eacute;mentaire donne lieu au versement d&apos;un int&eacute;r&ecirc;t compl&eacute;mentaire de 0,5 %.</P>
+<P CLASS="Liste2-Enumeree">
+En ce qui concerne les impôts et taxes retenus à la source pour le compte du Tr&eacute;sor public, les taxes sur le chiffre d’affaires, les taxes indirectes et <FONT COLOR='#000000'>l’impôt</FONT> sur les traitements, salaires, pensions et rentes viagères retenus à la source, les int&eacute;rêts de retard sont port&eacute;s respectivement à 10 % et 1 %.</P>
+<H6 CLASS="Modification">
+Loi n&deg; 2004-271 du 15 avril 2004, an; fiscale, art. 32-1; ord n&deg; 2023-719 du 13 sept. 2023, art.3</H6>
+<P CLASS="Liste2-Enumeree">
+2<b>&deg;-</b>Les imp&ocirc;ts et taxes dont le recouvrement incombe aux comptables de la Direction g&eacute;n&eacute;rale du Tr&eacute;sor et de la Comptabilit&eacute; publique, qui ne sont pas acquitt&eacute;s le dernier jour du mois suivant celui de la mise en recouvrement sont passibles d&apos;une majoration de 10 %.</P>
+<P CLASS="Liste2-Enumeree"><FONT COLOR='#000000'>
+3<b>&deg;-</b> Les chèques, billets à ordre, traites et autres effets financiers qui se révèlent impayés, sont sanctionnés par une majoration fixée en fonction de la nature spécifique des incidents.</FONT></P>
+<P CLASS="Liste2-Numerotee"><FONT COLOR='#000000'>
+En ce qui concerne les effets impayés pour absence de signature, signature non conforme ou autres erreurs matérielles, la majoration est fixée à : </FONT></P>
+<P CLASS="Liste2-Enumeree"><FONT COLOR='#000000'>
+-	 5 % du montant de l’effet lorsque la régularisation intervient au cours du mois du rejet ;</FONT></P>
+<P CLASS="Liste2-Enumeree"><FONT COLOR='#000000'>
+-	 7 % du montant de l’effet lorsque la régularisation a lieu au-delà du mois de rejet.</FONT></P>
+<P CLASS="Liste1-Numerotee"><FONT COLOR='#000000'>
+S’agissant des effets impayés pour défaut ou insuffisance de provision, cette majoration est égale :</FONT></P>
+<P CLASS="Liste2-Enumeree"><FONT COLOR='#000000'>
+-	 à 12 % du montant de l’effet lorsque la régularisation intervient au cours du mois du rejet ;</FONT></P>
+<P CLASS="Liste2-Enumeree"><FONT COLOR='#000000'>
+-	 à 27 % du montant de l’effet lorsque la régularisation a lieu au-delà du mois de rejet ;</FONT></P>
+<P CLASS="Liste2-Enumeree"><FONT COLOR='#000000'>
+- 	au montant de l’effet en cas de récidive au cours du même exercice. </FONT></P>
+<P CLASS="Liste1-Numerotee"><FONT COLOR='#000000'>
+Pour la régularisation de ces effets, le comptable public est autorisé à notifier au redevable concerné, une mise en demeure de 72 heures après la prise en charge de l’effet impayé.</FONT></P>
+<P CLASS="Liste1-Numerotee"><FONT COLOR='#000000'>
+A l’expiration de ce délai, il peut recourir à l’encontre du contribuable défaillant, à toutes les voies d’exécution prévues par le présent Livre. </FONT></P>
+<H6 CLASS="Modification">
+Loi n° 2024-1109 du 18 déc. 2024, an. fiscale, art. 20-3</H6>
+
+
+<P CLASS="Paragraphe">
+Insuffisances de d&eacute;claration</P>
+
+
+<span id="#A5162"></span>
+<H6 CLASS="NoArticle">
+Art. 162</H6>
+<P CLASS="Liste2-Enumeree">
+1<b>&deg;-</b>Lorsqu&apos;un contribuable d&eacute;clare ou fait appara&icirc;tre une base d&apos;imposition ou des &eacute;l&eacute;ments servant &agrave; la liquidation de l&apos;imp&ocirc;t insuffisants, inexacts ou incomplets, le montant des droits &eacute;lud&eacute;s est passible en sus des int&eacute;r&ecirc;ts de retard pr&eacute;vus &agrave; l&apos;article 161 ci-dessus, d&apos;une majoration de :</P>
+<P CLASS="Liste2-Enumeree">
+-15 % si le montant des droits correspondant aux insuffisances, inexactitudes ou omissions n&apos;exc&egrave;de pas le quart des droits r&eacute;ellement dus;</P>
+<P CLASS="Liste2-Enumeree">
+-30 % si ce montant est sup&eacute;rieur au quart des droits r&eacute;ellement dus;</P>
+<P CLASS="Liste2-Enumeree">
+-100 % en cas de manoeuvres frauduleuses.</P>
+<P CLASS="Liste2-Enumeree">
+2&deg;	En ce qui concerne les impôts et taxes retenus à la source pour le compte du Tr&eacute;sor public, les taxes sur le chiffre d’affaires, les taxes indirectes, et <FONT COLOR='#000000'>l’impôt</FONT> sur les traitements, salaires, pensions et rentes viagères retenus à la source, les majorations pr&eacute;vues par le paragraphe 1 ci-dessus sont port&eacute;es respectivement à 30 %, 60 % et 150 %.</P>
+<H6 CLASS="Modification">
+Loi n&deg; 2004-271 du 15 avril 2004, an. fiscale, art. 32-2; ord n&deg; 2023-719 du 13 sept. 2023, art.3.</H6>
+<P CLASS="Paragraphe">
+Taxation d&apos;office</P>
+
+
+<span id="#A5163"></span>
+<DIV>
+<H6 CLASS="NoArticle">
+    Art.163  </H6>
+<P CLASS="Liste2-Enumeree">
+1&deg;					En sus des int&eacute;r&ecirc;ts de retard pr&eacute;vus &agrave; l&apos;article 161 du pr&eacute;sent Livre, les droits aff&eacute;rents aux d&eacute;clarations souscrites hors d&eacute;lais l&eacute;gaux dans le cadre d&apos;une proc&eacute;dure de taxation d&apos;office sont passibles d&apos;une majoration de 10 % :</P>
+<P CLASS="Liste2-Enumeree">
+-	en mati&egrave;re d&apos;imp&ocirc;t g&eacute;n&eacute;ral sur le revenu, d&apos;imp&ocirc;t sur les b&eacute;n&eacute;fices industriels, commerciaux ou agricoles, d&apos;imp&ocirc;t sur les b&eacute;n&eacute;fices non commerciaux, de contributions fonci&egrave;res, et de contributions des patentes et licences, cette majoration est port&eacute;e &agrave; 50 % si la situation n&apos;a pas &eacute;t&eacute; r&eacute;gularis&eacute;e dans un d&eacute;lai de trente jours suivant une demande de l&apos;Administration;</P>
+<P CLASS="Liste2-Enumeree">
+–	 en matière d’impôts et taxes retenus à la source pour le compte du Tr&eacute;sor    public, de taxes sur le chiffre d’affaires, de taxes indirectes et <FONT COLOR='#000000'>d’impôt</FONT> sur les traitements, salaires, pensions et rentes viagères, cette majoration est port&eacute;e à 100 % si la situation n’a pas &eacute;t&eacute; r&eacute;gularis&eacute;e dans un d&eacute;lai de trente jours suivant une demande de l’Administration.</P>
+<H6 CLASS="Modification">
+Ord n&deg; 2023-719 du 13 sept. 2023, art.3</H6>
+<P CLASS="Liste2-Enumeree">
+2&deg;	Les droits ou les suppl&eacute;ments de droits mis &agrave; la charge des contribuables dans le cadre d&apos;une proc&eacute;dure de taxation d&apos;office sont passibles d&apos;une majoration de :</P>
+<P CLASS="Liste2-Enumeree">
+-	50 % en mati&egrave;re d&apos;imp&ocirc;t g&eacute;n&eacute;ral sur le revenu, d&apos;imp&ocirc;t sur les b&eacute;n&eacute;fices industriels, commerciaux ou agricoles, d&apos;imp&ocirc;t sur les b&eacute;n&eacute;fices non commerciaux, de contributions fonci&egrave;res, et de contributions des patentes et licences;</P>
+<P CLASS="Liste2-Enumeree">
+-	100 % en mati&egrave;re d&apos;imp&ocirc;ts et taxes retenus &agrave; la source pour le compte du Tr&eacute;sor public, de taxes sur le chiffres d&apos;affaires, de taxes indirectes et <FONT COLOR='#000000'>d&apos;imp&ocirc;t</FONT> sur les traitements, salaires, pensions et rentes viag&egrave;res retenus &agrave; la source.</P>
+<FONT COLOR='#000000'>
+<P CLASS="Liste2-Enumeree">
+Les taux pr&eacute;vus au pr&eacute;sent paragraphe, sont port&eacute;s &agrave; 200 % en cas de d&eacute;faut de d&eacute;claration d&apos;existence.</P>
+</FONT>
+<H6 CLASS="Modification">
+Loi n&deg; 2004-271 du 15 avril 2004, an; fiscale,Art. 32-3; Loi n&deg; 2015-840 du 18 d&eacute;cembre 2015, an. fiscale,Art. 3-4; ord n&deg; 2023-719 du 13 sept. 2023, art.3.</H6>
+<P CLASS="Liste2-Enumeree">
+3&deg;	Les droits ou les suppl&eacute;ments de droits mis &agrave; la charge des contribuables dans le cadre d&apos;une proc&eacute;dure de rectification d&apos;office sont major&eacute;s de 100 %.</P>
+<P CLASS="Paragraphe">
+Evaluation d&apos;office pour opposition &agrave; contr&ocirc;le fiscal</P>
+</DIV>
+
+
+<span id="#A5164"></span>
+<H6 CLASS="NoArticle">
+Art. 164</H6>
+<P CLASS="ParaText">
+Les droits &eacute;valu&eacute;s d&apos;office dans le cadre d&apos;une proc&eacute;dure d&apos;opposition &agrave; contr&ocirc;le fiscal sont passibles d&apos;une majoration de 200 %.</P>
+<P CLASS="Paragraphe">
+Abus de droit</P>
+
+<span id="#A5165"></span>
+<H6 CLASS="NoArticle">
+Art. 165</H6>
+<P CLASS="ParaText">
+Les droits rappel&eacute;s dans le cadre d&apos;une proc&eacute;dure de r&eacute;pression des abus de droit sont passibles d&apos;une majoration de 150 %.</P>
+<P CLASS="Paragraphe">
+Fraude au num&eacute;ro de compte contribuable</P>
+
+<span id="#A5166"></span>
+<H6 CLASS="NoArticle">
+Art. 166</H6>
+<P CLASS="ParaText">
+Toute personne qui utilise &agrave; son profit le num&eacute;ro de compte contribuable d&apos;autrui ou un num&eacute;ro de compte contribuable fictif pour obtenir le b&eacute;n&eacute;fice d&apos;une disposition fiscale ou pour tout autre motif est passible d&apos;une amende de 500 000 francs, sans pr&eacute;judice du paiement des droits &eacute;ventuellement &eacute;lud&eacute;s.</P>
+
+<H6 CLASS="Modification">
+Loi n<b>&deg;-</b> 2005-161 du 27 avril 2005, an. fiscale,Art. 28-8.</H6>
+<P CLASS="ParaText">
+Les m&ecirc;mes sanctions sont applicables &agrave; toute personne qui autorise un tiers &agrave; faire usage de son num&eacute;ro de compte contribuable.</P>
+
+
+<H6 CLASS="Modification">
+Loi n<b>&deg;-</b> 2002-156 du 15 mars 2002, an. fiscale,Art. 30.</H6>
+<P CLASS="Paragraphe">
+Fraude &agrave; la d&eacute;livrance de factures</P>
+
+
+<span id="#A5167"></span>
+<H6 CLASS="NoArticle">
+Art. 167</H6>
+<P CLASS="ParaText">
+Tout achat &agrave; titre professionnel pour lequel le contribuable ne peut pr&eacute;senter une facture r&eacute;guli&egrave;re et conforme &agrave; la nature, &agrave; la quantit&eacute; et &agrave; la valeur des marchandises c&eacute;d&eacute;es, est r&eacute;put&eacute; avoir &eacute;t&eacute; effectu&eacute; en fraude des taxes sur le chiffre d&apos;affaires et des taxes assimil&eacute;es, quelle que soit la qualit&eacute; du vendeur au regard desdites taxes. En pareil cas, l&apos;acheteur est, soit personnellement, soit solidairement avec le vendeur si celui-ci est connu, tenu de payer lesdites taxes sur le montant de cet achat, ainsi que les p&eacute;nalit&eacute;s exigibles.</P>
+<P CLASS="ParaText">
+Les dispositions du paragraphe ci-dessus sont &eacute;galement applicables &agrave; l&apos;assujetti aux taxes sur le chiffre d&apos;affaires qui acquiert ses marchandises par l&apos;interm&eacute;diaire d&apos;une personne effectuant des achats group&eacute;s aux fins de distribution.</P>
+<P CLASS="ParaText">
+Les taxes acquitt&eacute;es relatives &agrave; des op&eacute;rations r&eacute;put&eacute;es r&eacute;alis&eacute;es en fraude de taxe sur le chiffre d&apos;affaires comme indiqu&eacute; ci-dessus ne sont admises en d&eacute;duction d&apos;aucun imp&ocirc;t.</P>
+
+<span id="#A5168"></span>
+<H6 CLASS="NoArticle">
+Art. 168 </H6>
+<P CLASS="Liste2-Enumeree">
+1&deg; Les infractions aux dispositions de l'article <a class='ui-button' href='' onClick="loadArticle('332','5144');return false;">144</a> et<a class='ui-button' href='' onClick="loadArticle('332','5145');return false;">145</a>, sans pr&eacute;judice des autres sanctions pr&eacute;vues par le pr&eacute;sent Livre, sont punies d'une amende &eacute;gale &agrave; :</P>
+<P CLASS="Liste2-Enumeree">
+- 10 000 francs par facture non &eacute;mise, pour les contribuables relevant de  <FONT COLOR='#000000'>la taxe d&apos;Etat de l&apos;Entreprenant ou de l&apos;imp&ocirc;t des microentreprises </FONT>;</P>
+<H6 CLASS="Modification"><FONT COLOR='#000000'>
+Loi n&deg; 2020-972 du 23 d&eacute;c. 2020, an. fiscale,Art. 33-31.</FONT></H6>
+<P CLASS="Liste2-Enumeree">
+- 30 000 francs par facture non &eacute;mise, pour les contribuables relevant du r&eacute;gime r&eacute;el simplifi&eacute; ;</P>
+<P CLASS="Liste2-Enumeree">
+- 50 000 francs par facture non &eacute;mise, pour les contribuables relevant du r&eacute;gime r&eacute;el normal.</P>
+<P CLASS="Liste2-Enumeree">
+Le cumul des amendes appliqu&eacute;es au cours d'un contr&ocirc;le, ne peut exc&eacute;der respectivement, 500 mille francs, 3 millions de francs et 10 millions de francs, pour les contribuables cit&eacute;s au paragraphe ci-dessus.</P>
+<P CLASS="Liste2-Enumeree">
+2&deg; Le non-paiement de l'amende dans un d&eacute;lai de 72 heures est sanctionn&eacute; par la fermeture des magasins dont les g&eacute;rants ne satisfont pas &agrave; l'obligation de d&eacute;livrance de la facture normalis&eacute;e. Cette sanction se cumule &agrave; celle-ci-dessus &eacute;num&eacute;r&eacute;e.</P>
+
+<H6 CLASS="Modification">
+Loi n<b>&deg;-</b> 2005- 161 du 27 avril 2005, an. fiscale,Art. 27-5; loi n&deg; 2013-908 du 26 d&eacute;cembre 2013, an. Fiscale,Art. 24-2 ; loi n&deg; 2017-870 du 27 d&eacute;cembre 2017, an. fiscaleArt. 11-16 ; ord. n&deg; 2018-145  du 14 f&eacute;vrier 2018,Art. 1.</H6>
+
+<P CLASS="Paragraphe">
+Amendes pour retard ou d&eacute;faut de production des d&eacute;clarations</P>
+
+<span id="#A5169"></span>
+<DIV>
+<H6 CLASS="NoArticle">
+    Art. 169  &nbsp;&nbsp; <a href="#" class="ui-buttonh" onClick="showHideHistoric('h255169')" title="Consultez l'historique">2025...</a>
+	&nbsp;&nbsp;  <a href="#" class="ui-buttonh" onClick="showHideHistoric('h235169')" title="Consultez l'historique">2023...</a></H6>
+<P CLASS="ParaText"><FONT COLOR='#000000'>
+En mati&egrave;re d&apos;imp&ocirc;t sur les b&eacute;n&eacute;fices industriels, commerciaux, agricoles ou non commerciaux, les d&eacute;clarations de r&eacute;sultats b&eacute;n&eacute;ficiaires, d&eacute;ficitaires ou nuls, ou dont les b&eacute;n&eacute;fices ne sont pas imposables produites hors d&eacute;lai, donnent lieu, sans pr&eacute;judice des majorations, &agrave; l&apos;application d&apos;une amende de :</FONT></P>
+<P CLASS="ParaText"><FONT COLOR='#000000'>
+-	3 000 000 de francs, major&eacute;e de 300 000 francs par mois ou fraction de mois de retard suppl&eacute;mentaire, en ce qui concerne les entreprises relevant de la Direction des grandes Entreprises ;</FONT> </P>
+<P CLASS="ParaText"><FONT COLOR='#000000'>
+-	1 000 000 de francs, major&eacute;e de 100 000 francs par mois ou fraction de mois de retard suppl&eacute;mentaire, en ce qui concerne les entreprises relevant de la Direction des moyennes Entreprises ; </FONT></P>
+<P CLASS="ParaText"><FONT COLOR='#000000'>
+-	500 000 de francs, major&eacute;e de 50 000 francs par mois ou fraction de mois de retard suppl&eacute;mentaire, en ce qui concerne les entreprises relevant des Directions r&eacute;gionales des Imp&ocirc;ts. </FONT> </P>
+<H6 CLASS="Modification">
+Loi n&deg; 2019-1080 du 18 d&eacute;cembre 2019, an. fiscale,Art. 11-2</H6>
+<P CLASS="ParaText"><FONT COLOR='#d00000'>La non-transmission des formats papier et &eacute;lectronique des &eacute;tats  financiers et des notes annexes de l&rsquo;exercice dans les d&eacute;lais pr&eacute;vus aux  articles 36, 49 bis et 101 bis du Code g&eacute;n&eacute;ral des Imp&ocirc;ts, est passible d&rsquo;une  amende de 1 000 000 de francs, major&eacute;e de 100 000 francs par mois ou fraction  de mois de retard suppl&eacute;mentaire.&nbsp;</FONT></P>
+<H6 CLASS="Modification">
+Ord. n° 2009-382 du 26 novembre 2009, an. fiscale, art.15-7; loi n° 2012-1179 du 27 décembre 2012, an. fiscale, art. 17-1; loi n° 2015-840 du 18 déc. 2015, an. fiscale, art. 24-4; loi n° 2020-972 du 23 déc. 2020, an. fiscale, art. 30; loi n° 2023-1000 du 18 déc. 2023, an. fiscale, art. 10-3; loi n&#176; 2025-987 du 19  d&eacute;cembre 2025, art. 21-5.</H6>
+<P CLASS="ParaText">
+Pass&eacute; un d&eacute;lai de trois mois &agrave; compter des dates limites pr&eacute;vues par les articles 35, 49 bis et 101 bis du Code g&eacute;n&eacute;ral des Imp&ocirc;ts, l&apos;amende est port&eacute;e &agrave; 2 000 000 de francs CFA, major&eacute;e de 200 000 francs CFA par mois ou fraction de mois de retard suppl&eacute;mentaire. Cette amende se cumule avec celle pr&eacute;vue au paragraphe pr&eacute;c&eacute;dent.</P>
+<H6 CLASS="Modification">
+Ord. n&deg; 2009-382 du 26 novembre 2009, an. fiscale,Art.15-8; Loi n&deg;  2012-1179 du 27 d&eacute;cembre 2012, an. fiscale,Art. 17-1.</H6>
+<P CLASS="ParaText">
+Les mêmes sanctions sont applicables à la non-transmission ou la transmission tardive des actes modificatifs des statuts, des comptes rendus des délibérations des assemblées statutaires des entreprises ainsi que des comptes rendus détaillés et des tableaux annexes fournis par les entreprises d’assurances ou de réassurance.</P>
+<H6 CLASS="Modification">
+Ord. n° 2008-381 du 18 déc. 2008, an. fiscale, art. 38;  loi n° 2023-1000 du 18 déc. 2023, an. fiscale, art. 10-3.</H6>
+<P CLASS="ParaText">
+Les sanctions pr&eacute;vues aux deuxi&egrave;me et troisi&egrave;me paragraphes du pr&eacute;sent article sont applicables en cas de d&eacute;faut de d&eacute;p&ocirc;t ou de d&eacute;p&ocirc;t tardif des d&eacute;clarations pr&eacute;vues aux articles 1066 bis et 1066 ter du Code g&eacute;n&eacute;ral des Imp&ocirc;ts.</P>
+<H6 CLASS="Modification">
+Ord. n&deg; 2011-121 du 22 juin 2011, an. fiscale,Art. 34-1.</H6>
+<P CLASS="ParaText"><FONT COLOR='#d00000'>
+La non-transmission ou la transmission tardive des formats papier et  &eacute;lectronique des &eacute;tats financiers et des notes annexes de fin d&rsquo;exercice apr&egrave;s  les d&eacute;lais pr&eacute;vus &agrave; l&rsquo;article 82 bis du Code g&eacute;n&eacute;ral des Imp&ocirc;ts, entra&icirc;ne  l&rsquo;application d&rsquo;une amende de 100 000 francs, major&eacute;e de 10 000 francs par mois  ou fraction de mois de retard<strong></strong>suppl&eacute;mentaire.&nbsp;</FONT></p>
+<H6 CLASS="Modification">
+Loi n° 2017-870 du 27 décembre 2017, an. fiscale art. 10-6; ord. n° 2018-145 du 14 février 2018, art. 1; loi n° 2020-972 du 23 déc. 2020, an. fiscale, art. 30; Loi n° 2023-1000 du 18 déc. 2023, an. fiscale, art. 10-3; loi n&#176; 2025-987 du 19  d&eacute;cembre 2025, art. 21-5.</H6>
+<P CLASS="ParaText">
+Pass&eacute; un d&eacute;lai de trois mois &agrave; compter des dates limites pr&eacute;vues par l&apos;article 82 bis du Code g&eacute;n&eacute;ral des Imp&ocirc;ts, l&apos;amende est port&eacute;e &agrave; 200 000 francs, major&eacute;e de 20 000 francs par mois ou fraction de mois de retard suppl&eacute;mentaire. Cette amende se cumule avec celle pr&eacute;vue au paragraphe pr&eacute;c&eacute;dent.</P>
+<H6 CLASS="Modification">
+Loi  n&deg; 2012-1179 du 27 d&eacute;cembre 2012, an. fiscale,Art. 17-2.</H6>
+
+<P CLASS="ParaText"><FONT COLOR='#d00000'> 
+De m&ecirc;me, les sanctions pr&eacute;vues aux premier, deuxi&egrave;me et troisi&egrave;me tirets  du premier paragraphe du pr&eacute;sent article sont applicables en cas de d&eacute;faut de  d&eacute;p&ocirc;t ou de d&eacute;p&ocirc;t tardif des d&eacute;clarations de la contribution des  patentes.&nbsp;</FONT></p>
+<H6 CLASS="Modification">
+Loi n&#176; 2025-987 du 19  d&eacute;cembre 2025, art. 10</H6>
+
+<P CLASS="ParaText"><FONT COLOR='#d00000'>
+Le d&eacute;faut de production du formulaire d&rsquo;identification de leurs  b&eacute;n&eacute;ficiaires effectifs vis&eacute; &agrave; l&rsquo;article 71-1&deg; du Code g&eacute;n&eacute;ral des Imp&ocirc;ts, lors  du d&eacute;p&ocirc;t des &eacute;tats financiers, donne lieu &agrave; l&rsquo;application d&rsquo;une amende de 1 000&nbsp;000  de francs major&eacute;e de 100&nbsp;000 francs par mois ou fraction de mois de retard  suppl&eacute;mentaire.</FONT></p>
+<H6 CLASS="Modification">
+Loi n&#176; 2025-987 du 19  d&eacute;cembre 2025, art. 24-6</H6>
+
+
+<P CLASS="ParaText">
+En mati&egrave;re de taxes sur le chiffre d&apos;affaires, le retard dans la production des d&eacute;clarations est sanctionn&eacute;, lorsque aucun droit n&apos;est d&ucirc;, par une amende de 20 000 francs, major&eacute;e de 10 000 francs par mois de retard suppl&eacute;mentaire.</P>
+<H6 CLASS="Modification">
+Loi n&deg; 2017-870 du 27 d&eacute;cembre 2017, an. fiscaleArt. 10-6;ord. n&deg; 2018-145 du 14 f&eacute;vrier 2018,Art. 1.</H6>
+<P CLASS="ParaText"><FONT COLOR='#000000'> 
+En ce qui concerne la taxe sur la valeur ajout&eacute;e, l&apos;amende pr&eacute;vue au paragraphe pr&eacute;c&eacute;dent est port&eacute;e &agrave; :</FONT></P>
+<P CLASS="Liste2-Enumeree"><FONT COLOR='#000000'> 
+- 1 000 000 de francs, major&eacute;e de 100 000 francs par mois ou fraction de mois de retard suppl&eacute;mentaire, pour les entreprises relevant de la Direction des grandes Entreprises ;</FONT></P>
+<P CLASS="Liste2-Enumeree"><FONT COLOR='#000000'> 
+- 500 000 francs, major&eacute;e de 50 000 francs par mois ou fraction de mois de retard suppl&eacute;mentaire, en ce qui concerne les entreprises relevant de la Direction des moyennes Entreprises ;</FONT></P>
+<P CLASS="Liste2-Enumeree"><FONT COLOR='#000000'> 
+- 100 000 francs, major&eacute;e de 10 000 francs par mois ou fraction de mois de retard suppl&eacute;mentaire, en ce qui concerne les entreprises relevant des Directions r&eacute;gionales des Imp&ocirc;ts.</FONT></P>
+<H6 CLASS="Modification">
+Loi n&deg; 2020-972 du 23 d&eacute;c. 2020, an. fiscale,Art. 16.</H6>
+
+</DIV>
+
+ <P CLASS="Paragraphe">
+Amende pour non-production ou pour production <FONT COLOR='#d00000'>de notes annexes ou</FONT> d&apos;&eacute;tats annexes non conformes ou contenant des insuffisances ou informations erron&eacute;es ou pour d&eacute;faut de renseignement de la rubrique relative aux comptes bancaires dans les &eacute;tats financiers</P>
+<H6 CLASS="Modification">
+Loi n&deg; 2020-972 du 23 d&eacute;c. 2020, an. fiscale,Art. 3-2; loi n° 2024-1109 du 18 déc. 2024, an. fiscale, art. 33-3; loi n&#176; 2025-987 du 19  d&eacute;cembre 2025, art. 21-6.</H6>
+
+<span id="#A5169b"></span>
+<H6 CLASS="NoArticle">
+Art. 169 bis &nbsp;&nbsp;&nbsp;&nbsp;<a href="#" onClick="loadpage('332','h255169b');return false;" class="ui-button"   title="Consultez l'historique">2025...</a>
+&nbsp;&nbsp;&nbsp;&nbsp;<a href="#" onClick="loadpage('332','h245169b');return false;" class="ui-button"   title="Consultez l'historique">2024...</a></H6>
+<P CLASS="ParaText">
+La non-production ou la production <FONT COLOR='#d00000'>de notes annexes ou</FONT> d&apos;&eacute;tats annexes vis&eacute;s &agrave; l&apos;article 36 du Code g&eacute;n&eacute;ral des Imp&ocirc;ts non conformes ou contenant des insuffisances ou informations erron&eacute;es ou le défaut de renseignement de la rubrique relative aux comptes bancaires dans les états financiers est passible d&apos;une amende de 1000 000 de francs, major&eacute;e de 100 000 francs par mois ou fraction de mois de retard suppl&eacute;mentaire.</P>
+<H6 CLASS="Modification">
+Loi n&deg; 2020-972 du 23 d&eacute;c. 2020, an. fiscale, art. 3-2.;  loi n° 2024-1109 du 18 déc. 2024, an. fiscale, art. 33-4 ; loi n&#176; 2025-987 du 19  d&eacute;cembre 2025, art. 21-6</H6>
+
+
+<P CLASS="Paragraphe">
+Amendes pour retard ou d&eacute;faut de production de l&apos;&eacute;tat r&eacute;capitulatif des salaires</P>
+<span id="#A5170"></span>
+<H6 CLASS="NoArticle">
+Art. 170</H6>
+<P CLASS="ParaText">
+Le retard ou le d&eacute;faut de production de l&apos;&eacute;tat pr&eacute;vu &agrave; l&apos;article <a class='ui-button' href='' onClick="loadArticle('332','0127');return false;">127</a> du Code g&eacute;n&eacute;ral des Imp&ocirc;ts est sanctionn&eacute; par une amende de 1 000 000 de francs, major&eacute;e de 100 000 francs par mois ou fraction de mois de retard suppl&eacute;mentaire. </P>
+<P CLASS="ParaText">
+Pass&eacute; un d&eacute;lai de trois mois &agrave; compter de la date limite vis&eacute;e &agrave; l&apos;article <a class='ui-button' href='' onClick="loadArticle('332','0127');return false;">127</a> du Code g&eacute;n&eacute;ral des Imp&ocirc;ts, l&apos;amende est port&eacute;e &agrave; 2 000 000 de francs, major&eacute;e de 200 000 francs par mois ou fraction de mois de retard suppl&eacute;mentaire. Cette amende se cumule avec celle pr&eacute;vue au paragraphe pr&eacute;c&eacute;dent.</P>
+
+<H6 CLASS="Modification">
+Loi n<b>&deg;-</b> 2002-156 du 15 mars 2002, an. fiscale,Art. 8; Ord. n<b>&deg;-</b> 2011-480 du 28 d&eacute;cembre 2011Art. 13.</H6>
+
+<span id="#A5170b"></span>
+<H6 CLASS="NoArticle">
+Art. 170 bis</H6>
+<P CLASS="ParaText">
+Toute r&eacute;gularisation en violation des dispositions de l&apos;article <a class='ui-button' href='' onClick="loadArticle('332','5024');return false;">24</a> du pr&eacute;sent Livre est sanctionn&eacute;e dans les m&ecirc;mes conditions  qu&apos;en mati&egrave;re de contr&ocirc;le fiscal</P>
+
+<H6 CLASS="Modification">
+Ord. n<b>&deg;-</b> 2006-234 du 02 ao&ucirc;t 2006Art. 35.</H6>
+<P CLASS="Paragraphe">
+Amende pour d&eacute;claration de cr&eacute;dits injustifi&eacute;s de TVA</P>
+
+
+<span id="#A5170t"></span>
+<H6 CLASS="NoArticle">
+Art. 170 ter</H6>
+<P CLASS="ParaText">
+Les cr&eacute;dits de taxe sur la valeur ajout&eacute;e non justifi&eacute;s donnent lieu &agrave; une amende de 30 % du montant du cr&eacute;dit non justifi&eacute;. </P>
+<P CLASS="ParaText">
+Ce taux est port&eacute; &agrave; 100 % lorsque le cr&eacute;dit non justifi&eacute; proc&egrave;de de manoeuvres frauduleuses.</P>
+
+<H6 CLASS="Modification">
+Ord. n<b>&deg;-</b> 2006-234 du 02 ao&ucirc;t 2006Art. 32-4.</H6>
+
+
+<DIV>
+<span id="#A5170q"></span>
+<H6 CLASS="NoArticle">
+Art. 170 quater</H6>
+<P CLASS="ParaText">
+Les r&eacute;ductions d&apos;imp&ocirc;t sur les b&eacute;n&eacute;fices, effectu&eacute;es sur la base de d&eacute;claration frauduleuse relative au programme d&apos;investissement agr&eacute;&eacute;, donnent lieu &agrave; l&apos;application d&apos;une amende &eacute;gale au montant imput&eacute;. </P>
+<H6 CLASS="Modification">
+loi n&deg; 2015-840 du 18 d&eacute;cembre 2015, an. fiscale,Art. 9-4</H6>
+</DIV>
+
+<DIV>
+<P CLASS="Paragraphe">
+<a name="50634993_pgfId-1042305"></a>Amende pour non-tenue du registre des b&eacute;n&eacute;ficiaires effectifs, du registre des titres nominatifs et du registre des titres au porteur</P>
+<span id="#A5170u"></span>
+<H6 CLASS="NoArticle">
+Art. 170 quinquies    </H6>
+<P CLASS="ParaText"><FONT COLOR='#000000'>
+<a name="50634993_pgfId-1042638"></a>1&deg; La non-tenue des registres pr&eacute;vus aux articles 49 bis et 49 ter du pr&eacute;sent Livre est sanctionn&eacute;e par une amende de 5 000 000 de francs par registre non tenu.</FONT></P>
+<P CLASS="ParaText"><FONT COLOR='#000000'>
+<a name="50634993_pgfId-1042620"></a>2&deg; La tenue de registre comportant des erreurs ou des omissions donne lieu &agrave; une amende &eacute;gale &agrave; 500 000 francs par erreur ou omission.</FONT></P>
+<P CLASS="ParaText"><FONT COLOR='#000000'>
+<a name="50634993_pgfId-1042612"></a>3&deg; L&#8216;amende pr&eacute;vue au 1&deg; ci-dessus s&#8216;applique &eacute;galement lorsque le contribuable n&#8216;a pas produit les registres susvis&eacute;s, suite &agrave; une requ&ecirc;te de l&#8216;Administration. Cette amende est major&eacute;e de 500 000 francs par mois ou fraction de mois de retard suppl&eacute;mentaire, &agrave; compter de l&#8216;expiration du d&eacute;lai imparti au contribuable pour r&eacute;pondre &agrave; la requ&ecirc;te.</FONT></P>
+<H6 CLASS="Modification">
+<a name="50634993_pgfId-1042664"></a>Loi n&deg; 2018 - 984 du 28 d&eacute;cembre 2018, an. fiscaleArt. 16-5</H6>
+</DIV>
+
+<P CLASS="Paragraphe">
+Amende pour d&eacute;faut de production des renseignements sur imprim&eacute;s r&eacute;glementaires, &agrave; la charge des entreprises mini&egrave;res et p&eacute;troli&egrave;res et de leurs fournisseurs</P>
+
+<DIV>
+<span id="#A5170s"></span>
+<H6 CLASS="NoArticle">
+Art. 170 sexies &nbsp;&nbsp;  <a href="#" class="ui-buttonh" onClick="showHideHistoric('h235170s')" title="Consultez l'historique">2023...</a></H6>
+<P CLASS="ParaText">
+Le d&eacute;faut de production des informations au moyen des imprim&eacute;s r&eacute;glementaires pr&eacute;vus &agrave; l&apos;article <a class='ui-button' href='' onClick="loadArticle('321','383');return false;">383 bis</a> du Code g&eacute;n&eacute;ral des Imp&ocirc;ts, est sanctionn&eacute; par une amende de 1 000 000 de francs, major&eacute;e de 100 000 francs par mois ou fraction de mois de retard suppl&eacute;mentaire.</P>
+<H6 CLASS="Modification">
+Loi n&deg; 2019-1080 du 18 d&eacute;cembre 2019, an. fiscale,Art. 11-3; loi n&deg; 2023-1000 du 18 d&eacute;c. 2023, an. fiscale, art. 21-3.</H6>
+<P CLASS="Paragraphe">
+Amende pour d&eacute;claration de d&eacute;ficit fiscal injustifi&eacute;</P>
+</DIV>
+<DIV>
+<span id="#A51700"></span>
+<H6 CLASS="NoArticle">
+Art. 170 octies </H6>
+<P CLASS="ParaText">
+La d&eacute;claration de d&eacute;ficit fiscal injustifi&eacute; r&eacute;sultant de man&#339;uvres frauduleuses ou d&apos;un abus de droit, est sanctionn&eacute;e d&apos;une amende dont le taux est fix&eacute; &agrave; 25 % du montant du d&eacute;ficit d&eacute;clar&eacute;, m&ecirc;me lorsque la r&eacute;sorption de ce d&eacute;ficit par l&apos;Administration fiscale, n&apos;aboutit pas &agrave; un rappel d&apos;imp&ocirc;t. En cas de litige, ce chef de redressement peut &ecirc;tre soumis &agrave; la Commission mixte paritaire, conform&eacute;ment &agrave; l&apos;article 25 du pr&eacute;sent Livre. Dans ce cas, la caution pr&eacute;vue &agrave; l&apos;article 190 du m&ecirc;me Livre, n&apos;est pas exig&eacute;e.</P>
+<H6 CLASS="Modification">
+Loi n&deg; 2019-1080 du 18 d&eacute;cembre 2019, an. fiscale,Art. 11-3</H6>
+<P CLASS="Paragraphe">
+Amende pour non-d&eacute;p&ocirc;t ou d&eacute;p&ocirc;t tardif des d&eacute;clarations relatives aux imp&ocirc;ts exon&eacute;r&eacute;s</P>
+</DIV>
+<DIV>
+<span id="#A5170n"></span>
+<H6 CLASS="NoArticle">
+Art. 170 nonies </H6>
+<P CLASS="ParaText">
+Sous r&eacute;serve des dispositions de l&apos;article 169 du pr&eacute;sent Livre, le non-d&eacute;p&ocirc;t dans les d&eacute;lais l&eacute;gaux des d&eacute;clarations aff&eacute;rentes aux imp&ocirc;ts exon&eacute;r&eacute;s, est sanctionn&eacute; par une amende de 200 000 francs, major&eacute;e de 20 000 francs par mois ou fraction de mois de retard suppl&eacute;mentaire.</P>
+<H6 CLASS="Modification">
+Loi n&deg; 2019-1080 du 18 d&eacute;cembre 2019, an. fiscale,Art. 11-3</H6>
+</DIV>
+
+<P CLASS="Paragraphe">
+Amende pour perception de revenus de sources injustifi&eacute;es</P>
+<DIV>
+<span id="#A5170d"></span>
+<H6 CLASS="NoArticle">
+Art. 170 decies</H6>
+<P CLASS="ParaText">
+Les revenus per&ccedil;us par une personne physique, consid&eacute;r&eacute;s comme &eacute;tant de sources injustifi&eacute;es &agrave; l&apos;issue d&apos;une proc&eacute;dure de contr&ocirc;le mise en &#339;uvre en application du deuxi&egrave;me paragraphe de l&apos;article 7 du pr&eacute;sent Livre, donnent lieu &agrave; la perception d&apos;une amende &eacute;gale &agrave; 50 % du montant brut desdits revenus, sans pr&eacute;judice des     rappels d&apos;imp&ocirc;ts de toute nature qui pourraient &ecirc;tre mis &agrave; la charge de l&apos;entreprise, du fait de ces revenus. </P>
+<P CLASS="ParaText">
+L&apos;entreprise vis&eacute;e &agrave; l&apos;article 7 suscit&eacute; ainsi que la personne physique ayant directement ou indirectement b&eacute;n&eacute;fici&eacute; desdits revenus, sont solidairement responsables du paiement de l&apos;amende susvis&eacute;e. </P>
+<H6 CLASS="Modification">
+Loi n&deg; 2019-1080 du 18 d&eacute;cembre 2019, an. fiscale,Art. 22-2</H6>
+
+<P CLASS="Paragraphe">
+Amende pour non-respect des obligations fiscales pr&eacute;vues &agrave; l&apos;article 179 bis du Code g&eacute;n&eacute;ral des Imp&ocirc;ts</P>
+<H6 CLASS="Modification"><FONT COLOR='#000000'>
+Loi n&deg; 2020-972 du 23 d&eacute;c. 2020, an. fiscale,Art. 18-3.</FONT></H6>
+</DIV>
+<DIV>
+<span id="#A5170d"></span>
+<H6 CLASS="NoArticle">
+Art. 170 undecies</H6>
+<P CLASS="ParaText"><FONT COLOR='#000000'>
+Le non-respect des obligations fiscales pr&eacute;vues aux premier et deuxi&egrave;me paragraphes de l&apos;article 179 bis du Code g&eacute;n&eacute;ral des Imp&ocirc;ts est sanctionn&eacute; d&apos;une amende fix&eacute;e comme suit :</FONT></P>
+<P CLASS="Liste2-Enumeree"><FONT COLOR='#000000'>
+- 500 000 francs pour le nouvel acqu&eacute;reur du bien immeuble c&eacute;d&eacute; ;</FONT></P>
+<P CLASS="Liste2-Enumeree"><FONT COLOR='#000000'>
+- 3 000 000 de francs pour le notaire.</FONT></P>
+<H6 CLASS="Modification"><FONT COLOR='#000000'>
+Loi n&deg; 2020-972 du 23 d&eacute;c. 2020, an. fiscale,Art. 18-3.</FONT></H6>
+<P CLASS="Paragraphe">
+ Amendes pour d&eacute;faut de production de l&apos;&eacute;tat annuel r&eacute;capitulant les pr&eacute;l&egrave;vements effectu&eacute;s sur les paiements faits aux prestataires de services du secteur informel.</P>
+<H6 CLASS="Modification">
+Ord  n&deg; 2009-382 du 26 nov. 2009, an fiscale,Art. 18; ord. n&deg; 2011-121 du 22 juin 2011, an fiscale,Art. 36;<FONT COLOR='#000000'> loi n&deg; 2020-972 du 23 d&eacute;c. 2020, an. fiscale,Art. 33-33.</FONT></H6>
+</DIV>
+<DIV>
+<span id="#A5170i"></span>
+<H6 CLASS="NoArticle">
+Art. 170 duodecies </H6>
+<P CLASS="ParaText"><FONT COLOR='#000000'>
+Le retard ou le d&eacute;faut de production de l&apos;&eacute;tat annuel r&eacute;capitulant les pr&eacute;l&egrave;vements effectu&eacute;s sur les paiements faits aux prestataires de services du secteur informel, pr&eacute;vu par l&apos;article 84 bis du Code g&eacute;n&eacute;ral des Imp&ocirc;ts, est sanctionn&eacute; par une amende de  200 000 francs major&eacute;e de 20 000 francs par mois ou fraction de mois de retard suppl&eacute;mentaire.</FONT></P>
+<P CLASS="ParaText"><FONT COLOR='#000000'>
+Toute omission ou inexactitude des mentions figurant sur ledit &eacute;tat, entra&icirc;ne l&apos;application d'une amende fiscale de 10 000 francs, encourue autant de fois qu'il est relev&eacute; d'omissions ou d'inexactitudes. Cette amende ne peut &ecirc;tre inf&eacute;rieure &agrave; 100 000 francs. </FONT></P>
+<H6 CLASS="Modification">
+Loi n&deg; 2020-972 du 23 d&eacute;c. 2020, an. fiscale,Art. 33-33.</H6>
+</DIV>
+
+<DIV>
+<H6 CLASS="NoArticle">
+Art. 170 tredecies  </H6>
+<P CLASS="ParaText"><FONT COLOR='#d00000'>
+En ce qui concerne les plateformes &eacute;trang&egrave;res de services en ligne vis&eacute;es &agrave; l&#8217;alin&eacute;a 11 de l&#8217;article 3 du Code g&eacute;n&eacute;ral des Imp&ocirc;ts, le paiement de l&#8217;imp&ocirc;t exigible est fait au plus tard le 30 juin de l&#8217;ann&eacute;e suivant celle au titre de laquelle le chiffre d&#8217;affaires a &eacute;t&eacute; r&eacute;alis&eacute; en C&ocirc;te d&#8217;Ivoire, par voie &eacute;lectronique en ligne &agrave; l&#8217;appui de la d&eacute;claration, selon la proc&eacute;dure simplifi&eacute;e de paiement &agrave; distance de la taxe sur la valeur ajout&eacute;e mise en place par l&#8217;Administration fiscale. </FONT></P>
+<P CLASS="ParaText"><FONT COLOR='#d00000'>
+Le d&eacute;faut de d&eacute;claration ou de paiement de l&#8217;imp&ocirc;t sur les b&eacute;n&eacute;fices des plateformes &eacute;trang&egrave;res de services en ligne vis&eacute;es &agrave; l&#8217;alin&eacute;a 11 de l&#8217;article 3 du Code susvis&eacute;, est sanctionn&eacute; par la suspension de l&#8217;acc&egrave;s &agrave; la plateforme &agrave; partir du territoire ivoirien, apr&egrave;s mise en demeure de l&#8217;Administration fiscale rest&eacute;e sans suite.</FONT></P>
+<P CLASS="ParaText"><FONT COLOR='#d00000'>
+Par ailleurs, la liste des plateformes d&eacute;faillantes est publi&eacute;e au plus tard le 31 octobre de chaque ann&eacute;e civile sur le site officiel de la Direction g&eacute;n&eacute;rale des Imp&ocirc;ts et sur tous autres espaces nationaux et internationaux d&#8217;information accessibles au large public. </FONT></P>
+<P CLASS="ParaText"><FONT COLOR='#d00000'>
+Les sanctions pr&eacute;vues aux paragraphes pr&eacute;c&eacute;dents s&#8217;appliquent, sans pr&eacute;judice des amendes et autres sanctions fiscales pr&eacute;vues au Livre de Proc&eacute;dures fiscales en mati&egrave;re de d&eacute;faut ou de retard de production des d&eacute;clarations en mati&egrave;re d&#8217;imp&ocirc;t sur les b&eacute;n&eacute;fices.</FONT></P>
+<H6 CLASS="Modification">
+<A NAME="pgfId-1147353"></A>Loi n&#176; 2025-987 du 19  d&eacute;cembre 2025, art. 33-10</H6>
+</DIV>
+
+
+<!-- Old wrapper body -->
+
+<span class="historique" ID="h235161">
+<div class="histText">
+
+<BR> 
+<BR>Art. 161
+<BR> 
+<p>1&deg;-Sans pr&eacute;judice des autres sanctions pr&eacute;vues par le pr&eacute;sent Livre, toute somme non acquitt&eacute;e dans les d&eacute;lais l&eacute;gaux est passible d'un int&eacute;r&ecirc;t de retard de 5 %. Chaque mois ou fraction de mois de retard suppl&eacute;mentaire donne lieu au versement d'un int&eacute;r&ecirc;t compl&eacute;mentaire de 0,5 %.</p>
+<p>En ce qui concerne les imp&ocirc;ts et taxes retenus &agrave; la source pour le compte du Tr&eacute;sor public, les taxes sur le chiffre d'affaires, les taxes indirectes et les imp&ocirc;ts sur les traitements, salaires, pensions et rentes viag&egrave;res retenus &agrave; la source, les int&eacute;r&ecirc;ts de retard sont port&eacute;s respectivement &agrave; 10 % et 1 %.</p>
+<p>Loi n&deg;- 2004-271 du 15 avril 2004, an; fiscale,Art. 32-1</p>
+<p>2&deg;-Les imp&ocirc;ts et taxes dont le recouvrement incombe aux comptables de la Direction g&eacute;n&eacute;rale du Tr&eacute;sor et de la Comptabilit&eacute; publique, qui ne sont pas acquitt&eacute;s le dernier jour du mois suivant celui de la mise en recouvrement sont passibles d'une majoration de 10 %.</p>
+<p>3&deg;-Les ch&egrave;ques, billets &agrave; ordre, traites et autres effets financiers qui se r&eacute;v&egrave;lent impay&eacute;s faute de provision sont sanctionn&eacute;s par une majoration &eacute;gale &agrave; leur montant.<br />
+</p>
+<BR><BR><BR></div></span><finh235161>
+
+<span class="historique" ID="h245161">
+<div class="histText">
+
+<BR> 
+<BR>Art. 161
+<BR> 
+<p>1&deg;-Sans pr&eacute;judice des autres sanctions pr&eacute;vues par le pr&eacute;sent Livre, toute somme non acquitt&eacute;e dans les d&eacute;lais l&eacute;gaux est passible d'un int&eacute;r&ecirc;t de retard de 5 %. Chaque mois ou fraction de mois de retard suppl&eacute;mentaire donne lieu au versement d'un int&eacute;r&ecirc;t compl&eacute;mentaire de 0,5 %.</p>
+<p>En ce qui concerne les imp&ocirc;ts et taxes retenus &agrave; la source pour le compte du Tr&eacute;sor public, les taxes sur le chiffre d&rsquo;affaires, les taxes indirectes et l&rsquo;imp&ocirc;t sur les traitements, salaires, pensions et rentes viag&egrave;res retenus &agrave; la source, les int&eacute;r&ecirc;ts de retard sont port&eacute;s respectivement &agrave; 10 % et 1 %.</p>
+<p>Loi n&deg; 2004-271 du 15 avril 2004, an; fiscale, art. 32-1; ord n&deg; 2023-719 du 13 sept. 2023, art.3</p>
+<p>2&deg;-Les imp&ocirc;ts et taxes dont le recouvrement incombe aux comptables de la Direction g&eacute;n&eacute;rale du Tr&eacute;sor et de la Comptabilit&eacute; publique, qui ne sont pas acquitt&eacute;s le dernier jour du mois suivant celui de la mise en recouvrement sont passibles d'une majoration de 10 %.</p>
+<p>3&deg;-Les ch&egrave;ques, billets &agrave; ordre, traites et autres effets financiers qui se r&eacute;v&egrave;lent impay&eacute;s faute de provision sont sanctionn&eacute;s par une majoration &eacute;gale &agrave; leur montant.</p>
+<BR> 
+<BR><BR><BR></div></span><finh245161>
+
+<span class="historique" ID="h235162">
+<div class="histText">
+
+<BR> 
+<BR>Art. 162
+<BR> 
+<p>1&deg;-Lorsqu'un contribuable d&eacute;clare ou fait appara&icirc;tre une base d'imposition ou des &eacute;l&eacute;ments servant &agrave; la liquidation de l'imp&ocirc;t insuffisants, inexacts ou incomplets, le montant des droits &eacute;lud&eacute;s est passible en sus des int&eacute;r&ecirc;ts de retard pr&eacute;vus &agrave; l'article 161 ci-dessus, d'une majoration de :</p>
+<p>-15 % si le montant des droits correspondant aux insuffisances, inexactitudes ou omissions n'exc&egrave;de pas le quart des droits r&eacute;ellement dus;</p>
+<p>-30 % si ce montant est sup&eacute;rieur au quart des droits r&eacute;ellement dus;</p>
+<p>-100 % en cas de manoeuvres frauduleuses.</p>
+<p>2&deg;-En ce qui concerne les imp&ocirc;ts et taxes retenus &agrave; la source pour le compte du Tr&eacute;sor public, les taxes sur le chiffre d'affaires, les taxes indirectes, et les imp&ocirc;ts sur les traitements, salaires, pensions et rentes viag&egrave;res retenus &agrave; la source, les majorations pr&eacute;vues par le paragraphe 1 ci-dessus sont port&eacute;es respectivement &agrave; 30 %, 60 % et 150 %.</p>
+<p>Loi n&deg;- 2004-271 du 15 avril 2004, an. fiscale,Art. 32-2.</p>
+<BR><BR><BR></div></span><finh235162>
+
+<span class="historique" ID="h235163">
+<div class="histText">
+
+<BR> 
+<BR>Art. 163
+<BR> 
+<p>1&deg;	En sus des int&eacute;r&ecirc;ts de retard pr&eacute;vus &agrave; l'article 161 du pr&eacute;sent Livre, les droits aff&eacute;rents aux d&eacute;clarations souscrites hors d&eacute;lais l&eacute;gaux dans le cadre d'une proc&eacute;dure de taxation d'office sont passibles d'une majoration de 10 % :</p>
+<p>-	en mati&egrave;re d'imp&ocirc;t g&eacute;n&eacute;ral sur le revenu, d'imp&ocirc;t sur les b&eacute;n&eacute;fices industriels, commerciaux ou agricoles, d'imp&ocirc;t sur les b&eacute;n&eacute;fices non commerciaux, de contributions fonci&egrave;res, et de contributions des patentes et licences, cette majoration est port&eacute;e &agrave; 50 % si la situation n'a pas &eacute;t&eacute; r&eacute;gularis&eacute;e dans un d&eacute;lai de trente jours suivant une demande de l'Administration;</p>
+<p>-	en mati&egrave;re d'imp&ocirc;ts et taxes retenus &agrave; la source pour le compte du Tr&eacute;sor public, de taxes sur le chiffre d'affaires, de taxes indirectes et d'imp&ocirc;ts sur les traitements, salaires, pensions et rentes viag&egrave;res, cette majoration est port&eacute;e &agrave; 100 % si la situation n'a pas &eacute;t&eacute; r&eacute;gularis&eacute;e dans un d&eacute;lai de trente jours suivant une demande de l'Administration.</p>
+<p>2&deg;	Les droits ou les suppl&eacute;ments de droits mis &agrave; la charge des contribuables dans le cadre d'une proc&eacute;dure de taxation d'office sont passibles d'une majoration de :</p>
+<p>-	50 % en mati&egrave;re d'imp&ocirc;t g&eacute;n&eacute;ral sur le revenu, d'imp&ocirc;t sur les b&eacute;n&eacute;fices industriels, commerciaux ou agricoles, d'imp&ocirc;t sur les b&eacute;n&eacute;fices non commerciaux, de contributions fonci&egrave;res, et de contributions des patentes et licences;</p>
+<p>-	100 % en mati&egrave;re d'imp&ocirc;ts et taxes retenus &agrave; la source pour le compte du Tr&eacute;sor public, de taxes sur le chiffres d'affaires, de taxes indirectes et d'imp&ocirc;ts sur les traitements, salaires, pensions et rentes viag&egrave;res retenus &agrave; la source.</p>
+<p>Les taux pr&eacute;vus au pr&eacute;sent paragraphe, sont port&eacute;s &agrave; 200 % en cas de d&eacute;faut de d&eacute;claration d'existence.</p>
+<p>Loi n&deg; 2004-271 du 15 avril 2004, an; fiscale,Art. 32-3; Loi n&deg; 2015-840 du 18 d&eacute;cembre 2015, an. fiscale,Art. 3-4</p>
+<p>3&deg;	Les droits ou les suppl&eacute;ments de droits mis &agrave; la charge des contribuables dans le cadre d'une proc&eacute;dure de rectification d'office sont major&eacute;s</p>
+<BR><BR><BR></div></span><finh235163>
+
+
+
+<span class="historique" ID="h205168">
+<div class="histText">
+
+<BR> 
+<BR>Art. 168 
+<BR> 
+<BR>1° Les infractions aux dispositions de l'article144et 145 , sans pr&eacute;judice des autres sanctions pr&eacute;vues par le pr&eacute;sent Livre, sont punies d'une amende &eacute;gale &agrave; : 
+<BR> 
+<BR>- 10 000 francs par facture non &eacute;mise, pour les contribuables relevant de l'imp&ocirc;t synth&eacute;tique ; 
+<BR> 
+<BR>- 30 000 francs par facture non &eacute;mise, pour les contribuables relevant du r&eacute;gime r&eacute;el simplifi&eacute; ; 
+<BR> 
+<BR>- 50 000 francs par facture non &eacute;mise, pour les contribuables relevant du r&eacute;gime r&eacute;el normal. 
+<BR> 
+<BR>Le cumul des amendes appliqu&eacute;es au cours d'un contr&ocirc;le, ne peut exc&eacute;der respectivement, 500 mille francs, 3 millions de francs et 10 millions de francs, pour les contribuables cit&eacute;s au paragraphe ci-dessus. 
+<BR> 
+<BR>2° Le non-paiement de l'amende dans un d&eacute;lai de 72 heures est sanctionn&eacute; par la fermeture des magasins dont les g&eacute;rants ne satisfont pas &agrave; l'obligation de d&eacute;livrance de la facture normalis&eacute;e. Cette sanction se cumule &agrave; celle-ci-dessus &eacute;num&eacute;r&eacute;e.  
+<BR>Loi n °-2005- 161 du 27 avril 2005, an. fiscale,Art. 27-5; loi n° 2013-908 du 26 d&eacute;cembre 2013, an. Fiscale,Art. 24-2 ; loi n° 2017-870 du 27 d&eacute;cembre 2017, an. fiscaleArt. 11-16 ; ord. n° 2018-145du 14 f&eacute;vrier 2018,Art. 1. 
+<BR><BR><BR></div></span><finh205168>
+
+<span class="historique" ID="h235169">
+<div class="histText">
+<BR> 
+<BR> 
+<BR>Art. 169 
+<BR> 
+<p>Le non-d&eacute;p&ocirc;t ou la non-transmission des formats papier et &eacute;lectronique des &eacute;tats financiers de l'exercice dans les d&eacute;lais pr&eacute;vus aux articles 36, 49 bis et 101 bis du Code g&eacute;n&eacute;ral des Imp&ocirc;ts, est passible d'une amende de 1 000 000 de francs, major&eacute;e de 100 000 francs par mois ou fraction de mois de retard suppl&eacute;mentaire.</p>
+<p>Ord. n&deg; 2009-382 du 26 novembre 2009, an. fiscale,Art.15-7; loi n&deg; 2012-1179 du 27 d&eacute;cembre 2012, an. fiscale,Art. 17-1; loi n&deg; 2015-840 du 18 d&eacute;cembre 2015, an. fiscale,Art. 24-4; loi n&deg; 2020-972 du 23 d&eacute;c. 2020, an. fiscale,Art. 30.</p>
+<p>Ord. n&deg; 2009-382 du 26 novembre 2009, an. fiscale,Art.15-7; Loi n&deg; 2012-1179 du 27 d&eacute;cembre 2012, an. fiscale,Art. 17-1; Loi n&deg; 2015-840 du 18 d&eacute;cembre 2015, an. fiscale,Art. 24-4</p>
+<p>Pass&eacute; un d&eacute;lai de trois mois &agrave; compter des dates limites pr&eacute;vues par les articles 35, 49 bis et 101 bis du Code g&eacute;n&eacute;ral des Imp&ocirc;ts, l'amende est port&eacute;e &agrave; 2 000 000 de francs CFA, major&eacute;e de 200 000 francs CFA par mois ou fraction de mois de retard suppl&eacute;mentaire. Cette amende se cumule avec celle pr&eacute;vue au paragraphe pr&eacute;c&eacute;dent.</p>
+<p>Ord. n&deg; 2009-382 du 26 novembre 2009, an. fiscale,Art.15-8; Loi n&deg; 2012-1179 du 27 d&eacute;cembre 2012, an. fiscale,Art. 17-1.</p>
+<p>Les m&ecirc;mes sanctions sont applicables au non d&eacute;p&ocirc;t ou au d&eacute;p&ocirc;t tardif des actes modificatifs des statuts, des comptes rendus des d&eacute;lib&eacute;rations des assembl&eacute;es statutaires des entreprises ainsi que des comptes rendus d&eacute;taill&eacute;s et des tableaux annexes fournis par les entreprises d'assurances ou de r&eacute;assurance.</p>
+<p>Ord. n&deg; 2008-381 du 18 d&eacute;cembre 2008, an. fiscale,Art. 38.</p>
+<p>Les sanctions pr&eacute;vues aux deuxi&egrave;me et troisi&egrave;me paragraphes du pr&eacute;sent article sont applicables en cas de d&eacute;faut de d&eacute;p&ocirc;t ou de d&eacute;p&ocirc;t tardif des d&eacute;clarations pr&eacute;vues aux articles 1066 bis et 1066 ter du Code g&eacute;n&eacute;ral des Imp&ocirc;ts.</p>
+<p>Ord. n&deg; 2011-121 du 22 juin 2011, an. fiscale,Art. 34-1.</p>
+<p>Le non-d&eacute;p&ocirc;t ou le d&eacute;p&ocirc;t des formats papier et &eacute;lectronique des &eacute;tats financiers de l'exercice apr&egrave;s les d&eacute;lais pr&eacute;vus &agrave; l'article 82 bis du Code g&eacute;n&eacute;ral des Imp&ocirc;ts, est passible d'une amende de 100 000 francs, major&eacute;e de 10 000 francs par mois ou fraction de mois de retard suppl&eacute;mentaire. </p>
+<p>Loi n&deg; 2017-870 du 27 d&eacute;cembre 2017, an. fiscaleArt. 10-6; ord. n&deg; 2018-145 du 14 f&eacute;vrier 2018,Art. 1; loi n&deg; 2020-972 du 23 d&eacute;c. 2020, an. fiscale,Art. 30. </p>
+<p>Pass&eacute; un d&eacute;lai de trois mois &agrave; compter des dates limites pr&eacute;vues par l'article 82 bis du Code g&eacute;n&eacute;ral des Imp&ocirc;ts, l'amende est port&eacute;e &agrave; 200 000 francs, major&eacute;e de 20 000 francs par mois ou fraction de mois de retard suppl&eacute;mentaire. Cette amende se cumule avec celle pr&eacute;vue au paragraphe pr&eacute;c&eacute;dent.</p>
+<p>Loi n&deg; 2012-1179 du 27 d&eacute;cembre 2012, an. fiscale,Art. 17-2.</p>
+<p>En mati&egrave;re de taxes sur le chiffre d'affaires, le retard dans la production des d&eacute;clarations est sanctionn&eacute;, lorsque aucun droit n'est d&ucirc;, par une amende de 20 000 francs, major&eacute;e de 10 000 francs par mois de retard suppl&eacute;mentaire.</p>
+<p>Loi n&deg; 2017-870 du 27 d&eacute;cembre 2017, an. fiscaleArt. 10-6;ord. n&deg; 2018-145 du 14 f&eacute;vrier 2018,Art. 1.</p>
+<p>En ce qui concerne la taxe sur la valeur ajout&eacute;e, l'amende pr&eacute;vue au paragraphe pr&eacute;c&eacute;dent est port&eacute;e &agrave; :</p>
+<p>- 1 000 000 de francs, major&eacute;e de 100 000 francs par mois ou fraction de mois de retard suppl&eacute;mentaire, pour les entreprises relevant de la Direction des grandes Entreprises ;</p>
+<p>- 500 000 francs, major&eacute;e de 50 000 francs par mois ou fraction de mois de retard suppl&eacute;mentaire, en ce qui concerne les entreprises relevant de la Direction des moyennes Entreprises ;</p>
+<p>- 100 000 francs, major&eacute;e de 10 000 francs par mois ou fraction de mois de retard suppl&eacute;mentaire, en ce qui concerne les entreprises relevant des Directions r&eacute;gionales des Imp&ocirc;ts.</p>
+<p>Loi n&deg; 2020-972 du 23 d&eacute;c. 2020, an. fiscale,Art. 16.</p>
+><BR></div></span><finh235169>
+
+<span class="historique" ID="h245169b">
+<div class="histText">
+
+<BR> 
+<BR>Art. 169 bis
+<BR> 
+<p>La non-production ou la production d'&eacute;tats annexes vis&eacute;s &agrave; l'article 36 du Code g&eacute;n&eacute;ral des Imp&ocirc;ts non conformes ou contenant des insuffisances ou informations erron&eacute;es est passible d'une amende de 1000 000 de francs, major&eacute;e de 100 000 francs par mois ou fraction de mois de retard suppl&eacute;mentaire.</p>
+<p>Loi n&deg; 2020-972 du 23 d&eacute;c. 2020, an. fiscale,Art. 3-2.</p>
+<BR> 
+<BR><BR><BR></div></span><finh245169b>
+
+<span class="historique" ID="h235170s">
+<div class="histText">
+<BR> 
+<BR> 
+<BR>Art. 170 sexies
+<BR> 
+<p>Le d&eacute;faut de production des informations au moyen des imprim&eacute;s r&eacute;glementaires pr&eacute;vus &agrave; l'article 355-23 du Code g&eacute;n&eacute;ral des Imp&ocirc;ts, est sanctionn&eacute; par une amende de 1 000 000 de francs, major&eacute;e de 100 000 francs par mois ou fraction de mois de retard suppl&eacute;mentaire.</p>
+<p>Loi n&deg; 2019-1080 du 18 d&eacute;cembre 2019, an. fiscale,Art. 11-3</p>
+<BR></div></span><finh235170s>
+</div></div> <!-- wrapper -->
+	  <div id="articleList"><div id="contenu" style='height:auto; background-color:#FFFFCC'>&nbsp;</div>
+      </div><p>&nbsp;</p><p>&nbsp;</p><p>&nbsp;</p><p>&nbsp;</p><p>&nbsp;</p><p>&nbsp;</p><p>&nbsp;</p><p>&nbsp;</p><p>&nbsp;</p><p>&nbsp;</p>
+	  <p>&nbsp;</p><p>&nbsp;</p><p>&nbsp;</p><p>&nbsp;</p><p>&nbsp;</p><p>&nbsp;</p></BODY></HTML>
+	  

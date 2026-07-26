@@ -1,0 +1,206 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+  <meta name="theme-color" content="#0f766e" />
+  <meta name="color-scheme" content="light" />
+  <title>Revue Fiscale — Portail client</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700&family=Syne:wght@600;700;800&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="/shared/saas-ds.css" />
+  <style>
+    :root {
+      --accent: #0f766e;
+      --accent-deep: #115e59;
+      --accent-soft: #ecfdf8;
+      --accent-ring: rgba(15, 118, 110, 0.18);
+    }
+    .client-shell {
+      min-height: 100dvh;
+      display: flex;
+      flex-direction: column;
+    }
+    .client-main {
+      flex: 1;
+      width: 100%;
+      max-width: 920px;
+      margin: 0 auto;
+      padding: 1rem max(1rem, var(--safe-right)) calc(1.5rem + var(--safe-bottom)) max(1rem, var(--safe-left));
+    }
+    .tagline {
+      color: var(--muted);
+      margin: 0 0 0.85rem;
+      font-size: 0.88rem;
+      line-height: 1.45;
+    }
+    .metrics {
+      display: grid;
+      grid-template-columns: repeat(4, minmax(0, 1fr));
+      gap: 0;
+      margin: 0.75rem 0;
+      background: var(--surface);
+      border: 1px solid var(--line);
+      border-radius: var(--radius);
+      overflow: hidden;
+    }
+    .metric {
+      padding: 0.65rem 0.85rem;
+      border-right: 1px solid var(--line);
+    }
+    .metric:last-child { border-right: none; }
+    .metric .k {
+      font-size: 0.6rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.06em;
+      color: var(--muted);
+    }
+    .metric .v {
+      font-family: var(--font-brand);
+      font-size: 1.1rem;
+      font-weight: 700;
+      margin-top: 0.1rem;
+      font-variant-numeric: tabular-nums;
+    }
+    pre.rapport {
+      white-space: pre-wrap;
+      background: #0f172a;
+      color: #e2e8f0;
+      border: 1px solid var(--line);
+      border-radius: var(--radius);
+      padding: 0.85rem;
+      font-size: 0.78rem;
+      line-height: 1.5;
+      max-height: 55vh;
+      overflow: auto;
+      width: 100%;
+      margin: 0.5rem 0 0;
+    }
+    @media (max-width: 800px) {
+      .metrics { grid-template-columns: 1fr 1fr; }
+      .metric:nth-child(2) { border-right: none; }
+      .metric:nth-child(n+3) { border-top: 1px solid var(--line); }
+    }
+  </style>
+</head>
+<body>
+  <div class="client-shell">
+    <header class="topbar" style="position:sticky;grid-area:unset;width:100%">
+      <div class="topbar-left">
+        <div class="brand-bar">Revue<span> Fiscale</span></div>
+        <span class="surface-pill">Portail client</span>
+      </div>
+      <div class="topbar-right">
+        <span class="brand-byline" style="margin:0">Édité par 2AàZ</span>
+        <span class="badge badge-brouillon">Lecture seule</span>
+      </div>
+    </header>
+    <main class="client-main">
+      <p class="tagline">Consultation lecture seule de la restitution de mission. Aucune modification possible.</p>
+
+      <section class="panel" id="vue-token">
+        <h2 style="margin:0 0 0.25rem;font-family:var(--font-brand);font-size:1rem">Accès sécurisé</h2>
+        <p class="sub">Collez le jeton fourni par votre cabinet pour ouvrir la restitution.</p>
+        <label for="token">Jeton d&apos;accès</label>
+        <input id="token" placeholder="Collez le jeton reçu du cabinet" autocomplete="off" />
+        <div class="actions">
+          <button type="button" class="btn btn-primary" id="btn-ouvrir" style="max-width:280px">Ouvrir la restitution</button>
+        </div>
+        <div class="status" id="status"></div>
+      </section>
+
+      <section class="panel hidden" id="vue-empty" style="margin-top:0.75rem">
+        <p class="page-eyebrow">Portail client</p>
+        <h2 style="margin:0 0 0.35rem;font-family:var(--font-brand);font-size:1.1rem">Restitution indisponible</h2>
+        <p id="empty-msg" class="sub" style="margin:0 0 0.75rem;line-height:1.5"></p>
+        <p id="empty-meta" class="sub" style="margin:0"></p>
+        <div class="actions">
+          <button type="button" class="btn btn-ghost" id="btn-autre-empty">Autre jeton</button>
+        </div>
+      </section>
+
+      <section class="panel hidden" id="vue-rest" style="margin-top:0.75rem">
+        <p class="page-eyebrow">Restitution</p>
+        <h2 style="margin:0 0 0.25rem;font-family:var(--font-brand);font-size:1.1rem">Résultats de mission</h2>
+        <p id="meta" class="sub" style="margin-bottom:0"></p>
+        <div class="metrics" id="metrics"></div>
+        <pre class="rapport" id="rapport"></pre>
+        <div class="actions">
+          <button type="button" class="btn btn-ghost" id="btn-autre">Autre jeton</button>
+        </div>
+      </section>
+    </main>
+  </div>
+  <script>
+    const $ = (id) => document.getElementById(id);
+    const params = new URLSearchParams(location.search);
+    if (params.get("token")) $("token").value = params.get("token");
+
+    function fmt(v) {
+      try { return new Intl.NumberFormat("fr-FR").format(Number(v)); } catch { return String(v); }
+    }
+
+    function resetVues() {
+      $("vue-rest").classList.add("hidden");
+      $("vue-empty").classList.add("hidden");
+      $("vue-token").classList.remove("hidden");
+    }
+
+    async function charger() {
+      const token = $("token").value.trim();
+      if (!token) { $("status").textContent = "Jeton requis"; $("status").classList.add("err"); return; }
+      $("status").textContent = "Chargement…"; $("status").classList.remove("err");
+      try {
+        const r = await fetch(`/api/v1/client/${encodeURIComponent(token)}/restitution`);
+        const text = await r.text();
+        let data; try { data = JSON.parse(text); } catch { data = { detail: text }; }
+        if (!r.ok) {
+          const detail = typeof data.detail === "string"
+            ? data.detail
+            : JSON.stringify(data.detail || r.statusText);
+          if (r.status === 404) {
+            throw new Error(
+              detail && detail !== "Not Found"
+                ? detail
+                : "Lien invalide ou expiré. Demandez un nouveau jeton à votre cabinet."
+            );
+          }
+          throw new Error(detail);
+        }
+        $("vue-token").classList.add("hidden");
+        $("status").textContent = "";
+        const meta = `Mission #${data.mission_id}` + (data.email_contact ? ` · ${data.email_contact}` : "");
+        if (data.sans_restitution || !data.restitution) {
+          $("empty-msg").textContent = data.message
+            || "Cette mission n'a pas encore de restitution. Contactez votre cabinet.";
+          $("empty-meta").textContent = meta;
+          $("vue-empty").classList.remove("hidden");
+          $("vue-rest").classList.add("hidden");
+          return;
+        }
+        const rest = data.restitution || {};
+        const p = rest.passage || {};
+        $("meta").textContent = meta;
+        $("metrics").innerHTML = `
+          <div class="metric"><div class="k">Réintégrations</div><div class="v">${fmt(p.total_reintegration)}</div></div>
+          <div class="metric"><div class="k">Déductions</div><div class="v">${fmt(p.total_deduction)}</div></div>
+          <div class="metric"><div class="k">Solde net</div><div class="v">${fmt(p.solde_net)}</div></div>
+          <div class="metric"><div class="k">Score risque</div><div class="v">${(rest.score_risque && rest.score_risque.score) ?? "—"}</div></div>`;
+        $("rapport").textContent = rest.rapport_markdown || "Pas de rapport disponible.";
+        $("vue-empty").classList.add("hidden");
+        $("vue-rest").classList.remove("hidden");
+      } catch (e) {
+        $("status").textContent = e.message;
+        $("status").classList.add("err");
+      }
+    }
+
+    $("btn-ouvrir").onclick = () => charger();
+    $("btn-autre").onclick = () => resetVues();
+    $("btn-autre-empty").onclick = () => resetVues();
+    if (params.get("token")) charger();
+  </script>
+</body>
+</html>

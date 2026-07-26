@@ -1,0 +1,42 @@
+reference_source: CGI 2026 — docs client 6/9/10 (propositions metier)
+date_effet: '2026-01-01'
+effets_croises: []
+a_confirmer:
+- date d effet 01/01/2026
+- valeurs issues docs client 6/9/10 — a valider metier
+formule_plafonnement: sans objet
+questions_generees:
+- id: q_prestataire_nonres
+  texte: Prestataire non resident ?
+  type: booleen
+- id: q_tva_tiers
+  texte: TVA due pour compte de tiers ?
+  type: montant
+profils_applicables:
+- Entreprises au regime reel
+nature: sans_objet
+identifiant: TVA-TIERS-NONRESIDENT
+impot: TVA
+reference_legale: CGI 2026, art. 442, 351 et 352
+comptes_declencheurs:
+- '604'
+- '611'
+- '622'
+- '632'
+condition_declenchement: (solde(604) > 0 ou solde(611) > 0 ou solde(622) > 0 ou solde(632) > 0) et reponse(q_prestataire_nonres)
+  = vrai
+conditions_fond: Prestataire non etabli en CI, prestation utilisee localement ?
+resultat: reponse(q_tva_tiers)
+niveau_risque: eleve
+cas_test:
+  soldes:
+    '604': '0'
+    '611': '10000000'
+    '622': '0'
+    '632': '0'
+  agregats: {}
+  reponses:
+    q_prestataire_nonres: true
+    q_tva_tiers: '1800000'
+  declenche_attendu: true
+  montant_attendu: '1800000'

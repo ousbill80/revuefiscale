@@ -1,0 +1,36 @@
+reference_source: CGI 2026 — doc client 2/5 format pivot (propositions metier)
+date_effet: '2026-01-01'
+effets_croises: []
+identifiant: BIC-CHG-18B-CREDITBAILVT
+impot: BIC
+reference_legale: CGI 2026, art. 18 B (credit-bail VT)
+profils_applicables:
+- Entreprises au regime reel
+comptes_declencheurs:
+- '622'
+- '6125'
+nature: permanente
+condition_declenchement: reponse(q_vt) = vrai et reponse(q_part_non_ded) > 0
+conditions_fond: CGI 2026, art. 18 B (credit-bail VT)
+formule_plafonnement: sans objet
+questions_generees:
+- id: q_vt
+  texte: Vehicule de tourisme ?
+  type: booleen
+- id: q_part_non_ded
+  texte: Part loyer non deductible ?
+  type: montant
+resultat: reponse(q_part_non_ded)
+niveau_risque: moyen
+a_confirmer:
+- date d effet 01/01/2026
+- valeurs issues doc client 5 — a valider metier
+cas_test:
+  soldes:
+    '622': '1'
+  reponses:
+    q_vt: true
+    q_part_non_ded: '800000'
+  agregats: {}
+  declenche_attendu: true
+  montant_attendu: '800000'

@@ -1,0 +1,1985 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+  <meta name="theme-color" content="#2563eb" />
+  <meta name="color-scheme" content="light" />
+  <title>Revue Fiscale — Console éditoriale</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700&family=Syne:wght@600;700;800&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="/shared/saas-ds.css" />
+  <style>
+    :root {
+      --accent: #2563eb;
+      --accent-deep: #1d4ed8;
+      --accent-soft: #eff6ff;
+      --accent-ring: rgba(37, 99, 235, 0.18);
+      --sidebar-active-bar: #60a5fa;
+    }
+    code {
+      font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+      font-size: 0.85em;
+      background: var(--line-soft);
+      padding: 0.1em 0.35em;
+      border-radius: 4px;
+    }
+    tr.row-selected { outline: 2px solid var(--accent); outline-offset: -2px; }
+    .patch-preview {
+      margin-top: 0.75rem;
+      max-height: 220px;
+      overflow: auto;
+      font-size: 0.72rem;
+      white-space: pre-wrap;
+      background: var(--line-soft);
+      padding: 0.6rem;
+      border-radius: 6px;
+    }
+    .check-row {
+      display: flex;
+      align-items: flex-start;
+      gap: 0.45rem;
+      margin: 0.75rem 0 0.25rem;
+      font-size: 0.82rem;
+    }
+    .check-row input:disabled + span { opacity: 0.55; }
+    .seance-bandeau {
+      margin: 0 0 0.85rem;
+      padding: 0.75rem 0.85rem;
+      border: 1px solid var(--line, #e5e7eb);
+      border-radius: 8px;
+      background: var(--accent-soft, #eff6ff);
+    }
+    .seance-bandeau-title {
+      margin: 0 0 0.45rem;
+      font-size: 0.78rem;
+      font-weight: 600;
+      letter-spacing: 0.02em;
+      text-transform: uppercase;
+      color: var(--muted, #64748b);
+    }
+    .seance-etapes {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.4rem;
+      align-items: center;
+    }
+    .seance-etape {
+      appearance: none;
+      border: 1px solid var(--line, #cbd5e1);
+      background: #fff;
+      color: inherit;
+      font: inherit;
+      font-size: 0.82rem;
+      font-weight: 500;
+      padding: 0.35rem 0.65rem;
+      border-radius: 6px;
+      cursor: pointer;
+    }
+    .seance-etape:hover { border-color: var(--accent); }
+    .seance-etape.is-active {
+      background: var(--accent);
+      border-color: var(--accent);
+      color: #fff;
+    }
+    .seance-sep {
+      color: var(--muted, #94a3b8);
+      font-size: 0.75rem;
+      user-select: none;
+    }
+    .seance-rappel {
+      margin: 0.55rem 0 0;
+      font-size: 0.78rem;
+      color: var(--muted, #64748b);
+      line-height: 1.4;
+    }
+    .seance-docs {
+      margin: 0.35rem 0 0;
+      font-size: 0.75rem;
+      color: var(--muted, #64748b);
+    }
+  </style>
+</head>
+<body>
+  <div id="vue-login" class="login-screen">
+    <aside class="login-aside" aria-hidden="true">
+      <p class="login-eyebrow">Console</p>
+      <div class="login-aside-brand">
+        <svg class="brand-mark brand-mark--hero" viewBox="0 0 40 40" width="40" height="40" aria-hidden="true" focusable="false">
+          <rect class="brand-mark__plate" x="1" y="1" width="38" height="38" rx="10" />
+          <rect class="brand-mark__sheet" x="10" y="9" width="16" height="20" rx="2.5" />
+          <path class="brand-mark__lines" d="M14 15h8M14 19h8M14 23h5" />
+          <path class="brand-mark__scan" d="M22 11.5c5.2 2.2 7.8 6.4 7.8 11.2" />
+          <circle class="brand-mark__dot" cx="29.5" cy="23" r="2.4" />
+        </svg>
+        <span class="login-aside-brand-text">Revue Fiscale</span>
+      </div>
+      <p class="login-aside-tagline">Référentiel fiscal central, millésimé et versionné — le socle commun de toutes les missions abonnées.</p>
+      <p class="login-aside-foot">Édité par 2AàZ · Console</p>
+    </aside>
+    <section class="login-card">
+      <div class="login-card-inner">
+        <p class="login-eyebrow">Console</p>
+        <div class="brand">
+          <svg class="brand-mark brand-mark--card" viewBox="0 0 40 40" width="40" height="40" aria-hidden="true" focusable="false">
+            <rect class="brand-mark__plate" x="1" y="1" width="38" height="38" rx="10" />
+            <rect class="brand-mark__sheet" x="10" y="9" width="16" height="20" rx="2.5" />
+            <path class="brand-mark__lines" d="M14 15h8M14 19h8M14 23h5" />
+            <path class="brand-mark__scan" d="M22 11.5c5.2 2.2 7.8 6.4 7.8 11.2" />
+            <circle class="brand-mark__dot" cx="29.5" cy="23" r="2.4" />
+          </svg>
+          <span class="brand-text">Revue Fiscale</span>
+        </div>
+        <p class="brand-byline">Édité par 2AàZ</p>
+        <h1 class="login-form-title">Connexion</h1>
+        <p class="sub">Accédez au référentiel fiscal central.</p>
+        <form id="form-login">
+          <div class="field-stack">
+            <label for="email">Email</label>
+            <input id="email" type="email" autocomplete="username" required placeholder="vous@2aaz.ci" />
+          </div>
+          <div class="field-stack">
+            <label for="mdp">Mot de passe</label>
+            <input id="mdp" type="password" autocomplete="current-password" required placeholder="••••••••" />
+          </div>
+          <div class="actions">
+            <button type="submit" class="btn btn-primary btn-block">Se connecter</button>
+          </div>
+        </form>
+        <div id="demo-access" class="demo-access hidden" hidden>
+          <div class="demo-access-head">
+            <span class="demo-badge">Démo</span>
+            <span class="demo-access-hint">Clic = remplir · double-clic = connexion</span>
+          </div>
+          <div class="demo-chips" role="group" aria-label="Accès démo">
+            <button type="button" class="demo-chip" data-demo="editorial">Remplir Editorial</button>
+            <button type="button" class="demo-chip" data-demo="ops">Remplir Ops</button>
+            <button type="button" class="demo-chip demo-chip-submit" data-demo-submit="editorial">Connexion démo</button>
+          </div>
+        </div>
+        <div class="status" id="status-login"></div>
+      </div>
+    </section>
+  </div>
+
+  <div id="vue-app" class="app-frame hidden">
+    <header class="topbar">
+      <div class="topbar-left">
+        <button type="button" class="btn-menu" id="btn-menu" aria-label="Menu">
+          <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 7h16M4 12h16M4 17h16" stroke-linecap="round"/></svg>
+        </button>
+        <div class="brand-bar">Revue<span> Fiscale</span></div>
+        <span class="surface-pill">Console</span>
+      </div>
+      <div class="topbar-right">
+        <div class="user-chip">
+          <span class="avatar" id="who-avatar">E</span>
+          <span class="who" id="who"></span>
+        </div>
+        <button type="button" class="btn btn-logout" id="btn-logout">Déconnexion</button>
+      </div>
+    </header>
+
+    <aside class="sidebar" id="sidebar" aria-label="Navigation console">
+      <div class="sidebar-collapse-row">
+        <button type="button" class="btn-sidebar-collapse" id="btn-sidebar-collapse"
+          aria-expanded="true" aria-controls="sidebar" title="Réduire le menu"
+          aria-label="Réduire le menu">
+          <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M15 6l-6 6 6 6" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        </button>
+      </div>
+      <div class="nav-group" role="group" aria-label="Référentiel">
+        <div class="nav-group-label nav-label">Référentiel</div>
+        <button type="button" class="side-nav-item nav-btn active" data-view="versions">
+          <span class="nav-ico-wrap" aria-hidden="true">
+            <svg class="nav-ico" viewBox="0 0 24 24"><path d="M12 2v4M12 18v4M4.9 4.9l2.8 2.8M16.3 16.3l2.8 2.8M2 12h4M18 12h4M4.9 19.1l2.8-2.8M16.3 7.7l2.8-2.8" stroke-linecap="round"/><circle cx="12" cy="12" r="3"/></svg>
+          </span>
+          <span class="nav-label-txt">Versions</span>
+        </button>
+        <button type="button" class="side-nav-item nav-btn" data-view="publier">
+          <span class="nav-ico-wrap" aria-hidden="true">
+            <svg class="nav-ico" viewBox="0 0 24 24"><path d="M12 19V5M5 12l7-7 7 7" stroke-linecap="round" stroke-linejoin="round"/></svg>
+          </span>
+          <span class="nav-label-txt">Publier</span>
+        </button>
+      </div>
+      <div class="nav-group" role="group" aria-label="Files de travail">
+        <div class="nav-group-label nav-label">Files</div>
+        <button type="button" class="side-nav-item nav-btn" data-view="propositions">
+          <span class="nav-ico-wrap" aria-hidden="true">
+            <svg class="nav-ico" viewBox="0 0 24 24"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><path d="M14 2v6h6M8 13h8M8 17h5" stroke-linecap="round"/></svg>
+          </span>
+          <span class="nav-label-txt">Propositions</span>
+          <span class="nav-badge hidden" id="nav-badge-prop" aria-label="Propositions ouvertes">0</span>
+        </button>
+        <button type="button" class="side-nav-item nav-btn" data-view="a-confirmer">
+          <span class="nav-ico-wrap" aria-hidden="true">
+            <svg class="nav-ico" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M12 8v4l2.5 2.5" stroke-linecap="round"/></svg>
+          </span>
+          <span class="nav-label-txt">À confirmer</span>
+          <span class="nav-badge hidden" id="nav-badge-ac" aria-label="Mentions à confirmer">0</span>
+        </button>
+        <button type="button" class="side-nav-item nav-btn" data-view="contestations">
+          <span class="nav-ico-wrap" aria-hidden="true">
+            <svg class="nav-ico" viewBox="0 0 24 24"><path d="M10.3 3.9L1.8 18a2 2 0 0 0 1.7 3h17a2 2 0 0 0 1.7-3L13.7 3.9a2 2 0 0 0-3.4 0z"/><path d="M12 9v4M12 17h.01" stroke-linecap="round"/></svg>
+          </span>
+          <span class="nav-label-txt">Contestations</span>
+        </button>
+      </div>
+      <div class="sidebar-foot">
+        <p>Édité par 2AàZ</p>
+        <p>Domaine éditorial — pas de données abonné</p>
+      </div>
+    </aside>
+
+    <main class="main">
+      <section id="view-versions">
+        <div class="page-head">
+          <div>
+            <p class="page-eyebrow">Millésimes</p>
+            <h1>Versions du référentiel</h1>
+            <p>Brouillons et versions publiées. Une mission épingle la version de démarrage.</p>
+          </div>
+          <div class="page-head-actions">
+            <button type="button" class="btn btn-ghost" id="btn-lister">Actualiser</button>
+            <button type="button" class="btn btn-primary" id="btn-nouveau-brouillon">Nouveau brouillon</button>
+          </div>
+        </div>
+        <div class="metrics-grid" id="metrics-versions" role="group" aria-label="Indicateurs versions">
+          <button type="button" class="card-metric card-metric-btn" id="metric-ver-total" data-metric="total">
+            <div class="metric-top"><span class="k">Total</span><span class="metric-hint" aria-hidden="true">→</span></div>
+            <div class="v" id="stat-total">—</div>
+            <div class="metric-foot">Toutes les versions</div>
+          </button>
+          <button type="button" class="card-metric card-metric-btn" id="metric-ver-pub" data-metric="pub">
+            <div class="metric-top"><span class="k">Publiées</span><span class="metric-hint" aria-hidden="true">→</span></div>
+            <div class="v" id="stat-pub">—</div>
+            <div class="metric-foot">Disponibles aux abonnés</div>
+          </button>
+          <button type="button" class="card-metric card-metric-btn" id="metric-ver-brouillon" data-metric="brouillon">
+            <div class="metric-top"><span class="k">Brouillons</span><span class="metric-hint" aria-hidden="true">→</span></div>
+            <div class="v" id="stat-brouillon">—</div>
+            <div class="metric-foot">Non publiés</div>
+          </button>
+        </div>
+        <div class="panel panel-flush">
+          <div class="table-wrap">
+            <table>
+              <thead>
+                <tr><th>Id</th><th>Libellé</th><th>Statut</th><th>Par</th></tr>
+              </thead>
+              <tbody id="versions"></tbody>
+            </table>
+          </div>
+          <div class="status" id="status-versions"></div>
+        </div>
+      </section>
+
+      <section id="view-publier" class="hidden">
+        <div class="page-head">
+          <div>
+            <p class="page-eyebrow">Publication</p>
+            <h1>Publier</h1>
+            <p>Créer un brouillon, le publier pour les abonnés, ou charger une règle YAML.</p>
+          </div>
+        </div>
+        <div class="split">
+          <div class="panel">
+            <div class="panel-section">
+              <h2 class="panel-section-title label-with-tip">
+                Identité version
+                <span data-infotip="Le libellé identifie le millésime pour les abonnés. Les missions déjà ouvertes restent épinglées sur leur version de démarrage."></span>
+              </h2>
+              <p class="sub">Créer un brouillon, puis le publier pour les abonnés.</p>
+              <label for="libelle">Libellé</label>
+              <input id="libelle" value="v2026.1-brouillon" />
+              <label for="note">Note</label>
+              <input id="note" value="Créé depuis la console" />
+              <label for="par">Publiée par</label>
+              <input id="par" value="editeur@2aaz.ci" />
+            </div>
+            <div class="panel-section">
+              <h2 class="panel-section-title label-with-tip">
+                Actions
+                <span data-infotip="Brouillon = version non visible des nouvelles missions. Publier rend la version disponible ; confirmation requise."></span>
+              </h2>
+              <div class="actions">
+                <button type="button" class="btn btn-primary" id="btn-brouillon">Créer brouillon</button>
+                <button type="button" class="btn btn-accent" id="btn-publier">Publier…</button>
+              </div>
+            </div>
+          </div>
+          <div class="panel">
+            <div class="panel-section">
+              <h2 class="panel-section-title label-with-tip">
+                Contenu — charger YAML
+                <span data-infotip="Charge un fichier depuis referentiel/ vers un brouillon existant. N’écrit aucun taux ni seuil en dur dans le code."></span>
+              </h2>
+              <p class="sub">YAML depuis <code>referentiel/</code> vers un brouillon.</p>
+              <label for="version-id">Version id</label>
+              <input id="version-id" type="number" inputmode="numeric" />
+              <label for="fichier">Fichier</label>
+              <input id="fichier" value="BIC-CHG-18G-DONS.yaml" />
+              <div class="actions">
+                <button type="button" class="btn btn-ghost btn-block" id="btn-charger">Charger YAML</button>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="status" id="status" role="status"></div>
+      </section>
+
+      <section id="view-propositions" class="hidden">
+        <div class="page-head">
+          <div>
+            <p class="page-eyebrow">Validation</p>
+            <h1 class="label-with-tip">
+              Propositions éditoriales
+              <span data-infotip="L’IA propose, l’éditeur valide. Accepter = statut seul. Patch = YAML téléchargé intact. Appliquer = 1 champ / 1 mention avec garde-fou a_confirmer."></span>
+            </h1>
+            <p>
+              Acceptation contrôlée : <strong>statut</strong> · <strong>préparer patch</strong>
+              · <strong>appliquer</strong>. Aucune règle inventée.
+            </p>
+          </div>
+          <div class="page-head-actions">
+            <button type="button" class="btn btn-ghost" id="btn-prop">Actualiser</button>
+          </div>
+        </div>
+        <p class="hint" style="margin:0 0 0.75rem;color:var(--muted);font-size:0.82rem">
+          Seeds file : <code>make seed-editorial-pistes</code> (Annexe + CGI) — n’accepte /
+          ne purge aucun YAML.
+        </p>
+        <div class="prop-seed-stats" id="prop-seed-stats" aria-live="polite">
+          <span class="chip">Annexe seedées : <strong id="prop-seed-annexe">—</strong></span>
+          <span class="chip">CGI seedées : <strong id="prop-seed-cgi">—</strong></span>
+          <span class="chip">Ouvertes : <strong id="prop-seed-ouvertes">—</strong></span>
+          <span class="chip">Autres sources : <strong id="prop-seed-autres">—</strong></span>
+        </div>
+        <div class="filter-chips" id="prop-filter-chips" role="group" aria-label="Filtrer les propositions">
+          <span class="filter-chips-label">Filtre</span>
+          <button type="button" class="filter-chip is-active" data-prop-filtre="toutes">Toutes</button>
+          <button type="button" class="filter-chip" data-prop-filtre="ouvertes">Ouvertes</button>
+          <button type="button" class="filter-chip" data-prop-filtre="annexe">Annexe</button>
+          <button type="button" class="filter-chip" data-prop-filtre="cgi">CGI</button>
+        </div>
+        <div class="split">
+          <div class="panel panel-flush" style="flex:1.3;min-width:0">
+            <div class="table-wrap">
+              <table>
+                <thead><tr><th>Id</th><th>Source</th><th>Statut</th></tr></thead>
+                <tbody id="propositions"></tbody>
+              </table>
+            </div>
+            <div class="status" id="status-propositions"></div>
+          </div>
+          <div class="panel" id="panel-prop-detail" style="flex:1;min-width:260px">
+            <h2 class="label-with-tip">
+              Détail proposition
+              <span data-infotip="Modes : statut_seul (Accepter) · preparer_patch (Patch) · appliquer (écrit YAML si autorisé)."></span>
+            </h2>
+            <div id="prop-detail-empty" class="empty-state">
+              <p class="empty-state-title">Aucune sélection</p>
+              <p class="empty-state-body">Sélectionnez une ligne pour statut · patch · appliquer.</p>
+            </div>
+            <div id="prop-detail-body" class="hidden">
+              <p><span class="cell-muted">Id · source</span><br>
+                <code id="prop-d-id" class="cell-strong"></code>
+                <span id="prop-d-source" class="cell-muted" style="display:block;margin-top:0.2rem;font-size:0.78rem"></span>
+              </p>
+              <p><span class="cell-muted">rule_id · entree_id</span><br>
+                <code id="prop-d-rule"></code>
+                <span id="prop-d-entree" class="cell-muted" style="display:block;font-size:0.78rem"></span>
+              </p>
+              <p><span class="cell-muted">Statut éditorial</span><br>
+                <span id="prop-d-statut-ed" class="badge badge-cat"></span>
+                <span id="prop-d-statut" class="badge badge-wait" style="margin-left:0.25rem"></span>
+              </p>
+              <p><span class="cell-muted">Extrait source</span><br>
+                <span id="prop-d-extrait" style="white-space:pre-wrap;font-size:0.85rem"></span>
+              </p>
+              <p><span class="cell-muted">Suggestion</span><br>
+                <strong id="prop-d-suggestion" style="font-weight:600;white-space:pre-wrap;font-size:0.85rem"></strong>
+              </p>
+              <p><span class="cell-muted">Suggestion structurée</span><br>
+                <span id="prop-d-struct" class="cell-muted" style="white-space:pre-wrap;font-size:0.78rem"></span>
+              </p>
+              <p>
+                <span class="cell-muted">retirer_a_confirmer_autorise</span><br>
+                <span id="prop-d-retirer-flag" class="badge badge-cat"></span>
+              </p>
+              <label class="check-row" for="prop-retirer-ac">
+                <input type="checkbox" id="prop-retirer-ac" />
+                <span>Retirer la mention <code>a_confirmer</code> ciblée (exige autorisation + confirmations)</span>
+              </label>
+              <div class="actions" style="margin-top:0.75rem;flex-wrap:wrap">
+                <button type="button" class="btn btn-primary btn-sm" id="btn-prop-statut" data-act="acceptee" data-mode="statut_seul">Accepter</button>
+                <button type="button" class="btn btn-ghost btn-sm" id="btn-prop-patch" data-act="acceptee" data-mode="preparer_patch">Patch</button>
+                <button type="button" class="btn btn-ghost btn-sm" id="btn-prop-appliquer" data-act="acceptee" data-mode="appliquer" disabled title="Réservé si suggestion structurée ou retrait autorisé">Appliquer</button>
+                <button type="button" class="btn btn-ghost btn-sm" id="btn-prop-corriger" data-act="corrigee">Corriger</button>
+                <button type="button" class="btn btn-danger btn-sm" id="btn-prop-rejeter" data-act="rejetee">Rejeter</button>
+              </div>
+              <p class="hint" style="margin-top:0.6rem;font-size:0.75rem;color:var(--muted)">
+                Accepter = statut seul. Patch = téléchargement YAML intact.
+                Appliquer = 1 champ / 1 mention (disabled si non autorisé).
+              </p>
+              <div id="prop-patch-box" class="hidden">
+                <p class="cell-muted" style="margin:0.5rem 0 0.25rem">Aperçu patch</p>
+                <pre class="patch-preview" id="prop-patch-preview"></pre>
+                <button type="button" class="btn btn-ghost btn-sm" id="btn-prop-dl-patch">Télécharger YAML proposé</button>
+              </div>
+              <div id="prop-cgi-slot"></div>
+              <div class="status" id="status-prop-detail"></div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section id="view-contestations" class="hidden">
+        <div class="page-head">
+          <div>
+            <p class="page-eyebrow">Signalements</p>
+            <h1>Contestations</h1>
+            <p>Signalements abonnés (lecture — pas de balances).</p>
+          </div>
+          <div class="page-head-actions">
+            <button type="button" class="btn btn-ghost" id="btn-cont">Actualiser</button>
+          </div>
+        </div>
+        <div class="notice-banner is-info" role="note">
+          Traitement éditeur (réponse / changement de statut) : API write non branchée —
+          cette vue est une boîte de réception en lecture seule. Aucun faux bouton d’action.
+        </div>
+        <div class="panel panel-flush">
+          <div class="table-wrap">
+            <table>
+              <thead><tr><th>Id</th><th>Cabinet</th><th>Règle</th><th>Motif</th><th>Statut</th></tr></thead>
+              <tbody id="contestations"></tbody>
+            </table>
+          </div>
+          <div class="status" id="status-contestations"></div>
+        </div>
+      </section>
+
+      <section id="view-a-confirmer" class="hidden">
+        <div class="page-head">
+          <div>
+            <p class="page-eyebrow">Rigueur fiscale</p>
+            <h1 class="label-with-tip">
+              File <code>a_confirmer</code>
+              <span data-infotip="Chaque ligne = rule_id + champ à valider. Marquer en revue = workflow éditeur (note) — ne purge pas le YAML. a_confirmer = vérité éditoriale, pas un stop runtime."></span>
+            </h1>
+            <p>
+              « Marquer en revue » = workflow éditeur — <strong>ne purge pas</strong> le YAML.
+            </p>
+          </div>
+          <div class="page-head-actions">
+            <button type="button" class="btn btn-ghost" id="btn-a-confirmer-csv">Exporter CSV</button>
+            <button type="button" class="btn btn-ghost" id="btn-a-confirmer">Actualiser file</button>
+          </div>
+        </div>
+        <div class="seance-bandeau" id="seance-bandeau" aria-label="Ordre de séance fiscaliste">
+          <p class="seance-bandeau-title label-with-tip">
+            Ordre de séance
+            <span data-infotip="Ordre recommandé : Annexe → CGI → Dates non prouvées → Bloqués. Ne pas purger a_confirmer ni promouvoir une faible en claire."></span>
+          </p>
+          <div class="seance-etapes" role="group" aria-label="Étapes Annexe puis CGI puis Faibles puis Bloqués">
+            <button type="button" class="seance-etape" data-vue="pistes_annexe" id="seance-etape-annexe">1 · Annexe</button>
+            <span class="seance-sep" aria-hidden="true">→</span>
+            <button type="button" class="seance-etape" data-vue="pistes_cgi" id="seance-etape-cgi">2 · CGI</button>
+            <span class="seance-sep" aria-hidden="true">→</span>
+            <button type="button" class="seance-etape" data-vue="dates_non_prouvees" id="seance-etape-faibles">3 · Dates non prouvées</button>
+            <span class="seance-sep" aria-hidden="true">→</span>
+            <button type="button" class="seance-etape" data-vue="croisement_bloque" id="seance-etape-bloques">4 · Bloqués</button>
+          </div>
+          <p class="seance-rappel">
+            Ne pas purger <code>a_confirmer</code> · ne pas promouvoir une faible en claire.
+            Contexte CGI partagé + lien ouvrir proposition.
+          </p>
+          <p class="seance-docs">
+            Playbook <code>docs/22-seance-fiscaliste.md</code>
+            · lot Annexe <code>docs/18-lot-fiscaliste-annexe-8.md</code>
+          </p>
+        </div>
+        <div class="stat-row" id="stat-ac-primaire">
+          <div class="stat"><div class="k">Mentions</div><div class="v" id="stat-ac-total">—</div></div>
+          <div class="stat"><div class="k">Règles</div><div class="v" id="stat-ac-regles">—</div></div>
+          <div class="stat"><div class="k">En attente</div><div class="v" id="stat-ac-attente">—</div></div>
+          <div class="stat"><div class="k">En revue</div><div class="v" id="stat-ac-revue">—</div></div>
+        </div>
+        <details class="stats-collapse" id="stats-ac-secondaires">
+          <summary>Stats secondaires (pistes · croisement)</summary>
+          <div class="stat-row">
+            <div class="stat"><div class="k">Sourçable</div><div class="v" id="stat-ac-sourcable">—</div></div>
+            <div class="stat"><div class="k">Bloqueur</div><div class="v" id="stat-ac-bloqueur">—</div></div>
+            <div class="stat"><div class="k">Pistes sourcées</div><div class="v" id="stat-ac-pistes">—</div></div>
+            <div class="stat"><div class="k">Faibles CGI</div><div class="v" id="stat-ac-faibles">—</div></div>
+            <div class="stat"><div class="k">Bloqués CGI</div><div class="v" id="stat-ac-bloques">—</div></div>
+          </div>
+        </details>
+        <p class="hint" id="hint-ac-avertissement" style="margin:0 0 0.75rem;color:var(--muted);font-size:0.82rem"></p>
+        <p class="hint" id="hint-ac-workflow" style="margin:0 0 0.75rem;color:var(--muted);font-size:0.82rem"></p>
+        <div class="filter-chips" id="ac-filter-chips" role="group" aria-label="Raccourcis vue séance">
+          <span class="filter-chips-label">Raccourcis</span>
+          <button type="button" class="filter-chip is-active" data-ac-chip="">Toutes</button>
+          <button type="button" class="filter-chip" data-ac-chip="pistes_annexe">Annexe</button>
+          <button type="button" class="filter-chip" data-ac-chip="pistes_cgi">CGI</button>
+          <button type="button" class="filter-chip" data-ac-chip="dates_non_prouvees">Dates non prouvées</button>
+          <button type="button" class="filter-chip" data-ac-chip="croisement_bloque">Bloqués</button>
+        </div>
+        <div class="toolbar toolbar-filtres">
+          <label>Vue
+            <select id="filtre-ac-vue">
+              <option value="">Toutes</option>
+              <option value="pistes_sourcees">Pistes sourcées (Annexe+CGI)</option>
+              <option value="pistes_annexe">Pistes Annexe</option>
+              <option value="pistes_cgi">Pistes CGI</option>
+              <option value="dates_non_prouvees">Dates non prouvées (faibles)</option>
+              <option value="croisement_faible">Faibles</option>
+              <option value="croisement_bloque">Bloqués CGI</option>
+              <option value="croisement_claire">Claires CGI</option>
+              <option value="croisement_contraste">Contrastes CGI</option>
+            </select>
+          </label>
+          <label>Priorité
+            <select id="filtre-ac-priorite">
+              <option value="">Toutes</option>
+              <option value="sourcable">sourcable</option>
+              <option value="bloqueur">bloqueur</option>
+              <option value="hors_perimetre">hors_perimetre</option>
+            </select>
+          </label>
+          <label>Catégorie
+            <select id="filtre-ac-categorie">
+              <option value="">Toutes</option>
+              <option value="taux">taux</option>
+              <option value="seuil">seuil</option>
+              <option value="date">date</option>
+              <option value="agregat">agregat</option>
+              <option value="autre">autre</option>
+            </select>
+          </label>
+          <label>Statut workflow
+            <select id="filtre-ac-statut">
+              <option value="">Tous</option>
+              <option value="en_attente">en_attente</option>
+              <option value="en_revue">en_revue</option>
+            </select>
+          </label>
+          <label>rule_id
+            <input id="filtre-ac-regle" type="search" placeholder="ex. BIC-CHG-18G" />
+          </label>
+        </div>
+        <div class="split">
+          <div class="panel panel-flush" style="flex:1.4;min-width:0">
+            <div class="table-wrap">
+              <table>
+                <thead>
+                  <tr>
+                    <th>rule_id</th>
+                    <th>#</th>
+                    <th>Classe</th>
+                    <th>Priorité</th>
+                    <th>Catégorie</th>
+                    <th>Champ à valider</th>
+                    <th>Piste</th>
+                    <th>Statut</th>
+                  </tr>
+                </thead>
+                <tbody id="a-confirmer"></tbody>
+              </table>
+            </div>
+            <div class="status" id="status-a-confirmer"></div>
+          </div>
+          <div class="panel" id="panel-ac-detail" style="flex:1;min-width:260px">
+            <h2>Détail champ</h2>
+            <div id="ac-detail-empty" class="empty-state">
+              <p class="empty-state-title">Aucune sélection</p>
+              <p class="empty-state-body">Sélectionnez une ligne pour afficher le champ, la référence et agir.</p>
+            </div>
+            <div id="ac-detail-body" class="hidden">
+              <p><span class="cell-muted">rule_id</span><br><code id="ac-d-id" class="cell-strong"></code></p>
+              <p><span class="cell-muted">Fichier</span><br><span id="ac-d-fichier"></span></p>
+              <p><span class="cell-muted">Impôt / réf. légale</span><br><span id="ac-d-ref"></span></p>
+              <p><span class="cell-muted">Priorité · catégorie · index</span><br><span id="ac-d-meta"></span></p>
+              <p><span class="cell-muted">Champ à valider</span><br><strong id="ac-d-champ" style="font-weight:600;white-space:pre-wrap"></strong></p>
+              <p><span class="cell-muted">Statut workflow</span><br><span id="ac-d-statut" class="badge badge-wait"></span></p>
+              <p id="ac-d-piste-wrap" class="hidden">
+                <span class="cell-muted">Pistes sourcées</span><br>
+                <span id="ac-d-piste-badges"></span>
+                <span id="ac-d-piste-meta" class="cell-muted" style="display:block;margin-top:0.35rem;white-space:pre-wrap;font-size:0.82rem"></span>
+                <button type="button" class="btn btn-ghost btn-sm" id="btn-ac-prop" style="margin-top:0.4rem">Ouvrir proposition</button>
+              </p>
+              <div id="ac-cgi-slot"></div>
+              <p id="ac-d-note-wrap" class="hidden"><span class="cell-muted">Note éditeur</span><br><span id="ac-d-note"></span></p>
+              <label for="ac-note-input" style="font-size:0.8rem;margin-top:0.75rem;display:block">Note éditeur (optionnel)</label>
+              <textarea id="ac-note-input" rows="3" maxlength="2000" placeholder="Ex. : vérifié CGI p. … — en attente visa fiscaliste" style="width:100%;resize:vertical"></textarea>
+              <div class="actions" style="margin-top:0.75rem">
+                <button type="button" class="btn btn-primary" id="btn-ac-en-revue">Marquer en revue</button>
+                <button type="button" class="btn btn-ghost" id="btn-ac-attente">Remettre en attente</button>
+              </div>
+              <p class="hint" style="margin-top:0.6rem;font-size:0.75rem;color:var(--muted)">
+                Ces boutons ne valident pas le fond fiscal et ne retirent aucun
+                <code>a_confirmer</code> du YAML.
+              </p>
+              <div class="status" id="status-ac-detail"></div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+    </main>
+
+    <!-- Panneau Contexte CGI unique (déplacé dans prop / a_confirmer) -->
+    <div id="cgi-panel-holder" class="hidden" aria-hidden="true">
+      <div id="panel-contexte-cgi-shared" class="contexte-cgi-panel">
+        <h3>Contexte CGI</h3>
+        <p class="cell-muted" style="font-size:0.75rem;margin:0 0 0.4rem">
+          Recherche corpus type=cgi · millésime 2026 — aide revue, pas un visa.
+        </p>
+        <p id="cgi-shared-classe" class="cell-muted" style="font-size:0.75rem;margin:0 0 0.35rem"></p>
+        <p id="cgi-shared-faux-amis" class="hidden" style="font-size:0.78rem;margin:0 0 0.45rem;color:#c2410c"></p>
+        <div id="cgi-shared-body" class="cell-muted" style="font-size:0.82rem">Sélectionnez une ligne…</div>
+        <button type="button" class="btn btn-ghost btn-sm hidden" id="cgi-shared-ouvrir-prop" style="margin-top:0.55rem">
+          Ouvrir proposition
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <div class="drawer-backdrop" id="backdrop"></div>
+
+  <script src="/shared/sidebar-collapse.js"></script>
+  <script src="/shared/infotip.js"></script>
+  <script>
+    const CLE = "console_jeton";
+    let jeton = localStorage.getItem(CLE) || "";
+    const $ = (id) => document.getElementById(id);
+
+    function setStatus(el, msg, err = false) {
+      el.textContent = msg || "";
+      el.classList.toggle("err", !!err);
+    }
+    function setLoginStatus(msg, err = false) {
+      setStatus($("status-login"), msg, err);
+    }
+    function setWho(text) {
+      $("who").textContent = text || "";
+      $("who-avatar").textContent = (text || "E").trim().charAt(0).toUpperCase() || "E";
+    }
+
+    function badgeClasse(classe) {
+      const c = (classe || "").toLowerCase();
+      if (!c) return "<span class='cell-muted'>—</span>";
+      const map = {
+        claire: "badge-claire",
+        contraste: "badge-contraste",
+        faible: "badge-faible",
+        bloque: "badge-bloque",
+      };
+      const cls = map[c] || "badge-cat";
+      const label = c === "bloque" ? "bloqué" : c;
+      return "<span class='badge " + cls + "'>" + escapeHtml(label) + "</span>";
+    }
+
+    function majNavBadge(id, total, alertWhenPositive) {
+      const badge = $(id);
+      if (!badge) return;
+      const n = Number(total) || 0;
+      if (n > 0) {
+        badge.textContent = n > 99 ? "99+" : String(n);
+        badge.classList.remove("hidden");
+        if (alertWhenPositive) badge.classList.add("is-alert");
+        else badge.classList.remove("is-alert");
+      } else {
+        badge.textContent = "0";
+        badge.classList.add("hidden");
+        badge.classList.remove("is-alert");
+      }
+    }
+
+    function majNavBadgeAc(total) {
+      majNavBadge("nav-badge-ac", total, true);
+    }
+
+    function majNavBadgeProp(ouvertes) {
+      majNavBadge("nav-badge-prop", ouvertes, true);
+    }
+
+    function decodeJwtPayload(token) {
+      try {
+        const parts = String(token || "").split(".");
+        if (parts.length < 2) return null;
+        /* Staff 2AàZ : charge.sig (2 segments). JWT classique : header.payload.sig. */
+        const part = parts.length === 2 ? parts[0] : parts[1];
+        if (!part) return null;
+        const b64 = part.replace(/-/g, "+").replace(/_/g, "/");
+        const pad = b64.length % 4 === 0 ? "" : "=".repeat(4 - (b64.length % 4));
+        const json = atob(b64 + pad);
+        return JSON.parse(json);
+      } catch {
+        return null;
+      }
+    }
+
+    function setWhoFromJeton(fallback) {
+      const payload = decodeJwtPayload(jeton);
+      if (payload) {
+        const email = payload.email || payload.sub || "";
+        const role = payload.role || payload.rol || "";
+        if (email && role) {
+          setWho(email + " · " + role);
+          return;
+        }
+        if (email) {
+          setWho(email);
+          return;
+        }
+      }
+      setWho(fallback || "Session");
+    }
+
+    function emptyStateRow(colspan, title, body, actionsHtml) {
+      return (
+        "<tr><td colspan=\"" + colspan + "\">"
+        + "<div class=\"empty-state\">"
+        + "<p class=\"empty-state-title\">" + escapeHtml(title) + "</p>"
+        + "<p class=\"empty-state-body\">" + escapeHtml(body) + "</p>"
+        + (actionsHtml ? "<div class=\"empty-state-actions\">" + actionsHtml + "</div>" : "")
+        + "</div></td></tr>"
+      );
+    }
+
+    let filtreProp = "toutes";
+    let cacheVersions = [];
+
+    function placerPanneauCgi(slotId) {
+      const panel = $("panel-contexte-cgi-shared");
+      const slot = $(slotId);
+      if (!panel || !slot) return;
+      slot.appendChild(panel);
+    }
+
+    function resetPanneauCgiMeta() {
+      const classeEl = $("cgi-shared-classe");
+      const fauxEl = $("cgi-shared-faux-amis");
+      const btn = $("cgi-shared-ouvrir-prop");
+      if (classeEl) classeEl.textContent = "";
+      if (fauxEl) {
+        fauxEl.textContent = "";
+        fauxEl.classList.add("hidden");
+      }
+      if (btn) {
+        btn.classList.add("hidden");
+        btn.onclick = null;
+      }
+    }
+
+    function afficherFauxAmis(data) {
+      const fauxEl = $("cgi-shared-faux-amis");
+      if (!fauxEl) return;
+      const liste = (data && data.faux_amis_potentiels) || [];
+      if (!liste.length) {
+        fauxEl.textContent = "";
+        fauxEl.classList.add("hidden");
+        return;
+      }
+      fauxEl.innerHTML =
+        "<strong>Faux amis potentiels</strong> (catalogue croisement) : "
+        + escapeHtml(liste.join(", "))
+        + " — à lire avant acceptation, pas une promotion.";
+      fauxEl.classList.remove("hidden");
+    }
+
+    function lierOuvrirProposition(pid) {
+      const btn = $("cgi-shared-ouvrir-prop");
+      if (!btn) return;
+      if (pid) {
+        btn.classList.remove("hidden");
+        btn.textContent = "Ouvrir proposition #" + pid;
+        btn.onclick = (ev) => {
+          ev.preventDefault();
+          ouvrirProposition(pid);
+        };
+      } else {
+        btn.classList.add("hidden");
+        btn.onclick = null;
+      }
+    }
+
+    async function api(path, opts = {}) {
+      const headers = Object.assign({ "Content-Type": "application/json" }, opts.headers || {});
+      if (jeton) headers.Authorization = "Bearer " + jeton;
+      const res = await fetch(path, { ...opts, headers });
+      const text = await res.text();
+      let data;
+      try { data = text ? JSON.parse(text) : null; } catch { data = { detail: text }; }
+      if (!res.ok) {
+        const detail = data && data.detail != null
+          ? (typeof data.detail === "string" ? data.detail : JSON.stringify(data.detail))
+          : res.statusText;
+        throw new Error(detail);
+      }
+      return data;
+    }
+
+    function showApp(on) {
+      $("vue-login").classList.toggle("hidden", on);
+      $("vue-app").classList.toggle("hidden", !on);
+      if (!on) closeDrawer();
+    }
+
+    function closeDrawer() {
+      $("sidebar").classList.remove("open");
+      $("backdrop").classList.remove("open");
+    }
+
+    const VIEWS = ["versions", "publier", "propositions", "contestations", "a-confirmer"];
+    let cacheProp = [];
+    let selectionPropId = null;
+    let dernierPatch = null;
+    const CLE_PROP_SEL = "console_prop_sel";
+
+    function lireHashPropId() {
+      const m = (location.hash || "").match(/[#&]prop=(\d+)/);
+      return m ? Number(m[1]) : null;
+    }
+    function ecrireHashPropId(id) {
+      if (id == null) {
+        if ((location.hash || "").includes("prop=")) {
+          history.replaceState(null, "", location.pathname + location.search);
+        }
+        return;
+      }
+      history.replaceState(null, "", location.pathname + location.search + "#prop=" + id);
+      try { sessionStorage.setItem(CLE_PROP_SEL, String(id)); } catch { /* ignore */ }
+    }
+    function propIdStocke() {
+      const h = lireHashPropId();
+      if (h) return h;
+      try {
+        const s = sessionStorage.getItem(CLE_PROP_SEL);
+        return s ? Number(s) : null;
+      } catch { return null; }
+    }
+
+    function showView(name) {
+      VIEWS.forEach((v) => {
+        $("view-" + v).classList.toggle("hidden", v !== name);
+      });
+      document.querySelectorAll(".nav-btn").forEach((b) => {
+        b.classList.toggle("active", b.dataset.view === name);
+      });
+      closeDrawer();
+      if (name === "propositions") listerProp().catch(() => {});
+      if (name === "contestations") listerCont().catch(() => {});
+      if (name === "a-confirmer") listerAConfirmer().catch(() => {});
+    }
+
+    function ouvrirProposition(pid) {
+      selectionPropId = pid ? Number(pid) : null;
+      ecrireHashPropId(selectionPropId);
+      showView("propositions");
+    }
+
+    function fmtDate(v) {
+      if (!v) return null;
+      try { return new Date(v).toLocaleString("fr-FR", { dateStyle: "short", timeStyle: "short" }); }
+      catch { return String(v); }
+    }
+    function escapeHtml(s) {
+      return String(s ?? "").replace(/[&<>"']/g, (c) => ({
+        "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;"
+      }[c]));
+    }
+
+    async function lister() {
+      setStatus($("status-versions"), "Chargement…");
+      const rows = await api("/api/v1/editorial/versions");
+      cacheVersions = rows || [];
+      const tbody = $("versions");
+      tbody.innerHTML = "";
+      let pub = 0;
+      if (!rows.length) {
+        tbody.innerHTML = emptyStateRow(
+          4,
+          "Aucune version",
+          "Créez un brouillon pour démarrer un millésime du référentiel.",
+          "<button type=\"button\" class=\"btn btn-primary btn-sm\" id=\"btn-empty-brouillon\">Nouveau brouillon</button>"
+        );
+        const emptyBtn = $("btn-empty-brouillon");
+        if (emptyBtn) emptyBtn.onclick = () => showView("publier");
+      }
+      for (const r of rows) {
+        const publiee = !!r.publiee_le;
+        if (publiee) pub += 1;
+        const tr = document.createElement("tr");
+        tr.dataset.statut = publiee ? "pub" : "brouillon";
+        tr.innerHTML =
+          "<td class='num cell-muted'>" + r.id + "</td>" +
+          "<td><span class='cell-strong'>" + escapeHtml(r.libelle || "") + "</span>" +
+          (r.note ? "<div class='cell-muted' style='margin-top:0.15rem'>" + escapeHtml(r.note) + "</div>" : "") +
+          "</td>" +
+          "<td><span class='badge " + (publiee ? "badge-ok" : "badge-draft") + "'>" +
+          (publiee ? "Publiée · " + fmtDate(r.publiee_le) : "Brouillon") +
+          "</span></td>" +
+          "<td class='cell-muted'>" + escapeHtml(r.publiee_par || "—") + "</td>";
+        tbody.appendChild(tr);
+      }
+      $("stat-total").textContent = String(rows.length);
+      $("stat-pub").textContent = String(pub);
+      $("stat-brouillon").textContent = String(rows.length - pub);
+      setStatus($("status-versions"), rows.length ? rows.length + " version(s) synchronisée(s)." : "");
+    }
+
+    function filtrerVersionsTableau(metric) {
+      const rows = document.querySelectorAll("#versions tr[data-statut]");
+      rows.forEach((tr) => {
+        if (!metric || metric === "total") {
+          tr.classList.remove("hidden");
+          return;
+        }
+        tr.classList.toggle("hidden", tr.dataset.statut !== metric);
+      });
+      document.querySelectorAll("#metrics-versions .card-metric-btn").forEach((btn) => {
+        btn.classList.toggle("warn", metric && btn.dataset.metric === metric && metric === "brouillon");
+      });
+    }
+
+    function suggestionDepuisCharge(cu) {
+      const sug = (cu && cu.suggestion_structuree) || null;
+      if (sug && typeof sug === "object") return sug;
+      return null;
+    }
+
+    function retirerAutorise(cu) {
+      const sug = suggestionDepuisCharge(cu);
+      if (sug) return !!sug.retirer_a_confirmer_autorise;
+      return false;
+    }
+
+    function rendreContexteCgi(el, data) {
+      if (!el) return;
+      afficherFauxAmis(data);
+      const classeEl = $("cgi-shared-classe");
+      if (classeEl) {
+        const cl = data && data.classe_croisement;
+        if (cl) {
+          classeEl.innerHTML = "Classe croisement : " + badgeClasse(cl)
+            + (cl === "faible" ? " <span class='cell-muted'>(pas promu en claire)</span>" : "");
+        } else {
+          classeEl.textContent = "";
+        }
+      }
+      if (!data) {
+        el.innerHTML = "<span class='cell-muted'>Contexte indisponible.</span>";
+        return;
+      }
+      if (data.bloque || !(data.fragments || []).length) {
+        el.innerHTML =
+          "<p style='color:#b45309;margin:0'><strong>"
+          + escapeHtml(data.message || "pas de fragment CGI trouvé — reste bloqué")
+          + "</strong></p>"
+          + (data.requete
+            ? "<p class='cell-muted' style='margin:0.35rem 0 0;font-size:0.75rem'>Requête : "
+              + escapeHtml(data.requete) + "</p>"
+            : "");
+        return;
+      }
+      const refs = (data.references_candidates || []).join(", ");
+      let html = "";
+      if (refs) {
+        html += "<p class='cell-muted' style='margin:0 0 0.4rem;font-size:0.75rem'>Réf. candidates : "
+          + escapeHtml(refs) + "</p>";
+      }
+      html += "<ul style='margin:0;padding-left:1.1rem'>";
+      for (const f of (data.fragments || []).slice(0, 3)) {
+        html +=
+          "<li style='margin-bottom:0.45rem'>"
+          + "<a href=\"#\" class=\"cgi-ref\" data-ref=\""
+          + escapeHtml(f.reference || "")
+          + "\" style=\"font-weight:600\">art. "
+          + escapeHtml(f.reference || "?")
+          + "</a>"
+          + (f.millesime != null
+            ? " <span class='badge badge-cat'>" + escapeHtml(String(f.millesime)) + "</span>"
+            : "")
+          + "<div style='margin-top:0.15rem;white-space:pre-wrap'>"
+          + escapeHtml(f.extrait || "")
+          + "</div></li>";
+      }
+      html += "</ul>";
+      el.innerHTML = html;
+    }
+
+    async function chargerContexteCgiEntree(entreeId) {
+      const el = $("cgi-shared-body");
+      if (!el || !entreeId) return;
+      el.textContent = "Recherche CGI…";
+      try {
+        const data = await api(
+          "/api/v1/editorial/a-confirmer/contexte-cgi?entree_id="
+          + encodeURIComponent(entreeId)
+          + "&millesime=2026&limite=3"
+        );
+        rendreContexteCgi(el, data);
+      } catch (e) {
+        el.innerHTML = "<span class='err'>" + escapeHtml(e.message) + "</span>";
+      }
+    }
+
+    async function chargerContexteCgiProp(propId) {
+      const el = $("cgi-shared-body");
+      if (!el || !propId) return;
+      el.textContent = "Recherche CGI…";
+      try {
+        const data = await api(
+          "/api/v1/editorial/propositions/" + propId + "/contexte-cgi?millesime=2026&limite=3"
+        );
+        rendreContexteCgi(el, data);
+      } catch (e) {
+        el.innerHTML = "<span class='err'>" + escapeHtml(e.message) + "</span>";
+      }
+    }
+
+    function afficherDetailProp(id) {
+      selectionPropId = id;
+      ecrireHashPropId(id);
+      const p = (cacheProp || []).find((x) => Number(x.id) === Number(id));
+      const empty = $("prop-detail-empty");
+      const body = $("prop-detail-body");
+      if (!p) {
+        empty.classList.remove("hidden");
+        body.classList.add("hidden");
+        return;
+      }
+      empty.classList.add("hidden");
+      body.classList.remove("hidden");
+      placerPanneauCgi("prop-cgi-slot");
+      resetPanneauCgiMeta();
+      const cu = p.charge_utile || {};
+      $("prop-d-id").textContent = "#" + p.id;
+      $("prop-d-source").textContent = p.source || "—";
+      $("prop-d-rule").textContent = cu.rule_id || "—";
+      $("prop-d-entree").textContent = cu.entree_id
+        ? ("entree_id : " + cu.entree_id + (cu.piste_id ? " · piste " + cu.piste_id : ""))
+        : (cu.piste_id ? "piste " + cu.piste_id : "—");
+      $("prop-d-statut-ed").textContent = cu.statut_editorial || "—";
+      $("prop-d-statut").textContent = p.statut || "—";
+      $("prop-d-statut").className = "badge " + (p.statut === "ouverte" ? "badge-wait" : "badge-ok");
+      const extrait = cu.extrait_cgi || cu.extrait_annexe || "";
+      $("prop-d-extrait").textContent = extrait || "—";
+      const suggestionTxt = [cu.suggestion, cu.suggestion_valeur].filter(Boolean).join("\n");
+      $("prop-d-suggestion").textContent = suggestionTxt || "—";
+      const sug = suggestionDepuisCharge(cu);
+      if (sug) {
+        $("prop-d-struct").textContent =
+          "champ=" + (sug.champ == null ? "∅" : sug.champ)
+          + " · valeur=" + (sug.valeur == null ? "∅" : JSON.stringify(sug.valeur))
+          + " · index_a_confirmer=" + (sug.index_a_confirmer == null ? "∅" : sug.index_a_confirmer);
+      } else {
+        $("prop-d-struct").textContent = cu.suggestion_valeur
+          ? "Repli minimal (suggestion_valeur) — retrait a_confirmer non autorisé par défaut"
+          : "Aucune suggestion structurée (statut / patch documentaire seulement)";
+      }
+      const autorise = retirerAutorise(cu);
+      $("prop-d-retirer-flag").textContent = autorise ? "true" : "false";
+      $("prop-d-retirer-flag").className = "badge " + (autorise ? "badge-ok" : "badge-cat");
+      const cb = $("prop-retirer-ac");
+      cb.disabled = !autorise || p.statut !== "ouverte";
+      if (!autorise) cb.checked = false;
+      const ouverte = p.statut === "ouverte";
+      const peutAppliquer = ouverte && !!(
+        (sug && sug.champ != null)
+        || autorise
+      );
+      ["btn-prop-statut", "btn-prop-patch", "btn-prop-corriger", "btn-prop-rejeter"]
+        .forEach((bid) => { const el = $(bid); if (el) el.disabled = !ouverte; });
+      const btnApp = $("btn-prop-appliquer");
+      if (btnApp) {
+        btnApp.disabled = !peutAppliquer;
+        btnApp.title = peutAppliquer
+          ? "Écrit 1 champ ou 1 mention (double confirm si retrait)"
+          : "Non autorisé — pas de suggestion structurée ni retrait a_confirmer";
+      }
+      $("prop-patch-box").classList.add("hidden");
+      dernierPatch = null;
+      setStatus($("status-prop-detail"), "");
+      document.querySelectorAll("#propositions tr[data-pid]").forEach((tr) => {
+        tr.classList.toggle("row-selected", Number(tr.dataset.pid) === Number(id));
+      });
+      lierOuvrirProposition(null);
+      chargerContexteCgiProp(id);
+    }
+
+    async function listerProp() {
+      setStatus($("status-propositions"), "Chargement…");
+      const rows = await api("/api/v1/editorial/propositions");
+      cacheProp = rows || [];
+      let nAnnexe = 0, nCgi = 0, nOuvertes = 0, nAutres = 0;
+      for (const p of rows) {
+        if (p.source === "annexe_2026_croisement") nAnnexe += 1;
+        else if (p.source === "cgi_2026_croisement") nCgi += 1;
+        else nAutres += 1;
+        if (p.statut === "ouverte") nOuvertes += 1;
+      }
+      if ($("prop-seed-annexe")) $("prop-seed-annexe").textContent = String(nAnnexe);
+      if ($("prop-seed-cgi")) $("prop-seed-cgi").textContent = String(nCgi);
+      if ($("prop-seed-ouvertes")) $("prop-seed-ouvertes").textContent = String(nOuvertes);
+      if ($("prop-seed-autres")) $("prop-seed-autres").textContent = String(nAutres);
+      majNavBadgeProp(nOuvertes);
+      rendrePropositions();
+      setStatus(
+        $("status-propositions"),
+        rows.length
+          ? rows.length + " proposition(s) · Annexe " + nAnnexe + " · CGI " + nCgi
+            + " · ouvertes " + nOuvertes
+          : ""
+      );
+    }
+
+    function propPasseFiltre(p) {
+      if (filtreProp === "ouvertes") return p.statut === "ouverte";
+      if (filtreProp === "annexe") return p.source === "annexe_2026_croisement";
+      if (filtreProp === "cgi") return p.source === "cgi_2026_croisement";
+      return true;
+    }
+
+    function rendrePropositions() {
+      const rows = cacheProp || [];
+      const tb = $("propositions");
+      if (!tb) return;
+      tb.innerHTML = "";
+      const filtered = rows.filter(propPasseFiltre);
+      if (!rows.length) {
+        tb.innerHTML = emptyStateRow(
+          3,
+          "File vide",
+          "Aucune proposition éditoriale en attente. Seeds : make seed-editorial-pistes."
+        );
+      } else if (!filtered.length) {
+        tb.innerHTML = emptyStateRow(
+          3,
+          "Aucun résultat",
+          "Aucune proposition pour ce filtre. Essayez « Toutes » ou Actualiser."
+        );
+      }
+      const want = selectionPropId || propIdStocke();
+      for (const p of filtered) {
+        const tr = document.createElement("tr");
+        tr.dataset.pid = String(p.id);
+        tr.style.cursor = "pointer";
+        const cu = p.charge_utile || {};
+        const label = cu.rule_id
+          ? (cu.rule_id + (cu.entree_id ? " · " + cu.entree_id : "") + (cu.piste_id ? " · " + cu.piste_id : ""))
+          : (p.source || "");
+        const badgeAnnexe = p.source === "annexe_2026_croisement"
+          ? ` <span class="badge" style="background:#fef3c7;color:#92400e;border:1px solid #f59e0b">Piste Annexe</span>`
+          : "";
+        const badgeCgi = p.source === "cgi_2026_croisement"
+          ? ` <span class="badge" style="background:#dbeafe;color:#1e40af;border:1px solid #3b82f6">Piste CGI</span>`
+          : "";
+        tr.innerHTML =
+          `<td class="num cell-muted">${p.id}</td>`
+          + `<td>${escapeHtml(label)}${badgeAnnexe}${badgeCgi}`
+          + `<div class="cell-muted" style="font-size:0.72rem">${escapeHtml(p.source || "")}</div></td>`
+          + `<td><span class="badge badge-wait">${escapeHtml(p.statut)}</span>`
+          + (cu.statut_editorial
+            ? ` <span class="badge badge-cat">${escapeHtml(cu.statut_editorial)}</span>`
+            : "")
+          + `</td>`;
+        tr.onclick = () => afficherDetailProp(p.id);
+        tb.appendChild(tr);
+      }
+      if (want && filtered.some((r) => Number(r.id) === Number(want))) {
+        afficherDetailProp(Number(want));
+      } else if (selectionPropId && filtered.some((r) => Number(r.id) === Number(selectionPropId))) {
+        afficherDetailProp(selectionPropId);
+      } else {
+        $("prop-detail-empty").classList.remove("hidden");
+        $("prop-detail-body").classList.add("hidden");
+      }
+    }
+
+    function telechargerPatch(patch) {
+      if (!patch) return;
+      const blob = new Blob([patch.yaml_apres || ""], { type: "text/yaml;charset=utf-8" });
+      const a = document.createElement("a");
+      a.href = URL.createObjectURL(blob);
+      a.download = (patch.fichier || "patch") + ".propose.yaml";
+      a.click();
+      URL.revokeObjectURL(a.href);
+    }
+
+    function montrerPatch(patch) {
+      dernierPatch = patch;
+      const box = $("prop-patch-box");
+      const pre = $("prop-patch-preview");
+      if (!patch) {
+        box.classList.add("hidden");
+        return;
+      }
+      box.classList.remove("hidden");
+      const ops = (patch.operations || []).map((o) => o.op).join(", ") || "(aucune mutation)";
+      pre.textContent =
+        "Ops: " + ops + "\n"
+        + (patch.avertissement ? patch.avertissement + "\n\n" : "")
+        + (patch.yaml_apres || JSON.stringify(patch, null, 2));
+    }
+
+    async function actionProposition(act, mode) {
+      if (!selectionPropId) return;
+      const p = (cacheProp || []).find((x) => Number(x.id) === Number(selectionPropId));
+      if (!p || p.statut !== "ouverte") {
+        setStatus($("status-prop-detail"), "Proposition non ouverte.", true);
+        return;
+      }
+      const cu = p.charge_utile || {};
+      const retirer = !!($("prop-retirer-ac") && $("prop-retirer-ac").checked);
+      if (act === "acceptee" && mode === "appliquer") {
+        const champ = (suggestionDepuisCharge(cu) || {}).champ;
+        const msg =
+          "Appliquer au YAML ?\n\n"
+          + "rule_id : " + (cu.rule_id || "?") + "\n"
+          + "champ : " + (champ == null ? "(aucun — retrait mention seulement si coché)" : champ) + "\n"
+          + "retirer a_confirmer : " + (retirer ? "OUI" : "non");
+        if (!confirm(msg)) return;
+        if (retirer) {
+          const ok2 = confirm(
+            "CONFIRMATION 2/2 — Retirer UNE mention a_confirmer du YAML "
+            + "(index " + ((suggestionDepuisCharge(cu) || {}).index_a_confirmer ?? "?") + ").\n"
+            + "Pas de purge de masse. Continuer ?"
+          );
+          if (!ok2) return;
+        }
+      }
+      if (act === "acceptee" && mode === "preparer_patch" && retirer) {
+        if (!confirm("Préparer un patch qui simule le retrait de la mention a_confirmer (sans écrire le disque) ?")) {
+          return;
+        }
+      }
+      setStatus($("status-prop-detail"), "Envoi…");
+      try {
+        const body = { statut: act };
+        if (mode) body.mode = mode;
+        if (act === "acceptee") body.retirer_mention_a_confirmer = !!retirer;
+        const data = await api("/api/v1/editorial/propositions/" + selectionPropId + "/statut", {
+          method: "POST",
+          body: JSON.stringify(body),
+        });
+        if (mode === "preparer_patch" && data.acceptation && data.acceptation.patch) {
+          montrerPatch(data.acceptation.patch);
+          telechargerPatch(data.acceptation.patch);
+          setStatus(
+            $("status-prop-detail"),
+            "Patch préparé — proposition ouverte, YAML non modifié. "
+            + ((data.acceptation.patch.avertissement) || "")
+          );
+          setStatus($("status-propositions"), data.note || "Patch téléchargé");
+          return;
+        }
+        const note = data.note || ("Statut → " + act);
+        setStatus($("status-prop-detail"), note);
+        setStatus($("status-propositions"), note);
+        await listerProp();
+      } catch (err) {
+        setStatus($("status-prop-detail"), err.message, true);
+        setStatus($("status-propositions"), err.message, true);
+      }
+    }
+
+    async function listerCont() {
+      setStatus($("status-contestations"), "Chargement…");
+      const rows = await api("/api/v1/editorial/contestations");
+      const tb = $("contestations");
+      tb.innerHTML = "";
+      if (!rows.length) {
+        tb.innerHTML = emptyStateRow(
+          5,
+          "Aucune contestation",
+          "Les signalements abonnés apparaîtront ici. Traitement write non branché — lecture seule."
+        );
+      }
+      for (const c of rows) {
+        const tr = document.createElement("tr");
+        tr.innerHTML =
+          `<td class="num cell-muted">${c.id}</td>`
+          + `<td>${escapeHtml(c.tenant_denomination)}</td>`
+          + `<td><code>${escapeHtml(c.regle_id)}</code></td>`
+          + `<td>${escapeHtml(c.motif)}</td>`
+          + `<td><span class="badge badge-cat">${escapeHtml(c.statut)}</span></td>`;
+        tb.appendChild(tr);
+      }
+      setStatus($("status-contestations"), rows.length ? rows.length + " contestation(s)" : "");
+    }
+
+    let cacheAConfirmer = null;
+    let selectionAcId = null;
+
+    async function listerAConfirmer() {
+      setStatus($("status-a-confirmer"), "Chargement…");
+      const data = await api("/api/v1/editorial/a-confirmer");
+      cacheAConfirmer = data;
+      rendreAConfirmer();
+    }
+
+    function entreeParId(id) {
+      if (!cacheAConfirmer) return null;
+      const entrees = (cacheAConfirmer.file && cacheAConfirmer.file.entrees)
+        || cacheAConfirmer.mentions || [];
+      return entrees.find((m) => (m.id || (m.identifiant + "#" + m.index)) === id) || null;
+    }
+
+    function afficherDetailAc(id) {
+      selectionAcId = id;
+      const m = entreeParId(id);
+      const empty = $("ac-detail-empty");
+      const body = $("ac-detail-body");
+      if (!m) {
+        empty.classList.remove("hidden");
+        body.classList.add("hidden");
+        return;
+      }
+      empty.classList.add("hidden");
+      body.classList.remove("hidden");
+      placerPanneauCgi("ac-cgi-slot");
+      resetPanneauCgiMeta();
+      const eid = m.id || (m.identifiant + "#" + m.index);
+      $("ac-d-id").textContent = eid;
+      $("ac-d-fichier").textContent = m.fichier || "—";
+      const impot = m.impot || "";
+      const ref = m.reference_legale || "";
+      $("ac-d-ref").textContent = [impot, ref].filter(Boolean).join(" · ") || "—";
+      $("ac-d-meta").textContent =
+        (m.priorite || "—") + " · " + (m.categorie || "—") + " · #" + (m.index != null ? m.index : "—");
+      $("ac-d-champ").textContent = m.champ_a_valider || m.texte || "";
+      const statut = m.statut || "en_attente";
+      $("ac-d-statut").textContent = statut;
+      $("ac-d-statut").className = "badge " + (statut === "en_revue" ? "badge-ok" : "badge-wait");
+      const cl = m.classe_croisement || (m.croisement_cgi_meta && m.croisement_cgi_meta.classe_croisement);
+      const raison = (m.croisement_cgi_meta && m.croisement_cgi_meta.raison) || "";
+      const classeEl = $("cgi-shared-classe");
+      if (classeEl) {
+        if (cl) {
+          classeEl.innerHTML = "Classe croisement : " + badgeClasse(cl)
+            + (raison ? " <span class='cell-muted'>— " + escapeHtml(raison) + "</span>" : "")
+            + (cl === "faible" ? " <span class='cell-muted'>(pas promu en claire)</span>" : "");
+        } else {
+          classeEl.textContent = "Pas de classe croisement (make croiser-cgi).";
+        }
+      }
+      const fauxCat = (m.croisement_cgi_meta && (
+        m.croisement_cgi_meta.faux_amis_potentiels || m.croisement_cgi_meta.faux_amis
+      )) || [];
+      if (fauxCat.length) {
+        afficherFauxAmis({ faux_amis_potentiels: fauxCat });
+      }
+      chargerContexteCgiEntree(eid);
+      const pisteWrap = $("ac-d-piste-wrap");
+      const metaAnnexe = m.piste_annexe_meta || null;
+      const metaCgi = m.piste_cgi_meta || null;
+      const estSourcee = !!(m.piste_annexe || m.piste_cgi || m.piste_sourcee);
+      if (estSourcee && pisteWrap) {
+        pisteWrap.classList.remove("hidden");
+        const badges = [];
+        if (m.piste_annexe) {
+          badges.push(
+            "<span class='badge' style='background:#fef3c7;color:#92400e;border:1px solid #f59e0b;margin-right:0.25rem'>Piste Annexe</span>"
+          );
+        }
+        if (m.piste_cgi) {
+          badges.push(
+            "<span class='badge' style='background:#e0f2fe;color:#075985;border:1px solid #0ea5e9;margin-right:0.25rem'>Piste CGI</span>"
+          );
+        }
+        const badgesEl = $("ac-d-piste-badges");
+        if (badgesEl) badgesEl.innerHTML = badges.join("");
+        const lines = [];
+        if (metaAnnexe && metaAnnexe.piste_id) {
+          lines.push("— Annexe —");
+          lines.push("piste_id : " + metaAnnexe.piste_id);
+          if (metaAnnexe.pages && metaAnnexe.pages.length) {
+            lines.push("pages Annexe : " + metaAnnexe.pages.join(", "));
+          }
+          if (metaAnnexe.suggestion) lines.push(metaAnnexe.suggestion);
+          if (metaAnnexe.suggestion_valeur) {
+            lines.push("Suggestion valeur : " + metaAnnexe.suggestion_valeur);
+          }
+          if (metaAnnexe.extrait_annexe) {
+            lines.push("Extrait : " + metaAnnexe.extrait_annexe);
+          }
+        }
+        if (metaCgi && metaCgi.piste_id) {
+          lines.push("— CGI —");
+          lines.push("piste_id : " + metaCgi.piste_id);
+          if (metaCgi.article_corpus) {
+            lines.push("article corpus : " + metaCgi.article_corpus);
+          }
+          if (metaCgi.suggestion) lines.push(metaCgi.suggestion);
+          if (metaCgi.suggestion_valeur) {
+            lines.push("Suggestion valeur : " + metaCgi.suggestion_valeur);
+          }
+          if (metaCgi.extrait_cgi) {
+            lines.push("Extrait : " + metaCgi.extrait_cgi);
+          }
+        }
+        lines.push("Statut éditorial : a_valider_humain (pas un visa)");
+        const peutPatch = !!(
+          m.peut_preparer_patch
+          || (metaCgi && metaCgi.peut_preparer_patch)
+          || (metaAnnexe && metaAnnexe.peut_preparer_patch)
+        );
+        const peutAppliquer = !!(
+          m.peut_appliquer
+          || (metaCgi && metaCgi.peut_appliquer)
+          || (metaAnnexe && metaAnnexe.peut_appliquer)
+        );
+        const retirerOk = !!(
+          m.retirer_a_confirmer_autorise
+          || (metaCgi && metaCgi.retirer_a_confirmer_autorise)
+          || (metaAnnexe && metaAnnexe.retirer_a_confirmer_autorise)
+        );
+        lines.push(
+          "Acceptation contrôlée : "
+          + (peutPatch ? "Préparer patch OK" : "Préparer patch indisponible (seed manquant)")
+          + " · "
+          + (peutAppliquer
+            ? "Appliquer possible (champ ou retrait structuré)"
+            : "Appliquer : pas de champ/retrait structuré (statut ou patch documentaire)")
+          + " · retirer_a_confirmer_autorise=" + (retirerOk ? "true" : "false")
+        );
+        $("ac-d-piste-meta").textContent = lines.join("\n");
+        const btnProp = $("btn-ac-prop");
+        if (btnProp) {
+          const pid =
+            m.proposition_id
+            || (metaCgi && metaCgi.proposition_id)
+            || (metaAnnexe && metaAnnexe.proposition_id)
+            || m.proposition_id_cgi
+            || m.proposition_id_annexe;
+          const seedHint = "make seed-editorial-pistes";
+          btnProp.onclick = (ev) => {
+            ev.stopPropagation();
+            if (pid) ouvrirProposition(pid);
+            else {
+              setStatus(
+                $("status-ac-detail"),
+                "Proposition non seedée — " + seedHint,
+                true
+              );
+            }
+          };
+          btnProp.disabled = !pid;
+          btnProp.textContent = pid
+            ? "Ouvrir proposition #" + pid
+            : "Proposition non seedée (" + seedHint + ")";
+          lierOuvrirProposition(pid || null);
+        }
+      } else if (pisteWrap) {
+        pisteWrap.classList.add("hidden");
+        lierOuvrirProposition(null);
+      }
+      const note = m.note_editeur || "";
+      const nw = $("ac-d-note-wrap");
+      if (note) {
+        nw.classList.remove("hidden");
+        $("ac-d-note").textContent = note + (m.revue_par ? " · " + m.revue_par : "");
+      } else {
+        nw.classList.add("hidden");
+      }
+      $("ac-note-input").value = note || "";
+      setStatus($("status-ac-detail"), "");
+      document.querySelectorAll("#a-confirmer tr[data-ac-id]").forEach((tr) => {
+        tr.style.outline = tr.dataset.acId === eid ? "2px solid var(--accent)" : "";
+      });
+    }
+
+    function synchroniserBandeauSeance() {
+      const sel = $("filtre-ac-vue");
+      const vue = (sel && sel.value) || "";
+      document.querySelectorAll(".seance-etape").forEach((btn) => {
+        btn.classList.toggle("is-active", btn.dataset.vue === vue);
+      });
+      document.querySelectorAll("#ac-filter-chips .filter-chip").forEach((btn) => {
+        const chip = btn.getAttribute("data-ac-chip") || "";
+        btn.classList.toggle("is-active", chip === vue);
+      });
+    }
+
+    function appliquerVueSeance(vue) {
+      const sel = $("filtre-ac-vue");
+      if (!sel) return;
+      sel.value = vue;
+      synchroniserBandeauSeance();
+      rendreAConfirmer();
+    }
+
+    function majLabelsFiltreVue(data) {
+      const croise = (data && data.croisement_cgi) || {};
+      const pa = (data && data.pistes_annexe) || {};
+      const pc = (data && data.pistes_cgi) || {};
+      const ps = (data && data.pistes_sourcees) || {};
+      const setOpt = (value, label) => {
+        const opt = document.querySelector('#filtre-ac-vue option[value="' + value + '"]');
+        if (opt) opt.textContent = label;
+      };
+      const nAnnexe = pa.n != null ? pa.n : "—";
+      const nCgi = pc.n != null ? pc.n : "—";
+      const nSourcees = ps.n != null
+        ? ps.n
+        : (
+            (typeof nAnnexe === "number" ? nAnnexe : 0)
+            + (typeof nCgi === "number" ? nCgi : 0)
+          );
+      setOpt("pistes_sourcees", "Pistes sourcées (" + nSourcees + ")");
+      setOpt("pistes_annexe", "Pistes Annexe (" + nAnnexe + ")");
+      setOpt("pistes_cgi", "Pistes CGI (" + nCgi + ")");
+      setOpt(
+        "dates_non_prouvees",
+        "Dates non prouvées (" + (croise.n_faibles != null ? croise.n_faibles : "—") + ")"
+      );
+      setOpt(
+        "croisement_faible",
+        "Faibles (" + (croise.n_faibles != null ? croise.n_faibles : "—") + ")"
+      );
+      setOpt(
+        "croisement_bloque",
+        "Bloqués CGI (" + (croise.n_bloques != null ? croise.n_bloques : "—") + ")"
+      );
+      setOpt(
+        "croisement_claire",
+        "Claires CGI (" + (croise.n_claires != null ? croise.n_claires : "—") + ")"
+      );
+      setOpt(
+        "croisement_contraste",
+        "Contrastes CGI (" + (croise.n_contrastes != null ? croise.n_contrastes : "—") + ")"
+      );
+      const btnAnnexe = $("seance-etape-annexe");
+      const btnCgi = $("seance-etape-cgi");
+      const btnFaibles = $("seance-etape-faibles");
+      const btnBloques = $("seance-etape-bloques");
+      if (btnAnnexe) btnAnnexe.textContent = "1 · Annexe (" + nAnnexe + ")";
+      if (btnCgi) btnCgi.textContent = "2 · CGI (" + nCgi + ")";
+      if (btnFaibles) {
+        btnFaibles.textContent =
+          "3 · Dates non prouvées (" + (croise.n_faibles != null ? croise.n_faibles : "—") + ")";
+      }
+      if (btnBloques) {
+        btnBloques.textContent =
+          "4 · Bloqués (" + (croise.n_bloques != null ? croise.n_bloques : "—") + ")";
+      }
+    }
+
+    function rendreAConfirmer() {
+      const data = cacheAConfirmer;
+      if (!data) return;
+      const tbody = $("a-confirmer");
+      tbody.innerHTML = "";
+      const entrees = (data.file && data.file.entrees) || data.mentions || [];
+      const filtreP = ($("filtre-ac-priorite") && $("filtre-ac-priorite").value) || "";
+      const filtreC = ($("filtre-ac-categorie") && $("filtre-ac-categorie").value) || "";
+      const filtreS = ($("filtre-ac-statut") && $("filtre-ac-statut").value) || "";
+      const filtreR = (($("filtre-ac-regle") && $("filtre-ac-regle").value) || "").trim().toLowerCase();
+      const filtreVue = ($("filtre-ac-vue") && $("filtre-ac-vue").value) || "";
+      let attente = 0;
+      let revue = 0;
+      let affichees = 0;
+      const sorted = [...entrees].sort((a, b) => {
+        const ia = String(a.identifiant || "");
+        const ib = String(b.identifiant || "");
+        if (ia !== ib) return ia.localeCompare(ib);
+        return (a.index || 0) - (b.index || 0);
+      });
+      if (!sorted.length) {
+        tbody.innerHTML = emptyStateRow(
+          8,
+          "File vide",
+          "Rien à confirmer pour le moment. Les mentions a_confirmer du référentiel apparaîtront ici."
+        );
+      }
+      let lastId = null;
+      for (const m of sorted) {
+        const statut = m.statut || "en_attente";
+        if (statut === "en_attente") attente += 1;
+        if (statut === "en_revue") revue += 1;
+        const priorite = m.priorite || "";
+        const categorie = m.categorie || "";
+        const rid = String(m.identifiant || "");
+        const eid = m.id || (rid + "#" + m.index);
+        const estAnnexe = !!(m.piste_annexe);
+        const estCgi = !!(m.piste_cgi);
+        const estSourcee = !!(m.piste_sourcee || estAnnexe || estCgi);
+        const classe = m.classe_croisement
+          || (m.croisement_cgi_meta && m.croisement_cgi_meta.classe_croisement)
+          || "";
+        if (filtreVue === "pistes_annexe" && !estAnnexe) continue;
+        if (filtreVue === "pistes_cgi" && !estCgi) continue;
+        if (filtreVue === "pistes_sourcees" && !estSourcee) continue;
+        if (filtreVue === "dates_non_prouvees" && classe !== "faible") continue;
+        if (filtreVue === "croisement_faible" && classe !== "faible") continue;
+        if (filtreVue === "croisement_bloque" && classe !== "bloque") continue;
+        if (filtreVue === "croisement_claire" && classe !== "claire") continue;
+        if (filtreVue === "croisement_contraste" && classe !== "contraste") continue;
+        if (filtreP && priorite !== filtreP) continue;
+        if (filtreC && categorie !== filtreC) continue;
+        if (filtreS && statut !== filtreS) continue;
+        if (filtreR && !rid.toLowerCase().includes(filtreR)) continue;
+        affichees += 1;
+        const champ = m.champ_a_valider || m.texte || "";
+        const tr = document.createElement("tr");
+        tr.dataset.acId = eid;
+        tr.style.cursor = "pointer";
+        const showId = rid !== lastId;
+        lastId = rid;
+        tr.innerHTML =
+          "<td>" + (showId
+            ? "<code class='cell-strong'>" + escapeHtml(rid) + "</code>"
+              + (m.fichier ? "<div class='cell-muted' style='font-size:0.72rem'>" + escapeHtml(m.fichier) + "</div>" : "")
+            : "<span class='cell-muted' style='padding-left:0.4rem'>↳</span>") +
+          "</td>" +
+          "<td class='num cell-muted'>" + escapeHtml(String(m.index != null ? m.index : "—")) + "</td>" +
+          "<td>" + badgeClasse(classe) + "</td>" +
+          "<td><span class='badge badge-cat'>" + escapeHtml(priorite || "—") + "</span></td>" +
+          "<td><span class='badge badge-cat'>" + escapeHtml(categorie || "—") + "</span></td>" +
+          "<td><strong style='font-weight:600'>" + escapeHtml(champ) + "</strong></td>" +
+          "<td>" + (estSourcee
+            ? (
+                (estAnnexe
+                  ? "<span class='badge' style='background:#fef3c7;color:#92400e;border:1px solid #f59e0b;margin-right:0.2rem'>Annexe</span>"
+                  : "")
+                + (estCgi
+                  ? "<span class='badge' style='background:#e0f2fe;color:#075985;border:1px solid #0ea5e9;margin-right:0.2rem'>CGI</span>"
+                  : "")
+              )
+            : "<span class='cell-muted'>—</span>") + "</td>" +
+          "<td><span class='badge " + (statut === "en_revue" ? "badge-ok" : "badge-wait") + "'>" +
+          escapeHtml(statut) + "</span></td>";
+        tr.onclick = () => afficherDetailAc(eid);
+        tbody.appendChild(tr);
+      }
+      if (sorted.length && !affichees) {
+        tbody.innerHTML = emptyStateRow(
+          8,
+          "Aucun résultat",
+          "Aucun champ pour ce filtre. Changez les raccourcis séance ou réinitialisez les filtres."
+        );
+      }
+      const cp = data.comptes_par_priorite || {};
+      const cs = data.comptes_par_statut || (data.file && data.file.comptes_par_statut) || {};
+      $("stat-ac-total").textContent = String(data.total_mentions != null ? data.total_mentions : entrees.length);
+      majNavBadgeAc(data.total_mentions != null ? data.total_mentions : entrees.length);
+      $("stat-ac-regles").textContent = String(
+        data.total_regles_concernees != null
+          ? data.total_regles_concernees
+          : Object.keys(data.par_regle_file || data.par_regle || {}).length
+      );
+      $("stat-ac-attente").textContent = String(cs.en_attente != null ? cs.en_attente : attente);
+      if ($("stat-ac-revue")) {
+        $("stat-ac-revue").textContent = String(cs.en_revue != null ? cs.en_revue : revue);
+      }
+      $("stat-ac-sourcable").textContent = String(cp.sourcable != null ? cp.sourcable : "—");
+      $("stat-ac-bloqueur").textContent = String(cp.bloqueur != null ? cp.bloqueur : "—");
+      if ($("stat-ac-pistes")) {
+        const ps = data.pistes_sourcees || {};
+        const nPistes = ps.n != null
+          ? ps.n
+          : (
+              ((data.pistes_annexe && data.pistes_annexe.n) || 0)
+              + ((data.pistes_cgi && data.pistes_cgi.n) || 0)
+            );
+        $("stat-ac-pistes").textContent = String(nPistes);
+      }
+      const croise = data.croisement_cgi || {};
+      if ($("stat-ac-faibles")) {
+        $("stat-ac-faibles").textContent = String(
+          croise.n_faibles != null ? croise.n_faibles : "—"
+        );
+      }
+      if ($("stat-ac-bloques")) {
+        $("stat-ac-bloques").textContent = String(
+          croise.n_bloques != null ? croise.n_bloques : "—"
+        );
+      }
+      majLabelsFiltreVue(data);
+      synchroniserBandeauSeance();
+      const hint = $("hint-ac-avertissement");
+      if (hint) hint.textContent = data.avertissement || "";
+      const hintW = $("hint-ac-workflow");
+      if (hintW) hintW.textContent = data.note_workflow || data.note_sources || "";
+      setStatus(
+        $("status-a-confirmer"),
+        affichees
+          ? affichees + " champ(s) affiché(s) · " + entrees.length + " au total · empreinte " + (data.empreinte || "").slice(0, 12) + "…"
+          : (entrees.length ? "Filtre vide" : "")
+      );
+      if (selectionAcId) afficherDetailAc(selectionAcId);
+    }
+
+    async function boot() {
+      await lister();
+      await listerProp().catch(() => {});
+      await listerCont().catch(() => {});
+      await listerAConfirmer().catch(() => {});
+    }
+
+    $("form-login").onsubmit = async (e) => {
+      e.preventDefault();
+      setLoginStatus("Connexion…");
+      try {
+        const data = await api("/api/v1/billing/auth/connexion", {
+          method: "POST",
+          body: JSON.stringify({ email: $("email").value.trim(), mot_de_passe: $("mdp").value }),
+        });
+        jeton = data.jeton;
+        localStorage.setItem(CLE, jeton);
+        setWho(data.email + " · " + data.role);
+        showApp(true);
+        showView("versions");
+        setLoginStatus("");
+        if (window.RfInfoTip) RfInfoTip.hydrate(document);
+        await boot();
+      } catch (err) {
+        setLoginStatus(err.message, true);
+      }
+    };
+
+    $("btn-logout").onclick = () => {
+      jeton = "";
+      localStorage.removeItem(CLE);
+      showApp(false);
+    };
+
+    $("btn-menu").onclick = () => {
+      $("sidebar").classList.add("open");
+      $("backdrop").classList.add("open");
+    };
+    $("backdrop").onclick = closeDrawer;
+    RfSidebarCollapse.init({ storageKey: "rf-sidebar-collapsed-console" });
+
+    document.querySelectorAll(".nav-btn").forEach((btn) => {
+      btn.onclick = () => showView(btn.dataset.view);
+    });
+
+    if ($("btn-nouveau-brouillon")) {
+      $("btn-nouveau-brouillon").onclick = () => showView("publier");
+    }
+    document.querySelectorAll("#metrics-versions .card-metric-btn").forEach((btn) => {
+      btn.onclick = () => filtrerVersionsTableau(btn.dataset.metric || "total");
+    });
+
+    document.querySelectorAll("#prop-filter-chips .filter-chip").forEach((btn) => {
+      btn.onclick = () => {
+        filtreProp = btn.getAttribute("data-prop-filtre") || "toutes";
+        document.querySelectorAll("#prop-filter-chips .filter-chip").forEach((b) => {
+          b.classList.toggle("is-active", b === btn);
+        });
+        rendrePropositions();
+      };
+    });
+
+    document.querySelectorAll("#ac-filter-chips .filter-chip").forEach((btn) => {
+      btn.onclick = () => {
+        appliquerVueSeance(btn.getAttribute("data-ac-chip") || "");
+      };
+    });
+
+    $("btn-lister").onclick = async () => { try { await lister(); } catch (e) { setStatus($("status-versions"), e.message, true); } };
+    $("btn-prop").onclick = async () => { try { await listerProp(); } catch (e) { setStatus($("status-propositions"), e.message, true); } };
+    $("btn-cont").onclick = async () => { try { await listerCont(); } catch (e) { setStatus($("status-contestations"), e.message, true); } };
+    $("btn-a-confirmer").onclick = async () => { try { await listerAConfirmer(); } catch (e) { setStatus($("status-a-confirmer"), e.message, true); } };
+    if ($("btn-a-confirmer-csv")) {
+      $("btn-a-confirmer-csv").onclick = async () => {
+        try {
+          const res = await fetch("/api/v1/editorial/a-confirmer/export.csv", {
+            headers: jeton ? { Authorization: "Bearer " + jeton } : {},
+          });
+          if (!res.ok) {
+            const t = await res.text();
+            throw new Error(t || res.statusText);
+          }
+          const blob = await res.blob();
+          const a = document.createElement("a");
+          a.href = URL.createObjectURL(blob);
+          a.download = "a-confirmer.csv";
+          a.click();
+          URL.revokeObjectURL(a.href);
+          setStatus($("status-a-confirmer"), "CSV téléchargé (lecture seule).");
+        } catch (e) {
+          setStatus($("status-a-confirmer"), e.message, true);
+        }
+      };
+    }
+    if ($("btn-prop-statut")) $("btn-prop-statut").onclick = () => actionProposition("acceptee", "statut_seul");
+    if ($("btn-prop-patch")) $("btn-prop-patch").onclick = () => actionProposition("acceptee", "preparer_patch");
+    if ($("btn-prop-appliquer")) $("btn-prop-appliquer").onclick = () => actionProposition("acceptee", "appliquer");
+    if ($("btn-prop-corriger")) $("btn-prop-corriger").onclick = () => actionProposition("corrigee");
+    if ($("btn-prop-rejeter")) $("btn-prop-rejeter").onclick = () => actionProposition("rejetee");
+    if ($("btn-prop-dl-patch")) {
+      $("btn-prop-dl-patch").onclick = () => telechargerPatch(dernierPatch);
+    }
+    if ($("filtre-ac-priorite")) $("filtre-ac-priorite").onchange = () => rendreAConfirmer();
+    if ($("filtre-ac-categorie")) $("filtre-ac-categorie").onchange = () => rendreAConfirmer();
+    if ($("filtre-ac-statut")) $("filtre-ac-statut").onchange = () => rendreAConfirmer();
+    if ($("filtre-ac-regle")) $("filtre-ac-regle").oninput = () => rendreAConfirmer();
+    if ($("filtre-ac-vue")) {
+      $("filtre-ac-vue").onchange = () => {
+        synchroniserBandeauSeance();
+        rendreAConfirmer();
+      };
+    }
+    document.querySelectorAll(".seance-etape").forEach((btn) => {
+      btn.onclick = () => appliquerVueSeance(btn.dataset.vue || "");
+    });
+
+    if ($("btn-ac-en-revue")) {
+      $("btn-ac-en-revue").onclick = async () => {
+        if (!selectionAcId) return;
+        setStatus($("status-ac-detail"), "Enregistrement…");
+        try {
+          await api("/api/v1/editorial/a-confirmer/en-revue", {
+            method: "POST",
+            body: JSON.stringify({
+              entree_id: selectionAcId,
+              note_editeur: ($("ac-note-input").value || "").trim() || null,
+            }),
+          });
+          setStatus($("status-ac-detail"), "Marqué en revue (YAML inchangé).");
+          await listerAConfirmer();
+        } catch (e) {
+          setStatus($("status-ac-detail"), e.message, true);
+        }
+      };
+    }
+    if ($("btn-ac-attente")) {
+      $("btn-ac-attente").onclick = async () => {
+        if (!selectionAcId) return;
+        setStatus($("status-ac-detail"), "Enregistrement…");
+        try {
+          await api("/api/v1/editorial/a-confirmer/remettre-attente", {
+            method: "POST",
+            body: JSON.stringify({ entree_id: selectionAcId }),
+          });
+          setStatus($("status-ac-detail"), "Remis en attente.");
+          await listerAConfirmer();
+        } catch (e) {
+          setStatus($("status-ac-detail"), e.message, true);
+        }
+      };
+    }
+
+    $("btn-brouillon").onclick = async () => {
+      try {
+        const data = await api("/api/v1/editorial/versions", {
+          method: "POST",
+          body: JSON.stringify({ libelle: $("libelle").value, note: $("note").value || null }),
+        });
+        $("version-id").value = data.id;
+        setStatus($("status"), "Brouillon créé — id " + data.id);
+        await lister();
+      } catch (e) { setStatus($("status"), e.message, true); }
+    };
+    $("btn-publier").onclick = async () => {
+      const libelle = $("libelle").value.trim();
+      const par = $("par").value.trim();
+      if (!libelle) {
+        setStatus($("status"), "Libellé requis pour publier.", true);
+        return;
+      }
+      const ok = confirm(
+        "Publier la version « " + libelle + " » ?\n\n"
+        + "Les nouvelles missions pourront l’utiliser.\n"
+        + "Les missions déjà ouvertes restent épinglées sur leur version de démarrage.\n\n"
+        + "Publiée par : " + (par || "(non renseigné)")
+      );
+      if (!ok) return;
+      try {
+        const data = await api("/api/v1/editorial/versions/publier", {
+          method: "POST",
+          body: JSON.stringify({ libelle: libelle, par: par }),
+        });
+        setStatus($("status"), "Publié — id " + data.id + ". Missions en cours restent épinglées.");
+        await lister();
+      } catch (e) { setStatus($("status"), e.message, true); }
+    };
+    $("btn-charger").onclick = async () => {
+      try {
+        const data = await api("/api/v1/editorial/regles/charger", {
+          method: "POST",
+          body: JSON.stringify({ version_id: Number($("version-id").value), fichier: $("fichier").value }),
+        });
+        setStatus($("status"), "Règle chargée — regle_version_id=" + data.regle_version_id);
+      } catch (e) { setStatus($("status"), e.message, true); }
+    };
+
+    if (jeton) {
+      showApp(true);
+      setWhoFromJeton("Session restaurée");
+      showView("versions");
+      if (window.RfInfoTip) RfInfoTip.hydrate(document);
+      boot().catch(() => {
+        jeton = "";
+        localStorage.removeItem(CLE);
+        showApp(false);
+      });
+    } else if (window.RfInfoTip) {
+      RfInfoTip.hydrate(document);
+    }
+
+    /* Mode démo : ENV=dev via /sante, sinon localhost uniquement — jamais en prod. */
+    const DEMO_ACCOUNTS = {
+      editorial: { email: "editorial@2aaz.ci", mdp: "EditorialDemo2026!" },
+      ops: { email: "ops@2aaz.ci", mdp: "OpsDemo2026!" },
+    };
+
+    function isLocalHost() {
+      const h = location.hostname;
+      return h === "localhost" || h === "127.0.0.1" || h === "[::1]";
+    }
+
+    async function detectDemoMode() {
+      /* Jamais hors localhost — credentials démo ne doivent pas fuiter en prod. */
+      if (!isLocalHost()) return false;
+      try {
+        const r = await fetch("/sante");
+        if (r.ok) {
+          const data = await r.json();
+          if (data && data.env === "dev") return true;
+          if (data && data.env && data.env !== "dev") return false;
+        }
+      } catch { /* API indisponible */ }
+      return true; /* localhost sans /sante = mode démo local */
+    }
+
+    function fillDemo(key) {
+      const acc = DEMO_ACCOUNTS[key];
+      if (!acc) return;
+      $("email").value = acc.email;
+      $("mdp").value = acc.mdp;
+      $("email").focus();
+    }
+
+    function submitDemo(key) {
+      fillDemo(key);
+      $("form-login").requestSubmit();
+    }
+
+    detectDemoMode().then((demo) => {
+      const box = $("demo-access");
+      if (!demo || !box) return;
+      box.hidden = false;
+      box.classList.remove("hidden");
+      box.querySelectorAll("[data-demo]").forEach((btn) => {
+        btn.addEventListener("click", () => fillDemo(btn.dataset.demo));
+        btn.addEventListener("dblclick", (e) => {
+          e.preventDefault();
+          submitDemo(btn.dataset.demo);
+        });
+      });
+      box.querySelectorAll("[data-demo-submit]").forEach((btn) => {
+        btn.addEventListener("click", () => submitDemo(btn.dataset.demoSubmit));
+      });
+    });
+  </script>
+</body>
+</html>

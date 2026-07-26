@@ -1,0 +1,524 @@
+<!DOCTYPE HTML><HTML><HEAD><META HTTP-EQUIV="Content-Type" CONTENT="text/html; charset=UTF-8">
+<TITLE>Code des impots -146</TITLE><LINK REL="STYLESHEET" HREF="/cicgi.css" CHARSET="ISO-8859-1" TYPE="text/css">
+<style type="text/css">
+body {margin-left: 5px;	margin-top: 0px; margin-right: .5em;margin-bottom: 0px;background-color:#fafafa ;}
+.Liste-Numerote {font-size: 12pt;font-weight: regular;font-style: italic;color: #000000;text-transform: none;margin-left:8px ;margin-bottom:8px ;margin-top:4px ;margin-right:10px ;font-family:Georgia, "Times New Roman", Times, serif}
+li {list-style-type: none; margin-left:0px ; padding-left:0em ; }
+.Paratext {font-size: 12pt;font-weight: regular;font-style: italic;color: #000000;text-decoration: none;vertical-align: baseline;text-transform: none;margin-left:0px ;font-family:Georgia, "Times New Roman", Times, serif}
+.Normal {font-size: 12pt;font-weight: regular;font-style: italic;color: #000000;text-decoration: none;vertical-align: baseline;text-transform: none;margin-left:0px ;font-family:Georgia, "Times New Roman", Times, serif}
+ul {list-style-type: none; margin-left:0px ; padding-left:0em ;  }
+.Liste2-Enumeree {font-size: 12pt;font-weight: regular;font-style: italic;color: #000000;text-decoration: none;vertical-align: baseline;text-transform: none;list-style-type:none ;margin-left:16px ;margin-bottom:8px;margin-right:10px;font-family:Georgia, "Times New Roman", Times, serif}
+P.Liste2-Enumeree {font-size: 12pt;font-weight: regular;font-style: italic;color: #000000;text-decoration: none;vertical-align: baseline;text-transform: none;list-style-type:none ;margin-left:16px ;margin-bottom:8px;margin-right:10px;font-family:Georgia, "Times New Roman", Times, serif}
+.Entete {font-size: 13pt;font-weight: regular;font-style: italic;color:#000000 ;text-decoration: none;vertical-align: baseline;text-transform: none;margin-left:8px ;font-family:Georgia, "Times New Roman", Times, serif}
+table, TABLE {border-width:1px; width:99% ;border-collapse:collapse;border-color: #9ecaed;box-shadow: 0 0 10px #9ecaed;}
+tr,td {text-align:left;vertical-align:bottom;border:1px solid #9ecaed;padding:.2em;marging-left:.2em}
+th, TH{text-align:center;vertical-align:middle;padding:.2em;}
+P.TableauEntete {font-size: 13pt;font-weight: regular;font-style: italic;color: #000000;font-family:Georgia, "Times New Roman"}
+P.TableauCelluleLeft, P.TableauCellule {text-align:right;margin-right:1em;font-size: 13pt;font-weight: regular;font-style: italic;color: #000000;font-family:Georgia, "Times New Roman"}
+P.TableauCelluleRight {text-align:left;margin-left:1em;font-size: 13pt;font-weight: regular;font-style: italic;color: #000000;font-family:Georgia, "Times New Roman"}
+.ui-buttonh {padding: .1em .1em ; border: 1px solid #dadada;border-radius: 4px; box-shadow: 0 0 4px #9ecaed;color:#FF3300 ;margin-left:8px ;margin-right:8px ;margin-bottom:2px ;margin-top:2px ;text-decoration:none ;font-size:12pt ;font-family:"Times New Roman"}   
+.ui-button {padding: .1em .1em ; border: 1px solid #dadada;border-radius: 4px; box-shadow: 0 0 4px #9ecaed;color:#FF3300 ;margin-left:8px ;margin-right:8px ;margin-bottom:2px ;margin-top:2px ;text-decoration:none ;font-size:12pt ;font-family:"Times New Roman"}   
+H3 {display: block;text-align: center;text-indent: 0pt;margin-top: 10pt;margin-bottom: 10pt;margin-right: 10pt;margin-left: 10pt;font-size: 12pt;font-weight: Bold;font-style: Regular;color: #00A000;text-decoration: none;vertical-align: baseline;text-transform: none;font-family: "Times New Roman";}
+H4 {display: block;text-align: left;text-indent: 0pt;margin-top: 10pt;margin-bottom: 6pt;margin-right: 10pt;margin-left: 10pt;font-size: 12pt;font-weight: Bold;font-style: Regular;color: #000000;text-decoration: none;vertical-align: baseline;text-transform: none;font-family: "Times New Roman";}
+H5 {display: block;text-align: left;text-indent: 0pt;margin-top: 10pt;margin-bottom: 6pt;margin-right: 10pt;margin-left: 10pt;font-size: 11pt;font-weight: Bold;font-style: Regular;color: #000000;text-decoration: none;vertical-align: baseline;text-transform: none;font-family: "Times New Roman";}
+H6.NoArticle {display: block;text-align: left;text-indent: 0pt;margin-top: 14pt;margin-bottom: 0pt;margin-right: 0pt;margin-left: 0pt;font-size: 14pt;font-weight: regular;font-style: Regular;color: #00a000;text-decoration: none;vertical-align: baseline;text-transform: none;font-family: "Times New Roman";}
+H2 {text-align:center;font-size:16pt;font-family:Georgia, "Times New Roman", Times, serif}
+P.ParaText {font-size: 12pt;font-weight: regular;font-style: italic;color: #000000;	text-decoration: none;vertical-align: baseline;text-transform: none;font-family:Georgia, "Times New Roman", Times, serif;}
+H2.Section,P.Section {font-size:12pt;font-weight:bold;font-style:Regular;color:#008000;font-family:Georgia,"Times New Roman"}
+P.Paragraphe, p.Paragraphe {Text-Align:center;Text-decoration:none;font-size:12pt;font-weight:bold;font-style:Normal;color:#00A000;font-family:Georgia,"Times New Roman"}
+H2.Livre,P.Livre {text-align:center;font-size:16pt;font-weight:bold;font-style:Regular;color:#008000;font-family:Georgia,"Times New Roman"}
+P.Partie,H2.Partie,P.TitreSub {text-align:center;font-size:14pt;font-weight:bold;font-style:Regular;color:#008000;font-family:Georgia,"Times New Roman"}
+H2.ChapitreNo,H2.TitreNo {text-align:center;font-size:14pt;font-weight:bold;font-style:Regular;color:#008000;font-family:Georgia,"Times New Roman"}
+H2.Chapitre, h2.Chapitre {text-align:center;font-size:14pt;font-weight:bold;font-style:Regular;color:#008000;font-family:Georgia,"Times New Roman"}
+H2.TitreNo {text-align:center;font-size:14pt;font-weight:bold;font-style:Regular;color:#008000;font-family:Georgia,"Times New Roman"}
+h3.Sous-Section, H3.Sous-Section, h3.Sous-section, h2.Section {font-size:12pt;font-weight:bold;font-style:Italic;color:#008000;font-family:Georgia,"Times New Roman"}
+hr,HR { display: block; width:90%;  margin-top: 0.5em; margin-bottom: 0.5em; margin-left: auto;  margin-right: auto;  border-style: inset; border-width: 1px;}
+P.TitreSub {text-align:center;font-size:14pt;font-weight:bold;font-style:Regular;color:#008000;font-family:Georgia,"Times New Roman"}
+.Reference {display: block;text-align: left;text-indent: 0pt;margin-top: 10pt;margin-bottom: 6pt;margin-right: 10pt;margin-left: 10pt;font-size: 14pt;font-weight: Bold;font-style: Regular;color: #7F5434;text-decoration: none;vertical-align: baseline;text-transform: none;font-family: "Times New Roman";}
+.ludwig,blockquote {padding-left:1em;background-color:#fafafa;font-size:12pt;font-weight:100;font-style:italic;}
+#articleList {position:absolute ;	z-index: 1 ;left: 10px ;top: 80px ;height:340px;width: 620px;border: 2px solid #cacaca ;border-radius: 5px ;background-color:#fafafa ;    box-shadow: 0 0 12px #333333;	margin-left:0px ;	padding: .3em .3em ;		overflow:hidden ;	visibility:hidden ;  }			
+#articleList h3 { text-align: center; margin: 0; }		
+
+.historique {
+  display:none ;
+  padding: .1em .3em ;
+  border: solid 2px #dadada;
+  border-radius: 7px;
+  box-shadow: 0 0 5px #9ecaed;  
+  
+}
+.histText {
+    display: block;
+    font-family: ;"Times New Roman"
+	padding: .1em .3em ;
+    margin: 1em 0px;
+	font-style:italic;
+	color:#000000;
+	overflow:auto;
+}
+.highlight {
+  font-weight:bold ;
+  color:#000000 ;
+  background-color:#FFFFCC ;
+  }
+.articleList-scroll {
+	overflow-x:hidden ;
+	overflow-y:scroll ;
+	scrollbar-width:thin ;
+	scrollbar-color:blue orange ;
+}
+
+#contenu {
+	overflow-x:hidden ;
+    overflow-y:scroll ;
+	scrollbar-width:thin ;
+	scrollbar-color:blue orange ;
+}		
+
+table, TABLE {
+ text-align:center; 
+    margin-left:.5em; 
+    margin-right:.5em; 
+    border:1px solid #000000;	
+	border-collapse:collapse ;
+    border-color: #9ecaed;
+    box-shadow: 0 0 10px #9ecaed;
+	
+   }
+  tr,td {text-align:left;}
+  
+
+
+ </style>
+ 
+<script src="/js/iscroll.js"></script>
+<script src="/js/jquery.js"></script>   
+<script src="/js/jquery-ui-1.10.3.custom.js"></script>    	    
+<script src="/js/jquery.ui.draggable.js" type="text/javascript"></script>			
+<script src="/js/jquery.ui.core.js"></script> 			
+<script src="/js/jquery.ui.widget.js"></script>			
+<script src="/js/jquery.ui.position.js"></script>			
+<script src="/js/jquery.ui.menu.js"></script>    		
+<script type="text/javascript" src="./xpages.js"></script>
+/* VERSION POUR PAGE HTML SUR SITE DGI.CGICI.COM */
+<script language="javascript">
+ function showButton(id) {
+    var x = document.getElementById(id) ;
+	if(x.style.display === "none") {
+	   x.style.display = "block" ;
+	  } else {
+	   x.style.display = "none" ;
+	   }
+	 }   
+	 var pagenumber="146";
+function loadpage(page, art) {
+      showHideHistoric(art);
+	  return false;
+	  } 
+function loadArticle(page, art) { var artno = art ;var pgno=page;scrolltoelementTag(pgno,artno) ;return false ;} 
+
+</script>
+</HEAD>
+<BODY><div ID="wrapper"><div ID="scroller">
+
+
+
+<H2 CLASS="Section">
+Section VI - Obligations sp&eacute;ciales relatives au d&eacute;c&egrave;s</H2>
+
+<H3 CLASS="Sous-section">
+I - Obligations sp&eacute;ciales concernant les mutations par d&eacute;c&egrave;s</H3>
+<span id="#A0493"></span>
+<H6 CLASS="NoArticle">
+Art. 493</H6>
+<P CLASS="ParaText">
+Les h&eacute;ritiers, l&eacute;gataires ou donataires, leurs tuteurs ou curateurs seront tenus de souscrire une d&eacute;claration d&eacute;taill&eacute;e et de la signer sur une formule imprim&eacute;e fournie par l&apos;Administration.</P>
+<P CLASS="ParaText">
+Toutefois, en ce qui concerne les immeubles situ&eacute;s dans la circonscription de service du Domaine et de l&apos;Enregistrement autre que celui o&ugrave; est pass&eacute;e la d&eacute;claration, le d&eacute;tail sera pr&eacute;sent&eacute; non dans cette d&eacute;claration, mais distinctement pour chaque service du Domaine et de l&apos;Enregistrement de la situation des biens, sur une formule fournie par l&apos;Administration et sign&eacute;e par le d&eacute;clarant.</P>
+
+<H6 CLASS="Modification">
+Ord. n<b>&deg;-</b> 2009-382 du 26 novembre 2009Art. 23-10.</H6>
+
+
+<span id="#A0494"></span>
+<H6 CLASS="NoArticle">
+Art. 494</H6>
+<P CLASS="ParaText">
+La d&eacute;claration pr&eacute;vue &agrave; l&apos;article pr&eacute;c&eacute;dent doit mentionner les noms, pr&eacute;noms, date et lieu de naissance :</P>
+<P CLASS="Liste2-Enumeree">
+1-De chacun des h&eacute;ritiers, l&eacute;gataires ou donataires.</P>
+<P CLASS="Liste2-Enumeree">
+2-De chacun des enfants des h&eacute;ritiers, donataires ou l&eacute;gataires vivant au moment de l&apos;ouverture des droits de ces derniers &agrave; la succession.</P>
+<P CLASS="Liste2-Enumeree">
+Si la naissance est arriv&eacute;e hors de C&ocirc;te d&apos;Ivoire, il est, en outre, justifi&eacute; de cette date avant l&apos;enregistrement de la d&eacute;claration; &agrave; d&eacute;faut de quoi, il sera per&ccedil;u les droits les plus &eacute;lev&eacute;s qui pourraient &ecirc;tre dus au Tr&eacute;sor, sauf restitution du trop per&ccedil;u s&apos;il y a lieu.</P>
+<P CLASS="Liste2-Enumeree">
+Les dispositions de l&apos;article <a class='ui-button' href='' onClick="scrolltoelementTag('785');return false;">785</a> sont applicables &agrave; toute indication inexacte dans les mentions pr&eacute;vues au pr&eacute;sent article.</P>
+
+<span id="#A0495"></span>
+<H6 CLASS="NoArticle">
+Art. 495</H6>
+<P CLASS="ParaText">
+Les agents du service de l&apos;Enregistrement peuvent demander aux h&eacute;ritiers et aux autres ayants droit des &eacute;claircissements, ainsi que toutes justifications au sujet des titres et valeurs mobili&egrave;res non &eacute;nonc&eacute;s dans la d&eacute;claration et rentrant dans les pr&eacute;visions de l&apos;article <a class='ui-button' href='' onClick="scrolltoelementTag('689');return false;">689</a>.</P>
+<P CLASS="ParaText">
+Lorsque la demande de justification aura &eacute;t&eacute; formul&eacute;e par lettre recommand&eacute;e avec accus&eacute; de r&eacute;ception, il devra y &ecirc;tre satisfait dans le d&eacute;lai fix&eacute; par le service de l&apos;Enregistrement et qui ne pourra &ecirc;tre inf&eacute;rieur &agrave; trente jours.</P>
+<P CLASS="ParaText">
+A d&eacute;faut de r&eacute;ponse dans le d&eacute;lai assign&eacute; ou si la r&eacute;ponse constitue un refus de r&eacute;pondre, la preuve contraire r&eacute;serv&eacute;e par l&apos;article <a class='ui-button' href='' onClick="scrolltoelementTag('689');return false;">689</a> ne sera plus recevable, sous r&eacute;serve des restitutions qui appara&icirc;traient ult&eacute;rieurement justifi&eacute;es.</P>
+
+
+
+<H3 CLASS="Sous-section">
+II - Obligations des d&eacute;positaires ou d&eacute;biteurs de sommes dues en raison du d&eacute;c&egrave;s</H3>
+<span id="#A0496"></span>
+<H6 CLASS="NoArticle">
+Art. 496 &nbsp;&nbsp;&nbsp;&nbsp; <a href="#" onClick="loadpage('142','h23496');return false;" class="ui-button"  title="Consultez l'historique">2023...</a></H6>
+<P CLASS="ParaText">
+1<b>&deg;-</b>Les Administrations publiques, les &eacute;tablissements ou organismes quelconques soumis au contr&ocirc;le de l&apos;autorit&eacute; administrative, les soci&eacute;t&eacute;s ou compagnies, banquiers, escompteurs, officiers publics ou minist&eacute;riels ou agents d&apos;affaires, qui seraient d&eacute;positaires, d&eacute;tenteurs ou d&eacute;biteurs de titres, sommes ou valeurs d&eacute;pendant d&apos;une succession qu&apos;ils sauraient ouverte, doivent adresser soit avant le paiement, la remise ou le transfert, soit dans la quinzaine qui suit ces op&eacute;rations, au chef du service du Domaine et de l&apos;Enregistrement de leur r&eacute;sidence, la liste de ces titres, sommes ou valeurs.</P>
+
+<H6 CLASS="Modification">
+Ord. n<b>&deg;-</b> 2009-382 du 26 novembre 2009Art. 23-2.</H6>
+<P CLASS="ParaText">
+Il en est donn&eacute; r&eacute;c&eacute;piss&eacute;.</P>
+<P CLASS="ParaText">
+2<b>&deg;-</b>Les soci&eacute;t&eacute;s, compagnies, caisses ou organismes d&apos;assurances &eacute;trangers, ainsi que leurs &eacute;tablissements, agences, succursales, directions r&eacute;gionales ou locales en C&ocirc;te d&apos;Ivoire, ne peuvent se lib&eacute;rer des sommes, rentes ou &eacute;moluments quelconques dus par eux &agrave; raison ou &agrave; l&apos;occasion du d&eacute;c&egrave;s de l&apos;assur&eacute; &agrave; tout b&eacute;n&eacute;ficiaire domicili&eacute; en C&ocirc;te d&apos;Ivoire ou hors de C&ocirc;te d&apos;Ivoire, si ce n&apos;est sur la pr&eacute;sentation d&apos;un certificat d&eacute;livr&eacute; sans frais par le chef du service du Domaine et de l&apos;Enregistrement, constatant l&apos;acquittement du droit de mutation par d&eacute;c&egrave;s.</P>
+
+
+<H6 CLASS="Modification">
+Ord. n<b>&deg;-</b> 2009-382 du 26 novembre 2009Art. 23-2.</H6>
+<P CLASS="Liste2-Enumeree">
+Ils peuvent toutefois, sur la demande &eacute;crite des b&eacute;n&eacute;ficiaires &eacute;tablie sur papier non timbr&eacute;, verser tout ou partie des sommes dues par eux en l&apos;acquit des droits de mutation par d&eacute;c&egrave;s, &agrave; l&apos;inspecteur comp&eacute;tent pour recevoir la d&eacute;claration de succession.</P>
+<P CLASS="Liste2-Enumeree">
+Les dispositions du pr&eacute;sent paragraphe ne sont pas applicables lorsque les sommes, rentes ou &eacute;moluments quelconques dus &agrave; raison ou &agrave; l&apos;occasion du d&eacute;c&egrave;s de l&apos;assur&eacute; n&apos;exc&egrave;dent pas 50 000 francs et reviennent au conjoint survivant ou &agrave; des successibles en ligne directe n&apos;ayant pas hors de C&ocirc;te d&apos;Ivoire un domicile de fait ou de droit.</P>
+<P CLASS="Liste2-Enumeree">
+3<b>&deg;-</b>Quiconque a contrevenu aux dispositions du pr&eacute;sent article est personnellement tenu des droits et p&eacute;nalit&eacute;s exigibles, sauf recours contre le redevable, et passible, en outre, d&apos;une amende de <FONT COLOR='#000000'>25 000 </FONT> francs.</P>
+
+
+<H6 CLASS="Modification">
+Loi n<b>&deg;-</b> 83-1421 du 30 d&eacute;c, 1983, an. fiscale,Art. 43; loi n° 2023-1000 du 18  déc. 2023, an. fiscale, art. 2-1.</H6>
+
+
+<span id="#A0497"></span>
+<H6 CLASS="NoArticle">
+Art. 497 &nbsp;&nbsp;&nbsp;&nbsp; <a href="#" onClick="loadpage('142','h23497');return false;" class="ui-button"  title="Consultez l'historique">2023...</a></H6>
+<P CLASS="ParaText">
+Les prescriptions des deux premiers alin&eacute;as de l&apos;article <a class='ui-button' href='' onClick="scrolltoelementTag('496');return false;">496</a>-2<b>&deg;-</b> sont applicables aux Administrations publiques, aux &eacute;tablissements, organismes, soci&eacute;t&eacute;s, compa-gnies ou personnes d&eacute;sign&eacute;es au paragraphe 1 du m&ecirc;me article qui seraient d&eacute;positaires, d&eacute;tentrices ou d&eacute;bitrices de titres, sommes ou valeurs d&eacute;pendant d&apos;une succession qu&apos;elles sauraient ouverte et d&eacute;volue &agrave; un ou plusieurs h&eacute;ritiers, l&eacute;gataires ou donataires, ayant hors de C&ocirc;te d&apos;Ivoire leur domicile de fait ou de droit.</P>
+<P CLASS="ParaText">
+Quiconque a contrevenu aux dispositions du pr&eacute;sent article est personnellement tenu des droits et p&eacute;nalit&eacute;s exigibles, sauf recours contre le redevable, et passible, en outre, d&apos;une amende de <FONT COLOR='#000000'>25 000 </FONT> francs.</P>
+
+<H6 CLASS="Modification">
+Loi n<b>&deg;-</b> 2004-271 du 15 avril 2004, an. fiscale,Art. 28-3; loi n° 2023-1000 du 18  déc. 2023, an. fiscale, art. 2-1.</H6>
+
+
+<span id="#A0498"></span>
+<H6 CLASS="NoArticle">
+Art. 498 &nbsp;&nbsp;&nbsp;&nbsp; <a href="#" onClick="loadpage('142','h23498');return false;" class="ui-button"  title="Consultez l'historique">2023...</a></H6>
+<P CLASS="ParaText">
+Les d&eacute;positaires d&eacute;sign&eacute;s &agrave; l&apos;article <a class='ui-button' href='' onClick="scrolltoelementTag('496');return false;">496</a>-1<b>&deg;-</b> doivent, dans les trois mois au plus tard de l&apos;ouverture d&apos;un compte indivis ou collectif avec solidarit&eacute;, faire conna&icirc;tre au chef du service du Domaine et de l&apos;Enregistrement de leur r&eacute;sidence les nom, pr&eacute;noms et domicile de chacun des d&eacute;posants, ainsi que la date de l&apos;ouverture du compte, sous peine d&apos;une amende de <FONT COLOR='#000000'>25 000 </FONT> francs.</P>
+
+<H6 CLASS="Modification">
+Loi n<b>&deg;-</b> 83-1421 du 30 d&eacute;c. 1983, an. fiscale, art 43; Ord. n<b>&deg;-</b> 2009-382 du 26 novembre 2009, Art. 23-2; loi n° 2023-1000 du 18  déc. 2023, an. fiscale, art. 2-1.</H6>
+<P CLASS="ParaText">
+Ils doivent de plus, dans la quinzaine de la notification qui leur est faite par le service de l&apos;Enregistrement du d&eacute;c&egrave;s de l&apos;un des d&eacute;posants et sous la sanction &eacute;dict&eacute;e &agrave; l&apos;article <a class='ui-button' href='' onClick="scrolltoelementTag('496');return false;">496</a>-3<b>&deg;-</b>, adresser au chef du service du Domaine et de l&apos;Enregistrement de leur r&eacute;sidence la liste des titres, sommes ou valeurs existant au jour du d&eacute;c&egrave;s au cr&eacute;dit des cotitulaires du compte.</P>
+
+
+<H6 CLASS="Modification">
+Ord. n<b>&deg;-</b> 2009-382 du 26 novembre 2009Art. 23-2.</H6>
+
+
+<span id="#A0499"></span>
+<H6 CLASS="NoArticle">
+Art. 499</H6>
+<P CLASS="ParaText">
+Toute personne ou soci&eacute;t&eacute; qui se livre habituellement &agrave; la location de coffres-forts ou de compartiments de coffres-forts doit :</P>
+<P CLASS="Liste2-Enumeree">
+1-En faire la d&eacute;claration au service de l&apos;Enregistrement de sa r&eacute;sidence et, s&apos;il y a lieu, &agrave; celui de chacune de ses succursales ou agences louant des coffres-forts.</P>
+<P CLASS="Liste2-Enumeree">
+2-Tenir un r&eacute;pertoire alphab&eacute;tique non sujet au timbre pr&eacute;sentant, avec mention des pi&egrave;ces justificatives produites, les nom, pr&eacute;noms, profession, domicile et r&eacute;sidence r&eacute;els de tous les occupants de coffres-forts et le num&eacute;ro du coffre-fort lou&eacute;.</P>
+<P CLASS="Liste2-Enumeree">
+Ce r&eacute;pertoire est tenu sur fiches; les dates et heures d&apos;ouverture des coffres-forts sont mentionn&eacute;es sur la fiche de chaque locataire dans l&apos;ordre chronologique.</P>
+<P CLASS="Liste2-Enumeree">
+3-Inscrire sur registre ou carnet &eacute;tabli sur papier non timbr&eacute;, avec indication de la date et de l&apos;heure auxquelles elle se pr&eacute;sente, les nom, adresse et qualit&eacute; de toute personne qui veut proc&eacute;der &agrave; l&apos;ouverture d&apos;un coffre-fort et exiger que cette personne appose sa signature sur ledit registre ou carnet apr&egrave;s avoir certifi&eacute;, sous les sanctions pr&eacute;vues par l&apos;article <a class='ui-button' href='' onClick="scrolltoelementTag('786');return false;">786</a> alin&eacute;a 3 en cas d&apos;affirmation inexact :</P>
+<P CLASS="Liste2-Enumeree">
+a)Si elle est personnellement locataire du coffre-fort, qu&apos;elle n&apos;a connaissance d&apos;aucun d&eacute;c&egrave;s rendant applicables les dispositions de l&apos;article <a class='ui-button' href='' onClick="scrolltoelementTag('786');return false;">786</a> (d&eacute;c&egrave;s de son propre conjoint non s&eacute;par&eacute; de corps, et, dans le cas o&ugrave; la location n&apos;est pas exclusive, d&apos;un de ses colocataires ou du conjoint non s&eacute;par&eacute; de corps de l&apos;un de ses colocataires).</P>
+<P CLASS="Liste2-Enumeree">
+b)Si elle n&apos;est pas personnellement locataire du coffre-fort, qu&apos;elle n&apos;a pas connaissance du d&eacute;c&egrave;s soit du locataire ou de l&apos;un des colocataires, soit du conjoint non s&eacute;par&eacute; de corps du locataire ou de l&apos;un de ses colocataires.</P>
+<P CLASS="Liste2-Enumeree">
+4-Repr&eacute;senter et communiquer lesdits r&eacute;pertoires registres ou carnets &agrave; toutes demandes des agents du service de l&apos;Enregistrement.</P>
+
+<span id="#A0500"></span>
+<H6 CLASS="NoArticle">
+Art. 500</H6>
+<P CLASS="ParaText">
+Aucun coffre-fort ou compartiment de coffre-fort tenu en location ne peut &ecirc;tre ouvert par qui que ce soit apr&egrave;s le d&eacute;c&egrave;s soit du locataire ou de l&apos;un des locataires, soit de son conjoint, s&apos;il n&apos;y a pas entre eux s&eacute;paration de corps, qu&apos;en pr&eacute;sence d&apos;un notaire ou greffier-notaire requis &agrave; cet effet par tous les ayants droit &agrave; la succession ou du notaire ou greffier-notaire d&eacute;sign&eacute; par le pr&eacute;sident du tribunal civil &agrave; comp&eacute;tence &eacute;tendue, en cas de d&eacute;saccord, et sur demande de l&apos;un des ayants droit.</P>
+<P CLASS="ParaText">
+Avis des lieu, jour et heure de l&apos;ouverture est donn&eacute; par le notaire quinze jours francs &agrave; l&apos;avance par lettre recommand&eacute;e ou t&eacute;l&eacute;gramme adress&eacute; au chef du service du Domaine et de l&apos;Enregistrement dont d&eacute;pend le lieu de situation du coffre ou du compartiment de coffre qui d&eacute;signe pour assister &agrave; l&apos;ouverture soit un agent de l&apos;Enregistrement ayant au moins le grade d&apos;inspecteur si le coffre ou compartiment de coffre est situ&eacute; &agrave; la r&eacute;sidence de cet agent, soit le pr&eacute;fet ou le sous-pr&eacute;fet dans le cas contraire.</P>
+
+<H6 CLASS="Modification">
+Ord. n<b>&deg;-</b> 2009-382 du 26 novembre 2009Art. 23-2.</H6>
+<P CLASS="ParaText">
+Le proc&egrave;s-verbal constate l&apos;ouverture du coffre-fort et contient l&apos;&eacute;num&eacute;ration compl&egrave;te et d&eacute;taill&eacute;e de tous les titres, sommes ou objets quelconques qui y sont contenus.</P>
+<P CLASS="ParaText">
+S&apos;il est trouv&eacute; des testaments ou autres papiers cachet&eacute;s ou s&apos;il s&apos;&eacute;l&egrave;ve des difficult&eacute;s au cours de l&apos;op&eacute;ration, le notaire ou greffier-notaire appose des scell&eacute;s conform&eacute;ment aux dispositions l&eacute;gales et r&eacute;glementaires.</P>
+<P CLASS="ParaText">
+Les proc&egrave;s-verbaux sont exempts de timbre et enregistr&eacute;s gratis mais il ne peut pas en &ecirc;tre d&eacute;livr&eacute; exp&eacute;dition ou copie et il ne peut pas en &ecirc;tre fait usage en justice, par acte public ou par devant toute autorit&eacute; constitu&eacute;e sans que les droits de timbre et d&apos;enregistrement aient &eacute;t&eacute; acquitt&eacute;s.</P>
+<P CLASS="ParaText">
+Ces proc&egrave;s-verbaux sont re&ccedil;us en brevet toutes les fois qu&apos;ils sont dress&eacute;s par un notaire ou greffier-notaire autre que celui choisi ou d&eacute;sign&eacute; pour r&eacute;gler la succession.</P>
+
+
+<span id="#A0501"></span>
+<H6 CLASS="NoArticle">
+Art. 501</H6>
+<P CLASS="ParaText">
+Les dispositions contenues dans les articles <a class='ui-button' href='' onClick="scrolltoelementTag('497');return false;">497</a> et <a class='ui-button' href='' onClick="scrolltoelementTag('786');return false;">786</a> sont applicables aux plis cachet&eacute;s et caissettes ferm&eacute;es, remis en d&eacute;p&ocirc;t aux banquiers, changeurs, escompteurs, et &agrave; toutes personnes recevant habituellement les plis de m&ecirc;me nature.</P>
+<P CLASS="ParaText">
+Lesdites personnes sont soumises aux obligations &eacute;dict&eacute;es &agrave; l&apos;article <a class='ui-button' href='' onClick="scrolltoelementTag('496');return false;">496</a>.</P>
+<P CLASS="ParaText">
+Les plis et caissettes sont remis et pour contenu inventori&eacute; dans les formes et conditions pr&eacute;vues pour les coffres-forts.</P>
+
+<span id="#A0502"></span>
+<H6 CLASS="NoArticle">
+Art. 502</H6>
+<P CLASS="ParaText">
+Les personnes et soci&eacute;t&eacute;s vis&eacute;es aux articles <a class='ui-button' href='' onClick="scrolltoelementTag('496');return false;">496</a>-1<b>&deg;-</b>, <a class='ui-button' href='' onClick="scrolltoelementTag('499');return false;">499</a> et 501 1er alin&eacute;a sont tenues d&apos;adresser au chef du service du Domaine et de l&apos;Enregistrement de leur r&eacute;sidence :</P>
+
+<H6 CLASS="Modification">
+Ord. n<b>&deg;-</b> 2009-382 du 26 novembre 2009Art. 23-2.</H6>
+<P CLASS="Liste2-Enumeree">
+1-Avis de toute location de coffre-fort qui ne fait pas suite &agrave; une location ant&eacute;rieure pour laquelle un avis a d&eacute;j&agrave; &eacute;t&eacute; fourni.</P>
+<P CLASS="Liste2-Enumeree">
+2-Avis de cessation de toute location &agrave; laquelle une location nouvelle ne fait pas imm&eacute;diatement suite.</P>
+<P CLASS="Liste2-Enumeree">
+Les avis sont &eacute;tablis sur des formules imprim&eacute;es, d&eacute;livr&eacute;es sans frais par l&apos;Administration; ils indiquent les nom et pr&eacute;noms des locataires, la date et le lieu de leur naissance, leur domicile, les nom et pr&eacute;noms de leur conjoint, s&apos;ils sont mari&eacute;s, la dur&eacute;e de la location, et, suivant le cas, la date de cette derni&egrave;re ou celle de la cessation. Les avis sont envoy&eacute;s dans la quinzaine de cette date; il en est donn&eacute; r&eacute;c&eacute;piss&eacute;.</P>
+
+
+
+
+<H3 CLASS="Sous-section">
+III - Immeubles et fonds de commerce : obligations des acqu&eacute;reurs, des notaires, des conservateurs des Hypoth&egrave;ques et de la Propri&eacute;t&eacute; fonci&egrave;re et des greffiers</H3>
+<span id="#A0503"></span>
+<H6 CLASS="NoArticle">
+Art. 503 &nbsp;&nbsp;&nbsp;&nbsp; <a href="#" onClick="loadpage('142','h23503');return false;" class="ui-button"  title="Consultez l'historique">2023...</a></H6>
+<P CLASS="ParaText">
+1<b>&deg;-</b>Tout acqu&eacute;reur de droits r&eacute;els immobiliers ou de fonds de commerce situ&eacute;s en C&ocirc;te d&apos;Ivoire et d&eacute;pendant d&apos;une succession ne pourra se lib&eacute;rer du prix d&apos;acquisition si ce n&apos;est sur la pr&eacute;sentation d&apos;un certificat d&eacute;livr&eacute; sans frais par le chef du service du Domaine et de l&apos;Enregistrement et constatant, soit l&apos;acquittement, soit la non exigibilit&eacute; de l&apos;imp&ocirc;t de mutation par d&eacute;c&egrave;s, &agrave; moins qu&apos;il ne pr&eacute;f&egrave;re retenir la garantie du Tr&eacute;sor et conserver, jusqu&apos;&agrave; la pr&eacute;sentation du certificat du chef du service du Domaine et de l&apos;Enregistrement, une somme &eacute;gale au montant de l&apos;imp&ocirc;t calcul&eacute; sur le prix.</P>
+
+<H6 CLASS="Modification">
+Ord. n<b>&deg;-</b> 2009-382  du 26 novembre  2009, an. fiscale,Art. 23-2  et 4.</H6>
+<P CLASS="ParaText">
+2<b>&deg;-</b>Quiconque aura contrevenu aux dispositions du paragraphe 1<b>&deg;-</b> ci-dessus sera personnellement tenu des droits et p&eacute;nalit&eacute;s exigibles, sauf recours contre le redevable et passible, en outre, d&apos;une amende de <FONT COLOR='#000000'>25 000 </FONT> francs.</P>
+
+
+<H6 CLASS="Modification">
+Loi n<b>&deg;-</b> 83-1421 du 30 d&eacute;c. 1983, an. fiscale,Art. 43; loi n<b>&deg;-</b> 2004-271 du 15 avril 2004, an. fiscale,Art. 28-2; loi n° 2023-1000 du 18  déc. 2023, an. fiscale, art. 2-1.</H6>
+<P CLASS="ParaText">
+3<b>&deg;-</b>Le notaire qui aura re&ccedil;u un acte constatant l&apos;acquisition de droits r&eacute;els immobiliers ou de fonds de commerce d&eacute;pendant d&apos;une succession sera solidairement responsable des droits, p&eacute;nalit&eacute;s et amendes vis&eacute;s au paragraphe 2<b>&deg;-</b> ci-dessus.</P>
+<P CLASS="ParaText">
+4<b>&deg;-</b>La transcription &agrave; la Conservation des Hypoth&egrave;ques d&apos;actes ou &eacute;crits constatant la transmission par d&eacute;c&egrave;s de droits r&eacute;els immobiliers ou l&apos;inscription aux Livres fonciers de mutations par d&eacute;c&egrave;s de ces m&ecirc;mes droits, ou l&apos;inscription au registre du commerce de la transmission des fonds ne pourra &ecirc;tre effectu&eacute;e que sur la pr&eacute;sentation d&apos;un certificat d&eacute;livr&eacute; sans frais par le chef du service du Domaine et de l&apos;Enregistrement, constatant l&apos;acquittement ou la non exigibilit&eacute; de l&apos;imp&ocirc;t de mutation par d&eacute;c&egrave;s.</P>
+
+
+<H6 CLASS="Modification">
+Ord. n<b>&deg;-</b> 2009-382 du 26 novembre 2009Art. 23-2.</H6>
+<P CLASS="ParaText">
+5<b>&deg;-</b>Le conservateur ou le greffier du tribunal de commerce qui aura contrevenu aux dispositions du paragraphe 4<b>&deg;-</b> ci-dessus, sera personnellement tenu des droits et p&eacute;nalit&eacute;s exigibles, sauf recours contre le redevable, et passible, en outre, d&apos;une amende de <FONT COLOR='#000000'>25 000 </FONT> francs.</P>
+
+
+<H6 CLASS="Modification">
+Loi n<b>&deg;-</b> 83-1421 du 30 d&eacute;c. 1983, an. fiscale,Art. 43; loi n<b>&deg;-</b> 2004-271 du 15 avril 2004, an. fiscale,Art. 28-2; loi n° 2023-1000 du 18  déc. 2023, an. fiscale, art. 2-1.</H6>
+<P CLASS="ParaText">
+6<b>&deg;-</b>Dans les actes et d&eacute;clarations soumis &agrave; l&apos;enregistrement, la d&eacute;signation des immeubles situ&eacute;s dans les centres urbains dot&eacute;s d&apos;un cadastre comporte les num&eacute;ros parcellaires; de m&ecirc;me dans les actes, le si&egrave;ge social des soci&eacute;t&eacute;s est d&eacute;termin&eacute; par l&apos;adresse topographique compl&egrave;te et par la d&eacute;signation de la bo&icirc;te postale. Toute infraction aux pr&eacute;sentes dispositions est sanctionn&eacute;e par une amende de cinq mille francs mise &agrave; la charge des notaires ou des parties si ces derni&egrave;res sont seules &agrave; intervenir.</P>
+
+
+
+
+<H3 CLASS="Sous-section">
+IV - Notice de d&eacute;c&egrave;s</H3>
+<span id="#A0504"></span>
+<H6 CLASS="NoArticle">
+Art. 504</H6>
+<P CLASS="ParaText">
+Les maires, ou autres fonctionnaires comp&eacute;tents pour recevoir les actes de l&apos;&eacute;tat civil, fourniront chaque trimestre aux chefs de service du Domaine et de l&apos;Enregistrement les relev&eacute;s par eux certifi&eacute;s des actes de d&eacute;c&egrave;s. Ces relev&eacute;s seront d&eacute;livr&eacute;s sur papier non timbr&eacute; et remis dans les mois de janvier, avril, juillet et octobre.</P>
+
+<H6 CLASS="Modification">
+Ord. n<b>&deg;-</b> 2009-382 du 26 novembre 2009Art. 23-3.</H6>
+<P CLASS="ParaText">
+Il en sera tir&eacute; r&eacute;c&eacute;piss&eacute;, aussi sur papier non timbr&eacute;.</P>
+
+
+
+
+<H3 CLASS="Sous-section">
+V - Inscriptions nominatives de rentes sur l&apos;Etat et titres nominatifs ou &agrave; ordre provenant de titulaires d&eacute;c&eacute;d&eacute;s - Transferts</H3>
+<span id="#A0505"></span>
+<H6 CLASS="NoArticle">
+Art. 505 &nbsp;&nbsp;&nbsp;&nbsp; <a href="#" onClick="loadpage('142','h23505');return false;" class="ui-button"  title="Consultez l'historique">2023...</a></H6>
+<P CLASS="ParaText">
+1<b>&deg;-</b>Le transfert, la mutation, la conversion au porteur ou le remboursement des inscriptions de rentes sur l&apos;Etat ou des titres nominatifs de soci&eacute;t&eacute;s ou de collectivit&eacute;s publiques, provenant de titulaires d&eacute;c&eacute;d&eacute;s ou d&eacute;clar&eacute;s absents, ne pourra &ecirc;tre effectu&eacute; que sur la pr&eacute;sentation d&apos;un certificat d&eacute;livr&eacute; sans frais par le chef du service du Domaine et de l&apos;Enregistrement, constatant l&apos;acquittement du droit de mutation par d&eacute;c&egrave;s.</P>
+
+<H6 CLASS="Modification">
+Ord. n<b>&deg;-</b> 2009-382 du 26 novembre 2009Art. 23-2.</H6>
+<P CLASS="ParaText">
+2<b>&deg;-</b>Dans le cas o&ugrave; le transfert, la mutation, la conversion au porteur ou le remboursement donne lieu &agrave; la production d&apos;un certificat de propri&eacute;t&eacute; d&eacute;livr&eacute; conform&eacute;ment &agrave; la r&eacute;glementation relative au r&eacute;gime des titres nominatifs, il appartient au r&eacute;dacteur de ce document d&apos;y viser, s&apos;il y a lieu, le certificat du chef du service du Domaine et de l&apos;Enregistrement pr&eacute;vu au paragraphe qui pr&eacute;c&egrave;de. La responsabilit&eacute; du certificateur est, dans ce cas, substitu&eacute;e &agrave; celle de la soci&eacute;t&eacute; ou collectivit&eacute;.</P>
+
+
+<H6 CLASS="Modification">
+Ord. n<b>&deg;-</b> 2009-382 du 26 novembre 2009Art. 23-2.</H6>
+<P CLASS="ParaText">
+3<b>&deg;-</b>Quiconque aura contrevenu aux dispositions ci-dessus sera personnellement tenu des droits et p&eacute;nalit&eacute;s exigibles, sauf recours contre le redevable, et passible, en outre, d&apos;une amende de <FONT COLOR='#000000'>25 000 </FONT> francs.</P>
+
+
+<H6 CLASS="Modification">
+Loi n<b>&deg;-</b> 83-1421 du 30 d&eacute;c. 1983, an. fiscale,Art. 43; loi n<b>&deg;-</b> 2004-271 du 15 avril 2004, an. fiscale,Art. 28-2; loi n° 2023-1000 du 18  déc. 2023, an. fiscale, art. 2-1.</H6>
+
+
+<span id="#A0506"></span>
+<H6 CLASS="NoArticle">
+Art. 506</H6>
+<P CLASS="ParaText">
+Lorsque le transfert, la mutation ou la conversion au porteur est effectu&eacute; en vue ou &agrave; l&apos;occasion de la n&eacute;gociation des titres, le certificat du chef du service du Domaine et de l&apos;Enregistrement vis&eacute; &agrave; l&apos;article pr&eacute;c&eacute;dent pourra &ecirc;tre remplac&eacute; par une d&eacute;claration des parties &eacute;tablie sur papier non timbr&eacute;, d&eacute;signant avec pr&eacute;cision les titres auxquels elle s&apos;applique et indiquant que l&apos;ali&eacute;nation est faite pour permettre d&apos;acquitter des droits de mutation par d&eacute;c&egrave;s et que le produit en sera vers&eacute; directement au receveur comp&eacute;tent pour recevoir la d&eacute;claration de la succession par l&apos;interm&eacute;diaire charg&eacute; de la n&eacute;gociation.</P>
+
+<H6 CLASS="Modification">
+Ord. n<b>&deg;-</b> 2009-382 du 26 novembre 2009Art. 23-2.</H6>
+<P CLASS="ParaText">
+Au cas o&ugrave; tout ou partie des titres serait amorti, la remise audit interm&eacute;diaire des fonds provenant du remboursement lib&eacute;rera l&apos;&eacute;tablissement &eacute;metteur dans les m&ecirc;mes conditions que la remise des titres eux-m&ecirc;mes.</P>
+<P CLASS="ParaText">
+Tout interm&eacute;diaire qui n&apos;effectue pas le versement pr&eacute;vu aux alin&eacute;as pr&eacute;c&eacute;dents est passible, personnellement, d&apos;une amende &eacute;gale au montant des sommes dont il s&apos;est irr&eacute;guli&egrave;rement dessaisi.</P>
+
+
+<span id="#A0507"></span>
+<H6 CLASS="NoArticle">
+Art. 507</H6>
+<P CLASS="ParaText">
+Par d&eacute;rogation &agrave; l&apos;article 505, l&apos;inscription, le transfert ou la mutation de cr&eacute;ances ou de titres de cr&eacute;ances d&apos;indemnit&eacute;s de dommage de guerre, provenant de cr&eacute;anciers ou de titulaires d&eacute;c&eacute;d&eacute;s ou d&eacute;clar&eacute;s absents, peut &ecirc;tre effectu&eacute; sur la pr&eacute;sentation d&apos;un certificat d&eacute;livr&eacute; sans frais par le chef du service du Domaine et de l&apos;Enregistrement, constatant que les cr&eacute;anciers ou les titres qui les repr&eacute;sentent ont &eacute;t&eacute; compris dans la d&eacute;claration de succession et que l&apos;imputation des droits exigibles a &eacute;t&eacute; demand&eacute;e dans les conditions pr&eacute;vues par l&apos;article 46 dernier alin&eacute;a de la loi du 17 avril 1919.</P>
+
+<H6 CLASS="Modification">
+Ord. n<b>&deg;-</b> 2009-382 du 26 novembre 2009Art. 23-2.</H6>
+
+
+
+
+<H3 CLASS="Sous-section">
+VI - Police d&apos;assurance contre l&apos;incendie souscrite par des personnes d&eacute;c&eacute;d&eacute;es</H3>
+<P CLASS="Paragraphe">
+Mention obligatoire dans les d&eacute;clarations de successions</P>
+<span id="#A0508"></span>
+<H6 CLASS="NoArticle">
+Art. 508</H6>
+<P CLASS="ParaText">
+Les h&eacute;ritiers, donataires ou l&eacute;gataires dans les d&eacute;clarations de mutation par d&eacute;c&egrave;s, les parties dans les actes constatant une transmission entre vifs &agrave; titre gratuit doivent faire conna&icirc;tre si les bijoux, pierreries, objets d&apos;art ou de collection compris dans la mutation &eacute;taient l&apos;objet d&apos;un contrat d&apos;assurance contre le vol ou contre l&apos;incendie, en cours au jour du d&eacute;c&egrave;s ou de l&apos;acte et, au cas de l&apos;affirmative, indiquer la date du contrat, le nom ou la raison sociale et le domicile de l&apos;assureur, ainsi que le montant des risques.</P>
+<P CLASS="ParaText">
+Toute contravention aux dispositions qui pr&eacute;c&egrave;dent est punie d&apos;une amende &eacute;gale au double du droit dont le Tr&eacute;sor a &eacute;t&eacute; frustr&eacute;.</P>
+<P CLASS="Paragraphe">
+Avis &agrave; donner par les assureurs</P>
+
+<span id="#A0509"></span>
+<H6 CLASS="NoArticle">
+Art. 509 &nbsp;&nbsp;&nbsp;&nbsp; <a href="#" onClick="loadpage('142','h23509');return false;" class="ui-button"  title="Consultez l'historique">2023...</a></H6>
+<P CLASS="ParaText">
+Les soci&eacute;t&eacute;s, compagnies d&apos;assurances et tous autres assureurs &eacute;trangers, qui auraient assur&eacute; contre le vol ou contre l&apos;incendie, en vertu d&apos;un contrat ou d&apos;une convention en cours &agrave; l&apos;&eacute;poque du d&eacute;c&egrave;s, des bijoux, pierreries, objets d&apos;art ou de collection situ&eacute;s en C&ocirc;te d&apos;Ivoire, et d&eacute;pendant d&apos;une succession qu&apos;ils sauraient ouverte ou appartenant au conjoint d&apos;une personne qu&apos;ils sauraient d&eacute;c&eacute;d&eacute;e, doivent, dans la quinzaine qui suit le jour o&ugrave; ils ont connaissance du d&eacute;c&egrave;s, adresser au chef du service du Domaine et de l&apos;Enregistrement de leur r&eacute;sidence une notice faisant conna&icirc;tre :</P>
+
+<H6 CLASS="Modification">
+Ord. n<b>&deg;-</b> 2009-382 du 26 novembre 2009Art. 23-2.</H6>
+<P CLASS="Liste2-Enumeree">
+1-Le nom ou la raison sociale et le domicile de l&apos;assureur.</P>
+<P CLASS="Liste2-Enumeree">
+2-Les nom, pr&eacute;noms et domicile de l&apos;assur&eacute;, ainsi que la date de son d&eacute;c&egrave;s ou du d&eacute;c&egrave;s de son conjoint.</P>
+<P CLASS="Liste2-Enumeree">
+3-Le num&eacute;ro, la date et la dur&eacute;e de la police et la valeur des objets assur&eacute;s.</P>
+<P CLASS="Liste2-Enumeree">
+Il en est donn&eacute; r&eacute;c&eacute;piss&eacute;.</P>
+<P CLASS="Liste2-Enumeree">
+Quiconque a contrevenu aux dispositions qui pr&eacute;c&egrave;dent est passible d&apos;une amende de <FONT COLOR='#000000'>25 000 </FONT> francs.</P>
+
+
+<H6 CLASS="Modification">
+Loi n<b>&deg;-</b> 83-1421 du 30 d&eacute;c. 1983, an. fiscale,Art. 43; loi n° 2023-1000 du 18  déc. 2023, an. fiscale, art. 2-1.</H6>
+
+<span class="historique" ID="h23496">
+<div class="histText">
+
+<BR>
+<p>1&deg;	Les Administrations publiques, les &eacute;tablissements ou organismes quelconques soumis au contr&ocirc;le de l&rsquo;autorit&eacute; administrative, les soci&eacute;t&eacute;s ou compagnies, banquiers, escompteurs, officiers publics ou minist&eacute;riels ou agents d&rsquo;affaires, qui seraient d&eacute;positaires, d&eacute;tenteurs ou d&eacute;biteurs de titres, sommes ou valeurs d&eacute;pendant d&rsquo;une succession qu&rsquo;ils sauraient ouverte, doivent adresser soit avant le paiement, la remise ou le transfert, soit dans la quinzaine qui suit ces op&eacute;rations, au chef du service du Domaine et de l&rsquo;Enregistrement de leur r&eacute;sidence, la liste de ces titres, sommes ou valeurs.</p>
+<p>Ord. n&deg; 2009-382 du 26 novembre 2009, an. fiscale, art. 23-2.</p>
+<p>Il en est donn&eacute; r&eacute;c&eacute;piss&eacute;.</p>
+<p>2&deg;	Les soci&eacute;t&eacute;s, compagnies, caisses ou organismes d&rsquo;assurances &eacute;trangers, ainsi que leurs &eacute;tablissements, agences, succursales, directions r&eacute;gionales ou locales en C&ocirc;te d&rsquo;Ivoire, ne peuvent se lib&eacute;rer des sommes, rentes ou &eacute;moluments quelconques dus par eux &agrave; raison ou &agrave; l&rsquo;occasion du d&eacute;c&egrave;s de l&rsquo;assur&eacute; &agrave; tout b&eacute;n&eacute;ficiaire domicili&eacute; en C&ocirc;te d&rsquo;Ivoire ou hors de C&ocirc;te d&rsquo;Ivoire, si ce n&rsquo;est sur la pr&eacute;sentation d&rsquo;un certificat d&eacute;livr&eacute; sans frais par le chef du service du Domaine et de l&rsquo;Enregistrement, constatant l&rsquo;acquittement du droit de mutation par d&eacute;c&egrave;s.</p>
+<p>Ord. n&deg; 2009-382 du 26 novembre 2009, an. fiscale, art. 23-2.</p>
+<p>Ils peuvent toutefois, sur la demande &eacute;crite des b&eacute;n&eacute;ficiaires &eacute;tablie sur papier non timbr&eacute;, verser tout ou partie des sommes dues par eux en l&rsquo;acquit des droits de mutation par d&eacute;c&egrave;s, &agrave; l&rsquo;inspecteur comp&eacute;tent pour recevoir la d&eacute;claration de succession.</p>
+<p>Les dispositions du pr&eacute;sent paragraphe ne sont pas applicables lorsque les sommes, rentes ou &eacute;moluments quelconques dus &agrave; raison ou &agrave; l&rsquo;occasion du d&eacute;c&egrave;s de l&rsquo;assur&eacute; n&rsquo;exc&egrave;dent pas 50 000 francs et reviennent au conjoint survivant ou &agrave; des successibles en ligne directe n&rsquo;ayant pas hors de C&ocirc;te d&rsquo;Ivoire un domicile de fait ou de droit.</p>
+<p>3&deg;	Quiconque a contrevenu aux dispositions du pr&eacute;sent article est personnellement tenu des droits et p&eacute;nalit&eacute;s exigibles, sauf recours contre le redevable, et passible, en outre, d&rsquo;une amende de 18 000 francs.</p>
+<p>Loi n&deg; 83-1421 du 30 d&eacute;c, 1983, an. fiscale, art. 43.</p>
+<p>&nbsp;</p> 
+
+</div></span><finh23496>
+
+<span class="historique" ID="h23497">
+<div class="histText">
+
+<BR> 
+<p>Les prescriptions des deux premiers alin&eacute;as de l&rsquo;article 496-2&deg; sont applicables aux Administrations publiques, aux &eacute;tablissements, organismes, soci&eacute;t&eacute;s, compagnies ou personnes d&eacute;sign&eacute;es au paragraphe 1 du m&ecirc;me article qui seraient d&eacute;positaires, d&eacute;tentrices ou d&eacute;bitrices de titres, sommes ou valeurs d&eacute;pendant d&rsquo;une succession qu&rsquo;elles sauraient ouverte et d&eacute;volue &agrave; un ou plusieurs h&eacute;ritiers, l&eacute;gataires ou donataires, ayant hors de C&ocirc;te d&rsquo;Ivoire leur domicile de fait ou de droit.</p>
+<p>Quiconque a contrevenu aux dispositions du pr&eacute;sent article est personnellement tenu des droits et p&eacute;nalit&eacute;s exigibles, sauf recours contre le redevable, et passible, en outre, d&rsquo;une amende de 18 000 francs.</p>
+<p>Loi n&deg; 2004-271 du 15 avril 2004, an. fiscale, art. 28-3.</p>
+<p>&nbsp;</p>
+</div></span><finh23497>
+
+<span class="historique" ID="h23498">
+<div class="histText">
+
+<BR> 
+<p>Les d&eacute;positaires d&eacute;sign&eacute;s &agrave; l&rsquo;article 496-1&deg; doivent, dans les trois mois au plus tard de l&rsquo;ouverture d&rsquo;un compte indivis ou collectif avec solidarit&eacute;, faire conna&icirc;tre au chef du service du Domaine et de l&rsquo;Enregistrement de leur r&eacute;sidence les nom, pr&eacute;noms et domicile de chacun des d&eacute;posants, ainsi que la date de l&rsquo;ouverture du compte, sous peine d&rsquo;une amende de 18 000 francs.</p>
+<p>Loi n&deg; 83-1421 du 30 d&eacute;c. 1983, an. fiscale, art 43; ord. n&deg; 2009-382 du 26 novembre 2009, an. fiscale, art. 23-2.</p>
+<p>Ils doivent de plus, dans la quinzaine de la notification qui leur est faite par le service de l&rsquo;Enregistrement du d&eacute;c&egrave;s de l&rsquo;un des d&eacute;posants et sous la sanction &eacute;dict&eacute;e &agrave; l&rsquo;article 496-3&deg;, adresser au chef du service du Domaine et de l&rsquo;Enregistrement de leur r&eacute;sidence la liste des titres, sommes ou valeurs existant au jour du d&eacute;c&egrave;s au cr&eacute;dit des cotitulaires du compte.</p>
+<p>Ord. n&deg; 2009-382 du 26 novembre 2009, an. fiscale, art. 23-2.</p>
+<p>&nbsp;</p>
+</div></span><finh23498>
+
+<span class="historique" ID="h23503">
+<div class="histText">
+
+<BR> 
+<p>1&deg;	Tout acqu&eacute;reur de droits r&eacute;els immobiliers ou de fonds de commerce situ&eacute;s en C&ocirc;te d&rsquo;Ivoire et d&eacute;pendant d&rsquo;une succession ne pourra se lib&eacute;rer du prix d&rsquo;acquisition si ce n&rsquo;est sur la pr&eacute;sentation d&rsquo;un certificat d&eacute;livr&eacute; sans frais par le chef du service du Domaine et de l&rsquo;Enregistrement et constatant, soit l&rsquo;acquittement, soit la non exigibilit&eacute; de l&rsquo;imp&ocirc;t de mutation par d&eacute;c&egrave;s, &agrave; moins qu&rsquo;il ne pr&eacute;f&egrave;re retenir la garantie du Tr&eacute;sor et conserver, jusqu&rsquo;&agrave; la pr&eacute;sentation du certificat du chef du service du Domaine et de l&rsquo;Enregistrement, une somme &eacute;gale au montant de l&rsquo;imp&ocirc;t calcul&eacute; sur le prix.</p>
+<p>Ord. n&deg; 2009-382 du 26 novembre 2009, an. fiscale, art. 23-2 et 4.</p>
+<p>2&deg;	Quiconque aura contrevenu aux dispositions du paragraphe 1&deg; ci-dessus sera personnellement tenu des droits et p&eacute;nalit&eacute;s exigibles, sauf recours contre le redevable et passible, en outre, d&rsquo;une amende de 18 000 francs.</p>
+<p>Loi n&deg; 83-1421 du 30 d&eacute;c. 1983, an. fiscale, art. 43; loi n&deg; 2004-271 du 15 avril 2004, an. fiscale, art. 28-2.</p>
+<p>3&deg;	Le notaire qui aura re&ccedil;u un acte constatant l&rsquo;acquisition de droits r&eacute;els immobiliers ou de fonds de commerce d&eacute;pendant d&rsquo;une succession sera solidairement responsable des droits, p&eacute;nalit&eacute;s et amendes vis&eacute;s au paragraphe 2&deg; ci-dessus.</p>
+<p>4&deg;	La transcription &agrave; la Conservation des Hypoth&egrave;ques d&rsquo;actes ou &eacute;crits constatant la transmission par d&eacute;c&egrave;s de droits r&eacute;els immobiliers ou l&rsquo;inscription aux Livres fonciers de mutations par d&eacute;c&egrave;s de ces m&ecirc;mes droits, ou l&rsquo;inscription au registre du commerce de la transmission des fonds ne pourra &ecirc;tre effectu&eacute;e que sur la pr&eacute;sentation d&rsquo;un certificat d&eacute;livr&eacute; sans frais par le chef du service du Domaine et de l&rsquo;Enregistrement, constatant l&rsquo;acquittement ou la non exigibilit&eacute; de l&rsquo;imp&ocirc;t de mutation par d&eacute;c&egrave;s.</p>
+<p>Ord. n&deg; 2009-382 du 26 novembre 2009, an. fiscale, art. 23-2.</p>
+<p>5&deg;	Le conservateur ou le greffier du tribunal de commerce qui aura contrevenu aux dispositions du paragraphe 4&deg; ci-dessus, sera personnellement tenu des droits et p&eacute;nalit&eacute;s exigibles, sauf recours contre le redevable, et passible, en outre, d&rsquo;une amende de 18 000 francs.</p>
+<p>Loi n&deg; 83-1421 du 30 d&eacute;c. 1983, an. fiscale, art. 43; loi n&deg; 2004-271 du 15 avril 2004, an. fiscale, art. 28-2.</p>
+<p>6&deg;	Dans les actes et d&eacute;clarations soumis &agrave; l&rsquo;enregistrement, la d&eacute;signation des immeubles situ&eacute;s dans les centres urbains dot&eacute;s d&rsquo;un cadastre comporte les num&eacute;ros parcellaires; de m&ecirc;me dans les actes, le si&egrave;ge social des soci&eacute;t&eacute;s est d&eacute;termin&eacute; par l&rsquo;adresse topographique compl&egrave;te et par la d&eacute;signation de la bo&icirc;te postale. Toute infraction aux pr&eacute;sentes dispositions est sanctionn&eacute;e par une amende de cinq mille francs mise &agrave; la charge des notaires ou des parties si ces derni&egrave;res sont seules &agrave; intervenir.</p>
+<p>IV &ndash; Notice de d&eacute;c&egrave;s</p>
+<p>&nbsp;</p>
+</div></span><finh23503>
+
+<span class="historique" ID="h23505">
+<div class="histText">
+
+<BR> 
+<p>1&deg;	Le transfert, la mutation, la conversion au porteur ou le remboursement des inscriptions de rentes sur l&rsquo;Etat ou des titres nominatifs de soci&eacute;t&eacute;s ou de collectivit&eacute;s publiques, provenant de titulaires d&eacute;c&eacute;d&eacute;s ou d&eacute;clar&eacute;s absents, ne pourra &ecirc;tre effectu&eacute; que sur la pr&eacute;sentation d&rsquo;un certificat d&eacute;livr&eacute; sans frais par le chef du service du Domaine et de l&rsquo;Enregistrement, constatant l&rsquo;acquittement du droit de mutation par d&eacute;c&egrave;s.</p>
+<p>Ord. n&deg; 2009-382 du 26 novembre 2009, an. fiscale, art. 23-2.</p>
+<p>2&deg;	Dans le cas o&ugrave; le transfert, la mutation, la conversion au porteur ou le remboursement donne lieu &agrave; la production d&rsquo;un certificat de propri&eacute;t&eacute; d&eacute;livr&eacute; conform&eacute;ment &agrave; la r&eacute;glementation relative au r&eacute;gime des titres nominatifs, il appartient au r&eacute;dacteur de ce document d&rsquo;y viser, s&rsquo;il y a lieu, le certificat du chef du service du Domaine et de l&rsquo;Enregistrement pr&eacute;vu au paragraphe qui pr&eacute;c&egrave;de. La responsabilit&eacute; du certificateur est, dans ce cas, substitu&eacute;e &agrave; celle de la soci&eacute;t&eacute; ou collectivit&eacute;.</p>
+<p>Ord. n&deg; 2009-382 du 26 novembre 2009, an. fiscale, art. 23-2.</p>
+<p>3&deg;	Quiconque aura contrevenu aux dispositions ci-dessus sera personnellement tenu des droits et p&eacute;nalit&eacute;s exigibles, sauf recours contre le redevable, et passible, en outre, d&rsquo;une amende de 18 000 francs.</p>
+<p>Loi n&deg; 83-1421 du 30 d&eacute;c. 1983, an. fiscale, art. 43; loi n&deg; 2004-271 du 15 avril 2004, an. fiscale, art. 28-2.</p>
+<p>&nbsp;</p>
+</div></span><finh23505>
+
+<span class="historique" ID="h23509">
+<div class="histText">
+
+<BR> 
+<p>Les soci&eacute;t&eacute;s, compagnies d&rsquo;assurances et tous autres assureurs &eacute;trangers, qui auraient assur&eacute; contre le vol ou contre l&rsquo;incendie, en vertu d&rsquo;un contrat ou d&rsquo;une convention en cours &agrave; l&rsquo;&eacute;poque du d&eacute;c&egrave;s, des bijoux, pierreries, objets d&rsquo;art ou de collection situ&eacute;s en C&ocirc;te d&rsquo;Ivoire, et d&eacute;pendant d&rsquo;une succession qu&rsquo;ils sauraient ouverte ou appartenant au conjoint d&rsquo;une personne qu&rsquo;ils sauraient d&eacute;c&eacute;d&eacute;e, doivent, dans la quinzaine qui suit le jour o&ugrave; ils ont connaissance du d&eacute;c&egrave;s, adresser au chef du service du Domaine et de l&rsquo;Enregistrement de leur r&eacute;sidence une notice faisant conna&icirc;tre :</p>
+<p>Ord. n&deg; 2009-382 du 26 novembre 2009, an. fiscale, art. 23-2.</p>
+<p>1&ndash;	Le nom ou la raison sociale et le domicile de l&rsquo;assureur.</p>
+<p>2&ndash;	Les nom, pr&eacute;noms et domicile de l&rsquo;assur&eacute;, ainsi que la date de son d&eacute;c&egrave;s ou du d&eacute;c&egrave;s de son conjoint.</p>
+<p>3&ndash;	Le num&eacute;ro, la date et la dur&eacute;e de la police et la valeur des objets assur&eacute;s.</p>
+<p>Il en est donn&eacute; r&eacute;c&eacute;piss&eacute;.</p>
+<p>Quiconque a contrevenu aux dispositions qui pr&eacute;c&egrave;dent est passible d&rsquo;une amende de 18 000 francs.</p>
+<p>Loi n&deg; 83-1421 du 30 d&eacute;c. 1983, an. fiscale, art. 43.</p>
+<p>Section VII &ndash; Droit de communication</p>
+<p>&nbsp;</p>
+</div></span><finh23509>
+
+
+</div></div> <p>&nbsp;</p><p>&nbsp;</p></div></div> <!-- wrapper -->
+	  <div id="articleList"><div id="contenu" style='height:auto; background-color:#FFFFCC'>&nbsp;</div>
+      </div><p>&nbsp;</p><p>&nbsp;</p><p>&nbsp;</p><p>&nbsp;</p><p>&nbsp;</p><p>&nbsp;</p><p>&nbsp;</p><p>&nbsp;</p><p>&nbsp;</p><p>&nbsp;</p>
+	  <p>&nbsp;</p><p>&nbsp;</p><p>&nbsp;</p><p>&nbsp;</p><p>&nbsp;</p><p>&nbsp;</p></BODY></HTML>
+	  

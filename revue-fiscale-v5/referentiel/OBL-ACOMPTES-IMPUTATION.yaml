@@ -1,0 +1,37 @@
+reference_source: CGI 2026 — docs client 6/9/10 (propositions metier)
+date_effet: '2026-01-01'
+effets_croises: []
+a_confirmer:
+- date d effet 01/01/2026
+- valeurs issues docs client 6/9/10 — a valider metier
+formule_plafonnement: sans objet
+questions_generees:
+- id: q_imputation_anormale
+  texte: Imputation anormale des acomptes ?
+  type: booleen
+- id: q_montant
+  texte: Ecart d imputation ?
+  type: montant
+profils_applicables:
+- Entreprises au regime reel
+nature: sans_objet
+identifiant: OBL-ACOMPTES-IMPUTATION
+impot: OBL
+reference_legale: CGI 2026 — acomptes d impot et imputation
+comptes_declencheurs:
+- '444'
+- '4456'
+condition_declenchement: (solde(444) > 0 ou solde(4456) > 0) et reponse(q_imputation_anormale) = vrai
+conditions_fond: Imputation des acomptes correcte ?
+resultat: reponse(q_montant)
+niveau_risque: moyen
+cas_test:
+  soldes:
+    '444': '5000000'
+    '4456': '0'
+  agregats: {}
+  reponses:
+    q_imputation_anormale: true
+    q_montant: '500000'
+  declenche_attendu: true
+  montant_attendu: '500000'

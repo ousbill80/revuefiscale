@@ -1,0 +1,10 @@
+{
+  "avertissement": "[DÉMO FICTIF] Balance synthétique — montants non réels, non opposables. Ne constitue pas une situation comptable réelle.",
+  "lignes": [
+    {"compte": "7011", "libelle": "[FICTIF] Ventes de marchandises", "debit": "0", "credit": "1000000000"},
+    {"compte": "6582", "libelle": "[FICTIF] Dons et liberalites", "debit": "150000000", "credit": "0"},
+    {"compte": "622", "libelle": "[FICTIF] Honoraires et commissions", "debit": "50000000", "credit": "0"},
+    {"compte": "6011", "libelle": "[FICTIF] Achats de marchandises", "debit": "600000000", "credit": "0"},
+    {"compte": "5121", "libelle": "[FICTIF] Banque locale", "debit": "200000000", "credit": "0"}
+  ]
+}

@@ -1,0 +1,319 @@
+<!DOCTYPE HTML><HTML><HEAD><META HTTP-EQUIV="Content-Type" CONTENT="text/html; charset=UTF-8">
+<TITLE>Code des impots -336</TITLE><LINK REL="STYLESHEET" HREF="/cicgi.css" CHARSET="ISO-8859-1" TYPE="text/css">
+<style type="text/css">
+body {margin-left: 5px;	margin-top: 0px; margin-right: .5em;margin-bottom: 0px;background-color:#fafafa ;}
+.Liste-Numerote {font-size: 12pt;font-weight: regular;font-style: italic;color: #000000;text-transform: none;margin-left:8px ;margin-bottom:8px ;margin-top:4px ;margin-right:10px ;font-family:Georgia, "Times New Roman", Times, serif}
+li {list-style-type: none; margin-left:0px ; padding-left:0em ; }
+.Paratext {font-size: 12pt;font-weight: regular;font-style: italic;color: #000000;text-decoration: none;vertical-align: baseline;text-transform: none;margin-left:0px ;font-family:Georgia, "Times New Roman", Times, serif}
+.Normal {font-size: 12pt;font-weight: regular;font-style: italic;color: #000000;text-decoration: none;vertical-align: baseline;text-transform: none;margin-left:0px ;font-family:Georgia, "Times New Roman", Times, serif}
+ul {list-style-type: none; margin-left:0px ; padding-left:0em ;  }
+.Liste2-Enumeree {font-size: 12pt;font-weight: regular;font-style: italic;color: #000000;text-decoration: none;vertical-align: baseline;text-transform: none;list-style-type:none ;margin-left:16px ;margin-bottom:8px;margin-right:10px;font-family:Georgia, "Times New Roman", Times, serif}
+P.Liste2-Enumeree {font-size: 12pt;font-weight: regular;font-style: italic;color: #000000;text-decoration: none;vertical-align: baseline;text-transform: none;list-style-type:none ;margin-left:16px ;margin-bottom:8px;margin-right:10px;font-family:Georgia, "Times New Roman", Times, serif}
+.Entete {font-size: 13pt;font-weight: regular;font-style: italic;color:#000000 ;text-decoration: none;vertical-align: baseline;text-transform: none;margin-left:8px ;font-family:Georgia, "Times New Roman", Times, serif}
+table, TABLE {border-width:1px; width:99% ;border-collapse:collapse;border-color: #9ecaed;box-shadow: 0 0 10px #9ecaed;}
+tr,td {text-align:left;vertical-align:bottom;border:1px solid #9ecaed;padding:.2em;marging-left:.2em}
+th, TH{text-align:center;vertical-align:middle;padding:.2em;}
+P.TableauEntete {font-size: 13pt;font-weight: regular;font-style: italic;color: #000000;font-family:Georgia, "Times New Roman"}
+P.TableauCelluleLeft, P.TableauCellule {text-align:right;margin-right:1em;font-size: 13pt;font-weight: regular;font-style: italic;color: #000000;font-family:Georgia, "Times New Roman"}
+P.TableauCelluleRight {text-align:left;margin-left:1em;font-size: 13pt;font-weight: regular;font-style: italic;color: #000000;font-family:Georgia, "Times New Roman"}
+.ui-buttonh {padding: .1em .1em ; border: 1px solid #dadada;border-radius: 4px; box-shadow: 0 0 4px #9ecaed;color:#FF3300 ;margin-left:8px ;margin-right:8px ;margin-bottom:2px ;margin-top:2px ;text-decoration:none ;font-size:12pt ;font-family:"Times New Roman"}   
+.ui-button {padding: .1em .1em ; border: 1px solid #dadada;border-radius: 4px; box-shadow: 0 0 4px #9ecaed;color:#FF3300 ;margin-left:8px ;margin-right:8px ;margin-bottom:2px ;margin-top:2px ;text-decoration:none ;font-size:12pt ;font-family:"Times New Roman"}   
+H3 {display: block;text-align: center;text-indent: 0pt;margin-top: 10pt;margin-bottom: 10pt;margin-right: 10pt;margin-left: 10pt;font-size: 12pt;font-weight: Bold;font-style: Regular;color: #00A000;text-decoration: none;vertical-align: baseline;text-transform: none;font-family: "Times New Roman";}
+H4 {display: block;text-align: left;text-indent: 0pt;margin-top: 10pt;margin-bottom: 6pt;margin-right: 10pt;margin-left: 10pt;font-size: 12pt;font-weight: Bold;font-style: Regular;color: #000000;text-decoration: none;vertical-align: baseline;text-transform: none;font-family: "Times New Roman";}
+H5 {display: block;text-align: left;text-indent: 0pt;margin-top: 10pt;margin-bottom: 6pt;margin-right: 10pt;margin-left: 10pt;font-size: 11pt;font-weight: Bold;font-style: Regular;color: #000000;text-decoration: none;vertical-align: baseline;text-transform: none;font-family: "Times New Roman";}
+H6.NoArticle {display: block;text-align: left;text-indent: 0pt;margin-top: 14pt;margin-bottom: 0pt;margin-right: 0pt;margin-left: 0pt;font-size: 14pt;font-weight: regular;font-style: Regular;color: #00a000;text-decoration: none;vertical-align: baseline;text-transform: none;font-family: "Times New Roman";}
+H2 {text-align:center;font-size:16pt;font-family:Georgia, "Times New Roman", Times, serif}
+P.ParaText {font-size: 12pt;font-weight: regular;font-style: italic;color: #000000;	text-decoration: none;vertical-align: baseline;text-transform: none;font-family:Georgia, "Times New Roman", Times, serif;}
+H2.Section,P.Section {font-size:12pt;font-weight:bold;font-style:Regular;color:#008000;font-family:Georgia,"Times New Roman"}
+P.Paragraphe, p.Paragraphe {Text-Align:center;Text-decoration:none;font-size:12pt;font-weight:bold;font-style:Normal;color:#00A000;font-family:Georgia,"Times New Roman"}
+H2.Livre,P.Livre {text-align:center;font-size:16pt;font-weight:bold;font-style:Regular;color:#008000;font-family:Georgia,"Times New Roman"}
+P.Partie,H2.Partie,P.TitreSub {text-align:center;font-size:14pt;font-weight:bold;font-style:Regular;color:#008000;font-family:Georgia,"Times New Roman"}
+H2.ChapitreNo,H2.TitreNo {text-align:center;font-size:14pt;font-weight:bold;font-style:Regular;color:#008000;font-family:Georgia,"Times New Roman"}
+H2.Chapitre, h2.Chapitre {text-align:center;font-size:14pt;font-weight:bold;font-style:Regular;color:#008000;font-family:Georgia,"Times New Roman"}
+H2.TitreNo {text-align:center;font-size:14pt;font-weight:bold;font-style:Regular;color:#008000;font-family:Georgia,"Times New Roman"}
+h3.Sous-Section, H3.Sous-Section, h3.Sous-section, h2.Section {font-size:12pt;font-weight:bold;font-style:Italic;color:#008000;font-family:Georgia,"Times New Roman"}
+hr,HR { display: block; width:90%;  margin-top: 0.5em; margin-bottom: 0.5em; margin-left: auto;  margin-right: auto;  border-style: inset; border-width: 1px;}
+P.TitreSub {text-align:center;font-size:14pt;font-weight:bold;font-style:Regular;color:#008000;font-family:Georgia,"Times New Roman"}
+.Reference {display: block;text-align: left;text-indent: 0pt;margin-top: 10pt;margin-bottom: 6pt;margin-right: 10pt;margin-left: 10pt;font-size: 14pt;font-weight: Bold;font-style: Regular;color: #7F5434;text-decoration: none;vertical-align: baseline;text-transform: none;font-family: "Times New Roman";}
+.ludwig,blockquote {padding-left:1em;background-color:#fafafa;font-size:12pt;font-weight:100;font-style:italic;}
+#articleList {position:absolute ;	z-index: 1 ;left: 10px ;top: 80px ;height:340px;width: 620px;border: 2px solid #cacaca ;border-radius: 5px ;background-color:#fafafa ;    box-shadow: 0 0 12px #333333;	margin-left:0px ;	padding: .3em .3em ;		overflow:hidden ;	visibility:hidden ;  }			
+#articleList h3 { text-align: center; margin: 0; }		
+
+.historique {
+  display:none ;
+  padding: .1em .3em ;
+  border: solid 2px #dadada;
+  border-radius: 7px;
+  box-shadow: 0 0 5px #9ecaed;  
+  
+}
+.histText {
+    display: block;
+    font-family: ;"Times New Roman"
+	padding: .1em .3em ;
+    margin: 1em 0px;
+	font-style:italic;
+	color:#000000;
+	overflow:auto;
+}
+.highlight {
+  font-weight:bold ;
+  color:#000000 ;
+  background-color:#FFFFCC ;
+  }
+.articleList-scroll {
+	overflow-x:hidden ;
+	overflow-y:scroll ;
+	scrollbar-width:thin ;
+	scrollbar-color:blue orange ;
+}
+
+#contenu {
+	overflow-x:hidden ;
+    overflow-y:scroll ;
+	scrollbar-width:thin ;
+	scrollbar-color:blue orange ;
+}		
+
+table, TABLE {
+ text-align:center; 
+    margin-left:.5em; 
+    margin-right:.5em; 
+    border:1px solid #000000;	
+	border-collapse:collapse ;
+    border-color: #9ecaed;
+    box-shadow: 0 0 10px #9ecaed;
+	
+   }
+  tr,td {text-align:left;}
+  
+
+
+ </style>
+ 
+<script src="/js/iscroll.js"></script>
+<script src="/js/jquery.js"></script>   
+<script src="/js/jquery-ui-1.10.3.custom.js"></script>    	    
+<script src="/js/jquery.ui.draggable.js" type="text/javascript"></script>			
+<script src="/js/jquery.ui.core.js"></script> 			
+<script src="/js/jquery.ui.widget.js"></script>			
+<script src="/js/jquery.ui.position.js"></script>			
+<script src="/js/jquery.ui.menu.js"></script>    		
+<script type="text/javascript" src="./xpages.js"></script>
+/* VERSION POUR PAGE HTML SUR SITE DGI.CGICI.COM */
+<script language="javascript">
+ function showButton(id) {
+    var x = document.getElementById(id) ;
+	if(x.style.display === "none") {
+	   x.style.display = "block" ;
+	  } else {
+	   x.style.display = "none" ;
+	   }
+	 }   
+	 var pagenumber="336";
+function loadpage(page, art) {
+      showHideHistoric(art);
+	  return false;
+	  } 
+function loadArticle(page, art) { var artno = art ;var pgno=page;scrolltoelementTag(pgno,artno) ;return false ;} 
+
+</script>
+</HEAD>
+<BODY><div ID="wrapper"><div ID="scroller">
+
+
+
+<H2 CLASS="Section">
+Section II - Proc&eacute;dure pr&eacute;alable aupr&egrave;s de l&apos;Administration </H2>
+<span id="#A5183"></span>
+<H6 CLASS="NoArticle">
+Art. 183 &nbsp;&nbsp;&nbsp;&nbsp; <a href="#" onclick="loadpage('336','h205183');return false;" class="ui-button"  title="Consultez l'historique">2020...</a></H6>
+<P CLASS="ParaText"><FONT COLOR='#000000'>
+Les r&eacute;clamations sont, &agrave; peine de nullit&eacute;, adress&eacute;es par &eacute;crit au Directeur g&eacute;n&eacute;ral des Imp&ocirc;ts ou son repr&eacute;sentant, lorsque le montant global contest&eacute; exc&egrave;de la somme de 500 millions de francs, par le contribuable, ses ayants droit, ses mandataires r&eacute;guli&egrave;rement  d&eacute;sign&eacute;s, ses repr&eacute;sentants l&eacute;gaux justifiant de leurs pouvoirs, ou par toute personne mise  personnellement en demeure d&apos;acquitter un imp&ocirc;t qu&apos;elle n&apos;estime pas d&ucirc;.</FONT></P>
+<P CLASS="ParaText"><FONT COLOR='#000000'>
+Les r&eacute;clamations portant sur des sommes inf&eacute;rieures ou &eacute;gales &agrave; 500 millions de francs sont adress&eacute;es aux Directeurs centraux lorsqu&apos;elles sont li&eacute;es aux travaux de leurs services.</FONT></P>
+<P CLASS="ParaText"><FONT COLOR='#000000'>
+Les r&eacute;clamations sont formul&eacute;es aupr&egrave;s des    Directeurs r&eacute;gionaux lorsqu&apos;elles sont li&eacute;es aux activit&eacute;s de leurs services et que le montant global notifi&eacute; n&apos;exc&egrave;de pas 100 millions de francs.</FONT></P>
+<P CLASS="ParaText"><FONT COLOR='#000000'>
+Lorsque les montants contest&eacute;s issus des    travaux des Directions r&eacute;gionales exc&egrave;dent 100 millions de francs, la comp&eacute;tence en   mati&egrave;re de contentieux portant sur de tels montants revient au Directeur g&eacute;n&eacute;ral des Imp&ocirc;ts.</FONT></P>
+<P CLASS="ParaText"><FONT COLOR='#000000'>
+Par ailleurs, le Directeur g&eacute;n&eacute;ral des Imp&ocirc;ts est autoris&eacute; &agrave; se saisir d&apos;office de tout contentieux vid&eacute; par ses services.</FONT></P>
+<P CLASS="ParaText"><FONT COLOR='#000000'>
+Cette proc&eacute;dure est autoris&eacute;e dans un d&eacute;lai de douze (12) mois &agrave; compter de la date de notification de la r&eacute;ponse au contribuable par les services concern&eacute;s.</FONT></P>
+<H6 CLASS="Modification">
+Loi n&deg; 2005-161 du 27 avril 2005, an. fiscale,Art. 21-14; <FONT COLOR='#000000'>loi n&deg; 2020-972 du 23 d&eacute;c. 2020, an. fiscale,Art. 20-1.</FONT> </H6>
+<P CLASS="ParaText">
+Les r&eacute;clamations font obligatoirement l&apos;objet d&apos;un r&eacute;c&eacute;piss&eacute; d&eacute;livr&eacute; au requ&eacute;rant.</P>
+
+
+
+<span id="#A5184"></span>
+<H6 CLASS="NoArticle">
+Art. 184</H6>
+<P CLASS="ParaText">
+Toute r&eacute;clamation adress&eacute;e &agrave; un service des imp&ocirc;ts non comp&eacute;tent est transmise par celui-ci au service comp&eacute;tent.</P>
+<P CLASS="ParaText">
+Le requ&eacute;rant est avis&eacute; par &eacute;crit de la transmission de sa r&eacute;clamation.</P>
+
+<span id="#A5185"></span>
+<H6 CLASS="NoArticle">
+Art. 185 &nbsp;&nbsp;&nbsp;&nbsp; <a href="#" onclick="loadpage('336','h205185');return false;" class="ui-button"  title="Consultez l'historique">2020...</a></H6>
+<P CLASS="ParaText"><FONT COLOR='#000000'> 
+Pour &ecirc;tre recevables, les r&eacute;clamations doivent &ecirc;tre pr&eacute;sent&eacute;es &agrave; l&apos;Administration au plus tard six mois apr&egrave;s la date :</FONT></P>
+<P CLASS="Liste2-Enumeree"><FONT COLOR='#000000'> 
+1- de la mise en recouvrement du r&ocirc;le ou de la notification d&apos;un avis de recouvrement ;</FONT></P>
+<P CLASS="Liste2-Enumeree"><FONT COLOR='#000000'> 
+2- du versement de l&apos;imp&ocirc;t contest&eacute; lorsque cet imp&ocirc;t n&apos;a pas donn&eacute; lieu &agrave; l&apos;&eacute;tablissement d&apos;un r&ocirc;le ou &agrave; la notification d&apos;un avis de mise en recouvrement ;</FONT></P>
+<P CLASS="Liste2-Enumeree"><FONT COLOR='#000000'> 
+3- de la r&eacute;ception de la notification d&eacute;finitive des impositions ;</FONT></P>
+<P CLASS="Liste2-Enumeree"><FONT COLOR='#000000'> 
+4- de la r&eacute;alisation de l&apos;&eacute;v&eacute;nement qui motive la r&eacute;clamation.</FONT></P>
+<H6 CLASS="Modification"><FONT COLOR='#000000'> 
+Loi n&deg; 2020-972 du 23 d&eacute;c. 2020, an. fiscale,Art. 20-2.</FONT></H6>
+
+
+
+<span id="#A5186"></span>
+<H6 CLASS="NoArticle">
+Art. 186 &nbsp;&nbsp;&nbsp;&nbsp; <a href="#" onclick="loadpage('336','h205186');return false;" class="ui-button"  title="Consultez l'historique">2020...</a></H6>
+<P CLASS="ParaText">
+Toute r&eacute;clamation doit, &agrave; peine d&apos;irrecevabilit&eacute; :</P>
+<P CLASS="Liste2-Enumeree">
+1-Etre individuelle; toutefois, les contribuables impos&eacute;s collectivement ainsi que les membres des soci&eacute;t&eacute;s de personnes qui contestent les imp&ocirc;ts &agrave; la charge de la soci&eacute;t&eacute;, peuvent pr&eacute;senter une r&eacute;clamation collective.</P>
+<P CLASS="Liste2-Enumeree">
+2-Mentionner toutes les impositions contest&eacute;es.</P>
+<P CLASS="Liste2-Enumeree">
+3-Contenir l&apos;expos&eacute; sommaire des moyens et les conclusions du requ&eacute;rant pour chacune des impositions litigieuses.</P>
+<P CLASS="Liste2-Enumeree"><FONT COLOR='#000000'>
+4-	Etre adress&eacute;e soit au Directeur g&eacute;n&eacute;ral des Imp&ocirc;ts, soit aux Directeurs centraux ou aux Directeurs r&eacute;gionaux dont les travaux sont &agrave; l&apos;origine de la r&eacute;clamation, sur support papier ou par voie &eacute;lectronique, dat&eacute;e et porter la signature, le num&eacute;ro de compte contribuable, la bo&icirc;te postale et le contact t&eacute;l&eacute;phonique du requ&eacute;rant.</FONT></P>
+<H6 CLASS="Modification"><FONT COLOR='#000000'>
+Loi n&deg; 2020-972 du 23 d&eacute;c. 2020, an. fiscale,Art. 20-3.</FONT></H6>
+<P CLASS="Liste2-Enumeree">
+5-Etre appuy&eacute;e de toutes les pi&egrave;ces justificatives n&eacute;cessaires &agrave; l&apos;instruction du dossier. Celles-ci comprennent notamment :</P>
+<P CLASS="Liste2-Enumeree">
+-l&apos;original ou la copie de l&apos;avis d&apos;imposition ou de l&apos;avis de mise en recouvrement;</P>
+<P CLASS="Liste2-Enumeree">
+-l&apos;extrait de r&ocirc;le ou la copie de l&apos;extrait de r&ocirc;le;</P>
+<P CLASS="Liste2-Enumeree">
+-les notifications provisoire et d&eacute;finitive de redressements, si les impositions litigieuses r&eacute;sultent d&apos;un contr&ocirc;le fiscal;</P>
+<P CLASS="Liste2-Enumeree">
+-l&apos;original ou la copie de la quittance, de l&apos;attestation de versement, de l&apos;attestation de retenue &agrave; la source ou du certificat informatis&eacute; de cr&eacute;dit d&apos;imp&ocirc;t, en ce qui concerne le pr&eacute;l&egrave;vement &agrave; la source sur les sommes mises en paiement par le Tr&eacute;sor public, d&eacute;livr&eacute;s par les comptables de la Direction g&eacute;n&eacute;rale des Imp&ocirc;ts ou de la Direction g&eacute;n&eacute;rale du Tr&eacute;sor et de la Comptabilit&eacute; publique.</P>
+
+
+
+<H6 CLASS="Modification">
+Loi n<b>&deg;-</b> 2005-161 du 27 avril 2005, an. fiscale,Art. 21-15.</H6>
+
+
+<span id="#A5186b"></span>
+<H6 CLASS="NoArticle">
+Art. 186 bis</H6>
+<P CLASS="ParaText">
+Les pi&egrave;ces produites pour la premi&egrave;re fois dans le cadre de la juridiction contentieuse et qui n&apos;ont pas &eacute;t&eacute; mises &agrave; la disposition de l&apos;Administration sans motif valable lors d&apos;un contr&ocirc;le,  peuvent &ecirc;tre d&eacute;clar&eacute;es irrecevables.</P>
+
+<H6 CLASS="Modification">
+Ord. n<b>&deg;-</b> 2007-488 du 31 mai 2007Art. 33-3.</H6>
+
+
+<span id="#A5187"></span>
+<H6 CLASS="NoArticle">
+Art. 187</H6>
+<P CLASS="ParaText">
+Toute personne qui introduit ou soutient une r&eacute;clamation pour autrui doit justifier d&apos;un mandat r&eacute;gulier. Le mandat doit, &agrave; peine de nullit&eacute;, &ecirc;tre produit en m&ecirc;me temps que l&apos;acte qu&apos;il autorise ou enregistr&eacute; avant l&apos;ex&eacute;cution de cet acte.</P>
+<P CLASS="ParaText">
+Toutefois, il n&apos;est pas exig&eacute; de mandat des avocats inscrits au barreau, ni des personnes qui de par leurs fonctions ou leur qualit&eacute;, sont habilit&eacute;es &agrave; agir au nom du contribuable. Il en est de m&ecirc;me lorsque le signataire de la r&eacute;clamation a &eacute;t&eacute; mis personnellement en demeure d&apos;acquitter les impositions mentionn&eacute;es dans cette r&eacute;clamation.</P>
+
+<span id="#A5188"></span>
+<H6 CLASS="NoArticle">
+Art. 188 &nbsp;&nbsp;&nbsp;&nbsp; 
+<a href="#" onclick="loadpage('336','h215188');return false;" class="ui-button"  title="Consultez l'historique">2021...</a>
+&nbsp;&nbsp;&nbsp;&nbsp; <a href="#" onclick="loadpage('336','h205188');return false;" class="ui-button"  title="Consultez l'historique">2020...</a></H6>
+<P CLASS="ParaText"><FONT COLOR='#000000'>
+Le Directeur g&eacute;n&eacute;ral des Imp&ocirc;ts statue sur les r&eacute;clamations des contribuables lorsque le montant global notifi&eacute; exc&egrave;de les seuils fix&eacute;s pour les directions centrales et les directions r&eacute;gionales, dans le d&eacute;lai de quarante-cinq (45) jours suivant la date de leur r&eacute;ception.</P>
+<P CLASS="ParaText"><FONT COLOR='#000000'> 
+Il conna&icirc;t des appels form&eacute;s contre les d&eacute;cisions des directions centrales ou r&eacute;gionales.</FONT></P>
+<P CLASS="ParaText"><FONT COLOR='#000000'> 
+Les Directeurs centraux et les Directeurs r&eacute;gionaux statuent sur les r&eacute;clamations, dans la limite des seuils de comp&eacute;tence d&eacute;finis &agrave; l&apos;article 183 du pr&eacute;sent Livre, dans le d&eacute;lai de trente jours (30) suivant la date de leur r&eacute;ception.</FONT></P>
+<P CLASS="ParaText"><FONT COLOR='#000000'> 
+La d&eacute;cision est notifi&eacute;e au r&eacute;clamant et contient en cas de rejet total ou partiel, un expos&eacute; des motifs du rejet.</FONT></P>
+<H6 CLASS="Modification"><FONT COLOR='#000000'> 
+Loi n&deg; 2020-972 du 23 d&eacute;c. 2020, an. fiscale,Art. 20-4.</FONT></H6>
+<P CLASS="ParaText"><FONT COLOR='#000000'>
+La d&eacute;cision est notifi&eacute;e au r&eacute;clamant sur support papier ou par voie &eacute;lectronique et contient en cas de rejet total ou partiel, un expos&eacute; des motifs du rejet.</FONT></P>
+<P CLASS="ParaText"><FONT COLOR='#000000'>
+L&apos;utilisation de la voie &eacute;lectronique pour la notification de la d&eacute;cision doit r&eacute;sulter de l&apos;acceptation expresse du contribuable avec indication exacte de son adresse &eacute;lectronique.</FONT></P>
+<P CLASS="ParaText"><FONT COLOR='#000000'>
+Les conditions et modalit&eacute;s d&apos;utilisation de la voie &eacute;lectronique ainsi que les contribuables concern&eacute;s, sont d&eacute;termin&eacute;s par arr&ecirc;t&eacute; du Ministre en charge du Budget. </FONT></P>
+<H6 CLASS="Modification">
+Ord. n&deg; 2000-252 du 28 mars 2000, an, fiscale,Art. 25- 1&deg;;  loi n&deg; 2019-1080 du 18 d&eacute;cembre 2019, an. fiscale,Art. 10-6 .</H6>
+<P CLASS="ParaText">
+L&apos;absence de r&eacute;ponse dans les d&eacute;lais pr&eacute;vus vaut rejet.</P>
+
+<H6 CLASS="Modification">
+Ord. n<b>&deg;-</b> 2000-252 du 28 mars 2000, an, fiscale,Art. 25- 1<b>&deg;-</b>.</H6>
+
+<P CLASS="ParaText"> <FONT COLOR='#000000'>
+<a name="50483201_pgfId-1054274"></a>En cas de rejet de sa requ?te par le Directeur central ou le Directeur r?gional, le contribuable a la possibilit? de saisir dans les trente (30) jours, le Directeur g?n?ral des Imp?ts pour statuer sur sa requ?te.</P>
+<H6 CLASS="Modification">
+<a name="50483201_pgfId-1054246"></a>Loi n? 2021-899 du 21 d?c. 2021, an. fiscale,Art. 18-4.</H6>
+
+
+
+
+
+
+ 
+
+
+<span id="#A5189"></span>
+<H6 CLASS="NoArticle">
+Art. 189 &nbsp;&nbsp;&nbsp;&nbsp; <a href="#" class="ui-buttonh" onClick="showHideHistoric('h205189);return false;" title="Consultez l'historique">2020...</a></H6>
+<P CLASS="ParaText"><FONT COLOR='#000000'> 
+En cas de rejet de sa requ&ecirc;te par le Directeur g&eacute;n&eacute;ral des Imp&ocirc;ts, le contribuable a la possibilit&eacute; de saisir dans les trente jours (30), le Ministre en charge du Budget qui statue dans un d&eacute;lai de quarante-cinq jours (45) &agrave; compter de la r&eacute;ception de la r&eacute;clamation.</FONT></P>
+<H6 CLASS="Modification">
+Loi n<b>&deg;-</b> 2002-156 du 15 mars 2002, an. fiscale,Art. 29; <FONT COLOR='#000000'> loi n&deg; 2020-972 du 23 d&eacute;c. 2020, an. fiscale,Art. 20-5.</FONT></H6>
+
+<P CLASS="ParaText">
+La d&eacute;cision est notifi&eacute;e au r&eacute;clamant et contient, en cas de rejet total ou partiel, un expos&eacute; des motifs du rejet.</P>
+<P CLASS="ParaText">
+L&apos;absence de r&eacute;ponse dans les d&eacute;lais pr&eacute;vus vaut rejet.</P>
+
+<H6 CLASS="Modification">
+Ord. n<b>&deg;-</b> 2000-252 du 28 mars 2000Art. 25-1<b>&deg;-</b>.</H6>
+
+
+
+<!-- Old wrapper body -->
+<span class="historique" ID="h205183">
+<div class="histText">
+<BR> <BR>Art. 183 <BR>Les r&eacute;clamations sont, &agrave; peine de nullit&eacute;, adress&eacute;es par &eacute;crit au Directeur g&eacute;n&eacute;ral des Imp&ocirc;ts ou son repr&eacute;sentant, par le contribuable, ses ayants droit, ses mandataires r&eacute;guli&egrave;rement d&eacute;sign&eacute;s, ses repr&eacute;sentants l&eacute;gaux justifiant de leurs pouvoirs, ou par toute personne mise personnellement en demeure d'acquitter un imp&ocirc;t qu'elle n'estime pas d&ucirc;.  <BR>Loi n °-2005-161 du 27 avril 2005, an. fiscale,Art. 21-14. <BR> <BR>Les r&eacute;clamations font obligatoirement l'objet d'un r&eacute;c&eacute;piss&eacute; d&eacute;livr&eacute; au requ&eacute;rant. <BR>
+<BR><BR><BR></div></span><finh205183>
+<span class="historique" ID="h205185">
+<div class="histText">
+<BR> <BR>Art. 185  <BR>Pour &ecirc;tre recevables, les r&eacute;clamations doivent &ecirc;tre pr&eacute;sent&eacute;es &agrave; l'Administration au plus tard le 31 d&eacute;cembre de la deuxi&egrave;me ann&eacute;e suivant celle : <BR> <BR>1-De la mise en recouvrement du r&ocirc;le ou de la notification d'un avis de recouvrement. <BR> <BR>2-Du versement de l'imp&ocirc;t contest&eacute; lorsque cet imp&ocirc;t n'a pas donn&eacute; lieu &agrave; l'&eacute;tablissement d'un r&ocirc;le ou &agrave; la notification d'un avis de mise en recouvrement. <BR> <BR>3-De la notification d&eacute;finitive. <BR> <BR>4-De la r&eacute;alisation de l'&eacute;v&eacute;nement qui motive la r&eacute;clamation. <BR>
+<BR><BR><BR></div></span><finh205185>
+<span class="historique" ID="h205186">
+<div class="histText">
+<BR> <BR>Art. 186 <BR>Toute r&eacute;clamation doit, &agrave; peine d'irrecevabilit&eacute; : <BR> <BR>1-Etre individuelle; toutefois, les contribuables impos&eacute;s collectivement ainsi que les membres des soci&eacute;t&eacute;s de personnes qui contestent les imp&ocirc;ts &agrave; la charge de la soci&eacute;t&eacute;, peuvent pr&eacute;senter une r&eacute;clamation collective. <BR> <BR>2-Mentionner toutes les impositions contest&eacute;es. <BR> <BR>3-Contenir l'expos&eacute; sommaire des moyens et les conclusions du requ&eacute;rant pour chacune des impositions litigieuses. <BR> <BR>4-Etre adress&eacute;e au Directeur g&eacute;n&eacute;ral des Imp&ocirc;ts, r&eacute;dig&eacute;e sur papier libre ou imprim&eacute;e &agrave; la machine, dat&eacute;e et porter la signature manuscrite, le num&eacute;ro de compte contribuable, la boîte postale et le contact t&eacute;l&eacute;phonique du requ&eacute;rant. <BR> <BR>5-Etre appuy&eacute;e de toutes les pi&egrave;ces justificatives n&eacute;cessaires &agrave; l'instruction du dossier. Celles-ci comprennent notamment : <BR> <BR>-l'original ou la copie de l'avis d'imposition ou de l'avis de mise en recouvrement; <BR> <BR>-l'extrait de r&ocirc;le ou la copie de l'extrait de r&ocirc;le; <BR> <BR>-les notifications provisoire et d&eacute;finitive de redressements, si les impositions litigieuses r&eacute;sultent d'un contr&ocirc;le fiscal; <BR> <BR>-l'original ou la copie de la quittance, de l'attestation de versement, de l'attestation de retenue &agrave; la source ou du certificat informatis&eacute; de cr&eacute;dit d'imp&ocirc;t, en ce qui concerne le pr&eacute;l&egrave;vement &agrave; la source sur les sommes mises en paiement par le Tr&eacute;sor public, d&eacute;livr&eacute;s par les comptables de la Direction g&eacute;n&eacute;rale des Imp&ocirc;ts ou de la Direction g&eacute;n&eacute;rale du Tr&eacute;sor et de la Comptabilit&eacute; publique. <BR>
+<BR><BR><BR></div></span><finh205186>
+<span class="historique" ID="h215188">
+<div class="histText">
+ <BR>Art. 188Le Directeur g&eacute;n&eacute;ral des Imp&ocirc;ts statue sur les r&eacute;clamations des contribuables lorsque le montant global notifi&eacute; exc&egrave;de les seuils fix&eacute;s pour les directions centrales et les directions r&eacute;gionales, dans le d&eacute;lai de quarante-cinq (45) jours suivant la date de leur r&eacute;ception. <BR> <BR>Il connaît des appels form&eacute;s contre les d&eacute;cisions des directions centrales ou r&eacute;gionales.<BR> <BR>Les Directeurs centraux et les Directeurs r&eacute;gionaux statuent sur les r&eacute;clamations, dans la limite des seuils de comp&eacute;tence d&eacute;finis &agrave; l'article 183 du pr&eacute;sent Livre, dans le d&eacute;lai de trente jours (30) suivant la date de leur r&eacute;ception.<BR> <BR>La d&eacute;cision est notifi&eacute;e au r&eacute;clamant et contient en cas de rejet total ou partiel, un expos&eacute; des motifs du rejet.<BR> <BR>Loi n° 2020-972 du 23 d&eacute;c. 2020, an. fiscale,Art. 20-4.La d&eacute;cision est notifi&eacute;e au r&eacute;clamant sur support papier ou par voie &eacute;lectronique et contient en cas de rejet total ou partiel, un expos&eacute; des motifs du rejet.L'utilisation de la voie &eacute;lectronique pour la notification de la d&eacute;cision doit r&eacute;sulter de l'acceptation expresse du contribuable avec indication exacte de son adresse &eacute;lectronique.Les conditions et modalit&eacute;s d'utilisation de la voie &eacute;lectronique ainsi que les contribuables concern&eacute;s, sont d&eacute;termin&eacute;s par arr&ecirc;t&eacute; du Ministre en charge du Budget. <BR> <BR>Ord. n° 2000-252 du 28 mars 2000, an, fiscale,Art. 25- 1°;loi n° 2019-1080 du 18 d&eacute;cembre 2019, an. fiscale,Art. 10-6 . <BR> <BR>L'absence de r&eacute;ponse dans les d&eacute;lais pr&eacute;vus vaut rejet.  <BR>Ord. n °-2000-252 du 28 mars 2000, an, fiscale,Art. 25- 1 °- . <BR>
+<BR><BR><BR></div></span><finh215188>
+<span class="historique" ID="h205188">
+<div class="histText">
+ <BR>Art. 188 <BR>Le Directeur g&eacute;n&eacute;ral des Imp&ocirc;ts, ou son d&eacute;l&eacute;gu&eacute;, statue sur les r&eacute;clamations dans le d&eacute;lai de deux mois suivant la date de leur r&eacute;ception. <BR> <BR>Si le Directeur g&eacute;n&eacute;ral des Imp&ocirc;ts, ou son d&eacute;l&eacute;gu&eacute; n'est pas en mesure de statuer dans ce d&eacute;lai, il doit avant son expiration en informer le contribuable en pr&eacute;cisant le terme du d&eacute;lai compl&eacute;mentaire qu'il estime n&eacute;cessaire pour prendre sa d&eacute;cision. Ce d&eacute;lai ne peut exc&eacute;der deux mois. La d&eacute;cision est notifi&eacute;e au r&eacute;clamant sur support papier ou par voie &eacute;lectronique et contient en cas de rejet total ou partiel, un expos&eacute; des motifs du rejet.L'utilisation de la voie &eacute;lectronique pour la notification de la d&eacute;cision doit r&eacute;sulter de l'acceptation expresse du contribuable avec indication exacte de son adresse &eacute;lectronique.Les conditions et modalit&eacute;s d'utilisation de la voie &eacute;lectronique ainsi que les contribuables concern&eacute;s, sont d&eacute;termin&eacute;s par arr&ecirc;t&eacute; du Ministre en charge du Budget. <BR> <BR>Ord. n° 2000-252 du 28 mars 2000, an, fiscale,Art. 25- 1°;loi n° 2019-1080 du 18 d&eacute;cembre 2019, an. fiscale,Art. 10-6 . <BR> <BR>L'absence de r&eacute;ponse dans les d&eacute;lais pr&eacute;vus vaut rejet.  <BR>Ord. n °-2000-252 du 28 mars 2000, an, fiscale,Art. 25- 1 °- . <BR>
+<BR><BR><BR></div></span><finh205188>
+<span class="historique" ID="h195188">
+<div class="histText">
+<BR>  <BR>Art. 188 <BR>Le Directeur g&eacute;n&eacute;ral des Imp&ocirc;ts, ou son d&eacute;l&eacute;gu&eacute;, statue sur les r&eacute;clamations dans le d&eacute;lai de deux mois suivant la date de leur r&eacute;ception. <BR> <BR>Si le Directeur g&eacute;n&eacute;ral des Imp&ocirc;ts, ou son d&eacute;l&eacute;gu&eacute; n'est pas en mesure de statuer dans ce d&eacute;lai, il doit avant son expiration en informer le contribuable en pr&eacute;cisant le terme du d&eacute;lai compl&eacute;mentaire qu'il estime n&eacute;cessaire pour prendre sa d&eacute;cision. Ce d&eacute;lai ne peut exc&eacute;der deux mois. <BR> <BR>La d&eacute;cision est notifi&eacute;e au r&eacute;clamant et contient en cas de rejet total ou partiel, un expos&eacute; des motifs du rejet. <BR> <BR>L'absence de r&eacute;ponse dans les d&eacute;lais pr&eacute;vus vaut rejet.  <BR>Ord. n °-2000-252 du 28 mars 2000, an, fiscale,Art. 25- 1 °- . <BR> 
+<BR><BR><BR></div></span><finh195188>
+<span class="historique" ID="h205189">
+<div class="histText">
+<BR> <BR>Art. 189  <BR>En cas de rejet de sa requ&ecirc;te par le Directeur g&eacute;n&eacute;ral des Imp&ocirc;ts, le contribuable a la possibilit&eacute; de saisir dans les trente jours, le Ministre en charge du Budget qui statue dans un d&eacute;lai de deux mois &agrave; compter de la r&eacute;ception de la r&eacute;clamation.  <BR>Loi n °-2002-156 du 15 mars 2002, an. fiscale,Art. 29. <BR> <BR>Si le Ministre en charge du Budget n'est pas en mesure de statuer dans ce d&eacute;lai, il doit avant son expiration en informer le contribuable en pr&eacute;cisant le terme du d&eacute;lai compl&eacute;mentaire qu'il estime n&eacute;cessaire pour prendre sa d&eacute;cision. Ce d&eacute;lai ne peut, en tout &eacute;tat de cause, exc&eacute;der deux mois. <BR> <BR>La d&eacute;cision est notifi&eacute;e au r&eacute;clamant et contient, en cas de rejet total ou partiel, un expos&eacute; des motifs du rejet. <BR> <BR>L'absence de r&eacute;ponse dans les d&eacute;lais pr&eacute;vus vaut rejet.  <BR>Ord. n °-2000-252 du 28 mars 2000Art. 25-1 °- . <BR>
+<BR><BR><BR></div></span><finh205189>
+</div></div> <!-- wrapper -->
+	  <div id="articleList"><div id="contenu" style='height:auto; background-color:#FFFFCC'>&nbsp;</div>
+      </div><p>&nbsp;</p><p>&nbsp;</p><p>&nbsp;</p><p>&nbsp;</p><p>&nbsp;</p><p>&nbsp;</p><p>&nbsp;</p><p>&nbsp;</p><p>&nbsp;</p><p>&nbsp;</p>
+	  <p>&nbsp;</p><p>&nbsp;</p><p>&nbsp;</p><p>&nbsp;</p><p>&nbsp;</p><p>&nbsp;</p></BODY></HTML>
+	  

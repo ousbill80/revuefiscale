@@ -1,0 +1,40 @@
+reference_source: CGI 2026 — docs client 6/9/10 (propositions metier)
+date_effet: '2026-01-01'
+effets_croises: []
+a_confirmer:
+- date d effet 01/01/2026
+- valeurs issues docs client 6/9/10 — a valider metier
+formule_plafonnement: sans objet
+questions_generees:
+- id: q_foncier_manquant
+  texte: Contribution fonciere manquante ?
+  type: booleen
+- id: q_montant
+  texte: Droits estimes ?
+  type: montant
+profils_applicables:
+- Entreprises au regime reel
+nature: sans_objet
+identifiant: FONC-34-PATRIMOINE
+impot: FONC
+reference_legale: CGI 2026, art. 34 — contribution fonciere patrimoine
+comptes_declencheurs:
+- '211'
+- '213'
+- '22'
+condition_declenchement: (solde(211) > 0 ou solde(213) > 0 ou solde(22) > 0) et reponse(q_foncier_manquant)
+  = vrai
+conditions_fond: Biens immobiliers correctement declares ?
+resultat: reponse(q_montant)
+niveau_risque: moyen
+cas_test:
+  soldes:
+    '211': '100000000'
+    '213': '0'
+    '22': '0'
+  agregats: {}
+  reponses:
+    q_foncier_manquant: true
+    q_montant: '800000'
+  declenche_attendu: true
+  montant_attendu: '800000'

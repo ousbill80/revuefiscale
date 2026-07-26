@@ -1,0 +1,37 @@
+reference_source: CGI 2026 — doc client 2/5 format pivot (propositions metier)
+date_effet: '2026-01-01'
+effets_croises: []
+identifiant: BIC-CHG-18E-CADEAUX
+impot: BIC
+reference_legale: CGI 2026, art. 18 E
+profils_applicables:
+- Entreprises au regime reel
+comptes_declencheurs:
+- '6257'
+- '6583'
+nature: permanente
+condition_declenchement: (solde(6257) > 0 ou solde(6583) > 0) et reponse(q_non_pro) = vrai
+conditions_fond: CGI 2026, art. 18 E
+formule_plafonnement: sans objet
+questions_generees:
+- id: q_non_pro
+  texte: Sans caractere professionnel ?
+  type: booleen
+- id: q_montant
+  texte: Montant a reintegrer ?
+  type: montant
+resultat: reponse(q_montant)
+niveau_risque: moyen
+a_confirmer:
+- date d effet 01/01/2026
+- valeurs issues doc client 5 — a valider metier
+cas_test:
+  soldes:
+    '6257': '1500000'
+    '6583': '0'
+  reponses:
+    q_non_pro: true
+    q_montant: '1500000'
+  agregats: {}
+  declenche_attendu: true
+  montant_attendu: '1500000'

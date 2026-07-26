@@ -1,0 +1,539 @@
+<!DOCTYPE HTML><HTML><HEAD><META HTTP-EQUIV="Content-Type" CONTENT="text/html; charset=UTF-8">
+<TITLE>Code des impots -178</TITLE><LINK REL="STYLESHEET" HREF="/cicgi.css" CHARSET="ISO-8859-1" TYPE="text/css">
+<style type="text/css">
+body {margin-left: 5px;	margin-top: 0px; margin-right: .5em;margin-bottom: 0px;background-color:#fafafa ;}
+.Liste-Numerote {font-size: 12pt;font-weight: regular;font-style: italic;color: #000000;text-transform: none;margin-left:8px ;margin-bottom:8px ;margin-top:4px ;margin-right:10px ;font-family:Georgia, "Times New Roman", Times, serif}
+li {list-style-type: none; margin-left:0px ; padding-left:0em ; }
+.Paratext {font-size: 12pt;font-weight: regular;font-style: italic;color: #000000;text-decoration: none;vertical-align: baseline;text-transform: none;margin-left:0px ;font-family:Georgia, "Times New Roman", Times, serif}
+.Normal {font-size: 12pt;font-weight: regular;font-style: italic;color: #000000;text-decoration: none;vertical-align: baseline;text-transform: none;margin-left:0px ;font-family:Georgia, "Times New Roman", Times, serif}
+ul {list-style-type: none; margin-left:0px ; padding-left:0em ;  }
+.Liste2-Enumeree {font-size: 12pt;font-weight: regular;font-style: italic;color: #000000;text-decoration: none;vertical-align: baseline;text-transform: none;list-style-type:none ;margin-left:16px ;margin-bottom:8px;margin-right:10px;font-family:Georgia, "Times New Roman", Times, serif}
+P.Liste2-Enumeree {font-size: 12pt;font-weight: regular;font-style: italic;color: #000000;text-decoration: none;vertical-align: baseline;text-transform: none;list-style-type:none ;margin-left:16px ;margin-bottom:8px;margin-right:10px;font-family:Georgia, "Times New Roman", Times, serif}
+.Entete {font-size: 13pt;font-weight: regular;font-style: italic;color:#000000 ;text-decoration: none;vertical-align: baseline;text-transform: none;margin-left:8px ;font-family:Georgia, "Times New Roman", Times, serif}
+table, TABLE {border-width:1px; width:99% ;border-collapse:collapse;border-color: #9ecaed;box-shadow: 0 0 10px #9ecaed;}
+tr,td {text-align:left;vertical-align:bottom;border:1px solid #9ecaed;padding:.2em;marging-left:.2em}
+th, TH{text-align:center;vertical-align:middle;padding:.2em;}
+P.TableauEntete {font-size: 13pt;font-weight: regular;font-style: italic;color: #000000;font-family:Georgia, "Times New Roman"}
+P.TableauCelluleLeft, P.TableauCellule {text-align:right;margin-right:1em;font-size: 13pt;font-weight: regular;font-style: italic;color: #000000;font-family:Georgia, "Times New Roman"}
+P.TableauCelluleRight {text-align:left;margin-left:1em;font-size: 13pt;font-weight: regular;font-style: italic;color: #000000;font-family:Georgia, "Times New Roman"}
+.ui-buttonh {padding: .1em .1em ; border: 1px solid #dadada;border-radius: 4px; box-shadow: 0 0 4px #9ecaed;color:#FF3300 ;margin-left:8px ;margin-right:8px ;margin-bottom:2px ;margin-top:2px ;text-decoration:none ;font-size:12pt ;font-family:"Times New Roman"}   
+.ui-button {padding: .1em .1em ; border: 1px solid #dadada;border-radius: 4px; box-shadow: 0 0 4px #9ecaed;color:#FF3300 ;margin-left:8px ;margin-right:8px ;margin-bottom:2px ;margin-top:2px ;text-decoration:none ;font-size:12pt ;font-family:"Times New Roman"}   
+H3 {display: block;text-align: center;text-indent: 0pt;margin-top: 10pt;margin-bottom: 10pt;margin-right: 10pt;margin-left: 10pt;font-size: 12pt;font-weight: Bold;font-style: Regular;color: #00A000;text-decoration: none;vertical-align: baseline;text-transform: none;font-family: "Times New Roman";}
+H4 {display: block;text-align: left;text-indent: 0pt;margin-top: 10pt;margin-bottom: 6pt;margin-right: 10pt;margin-left: 10pt;font-size: 12pt;font-weight: Bold;font-style: Regular;color: #000000;text-decoration: none;vertical-align: baseline;text-transform: none;font-family: "Times New Roman";}
+H5 {display: block;text-align: left;text-indent: 0pt;margin-top: 10pt;margin-bottom: 6pt;margin-right: 10pt;margin-left: 10pt;font-size: 11pt;font-weight: Bold;font-style: Regular;color: #000000;text-decoration: none;vertical-align: baseline;text-transform: none;font-family: "Times New Roman";}
+H6.NoArticle {display: block;text-align: left;text-indent: 0pt;margin-top: 14pt;margin-bottom: 0pt;margin-right: 0pt;margin-left: 0pt;font-size: 14pt;font-weight: regular;font-style: Regular;color: #00a000;text-decoration: none;vertical-align: baseline;text-transform: none;font-family: "Times New Roman";}
+H2 {text-align:center;font-size:16pt;font-family:Georgia, "Times New Roman", Times, serif}
+P.ParaText {font-size: 12pt;font-weight: regular;font-style: italic;color: #000000;	text-decoration: none;vertical-align: baseline;text-transform: none;font-family:Georgia, "Times New Roman", Times, serif;}
+H2.Section,P.Section {font-size:12pt;font-weight:bold;font-style:Regular;color:#008000;font-family:Georgia,"Times New Roman"}
+P.Paragraphe, p.Paragraphe {Text-Align:center;Text-decoration:none;font-size:12pt;font-weight:bold;font-style:Normal;color:#00A000;font-family:Georgia,"Times New Roman"}
+H2.Livre,P.Livre {text-align:center;font-size:16pt;font-weight:bold;font-style:Regular;color:#008000;font-family:Georgia,"Times New Roman"}
+P.Partie,H2.Partie,P.TitreSub {text-align:center;font-size:14pt;font-weight:bold;font-style:Regular;color:#008000;font-family:Georgia,"Times New Roman"}
+H2.ChapitreNo,H2.TitreNo {text-align:center;font-size:14pt;font-weight:bold;font-style:Regular;color:#008000;font-family:Georgia,"Times New Roman"}
+H2.Chapitre, h2.Chapitre {text-align:center;font-size:14pt;font-weight:bold;font-style:Regular;color:#008000;font-family:Georgia,"Times New Roman"}
+H2.TitreNo {text-align:center;font-size:14pt;font-weight:bold;font-style:Regular;color:#008000;font-family:Georgia,"Times New Roman"}
+h3.Sous-Section, H3.Sous-Section, h3.Sous-section, h2.Section {font-size:12pt;font-weight:bold;font-style:Italic;color:#008000;font-family:Georgia,"Times New Roman"}
+hr,HR { display: block; width:90%;  margin-top: 0.5em; margin-bottom: 0.5em; margin-left: auto;  margin-right: auto;  border-style: inset; border-width: 1px;}
+P.TitreSub {text-align:center;font-size:14pt;font-weight:bold;font-style:Regular;color:#008000;font-family:Georgia,"Times New Roman"}
+.Reference {display: block;text-align: left;text-indent: 0pt;margin-top: 10pt;margin-bottom: 6pt;margin-right: 10pt;margin-left: 10pt;font-size: 14pt;font-weight: Bold;font-style: Regular;color: #7F5434;text-decoration: none;vertical-align: baseline;text-transform: none;font-family: "Times New Roman";}
+.ludwig,blockquote {padding-left:1em;background-color:#fafafa;font-size:12pt;font-weight:100;font-style:italic;}
+#articleList {position:absolute ;	z-index: 1 ;left: 10px ;top: 80px ;height:340px;width: 620px;border: 2px solid #cacaca ;border-radius: 5px ;background-color:#fafafa ;    box-shadow: 0 0 12px #333333;	margin-left:0px ;	padding: .3em .3em ;		overflow:hidden ;	visibility:hidden ;  }			
+#articleList h3 { text-align: center; margin: 0; }		
+
+.historique {
+  display:none ;
+  padding: .1em .3em ;
+  border: solid 2px #dadada;
+  border-radius: 7px;
+  box-shadow: 0 0 5px #9ecaed;  
+  
+}
+.histText {
+    display: block;
+    font-family: ;"Times New Roman"
+	padding: .1em .3em ;
+    margin: 1em 0px;
+	font-style:italic;
+	color:#000000;
+	overflow:auto;
+}
+.highlight {
+  font-weight:bold ;
+  color:#000000 ;
+  background-color:#FFFFCC ;
+  }
+.articleList-scroll {
+	overflow-x:hidden ;
+	overflow-y:scroll ;
+	scrollbar-width:thin ;
+	scrollbar-color:blue orange ;
+}
+
+#contenu {
+	overflow-x:hidden ;
+    overflow-y:scroll ;
+	scrollbar-width:thin ;
+	scrollbar-color:blue orange ;
+}		
+
+table, TABLE {
+ text-align:center; 
+    margin-left:.5em; 
+    margin-right:.5em; 
+    border:1px solid #000000;	
+	border-collapse:collapse ;
+    border-color: #9ecaed;
+    box-shadow: 0 0 10px #9ecaed;
+	
+   }
+  tr,td {text-align:left;}
+  
+
+
+ </style>
+ 
+<script src="/js/iscroll.js"></script>
+<script src="/js/jquery.js"></script>   
+<script src="/js/jquery-ui-1.10.3.custom.js"></script>    	    
+<script src="/js/jquery.ui.draggable.js" type="text/javascript"></script>			
+<script src="/js/jquery.ui.core.js"></script> 			
+<script src="/js/jquery.ui.widget.js"></script>			
+<script src="/js/jquery.ui.position.js"></script>			
+<script src="/js/jquery.ui.menu.js"></script>    		
+<script type="text/javascript" src="./xpages.js"></script>
+/* VERSION POUR PAGE HTML SUR SITE DGI.CGICI.COM */
+<script language="javascript">
+ function showButton(id) {
+    var x = document.getElementById(id) ;
+	if(x.style.display === "none") {
+	   x.style.display = "block" ;
+	  } else {
+	   x.style.display = "none" ;
+	   }
+	 }   
+	 var pagenumber="178";
+function loadpage(page, art) {
+      showHideHistoric(art);
+	  return false;
+	  } 
+function loadArticle(page, art) { var artno = art ;var pgno=page;scrolltoelementTag(pgno,artno) ;return false ;} 
+
+</script>
+</HEAD>
+<BODY><div ID="wrapper"><div ID="scroller">
+
+
+
+<H2 CLASS="Section">
+Section IV - Transmissions de propri&eacute;t&eacute;s</H2>
+<P CLASS="Paragraphe">
+Transmission &agrave; titre on&eacute;reux et &agrave; titre gratuit<BR>
+Dispositions g&eacute;n&eacute;rales</P>
+<span id="#A0671"></span>
+<H6 CLASS="NoArticle">
+Art. 671</H6>
+<P CLASS="ParaText">
+Pour les ventes et autres transmissions &agrave; titre on&eacute;reux de biens meubles, la valeur vis&eacute;e &agrave; l&apos;article <a class='ui-button' href='' onclick="scrolltoelementTag('665');return false;">665</a> est d&eacute;termin&eacute;e par le prix exprim&eacute; et le capital des charges qui peuvent s&apos;ajouter au prix ou par une estimation des parties si la valeur r&eacute;elle est sup&eacute;rieure au prix augment&eacute; des charges.</P>
+
+<span id="#A0672"></span>
+<H6 CLASS="NoArticle">
+Art. 672</H6>
+<P CLASS="ParaText">
+Pour les transmissions de biens meubles entre vifs, &agrave; titre gratuit, et celles de ces m&ecirc;mes biens qui s&apos;op&egrave;rent par d&eacute;c&egrave;s, ladite valeur est d&eacute;termin&eacute;e par la d&eacute;claration d&eacute;taill&eacute;e et estimative des parties, sans distraction des charges sauf ce qui est dit aux articles <a class='ui-button' href='' onclick="scrolltoelementTag('675');return false;">675</a>, <a class='ui-button' href='' onclick="scrolltoelementTag('676');return false;">676</a>, <a class='ui-button' href='' onclick="scrolltoelementTag('678');return false;">678</a>, <a class='ui-button' href='' onclick="scrolltoelementTag('679');return false;">679</a> et <a class='ui-button' href='' onclick="scrolltoelementTag('681');return false;">681</a> ci-apr&egrave;s.</P>
+
+<span id="#A0673"></span>
+<H6 CLASS="NoArticle">
+Art. 673</H6>
+<P CLASS="ParaText">
+Pour les ventes, adjudications, cessions, r&eacute;trocessions, licitations et tous autres actes civils ou judiciaires portant translation de propri&eacute;t&eacute; ou d&apos;usufruit d&apos;immeubles &agrave; titre on&eacute;reux, la valeur est d&eacute;termin&eacute;e par le prix exprim&eacute; en y ajoutant toutes les indemnit&eacute;s stipul&eacute;es au profit du c&eacute;dant, &agrave; quelque titre et pour quelque cause que ce soit, ou par une estimation d&apos;experts, dans les cas autoris&eacute;s par la pr&eacute;sente codification ou par la valeur v&eacute;nale r&eacute;elle du bien c&eacute;d&eacute; lorsque cette valeur est sup&eacute;rieure au prix exprim&eacute;.</P>
+
+<H6 CLASS="Modification">
+Loi n<b>&deg;-</b>96-218 du 13 mars 1996, an. fiscale, art 35-1<b>&deg;-</b>.</H6>
+<P CLASS="ParaText">
+Lorsque la mutation porte &agrave; la fois sur des immeubles par nature et sur des immeubles par destination, ces derniers doivent faire l&apos;objet d&apos;un prix particulier et d&apos;une d&eacute;signation d&eacute;taill&eacute;e.</P>
+<P CLASS="ParaText">
+Les constructions, plantations ou ouvrages, faits sur un terrain faisant l&apos;objet d&apos;une concession provisoire ou acquis sous condition r&eacute;solutoire de mise en valeur et mis en valeur sans accord des autorit&eacute;s comp&eacute;tentes par d&apos;autres que le concessionnaire ou l&apos;acqu&eacute;reur sous condition r&eacute;solutoire, sont pr&eacute;sum&eacute;s &ecirc;tre la propri&eacute;t&eacute; de ces derniers.</P>
+<P CLASS="ParaText">
+Pour la liquidation des droits de mutation exigibles lors de la cession du terrain, aucune preuve ne pourra &ecirc;tre invoqu&eacute;e, tant par le vendeur que par le nouvel acqu&eacute;reur, contre la pr&eacute;somption qui pr&eacute;c&egrave;de. Les droits seront per&ccedil;us sur la valeur du terrain major&eacute;e de celle des constructions, plantations ou ouvrages sauf le cas o&ugrave; le vendeur d&eacute;clarerait se r&eacute;server la propri&eacute;t&eacute; desdits constructions, plantations ou ouvrages auquel cas la valeur du terrain seulement servira de base &agrave; la liquidation des droits.</P>
+
+
+<span id="#A0674"></span>
+<H6 CLASS="NoArticle">
+Art. 674</H6>
+<P CLASS="ParaText">
+Pour la liquidation et le paiement des droits sur les mutations &agrave; titre gratuit entre vifs et par d&eacute;c&egrave;s, la valeur est d&eacute;termin&eacute;e d&apos;apr&egrave;s la d&eacute;claration d&eacute;taill&eacute;e et estimative des parties sans distraction des charges, sous r&eacute;serve en ce qui concerne celles-ci des dispositions des articles <a class='ui-button' href='' onclick="scrolltoelementTag('681');return false;">681</a> et suivants, ou par la valeur v&eacute;nale r&eacute;elle du bien transmis lorsque cette valeur est sup&eacute;rieure &agrave; la valeur d&eacute;clar&eacute;e par les parties.</P>
+
+<H6 CLASS="Modification">
+Loi n<b>&deg;-</b> 96-218 du 13 mars 1996, an. fiscale, art 35-2<b>&deg;-</b>.</H6>
+<P CLASS="ParaText">
+N&eacute;anmoins, si, dans les deux ann&eacute;es qui auront pr&eacute;c&eacute;d&eacute; ou suivi, soit l&apos;acte de donation, soit le point de d&eacute;part des d&eacute;lais pour souscrire la d&eacute;claration de succession, les immeubles transmis ont fait l&apos;objet d&apos;une adjudication, soit par autorit&eacute; de justice, soit volontaire, avec admission des &eacute;trangers, les droits exigibles ne pourront &ecirc;tre calcul&eacute;s sur une somme inf&eacute;rieure au prix de l&apos;adjudication, en y ajoutant toutes charges en capital, &agrave; moins qu&apos;il ne soit justifi&eacute; que la consistance des immeubles a subi dans l&apos;intervalle, des transformations susceptibles d&apos;en modifier la valeur.</P>
+<P CLASS="Paragraphe">
+Dispositions sp&eacute;ciales aux transmissions de valeurs mobili&egrave;res</P>
+
+
+<span id="#A0675"></span>
+<H6 CLASS="NoArticle">
+Art. 675</H6>
+<P CLASS="ParaText">
+Pour les valeurs mobili&egrave;res de toute nature admises &agrave; une cote officielle ou &agrave; une cote de courtiers en valeurs mobili&egrave;res, le capital servant de base &agrave; la liquidation et au paiement des droits de mutation &agrave; titre gratuit entre vifs ou par d&eacute;c&egrave;s est d&eacute;termin&eacute; par le cours moyen boursier au jour de la transmission.</P>
+
+<H6 CLASS="Modification">
+Loi n<b>&deg;-</b> 81-1127 du 30 d&eacute;c. 1981, an. fiscale,Art. 15.</H6>
+<P CLASS="ParaText">
+S&apos;il s&apos;agit de valeurs non cot&eacute;es en bourse, le capital est d&eacute;termin&eacute; par la d&eacute;claration estimative des parties conform&eacute;ment &agrave; l&apos;article <a class='ui-button' href='' onclick="scrolltoelementTag('672');return false;">672</a>, sauf application de l&apos;article <a class='ui-button' href='' onclick="scrolltoelementTag('795');return false;">795</a>.</P>
+
+
+<span id="#A0676"></span>
+<H6 CLASS="NoArticle">
+Art. 676</H6>
+<P CLASS="ParaText">
+Sont assujettis aux droits de mutation par d&eacute;c&egrave;s, les fonds publics, actions, obligations, parts d&apos;int&eacute;r&ecirc;ts, cr&eacute;ances et g&eacute;n&eacute;ralement toutes valeurs mobili&egrave;res &eacute;trang&egrave;res, de quelque nature qu&apos;ils soient, d&eacute;pendant d&apos;une succession r&eacute;gie par les lois de la C&ocirc;te d&apos;Ivoire ou d&eacute;pendant de la succession de personnes domicili&eacute;es en C&ocirc;te d&apos;Ivoire, quelle que soit la nationalit&eacute; de ces derniers.</P>
+
+<H6 CLASS="Modification">
+Loi n<b>&deg;-</b> 86-1383 du 19 d&eacute;c, 1986, an. fiscale,Art. 9.</H6>
+
+
+<span id="#A0677"></span>
+<H6 CLASS="NoArticle">
+Art. 677</H6>
+<P CLASS="ParaText">
+Lorsqu&apos;elles s&apos;op&egrave;rent par acte pass&eacute; en C&ocirc;te d&apos;Ivoire ou par acte pass&eacute; hors de C&ocirc;te d&apos;Ivoire et dont il est fait usage en C&ocirc;te d&apos;Ivoire, les transmissions entre vifs &agrave; titre gratuit ou &agrave; titre on&eacute;reux de biens mobiliers sis hors de C&ocirc;te d&apos;Ivoire, corporels ou incorporels, sont soumises aux droits de mutation dans les m&ecirc;mes conditions que si elles ont pour objet des biens de m&ecirc;me nature sis en C&ocirc;te d&apos;Ivoire.</P>
+<P CLASS="Paragraphe">
+Mutations par d&eacute;c&egrave;s -R&egrave;gles g&eacute;n&eacute;rales</P>
+
+<span id="#A0678"></span>
+<H6 CLASS="NoArticle">
+Art. 678</H6>
+<P CLASS="Liste2-Enumeree">
+1<b>&deg;-</b>Pour la liquidation et le paiement des droits de mutation par d&eacute;c&egrave;s, la valeur de la propri&eacute;t&eacute; des biens meubles est d&eacute;termin&eacute;e, sauf preuve contraire :</P>
+<P CLASS="Liste2-Enumeree">
+a)Par le prix exprim&eacute; dans les actes de vente, lorsque cette vente a lieu publiquement dans les deux ann&eacute;es du d&eacute;c&egrave;s.</P>
+<P CLASS="Liste2-Enumeree">
+b)A d&eacute;faut d&apos;actes de vente, par l&apos;estimation contenue dans les inventaires, s&apos;il en est dress&eacute; dans les formes prescrites par l&apos;article 943 du Code de Proc&eacute;dure civile, et dans les cinq ann&eacute;es du d&eacute;c&egrave;s pour les meubles meublants, et par l&apos;estimation contenue dans les inventaires et autres actes, s&apos;il en est pass&eacute; dans le m&ecirc;me d&eacute;lai, pour les autres biens meubles, sauf les dispositions ci-apr&egrave;s du paragraphe 2.</P>
+<P CLASS="Liste2-Enumeree">
+c)A d&eacute;faut des bases d&apos;&eacute;valuation &eacute;tablies par les deux alin&eacute;as pr&eacute;c&eacute;dents, par la d&eacute;claration d&eacute;taill&eacute;e et estimative des parties. Toutefois, pour les meubles meublants, et sans que l&apos;Administration ait &agrave; en justifier l&apos;existence, la valeur imposable ne peut &ecirc;tre inf&eacute;rieure &agrave; 5 % de l&apos;ensemble des autres valeurs mobili&egrave;res et immobili&egrave;res de la succession, la preuve contraire &eacute;tant aussi r&eacute;serv&eacute;e.</P>
+<P CLASS="Liste2-Enumeree">
+2<b>&deg;-</b>En ce qui concerne les bijoux, pierreries, objets d&apos;art ou de collection, la valeur imposable ne peut, sous r&eacute;serve de ce qui est dit au paragraphe 1, &ecirc;tre inf&eacute;rieure &agrave; 60 % de l&apos;&eacute;valuation faite dans les contrats ou conventions d&apos;assurance contre le vol ou contre l&apos;incendie en cours au jour du d&eacute;c&egrave;s et conclus par le d&eacute;funt, son conjoint ou ses auteurs moins de dix ans avant l&apos;ouverture de la succession, sauf preuve contraire.</P>
+<P CLASS="Liste2-Enumeree">
+S&apos;il existe plusieurs polices susceptibles d&apos;&ecirc;tre retenues pour l&apos;application du forfait, celui-ci est calcul&eacute; sur la moyenne des &eacute;valuations figurant dans ces polices.</P>
+<P CLASS="Liste2-Enumeree">
+3<b>&deg;-</b>Les dispositions du pr&eacute;sent article ne sont applicables ni aux cr&eacute;ances, ni aux rentes, actions, obligations, effets publics et autres biens meubles, dont la valeur et le mode d&apos;&eacute;valuation sont d&eacute;termin&eacute;s par des dispositions sp&eacute;ciales.</P>
+
+<span id="#A0679"></span>
+<H6 CLASS="NoArticle">
+Art. 679</H6>
+<P CLASS="ParaText">
+Les dispositions des paragraphes 1<b>&deg;-</b> et 3<b>&deg;-</b> de l&apos;article pr&eacute;c&eacute;dent sont applicables &agrave; la liquidation et au paiement des droits de mutation entre vifs &agrave; titre gratuit toutes les fois que les meubles transmis sont vendus dans les deux ans de l&apos;acte de donation, ou que, s&apos;agissant de bijoux, de pierreries, d&apos;objets d&apos;art ou de collection, ils font l&apos;objet d&apos;une assurance contre le vol ou contre l&apos;incendie en cours &agrave; la date de cet acte et conclue par le donateur, son conjoint ou ses auteurs depuis moins de dix ans.</P>
+
+<span id="#A0680"></span>
+<H6 CLASS="NoArticle">
+Art. 680</H6>
+<P CLASS="ParaText">
+Par d&eacute;rogation &agrave; l&apos;article ci-dessus, les droits de mutation &agrave; titre gratuit entre vifs ou par d&eacute;c&egrave;s sont liquid&eacute;s d&apos;apr&egrave;s la d&eacute;claration estimative des parties, en ce qui concerne les cr&eacute;ances dont le d&eacute;biteur se trouvera en &eacute;tat de faillite, liquidation des biens ou de d&eacute;confiture au moment de l&apos;acte de donation ou de l&apos;ouverture de la succession.</P>
+<P CLASS="ParaText">
+Toute somme recouvr&eacute;e sur le d&eacute;biteur de la cr&eacute;ance post&eacute;rieurement &agrave; l&apos;&eacute;valuation et en sus de celle-ci devra faire l&apos;objet d&apos;une d&eacute;claration. Seront applicables &agrave; ces d&eacute;clarations les principes qui r&eacute;gissent les d&eacute;clarations de mutation par d&eacute;c&egrave;s en g&eacute;n&eacute;ral, notamment au point de vue des d&eacute;lais, des p&eacute;nalit&eacute;s de retard et de la prescription, l&apos;exigibilit&eacute; de l&apos;imp&ocirc;t seulement report&eacute;e au jour du recouvrement de tout ou partie de la cr&eacute;ance transmise.</P>
+
+<span id="#A0681"></span>
+<H6 CLASS="NoArticle">
+Art. 681</H6>
+<P CLASS="ParaText">
+Lorsque les h&eacute;ritiers et l&eacute;gataires universels sont grev&eacute;s de legs particuliers et sommes d&apos;argent non existantes dans la succession et qu&apos;ils ont acquitt&eacute; le droit sur l&apos;int&eacute;gralit&eacute; des biens de cette m&ecirc;me succession, le m&ecirc;me droit n&apos;est pas d&ucirc; pour ce legs; cons&eacute;quemment, les droits d&eacute;j&agrave; pay&eacute;s par les l&eacute;gataires particuliers doivent s&apos;imputer sur ceux dus par les h&eacute;ritiers ou l&eacute;gataires universels.</P>
+<P CLASS="Paragraphe">
+D&eacute;duction des dettes et charges</P>
+
+<span id="#A0682"></span>
+<H6 CLASS="NoArticle">
+Art. 682</H6>
+<P CLASS="ParaText">
+Pour la liquidation et le paiement des droits de mutation par d&eacute;c&egrave;s, seront d&eacute;duites les dettes &agrave; la charge du d&eacute;funt dont l&apos;existence au jour de l&apos;ouverture de la succession sera d&ucirc;ment justifi&eacute;e par tous les modes de preuve compatibles avec la proc&eacute;dure &eacute;crite.</P>
+<P CLASS="ParaText">
+S&apos;il s&apos;agit de dettes commerciales, l&apos;Administration pourra exiger, sous peine de rejet, la production des livres de commerce du d&eacute;funt.</P>
+<P CLASS="ParaText">
+Ces livres seront d&eacute;pos&eacute;s pendant cinq jours au service qui re&ccedil;oit la d&eacute;claration et ils seront, s&apos;il y a lieu, communiqu&eacute;s une fois, sans d&eacute;placement, aux agents du service pendant les deux ann&eacute;es qui suivront la d&eacute;claration, sous peine d&apos;une amende &eacute;gale aux droits qui n&apos;auraient pas &eacute;t&eacute; per&ccedil;us par suite de la d&eacute;duction du passif.</P>
+<P CLASS="ParaText">
+L&apos;Administration aura le droit de puiser dans les titres ou livres produits, les renseignements permettant de contr&ocirc;ler la sinc&eacute;rit&eacute; de la d&eacute;claration de l&apos;actif d&eacute;pendant de la succession et, en cas d&apos;instance, la production de ces titres ou livres ne pourra &ecirc;tre refus&eacute;e.</P>
+<P CLASS="ParaText">
+S&apos;il s&apos;agit d&apos;une dette grevant une succession d&eacute;volue &agrave; une personne pour la nue-propri&eacute;t&eacute; et &agrave; une autre pour l&apos;usufruit, le droit de mutation sera per&ccedil;u sur l&apos;actif de la succession diminu&eacute; du montant de la dette, dans les conditions de l&apos;article <a class='ui-button' href='' onclick="scrolltoelementTag('692');return false;">692</a> ci-apr&egrave;s.</P>
+
+<span id="#A0683"></span>
+<H6 CLASS="NoArticle">
+Art. 683</H6>
+<P CLASS="ParaText">
+Les dettes dont la d&eacute;duction est demand&eacute;e sont d&eacute;taill&eacute;es, article par article, dans un inventaire sur papier non timbr&eacute;, qui est d&eacute;pos&eacute; au service lors de la d&eacute;claration de la succession et certifi&eacute; par le d&eacute;posant.</P>
+<P CLASS="ParaText">
+A l&apos;appui de leur demande en d&eacute;duction, les h&eacute;ritiers ou leurs repr&eacute;sentants devront indiquer, soit la date de l&apos;acte, le nom et la r&eacute;sidence de l&apos;officier public qui l&apos;a re&ccedil;u, soit la date du jugement et la juridiction dont il &eacute;mane, soit la date du jugement d&eacute;claratif de la faillite ou de la liquidation des biens, ainsi que la date du proc&egrave;s-verbal des op&eacute;rations de v&eacute;rification et d&apos;affirmation de cr&eacute;ances ou du r&egrave;glement d&eacute;finitif de la distribution par contribution.</P>
+<P CLASS="ParaText">
+Ils devront pr&eacute;senter les autres titres, actes ou &eacute;crits que le cr&eacute;ancier ne peut sous peine de dommages et int&eacute;r&ecirc;ts refuser de communiquer sans r&eacute;c&eacute;piss&eacute;.</P>
+
+<H6 CLASS="Modification">
+Loi n<b>&deg;-</b> 86-1383 du 19 d&eacute;c. 1986, an. fiscale,Art. 9.</H6>
+
+
+<span id="#A0684"></span>
+<H6 CLASS="NoArticle">
+Art. 684</H6>
+<P CLASS="ParaText">
+Toute dette, au sujet de laquelle l&apos;agent de l&apos;Administration aura jug&eacute; les justifications insuffisantes, ne sera pas retranch&eacute;e de l&apos;actif de la succession pour la perception du droit, sauf aux parties &agrave; se pourvoir en restitution, s&apos;il y a lieu, dans les deux ann&eacute;es, &agrave; compter du jour de la d&eacute;claration.</P>
+<P CLASS="ParaText">
+N&eacute;anmoins, toute dette constat&eacute;e par acte authentique et non &eacute;chue au jour de l&apos;ouverture de la succession, ne pourra &ecirc;tre &eacute;cart&eacute;e par l&apos;Administration tant que celle-ci n&apos;aura pas fait juger qu&apos;elle est simul&eacute;e. L&apos;action pour prouver la simulation sera prescrite apr&egrave;s cinq ans, &agrave; compter du jour de la d&eacute;claration.</P>
+<P CLASS="ParaText">
+Les h&eacute;ritiers ou l&eacute;gataires seront admis dans le d&eacute;lai de deux ans, &agrave; compter du jour de la d&eacute;claration, &agrave; r&eacute;clamer, sous les justifications prescrites ci-dessus, la d&eacute;duction des dettes &eacute;tablies par les op&eacute;rations de la faillite ou de la liquidation judiciaire ou par le r&egrave;glement d&eacute;finitif de la distribution par contribution post&eacute;rieure &agrave; la d&eacute;claration et obtenir le remboursement des droits qu&apos;ils auraient pay&eacute;s en trop.</P>
+
+<span id="#A0685"></span>
+<H6 CLASS="NoArticle">
+Art. 685</H6>
+<P CLASS="ParaText">
+L&apos;agent de l&apos;Administration aura, dans tous les cas, la facult&eacute; d&apos;exiger de l&apos;h&eacute;ritier la production de l&apos;attestation du cr&eacute;ancier certifiant l&apos;existence de la dette &agrave; l&apos;&eacute;poque de l&apos;ouverture de la succession. Cette attestation, qui serait sur papier non timbr&eacute;, ne pourra &ecirc;tre refus&eacute;e, sous peine de dommages-int&eacute;r&ecirc;ts toutes les fois qu&apos;elle sera l&eacute;gitimement r&eacute;clam&eacute;e.</P>
+<P CLASS="ParaText">
+Le cr&eacute;ancier qui attestera de l&apos;existence d&apos;une dette d&eacute;clarera, par une mention expresse, conna&icirc;tre les dispositions de l&apos;article <a class='ui-button' href='' onclick="scrolltoelementTag('782');return false;">782</a> relatives aux peines en cas de fausse attestation.</P>
+
+<span id="#A0686"></span>
+<H6 CLASS="NoArticle">
+Art. 686</H6>
+<P CLASS="ParaText">
+Toutefois ne sont pas d&eacute;duites :</P>
+<P CLASS="Liste2-Enumeree">
+1-Les dettes &eacute;chues depuis plus de trois mois avant l&apos;ouverture de la succession, &agrave; moins qu&apos;il ne soit produit une attestation du cr&eacute;ancier en certifiant l&apos;existence &agrave; cette &eacute;poque, dans la forme et suivant les r&egrave;gles d&eacute;termin&eacute;es &agrave; l&apos;article <a class='ui-button' href='' onclick="scrolltoelementTag('685');return false;">685</a>.</P>
+<P CLASS="Liste2-Enumeree">
+2-Les dettes consenties par le d&eacute;funt au profit de ses h&eacute;ritiers ou de personnes interpos&eacute;es.</P>
+
+<H6 CLASS="Modification">
+Loi n<b>&deg;-</b> 86-1383 du 19 d&eacute;c. 1986, an. fiscale,Art. 9.</H6>
+<P CLASS="ParaText">
+Sont r&eacute;put&eacute;es personnes interpos&eacute;es, les personnes d&eacute;sign&eacute;es ci-apr&egrave;s :</P>
+<P CLASS="Liste2-Enumeree">
+a)Les p&egrave;re, m&egrave;re, enfants, descendants et l&apos;&eacute;pouse de l&apos;h&eacute;ritier donataire ou l&eacute;gataire.</P>
+<P CLASS="Liste2-Enumeree">
+b)Les enfants de l&apos;&eacute;poux survivant issus d&apos;un autre mariage et les parents dont cet &eacute;poux est l&apos;h&eacute;ritier pr&eacute;somptif.</P>
+<P CLASS="Liste2-Enumeree">
+N&eacute;anmoins, lorsque la dette aura &eacute;t&eacute; consentie par un acte authentique ou par acte sous-seing priv&eacute; ayant date certaine avant l&apos;ouverture de la succession autrement que par le d&eacute;c&egrave;s d&apos;une des parties contractantes, les h&eacute;ritiers, donataires et l&eacute;gataires et les personnes r&eacute;put&eacute;es interpos&eacute;es auront le droit de prouver la sinc&eacute;rit&eacute; de cette dette et son existence au jour de l&apos;ouverture de la succession.</P>
+<P CLASS="Liste2-Enumeree">
+3-Les dettes reconnues par testament.</P>
+<P CLASS="Liste2-Enumeree">
+4-Les dettes hypoth&eacute;caires garanties par une inscription p&eacute;rim&eacute;e depuis plus de trois mois, &agrave; moins qu&apos;il ne s&apos;agisse d&apos;une dette non &eacute;chue et que l&apos;existence n&apos;en soit attest&eacute;e par le cr&eacute;ancier dans les formes pr&eacute;vues &agrave; l&apos;article <a class='ui-button' href='' onclick="scrolltoelementTag('685');return false;">685</a>; si l&apos;inscription n&apos;est pas p&eacute;rim&eacute;e, mais si le chiffre en a &eacute;t&eacute; r&eacute;duit, l&apos;exc&eacute;dent sera seul d&eacute;duit s&apos;il y a lieu.</P>
+<P CLASS="Liste2-Enumeree">
+5-Les dettes r&eacute;sultant de titres pass&eacute;s ou de jugements rendus &agrave; l&apos;&eacute;tranger &agrave; moins qu&apos;ils n&apos;aient &eacute;t&eacute; rendus ex&eacute;cutoires en C&ocirc;te d&apos;Ivoire; celles qui sont hypoth&eacute;qu&eacute;es exclusivement sur les immeubles situ&eacute;s &agrave; l&apos;&eacute;tranger, celles enfin, qui gr&egrave;vent des successions d&apos;&eacute;trangers, &agrave; moins qu&apos;elles n&apos;aient &eacute;t&eacute; contract&eacute;es en C&ocirc;te d&apos;Ivoire et envers des personnes domicili&eacute;es en C&ocirc;te d&apos;Ivoire ou envers des soci&eacute;t&eacute;s et compagnies m&ecirc;me &eacute;trang&egrave;res ayant une succursale en C&ocirc;te d&apos;Ivoire.</P>
+<P CLASS="Liste2-Enumeree">
+6-Les dettes en capital et int&eacute;r&ecirc;ts pour lesquelles le d&eacute;lai de prescription est accompli, &agrave; moins qu&apos;il ne soit justifi&eacute; que la prescription a &eacute;t&eacute; interrompue.</P>
+
+
+<span id="#A0687"></span>
+<H6 CLASS="NoArticle">
+Art. 687</H6>
+<P CLASS="ParaText">
+L&apos;inexactitude des d&eacute;clarations ou attestations de dettes pourra &ecirc;tre &eacute;tablie par tous les moyens de preuve admis par le droit commun, except&eacute; le serment.</P>
+
+<span id="#A0688"></span>
+<H6 CLASS="NoArticle">
+Art. 688</H6>
+<P CLASS="ParaText">
+Sont r&eacute;put&eacute;s, au point de vue fiscal, faire partie, jusqu&apos;&agrave; preuve du contraire, de la succession de l&apos;usufruitier, toute valeur mobili&egrave;re, tout bien meuble ou immeuble appartenant pour l&apos;usufruit au d&eacute;funt et, pour la nue-propri&eacute;t&eacute;, &agrave; ses pr&eacute;somptifs h&eacute;ritiers ou descendants d&apos;eux, m&ecirc;me exclus par testament, ou &agrave; ses donataires ou l&eacute;gataires institu&eacute;s m&ecirc;me par testament post&eacute;rieur, ou &agrave; des personnes interpos&eacute;es, &agrave; moins qu&apos;il n&apos;y ait eu donation r&eacute;guli&egrave;re et que cette donation, si elle n&apos;est pas constat&eacute;e dans un contrat de mariage, ait &eacute;t&eacute; consentie plus de trois mois avant le d&eacute;c&egrave;s.</P>
+<P CLASS="ParaText">
+Sont r&eacute;put&eacute;es personnes interpos&eacute;es les personnes d&eacute;sign&eacute;es &agrave; l&apos;article <a class='ui-button' href='' onclick="scrolltoelementTag('686');return false;">686</a> ci-dessus.</P>
+
+<H6 CLASS="Modification">
+Loi n<b>&deg;-</b> 86-1383 du 19 d&eacute;c. 1986, an. fiscale,Art. 9.</H6>
+<P CLASS="ParaText">
+Toute r&eacute;clamation de ce chef sera prescrite dans un d&eacute;lai de cinq ans, &agrave; compter de l&apos;ouverture de la succession.</P>
+<P CLASS="ParaText">
+Toutefois, si la nue-propri&eacute;t&eacute; provient &agrave; l&apos;h&eacute;ritier, au donataire, au l&eacute;gataire ou &agrave; la personne interpos&eacute;e, d&apos;une vente ou d&apos;une donation &agrave; lui consentie par le d&eacute;funt, les droits de mutations acquitt&eacute;s par le nu-propri&eacute;taire, et dont il est justifi&eacute;, sont imput&eacute;s sur l&apos;imp&ocirc;t de transmission par d&eacute;c&egrave;s exigible &agrave; raison de l&apos;incorporation des biens dans la succession.</P>
+
+
+<span id="#A0689"></span>
+<H6 CLASS="NoArticle">
+Art. 689</H6>
+<P CLASS="ParaText">
+Sont pr&eacute;sum&eacute;s, jusqu&apos;&agrave; preuve contraire, faire partie de la succession, pour la liquidation et le paiement des droits de mutation par d&eacute;c&egrave;s, les titres et les valeurs dont le d&eacute;funt a per&ccedil;u les revenus ou &agrave; raison desquels il a effectu&eacute; des op&eacute;rations quelconques moins d&apos;un an avant son d&eacute;c&egrave;s.</P>
+
+<span id="#A0690"></span>
+<H6 CLASS="NoArticle">
+Art. 690</H6>
+<P CLASS="ParaText">
+Tous les titres, sommes ou valeurs, existant chez les d&eacute;positaires d&eacute;sign&eacute;s au paragraphe 1er de l&apos;article <a class='ui-button' href='' onclick="scrolltoelementTag('493');return false;">493</a> et faisant l&apos;objet de comptes indivis ou collectifs avec solidarit&eacute;, sont consid&eacute;r&eacute;s, pour la perception des droits de mutation par d&eacute;c&egrave;s, comme appartenant conjointement aux d&eacute;posants et d&eacute;pendant de la succession de chacun d&apos;eux pour une part virile, sauf preuve contraire r&eacute;serv&eacute;e tant &agrave; l&apos;Administration qu&apos;aux redevables et r&eacute;sultant pour ces derniers, soit des &eacute;nonciations du contrat de d&eacute;p&ocirc;t, soit des titres pr&eacute;vus par l&apos;article <a class='ui-button' href='' onclick="scrolltoelementTag('686');return false;">686</a>.</P>
+
+<span id="#A0691"></span>
+<H6 CLASS="NoArticle">
+Art. 691</H6>
+<P CLASS="ParaText">
+Les sommes, titres ou objets trouv&eacute;s dans un coffre-fort lou&eacute; conjointement &agrave; plusieurs personnes sont r&eacute;put&eacute;s, &agrave; d&eacute;faut de preuve contraire et seulement pour la perception des droits, &ecirc;tre la propri&eacute;t&eacute; conjointe de ces personnes et d&eacute;pendre pour une part virile de la succession.</P>
+<P CLASS="ParaText">
+Cette disposition est applicable aux plis cachet&eacute;s et caissettes ferm&eacute;es, remis en d&eacute;p&ocirc;t aux banquiers, changeurs, escompteurs et &agrave; toute personne recevant habituellement des plis de m&ecirc;me nature.</P>
+<P CLASS="Paragraphe">
+Valeur de la nue-propri&eacute;t&eacute; et de l&apos;usufruit</P>
+
+<span id="#A0692"></span>
+<H6 CLASS="NoArticle">
+Art. 692</H6>
+<P CLASS="ParaText">
+La valeur de la nue-propri&eacute;t&eacute; et de l&apos;usufruit des biens meubles et immeubles est d&eacute;termin&eacute;e, pour la liquidation et le paiement des droits, ainsi qu&apos;il suit, &agrave; savoir :</P>
+<P CLASS="Liste2-Enumeree">
+1-Pour les transmissions &agrave; titre on&eacute;reux de biens autres que cr&eacute;ances, rentes ou pensions, par le prix exprim&eacute;, en y ajoutant toutes les charges en capital, sauf application des articles <a class='ui-button' href='' onclick="scrolltoelementTag('788');return false;">788</a> et <a class='ui-button' href='' onclick="scrolltoelementTag('801');return false;">801</a>.</P>
+<P CLASS="Liste2-Enumeree">
+2-Pour les apports en mariage, les d&eacute;livrances de legs, ainsi que pour les transmissions entre vifs &agrave; titre gratuit ou celles qui s&apos;op&egrave;rent par d&eacute;c&egrave;s des m&ecirc;mes biens, par une &eacute;valuation conforme au bar&egrave;me suivant :</P>
+<P CLASS="Liste2-Enumeree">&nbsp;
+</P>
+<TABLE BORDER="1">
+<TR>
+<TD ROWSPAN="1" COLSPAN="1">
+<P CLASS="TableauEntete">
+Age de l&apos;usufruitier</P>
+</TD>
+<TD ROWSPAN="1" COLSPAN="1">
+<P CLASS="TableauEntete">
+Valeur de l&apos;usufruit</P>
+</TD>
+<TD ROWSPAN="1" COLSPAN="1">
+<P CLASS="TableauEntete">
+Valeur de la nue propri&eacute;t&eacute;</P>
+</TD>
+</TR>
+<TR>
+<TD ROWSPAN="1" COLSPAN="1">
+<P CLASS="TableauCellule">
+Moins de</P>
+</TD>
+<TD ROWSPAN="1" COLSPAN="1">
+<P CLASS="TableauCellule">
+Fraction de la propri&eacute;t&eacute; enti&egrave;re</P>
+</TD>
+<TD ROWSPAN="1" COLSPAN="1">
+<P CLASS="TableauCellule">
+Fraction de la propri&eacute;t&eacute; enti&egrave;re</P>
+</TD>
+</TR>
+<TR>
+<TD ROWSPAN="1" COLSPAN="1">
+<P CLASS="TableauCellule">
+20 ans r&eacute;volus</P>
+</TD>
+<TD ROWSPAN="1" COLSPAN="1">
+<P CLASS="TableauCellule">
+7/10</P>
+</TD>
+<TD ROWSPAN="1" COLSPAN="1">
+<P CLASS="TableauCellule">
+3/10</P>
+</TD>
+</TR>
+<TR>
+<TD ROWSPAN="1" COLSPAN="1">
+<P CLASS="TableauCellule">
+30 ans r&eacute;volus</P>
+</TD>
+<TD ROWSPAN="1" COLSPAN="1">
+<P CLASS="TableauCellule">
+6/10</P>
+</TD>
+<TD ROWSPAN="1" COLSPAN="1">
+<P CLASS="TableauCellule">
+4/10</P>
+</TD>
+</TR>
+<TR>
+<TD ROWSPAN="1" COLSPAN="1">
+<P CLASS="TableauCellule">
+40 ans r&eacute;volus</P>
+</TD>
+<TD ROWSPAN="1" COLSPAN="1">
+<P CLASS="TableauCellule">
+5/10</P>
+</TD>
+<TD ROWSPAN="1" COLSPAN="1">
+<P CLASS="TableauCellule">
+5/10</P>
+</TD>
+</TR>
+<TR>
+<TD ROWSPAN="1" COLSPAN="1">
+<P CLASS="TableauCellule">
+50 ans r&eacute;volus</P>
+</TD>
+<TD ROWSPAN="1" COLSPAN="1">
+<P CLASS="TableauCellule">
+4/10</P>
+</TD>
+<TD ROWSPAN="1" COLSPAN="1">
+<P CLASS="TableauCellule">
+6/10</P>
+</TD>
+</TR>
+<TR>
+<TD ROWSPAN="1" COLSPAN="1">
+<P CLASS="TableauCellule">
+60 ans r&eacute;volus</P>
+</TD>
+<TD ROWSPAN="1" COLSPAN="1">
+<P CLASS="TableauCellule">
+3/10</P>
+</TD>
+<TD ROWSPAN="1" COLSPAN="1">
+<P CLASS="TableauCellule">
+7/10</P>
+</TD>
+</TR>
+<TR>
+<TD ROWSPAN="1" COLSPAN="1">
+<P CLASS="TableauCellule">
+70 ans r&eacute;volus</P>
+</TD>
+<TD ROWSPAN="1" COLSPAN="1">
+<P CLASS="TableauCellule">
+1/10</P>
+</TD>
+<TD ROWSPAN="1" COLSPAN="1">
+<P CLASS="TableauCellule">
+9/10</P>
+</TD>
+</TR>
+<TR>
+<TD ROWSPAN="1" COLSPAN="1">
+<P CLASS="TableauCellule">
+Plus de 70 ans r&eacute;volus</P>
+</TD>
+<TD ROWSPAN="1" COLSPAN="1">
+<P CLASS="TableauCellule">
+1/10</P>
+</TD>
+<TD ROWSPAN="1" COLSPAN="1">
+<P CLASS="TableauCellule">
+9/10</P>
+</TD>
+</TR>
+</TABLE>
+<br>
+<P CLASS="Liste2-Enumeree">
+Toutefois, dans le cas d&apos;usufruits successifs, l&apos;usufruit &eacute;ventuel venant &agrave; s&apos;ouvrir, le nu-propri&eacute;taire aura droit &agrave; la restitution d&apos;une somme &eacute;gale &agrave; ce qu&apos;il aurait pay&eacute; en moins, si le droit acquitt&eacute; par lui avait &eacute;t&eacute; calcul&eacute; d&apos;apr&egrave;s l&apos;&acirc;ge de l&apos;usufruitier &eacute;ventuel.</P>
+<P CLASS="Liste2-Enumeree">
+L&apos;action en restitution ouverte au profit du nu-propri&eacute;taire se prescrit en deux ans &agrave; compter du jour du d&eacute;c&egrave;s du pr&eacute;c&eacute;dent usufruitier.</P>
+<P CLASS="Liste2-Enumeree">
+L&apos;usufruit constitu&eacute; pour une dur&eacute;e fixe est estim&eacute; aux deux dixi&egrave;mes de la valeur de la propri&eacute;t&eacute; enti&egrave;re pour chaque p&eacute;riode de dix ans de la dur&eacute;e de l&apos;usufruit, sans fraction et sans &eacute;gard &agrave; l&apos;&acirc;ge de l&apos;usufruitier.</P>
+<P CLASS="Liste2-Enumeree">
+3-Pour les cr&eacute;ances &agrave; terme, les rentes perp&eacute;tuelles ou non perp&eacute;tuelles et les pensions cr&eacute;&eacute;es ou transmises &agrave; quelque titre que ce soit et pour l&apos;amortissement de ces rentes ou pensions, par une quotit&eacute; de la valeur de la propri&eacute;t&eacute; enti&egrave;re, &eacute;tablie suivant les r&egrave;gles indiqu&eacute;es au paragraphe pr&eacute;c&eacute;dent d&apos;apr&egrave;s le capital d&eacute;termin&eacute; par les articles <a class='ui-button' href='' onclick="scrolltoelementTag('697');return false;">697</a> et <a class='ui-button' href='' onclick="scrolltoelementTag('700');return false;">700</a> du pr&eacute;sent Code.</P>
+<P CLASS="Liste2-Enumeree">
+Il n&apos;est rien d&ucirc; pour la r&eacute;union de l&apos;usufruit &agrave; la propri&eacute;t&eacute;, lorsque cette r&eacute;union a lieu par le d&eacute;c&egrave;s de l&apos;usufruitier ou l&apos;expiration du temps fix&eacute; pour la dur&eacute;e de l&apos;usufruit.</P>
+
+<span id="#A0693"></span>
+<H6 CLASS="NoArticle">
+Art. 693</H6>
+<P CLASS="ParaText">
+Les actes et d&eacute;clarations, r&eacute;gis par les dispositions des deux derniers paragraphes de l&apos;article pr&eacute;c&eacute;dent, feront conna&icirc;tre, sous les sanctions &eacute;dict&eacute;es par l&apos;article <a class='ui-button' href='' onclick="scrolltoelementTag('784');return false;">784</a> en cas d&apos;indications inexactes, la date et le lieu de naissance de l&apos;usufruitier, et, si la naissance est arriv&eacute;e hors de C&ocirc;te d&apos;Ivoire, il sera, en outre, justifi&eacute; de cette date avant l&apos;enregistrement; &agrave; d&eacute;faut de quoi, il sera per&ccedil;u les droits les plus &eacute;lev&eacute;s qui pourraient &ecirc;tre dus au Tr&eacute;sor, sauf restitution du trop-per&ccedil;u dans le d&eacute;lai de deux ans, sur la repr&eacute;sentation de l&apos;acte de naissance, dans le cas o&ugrave; la naissance aurait lieu hors de C&ocirc;te d&apos;Ivoire.</P>
+<P CLASS="Paragraphe">
+Dispositions communes</P>
+
+<span id="#A0694"></span>
+<H6 CLASS="NoArticle">
+Art. 694</H6>
+<P CLASS="ParaText">
+Dans tous les cas o&ugrave; les droits sont per&ccedil;us d&apos;apr&egrave;s une d&eacute;claration estimative des parties, la d&eacute;claration et l&apos;estimation doivent &ecirc;tre d&eacute;taill&eacute;es.</P>
+
+<span id="#A0695"></span>
+<H6 CLASS="NoArticle">
+Art. 695</H6>
+<P CLASS="ParaText">
+Si les sommes et valeurs ne sont pas d&eacute;termin&eacute;es dans un acte ou un jugement donnant lieu au droit proportionnel ou progressif, les parties sont tenues d&apos;y suppl&eacute;er, avant l&apos;enregistrement, par une d&eacute;claration estimative certifi&eacute;e et sign&eacute;e au pied de l&apos;acte.</P>
+
+
+</div></div> <p>&nbsp;</p><p>&nbsp;</p></div></div> <!-- wrapper -->
+	  <div id="articleList"><div id="contenu" style='height:auto; background-color:#FFFFCC'>&nbsp;</div>
+      </div><p>&nbsp;</p><p>&nbsp;</p><p>&nbsp;</p><p>&nbsp;</p><p>&nbsp;</p><p>&nbsp;</p><p>&nbsp;</p><p>&nbsp;</p><p>&nbsp;</p><p>&nbsp;</p>
+	  <p>&nbsp;</p><p>&nbsp;</p><p>&nbsp;</p><p>&nbsp;</p><p>&nbsp;</p><p>&nbsp;</p></BODY></HTML>
+	  

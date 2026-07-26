@@ -1,0 +1,37 @@
+reference_source: CGI 2026 — docs client 6/9/10 (propositions metier)
+date_effet: '2026-01-01'
+effets_croises: []
+a_confirmer:
+- date d effet 01/01/2026
+- valeurs issues docs client 6/9/10 — a valider metier
+formule_plafonnement: sans objet
+questions_generees:
+- id: q_ce_anormale
+  texte: CE sous-evaluee ?
+  type: booleen
+- id: q_montant
+  texte: Complement CE ?
+  type: montant
+profils_applicables:
+- Entreprises au regime reel
+nature: sans_objet
+identifiant: CE-146-EMPLOYEUR
+impot: CE
+reference_legale: CGI 2026, art. 134 a 146 — contribution employeur
+comptes_declencheurs:
+- '661'
+- '664'
+condition_declenchement: solde(661) > 0 et reponse(q_ce_anormale) = vrai
+conditions_fond: CE calculee sur assiette complete (avantages inclus) ?
+resultat: reponse(q_montant)
+niveau_risque: eleve
+cas_test:
+  soldes:
+    '661': '80000000'
+    '664': '0'
+  agregats: {}
+  reponses:
+    q_ce_anormale: true
+    q_montant: '2000000'
+  declenche_attendu: true
+  montant_attendu: '2000000'

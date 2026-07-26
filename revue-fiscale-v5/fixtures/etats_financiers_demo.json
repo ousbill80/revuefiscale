@@ -1,0 +1,6 @@
+{
+  "lignes": [
+    {"poste": "7011", "libelle": "Ventes", "montant_n": "1000000", "montant_n1": "900000"},
+    {"compte": "6011", "libelle": "Achats", "montant_n": "600000"}
+  ]
+}

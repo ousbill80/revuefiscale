@@ -1,0 +1,122 @@
+identifiant;fichier;index;categorie;priorite;texte
+BIC-AMORT-18B-GENERAL;BIC-AMORT-18B-GENERAL.yaml;0;date;sourcable;date d effet 01/01/2026
+BIC-AMORT-18B-GENERAL;BIC-AMORT-18B-GENERAL.yaml;1;autre;hors_perimetre;valeurs issues doc client 5 — a valider metier
+BIC-AMORT-18B-INFO;BIC-AMORT-18B-INFO.yaml;0;date;sourcable;date d effet
+BIC-AMORT-18B-INFO;BIC-AMORT-18B-INFO.yaml;1;autre;bloqueur;fraction recalculee vs dotation entiere
+BIC-AMORT-18B-VEHICULES;BIC-AMORT-18B-VEHICULES.yaml;0;date;sourcable;date d effet 01/01/2026
+BIC-AMORT-18B-VEHICULES;BIC-AMORT-18B-VEHICULES.yaml;1;autre;hors_perimetre;valeurs issues doc client 5 — a valider metier
+BIC-CHG-18-MIXTES;BIC-CHG-18-MIXTES.yaml;0;date;sourcable;date d effet 01/01/2026
+BIC-CHG-18-MIXTES;BIC-CHG-18-MIXTES.yaml;1;autre;hors_perimetre;valeurs issues doc client 5 — a valider metier
+BIC-CHG-18A-ASSURANCES;BIC-CHG-18A-ASSURANCES.yaml;0;date;sourcable;date d effet 01/01/2026
+BIC-CHG-18A-ASSURANCES;BIC-CHG-18A-ASSURANCES.yaml;1;autre;hors_perimetre;valeurs issues doc client 5 — a valider metier
+BIC-CHG-18A1-EXPATRIES;BIC-CHG-18A1-EXPATRIES.yaml;0;date;sourcable;date d effet 01/01/2026
+BIC-CHG-18A1-EXPATRIES;BIC-CHG-18A1-EXPATRIES.yaml;1;autre;hors_perimetre;valeurs issues doc client 5 — a valider metier
+BIC-CHG-18A1-SALAIRES;BIC-CHG-18A1-SALAIRES.yaml;0;date;sourcable;date d effet 01/01/2026
+BIC-CHG-18A1-SALAIRES;BIC-CHG-18A1-SALAIRES.yaml;1;autre;hors_perimetre;valeurs issues doc client 5 — a valider metier
+BIC-CHG-18A2-LOYERS;BIC-CHG-18A2-LOYERS.yaml;0;date;sourcable;date d effet 01/01/2026
+BIC-CHG-18A2-LOYERS;BIC-CHG-18A2-LOYERS.yaml;1;autre;hors_perimetre;valeurs issues doc client 5 — a valider metier
+BIC-CHG-18A3-FRAISSIEGE;BIC-CHG-18A3-FRAISSIEGE.yaml;0;date;sourcable;date d effet 01/01/2026
+BIC-CHG-18A3-FRAISSIEGE;BIC-CHG-18A3-FRAISSIEGE.yaml;1;autre;hors_perimetre;valeurs issues doc client 5 — a valider metier
+BIC-CHG-18A3-FRAISSIEGE;BIC-CHG-18A3-FRAISSIEGE.yaml;2;taux;sourcable;taux 5%/20%
+BIC-CHG-18A3-FRAISSIEGE;BIC-CHG-18A3-FRAISSIEGE.yaml;3;agregat;bloqueur;definition FRAIS_GENERAUX
+BIC-CHG-18A4-ADMIN;BIC-CHG-18A4-ADMIN.yaml;0;date;sourcable;date d effet
+BIC-CHG-18A4-ADMIN;BIC-CHG-18A4-ADMIN.yaml;1;seuil;sourcable;plafond 3 000 000 FCFA / beneficiaire / an
+BIC-CHG-18A5-INTERETS;BIC-CHG-18A5-INTERETS.yaml;0;date;sourcable;date d effet 01/01/2026
+BIC-CHG-18A5-INTERETS;BIC-CHG-18A5-INTERETS.yaml;1;autre;hors_perimetre;valeurs issues doc client 5 — a valider metier
+BIC-CHG-18A6-CCATAUX;BIC-CHG-18A6-CCATAUX.yaml;0;date;sourcable;date d effet 01/01/2026
+BIC-CHG-18A6-CCATAUX;BIC-CHG-18A6-CCATAUX.yaml;1;autre;hors_perimetre;valeurs issues doc client 5 — a valider metier
+BIC-CHG-18A6-SOUSCAP;BIC-CHG-18A6-SOUSCAP.yaml;0;date;sourcable;date d effet
+BIC-CHG-18A6-SOUSCAP;BIC-CHG-18A6-SOUSCAP.yaml;1;agregat;bloqueur;assiette 30 % — RESULTAT_AVANT_IMPOT a figer
+BIC-CHG-18A6-SOUSCAP;BIC-CHG-18A6-SOUSCAP.yaml;2;autre;bloqueur;limites (a)(c)(d)(e)
+BIC-CHG-18A6-SOUSCAP;BIC-CHG-18A6-SOUSCAP.yaml;3;taux;sourcable;taux BCEAO + 2
+BIC-CHG-18B-CREDITBAILVT;BIC-CHG-18B-CREDITBAILVT.yaml;0;date;sourcable;date d effet 01/01/2026
+BIC-CHG-18B-CREDITBAILVT;BIC-CHG-18B-CREDITBAILVT.yaml;1;autre;hors_perimetre;valeurs issues doc client 5 — a valider metier
+BIC-CHG-18D-IMPOTS;BIC-CHG-18D-IMPOTS.yaml;0;date;sourcable;date d effet 01/01/2026
+BIC-CHG-18D-IMPOTS;BIC-CHG-18D-IMPOTS.yaml;1;autre;hors_perimetre;valeurs issues doc client 5 — a valider metier
+BIC-CHG-18E-CADEAUX;BIC-CHG-18E-CADEAUX.yaml;0;date;sourcable;date d effet 01/01/2026
+BIC-CHG-18E-CADEAUX;BIC-CHG-18E-CADEAUX.yaml;1;autre;hors_perimetre;valeurs issues doc client 5 — a valider metier
+BIC-CHG-18F-PENALITES;BIC-CHG-18F-PENALITES.yaml;0;date;sourcable;date d effet 01/01/2026
+BIC-CHG-18F-PENALITES;BIC-CHG-18F-PENALITES.yaml;1;autre;hors_perimetre;valeurs issues doc client 5 — a valider metier
+BIC-CHG-18G-DONS;BIC-CHG-18G-DONS.yaml;0;taux;sourcable;taux 2,5 % — verifier art. 18 G / annexe fiscale
+BIC-CHG-18G-DONS;BIC-CHG-18G-DONS.yaml;1;seuil;sourcable;plafond 200 000 000 FCFA — verifier art. 18 G
+BIC-CHG-18G-DONS;BIC-CHG-18G-DONS.yaml;2;date;sourcable;date d effet 01/01/2026
+BIC-PROV-18E1-CREANCES;BIC-PROV-18E1-CREANCES.yaml;0;date;sourcable;date d effet 01/01/2026
+BIC-PROV-18E1-CREANCES;BIC-PROV-18E1-CREANCES.yaml;1;autre;hors_perimetre;valeurs issues doc client 5 — a valider metier
+BIC-PROV-18E1-RISQUES;BIC-PROV-18E1-RISQUES.yaml;0;date;sourcable;date d effet
+BIC-PROV-18E1-RISQUES;BIC-PROV-18E1-RISQUES.yaml;1;autre;bloqueur;perimetre exclusions 18 E 1°
+CE-143-APPRENTISSAGE;CE-143-APPRENTISSAGE.yaml;0;date;sourcable;date d effet 01/01/2026
+CE-143-APPRENTISSAGE;CE-143-APPRENTISSAGE.yaml;1;autre;hors_perimetre;valeurs issues docs client 6/9/10 — a valider metier
+CE-146-EMPLOYEUR;CE-146-EMPLOYEUR.yaml;0;date;sourcable;date d effet 01/01/2026
+CE-146-EMPLOYEUR;CE-146-EMPLOYEUR.yaml;1;autre;hors_perimetre;valeurs issues docs client 6/9/10 — a valider metier
+ENR-29-CONDAMNATION;ENR-29-CONDAMNATION.yaml;0;date;sourcable;date d effet 01/01/2026
+ENR-29-CONDAMNATION;ENR-29-CONDAMNATION.yaml;1;autre;hors_perimetre;valeurs issues docs client 6/9/10 — a valider metier
+ENR-666-ACTES;ENR-666-ACTES.yaml;0;date;sourcable;date d effet 01/01/2026
+ENR-666-ACTES;ENR-666-ACTES.yaml;1;autre;hors_perimetre;valeurs issues docs client 6/9/10 — a valider metier
+FONC-171-ACOMPTELOYER;FONC-171-ACOMPTELOYER.yaml;0;date;sourcable;date d effet 01/01/2026
+FONC-171-ACOMPTELOYER;FONC-171-ACOMPTELOYER.yaml;1;autre;hors_perimetre;valeurs issues docs client 6/9/10 — a valider metier
+FONC-34-PATRIMOINE;FONC-34-PATRIMOINE.yaml;0;date;sourcable;date d effet 01/01/2026
+FONC-34-PATRIMOINE;FONC-34-PATRIMOINE.yaml;1;autre;hors_perimetre;valeurs issues docs client 6/9/10 — a valider metier
+IRC-194-CREANCES;IRC-194-CREANCES.yaml;0;date;sourcable;date d effet 01/01/2026
+IRC-194-CREANCES;IRC-194-CREANCES.yaml;1;autre;hors_perimetre;valeurs issues docs client 6/9/10 — a valider metier
+IRVM-182-DISTRIB;IRVM-182-DISTRIB.yaml;0;date;sourcable;date d effet 01/01/2026
+IRVM-182-DISTRIB;IRVM-182-DISTRIB.yaml;1;autre;hors_perimetre;valeurs issues docs client 6/9/10 — a valider metier
+ITS-119-MASSESAL;ITS-119-MASSESAL.yaml;0;date;sourcable;date d effet 01/01/2026
+ITS-119-MASSESAL;ITS-119-MASSESAL.yaml;1;autre;hors_perimetre;valeurs issues docs client 6/9/10 — a valider metier
+OBL-108-HONORAIRES;OBL-108-HONORAIRES.yaml;0;date;sourcable;date d effet
+OBL-108-HONORAIRES;OBL-108-HONORAIRES.yaml;1;seuil;sourcable;seuils 50 000 / 10 000
+OBL-108-HONORAIRES;OBL-108-HONORAIRES.yaml;2;autre;sourcable;comptes 622/628
+OBL-338-REEVALUATION;OBL-338-REEVALUATION.yaml;0;date;sourcable;date d effet 01/01/2026
+OBL-338-REEVALUATION;OBL-338-REEVALUATION.yaml;1;autre;hors_perimetre;valeurs issues docs client 6/9/10 — a valider metier
+OBL-36-ETII;OBL-36-ETII.yaml;0;date;sourcable;date d effet 01/01/2026
+OBL-36-ETII;OBL-36-ETII.yaml;1;autre;hors_perimetre;valeurs issues docs client 6/9/10 — a valider metier
+OBL-36BIS-CBCR;OBL-36BIS-CBCR.yaml;0;date;sourcable;date d effet 01/01/2026
+OBL-36BIS-CBCR;OBL-36BIS-CBCR.yaml;1;autre;hors_perimetre;valeurs issues docs client 6/9/10 — a valider metier
+OBL-36BIS-CBCR;OBL-36BIS-CBCR.yaml;2;seuil;sourcable;seuil 250 Md FCFA a confirmer
+OBL-49BIS-REGISTRES;OBL-49BIS-REGISTRES.yaml;0;date;sourcable;date d effet 01/01/2026
+OBL-49BIS-REGISTRES;OBL-49BIS-REGISTRES.yaml;1;autre;hors_perimetre;valeurs issues docs client 6/9/10 — a valider metier
+OBL-49TER-RBE;OBL-49TER-RBE.yaml;0;date;sourcable;date d effet 01/01/2026
+OBL-49TER-RBE;OBL-49TER-RBE.yaml;1;autre;hors_perimetre;valeurs issues docs client 6/9/10 — a valider metier
+OBL-ACOMPTES-IMPUTATION;OBL-ACOMPTES-IMPUTATION.yaml;0;date;sourcable;date d effet 01/01/2026
+OBL-ACOMPTES-IMPUTATION;OBL-ACOMPTES-IMPUTATION.yaml;1;autre;hors_perimetre;valeurs issues docs client 6/9/10 — a valider metier
+OBNL-339-NONLUCRATIF;OBNL-339-NONLUCRATIF.yaml;0;date;sourcable;date d effet 01/01/2026
+OBNL-339-NONLUCRATIF;OBNL-339-NONLUCRATIF.yaml;1;autre;hors_perimetre;valeurs issues docs client 6/9/10 — a valider metier
+OBNL-35-STARTUP;OBNL-35-STARTUP.yaml;0;date;sourcable;date d effet 01/01/2026
+OBNL-35-STARTUP;OBNL-35-STARTUP.yaml;1;autre;hors_perimetre;valeurs issues docs client 6/9/10 — a valider metier
+PAT-272-PATENTE;PAT-272-PATENTE.yaml;0;date;sourcable;date d effet 01/01/2026
+PAT-272-PATENTE;PAT-272-PATENTE.yaml;1;autre;hors_perimetre;valeurs issues docs client 6/9/10 — a valider metier
+RA-CIE-01;RA-CIE-01.yaml;0;date;sourcable;date d effet 01/01/2026
+RA-CIE-01;RA-CIE-01.yaml;1;autre;hors_perimetre;valeurs issues docs client 6/9/10 — a valider metier
+RA-CNX-01;RA-CNX-01.yaml;0;date;sourcable;date d effet 01/01/2026
+RA-CNX-01;RA-CNX-01.yaml;1;autre;hors_perimetre;valeurs issues docs client 6/9/10 — a valider metier
+RA-CNX-02;RA-CNX-02.yaml;0;date;sourcable;date d effet 01/01/2026
+RA-CNX-02;RA-CNX-02.yaml;1;autre;hors_perimetre;valeurs issues docs client 6/9/10 — a valider metier
+RA-FISC-01;RA-FISC-01.yaml;0;date;sourcable;date d effet 01/01/2026
+RA-FISC-01;RA-FISC-01.yaml;1;autre;hors_perimetre;valeurs issues docs client 6/9/10 — a valider metier
+RA-FISC-02;RA-FISC-02.yaml;0;date;sourcable;date d effet 01/01/2026
+RA-FISC-02;RA-FISC-02.yaml;1;autre;hors_perimetre;valeurs issues docs client 6/9/10 — a valider metier
+RA-FISC-03;RA-FISC-03.yaml;0;date;sourcable;date d effet 01/01/2026
+RA-FISC-03;RA-FISC-03.yaml;1;autre;hors_perimetre;valeurs issues docs client 6/9/10 — a valider metier
+RA-FISC-04;RA-FISC-04.yaml;0;date;sourcable;date d effet 01/01/2026
+RA-FISC-04;RA-FISC-04.yaml;1;autre;hors_perimetre;valeurs issues docs client 6/9/10 — a valider metier
+RA-FISC-05;RA-FISC-05.yaml;0;date;sourcable;date d effet 01/01/2026
+RA-FISC-05;RA-FISC-05.yaml;1;autre;hors_perimetre;valeurs issues docs client 6/9/10 — a valider metier
+RA-IMMO-01;RA-IMMO-01.yaml;0;date;sourcable;date d effet 01/01/2026
+RA-IMMO-01;RA-IMMO-01.yaml;1;autre;hors_perimetre;valeurs issues docs client 6/9/10 — a valider metier
+RA-IMMO-02;RA-IMMO-02.yaml;0;date;sourcable;date d effet 01/01/2026
+RA-IMMO-02;RA-IMMO-02.yaml;1;autre;hors_perimetre;valeurs issues docs client 6/9/10 — a valider metier
+RA-RECON-01;RA-RECON-01.yaml;0;date;sourcable;date d effet 01/01/2026
+RA-RECON-01;RA-RECON-01.yaml;1;autre;hors_perimetre;valeurs issues docs client 6/9/10 — a valider metier
+RA-STOCK-01;RA-STOCK-01.yaml;0;date;sourcable;date d effet 01/01/2026
+RA-STOCK-01;RA-STOCK-01.yaml;1;autre;hors_perimetre;valeurs issues docs client 6/9/10 — a valider metier
+RA-TRANSF-01;RA-TRANSF-01.yaml;0;date;sourcable;date d effet 01/01/2026
+RA-TRANSF-01;RA-TRANSF-01.yaml;1;autre;hors_perimetre;valeurs issues docs client 6/9/10 — a valider metier
+RAS-92-NONRESIDENT;RAS-92-NONRESIDENT.yaml;0;date;sourcable;date d effet 01/01/2026
+RAS-92-NONRESIDENT;RAS-92-NONRESIDENT.yaml;1;autre;hors_perimetre;valeurs issues docs client 6/9/10 — a valider metier
+TIMBRE-805-DOCS;TIMBRE-805-DOCS.yaml;0;date;sourcable;date d effet 01/01/2026
+TIMBRE-805-DOCS;TIMBRE-805-DOCS.yaml;1;autre;hors_perimetre;valeurs issues docs client 6/9/10 — a valider metier
+TVA-COL-RAPPRO-CA;TVA-COL-RAPPRO-CA.yaml;0;date;sourcable;date d effet 01/01/2026
+TVA-COL-RAPPRO-CA;TVA-COL-RAPPRO-CA.yaml;1;autre;hors_perimetre;valeurs issues docs client 6/9/10 — a valider metier
+TVA-DED-PRORATA;TVA-DED-PRORATA.yaml;0;date;sourcable;date d effet 01/01/2026
+TVA-DED-PRORATA;TVA-DED-PRORATA.yaml;1;autre;hors_perimetre;valeurs issues docs client 6/9/10 — a valider metier
+TVA-TIERS-NONRESIDENT;TVA-TIERS-NONRESIDENT.yaml;0;date;sourcable;date d effet 01/01/2026
+TVA-TIERS-NONRESIDENT;TVA-TIERS-NONRESIDENT.yaml;1;autre;hors_perimetre;valeurs issues docs client 6/9/10 — a valider metier

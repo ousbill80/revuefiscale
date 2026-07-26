@@ -1,0 +1,577 @@
+<!DOCTYPE HTML><HTML><HEAD><META HTTP-EQUIV="Content-Type" CONTENT="text/html; charset=UTF-8">
+<TITLE>Code des impots -8</TITLE><LINK REL="STYLESHEET" HREF="/cicgi.css" CHARSET="ISO-8859-1" TYPE="text/css">
+<style type="text/css">
+body {margin-left: 5px;	margin-top: 0px; margin-right: .5em;margin-bottom: 0px;background-color:#fafafa ;}
+.Liste-Numerote {font-size: 12pt;font-weight: regular;font-style: italic;color: #000000;text-transform: none;margin-left:8px ;margin-bottom:8px ;margin-top:4px ;margin-right:10px ;font-family:Georgia, "Times New Roman", Times, serif}
+li {list-style-type: none; margin-left:0px ; padding-left:0em ; }
+.Paratext {font-size: 12pt;font-weight: regular;font-style: italic;color: #000000;text-decoration: none;vertical-align: baseline;text-transform: none;margin-left:0px ;font-family:Georgia, "Times New Roman", Times, serif}
+.Normal {font-size: 12pt;font-weight: regular;font-style: italic;color: #000000;text-decoration: none;vertical-align: baseline;text-transform: none;margin-left:0px ;font-family:Georgia, "Times New Roman", Times, serif}
+ul {list-style-type: none; margin-left:0px ; padding-left:0em ;  }
+.Liste2-Enumeree {font-size: 12pt;font-weight: regular;font-style: italic;color: #000000;text-decoration: none;vertical-align: baseline;text-transform: none;list-style-type:none ;margin-left:16px ;margin-bottom:8px;margin-right:10px;font-family:Georgia, "Times New Roman", Times, serif}
+P.Liste2-Enumeree {font-size: 12pt;font-weight: regular;font-style: italic;color: #000000;text-decoration: none;vertical-align: baseline;text-transform: none;list-style-type:none ;margin-left:16px ;margin-bottom:8px;margin-right:10px;font-family:Georgia, "Times New Roman", Times, serif}
+.Entete {font-size: 13pt;font-weight: regular;font-style: italic;color:#000000 ;text-decoration: none;vertical-align: baseline;text-transform: none;margin-left:8px ;font-family:Georgia, "Times New Roman", Times, serif}
+table, TABLE {border-width:1px; width:99% ;border-collapse:collapse;border-color: #9ecaed;box-shadow: 0 0 10px #9ecaed;}
+tr,td {text-align:left;vertical-align:bottom;border:1px solid #9ecaed;padding:.2em;marging-left:.2em}
+th, TH{text-align:center;vertical-align:middle;padding:.2em;}
+P.TableauEntete {font-size: 13pt;font-weight: regular;font-style: italic;color: #000000;font-family:Georgia, "Times New Roman"}
+P.TableauCelluleLeft, P.TableauCellule {text-align:right;margin-right:1em;font-size: 13pt;font-weight: regular;font-style: italic;color: #000000;font-family:Georgia, "Times New Roman"}
+P.TableauCelluleRight {text-align:left;margin-left:1em;font-size: 13pt;font-weight: regular;font-style: italic;color: #000000;font-family:Georgia, "Times New Roman"}
+.ui-buttonh {padding: .1em .1em ; border: 1px solid #dadada;border-radius: 4px; box-shadow: 0 0 4px #9ecaed;color:#FF3300 ;margin-left:8px ;margin-right:8px ;margin-bottom:2px ;margin-top:2px ;text-decoration:none ;font-size:12pt ;font-family:"Times New Roman"}   
+.ui-button {padding: .1em .1em ; border: 1px solid #dadada;border-radius: 4px; box-shadow: 0 0 4px #9ecaed;color:#FF3300 ;margin-left:8px ;margin-right:8px ;margin-bottom:2px ;margin-top:2px ;text-decoration:none ;font-size:12pt ;font-family:"Times New Roman"}   
+H3 {display: block;text-align: center;text-indent: 0pt;margin-top: 10pt;margin-bottom: 10pt;margin-right: 10pt;margin-left: 10pt;font-size: 12pt;font-weight: Bold;font-style: Regular;color: #00A000;text-decoration: none;vertical-align: baseline;text-transform: none;font-family: "Times New Roman";}
+H4 {display: block;text-align: left;text-indent: 0pt;margin-top: 10pt;margin-bottom: 6pt;margin-right: 10pt;margin-left: 10pt;font-size: 12pt;font-weight: Bold;font-style: Regular;color: #000000;text-decoration: none;vertical-align: baseline;text-transform: none;font-family: "Times New Roman";}
+H5 {display: block;text-align: left;text-indent: 0pt;margin-top: 10pt;margin-bottom: 6pt;margin-right: 10pt;margin-left: 10pt;font-size: 11pt;font-weight: Bold;font-style: Regular;color: #000000;text-decoration: none;vertical-align: baseline;text-transform: none;font-family: "Times New Roman";}
+H6.NoArticle {display: block;text-align: left;text-indent: 0pt;margin-top: 14pt;margin-bottom: 0pt;margin-right: 0pt;margin-left: 0pt;font-size: 14pt;font-weight: regular;font-style: Regular;color: #00a000;text-decoration: none;vertical-align: baseline;text-transform: none;font-family: "Times New Roman";}
+H2 {text-align:center;font-size:16pt;font-family:Georgia, "Times New Roman", Times, serif}
+P.ParaText {font-size: 12pt;font-weight: regular;font-style: italic;color: #000000;	text-decoration: none;vertical-align: baseline;text-transform: none;font-family:Georgia, "Times New Roman", Times, serif;}
+H2.Section,P.Section {font-size:12pt;font-weight:bold;font-style:Regular;color:#008000;font-family:Georgia,"Times New Roman"}
+P.Paragraphe, p.Paragraphe {Text-Align:center;Text-decoration:none;font-size:12pt;font-weight:bold;font-style:Normal;color:#00A000;font-family:Georgia,"Times New Roman"}
+H2.Livre,P.Livre {text-align:center;font-size:16pt;font-weight:bold;font-style:Regular;color:#008000;font-family:Georgia,"Times New Roman"}
+P.Partie,H2.Partie,P.TitreSub {text-align:center;font-size:14pt;font-weight:bold;font-style:Regular;color:#008000;font-family:Georgia,"Times New Roman"}
+H2.ChapitreNo,H2.TitreNo {text-align:center;font-size:14pt;font-weight:bold;font-style:Regular;color:#008000;font-family:Georgia,"Times New Roman"}
+H2.Chapitre, h2.Chapitre {text-align:center;font-size:14pt;font-weight:bold;font-style:Regular;color:#008000;font-family:Georgia,"Times New Roman"}
+H2.TitreNo {text-align:center;font-size:14pt;font-weight:bold;font-style:Regular;color:#008000;font-family:Georgia,"Times New Roman"}
+h3.Sous-Section, H3.Sous-Section, h3.Sous-section, h2.Section {font-size:12pt;font-weight:bold;font-style:Italic;color:#008000;font-family:Georgia,"Times New Roman"}
+hr,HR { display: block; width:90%;  margin-top: 0.5em; margin-bottom: 0.5em; margin-left: auto;  margin-right: auto;  border-style: inset; border-width: 1px;}
+P.TitreSub {text-align:center;font-size:14pt;font-weight:bold;font-style:Regular;color:#008000;font-family:Georgia,"Times New Roman"}
+.Reference {display: block;text-align: left;text-indent: 0pt;margin-top: 10pt;margin-bottom: 6pt;margin-right: 10pt;margin-left: 10pt;font-size: 14pt;font-weight: Bold;font-style: Regular;color: #7F5434;text-decoration: none;vertical-align: baseline;text-transform: none;font-family: "Times New Roman";}
+.ludwig,blockquote {padding-left:1em;background-color:#fafafa;font-size:12pt;font-weight:100;font-style:italic;}
+#articleList {position:absolute ;	z-index: 1 ;left: 10px ;top: 80px ;height:340px;width: 620px;border: 2px solid #cacaca ;border-radius: 5px ;background-color:#fafafa ;    box-shadow: 0 0 12px #333333;	margin-left:0px ;	padding: .3em .3em ;		overflow:hidden ;	visibility:hidden ;  }			
+#articleList h3 { text-align: center; margin: 0; }		
+
+.historique {
+  display:none ;
+  padding: .1em .3em ;
+  border: solid 2px #dadada;
+  border-radius: 7px;
+  box-shadow: 0 0 5px #9ecaed;  
+  
+}
+.histText {
+    display: block;
+    font-family: ;"Times New Roman"
+	padding: .1em .3em ;
+    margin: 1em 0px;
+	font-style:italic;
+	color:#000000;
+	overflow:auto;
+}
+.highlight {
+  font-weight:bold ;
+  color:#000000 ;
+  background-color:#FFFFCC ;
+  }
+.articleList-scroll {
+	overflow-x:hidden ;
+	overflow-y:scroll ;
+	scrollbar-width:thin ;
+	scrollbar-color:blue orange ;
+}
+
+#contenu {
+	overflow-x:hidden ;
+    overflow-y:scroll ;
+	scrollbar-width:thin ;
+	scrollbar-color:blue orange ;
+}		
+
+table, TABLE {
+ text-align:center; 
+    margin-left:.5em; 
+    margin-right:.5em; 
+    border:1px solid #000000;	
+	border-collapse:collapse ;
+    border-color: #9ecaed;
+    box-shadow: 0 0 10px #9ecaed;
+	
+   }
+  tr,td {text-align:left;}
+  
+
+
+ </style>
+ 
+<script src="/js/iscroll.js"></script>
+<script src="/js/jquery.js"></script>   
+<script src="/js/jquery-ui-1.10.3.custom.js"></script>    	    
+<script src="/js/jquery.ui.draggable.js" type="text/javascript"></script>			
+<script src="/js/jquery.ui.core.js"></script> 			
+<script src="/js/jquery.ui.widget.js"></script>			
+<script src="/js/jquery.ui.position.js"></script>			
+<script src="/js/jquery.ui.menu.js"></script>    		
+<script type="text/javascript" src="./xpages.js"></script>
+/* VERSION POUR PAGE HTML SUR SITE DGI.CGICI.COM */
+<script language="javascript">
+ function showButton(id) {
+    var x = document.getElementById(id) ;
+	if(x.style.display === "none") {
+	   x.style.display = "block" ;
+	  } else {
+	   x.style.display = "none" ;
+	   }
+	 }   
+	 var pagenumber="008";
+function loadpage(page, art) {
+      showHideHistoric(art);
+	  return false;
+	  } 
+function loadArticle(page, art) { var artno = art ;var pgno=page;scrolltoelementTag(pgno,artno) ;return false ;} 
+
+</script>
+</HEAD>
+<BODY>
+  <div ID="wrapper"><div ID="scroller">
+
+
+<h2 class="Section">
+Section VIII - Retenues &agrave; la source</h2>
+<H3 class="Paragraphe">
+Entreprises de transport de bois en grumes et d&apos;hydrocarbures</H3>
+<span id="#A0056"></span>
+<H6 class="NoArticle"> 
+Art. 56    </H6>
+<P CLASS="ParaText">
+Les personnes passibles de l&apos;imp&ocirc;t sur les b&eacute;n&eacute;fices sont tenues de pr&eacute;lever &agrave; la source pour le compte du Tr&eacute;sor public, une retenue de 7,5 % des sommes brutes mises en paiement au profit des entreprises de transport de bois en grumes et d&apos;hydrocarbures auxquelles elles ont recours pour l&apos;ex&eacute;cution de leurs march&eacute;s.</P>
+
+<H6 class="Modification">
+Ord. n<b>&deg;-</b> 2009-382 du 26 novembre 2009Art.13.</H6>
+<P CLASS="ParaText">
+La retenue n&apos;est toutefois pas exigible lorsque les sommes sont mises en paiement au profit de personnes r&eacute;guli&egrave;rement immatricul&eacute;es &agrave; la Direction g&eacute;n&eacute;rale des Imp&ocirc;ts.</P>
+
+
+<H6 class="Modification">
+Loi n<b>&deg;-</b> 2001-338 du 14 juin 2001, an. fiscale,Art. 15.</H6>
+<P CLASS="ParaText">
+Les dispositions pr&eacute;vues aux paragraphes 2<b>&deg;-</b> et 3<b>&deg;-</b> de l&apos;article <a class='ui-button' href='' onClick="loadArticle('008','0058');return false;">58</a> sont applicables mutatis mutandis &agrave; la retenue institu&eacute;e par le pr&eacute;sent article.</P>
+
+
+<H6 class="Modification">
+Ord. n<b>&deg;-</b> 2000-252 du 28 mars 2000Art. 8-2<b>&deg;-</b>.</H6>
+<H3 class="Paragraphe">
+Agents mandataires et apporteurs d&apos;affaires des soci&eacute;t&eacute;s ou compagnies d&apos;assurances</H3>
+
+
+<span id="#A0057"></span>
+<H6 class="NoArticle">
+Art. 57   &nbsp;&nbsp;&nbsp;&nbsp;<a href="#" onClick="loadpage('008','h2457');return false;" class="ui-button" title="Consultez l'historique">2024...</a> </H6>
+<P CLASS="ParaText">
+Les soci&eacute;t&eacute;s ou compagnies d&apos;assurances sont tenues de pr&eacute;lever &agrave; la source pour le compte du Tr&eacute;sor public, une retenue de 7,5 % des sommes brutes mises en paiement au profit des agents mandataires et apporteurs d&apos;affaires.</P>
+
+<H6 class="Modification">
+Ord. n<b>&deg;-</b> 2000-252 du 28 mars 2000Art. 3; loi n<b>&deg;-</b> 2001-338 du 14 juin 2001, an. fiscale,Art. 11; Ord. n<b>&deg;-</b> 2009-382 du 26 novembre 2009Art.13.</H6>
+
+<P CLASS="ParaText"><FONT COLOR='#000000'>
+<A NAME="50434094_pgfId-1139919"></A>La retenue ne s’applique pas aux sommes mises en paiement au profit des contribuables relevant de la taxe d’Etat de l’entreprenant et du régime des microentreprises. </FONT></P>
+<H6 CLASS="Modification">
+<A NAME="50434094_pgfId-1139903"></A>Loi n° 2024-1109 du 18 déc. 2024, an. fiscale, art. 7-1.</H6>
+<P CLASS="ParaText">
+Les dispositions pr&eacute;vues aux paragraphes 2<b>&deg;-</b> et 3<b>&deg;-</b> de l&apos;article <a class='ui-button' href='' onClick="loadArticle('008','0058');return false;">58</a> sont applicables mutatis mutandis &agrave; la retenue institu&eacute;e par le pr&eacute;sent article.</P>
+
+<H6 class="Modification">
+Ord. n<b>&deg;-</b> 2000-252 du 28 mars 2000. an. fiscale,Art. 3.</H6>
+
+
+<span id="#A0057b"></span>
+<H6 class="NoArticle">
+Art. 57 bis  &nbsp;&nbsp;&nbsp;&nbsp;<a href="#" onClick="loadpage('008','h2457b');return false;" class="ui-button" title="Consultez l'historique">2024...</a> </H6>
+<P CLASS="ParaText">
+Les entreprises sont tenues de pr&eacute;lever &agrave; la source pour le compte du Tr&eacute;sor public, une retenue de 7,5 % des sommes brutes mises en paiement au profit des mandataires ou apporteurs d&apos;affaires.</P>
+
+<H6 class="Modification">
+Ord. n<b>&deg;-</b> 2009-382 du 26 novembre 2009Art.13.</H6>
+<P CLASS="ParaText">
+<A NAME="50434094_pgfId-1023153"></A><FONT COLOR='#000000'>Sont exonérés de cette retenue, les mandataires ou apporteurs d’affaires immatriculés à la Direction générale des Impôts.</FONT> </P>
+<H6 CLASS="Modification">
+<A NAME="50434094_pgfId-1140017"></A>Loi n° 2024-1109 du 18 déc. 2024, an. fiscale, art. 7-2</H6>
+<P CLASS="ParaText">
+Les dispositions pr&eacute;vues aux paragraphes 2<b>&deg;-</b> et 3<b>&deg;-</b> de l&apos;article 58 sont applicables mutatis mutandis &agrave; la retenue institu&eacute;e par le pr&eacute;sent article.</P>
+
+
+<H6 class="Modification">
+
+Ord. n<b>&deg;-</b> 2007-675 du 28 d&eacute;cembre 2007Art. 37
+.</H6>
+<H3 class="Paragraphe">
+Revendeurs des importateurs, fabricants grossistes et demi-grossistes</H3>
+<div>
+<span id="#A0058"></span>
+<H6 class="NoArticle">
+Art. 58   &nbsp;&nbsp;&nbsp;&nbsp;<a href="#" onClick="loadpage('008','h2358');return false;" class="ui-button"   title="Consultez l'historique">2023...</a> 
+&nbsp;&nbsp;&nbsp;&nbsp;<a href="#" onClick="loadpage('008','h2458');return false;" class="ui-button" title="Consultez l'historique">2024...</a></H6>
+<P CLASS="Liste1-Numerotee">
+<A NAME="50434094_pgfId-1023164"></A>1°	 Les importateurs, fabricants, grossistes et demi-grossistes qui versent des ristournes, commissions ou remises à leurs revendeurs principaux sont tenus de prélever à la source pour le compte du Trésor, une retenue de 7,5 % des sommes brutes mises en paiement.</P>
+<P CLASS="Liste1-NumeroteeSuite">
+<A NAME="50434094_pgfId-1023199"></A>	La retenue n’est toutefois pas exigible lorsque les sommes sont mises en paiement au profit de personnes morales et des contribuables relevant de la taxe d’Etat de l’entreprenant ou du régime des microentreprises.</P>
+<P CLASS="Modification">
+<A NAME="50434094_pgfId-1023201"></A>Loi n° 97-710 du 20 déc. 1997, an. fiscale, art. 8; loi n° 2024-1109 du 18 déc. 2024, an. fiscale, art. 7-4</P>
+<P CLASS="Liste1-NumeroteeSuite">
+<A NAME="50434094_pgfId-1140064"></A><FONT COLOR='#000000'>Sont également exonérés de la retenue, les contribuables relevant de la taxe d’Etat de l’entreprenant ou du régime des microentreprises.</FONT></P>
+<H6 CLASS="Modification">
+<A NAME="50434094_pgfId-1023166"></A>Ord. n° 2006-234 du 02 août 2006, an. fiscale, art. 19;         ord. n° 2009-382 du 26 novembre 2009, an. fiscale, art.13;    loi n° 2014-861 du 22 décembre 2014, an. fiscale, art.12-2;   loi n° 2024-1109 du 18 déc. 2024, an. fiscale, art. 7-3.</H6>
+</DIV>
+<DIV>
+<P CLASS="Liste1-Numerotee">
+<A NAME="50618371_pgfId-1023167"></A>2°	</P>
+<P CLASS="Liste2-Enumeree">
+<A NAME="50618371_pgfId-1023168"></A>a)	 Les entreprises soumises à un régime du réel d’imposition doivent verser les retenues afférentes aux sommes mises en paiement au cours d’un mois donné, au plus tard le 15 du mois suivant.</P>
+<P CLASS="Liste2-EnumereeSuite">
+<A NAME="50618371_pgfId-1023169"></A>En ce qui concerne les entreprises relevant de la Direction des grandes Entreprises ou de la Direction des moyennes Entreprises, les retenues afférentes aux sommes mises en paiement au cours d’un mois donné doivent être versées:</P>
+<P CLASS="Liste3-EnumereeMod">
+<A NAME="50618371_pgfId-1023170"></A>– 	au plus tard le 10 du mois suivant, pour les entreprises industrielles et les entreprises pétrolières et minières;</P>
+<P CLASS="Liste3-Enumeree">
+<A NAME="50618371_pgfId-1023171"></A>– au plus tard le 15 du mois suivant, pour les entreprises commerciales;</P>
+<P CLASS="Liste3-Enumeree">
+<A NAME="50618371_pgfId-1023172"></A>– 	au plus tard le 20 du mois suivant, pour les entreprises prestataires de services.</P>
+<H6 CLASS="Modification">
+<A NAME="50618371_pgfId-1032494"></A>Ord. n° 2009-382 du 26 novembre 2009, an. fiscale, art.24-1; loi n° 2014-861 du 22 décembre 2014, an. fiscale, art.12-3; ord. n° 2015-797 du 18 décembre 2015, art. 7.</H6>
+<P CLASS="Liste2-Numerotee">
+<A NAME="50618371_pgfId-1032495"></A>b)	1- 	Le paiement des retenues s’effectue au moyen d’un bordereau avis de versement en triple exemplaire. A l’appui de ce bordereau doivent être joints des états nominatifs devant obligatoirement comporter les indications suivantes, pour chaque bénéficiaire des sommes versées :</P>
+<P CLASS="Liste4-Enumeree">
+<A NAME="50618371_pgfId-1023175"></A>– 	nom et prénoms;</P>
+<P CLASS="Liste4-Enumeree">
+<A NAME="50618371_pgfId-1023176"></A>–	 adresse géographique, postale et téléphonique;</P>
+<P CLASS="Liste4-Enumeree">
+<A NAME="50618371_pgfId-1023177"></A>– 	montant mis en paiement;</P>
+<P CLASS="Liste4-Enumeree">
+<A NAME="50618371_pgfId-1023178"></A>– 	date de paiement;</P>
+<P CLASS="Liste4-Enumeree">
+<A NAME="50618371_pgfId-1023179"></A>– 	montant de la retenue effectuée.</P>
+<P CLASS="Liste2-Numerotee">
+<A NAME="50618371_pgfId-1023180"></A>    2- 	Les états nominatifs énumérés au 1°       ci-dessus doivent être accompagnés, pour chaque bénéficiaire, d’une attestation individuelle de retenue établie conformément au modèle prescrit par l’Administration.</P>
+<P CLASS="Liste2-Numerotee">
+<A NAME="50618371_pgfId-1023181"></A>   3- 	Les attestations individuelles visées par le receveur des Impôts compétent sont remises par la partie versante aux bénéficiaires pour leur permettre de faire valoir ultérieurement les retenues qu’ils ont subies. Les retenues sont imputables sur les cotisations d’impôt sur les bénéfices industriels et commerciaux ou d’impôt minimum forfaitaire. Elles ne sont en aucun cas restituables.</P>
+</DIV>
+<DIV>
+<P CLASS="Liste1-Numerotee">
+<A NAME="50618371_pgfId-1023182"></A>3°	</P>
+<P CLASS="Liste2-Numerotee"><FONT COLOR='#000000'>
+<A NAME="50618371_pgfId-1023183"></A>a) Les omissions ou insuffisances constatées dans les retenues à la source sont sanctionnées conformément aux dispositions prévues par le Livre de Procédures fiscales. </FONT></P>
+<H6 CLASS="Modification">
+<A NAME="50618371_pgfId-1023184"></A>   Loi n° 2023-1000 du 18 déc. 2023, an. fiscale, art. 19-1.</H6>
+<P CLASS="Liste2-NumeroteeSuite">
+<A NAME="50618371_pgfId-1123751"></A>Le défaut de versement partiel ou total dans le délai légal des retenues effectuées est sanctionné par une pénalité de 100 %. Cette pénalité est toutefois ramenée à 30 % si le retard de paiement n’excède pas un mois.</P>
+<P CLASS="Liste2-Numerotee">
+<A NAME="50618371_pgfId-1023185"></A>b)	Sera considéré comme un délit d’escroquerie et sanctionné conformément aux dispositions de l’article 7 de l’annexe      fiscale à la loi n° 67-588 du 31 décembre 1967 portant loi de Finances pour la       gestion 1968, le fait pour tout importateur, fabricant, grossiste ou demi-grossiste de ne pas reverser au Trésor public les retenues effectivement opérées.</P>
+<P CLASS="Liste2-Numerotee">
+<A NAME="50618371_pgfId-1023186"></A>c)	Le refus ou le défaut de production des états visés au 2° b) est sanctionné par une amende de 100 000 francs.</P>
+<P CLASS="Liste2-NumeroteeSuite">
+<A NAME="50618371_pgfId-1023187"></A>    L’amende est perçue autant de fois qu’il y a d’états non produits.</P>
+<H6 CLASS="Modification">
+<A NAME="50618371_pgfId-1023189"></A>Loi n° 96-218 du 13 mars 1996, an. fiscale, art. 15.</H6>
+<H3 CLASS="Paragraphe">
+<A NAME="50618371_pgfId-1023190"></A>Sous-traitants, architectes, métreurs, géomètres et autres professionnels utilisés par les entrepreneurs du bâtiment et des travaux publics</H3>
+</DIV>
+<DIV>
+<H6 CLASS="NoArticle">
+<A NAME="50618371_pgfId-1023196"></A> Art. 59 &nbsp;&nbsp;&nbsp;&nbsp;<a href="#" onClick="loadpage('008','h2459');return false;" class="ui-button" title="Consultez l'historique">2024...</a></H6>
+<P CLASS="ParaText">
+<A NAME="50618371_pgfId-1023197"></A>1° Les entrepreneurs du bâtiment et des travaux publics, sont tenus de prélever à la source pour le compte du Trésor public, une retenue de 7,5 % des sommes brutes mises en paiement au profit des sous-traitants, architectes, métreurs, géomètres et autres professionnels auxquels ils ont recours pour l’exécution de leurs marchés.</P>
+<H6 CLASS="Modification">
+<A NAME="50618371_pgfId-1023198"></A>Ord. n° 2009-382 du 26 novembre 2009, an. fiscale, art.13.</H6>
+<P CLASS="Liste1-Numerotee">
+<A NAME="50434094_pgfId-1023199"></A>	La retenue n’est toutefois pas exigible lorsque les sommes sont mises en paiement au profit de personnes morales <FONT COLOR='#000000'>et des contribuables relevant de la taxe d’Etat de l’entreprenant ou du régime des microentreprises.</FONT></P>
+<H6 CLASS="Modification">
+<A NAME="50434094_pgfId-1023201"></A>Loi n° 97-710 du 20 déc. 1997, an. fiscale, art. 8; loi n° 2024-1109 du 18 déc. 2024, an. fiscale, art. 7-4</H6>
+<P CLASS="Liste1-Numerotee">
+<A NAME="50618371_pgfId-1023202"></A>2°	Les dispositions prévues aux paragraphes 2° et 3° de l’article 58 sont applicables mutatis mutandis à la retenue instituée par le présent article.</P>
+<H6 CLASS="Modification">
+<A NAME="50618371_pgfId-1023204"></A>Loi n° 96-218 du 13 mars 1996, an. fiscale, art. 16.</H6>
+<H3 class="Paragraphe">
+Traitants utilis&eacute;s par les exportateurs de caf&eacute; et de cacao</H3>
+</DIV>
+
+    <span id="#A0060"></span>
+<H6 class="NoArticle">
+Art. 60    </H6>
+<P CLASS="Liste2-Enumeree">
+1<b>&deg;-</b>Les exportateurs de caf&eacute; et de cacao sont tenus de pr&eacute;lever &agrave; la source pour le compte du Tr&eacute;sor public une retenue de 2 francs par kilogramme de caf&eacute; et de 2,5 francs par kilogramme de cacao, livr&eacute;s par les traitants.</P>
+<P CLASS="Liste2-Enumeree">
+Le fait g&eacute;n&eacute;rateur est constitu&eacute; par la livraison des produits aux exportateurs.</P>
+<P CLASS="Liste2-Enumeree">
+Le pr&eacute;l&egrave;vement est retenu sur toutes les sommes dues aux traitants par l&apos;exportateur au titre des produits livr&eacute;s.</P>
+
+<H6 class="Modification">
+Loi n<b>&deg;-</b> 2001-338 du 14 juin 2001, an. fiscale,Art.14-1<b>&deg;-</b>.</H6>
+<P CLASS="Liste2-Enumeree">
+2<b>&deg;-</b>Les dispositions pr&eacute;vues aux paragraphes 2<b>&deg;-</b> et 3<b>&deg;-</b> de l&apos;article <a class='ui-button' href='' onClick="loadArticle('008','0058');return false;">58</a> sont applicables mutatis mutandis &agrave; la retenue institu&eacute;e par le pr&eacute;sent article.</P>
+
+
+<H6 class="Modification">
+Loi n<b>&deg;-</b> 96-218 du 13 mars 1996, an. fiscale,Art. 18.</H6>
+<H3 class="Paragraphe">
+Pisteurs de produits du caf&eacute; et du cacao</H3>
+
+<span id="#A0060b"></span>
+<H6  class="NoArticle">
+Art. 60 bis    &nbsp;&nbsp;&nbsp;&nbsp;<a href="#" onClick="loadpage('008','h2460B');return false;" class="ui-button" title="Consultez l'historique">2024...</a> </H6>
+<P CLASS="Liste2-Enumeree">
+1<b>&deg;-</b>Les acheteurs de produits sont tenus de pr&eacute;lever &agrave; la source pour le compte du Tr&eacute;sor public une retenue sur les r&eacute;mun&eacute;rations qu&apos;ils versent aux pisteurs.</P>
+<P CLASS="Liste2-Enumeree"><FONT COLOR='#000000'>
+<A NAME="50434094_pgfId-1140221"></A>    Cette retenue ne s’applique pas aux contribuables relevant de la taxe d’Etat de l’entreprenant ou du régime des microentreprises.</FONT></P>
+<H6 CLASS="Modification">
+<A NAME="50434094_pgfId-1140257"></A>Loi n° 2024-1109 du 18 déc. 2024, an. fiscale, art. 7-5.</H6>
+<P CLASS="ParaText">
+2<b>&deg;-</b>La retenue est per&ccedil;ue au taux de 7,5 %  des r&eacute;mun&eacute;rations brutes vers&eacute;es.</P>
+
+<H6  class="Modification">
+Ord. n<b>&deg;-</b> 2009-382 du 26 novembre 2009Art.13.</H6>
+<P CLASS="Liste2-Enumeree">
+3<b>&deg;-</b>Les dispositions pr&eacute;vues aux paragraphes 2<b>&deg;-</b> et 3<b>&deg;-</b> de l'article <a class='ui-button' href='' onClick="loadArticle('008','0058');return false;">58</a> du pr&eacute;sent Code sont applicables mutatis mutandis &agrave; la retenue institu&eacute;e par le pr&eacute;sent article.</P>
+
+
+<H6  class="Modification">
+
+Ord. n<b>&deg;-</b> 2007-675 du 28 d&eacute;cembre 2007Art. 11
+.</H6>
+
+<H3 class="Paragraphe">
+Producteurs de noix de cajou ou interm&eacute;diaires de la filil&egrave;re</H3>
+<span id="#A0060t"></span>
+<H6 class="NoArticle">
+Art. 60 ter     </H6>
+<P CLASS="Paratext">
+<a name="pgfId-1069963"></a>Abrog&eacute;</P>
+
+<H6  class="Modification">
+<a name="pgfId-1069976"></a>Loi n&deg; 2017-870 du 27 d&eacute;cembre 2017, an. fiscaleArt. 41; ord. n&deg; 2018-145 du 14 f&eacute;vrier 2018,Art. 1.</H6>
+
+<H3 CLASS="Paragraphe">
+<a name="50499599_pgfId-1116263"></a>Exportateurs de noix de cajou brute</H3>
+<H6 CLASS="Modification">
+<a name="50499599_pgfId-1116312"></a>Loi n&deg; 2021-899 du 21 d&eacute;c. 2021, an. fiscale,Art. 12-1.</H6>
+<span id="#A0060q"></span>
+<H6 CLASS="NoArticle">
+Art. 60 quater    </H6>
+
+<P CLASS="ParaText"><FONT COLOR='#000000'>
+<a name="50499599_pgfId-1116351"></a>Il est institu&eacute; un pr&eacute;l&egrave;vement &agrave; titre d&#8216;imp&ocirc;t sur les b&eacute;n&eacute;fices industriels et commerciaux, &agrave; la charge des exportateurs de noix de cajou brute, au tarif de 5 francs par kilogramme de produit export&eacute;.</FONT></P>
+<P CLASS="ParaText"><FONT COLOR='#000000'>
+<a name="50499599_pgfId-1116352"></a>Le pr&eacute;l&egrave;vement est effectu&eacute; par l&#8216;autorit&eacute; en charge de la r&eacute;gulation ou de la gestion de la fili&egrave;re de noix de cajou.</FONT> </P>
+<P CLASS="ParaText"><FONT COLOR='#000000'>
+<a name="50499599_pgfId-1116353"></a>Le produit de la retenue est revers&eacute; &agrave; la Recette des Imp&ocirc;ts des grandes Entreprises, au moyen d&#8216;un imprim&eacute; r&eacute;glementaire pr&eacute;vu &agrave; cet effet par l&#8216;Administration fiscale, auquel est joint un formulaire administratif faisant ressortir les d&eacute;tails de l&#8216;op&eacute;ration d&#8216;exportation.</FONT></P>
+<P CLASS="ParaText"><FONT COLOR='#000000'>
+<a name="50499599_pgfId-1116354"></a>Le reversement doit intervenir au plus tard le 15 du mois suivant celui de l&#8216;exportation.</FONT></P>
+<P CLASS="ParaText"><FONT COLOR='#000000'>
+<a name="50499599_pgfId-1116260"></a>Le montant revers&eacute; est d&eacute;ductible de l&#8216;imp&ocirc;t sur les b&eacute;n&eacute;fices industriels et commerciaux d&eacute;termin&eacute; au titre de l&#8216;exercice au cours duquel l&#8216;exportation a &eacute;t&eacute; effectu&eacute;e.</FONT></P>
+<H6 CLASS="Modification">
+<a name="50499599_pgfId-1116372"></a>Loi n&deg; 2021-899 du 21 d&eacute;c. 2021, an. fiscale,Art. 12-1.</H6>
+
+
+<H3 class="Paragraphe">
+Producteurs de palmiers &agrave; huile, d&apos;ananas, de bois en grumes et de produits h&eacute;v&eacute;icoles</H3>
+
+
+<span id="#A0061"></span>
+<H6  class="NoArticle">
+Art. 61    </H6>
+<P CLASS="Liste2-Enumeree">
+1<b>&deg;-</b>Il est institu&eacute; un pr&eacute;l&egrave;vement &agrave; titre d&apos;imp&ocirc;t sur les b&eacute;n&eacute;fices sur les productions suivantes :</P>
+<P CLASS="Liste2-Enumeree">
+-produits du palmier &agrave; huile;</P>
+<P CLASS="Liste2-Enumeree">
+-ananas;</P>
+<P CLASS="Liste2-Enumeree">
+-bois en grumes;</P>
+<H6 CLASS="Modification">
+<a name="50483203_pgfId-1023240"></a>Loi n&deg; 2021-899 du 21 d&eacute;c. 2021, an. fiscale,Art. 12-2.</H6>
+<P CLASS="Liste2-Enumeree">
+2<b>&deg;-</b>Sont exclus du pr&eacute;l&egrave;vement, les productions des exploitants forestiers r&eacute;guli&egrave;rement d&eacute;clar&eacute;s et les op&eacute;rations de livraisons de bois en grumes entre industriels.</P>
+<P CLASS="Liste2-Enumeree">
+3<b>&deg;-</b>Le pr&eacute;l&egrave;vement subi est lib&eacute;ratoire de l&apos;imp&ocirc;t sur les b&eacute;n&eacute;fices. Pour les unit&eacute;s de production relevant du b&eacute;n&eacute;fice agricole ou commercial, le pr&eacute;l&egrave;vement sera imputable sur l&apos;imp&ocirc;t sur les b&eacute;n&eacute;fices, &agrave; l&apos;exception de l&apos;imp&ocirc;t minimum forfaitaire, avec le report possible sur deux exercices.</P>
+<P CLASS="Liste2-Enumeree">
+4<b>&deg;-</b>Le pr&eacute;l&egrave;vement ne constitue pas un &eacute;l&eacute;ment du prix de revient des produits en cause et ne doit pas &ecirc;tre r&eacute;percut&eacute; sur les prix de vente, sous peine de sanctions pr&eacute;vues par les dispositions relatives aux prix, &agrave; la poursuite et &agrave; la r&eacute;pression des infractions &agrave; la l&eacute;gislation &eacute;conomique.</P>
+<P CLASS="Liste2-Enumeree">
+5<b>&deg;-</b>Le pr&eacute;l&egrave;vement est retenu sur les sommes vers&eacute;es au producteur par les professionnels ou groupement de professionnels de la conservation ou de la transformation ou de la mise en valeur et ce, quelle que soit la destination des produits.</P>
+<P CLASS="Liste2-Enumeree">
+6<b>&deg;-</b>Le pr&eacute;l&egrave;vement est assis sur la valeur brute des produits concern&eacute;s livr&eacute;s en une ou plusieurs fois, par le producteur r&eacute;coltant lui-m&ecirc;me, son repr&eacute;sentant ou tout interm&eacute;diaire dont l&apos;intervention se situerait entre le producteur et les professionnels vis&eacute;s &agrave; l&apos;alin&eacute;a pr&eacute;c&eacute;dent.</P>
+<P CLASS="Liste2-Enumeree">
+7<b>&deg;-</b>Le taux du pr&eacute;l&egrave;vement est fix&eacute; comme suit :</P>
+<P CLASS="Liste2-Enumeree">
+-produits du palmier...........1,5 %;</P>
+<P CLASS="Liste2-Enumeree">
+-ananas..............................2,5 %;</P>
+<P CLASS="Liste2-Enumeree">
+-bois en grumes....................5 %.</P>
+
+<H6  class="Modification">
+Loi n<b>&deg;-</b> 2002-156 du 15 mars 2002, an. fiscale,Art.11. Ord. n<b>&deg;-</b> 2007-488 du 31 mai 2007Art. 11-2; loi n&deg; 2021-899 du 21 d&eacute;c. 2021, an. fiscale,Art. 12-2.</H6>
+<P CLASS="Liste2-Enumeree">
+ [Obsol&egrave;te].</P>
+
+<H6  class="Modification">
+Loi n<b>&deg;-</b> 2005-161 du 27 avril 2005, an. fiscale,Art. 10.</H6>
+<P CLASS="ParaText">
+<font color='#000000'>Pour les produits h&eacute;v&eacute;icoles et l&#8216;ananas, le taux est ramen&eacute; &agrave; 1,5 % pour les ann&eacute;es 2019, 2020 et 2021. </font></P>
+<H6  class="Modification">
+Loi n&deg; 2018 - 984 du 28 d&eacute;cembre 2018, an. fiscaleArt. 3</H6>
+<P CLASS="Liste2-Enumeree">
+8<b>&deg;-</b>Le total des pr&eacute;l&egrave;vements effectu&eacute;s par les professionnels concern&eacute;s au cours d&apos;un mois donn&eacute;, doit &ecirc;tre revers&eacute; au plus tard le 15 du mois suivant &agrave; la recette des Imp&ocirc;ts dont ils d&eacute;pendent, au moyen d&apos;une d&eacute;claration r&eacute;glementaire.</H6>
+<P CLASS="Liste2-Enumeree">
+9<b>&deg;-</b>Tout pr&eacute;l&egrave;vement pratiqu&eacute; est exigible du fait de sa facturation.</P>
+<P CLASS="Liste2-Enumeree">
+10<b>&deg;-</b>Tout professionnel qui n&apos;a pas effectu&eacute; les pr&eacute;l&egrave;vements, ou qui a op&eacute;r&eacute; des pr&eacute;l&egrave;vements insuffisants, est redevable, outre le montant des pr&eacute;l&egrave;vements non effectu&eacute;s, d&apos;une amende au taux du droit commun.</P>
+<P CLASS="Liste2-Enumeree">
+11<b>&deg;-</b>Le d&eacute;faut de production de la d&eacute;claration mensuelle des pr&eacute;l&egrave;vements dans le d&eacute;lai fix&eacute; ci-dessus, est sanctionn&eacute; par la proc&eacute;dure de taxation d&apos;office.</P>
+<P CLASS="Liste2-Enumeree">
+12<b>&deg;-</b>Sans pr&eacute;judice des dispositions qui pr&eacute;c&egrave;dent, le pr&eacute;l&egrave;vement est contr&ocirc;l&eacute; et recouvr&eacute; selon les m&ecirc;mes modalit&eacute;s, s&ucirc;ret&eacute;s, privil&egrave;ges et sanctions que l&apos;imp&ocirc;t sur les b&eacute;n&eacute;fices.</P>
+<H6  class="Modification">
+Loi n<b>&deg;-</b> 2001-338 du 14 juin 2001, an. fiscale,Art.9.</H6>
+
+<H3 class="Paragraphe">
+Clients revendeurs des scieries</H3>
+<span id="#A0061b"></span>
+<H6 class="NoArticle">
+Art. 61 bis   </H6>
+<P CLASS="Liste2-Enumeree">
+1<b>&deg;-</b> Les scieries sont tenues d&apos;effectuer un pr&eacute;l&egrave;vement  &agrave; titre d&apos;acompte d&apos;imp&ocirc;t sur les b&eacute;n&eacute;fices sur les ventes r&eacute;alis&eacute;es par les scieries avec leurs clients revendeurs.</P>
+<P CLASS="Liste2-Enumeree">
+2<b>&deg;-</b> Le taux du pr&eacute;l&egrave;vement est fix&eacute; &agrave; 10%.</P>
+<P CLASS="ParaText">
+3<b>&deg;-</b> Les dispositions pr&eacute;vues aux paragraphes 2<b>&deg;-</b> et 3<b>&deg;-</b> de l'article <a class='ui-button' href='' onClick="loadArticle('008','0058');return false;">58</a> du pr&eacute;sent Code sont applicables mutatis mutandis &agrave; la retenue institu&eacute;e par le pr&eacute;sent article.</P>
+
+
+<H6 class="Modification">
+Ord. n<b>&deg;-</b> 2008-381 du 18 d&eacute;cembre 2008,Art.17 .</H6>
+<span id="#A0061t"></span>
+<H6 class="NoArticle">
+Art. 61 ter    </H6>
+<P CLASS="ParaText">
+Il est institu&eacute; un pr&eacute;l&egrave;vement au taux de 5 % &agrave; titre d&apos;imp&ocirc;t  sur les b&eacute;n&eacute;fices sur les ventes de bois sur pied r&eacute;alis&eacute;es par la Soci&eacute;t&eacute; pour le D&eacute;veloppement des For&ecirc;ts (SODEFOR).</P>
+<P CLASS="ParaText">
+Le pr&eacute;l&egrave;vement est appliqu&eacute; par la SODEFOR &agrave; l&apos;occasion de ses ventes de bois sur pied. Il est lib&eacute;ratoire de l&apos;imp&ocirc;t sur les b&eacute;n&eacute;fices.</P>
+<P CLASS="ParaText">
+Sont exclues du pr&eacute;l&egrave;vement, les ventes faites aux industriels et aux exploitants forestiers relevant d&apos;un r&eacute;gime r&eacute;el d&apos;imposition.</P>
+<P CLASS="ParaText">
+Le pr&eacute;l&egrave;vement subi ne constitue pas un &eacute;l&eacute;ment du prix de revient desdits bois et ne doit pas &ecirc;tre r&eacute;percut&eacute; par l&apos;acheteur sur le prix de ses propres ventes. </P>
+<P CLASS="ParaText">
+Le pr&eacute;l&egrave;vement est assis, contr&ocirc;l&eacute; et recouvr&eacute; dans les m&ecirc;mes conditions et selon les m&ecirc;mes modalit&eacute;s, s&ucirc;ret&eacute;s et sanctions que celles pr&eacute;vues &agrave; l&apos;article <a class='ui-button' href='' onClick="loadArticle('008','0061');return false;">61</a> ci-dessus. </P>
+
+<H6 class="Modification"> 
+Ord. n<b>&deg;-</b> 2008-381 du 18 d&eacute;cembre 2008,Art.44-1/.</H6>
+
+
+<span class="historique" ID="h2457">
+<div class="histText">
+
+<p>Les soci&eacute;t&eacute;s ou compagnies d'assurances sont tenues de pr&eacute;lever &agrave; la source pour le compte du Tr&eacute;sor public, une retenue de 7,5 % des sommes brutes mises en paiement au profit des agents mandataires et apporteurs d'affaires.</p>
+<p>Ord. n&deg;- 2000-252 du 28 mars 2000Art. 3; loi n&deg;- 2001-338 du 14 juin 2001, an. fiscale,Art. 11; Ord. n&deg;- 2009-382 du 26 novembre 2009Art.13.</p>
+<p>Les dispositions pr&eacute;vues aux paragraphes 2&deg;- et 3&deg;- de l'article 58 sont applicables mutatis mutandis &agrave; la retenue institu&eacute;e par le pr&eacute;sent article.</p>
+<p>Ord. n&deg;- 2000-252 du 28 mars 2000. an. fiscale,Art. 3.</p>
+
+</div></span><finh2457>
+
+<span class="historique" ID="h2457b">
+<div class="histText">
+
+<p>Les entreprises sont tenues de pr&eacute;lever &agrave; la source pour le compte du Tr&eacute;sor public, une retenue de 7,5 % des sommes brutes mises en paiement au profit des mandataires ou apporteurs d'affaires.</p>
+<p>Ord. n&deg;- 2009-382 du 26 novembre 2009Art.13.</p>
+<p>Sont exon&eacute;r&eacute;s de cette retenue les mandataires ou apporteurs d'affaires relevant d'un r&eacute;gime r&eacute;el d'imposition.</p>
+<p>Les dispositions pr&eacute;vues aux paragraphes 2&deg;- et 3&deg;- de l'article 58 sont applicables mutatis mutandis &agrave; la retenue institu&eacute;e par le pr&eacute;sent article.</p>
+<p>Ord. n&deg;- 2007-675 du 28 d&eacute;cembre 2007Art. 37 .</p>
+
+</div></span><finh2457b>
+
+
+<span class="historique" ID="h2458">
+<div class="histText">
+
+<p>1&deg;	Les importateurs, fabricants, grossistes et demi-grossistes qui versent des ristournes, commissions ou remises &agrave; leurs revendeurs principaux sont tenus de pr&eacute;lever &agrave; la source pour le compte du Tr&eacute;sor, une retenue de 7,5 % des sommes brutes mises en paiement.</p>
+<p>Toutefois, les revendeurs principaux relevant de la Direction des grandes Entreprises ou de la Direction des moyennes Entreprises sont exon&eacute;r&eacute;s de cette retenue.</p>
+<p>Ord. n&deg; 2006-234 du 02 ao&ucirc;t 2006, an. fiscale, art. 19; ord. n&deg; 2009-382 du 26 novembre 2009, an. fiscale, art.13; loi n&deg; 2014-861 du 22 d&eacute;cembre 2014, an. fiscale, art.12-2.</p>
+<p>&nbsp;</p>
+<p>2&deg; </p>
+<p>a)	Les entreprises soumises &agrave; un r&eacute;gime du r&eacute;el d&rsquo;imposition doivent verser les retenues aff&eacute;rentes aux sommes mises en paiement au cours d&rsquo;un mois donn&eacute;, au plus tard le 15 du mois suivant.</p>
+<p>En ce qui concerne les entreprises relevant de la Direction des grandes Entreprises ou de la Direction des moyennes Entreprises, les retenues aff&eacute;rentes aux sommes mises en paiement au cours d&rsquo;un mois donn&eacute; doivent &ecirc;tre vers&eacute;es:</p>
+<p>&ndash; au plus tard le 10 du mois suivant, pour les entreprises industrielles et les entreprises p&eacute;troli&egrave;res et mini&egrave;res;</p>
+<p>&ndash; au plus tard le 15 du mois suivant, pour les entreprises commerciales;</p>
+<p>&ndash; au plus tard le 20 du mois suivant, pour les entreprises prestataires de services.</p>
+<p>Ord. n&deg; 2009-382 du 26 novembre 2009, an. fiscale, art.24-1; loi n&deg; 2014-861 du 22 d&eacute;cembre 2014, an. fiscale, art.12-3; ord. n&deg; 2015-797 du 18 d&eacute;cembre 2015, art. 7.</p>
+<p>b)	1- Le paiement des retenues s&rsquo;effectue au moyen d&rsquo;un bordereau avis de versement en triple exemplaire. A l&rsquo;appui de ce bordereau doivent &ecirc;tre joints des &eacute;tats nominatifs devant obligatoirement comporter les indications suivantes, pour chaque b&eacute;n&eacute;ficiaire des sommes vers&eacute;es :</p>
+<p>&ndash; nom et pr&eacute;noms;</p>
+<p>&ndash;	adresse g&eacute;ographique, postale et t&eacute;l&eacute;phonique;</p>
+<p>&ndash; montant mis en paiement;</p>
+<p>&ndash; date de paiement;</p>
+<p>&ndash; montant de la retenue effectu&eacute;e.</p>
+<p>2- Les &eacute;tats nominatifs &eacute;num&eacute;r&eacute;s au 1&deg; ci-dessus doivent &ecirc;tre accompagn&eacute;s, pour chaque b&eacute;n&eacute;ficiaire, d&rsquo;une attestation individuelle de retenue &eacute;tablie conform&eacute;ment au mod&egrave;le prescrit par l&rsquo;Administration.</p>
+<p>3- Les attestations individuelles vis&eacute;es par le receveur des Imp&ocirc;ts comp&eacute;tent sont remises par la partie versante aux b&eacute;n&eacute;ficiaires pour leur permettre de faire valoir ult&eacute;rieurement les retenues qu&rsquo;ils ont subies. Les retenues sont imputables sur les cotisations d&rsquo;imp&ocirc;t sur les b&eacute;n&eacute;fices industriels et commerciaux ou d&rsquo;imp&ocirc;t minimum forfaitaire. Elles ne sont en aucun cas restituables.</p>
+<p>&nbsp;</p>
+<p>3&deg; </p>
+<p>a) Les omissions ou insuffisances constat&eacute;es dans les retenues &agrave; la source sont sanctionn&eacute;es conform&eacute;ment aux dispositions pr&eacute;vues par le Livre de Proc&eacute;dures fiscales. </p>
+<p>Loi n&deg; 2023-1000 du 18 d&eacute;c. 2023, an. fiscale, art. 19-1.</p>
+<p>Le d&eacute;faut de versement partiel ou total dans le d&eacute;lai l&eacute;gal des retenues effectu&eacute;es est sanctionn&eacute; par une p&eacute;nalit&eacute; de 100 %. Cette p&eacute;nalit&eacute; est toutefois ramen&eacute;e &agrave; 30 % si le retard de paiement n&rsquo;exc&egrave;de pas un mois.</p>
+<p>b)	Sera consid&eacute;r&eacute; comme un d&eacute;lit d&rsquo;escroquerie et sanctionn&eacute; conform&eacute;ment aux dispositions de l&rsquo;article 7 de l&rsquo;annexe fiscale &agrave; la loi n&deg; 67-588 du 31 d&eacute;cembre 1967 portant loi de Finances pour la gestion 1968, le fait pour tout importateur, fabricant, grossiste ou demi-grossiste de ne pas reverser au Tr&eacute;sor public les retenues effectivement op&eacute;r&eacute;es.</p>
+<p>c)	Le refus ou le d&eacute;faut de production des &eacute;tats vis&eacute;s au 2&deg; b) est sanctionn&eacute; par une amende de 100 000 francs.</p>
+<p>L&rsquo;amende est per&ccedil;ue autant de fois qu&rsquo;il y a d&rsquo;&eacute;tats non produits.</p>
+<p>Loi n&deg; 96-218 du 13 mars 1996, an. fiscale, art. 15.</p>
+
+</div></span><finh2458>
+
+<span class="historique" ID="h2358">  
+<div class="histText">
+   
+<BR>Art. 58
+<BR> 
+ <p>1&deg;	Les importateurs, fabricants, grossistes et demi-grossistes qui versent des ristournes, commissions ou remises &agrave; leurs revendeurs principaux sont tenus de pr&eacute;lever &agrave; la source pour le compte du Tr&eacute;sor, une retenue de 7,5 % des sommes brutes mises en paiement.</p>
+<p>Toutefois, les revendeurs principaux relevant de la Direction des grandes Entreprises ou de la Direction des moyennes Entreprises sont exon&eacute;r&eacute;s de cette retenue.</p>
+<p>Ord. n&deg; 2006-234 du 02 ao&ucirc;t 2006, an. fiscale,Art. 19; Ord. n&deg; 2009-382 du 26 novembre 2009, an. fiscale,Art.13; loi n&deg; 2014-861 du 22 d&eacute;cembre 2014, an. fiscale,Art.12-2.</p>
+<p>2&deg; a)	Les entreprises soumises &agrave; un r&eacute;gime du r&eacute;el d'imposition doivent verser les retenues aff&eacute;rentes aux sommes mises en paiement au cours d'un mois donn&eacute;, au plus tard le 15 du mois suivant.</p>
+<p>Ord. n&deg; 2015-797 du 18 d&eacute;cembre 2015,Art. 7.</p>
+<p>En ce qui concerne les entreprises relevant de la Direction des grandes Entreprises ou de la Direction des moyennes Entreprises, les retenues aff&eacute;rentes aux sommes mises en paiement au cours d'un mois donn&eacute; doivent &ecirc;tre vers&eacute;es:</p>
+<p>-	au plus tard le 10 du mois suivant, pour les entreprises industrielles et les entreprises p&eacute;troli&egrave;res et mini&egrave;res;</p>
+<p>-	au plus tard le 15 du mois suivant, pour les entreprises commerciales;</p>
+<p>-	au plus tard le 20 du mois suivant, pour les entreprises prestataires de services.</p>
+<p>Ord. n&deg; 2009-382 du 26 novembre 2009, an. fiscale,Art.24-1; loi n&deg; 2014-861 du 22 d&eacute;cembre 2014, an. fiscale,Art.12-3.</p>
+<p>b)	1- Le paiement des retenues s'effectue au moyen d'un bordereau avis de versement en triple exemplaire. A l'appui de ce bordereau doivent &ecirc;tre joints des &eacute;tats nominatifs devant obligatoirement comporter les indications suivantes, pour chaque b&eacute;n&eacute;ficiaire des sommes vers&eacute;es :</p>
+<p>-	nom et pr&eacute;noms;</p>
+<p>-	adresse g&eacute;ographique, postale et t&eacute;l&eacute;phonique;</p>
+<p>-	montant mis en paiement;</p>
+<p>-	date de paiement;</p>
+<p>-	montant de la retenue effectu&eacute;e.</p>
+<p>2- Les &eacute;tats nominatifs &eacute;num&eacute;r&eacute;s au 1&deg; ci-dessus doivent &ecirc;tre accompagn&eacute;s, pour chaque b&eacute;n&eacute;ficiaire, d'une attestation individuelle de retenue &eacute;tablie conform&eacute;ment au mod&egrave;le prescrit par l'Administration.</p>
+<p>3- Les attestations individuelles vis&eacute;es par le receveur des Imp&ocirc;ts comp&eacute;tent sont remises par la partie versante aux b&eacute;n&eacute;ficiaires pour leur permettre de faire valoir ult&eacute;rieurement les retenues qu'ils ont subies. Les retenues sont imputables sur les cotisations d'imp&ocirc;t sur les b&eacute;n&eacute;fices industriels et commerciaux ou d'imp&ocirc;t minimum forfaitaire. Elles ne sont en aucun cas restituables.</p>
+<p>3&deg; a) Les omissions ou insuffisances constat&eacute;es dans les retenues sont sanctionn&eacute;es d'une part, par une p&eacute;nalit&eacute; &eacute;gale au montant des retenues non effectu&eacute;es et d'autre part, par la non d&eacute;ductibilit&eacute; des sommes vers&eacute;es.</p>
+<p>Le d&eacute;faut de versement partiel ou total dans le d&eacute;lai l&eacute;gal des retenues effectu&eacute;es est sanctionn&eacute; par une p&eacute;nalit&eacute; de 100 %. Cette p&eacute;nalit&eacute; est toutefois ramen&eacute;e &agrave; 30 % si le retard de paiement n'exc&egrave;de pas un mois.</p>
+<p>b)	Sera consid&eacute;r&eacute; comme un d&eacute;lit d'escroquerie et sanctionn&eacute; conform&eacute;ment aux dispositions de l'article 7 de l'annexe fiscale &agrave; la loi n&deg; 67-588 du 31 d&eacute;cembre 1967 portant loi de Finances pour la gestion 1968, le fait pour tout importateur, fabricant, grossiste ou demi-grossiste de ne pas reverser au Tr&eacute;sor public les retenues effectivement op&eacute;r&eacute;es.</p>
+<p>c)	Le refus ou le d&eacute;faut de production des &eacute;tats vis&eacute;s au 2&deg; b) est sanctionn&eacute; par une amende de 100 000 francs.</p>
+<p>L'amende est per&ccedil;ue autant de fois qu'il y a d'&eacute;tats non produits.</p>
+<p>Loi n&deg; 96-218 du 13 mars 1996, an. fiscale,Art. 15.</p>
+
+<BR><BR><BR>
+</div></span><finh2358>
+
+<span class="historique" ID="h2459">
+<div class="histText">
+
+1°	Les entrepreneurs du bâtiment et des travaux publics, sont tenus de prélever à la source pour le compte du Trésor public, une retenue de 7,5 % des sommes brutes mises en paiement au profit des sous-traitants, architectes, métreurs, géomètres et autres professionnels auxquels ils ont recours pour l’exécution de leurs marchés.
+
+Ord. n° 2009-382 du 26 novembre 2009, an. fiscale, art.13.
+
+La retenue n’est toutefois pas exigible lorsque les sommes sont mises en paiement au profit de personnes morales.
+
+>Loi n° 97-710 du 20 déc. 1997, an. fiscale, art. 8.
+
+2°	Les dispositions prévues aux paragraphes 2° et 3° de l’article 58 sont applicables mutatis mutandis à la retenue instituée par le présent article.
+
+Loi n° 96-218 du 13 mars 1996, an. fiscale, art. 16.
+
+</div></span><finh2459>
+
+<span class="historique" ID="h2460b">
+<div class="histText">
+<p>1&deg;-Les acheteurs de produits sont tenus de pr&eacute;lever &agrave; la source pour le compte du Tr&eacute;sor public une retenue sur les r&eacute;mun&eacute;rations qu'ils versent aux pisteurs.</p>
+<p>2&deg;-La retenue est per&ccedil;ue au taux de 7,5 % des r&eacute;mun&eacute;rations brutes vers&eacute;es.</p>
+<p>Ord. n&deg;- 2009-382 du 26 novembre 2009Art.13.</p>
+<p>3&deg;-Les dispositions pr&eacute;vues aux paragraphes 2&deg;- et 3&deg;- de l'article 58 du pr&eacute;sent Code sont applicables mutatis mutandis &agrave; la retenue institu&eacute;e par le pr&eacute;sent article.</p>
+<p>Ord. n&deg;- 2007-675 du 28 d&eacute;cembre 2007Art. 11 .</p>
+
+
+</div></span><finh2460b>
+
+
+
+
+</div> </div><p>&nbsp;</p><p>&nbsp;</p></div></div> <!-- wrapper -->
+	  <div id="articleList"><div id="contenu" style='height:auto; background-color:#FFFFCC'>&nbsp;</div>
+      </div><p>&nbsp;</p><p>&nbsp;</p><p>&nbsp;</p><p>&nbsp;</p><p>&nbsp;</p><p>&nbsp;</p><p>&nbsp;</p><p>&nbsp;</p><p>&nbsp;</p><p>&nbsp;</p>
+	  <p>&nbsp;</p><p>&nbsp;</p><p>&nbsp;</p><p>&nbsp;</p><p>&nbsp;</p><p>&nbsp;</p></BODY></HTML>
+	  

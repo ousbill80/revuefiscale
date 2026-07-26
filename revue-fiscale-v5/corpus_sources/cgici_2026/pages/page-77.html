@@ -1,0 +1,618 @@
+<!DOCTYPE HTML><HTML><HEAD><META HTTP-EQUIV="Content-Type" CONTENT="text/html; charset=UTF-8">
+<TITLE>Code des impots -82</TITLE><LINK REL="STYLESHEET" HREF="/cicgi.css" CHARSET="ISO-8859-1" TYPE="text/css">
+<style type="text/css">
+body {margin-left: 5px;	margin-top: 0px; margin-right: .5em;margin-bottom: 0px;background-color:#fafafa ;}
+.Liste-Numerote {font-size: 12pt;font-weight: regular;font-style: italic;color: #000000;text-transform: none;margin-left:8px ;margin-bottom:8px ;margin-top:4px ;margin-right:10px ;font-family:Georgia, "Times New Roman", Times, serif}
+li {list-style-type: none; margin-left:0px ; padding-left:0em ; }
+.Paratext {font-size: 12pt;font-weight: regular;font-style: italic;color: #000000;text-decoration: none;vertical-align: baseline;text-transform: none;margin-left:0px ;font-family:Georgia, "Times New Roman", Times, serif}
+.Normal {font-size: 12pt;font-weight: regular;font-style: italic;color: #000000;text-decoration: none;vertical-align: baseline;text-transform: none;margin-left:0px ;font-family:Georgia, "Times New Roman", Times, serif}
+ul {list-style-type: none; margin-left:0px ; padding-left:0em ;  }
+.Liste2-Enumeree {font-size: 12pt;font-weight: regular;font-style: italic;color: #000000;text-decoration: none;vertical-align: baseline;text-transform: none;list-style-type:none ;margin-left:16px ;margin-bottom:8px;margin-right:10px;font-family:Georgia, "Times New Roman", Times, serif}
+P.Liste2-Enumeree {font-size: 12pt;font-weight: regular;font-style: italic;color: #000000;text-decoration: none;vertical-align: baseline;text-transform: none;list-style-type:none ;margin-left:16px ;margin-bottom:8px;margin-right:10px;font-family:Georgia, "Times New Roman", Times, serif}
+.Entete {font-size: 13pt;font-weight: regular;font-style: italic;color:#000000 ;text-decoration: none;vertical-align: baseline;text-transform: none;margin-left:8px ;font-family:Georgia, "Times New Roman", Times, serif}
+table, TABLE {border-width:1px; width:99% ;border-collapse:collapse;border-color: #9ecaed;box-shadow: 0 0 10px #9ecaed;}
+tr,td {text-align:left;vertical-align:bottom;border:1px solid #9ecaed;padding:.2em;marging-left:.2em}
+th, TH{text-align:center;vertical-align:middle;padding:.2em;}
+P.TableauEntete {font-size: 13pt;font-weight: regular;font-style: italic;color: #000000;font-family:Georgia, "Times New Roman"}
+P.TableauCelluleLeft, P.TableauCellule {text-align:right;margin-right:1em;font-size: 13pt;font-weight: regular;font-style: italic;color: #000000;font-family:Georgia, "Times New Roman"}
+P.TableauCelluleRight {text-align:left;margin-left:1em;font-size: 13pt;font-weight: regular;font-style: italic;color: #000000;font-family:Georgia, "Times New Roman"}
+.ui-buttonh {padding: .1em .1em ; border: 1px solid #dadada;border-radius: 4px; box-shadow: 0 0 4px #9ecaed;color:#FF3300 ;margin-left:8px ;margin-right:8px ;margin-bottom:2px ;margin-top:2px ;text-decoration:none ;font-size:12pt ;font-family:"Times New Roman"}   
+.ui-button {padding: .1em .1em ; border: 1px solid #dadada;border-radius: 4px; box-shadow: 0 0 4px #9ecaed;color:#FF3300 ;margin-left:8px ;margin-right:8px ;margin-bottom:2px ;margin-top:2px ;text-decoration:none ;font-size:12pt ;font-family:"Times New Roman"}   
+H3 {display: block;text-align: center;text-indent: 0pt;margin-top: 10pt;margin-bottom: 10pt;margin-right: 10pt;margin-left: 10pt;font-size: 12pt;font-weight: Bold;font-style: Regular;color: #00A000;text-decoration: none;vertical-align: baseline;text-transform: none;font-family: "Times New Roman";}
+H4 {display: block;text-align: left;text-indent: 0pt;margin-top: 10pt;margin-bottom: 6pt;margin-right: 10pt;margin-left: 10pt;font-size: 12pt;font-weight: Bold;font-style: Regular;color: #000000;text-decoration: none;vertical-align: baseline;text-transform: none;font-family: "Times New Roman";}
+H5 {display: block;text-align: left;text-indent: 0pt;margin-top: 10pt;margin-bottom: 6pt;margin-right: 10pt;margin-left: 10pt;font-size: 11pt;font-weight: Bold;font-style: Regular;color: #000000;text-decoration: none;vertical-align: baseline;text-transform: none;font-family: "Times New Roman";}
+H6.NoArticle {display: block;text-align: left;text-indent: 0pt;margin-top: 14pt;margin-bottom: 0pt;margin-right: 0pt;margin-left: 0pt;font-size: 14pt;font-weight: regular;font-style: Regular;color: #00a000;text-decoration: none;vertical-align: baseline;text-transform: none;font-family: "Times New Roman";}
+H2 {text-align:center;font-size:16pt;font-family:Georgia, "Times New Roman", Times, serif}
+P.ParaText {font-size: 12pt;font-weight: regular;font-style: italic;color: #000000;	text-decoration: none;vertical-align: baseline;text-transform: none;font-family:Georgia, "Times New Roman", Times, serif;}
+H2.Section,P.Section {font-size:12pt;font-weight:bold;font-style:Regular;color:#008000;font-family:Georgia,"Times New Roman"}
+P.Paragraphe, p.Paragraphe {Text-Align:center;Text-decoration:none;font-size:12pt;font-weight:bold;font-style:Normal;color:#00A000;font-family:Georgia,"Times New Roman"}
+H2.Livre,P.Livre {text-align:center;font-size:16pt;font-weight:bold;font-style:Regular;color:#008000;font-family:Georgia,"Times New Roman"}
+P.Partie,H2.Partie,P.TitreSub {text-align:center;font-size:14pt;font-weight:bold;font-style:Regular;color:#008000;font-family:Georgia,"Times New Roman"}
+H2.ChapitreNo,H2.TitreNo {text-align:center;font-size:14pt;font-weight:bold;font-style:Regular;color:#008000;font-family:Georgia,"Times New Roman"}
+H2.Chapitre, h2.Chapitre {text-align:center;font-size:14pt;font-weight:bold;font-style:Regular;color:#008000;font-family:Georgia,"Times New Roman"}
+H2.TitreNo {text-align:center;font-size:14pt;font-weight:bold;font-style:Regular;color:#008000;font-family:Georgia,"Times New Roman"}
+h3.Sous-Section, H3.Sous-Section, h3.Sous-section, h2.Section {font-size:12pt;font-weight:bold;font-style:Italic;color:#008000;font-family:Georgia,"Times New Roman"}
+hr,HR { display: block; width:90%;  margin-top: 0.5em; margin-bottom: 0.5em; margin-left: auto;  margin-right: auto;  border-style: inset; border-width: 1px;}
+P.TitreSub {text-align:center;font-size:14pt;font-weight:bold;font-style:Regular;color:#008000;font-family:Georgia,"Times New Roman"}
+.Reference {display: block;text-align: left;text-indent: 0pt;margin-top: 10pt;margin-bottom: 6pt;margin-right: 10pt;margin-left: 10pt;font-size: 14pt;font-weight: Bold;font-style: Regular;color: #7F5434;text-decoration: none;vertical-align: baseline;text-transform: none;font-family: "Times New Roman";}
+.ludwig,blockquote {padding-left:1em;background-color:#fafafa;font-size:12pt;font-weight:100;font-style:italic;}
+#articleList {position:absolute ;	z-index: 1 ;left: 10px ;top: 80px ;height:340px;width: 620px;border: 2px solid #cacaca ;border-radius: 5px ;background-color:#fafafa ;    box-shadow: 0 0 12px #333333;	margin-left:0px ;	padding: .3em .3em ;		overflow:hidden ;	visibility:hidden ;  }			
+#articleList h3 { text-align: center; margin: 0; }		
+
+.historique {
+  display:none ;
+  padding: .1em .3em ;
+  border: solid 2px #dadada;
+  border-radius: 7px;
+  box-shadow: 0 0 5px #9ecaed;  
+  
+}
+.histText {
+    display: block;
+    font-family: ;"Times New Roman"
+	padding: .1em .3em ;
+    margin: 1em 0px;
+	font-style:italic;
+	color:#000000;
+	overflow:auto;
+}
+.highlight {
+  font-weight:bold ;
+  color:#000000 ;
+  background-color:#FFFFCC ;
+  }
+.articleList-scroll {
+	overflow-x:hidden ;
+	overflow-y:scroll ;
+	scrollbar-width:thin ;
+	scrollbar-color:blue orange ;
+}
+
+#contenu {
+	overflow-x:hidden ;
+    overflow-y:scroll ;
+	scrollbar-width:thin ;
+	scrollbar-color:blue orange ;
+}		
+
+table, TABLE {
+ text-align:center; 
+    margin-left:.5em; 
+    margin-right:.5em; 
+    border:1px solid #000000;	
+	border-collapse:collapse ;
+    border-color: #9ecaed;
+    box-shadow: 0 0 10px #9ecaed;
+	
+   }
+  tr,td {text-align:left;}
+  
+
+
+ </style>
+ 
+<script src="/js/iscroll.js"></script>
+<script src="/js/jquery.js"></script>   
+<script src="/js/jquery-ui-1.10.3.custom.js"></script>    	    
+<script src="/js/jquery.ui.draggable.js" type="text/javascript"></script>			
+<script src="/js/jquery.ui.core.js"></script> 			
+<script src="/js/jquery.ui.widget.js"></script>			
+<script src="/js/jquery.ui.position.js"></script>			
+<script src="/js/jquery.ui.menu.js"></script>    		
+<script type="text/javascript" src="./xpages.js"></script>
+/* VERSION POUR PAGE HTML SUR SITE DGI.CGICI.COM */
+<script language="javascript">
+ function showButton(id) {
+    var x = document.getElementById(id) ;
+	if(x.style.display === "none") {
+	   x.style.display = "block" ;
+	  } else {
+	   x.style.display = "none" ;
+	   }
+	 }   
+	 var pagenumber="082";
+function loadpage(page, art) {
+      showHideHistoric(art);
+	  return false;
+	  } 
+function loadArticle(page, art) { var artno = art ;var pgno=page;scrolltoelementTag(pgno,artno) ;return false ;} 
+
+</script>
+</HEAD>
+<BODY><div ID="wrapper"><div ID="scroller">
+
+
+<H2 CLASS="Section">
+Section IV - Exemptions</H2>
+<span id="#A0280"></span>
+<DIV>
+<H6 CLASS="NoArticle">
+    Art. 280 &nbsp;&nbsp;&nbsp;&nbsp; <a href="#" onClick="loadpage('082','h21280');return false;" class="ui-button"  title="Consultez l'historique">2021...</a></H6>
+<P CLASS="ParaText">
+Ne sont pas assujetties &agrave; la patente, les personnes ci-apr&egrave;s &eacute;num&eacute;r&eacute;es :</P>
+<P CLASS="Liste2-Enumeree">
+1-	L&apos;Etat, les collectivit&eacute;s territoriales et les &eacute;tablissements publics pour les services publics d&apos;utilit&eacute; g&eacute;n&eacute;rale.</P>
+<P CLASS="Liste2-Enumeree">
+2-	Les fonctionnaires et employ&eacute;s salari&eacute;s en ce qui concerne seulement l&apos;exercice de leur fonction.</P>
+<P CLASS="Liste2-Enumeree">
+3-	Les peintres, sculpteurs, dessinateurs et graveurs consid&eacute;r&eacute;s comme artistes et ne vendant que le produit de leurArt.</P>
+<P CLASS="Liste2-Enumeree">
+4-	Les &eacute;tablissements d&apos;enseignements scolaires et universitaires.</P>
+<P CLASS="Liste2-Enumeree">
+5-	Les entreprises de publication de journaux et p&eacute;riodiques.</P>
+<P CLASS="Liste2-Enumeree">
+6-	Les agriculteurs et les &eacute;leveurs qui ne vendent ou ne manipulent que les r&eacute;coltes, fruits, produits d&apos;&eacute;levage provenant de leur exploitation et qui ont un chiffre d&apos;affaires annuel inf&eacute;rieur &agrave; celui fix&eacute; pour relever d&apos;un r&eacute;gime r&eacute;el d&apos;imposition.</P>
+<H6 CLASS="Modification">
+Loi n&deg; 2002-156 du 15 mars 2002, an. fiscale,Art. 18.</H6>
+<P CLASS="Liste2-Enumeree"><FONT COLOR='#000000'> 
+<a name="50499599_pgfId-1026310"></a>7&ndash;	Abrog&eacute;.</FONT></P>
+<H6 CLASS="Modification">
+<a name="50499599_pgfId-1117825"></a>Loi n&deg; 2021-899 du 21 d&eacute;c. 2021, an. fiscale,Art. 4-6.</H6>
+<P CLASS="Liste2-Enumeree">
+8-	Les propri&eacute;taires ou locataires louant accidentellement en meubl&eacute; une partie de leur habitation personnelle lorsque d&apos;ailleurs cette location ne pr&eacute;sente aucun caract&egrave;re p&eacute;riodique.</P>
+<P CLASS="Liste2-Enumeree"><FONT COLOR='#000000'>
+9-	Abrog&eacute;</FONT></P>
+<H6 CLASS="Modification"><FONT COLOR='#000000'>
+Loi n&deg; 2020-972 du 23 d&eacute;c. 2020, an. fiscale,Art. 2-4.</FONT></H6>
+<P CLASS="Liste2-Enumeree">
+10-	Les associ&eacute;s des soci&eacute;t&eacute;s de capitaux.</P>
+<H6 CLASS="Modification">
+Loi n&deg; 2002-156 du 15 mars 2002, an. fiscale,Art. 19.</H6>
+<P CLASS="Liste2-Enumeree">
+11-	Les caisses d&apos;&eacute;pargne et de pr&eacute;voyance administr&eacute;es gratuitement.</P>
+<P CLASS="Liste2-Enumeree">
+12-	Les &eacute;tablissements publics ou priv&eacute;s ayant pour but de recueillir les enfants pauvres et de leur donner une profession.</P>
+<P CLASS="Liste2-Enumeree">
+13-	Les voyageurs, repr&eacute;sentants et placiers de commerce et d&apos;industrie qu&apos;ils travaillent pour le compte d&apos;une ou plusieurs maisons, qu&apos;ils soient r&eacute;mun&eacute;r&eacute;s par des remises proportionnelles ou des appointements fixes, &agrave; la condition qu&apos;ils ne fassent aucune op&eacute;ration pour leur compte personnel et qu&apos;ils n&apos;aient pas de personnalit&eacute; professionnelle ind&eacute;pendante de celle des commer&ccedil;ants dont ils placent les produits.</P>
+<P CLASS="Liste2-Enumeree">
+14-	Les soci&eacute;t&eacute;s coop&eacute;ratives agricoles de production et leurs unions pour les op&eacute;rations qui, entrant dans les usages normaux de l&apos;agriculture, ne donneraient pas lieu &agrave; l&apos;application de la patente si elles &eacute;taient effectu&eacute;es dans les m&ecirc;mes conditions par chacun des adh&eacute;rents desdites soci&eacute;t&eacute;s.</P>
+<P CLASS="Liste2-Enumeree">
+15-	Les soci&eacute;t&eacute;s coop&eacute;ratives de consommation quand elles se bornent &agrave; grouper les commandes de leurs adh&eacute;rents et &agrave; distribuer dans de simples magasins de d&eacute;p&ocirc;t les marchandises ayant fait l&apos;objet de ces commandes ou bien lorsque ne vendant qu&apos;&agrave; leurs soci&eacute;taires, leurs bonis sont &agrave; l&apos;exclusion de tout autre emploi, r&eacute;partis entre ces soci&eacute;taires ou vers&eacute;s &agrave; des &#339;uvres d&apos;int&eacute;r&ecirc;t g&eacute;n&eacute;ral, ou consacr&eacute;s &agrave; des r&eacute;serves qui ne sont pas destin&eacute;es &agrave; &ecirc;tre r&eacute;parties entre les porteurs d&apos;actions. Ne perdront pas cependant les droits &agrave; l&apos;exemption, les soci&eacute;t&eacute;s dont les statuts pr&eacute;voient l&apos;attribution au capital social d&apos;un int&eacute;r&ecirc;t fixe n&apos;exc&eacute;dant pas la limite de 6 %.</P>
+<P CLASS="Liste2-Enumeree">
+16-	Les syndicats agricoles et les soci&eacute;t&eacute;s de cr&eacute;dit agricole.</P>
+<P CLASS="Liste2-Enumeree">
+17-	Les planteurs vendant du bois de chauffe provenant exclusivement du d&eacute;broussaillement pour mise en valeur de leurs plantations.</P>
+<P CLASS="Liste2-Enumeree"><FONT COLOR='#000000'>
+18-	Abrog&eacute;.</FONT></P>
+<H6 CLASS="Modification"><FONT COLOR='#000000'>
+Loi n&deg; 2020-972 du 23 d&eacute;c. 2020, an. fiscale,Art. 2-4.</FONT></H6>
+<P CLASS="Liste2-Enumeree"><FONT COLOR='#000000'>
+19-	Les redevables de la taxe d&apos;Etat de l&apos;Entreprenant, de la taxe Communale de l&apos;Entreprenant, de l&apos;imp&ocirc;t des microentreprises.</FONT></P>
+<H6 CLASS="Modification"><FONT COLOR='#000000'>
+Loi n&deg; 2020-972 du 23 d&eacute;c. 2020, an. fiscale,Art. 33-20.</FONT></H6>
+<P CLASS="Liste2-Enumeree">
+20-	Les transporteurs domicili&eacute;s et r&eacute;guli&egrave;rement patent&eacute;s dans les pays de l&apos;Union Economique et Mon&eacute;taire Ouest Africaine, lorsqu&apos;ils transportent :</P>
+<P CLASS="Liste2-Enumeree">
+-	des marchandises ou mat&eacute;riels d&eacute;barqu&eacute;s &agrave; Abidjan &agrave; destination des autres pays membres de l&apos;Union;</P>
+<P CLASS="Liste2-Enumeree">
+-	ou des produits du cru, en provenance des autres pays membres de l&apos;Union devant &ecirc;tre embarqu&eacute;s &agrave; Abidjan.</P>
+<P CLASS="Liste2-Enumeree">
+Les dispositions du pr&eacute;sent paragraphe s&apos;appliquent sous r&eacute;serve du principe de r&eacute;ciprocit&eacute;.</P>
+<P CLASS="Liste2-Enumeree">
+21-	Les institutions financi&egrave;res &agrave; caract&egrave;re mutualiste, coop&eacute;ratif agr&eacute;&eacute;es dans le cadre strict de leur activit&eacute;.</P>
+<P CLASS="Liste2-Enumeree">
+22-	Les coop&eacute;ratives d&apos;achat qui fonctionnent conform&eacute;ment &agrave; leur objet et dont les membres sont immatricul&eacute;s fiscalement et acquittent individuellement la contribution des patentes.</P>
+<H6 CLASS="Modification">
+Loi n&deg; 2003-206 du 7 juillet 2003, an. fiscale,Art. 19.</H6>
+<P CLASS="Liste2-Enumeree">
+23-	Les contribuables vis&eacute;s &agrave; l&apos;article 272 du pr&eacute;sent Code, &agrave; raison de leurs v&eacute;hicules inutilis&eacute;s au 1er janvier de l&apos;ann&eacute;e d&apos;imposition.</P>
+<P CLASS="Liste2-Enumeree">
+Est consid&eacute;r&eacute; comme v&eacute;hicule inutilis&eacute;, tout v&eacute;hicule dont la carte grise aura &eacute;t&eacute; d&eacute;pos&eacute;e aupr&egrave;s du receveur des Produits divers de la Direction g&eacute;n&eacute;rale des Imp&ocirc;ts ou des receveurs des Imp&ocirc;ts Divers au plus tard le 31 janvier de l&apos;ann&eacute;e d&apos;imposition. Tout retrait de la carte grise ou la remise en circulation du v&eacute;hicule en cours d&apos;ann&eacute;e entra&icirc;ne l&apos;exigibilit&eacute; imm&eacute;diate de la patente au prorata de la p&eacute;riode restant &agrave; courir.</P>
+<H6 CLASS="Modification">
+Loi n&deg; 2003-206 du 7 juillet 2003, an. fiscale,Art. 22.</H6>
+
+<P CLASS="ParaText">
+24- Abrog&eacute;</P>
+
+<H6 CLASS="Modification">
+Loi n&deg; 2004-271 du 15 avril 2004, an. fiscale,Art. 4-2; loi n&deg; 2015-840 du 18 d&eacute;cembre 2015, an. fiscale,Art. 2.</H6>
+<P CLASS="Liste2-Enumeree">
+25-	Les structures exer&ccedil;ant dans le domaine de la microfinance quelle que soit leur forme, en ce qui concerne leurs op&eacute;rations de collecte de l&apos;&eacute;pargne et de distribution du cr&eacute;dit, ainsi que les membres ou clients de ces structures concernant les r&eacute;mun&eacute;rations des parts sociales et les revenus tir&eacute;s de leur &eacute;pargne.</P>
+<H6 CLASS="Modification">
+Loi n&deg; 96-562 du 22 juillet 1996. Ord. n&deg; 2011-480 du 28 d&eacute;cembre 2011, an. fiscale,Art. 29-6.</H6>
+<P CLASS="Liste2-Enumeree">
+26-	Les centres de gestion agr&eacute;&eacute;s au titre de l&apos;ann&eacute;e de leur cr&eacute;ation et les deux ann&eacute;es suivantes.</P>
+<H6 CLASS="Modification">
+Loi n&deg; 2001-338 du 14 juin 2001, an. fiscale,Art. 34.</H6>
+<P CLASS="Liste2-Enumeree"><FONT COLOR='#000000'>
+27-	 Abrog&eacute;. </FONT></P>
+<H6 CLASS="Modification">
+Loi n&deg; 2005-161 du 27 avril 2005, an. fiscale,Art. 26-3; loi n&deg; 2016-1116 du 08 d&eacute;cembre 2016, an. fiscale,Art. 26-3; <FONT COLOR='#000000'>loi n&deg; 2020-972 du 23 d&eacute;c. 2020, an. fiscale,Art. 33-20.</FONT></H6>
+
+<P CLASS="Liste2-Enumeree">
+28-	Le Centre national de Recherche agronomique dans le cadre de ses activit&eacute;s de recherche.</P>
+<H6 CLASS="Modification">
+Ord. n&deg; 2006-234 du 02 ao&ucirc;t 2006, an. fiscale,Art. 3-III-4.</H6>
+
+<P CLASS="Liste2-Enumeree"><FONT COLOR='#000000'> 
+<a name="50499599_pgfId-1035456"></a>29&ndash; Abrog&eacute;.</FONT></P>
+<H6 CLASS="Modification">
+<a name="50499599_pgfId-1035500"></a>Ord. n&deg; 2006-234 du 02 ao&ucirc;t 2006, an. fiscale,Art. 5-1;       ord. n&deg; 2007-488 du 31 mai 2007, an. fiscale,Art. 28-3;        ord. n&deg; 2008-381 du 18 d&eacute;cembre 2008, an. fiscale,Art. 27-6;  loi n&deg; 2015-840 du 18 d&eacute;cembre 2015, an. fiscale,Art. 2;         loi n&deg; 2021-899 du 21 d&eacute;c. 2021, an. fiscale,Art. 4-3.</H6>
+<P CLASS="Liste2-Enumeree">
+30-	Obsol&egrave;te].</P>
+<H6 CLASS="Modification">
+Ord. n&deg; 2006-234 du 02 ao&ucirc;t 2006, an. fiscale,Art. 6-1. Ord. n&deg; 2007-488 du 31 mai 2007, an. fiscale,Art. 28-4; Ord. n&deg; 2008-381 du 18 d&eacute;cembre 2008, an. fiscale,Art. 27-7/.</H6>
+<P CLASS="Liste2-Enumeree">
+31-Les organismes de bienfaisance et les associations sans but lucratif.</P>
+<H6 CLASS="Modification">
+Ord. n&deg; 2009-382 du 26 novembre 2009, an. fiscale,Art.1-2</H6>
+<P CLASS="Liste2-Enumeree">
+32-Les entreprises nouvelles, r&eacute;implant&eacute;es ou rouvertes avant le 31 d&eacute;cembre 2012 en zones Centre, Nord et Ouest au titre des exercices 2010, 2011, 2012, 2013, 2014 et 2015. Cette exon&eacute;ration est ramen&eacute;e &agrave; 75 % au titre des exercices 2016 et 2017.</P>
+<H6 CLASS="Modification">
+Ord. n&deg; 2011-121 du 22 juin 2011, an. fiscale,Art. 2-10.</H6>
+<P CLASS="Liste2-Enumeree">
+33-Les entreprises agro-industrielles intervenant dans les secteurs du coton, de l&apos;anacarde et du karit&eacute;, cr&eacute;&eacute;es, r&eacute;implant&eacute;es ou rouvertes avant le 31 d&eacute;cembre 2012 dans les zones Centre, Nord et Ouest au titre des exercices 2010 &agrave; 2015. Cette exon&eacute;ration est ramen&eacute;e &agrave; 75% pour les exercices 2016 et 2017.</P>
+<H6 CLASS="Modification">
+Ord. n&deg; 2011-121 du 22 juin 2011, an. fiscale,Art. 2-10.</H6>
+<P CLASS="Liste2-Enumeree">
+Pour les entreprises de production effectuant des op&eacute;rations d&apos;achat de produits, l&apos;exon&eacute;ration n&apos;est acquise que si la valeur des achats n&apos;exc&egrave;de pas 15 % de la valeur de la production totale.</P>
+<H6 CLASS="Modification">
+Ord. n&deg; 2009-382 du 26 novembre 2009, an. fiscale,Art.2-9.</H6>
+<P CLASS="Liste2-Enumeree">
+34 - Les entreprises cr&eacute;&eacute;es entre le 1er janvier 2010 et le 31 d&eacute;cembre 2012 pour la production, la conservation, le conditionnement ou la transformation des productions agricoles alimentaires, pendant une p&eacute;riode de 10 ans. La liste des produits agricoles alimentaires est &eacute;tablie par arr&ecirc;t&eacute; conjoint du Ministre en charge de l&apos;Agriculture et du Ministre de l&apos;Economie et des Finances.</P>
+<H6 CLASS="Modification">
+Ord. n&deg; 2009-382 du 26 novembre 2009, an. fiscale,Art. 27-6.</H6>
+<P CLASS="Liste2-Enumeree">
+35- La Soci&eacute;t&eacute; des Transports abidjanais (SOTRA) et ses filiales d&eacute;tenues &agrave; 100%, jusqu&apos;au 31 d&eacute;cembre 2015.</P>
+<H6 CLASS="Modification">
+Ord. n&deg; 2011-480 du 28 d&eacute;cembre 2011, an. fiscale,Art. 36-3.</H6>
+<P CLASS="Liste2-Enumeree">
+<a name="50499599_pgfId-1083484"></a>36- Les petites et moyennes entreprises sur une p&eacute;riode de cinq ans &agrave; compter de   l&rsquo;ann&eacute;e de cr&eacute;ation.</P>
+<H6 CLASS="Modification">
+<a name="50499599_pgfId-1083499"></a>Loi n&deg; 2018 - 984 du 28 d&eacute;cembre 2018, an. fiscaleArt. 1er-2 etArt. 1er-5; <FONT COLOR='#000000'>loi n&deg; 2021-899 du 21 d&eacute;c. 2021, an. fiscale,Art. 4-4.</FONT></H6>
+
+<P CLASS="Liste2-Enumeree">
+<FONT COLOR='#000000'>
+37 - Les entreprises de transformation de produits agricoles, durant les cinq ann&eacute;es suivant la date d&apos;ach&egrave;vement du programme d&apos;investissement agr&eacute;&eacute; par le Directeur g&eacute;n&eacute;ral des Imp&ocirc;ts en application de l&apos;article 1145 du Code g&eacute;n&eacute;ral des Imp&ocirc;ts.
+</FONT></P>
+<H6 CLASS="Modification">
+Loi n&deg; 2019-1080 du 18 d&eacute;cembre 2019, an. fiscale,Art. 2-2</H6>
+<P CLASS="Liste2-Enumeree"><FONT COLOR='#000000'>
+38- Les entreprises qui s&apos;installent avant le 1er janvier 2024, en dehors des limites du territoire du District d&apos;Abidjan, quelle que soit la nature de leurs activit&eacute;s, sur une p&eacute;riode de cinq ans, lorsque le montant des investissements r&eacute;alis&eacute;s est &eacute;gal ou sup&eacute;rieur &agrave; un montant minimum de un milliard de francs hors taxes. </FONT></P>
+<P CLASS="Liste2-Enumeree"><FONT COLOR='#000000'>
+Le b&eacute;n&eacute;fice de cette mesure n&apos;exclut pas l&apos;application des dispositions plus favorables pr&eacute;vues au Code des Investissements. </FONT></P>
+<H6 CLASS="Modification">
+Loi n&deg; 2019-1080 du 18 d&eacute;cembre 2019, an. fiscale,Art. 3-2</H6>
+<P CLASS="Liste2-Enumeree"><FONT COLOR='#000000'>
+39- Les entreprises priv&eacute;es sur une p&eacute;riode de cinq ans &agrave; compter de la date du d&eacute;but des investissements dans la recherche, le d&eacute;veloppement et l&apos;innovation, pour les immeubles, mat&eacute;riels et &eacute;quipements imposables affect&eacute;s exclusivement &agrave; la recherche, au d&eacute;veloppement et &agrave; l&apos;innovation.</FONT></P>
+<P CLASS="Liste2-Enumeree"><FONT COLOR='#000000'>
+    Le b&eacute;n&eacute;fice de cette mesure n&apos;exclut pas l&apos;application des dispositions plus favorables pr&eacute;vues au Code des Investissements. </FONT></P>
+<H6 CLASS="Modification">
+Loi n&deg; 2019-1080 du 18 d&eacute;c. 2019, an. fiscale,Art. 5-7</H6>
+</DIV>
+
+
+
+
+
+<DIV>
+<H6 CLASS="NoArticle">
+280 bis  &nbsp;&nbsp;&nbsp;&nbsp; <a href="#" onClick="loadpage('082','h21280b');return false;" class="ui-button"  title="Consultez l'historique">2021...</a></H6>
+<P CLASS="ParaText">
+<a name="50499599_pgfId-1101824"></a>Sont exempt&eacute;s du droit sur le chiffre d&rsquo;affaires, les d&eacute;p&ocirc;ts de vente de produits pharmaceutiques <FONT COLOR='#000000'>et les &eacute;tablissements annexes des cabinets v&eacute;t&eacute;rinaires </FONT> situ&eacute;s dans les zones rurales.</P>
+<H6 CLASS="Modification">
+<a name="50499599_pgfId-1101814"></a>Loi n&deg; 2020-972 du 23 d&eacute;c. 2020, an. fiscale,Art. 7-1;             loi n&deg; 2021-899 du 21 d&eacute;c. 2021, an. fiscale,Art. 13.</H6>
+</DIV>
+
+
+
+<span id="#A0281"></span>
+<H6 CLASS="NoArticle">
+Art. 281 &nbsp;&nbsp;&nbsp;&nbsp; <a href="#" onClick="loadpage('082','h23281');return false;" class="ui-button"  title="Consultez l'historique">2023...</a></H6>
+<P CLASS="ParaText"><FONT COLOR='#000000'>
+<A NAME="50618371_pgfId-1071925"></A>Abrogé.</FONT> </P>
+<H6 CLASS="Modification">
+<A NAME="50618371_pgfId-1026374"></A>Loi n° 71-683 du 28 décembre 1971, annexe fiscale, article 17; loi n° 86-88 du 31 janv. 1986, art. 15, an. fiscale; loi n° 2002-156 du 15 mars 2002, an. fiscale, art. 4-1°; ord.n° 2017-279 du 10 mai 2017, art. 2; loi n° 2023-1000 du 18 déc. 2023, an. fiscale, art. 7-3.</H6>
+
+
+
+<span id="#A0282"></span>
+<H6 CLASS="NoArticle">
+Art. 282 <a href="#" onClick="loadpage('082','h23282');return false;" class="ui-button"  title="Consultez l'historique">2023...</a></H6>
+
+<P CLASS="ParaText"><FONT COLOR='#000000'>
+<A NAME="50618371_pgfId-1027274"></A>Abrogé. </FONT></P>
+<H6 CLASS="Modification">
+Loi n° 2004-271 du 15 avril 2004, an. fiscale, art. 1er; loi n° 2012-1179 du 27 décembre 2012, an.  fiscale, art. 34-2. loi n° 2013-908 du 26 décembre 2013, an. fiscale, art. 25-2; loi n° 2023-1000 du 18 déc. 2023, an. fiscale, art. 7-3.</H6>
+
+
+
+
+<!-- Old wrapper body -->
+<span class="historique" ID="h21280">
+<div class="histText">
+
+<BR> 
+<BR>Art. 280 
+<BR> 
+<BR>Ne sont pas assujetties &agrave; la patente, les personnes ci-apr&egrave;s &eacute;num&eacute;r&eacute;es : 
+<BR> 
+<BR>1-L'Etat, les collectivit&eacute;s territoriales et les &eacute;tablissements publics pour les services publics d'utilit&eacute; g&eacute;n&eacute;rale. 
+<BR> 
+<BR>2-Les fonctionnaires et employ&eacute;s salari&eacute;s en ce qui concerne seulement l'exercice de leur fonction. 
+<BR> 
+<BR>3-Les peintres, sculpteurs, dessinateurs et graveurs consid&eacute;r&eacute;s comme artistes et ne vendant que le produit de leurArt. 
+<BR> 
+<BR>4-Les &eacute;tablissements d'enseignements scolaires et universitaires. 
+<BR> 
+<BR>5-Les entreprises de publication de journaux et p&eacute;riodiques. 
+<BR> 
+<BR>6-Les agriculteurs et les &eacute;leveurs qui ne vendent ou ne manipulent que les r&eacute;coltes, fruits, produits d'&eacute;levage provenant de leur exploitation et qui ont un chiffre d'affaires annuel inf&eacute;rieur &agrave; celui fix&eacute; pour relever d'un r&eacute;gime r&eacute;el d'imposition. 
+<BR> 
+<BR>Loi n° 2002-156 du 15 mars 2002, an. fiscale,Art. 18. 
+<BR> 
+<BR>7-Les concessionnaires de mines et carri&egrave;res pour le seul fait de l'extraction et de la vente des mati&egrave;res par eux extraites, l'exemption ne pouvant en aucun cas &ecirc;tre &eacute;tendue &agrave; la transformation des mati&egrave;res extraites. 
+<BR> 
+<BR>8-Les propri&eacute;taires ou locataires louant accidentellement en meubl&eacute; une partie de leur habitation personnelle lorsque d'ailleurs cette location ne pr&eacute;sente aucun caract&egrave;re p&eacute;riodique. 9-Abrog&eacute;Loi n° 2020-972 du 23 d&eacute;c. 2020, an. fiscale,Art. 2-4.
+<BR> 
+<BR>10-Les associ&eacute;s des soci&eacute;t&eacute;s de capitaux. 
+<BR> 
+<BR>Loi n° 2002-156 du 15 mars 2002, an. fiscale,Art. 19. 
+<BR> 
+<BR>11-Les caisses d'&eacute;pargne et de pr&eacute;voyance administr&eacute;es gratuitement. 
+<BR> 
+<BR>12-Les &eacute;tablissements publics ou priv&eacute;s ayant pour but de recueillir les enfants pauvres et de leur donner une profession. 
+<BR> 
+<BR>13-Les voyageurs, repr&eacute;sentants et placiers de commerce et d'industrie qu'ils travaillent pour le compte d'une ou plusieurs maisons, qu'ils soient r&eacute;mun&eacute;r&eacute;s par des remises proportionnelles ou des appointements fixes, &agrave; la condition qu'ils ne fassent aucune op&eacute;ration pour leur compte personnel et qu'ils n'aient pas de personnalit&eacute; professionnelle ind&eacute;pendante de celle des commer&cedil;ants dont ils placent les produits. 
+<BR> 
+<BR>14-Les soci&eacute;t&eacute;s coop&eacute;ratives agricoles de production et leurs unions pour les op&eacute;rations qui, entrant dans les usages normaux de l'agriculture, ne donneraient pas lieu &agrave; l'application de la patente si elles &eacute;taient effectu&eacute;es dans les m&ecirc;mes conditions par chacun des adh&eacute;rents desdites soci&eacute;t&eacute;s. 
+<BR> 
+<BR>15-Les soci&eacute;t&eacute;s coop&eacute;ratives de consommation quand elles se bornent &agrave; grouper les commandes de leurs adh&eacute;rents et &agrave; distribuer dans de simples magasins de d&eacute;p&ocirc;t les marchandises ayant fait l'objet de ces commandes ou bien lorsque ne vendant qu'&agrave; leurs soci&eacute;taires, leurs bonis sont &agrave; l'exclusion de tout autre emploi, r&eacute;partis entre ces soci&eacute;taires ou vers&eacute;s &agrave; des uvres d'int&eacute;r&ecirc;t g&eacute;n&eacute;ral, ou consacr&eacute;s &agrave; des r&eacute;serves qui ne sont pas destin&eacute;es &agrave; &ecirc;tre r&eacute;parties entre les porteurs d'actions. Ne perdront pas cependant les droits &agrave; l'exemption, les soci&eacute;t&eacute;s dont les statuts pr&eacute;voient l'attribution au capital social d'un int&eacute;r&ecirc;t fixe n'exc&eacute;dant pas la limite de 6 %. 
+<BR> 
+<BR>16-Les syndicats agricoles et les soci&eacute;t&eacute;s de cr&eacute;dit agricole. 
+<BR> 
+<BR>17-Les planteurs vendant du bois de chauffe provenant exclusivement du d&eacute;broussaillement pour mise en valeur de leurs plantations. 18-Abrog&eacute;.Loi n° 2020-972 du 23 d&eacute;c. 2020, an. fiscale,Art. 2-4.19-Les redevables de la taxe d'Etat de l'Entreprenant, de la taxe Communale de l'Entreprenant, de l'imp&ocirc;t des microentreprises.Loi n° 2020-972 du 23 d&eacute;c. 2020, an. fiscale,Art. 33-20.
+<BR> 
+<BR>20-Les transporteurs domicili&eacute;s et r&eacute;guli&egrave;rement patent&eacute;s dans les pays de l'Union Economique et Mon&eacute;taire Ouest Africaine, lorsqu'ils transportent : 
+<BR> 
+<BR>-des marchandises ou mat&eacute;riels d&eacute;barqu&eacute;s &agrave; Abidjan &agrave; destination des autres pays membres de l'Union; 
+<BR> 
+<BR>-ou des produits du cru, en provenance des autres pays membres de l'Union devant &ecirc;tre embarqu&eacute;s &agrave; Abidjan. 
+<BR> 
+<BR>Les dispositions du pr&eacute;sent paragraphe s'appliquent sous r&eacute;serve du principe de r&eacute;ciprocit&eacute;. 
+<BR> 
+<BR>21-Les institutions financi&egrave;res &agrave; caract&egrave;re mutualiste, coop&eacute;ratif agr&eacute;&eacute;es dans le cadre strict de leur activit&eacute;. 
+<BR> 
+<BR>22-Les coop&eacute;ratives d'achat qui fonctionnent conform&eacute;ment &agrave; leur objet et dont les membres sont immatricul&eacute;s fiscalement et acquittent individuellement la contribution des patentes. 
+<BR> 
+<BR>Loi n° 2003-206 du 7 juillet 2003, an. fiscale,Art. 19. 
+<BR> 
+<BR>23-Les contribuables vis&eacute;s &agrave; l'article 272 du pr&eacute;sent Code, &agrave; raison de leurs v&eacute;hicules inutilis&eacute;s au 1er janvier de l'ann&eacute;e d'imposition. 
+<BR> 
+<BR>Est consid&eacute;r&eacute; comme v&eacute;hicule inutilis&eacute;, tout v&eacute;hicule dont la carte grise aura &eacute;t&eacute; d&eacute;pos&eacute;e aupr&egrave;s du receveur des Produits divers de la Direction g&eacute;n&eacute;rale des Imp&ocirc;ts ou des receveurs des Imp&ocirc;ts Divers au plus tard le 31 janvier de l'ann&eacute;e d'imposition. Tout retrait de la carte grise ou la remise en circulation du v&eacute;hicule en cours d'ann&eacute;e entraîne l'exigibilit&eacute; imm&eacute;diate de la patente au prorata de la p&eacute;riode restant &agrave; courir. 
+<BR> 
+<BR>Loi n° 2003-206 du 7 juillet 2003, an. fiscale,Art. 22.  
+<BR>24- Abrog&eacute;  
+<BR>Loi n° 2004-271 du 15 avril 2004, an. fiscale,Art. 4-2; loi n° 2015-840 du 18 d&eacute;cembre 2015, an. fiscale,Art. 2. 
+<BR> 
+<BR>25-Les structures exer&cedil;ant dans le domaine de la microfinance quelle que soit leur forme, en ce qui concerne leurs op&eacute;rations de collecte de l'&eacute;pargne et de distribution du cr&eacute;dit, ainsi que les membres ou clients de ces structures concernant les r&eacute;mun&eacute;rations des parts sociales et les revenus tir&eacute;s de leur &eacute;pargne. 
+<BR> 
+<BR>Loi n° 96-562 du 22 juillet 1996. Ord. n° 2011-480 du 28 d&eacute;cembre 2011, an. fiscale,Art. 29-6. 
+<BR> 
+<BR>26-Les centres de gestion agr&eacute;&eacute;s au titre de l'ann&eacute;e de leur cr&eacute;ation et les deux ann&eacute;es suivantes. 
+<BR> 
+<BR>Loi n° 2001-338 du 14 juin 2001, an. fiscale,Art. 34. 27- Abrog&eacute;. 
+<BR> 
+<BR>Loi n° 2005-161 du 27 avril 2005, an. fiscale,Art. 26-3; loi n° 2016-1116 du 08 d&eacute;cembre 2016, an. fiscale,Art. 26-3;loi n° 2020-972 du 23 d&eacute;c. 2020, an. fiscale,Art. 33-20. 
+<BR>28-Le Centre national de Recherche agronomique dans le cadre de ses activit&eacute;s de recherche. 
+<BR> 
+<BR>Ord. n° 2006-234 du 02 ao&ucirc;t 2006, an. fiscale,Art. 3-III-4.  
+<BR>29-Les entreprises relevant d'un r&eacute;gime r&eacute;el d'imposition et r&eacute;alisant un chiffre d'affaires annuel toutes taxes comprises inf&eacute;rieur &agrave; un milliard de francs, pendant les deux ann&eacute;es suivant leur date de cr&eacute;ation.
+<BR>  
+<BR>Ord. n° 2006-234 du 02 ao&ucirc;t 2006, an. fiscale,Art. 5-1. Ord. n° 2007-488 du 31 mai 2007, an. fiscale,Art. 28-3; Ord. n° 2008-381 du 18 d&eacute;cembre 2008, an. fiscale,Art. 27-6;loi n° 2015-840 du 18 d&eacute;cembre 2015, an. fiscale,Art. 2. 
+<BR> 
+<BR>30-Obsol&egrave;te]. 
+<BR> 
+<BR>Ord. n° 2006-234 du 02 ao&ucirc;t 2006, an. fiscale,Art. 6-1. Ord. n° 2007-488 du 31 mai 2007, an. fiscale,Art. 28-4; Ord. n° 2008-381 du 18 d&eacute;cembre 2008, an. fiscale,Art. 27-7/. 
+<BR> 
+<BR>31-Les organismes de bienfaisance et les associations sans but lucratif. 
+<BR> 
+<BR>Ord. n° 2009-382 du 26 novembre 2009, an. fiscale,Art.1-2 
+<BR> 
+<BR>32-Les entreprises nouvelles, r&eacute;implant&eacute;es ou rouvertes avant le 31 d&eacute;cembre 2012 en zones Centre, Nord et Ouest au titre des exercices 2010, 2011, 2012, 2013, 2014 et 2015. Cette exon&eacute;ration est ramen&eacute;e &agrave; 75 % au titre des exercices 2016 et 2017. 
+<BR> 
+<BR>Ord. n° 2011-121 du 22 juin 2011, an. fiscale,Art. 2-10. 
+<BR> 
+<BR>33-Les entreprises agro-industrielles intervenant dans les secteurs du coton, de l'anacarde et du karit&eacute;, cr&eacute;&eacute;es, r&eacute;implant&eacute;es ou rouvertes avant le 31 d&eacute;cembre 2012 dans les zones Centre, Nord et Ouest au titre des exercices 2010 &agrave; 2015. Cette exon&eacute;ration est ramen&eacute;e &agrave; 75% pour les exercices 2016 et 2017. 
+<BR> 
+<BR>Ord. n° 2011-121 du 22 juin 2011, an. fiscale,Art. 2-10. 
+<BR> 
+<BR>Pour les entreprises de production effectuant des op&eacute;rations d'achat de produits, l'exon&eacute;ration n'est acquise que si la valeur des achats n'exc&egrave;de pas 15 % de la valeur de la production totale. 
+<BR> 
+<BR>Ord. n° 2009-382 du 26 novembre 2009, an. fiscale,Art.2-9. 
+<BR> 
+<BR>34 - Les entreprises cr&eacute;&eacute;es entre le 1er janvier 2010 et le 31 d&eacute;cembre 2012 pour la production, la conservation, le conditionnement ou la transformation des productions agricoles alimentaires, pendant une p&eacute;riode de 10 ans. La liste des produits agricoles alimentaires est &eacute;tablie par arr&ecirc;t&eacute; conjoint du Ministre en charge de l'Agriculture et du Ministre de l'Economie et des Finances. 
+<BR> 
+<BR>Ord. n° 2009-382 du 26 novembre 2009, an. fiscale,Art. 27-6. 
+<BR> 
+<BR>35- La Soci&eacute;t&eacute; des Transports abidjanais (SOTRA) et ses filiales d&eacute;tenues &agrave; 100%, jusqu'au 31 d&eacute;cembre 2015. 
+<BR> 
+<BR>Ord. n° 2011-480 du 28 d&eacute;cembre 2011, an. fiscale,Art. 36-3. 36- Les petites et moyennes entreprises sur une p&eacute;riode de cinq ans ? compter de lann&eacute;e de cr&eacute;ation
+<BR> 
+<BR>Loi n° 2018 - 984 du 28 d&eacute;cembre 2018, an. fiscaleArt. 1er-2 Les conditions doctroi et de mise en oeuvre sont d&eacute;termin&eacute;es par arr?t&eacute; du Ministre en charge du Budget.
+<BR> 
+<BR>Loi n° 2018 - 984 du 28 d&eacute;cembre 2018, an. fiscaleArt. 1er-5  
+<BR> 
+<BR>37 - Les entreprises de transformation de produits agricoles, durant les cinq ann&eacute;es suivant la date d'ach&egrave;vement du programme d'investissement agr&eacute;&eacute; par le Directeur g&eacute;n&eacute;ral des Imp&ocirc;ts en application de l'article 1145 du Code g&eacute;n&eacute;ral des Imp&ocirc;ts. 
+<BR>Loi n° 2019-1080 du 18 d&eacute;cembre 2019, an. fiscale,Art. 2-2 38- Les entreprises qui s'installent avant le 1er janvier 2024, en dehors des limites du territoire du District d'Abidjan, quelle que soit la nature de leurs activit&eacute;s, sur une p&eacute;riode de cinq ans, lorsque le montant des investissements r&eacute;alis&eacute;s est &eacute;gal ou sup&eacute;rieur &agrave; un montant minimum de un milliard de francs hors taxes. Le b&eacute;n&eacute;fice de cette mesure n'exclut pas l'application des dispositions plus favorables pr&eacute;vues au Code des Investissements. 
+<BR> 
+<BR>Loi n° 2019-1080 du 18 d&eacute;cembre 2019, an. fiscale,Art. 3-2 39- Les entreprises priv&eacute;es sur une p&eacute;riode de cinq ans &agrave; compter de la date du d&eacute;but des investissements dans la recherche, le d&eacute;veloppement et l'innovation, pour les immeubles, mat&eacute;riels et &eacute;quipements imposables affect&eacute;s exclusivement &agrave; la recherche, au d&eacute;veloppement et &agrave; l'innovation.Le b&eacute;n&eacute;fice de cette mesure n'exclut pas l'application des dispositions plus favorables pr&eacute;vues au Code des Investissements. 
+<BR> 
+<BR>Loi n° 2019-1080 du 18 d&eacute;c. 2019, an. fiscale,Art. 5-7 
+<BR>
+<BR><BR><BR></div></span><finh21280>
+<span class="historique" ID="h20280">
+<div class="histText">
+
+<BR> 
+<BR> 
+<BR>Art. 280 
+<BR> 
+<BR>Ne sont pas assujetties &agrave; la patente, les personnes ci-apr&egrave;s &eacute;num&eacute;r&eacute;es : 
+<BR> 
+<BR>1-L'Etat, les collectivit&eacute;s territoriales et les &eacute;tablissements publics pour les services publics d'utilit&eacute; g&eacute;n&eacute;rale. 
+<BR> 
+<BR>2-Les fonctionnaires et employ&eacute;s salari&eacute;s en ce qui concerne seulement l'exercice de leur fonction. 
+<BR> 
+<BR>3-Les peintres, sculpteurs, dessinateurs et graveurs consid&eacute;r&eacute;s comme artistes et ne vendant que le produit de leurArt. 
+<BR> 
+<BR>4-Les &eacute;tablissements d'enseignements scolaires et universitaires. 
+<BR> 
+<BR>5-Les entreprises de publication de journaux et p&eacute;riodiques. 
+<BR> 
+<BR>6-Les agriculteurs et les &eacute;leveurs qui ne vendent ou ne manipulent que les r&eacute;coltes, fruits, produits d'&eacute;levage provenant de leur exploitation et qui ont un chiffre d'affaires annuel inf&eacute;rieur &agrave; celui fix&eacute; pour relever d'un r&eacute;gime r&eacute;el d'imposition. 
+<BR> 
+<BR>Loi n° 2002-156 du 15 mars 2002, an. fiscale,Art. 18. 
+<BR> 
+<BR>7-Les concessionnaires de mines et carri&egrave;res pour le seul fait de l'extraction et de la vente des mati&egrave;res par eux extraites, l'exemption ne pouvant en aucun cas &ecirc;tre &eacute;tendue &agrave; la transformation des mati&egrave;res extraites. 
+<BR> 
+<BR>8-Les propri&eacute;taires ou locataires louant accidentellement en meubl&eacute; une partie de leur habitation personnelle lorsque d'ailleurs cette location ne pr&eacute;sente aucun caract&egrave;re p&eacute;riodique. 
+<BR> 
+<BR>9-Les loueurs d'une chambre meubl&eacute;e. 
+<BR> 
+<BR>10-Les associ&eacute;s des soci&eacute;t&eacute;s de capitaux. 
+<BR> 
+<BR>Loi n° 2002-156 du 15 mars 2002, an. fiscale,Art. 19. 
+<BR> 
+<BR>11-Les caisses d'&eacute;pargne et de pr&eacute;voyance administr&eacute;es gratuitement. 
+<BR> 
+<BR>12-Les &eacute;tablissements publics ou priv&eacute;s ayant pour but de recueillir les enfants pauvres et de leur donner une profession. 
+<BR> 
+<BR>13-Les voyageurs, repr&eacute;sentants et placiers de commerce et d'industrie qu'ils travaillent pour le compte d'une ou plusieurs maisons, qu'ils soient r&eacute;mun&eacute;r&eacute;s par des remises proportionnelles ou des appointements fixes, &agrave; la condition qu'ils ne fassent aucune op&eacute;ration pour leur compte personnel et qu'ils n'aient pas de personnalit&eacute; professionnelle ind&eacute;pendante de celle des commer&cedil;ants dont ils placent les produits. 
+<BR> 
+<BR>14-Les soci&eacute;t&eacute;s coop&eacute;ratives agricoles de production et leurs unions pour les op&eacute;rations qui, entrant dans les usages normaux de l'agriculture, ne donneraient pas lieu &agrave; l'application de la patente si elles &eacute;taient effectu&eacute;es dans les m&ecirc;mes conditions par chacun des adh&eacute;rents desdites soci&eacute;t&eacute;s. 
+<BR> 
+<BR>15-Les soci&eacute;t&eacute;s coop&eacute;ratives de consommation quand elles se bornent &agrave; grouper les commandes de leurs adh&eacute;rents et &agrave; distribuer dans de simples magasins de d&eacute;p&ocirc;t les marchandises ayant fait l'objet de ces commandes ou bien lorsque ne vendant qu'&agrave; leurs soci&eacute;taires, leurs bonis sont &agrave; l'exclusion de tout autre emploi, r&eacute;partis entre ces soci&eacute;taires ou vers&eacute;s &agrave; des uvres d'int&eacute;r&ecirc;t g&eacute;n&eacute;ral, ou consacr&eacute;s &agrave; des r&eacute;serves qui ne sont pas destin&eacute;es &agrave; &ecirc;tre r&eacute;parties entre les porteurs d'actions. Ne perdront pas cependant les droits &agrave; l'exemption, les soci&eacute;t&eacute;s dont les statuts pr&eacute;voient l'attribution au capital social d'un int&eacute;r&ecirc;t fixe n'exc&eacute;dant pas la limite de 6 %. 
+<BR> 
+<BR>16-Les syndicats agricoles et les soci&eacute;t&eacute;s de cr&eacute;dit agricole. 
+<BR> 
+<BR>17-Les planteurs vendant du bois de chauffe provenant exclusivement du d&eacute;broussaillement pour mise en valeur de leurs plantations. 
+<BR> 
+<BR>18-Les soci&eacute;t&eacute;s de secours et de pr&ecirc;ts mutuels agricoles. 
+<BR> 
+<BR>19-les redevables de l'imp&ocirc;t synth&eacute;tique, de la taxe forfaitaire des petits commer&cedil;ants et artisans et les vendeurs en ambulance exon&eacute;r&eacute;s du paiement de ladite taxe. 
+<BR> 
+<BR>20-Les transporteurs domicili&eacute;s et r&eacute;guli&egrave;rement patent&eacute;s dans les pays de l'Union Economique et Mon&eacute;taire Ouest Africaine, lorsqu'ils transportent : 
+<BR> 
+<BR>-des marchandises ou mat&eacute;riels d&eacute;barqu&eacute;s &agrave; Abidjan &agrave; destination des autres pays membres de l'Union; 
+<BR> 
+<BR>-ou des produits du cru, en provenance des autres pays membres de l'Union devant &ecirc;tre embarqu&eacute;s &agrave; Abidjan. 
+<BR> 
+<BR>Les dispositions du pr&eacute;sent paragraphe s'appliquent sous r&eacute;serve du principe de r&eacute;ciprocit&eacute;. 
+<BR> 
+<BR>21-Les institutions financi&egrave;res &agrave; caract&egrave;re mutualiste, coop&eacute;ratif agr&eacute;&eacute;es dans le cadre strict de leur activit&eacute;. 
+<BR> 
+<BR>22-Les coop&eacute;ratives d'achat qui fonctionnent conform&eacute;ment &agrave; leur objet et dont les membres sont immatricul&eacute;s fiscalement et acquittent individuellement la contribution des patentes. 
+<BR> 
+<BR>Loi n° 2003-206 du 7 juillet 2003, an. fiscale,Art. 19. 
+<BR> 
+<BR>23-Les contribuables vis&eacute;s &agrave; l'article 272 du pr&eacute;sent Code, &agrave; raison de leurs v&eacute;hicules inutilis&eacute;s au 1er janvier de l'ann&eacute;e d'imposition. 
+<BR> 
+<BR>Est consid&eacute;r&eacute; comme v&eacute;hicule inutilis&eacute;, tout v&eacute;hicule dont la carte grise aura &eacute;t&eacute; d&eacute;pos&eacute;e aupr&egrave;s du receveur des Produits divers de la Direction g&eacute;n&eacute;rale des Imp&ocirc;ts ou des receveurs des Imp&ocirc;ts Divers au plus tard le 31 janvier de l'ann&eacute;e d'imposition. Tout retrait de la carte grise ou la remise en circulation du v&eacute;hicule en cours d'ann&eacute;e entraîne l'exigibilit&eacute; imm&eacute;diate de la patente au prorata de la p&eacute;riode restant &agrave; courir. 
+<BR> 
+<BR>Loi n° 2003-206 du 7 juillet 2003, an. fiscale,Art. 22.  
+<BR>24- Abrog&eacute;  
+<BR>Loi n° 2004-271 du 15 avril 2004, an. fiscale,Art. 4-2; loi n° 2015-840 du 18 d&eacute;cembre 2015, an. fiscale,Art. 2. 
+<BR> 
+<BR>25-Les structures exer&cedil;ant dans le domaine de la microfinance quelle que soit leur forme, en ce qui concerne leurs op&eacute;rations de collecte de l'&eacute;pargne et de distribution du cr&eacute;dit, ainsi que les membres ou clients de ces structures concernant les r&eacute;mun&eacute;rations des parts sociales et les revenus tir&eacute;s de leur &eacute;pargne. 
+<BR> 
+<BR>Loi n° 96-562 du 22 juillet 1996. Ord. n° 2011-480 du 28 d&eacute;cembre 2011, an. fiscale,Art. 29-6. 
+<BR> 
+<BR>26-Les centres de gestion agr&eacute;&eacute;s au titre de l'ann&eacute;e de leur cr&eacute;ation et les deux ann&eacute;es suivantes. 
+<BR> 
+<BR>Loi n° 2001-338 du 14 juin 2001, an. fiscale,Art. 34. 
+<BR> 
+<BR>27-Les adh&eacute;rents des centres de gestion agr&eacute;&eacute;s au titre de l'ann&eacute;e de leur adh&eacute;sion et les deux ann&eacute;es suivantes. Cette exon&eacute;ration est ramen&eacute;e &agrave; 50 % les quatri&egrave;me et cinqui&egrave;me ann&eacute;es. 
+<BR> 
+<BR>Le b&eacute;n&eacute;fice de cet avantage est subordonn&eacute;, pour les entreprises immatricul&eacute;es au fichier de la Direction g&eacute;n&eacute;rale des Imp&ocirc;ts, &agrave; l'adh&eacute;sion &agrave; un centre de gestion agr&eacute;&eacute; au plus tard le 31 janvier de l'ann&eacute;e en cours. 
+<BR> 
+<BR> Pour les nouvelles immatriculations, le b&eacute;n&eacute;fice de cet avantage est subordonn&eacute; &agrave; l'adh&eacute;sion &agrave; un centre de gestion agr&eacute;&eacute; dans un d&eacute;lai de trente (30) jours &agrave; compter de la date de r&eacute;ception de la d&eacute;claration fiscale d'existence.
+<BR> 
+<BR>Loi n° 2005-161 du 27 avril 2005, an. fiscale,Art. 26-3; loi n° 2016-1116 du 08 d&eacute;cembre 2016, an. fiscale,Art. 26-3.  
+<BR>28-Le Centre national de Recherche agronomique dans le cadre de ses activit&eacute;s de recherche. 
+<BR> 
+<BR>Ord. n° 2006-234 du 02 ao&ucirc;t 2006, an. fiscale,Art. 3-III-4.  
+<BR>29-Les entreprises relevant d'un r&eacute;gime r&eacute;el d'imposition et r&eacute;alisant un chiffre d'affaires annuel toutes taxes comprises inf&eacute;rieur &agrave; un milliard de francs, pendant les deux ann&eacute;es suivant leur date de cr&eacute;ation.
+<BR>  
+<BR>Ord. n° 2006-234 du 02 ao&ucirc;t 2006, an. fiscale,Art. 5-1. Ord. n° 2007-488 du 31 mai 2007, an. fiscale,Art. 28-3; Ord. n° 2008-381 du 18 d&eacute;cembre 2008, an. fiscale,Art. 27-6;loi n° 2015-840 du 18 d&eacute;cembre 2015, an. fiscale,Art. 2. 
+<BR> 
+<BR>30-Obsol&egrave;te]. 
+<BR> 
+<BR>Ord. n° 2006-234 du 02 ao&ucirc;t 2006, an. fiscale,Art. 6-1. Ord. n° 2007-488 du 31 mai 2007, an. fiscale,Art. 28-4; Ord. n° 2008-381 du 18 d&eacute;cembre 2008, an. fiscale,Art. 27-7/. 
+<BR> 
+<BR>31-Les organismes de bienfaisance et les associations sans but lucratif. 
+<BR> 
+<BR>Ord. n° 2009-382 du 26 novembre 2009, an. fiscale,Art.1-2 
+<BR> 
+<BR>32-Les entreprises nouvelles, r&eacute;implant&eacute;es ou rouvertes avant le 31 d&eacute;cembre 2012 en zones Centre, Nord et Ouest au titre des exercices 2010, 2011, 2012, 2013, 2014 et 2015. Cette exon&eacute;ration est ramen&eacute;e &agrave; 75 % au titre des exercices 2016 et 2017. 
+<BR> 
+<BR>Ord. n° 2011-121 du 22 juin 2011, an. fiscale,Art. 2-10. 
+<BR> 
+<BR>33-Les entreprises agro-industrielles intervenant dans les secteurs du coton, de l'anacarde et du karit&eacute;, cr&eacute;&eacute;es, r&eacute;implant&eacute;es ou rouvertes avant le 31 d&eacute;cembre 2012 dans les zones Centre, Nord et Ouest au titre des exercices 2010 &agrave; 2015. Cette exon&eacute;ration est ramen&eacute;e &agrave; 75% pour les exercices 2016 et 2017. 
+<BR> 
+<BR>Ord. n° 2011-121 du 22 juin 2011, an. fiscale,Art. 2-10. 
+<BR> 
+<BR>Pour les entreprises de production effectuant des op&eacute;rations d'achat de produits, l'exon&eacute;ration n'est acquise que si la valeur des achats n'exc&egrave;de pas 15 % de la valeur de la production totale. 
+<BR> 
+<BR>Ord. n° 2009-382 du 26 novembre 2009, an. fiscale,Art.2-9. 
+<BR> 
+<BR>34 - Les entreprises cr&eacute;&eacute;es entre le 1er janvier 2010 et le 31 d&eacute;cembre 2012 pour la production, la conservation, le conditionnement ou la transformation des productions agricoles alimentaires, pendant une p&eacute;riode de 10 ans. La liste des produits agricoles alimentaires est &eacute;tablie par arr&ecirc;t&eacute; conjoint du Ministre en charge de l'Agriculture et du Ministre de l'Economie et des Finances. 
+<BR> 
+<BR>Ord. n° 2009-382 du 26 novembre 2009, an. fiscale,Art. 27-6. 
+<BR> 
+<BR>35- La Soci&eacute;t&eacute; des Transports abidjanais (SOTRA) et ses filiales d&eacute;tenues &agrave; 100%, jusqu'au 31 d&eacute;cembre 2015. 
+<BR> 
+<BR>Ord. n° 2011-480 du 28 d&eacute;cembre 2011, an. fiscale,Art. 36-3. 36- Les petites et moyennes entreprises sur une p&eacute;riode de cinq ans ? compter de lann&eacute;e de cr&eacute;ation
+<BR> 
+<BR>Loi n° 2018 - 984 du 28 d&eacute;cembre 2018, an. fiscaleArt. 1er-2 Les conditions doctroi et de mise en oeuvre sont d&eacute;termin&eacute;es par arr?t&eacute; du Ministre en charge du Budget.
+<BR> 
+<BR>Loi n° 2018 - 984 du 28 d&eacute;cembre 2018, an. fiscaleArt. 1er-5  
+<BR> 
+<BR>37 - Les entreprises de transformation de produits agricoles, durant les cinq ann&eacute;es suivant la date d'ach&egrave;vement du programme d'investissement agr&eacute;&eacute; par le Directeur g&eacute;n&eacute;ral des Imp&ocirc;ts en application de l'article 1145 du Code g&eacute;n&eacute;ral des Imp&ocirc;ts. 
+<BR>Loi n° 2019-1080 du 18 d&eacute;cembre 2019, an. fiscale,Art. 2-2 38- Les entreprises qui s'installent avant le 1er janvier 2024, en dehors des limites du territoire du District d'Abidjan, quelle que soit la nature de leurs activit&eacute;s, sur une p&eacute;riode de cinq ans, lorsque le montant des investissements r&eacute;alis&eacute;s est &eacute;gal ou sup&eacute;rieur &agrave; un montant minimum de un milliard de francs hors taxes. Le b&eacute;n&eacute;fice de cette mesure n'exclut pas l'application des dispositions plus favorables pr&eacute;vues au Code des Investissements. 
+<BR> 
+<BR>Loi n° 2019-1080 du 18 d&eacute;cembre 2019, an. fiscale,Art. 3-2 39- Les entreprises priv&eacute;es sur une p&eacute;riode de cinq ans &agrave; compter de la date du d&eacute;but des investissements dans la recherche, le d&eacute;veloppement et l'innovation, pour les immeubles, mat&eacute;riels et &eacute;quipements imposables affect&eacute;s exclusivement &agrave; la recherche, au d&eacute;veloppement et &agrave; l'innovation.Le b&eacute;n&eacute;fice de cette mesure n'exclut pas l'application des dispositions plus favorables pr&eacute;vues au Code des Investissements. 
+<BR> 
+<BR>Loi n° 2019-1080 du 18 d&eacute;c. 2019, an. fiscale,Art. 5-7 
+<BR> 
+<BR>
+<BR><BR><BR></div></span><finh20280>
+<span class="historique" ID="h21280b">
+<div class="histText">
+
+<BR> 
+<BR>280 bis Sont exempt&eacute;s du droit sur le chiffre d'affaires, les d&eacute;p&ocirc;ts de vente de produits pharmaceutiques situ&eacute;s dans les zones rurales.Loi n° 2020-972 du 23 d&eacute;c. 2020, an. fiscale,Art. 7-1.
+<BR>
+<BR><BR><BR></div></span><finh21280b>
+
+<span class="historique" ID="h23281">
+<div class="histText">
+
+<BR> 
+<BR>281
+<BR>
+
+<p>Sont exempt&eacute;es des droits de la contribution des patentes pendant l'ann&eacute;e o&ugrave; elles commencent &agrave; exercer et pendant les deux ann&eacute;es suivantes, les entreprises constitu&eacute;es pour ex&eacute;cuter un programme de construction de logements &agrave; caract&egrave;re &eacute;conomique et social.<br />
+  L'octroi de l'avantage susvis&eacute; aux entreprises constitu&eacute;es pour ex&eacute;cuter un tel programme est subordonn&eacute; &agrave; l'agr&eacute;ment pr&eacute;alable du programme prononc&eacute; par arr&ecirc;t&eacute; du Ministre des Finances apr&egrave;s avis d'une commission dont la composition et les attributions sont fix&eacute;es par d&eacute;cret en Conseil des Ministres.</p>
+<p>Loi n&deg;- 71-683 du 28 d&eacute;cembre 1971, annexe fiscale, article 17; loi n&deg;- 86-88 du 31 janv. 1986,Art. 15, an. fiscale; loi n&deg;- 2002-156 du 15 mars 2002, an. fiscale,Art. 4-1&deg;-. </p>
+<BR><BR><BR></div></span><finh23281>
+
+<span class="historique" ID="h23282">
+<div class="histText">
+
+<BR> 
+<BR>282
+<BR>
+<p>Sont exon&eacute;r&eacute;es de la contribution des patentes aussi bien pour le volet construction de logements que pour les unit&eacute;s industrielles de fabrication des mat&eacute;riaux et autres intrants servant &agrave; la r&eacute;alisation des logements, les entreprises agr&eacute;&eacute;es au r&eacute;gime fiscal en faveur des grands investissements dans l'habitat.<br />
+  Le b&eacute;n&eacute;fice de l'exon&eacute;ration vis&eacute;e ci-dessus qui s'&eacute;tend sur la dur&eacute;e du projet y compris la p&eacute;riode de r&eacute;alisation des investissements, est subordonn&eacute; aux conditions suivantes :<br />
+  -l'entreprise de construction de logements doit s'engager &agrave; r&eacute;aliser un programme d'au moins 3 000 logements sur trois ans;<br />
+  -le programme de construction doit &ecirc;tre pr&eacute;alablement agr&eacute;&eacute; par arr&ecirc;t&eacute; conjoint du Ministre des Finances et celui en charge du Logement, apr&egrave;s avis d'une Commission cr&eacute;&eacute;e par d&eacute;cret en Conseil des Ministres.</p>
+<p>Loi n&deg;- 2004-271 du 15 avril 2004, an. fiscale,Art. 1er; Loi n&deg;- 2012-1179 du 27 d&eacute;cembre 2012, an. fiscale,Art. 34-2.</p>
+<p>Le Comit&eacute; de suivi pr&eacute;vu &agrave; l'article 383 bis du Code g&eacute;n&eacute;ral des Imp&ocirc;ts, est &eacute;galement comp&eacute;tent pour se prononcer sur la r&eacute;siliation de l'agr&eacute;ment, lorsqu'il constate tout d&eacute;tournement de la destination initiale des mat&eacute;riaux et leurs intrants destin&eacute;s exclusivement &agrave; la r&eacute;alisation de projets immobiliers. </p>
+<p>Loi n&deg;- 2013- 908 du 26 d&eacute;cembre 2013, an. fiscale,Art. 25.</p>
+<BR><BR><BR></div></span><finh23281>
+</div></div> <!-- wrapper -->
+	  <div id="articleList"><div id="contenu" style='height:auto; background-color:#FFFFCC'>&nbsp;</div>
+      </div><p>&nbsp;</p><p>&nbsp;</p><p>&nbsp;</p><p>&nbsp;</p><p>&nbsp;</p><p>&nbsp;</p><p>&nbsp;</p><p>&nbsp;</p><p>&nbsp;</p><p>&nbsp;</p>
+	  <p>&nbsp;</p><p>&nbsp;</p><p>&nbsp;</p><p>&nbsp;</p><p>&nbsp;</p><p>&nbsp;</p></BODY></HTML>
+	  

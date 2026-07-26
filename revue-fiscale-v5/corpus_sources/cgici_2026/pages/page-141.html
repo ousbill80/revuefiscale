@@ -1,0 +1,412 @@
+<!DOCTYPE HTML><HTML><HEAD><META HTTP-EQUIV="Content-Type" CONTENT="text/html; charset=UTF-8">
+<TITLE>Code des impots -145</TITLE><LINK REL="STYLESHEET" HREF="/cicgi.css" CHARSET="ISO-8859-1" TYPE="text/css">
+<style type="text/css">
+body {margin-left: 5px;	margin-top: 0px; margin-right: .5em;margin-bottom: 0px;background-color:#fafafa ;}
+.Liste-Numerote {font-size: 12pt;font-weight: regular;font-style: italic;color: #000000;text-transform: none;margin-left:8px ;margin-bottom:8px ;margin-top:4px ;margin-right:10px ;font-family:Georgia, "Times New Roman", Times, serif}
+li {list-style-type: none; margin-left:0px ; padding-left:0em ; }
+.Paratext {font-size: 12pt;font-weight: regular;font-style: italic;color: #000000;text-decoration: none;vertical-align: baseline;text-transform: none;margin-left:0px ;font-family:Georgia, "Times New Roman", Times, serif}
+.Normal {font-size: 12pt;font-weight: regular;font-style: italic;color: #000000;text-decoration: none;vertical-align: baseline;text-transform: none;margin-left:0px ;font-family:Georgia, "Times New Roman", Times, serif}
+ul {list-style-type: none; margin-left:0px ; padding-left:0em ;  }
+.Liste2-Enumeree {font-size: 12pt;font-weight: regular;font-style: italic;color: #000000;text-decoration: none;vertical-align: baseline;text-transform: none;list-style-type:none ;margin-left:16px ;margin-bottom:8px;margin-right:10px;font-family:Georgia, "Times New Roman", Times, serif}
+P.Liste2-Enumeree {font-size: 12pt;font-weight: regular;font-style: italic;color: #000000;text-decoration: none;vertical-align: baseline;text-transform: none;list-style-type:none ;margin-left:16px ;margin-bottom:8px;margin-right:10px;font-family:Georgia, "Times New Roman", Times, serif}
+.Entete {font-size: 13pt;font-weight: regular;font-style: italic;color:#000000 ;text-decoration: none;vertical-align: baseline;text-transform: none;margin-left:8px ;font-family:Georgia, "Times New Roman", Times, serif}
+table, TABLE {border-width:1px; width:99% ;border-collapse:collapse;border-color: #9ecaed;box-shadow: 0 0 10px #9ecaed;}
+tr,td {text-align:left;vertical-align:bottom;border:1px solid #9ecaed;padding:.2em;marging-left:.2em}
+th, TH{text-align:center;vertical-align:middle;padding:.2em;}
+P.TableauEntete {font-size: 13pt;font-weight: regular;font-style: italic;color: #000000;font-family:Georgia, "Times New Roman"}
+P.TableauCelluleLeft, P.TableauCellule {text-align:right;margin-right:1em;font-size: 13pt;font-weight: regular;font-style: italic;color: #000000;font-family:Georgia, "Times New Roman"}
+P.TableauCelluleRight {text-align:left;margin-left:1em;font-size: 13pt;font-weight: regular;font-style: italic;color: #000000;font-family:Georgia, "Times New Roman"}
+.ui-buttonh {padding: .1em .1em ; border: 1px solid #dadada;border-radius: 4px; box-shadow: 0 0 4px #9ecaed;color:#FF3300 ;margin-left:8px ;margin-right:8px ;margin-bottom:2px ;margin-top:2px ;text-decoration:none ;font-size:12pt ;font-family:"Times New Roman"}   
+.ui-button {padding: .1em .1em ; border: 1px solid #dadada;border-radius: 4px; box-shadow: 0 0 4px #9ecaed;color:#FF3300 ;margin-left:8px ;margin-right:8px ;margin-bottom:2px ;margin-top:2px ;text-decoration:none ;font-size:12pt ;font-family:"Times New Roman"}   
+H3 {display: block;text-align: center;text-indent: 0pt;margin-top: 10pt;margin-bottom: 10pt;margin-right: 10pt;margin-left: 10pt;font-size: 12pt;font-weight: Bold;font-style: Regular;color: #00A000;text-decoration: none;vertical-align: baseline;text-transform: none;font-family: "Times New Roman";}
+H4 {display: block;text-align: left;text-indent: 0pt;margin-top: 10pt;margin-bottom: 6pt;margin-right: 10pt;margin-left: 10pt;font-size: 12pt;font-weight: Bold;font-style: Regular;color: #000000;text-decoration: none;vertical-align: baseline;text-transform: none;font-family: "Times New Roman";}
+H5 {display: block;text-align: left;text-indent: 0pt;margin-top: 10pt;margin-bottom: 6pt;margin-right: 10pt;margin-left: 10pt;font-size: 11pt;font-weight: Bold;font-style: Regular;color: #000000;text-decoration: none;vertical-align: baseline;text-transform: none;font-family: "Times New Roman";}
+H6.NoArticle {display: block;text-align: left;text-indent: 0pt;margin-top: 14pt;margin-bottom: 0pt;margin-right: 0pt;margin-left: 0pt;font-size: 14pt;font-weight: regular;font-style: Regular;color: #00a000;text-decoration: none;vertical-align: baseline;text-transform: none;font-family: "Times New Roman";}
+H2 {text-align:center;font-size:16pt;font-family:Georgia, "Times New Roman", Times, serif}
+P.ParaText {font-size: 12pt;font-weight: regular;font-style: italic;color: #000000;	text-decoration: none;vertical-align: baseline;text-transform: none;font-family:Georgia, "Times New Roman", Times, serif;}
+H2.Section,P.Section {font-size:12pt;font-weight:bold;font-style:Regular;color:#008000;font-family:Georgia,"Times New Roman"}
+P.Paragraphe, p.Paragraphe {Text-Align:center;Text-decoration:none;font-size:12pt;font-weight:bold;font-style:Normal;color:#00A000;font-family:Georgia,"Times New Roman"}
+H2.Livre,P.Livre {text-align:center;font-size:16pt;font-weight:bold;font-style:Regular;color:#008000;font-family:Georgia,"Times New Roman"}
+P.Partie,H2.Partie,P.TitreSub {text-align:center;font-size:14pt;font-weight:bold;font-style:Regular;color:#008000;font-family:Georgia,"Times New Roman"}
+H2.ChapitreNo,H2.TitreNo {text-align:center;font-size:14pt;font-weight:bold;font-style:Regular;color:#008000;font-family:Georgia,"Times New Roman"}
+H2.Chapitre, h2.Chapitre {text-align:center;font-size:14pt;font-weight:bold;font-style:Regular;color:#008000;font-family:Georgia,"Times New Roman"}
+H2.TitreNo {text-align:center;font-size:14pt;font-weight:bold;font-style:Regular;color:#008000;font-family:Georgia,"Times New Roman"}
+h3.Sous-Section, H3.Sous-Section, h3.Sous-section, h2.Section {font-size:12pt;font-weight:bold;font-style:Italic;color:#008000;font-family:Georgia,"Times New Roman"}
+hr,HR { display: block; width:90%;  margin-top: 0.5em; margin-bottom: 0.5em; margin-left: auto;  margin-right: auto;  border-style: inset; border-width: 1px;}
+P.TitreSub {text-align:center;font-size:14pt;font-weight:bold;font-style:Regular;color:#008000;font-family:Georgia,"Times New Roman"}
+.Reference {display: block;text-align: left;text-indent: 0pt;margin-top: 10pt;margin-bottom: 6pt;margin-right: 10pt;margin-left: 10pt;font-size: 14pt;font-weight: Bold;font-style: Regular;color: #7F5434;text-decoration: none;vertical-align: baseline;text-transform: none;font-family: "Times New Roman";}
+.ludwig,blockquote {padding-left:1em;background-color:#fafafa;font-size:12pt;font-weight:100;font-style:italic;}
+#articleList {position:absolute ;	z-index: 1 ;left: 10px ;top: 80px ;height:340px;width: 620px;border: 2px solid #cacaca ;border-radius: 5px ;background-color:#fafafa ;    box-shadow: 0 0 12px #333333;	margin-left:0px ;	padding: .3em .3em ;		overflow:hidden ;	visibility:hidden ;  }			
+#articleList h3 { text-align: center; margin: 0; }		
+
+.historique {
+  display:none ;
+  padding: .1em .3em ;
+  border: solid 2px #dadada;
+  border-radius: 7px;
+  box-shadow: 0 0 5px #9ecaed;  
+  
+}
+.histText {
+    display: block;
+    font-family: ;"Times New Roman"
+	padding: .1em .3em ;
+    margin: 1em 0px;
+	font-style:italic;
+	color:#000000;
+	overflow:auto;
+}
+.highlight {
+  font-weight:bold ;
+  color:#000000 ;
+  background-color:#FFFFCC ;
+  }
+.articleList-scroll {
+	overflow-x:hidden ;
+	overflow-y:scroll ;
+	scrollbar-width:thin ;
+	scrollbar-color:blue orange ;
+}
+
+#contenu {
+	overflow-x:hidden ;
+    overflow-y:scroll ;
+	scrollbar-width:thin ;
+	scrollbar-color:blue orange ;
+}		
+
+table, TABLE {
+ text-align:center; 
+    margin-left:.5em; 
+    margin-right:.5em; 
+    border:1px solid #000000;	
+	border-collapse:collapse ;
+    border-color: #9ecaed;
+    box-shadow: 0 0 10px #9ecaed;
+	
+   }
+  tr,td {text-align:left;}
+  
+
+
+ </style>
+ 
+<script src="/js/iscroll.js"></script>
+<script src="/js/jquery.js"></script>   
+<script src="/js/jquery-ui-1.10.3.custom.js"></script>    	    
+<script src="/js/jquery.ui.draggable.js" type="text/javascript"></script>			
+<script src="/js/jquery.ui.core.js"></script> 			
+<script src="/js/jquery.ui.widget.js"></script>			
+<script src="/js/jquery.ui.position.js"></script>			
+<script src="/js/jquery.ui.menu.js"></script>    		
+<script type="text/javascript" src="./xpages.js"></script>
+/* VERSION POUR PAGE HTML SUR SITE DGI.CGICI.COM */
+<script language="javascript">
+ function showButton(id) {
+    var x = document.getElementById(id) ;
+	if(x.style.display === "none") {
+	   x.style.display = "block" ;
+	  } else {
+	   x.style.display = "none" ;
+	   }
+	 }   
+	 var pagenumber="145";
+function loadpage(page, art) {
+      showHideHistoric(art);
+	  return false;
+	  } 
+function loadArticle(page, art) { var artno = art ;var pgno=page;scrolltoelementTag(pgno,artno) ;return false ;} 
+
+</script>
+</HEAD>
+<BODY><div ID="wrapper"><div ID="scroller">
+
+
+
+<H2 CLASS="Section">
+Section V - Obligations relatives aux officiers publics et &agrave; l&apos;Administration</H2>
+
+<H3 CLASS="Sous-section">
+I - Assistance judiciaire - D&eacute;pens : Transmission de l&apos;ex&eacute;cutoire au receveur</H3>
+<span id="#A0476"></span>
+<H6 CLASS="NoArticle">
+Art. 476 &nbsp;&nbsp;&nbsp;&nbsp; <a href="#" onClick="loadpage('141','h23476');return false;" class="ui-button"  title="Consultez l'historique">2023...</a></H6>
+<P CLASS="ParaText">
+Les greffiers sont tenus, dans le mois du jugement contenant liquidation des d&eacute;pens ou de la taxe des frais par le juge, de transmettre au chef du service du Domaine et de l&apos;Enregistrement chaque extrait de jugement ou chaque ex&eacute;cutoire, sous peine de <FONT COLOR='#000000'>25 000 </FONT> francs d&apos;amende par extrait de jugement ou ex&eacute;cutoire non transmis dans ledit d&eacute;lai.</P>
+
+<H6 CLASS="Modification">
+Loi n<b>&deg;-</b> 83-1421 du 30 d&eacute;c. 1983, an. fiscale,Art. 43; loi n<b>&deg;-</b> 2004-271 du 15 avril 2004, an. fiscale,Art. Ord. n<b>&deg;-</b> 2009-382 du 26 novembre 2009Art. 23-2; loi n° 2023-1000 du 18  déc. 2023, an. fiscale, art. 2-1.</H6>
+
+
+
+
+<H3 CLASS="Sous-section">
+II - Etat de frais : indication du montant des droits pay&eacute;s au Tr&eacute;sor</H3>
+<span id="#A0477"></span>
+<H6 CLASS="NoArticle">
+Art. 477 &nbsp;&nbsp;&nbsp;&nbsp; <a href="#" onClick="loadpage('141','h23477');return false;" class="ui-button"  title="Consultez l'historique">2023...</a></H6></H6>
+<P CLASS="ParaText">
+Les &eacute;tats de frais dress&eacute;s par les avocats, huissiers, greffiers, notaires-commis, doivent faire ressortir distinctement, dans une colonne sp&eacute;ciale et pour chaque d&eacute;bours, le montant des droits de toute nature pay&eacute;s au Tr&eacute;sor.</P>
+<P CLASS="ParaText">
+Toute contravention &agrave; cette disposition est punie d&apos;une amende de <FONT COLOR='#000000'>25 000 </FONT> francs qui est recouvr&eacute;e comme en mati&egrave;re d&apos;enregistrement.</P>
+
+<H6 CLASS="Modification">
+Loi n<b>&deg;-</b> 83-1421 du 30 d&eacute;c, 1983, an. fiscale,Art. 43; loi n<b>&deg;-</b> 2004-271 du 15 avril 2004, an.fiscale,Art. 28-2; loi n° 2023-1000 du 18  déc. 2023, an. fiscale, art. 2-1.</H6>
+
+
+
+
+<H3 CLASS="Sous-section">
+III - Obligations des officiers publics et courtiers de commerce</H3>
+<span id="#A0478"></span>
+<H6 CLASS="NoArticle">
+Art. 478 &nbsp;&nbsp;&nbsp;&nbsp; <a href="#" onClick="loadpage('141','h23478');return false;" class="ui-button"  title="Consultez l'historique">2023...</a></H6></H6>
+<P CLASS="ParaText">
+Les notaires, huissiers, greffiers et les secr&eacute;taires des Administrations locales et municipales tiendront des r&eacute;pertoires &agrave; colonnes sur lesquels ils inscriront jour par jour, sans blanc ni interligne et par ordre de num&eacute;ros, &agrave; savoir :</P>
+<P CLASS="Liste2-Enumeree">
+1-Les notaires, tous les actes et contrats qu&apos;ils recevront, m&ecirc;me ceux qui seront pass&eacute;s en brevet, &agrave; peine de <FONT COLOR='#000000'>25 000 </FONT> francs d&apos;amende pour chaque omission.</P>
+
+<H6 CLASS="Modification">
+Loi n<b>&deg;-</b> 83-1421 du 30 d&eacute;c. 1983, an. fiscale,Art. 43; loi n° 2023-1000 du 18  déc. 2023, an. fiscale, art. 2-1.</H6>
+<P CLASS="Liste2-Enumeree">
+2-Les huissiers, tous les actes et exploits de leur minist&egrave;re, sous peine d&apos;une amende de 18 000 francs pour chaque omission.</P>
+
+
+<H6 CLASS="Modification">
+Loi n<b>&deg;-</b> 83-1421 du 30 d&eacute;c. 1983, an. fiscale,Art. 43; loi n<b>&deg;-</b> 2004-271 du 15 avril 2004, an. fiscale,Art. 28-2.</H6>
+<P CLASS="Liste2-Enumeree">
+3-Les greffiers, tous les actes et jugements qui, aux termes du pr&eacute;sent r&egrave;glement, doivent &ecirc;tre enregistr&eacute;s sur les minutes, &agrave; peine d&apos;une amende de 18 000 francs pour chaque omission.</P>
+
+
+<H6 CLASS="Modification">
+Loi n<b>&deg;-</b> 83-1421 du 30 d&eacute;c. 1983, an. fiscale,Art. 43.</H6>
+<P CLASS="Liste2-Enumeree">
+4-Et les secr&eacute;taires, les actes des Administrations centrales et municipales d&eacute;nomm&eacute;s dans les articles <a class='ui-button' href='' onClick="loadArticle('145','0550');return false;">550</a>-1<b>&deg;-</b>, <a class='ui-button' href='' onClick="loadArticle('145','0551');return false;">551</a> et <a class='ui-button' href='' onClick="loadArticle('145','0552');return false;">552</a> du pr&eacute;sent Code, &agrave; peine d&apos;une amende de 18 000 francs pour chaque omission.</P>
+
+
+<H6 CLASS="Modification">
+Loi n<b>&deg;-</b> 83-1421 du 30 d&eacute;c. 1983, an. fiscale,Art. 43; loi n<b>&deg;-</b> 2004-271 du 15 avril 2004, an. fiscale,Art. 28-2.</H6>
+
+
+<span id="#A0479"></span>
+<H6 CLASS="NoArticle">
+Art. 479</H6>
+<P CLASS="ParaText">
+Chaque article du r&eacute;pertoire contiendra :</P>
+<P CLASS="Liste2-Enumeree">
+1-Son num&eacute;ro.</P>
+<P CLASS="Liste2-Enumeree">
+2-La date de l&apos;acte.</P>
+<P CLASS="Liste2-Enumeree">
+3-Sa nature.</P>
+<P CLASS="Liste2-Enumeree">
+4-Les noms et pr&eacute;noms des parties et leur domicile.</P>
+<P CLASS="Liste2-Enumeree">
+5-L&apos;indication des biens, leur situation et le prix; lorsqu&apos;il s&apos;agira d&apos;actes qui auront pour objet la propri&eacute;t&eacute;, l&apos;usufruit ou la jouissance de biens fonds.</P>
+<P CLASS="Liste2-Enumeree">
+6-La relation de l&apos;enregistrement.</P>
+
+<span id="#A0480"></span>
+<H6 CLASS="NoArticle">
+Art. 480 &nbsp;&nbsp;&nbsp;&nbsp; <a href="#" onClick="loadpage('141','h23480');return false;" class="ui-button"  title="Consultez l'historique">2023...</a></H6></H6>
+<P CLASS="ParaText">
+Les notaires, huissiers, greffiers et les secr&eacute;taires des Administrations centrales et municipales pr&eacute;senteront leurs r&eacute;pertoires aux chefs de service du Domaine et de l&apos;Enregistrement de leur r&eacute;sidence, qui les viseront et qui &eacute;nonceront dans leur visa le nombre des actes inscrits. Cette pr&eacute;sentation aura lieu, chaque ann&eacute;e dans la premi&egrave;re d&eacute;cade de chacun des mois de janvier, avril, juillet et octobre, &agrave; peine d&apos;une amende unique de <FONT COLOR='#000000'>25 000 </FONT> francs quelle que soit la dur&eacute;e de retard.</P>
+
+<H6 CLASS="Modification">
+Loi n<b>&deg;-</b> 83-1421 du 30 d&eacute;c. 1983, an. fiscale,Art. 43; loi n<b>&deg;-</b> 2004-271 du 15 avril 2004, an. fiscale,Art. 28-2.; Ord. n<b>&deg;-</b> 2009-382 du 26 novembre 2009,an. fiscale,Art. 23-3; loi n° 2023-1000 du 18  déc. 2023, an. fiscale, art. 2-1.</H6>
+
+
+<span id="#A0481"></span>
+<H6 CLASS="NoArticle">
+Art. 481 &nbsp;&nbsp;&nbsp;&nbsp; <a href="#" onClick="loadpage('141','h23481');return false;" class="ui-button"  title="Consultez l'historique">2023...</a></H6></H6>
+<P CLASS="ParaText">
+Ind&eacute;pendamment de la repr&eacute;sentation ordonn&eacute;e par l&apos;article pr&eacute;c&eacute;dent, les notaires, huissiers, greffiers et secr&eacute;taires seront tenus de communiquer leurs r&eacute;pertoires, &agrave; toute r&eacute;quisition, aux agents de l&apos;Enregistrement qui se pr&eacute;senteront chez eux pour les v&eacute;rifier, &agrave; peine d&apos;une amende de <FONT COLOR='#000000'>25 000 </FONT> francs en cas de refus.</P>
+
+<H6 CLASS="Modification">
+Loi n<b>&deg;-</b> 83-1421 du 30 d&eacute;c. 1983, an. fiscale,Art. 43; loi n<b>&deg;-</b> 2004-271 du 15 avril 2004, an. fiscale,Art. 28-2; loi n° 2023-1000 du 18  déc. 2023, an. fiscale, art. 2-1.</H6>
+<P CLASS="ParaText">
+L&apos;agent, dans ce cas, requerra l&apos;assistance du maire, du pr&eacute;fet ou de leur d&eacute;l&eacute;gu&eacute;, pour dresser en sa pr&eacute;sence, proc&egrave;s-verbal du refus qui lui aura &eacute;t&eacute; fait.</P>
+
+
+<span id="#A0482"></span>
+<H6 CLASS="NoArticle">
+Art. 482</H6>
+<P CLASS="ParaText">
+Les r&eacute;pertoires seront cot&eacute;s et paraph&eacute;s, &agrave; savoir, ceux des notaires, par le pr&eacute;sident, ou, &agrave; d&eacute;faut, par un juge du tribunal civil de la r&eacute;sidence; ceux des huissiers et greffiers des cours et tribunaux, par le pr&eacute;sident ou le juge qu&apos;il aura commis &agrave; cet effet, et ceux des secr&eacute;taires des Administrations, par le pr&eacute;sident ou le directeur de l&apos;Administration.</P>
+
+<span id="#A0483"></span>
+<H6 CLASS="NoArticle">
+Art. 483</H6>
+<P CLASS="ParaText">
+Les dispositions relatives &agrave; la tenue et au d&eacute;p&ocirc;t des r&eacute;pertoires sont applicables aux commissaires-priseurs et aux courtiers de commerce, mais seulement pour les proc&egrave;s-verbaux de vente de meubles et de marchandises, et pour les actes faits en cons&eacute;quence de ces ventes.</P>
+
+<span id="#A0484"></span>
+<H6 CLASS="NoArticle">
+Art. 484</H6>
+<P CLASS="ParaText">
+Ind&eacute;pendamment des obligations qui leur incombent en vertu des articles <a class='ui-button' href='' onClick="loadArticle('145','0478');return false;">478</a> et suivants, les huissiers et les greffiers tiendront sur registre non timbr&eacute;, cot&eacute; et paraph&eacute; par le pr&eacute;sident du tribunal civil, des r&eacute;pertoires &agrave; colonnes sur lesquels ils inscriront, jour par jour, sans blanc ni interligne et par ordre de num&eacute;ros, tous les actes, exploits, jugements et arr&ecirc;ts qui sont dispens&eacute;s des formalit&eacute;s du timbre et de l&apos;enregistrement.</P>
+<P CLASS="ParaText">
+Chaque article du r&eacute;pertoire contiendra :</P>
+<P CLASS="Liste2-Enumeree">
+1-Son num&eacute;ro.</P>
+<P CLASS="Liste2-Enumeree">
+2-La date de l&apos;acte.</P>
+<P CLASS="Liste2-Enumeree">
+3-Sa nature.</P>
+<P CLASS="Liste2-Enumeree">
+4-Les noms et pr&eacute;noms des parties et leur domicile.</P>
+<P CLASS="Liste2-Enumeree">
+Chaque acte port&eacute; sur ce r&eacute;pertoire devra &ecirc;tre annot&eacute; de son num&eacute;ro d&apos;ordre.</P>
+
+<span id="#A0485"></span>
+<H6 CLASS="NoArticle">
+Art. 485 &nbsp;&nbsp;&nbsp;&nbsp; <a href="#" onClick="loadpage('141','h23485');return false;" class="ui-button"  title="Consultez l'historique">2023...</a></H6></H6>
+<P CLASS="ParaText">
+Les huissiers et les greffiers pr&eacute;senteront, sous les sanctions pr&eacute;vues &agrave; l&apos;article <a class='ui-button' href='' onClick="loadArticle('145','0478');return false;">478</a>, ce r&eacute;pertoire au visa du chef du service du Domaine et de l&apos;Enregistrement de leur r&eacute;sidence, qui le visera et qui &eacute;noncera dans son visa le num&eacute;ro du dernier acte inscrit.</P>
+<P CLASS="ParaText">
+Cette pr&eacute;sentation aura lieu le 16 de chaque mois.</P>
+<P CLASS="ParaText">
+Si le jour fix&eacute; pour le visa est un jour f&eacute;ri&eacute;, le visa sera appos&eacute; le lendemain.</P>
+<P CLASS="ParaText">
+Les greffiers seront tenus, sous peine d&apos;une amende de <FONT COLOR='#000000'>25 000 </FONT> francs pour chaque omission, d&apos;inscrire au r&eacute;pertoire sp&eacute;cial, pr&eacute;vu &agrave; l&apos;article pr&eacute;c&eacute;dent, les bulletins n<b>&deg;-</b> 3 du casier judiciaire par eux d&eacute;livr&eacute;s.</P>
+
+<H6 CLASS="Modification">
+Loi n<b>&deg;-</b> 83-1421 du 30 d&eacute;c. 1983, an. fiscale, art 43; loi n<b>&deg;-</b> 2004-271 du 15 avril 2004, an. fiscale,Art. 28-2; Ord. n<b>&deg;-</b> 2009-382 du 26 novembre 2009Art. 23-4; loi n° 2023-1000 du 18  déc. 2023, an. fiscale, art. 2-1.</H6>
+
+
+<span id="#A0486"></span>
+<H6 CLASS="NoArticle">
+Art. 486</H6>
+<P CLASS="ParaText">
+Les notaires, huissiers, greffiers et autorit&eacute;s administratives sont tenus, chaque fois qu&apos;ils pr&eacute;sentent des actes, jugements ou arr&ecirc;t&eacute;s &agrave; la formalit&eacute; de l&apos;enregistrement de d&eacute;poser au service de l&apos;Enregistrement un bordereau r&eacute;capitulatif de ces actes, jugements ou arr&ecirc;t&eacute;s, &eacute;tabli par eux en double exemplaire sur des formules imprim&eacute;es qui leur sont fournies par l&apos;Administration.</P>
+
+<H6 CLASS="Modification">
+Ord. n<b>&deg;-</b> 2009-382 du 26 novembre 2009Art. 23-6.</H6>
+<P CLASS="ParaText">
+En outre, les notaires sont tenus de fournir deux exemplaires dispens&eacute;s de droit d&apos;enregistrement et de timbre, des actes r&eacute;capitul&eacute;s sur le bordereau.</P>
+
+
+<H6 CLASS="Modification">
+Loi n<b>&deg;-</b> 96-218 du 13 mars 1996, an. fiscale,Art. 4-2<b>&deg;-</b>.</H6>
+<P CLASS="ParaText">
+A d&eacute;faut, la formalit&eacute; de l&apos;enregistrement est refus&eacute;e.</P>
+<P CLASS="ParaText">
+La m&ecirc;me obligation incombe aux huissiers lorsqu&apos;ils pr&eacute;sentent &agrave; la recette de l&apos;Enregistrement des actes exempts de la formalit&eacute;, mais soumis &agrave; la taxe &eacute;tablie par l&apos;article <a class='ui-button' href='' onClick="loadArticle('145','0549');return false;">549</a> du pr&eacute;sent Livre.</P>
+
+
+<span id="#A0487"></span>
+<H6 CLASS="NoArticle">
+Art. 487</H6>
+<P CLASS="ParaText">
+Pour les actes extrajudiciaires dispens&eacute;s de la formalit&eacute; de l&apos;enregistrement, mais soumis &agrave; la taxe &eacute;tablie par l&apos;article <a class='ui-button' href='' onClick="loadArticle('145','0549');return false;">549</a>, la quittance de cette taxe est donn&eacute;e pour l&apos;ensemble des actes pr&eacute;sent&eacute;s en m&ecirc;me temps au service de l&apos;Enregistrement, sur l&apos;un des exemplaires du bordereau de d&eacute;p&ocirc;t vis&eacute; &agrave; l&apos;article <a class='ui-button' href='' onClick="loadArticle('145','0500');return false;">500</a> qui est restitu&eacute; &agrave; l&apos;huissier.</P>
+
+<H6 CLASS="Modification">
+Ord. n<b>&deg;-</b> 2009-382 du 26 novembre 2009Art. 23-6.</H6>
+
+
+<span id="#A0488"></span>
+<H6 CLASS="NoArticle">
+Art. 488 &nbsp;&nbsp;&nbsp;&nbsp; <a href="#" onClick="loadpage('141','h23488');return false;" class="ui-button"  title="Consultez l'historique">2023...</a></H6></H6>
+<P CLASS="Liste2-Enumeree">
+1<b>&deg;-</b>La taxe sur les actes extrajudiciaires dispens&eacute;s de la formalit&eacute; de l&apos;enregistrement est soumise aux r&egrave;gles qui gouvernent l&apos;exigibilit&eacute;, la restitution et le recouvrement des droits d&apos;enregistrement. Elle est per&ccedil;ue au vu du bordereau &agrave; d&eacute;poser conform&eacute;ment aux dispositions de l&apos;article <a class='ui-button' href='' onClick="loadArticle('145','0486');return false;">486</a> du pr&eacute;sent Livre.</P>
+<P CLASS="Liste2-Enumeree">
+Il est obligatoirement fait mention sur les actes, extraits, copies ou exp&eacute;ditions, de la date du bordereau et du num&eacute;ro d&apos;inscription sur lequel figurent les actes audit bordereau.</P>
+<P CLASS="Liste2-Enumeree">
+2<b>&deg;-</b>L&apos;enregistrement du bordereau pr&eacute;vu au paragraphe pr&eacute;c&eacute;dent n&apos;est pas de nature &agrave; faire courir la prescription &eacute;dict&eacute;e par l&apos;article <a class='ui-button' href='' onClick="loadArticle('145','5158');return false;">158</a> du Livre de Proc&eacute;dures fiscales.</P>
+<P CLASS="Liste2-Enumeree">
+3<b>&deg;-</b>Toute contravention aux dispositions de l&apos;article <a class='ui-button' href='' onClick="loadArticle('145','0549');return false;">549</a> et du paragraphe 1 ci-dessus est punie d&apos;une amende de <FONT COLOR='#000000'>25 000 </FONT> francs.</P>
+
+<H6 CLASS="Modification">
+Loi n<b>&deg;-</b> 83-1421 du 30 d&eacute;c. 1983, an. fiscale,Art. 43; loi n° 2023-1000 du 18  déc. 2023, an. fiscale, art. 2-1.</H6>
+<P CLASS="Liste2-Enumeree">
+4<b>&deg;-</b>Les exemptions, dont b&eacute;n&eacute;ficient en vertu de la r&eacute;glementation en vigueur les exploits vis&eacute;s &agrave; l&apos;article <a class='ui-button' href='' onClick="loadArticle('145','0549');return false;">549</a>, sont applicables &agrave; la taxe institu&eacute;e par cet article. Les dispositions relatives &agrave; l&apos;enregistrement en d&eacute;bet lui sont &eacute;galement applicables.</P>
+
+
+
+<H5 CLASS="Sous-section">
+IV - Chef du service du Domaine et de l&apos;Enregistrement </H5>
+
+<H6 CLASS="Modification">
+Ord. n<b>&deg;-</b> 2009-382 du 26 novembre 2009Art.23-1 </H6>
+<P CLASS="Paragraphe">
+Obligations des Chefs du service du Domaine et de  l&apos;Enregistrement</P>
+
+
+<H6 CLASS="Modification">
+Ord. n<b>&deg;-</b> 2009-382 du 26 novembre 2009Art.23-1.</H6>
+
+<span id="#A0489"></span>
+<H6 CLASS="NoArticle">
+Art. 489</H6>
+<P CLASS="ParaText">
+Les chefs de service du Domaine et de l&apos;Enregistrement ne pourront sous aucun pr&eacute;texte, lors m&ecirc;me qu&apos;il y aurait lieu &agrave; la proc&eacute;dure pr&eacute;vue par les articles <a class='ui-button' href='' onClick="loadArticle('145','0788');return false;">788</a> et suivants, diff&eacute;rer l&apos;enregistrement des actes et mutations dont les droits auront &eacute;t&eacute; pay&eacute;s aux taux r&eacute;gl&eacute;s par le pr&eacute;sent Livre.</P>
+
+<H6 CLASS="Modification">
+Ord. n<b>&deg;-</b> 2009-382 du 26 novembre 2009Art. 23-3.</H6>
+<P CLASS="ParaText">
+Ils ne pourront non plus suspendre ou arr&ecirc;ter le cours des proc&eacute;dures en retenant des actes ou exploits; cependant, si un acte dont il n&apos;y a pas de minute ou un exploit contient des renseignements dont la trace puisse &ecirc;tre utile pour la d&eacute;couverte des droits dus, le chef du service du Domaine et de l&apos;Enregistrement aura la facult&eacute; de tirer copie et de la faire certifier conforme &agrave; l&apos;original par l&apos;officier qui l&apos;aura pr&eacute;sent&eacute;. En cas de refus, il pourra r&eacute;server l&apos;acte pendant vingt-quatre heures seulement pour s&apos;en procurer une collation en forme, &agrave; ses frais, sauf r&eacute;p&eacute;tition, s&apos;il y a lieu.</P>
+
+
+<H6 CLASS="Modification">
+Ord. n<b>&deg;-</b> 2009-382 du 26 novembre 2009Art. 23-4.</H6>
+<P CLASS="ParaText">
+Cette disposition est applicable aux actes sous signature priv&eacute;e qui seront pr&eacute;sent&eacute;s &agrave; l&apos;enregistrement.</P>
+
+
+<span id="#A0490"></span>
+<H6 CLASS="NoArticle">
+Art. 490 </H6>
+<P CLASS="ParaText">
+<a name="50634768_pgfId-1000045"></a>La quittance de l&#8216;enregistrement sera mise sur l&#8216;acte enregistr&eacute; ou sur l&#8216;extrait de la d&eacute;claration du nouveau possesseur.</P>
+<P CLASS="ParaText">
+<a name="50634768_pgfId-1000046"></a>Le chef du service du Domaine et de l&#8216;Enregistrement y exprimera la date de l&#8216;enregistrement, le folio du registre, et le num&eacute;ro .</P>
+<H6 CLASS="Modification"><FONT COLOR='#000000'>
+<a name="50634768_pgfId-1021083"></a>Ord. n&deg; 2009-382 du 26 novembre 2009, an. fiscale,Art. 23-4; loi n&deg;  2018 - 984 du 28  d&eacute;cembre 2018, an. fiscaleArt. 24-2.</FONT></H6>
+<P CLASS="ParaText"><FONT COLOR='#000000'>
+<a name="50634768_pgfId-1040768"></a>Le receveur de l&#8216;Enregistrement proc&eacute;dera &agrave; la perception des droits et &eacute;noncera distinctement sur l&#8216;acte, la somme des droits per&ccedil;us en toutes lettres ainsi que la quotit&eacute; de chaque droit per&ccedil;u.</FONT></P>
+<P CLASS="ParaText"><FONT COLOR='#000000'>
+<a name="50634768_pgfId-1040769"></a>L&#8216;acte d&#8216;enregistrement ne peut &ecirc;tre d&eacute;livr&eacute; qu&#8216;apr&egrave;s visa du Conservateur de la Propri&eacute;t&eacute; fonci&egrave;re et des Hypoth&egrave;ques. Il est obligatoirement accompagn&eacute; de la quittance du paiement des droits s&#8216;il y a lieu, rev&ecirc;tue du visa du receveur de l&#8216;Enregistrement comp&eacute;tent.</FONT></P>
+<H6 CLASS="Modification">
+<a name="50634768_pgfId-1040770"></a>Loi n&deg;  2018 - 984 du 28  d&eacute;cembre 2018, an. fiscaleArt. 24-2</H6>
+<P CLASS="ParaText">
+<a name="50634768_pgfId-1000047"></a>Lorsqu&#8216;un acte renfermera plusieurs dispositions op&eacute;rant chacune un droit particulier, le chef du service du Domaine et de l&#8216;Enregistrement les indiquera sommairement dans sa quittance et y &eacute;noncera distinctement la quotit&eacute; de chaque droit per&ccedil;u.</P>
+<H6 CLASS="Modification">
+<a name="50634768_pgfId-1021087"></a>Ord. n&deg; 2009-382 du 26 novembre 2009, an. fiscale,Art. 23-4.</H6>
+
+
+<span id="#A0491"></span>
+<H6 CLASS="NoArticle">
+Art. 491</H6>
+<P CLASS="ParaText">
+Les chefs de service du Domaine et de l&apos;Enregistrement ne pourront d&eacute;livrer d&apos;extraits de leurs registres que sur ordonnance du juge, lorsque ces extraits ne seront pas demand&eacute;s par l&apos;une quelconque des parties contractantes ou leurs ayants cause.</P>
+
+<H6 CLASS="Modification">
+Ord. n<b>&deg;-</b> 2009-382 du 26 novembre 2009Art. 23-3.</H6>
+<P CLASS="ParaText">
+Il leur sera pay&eacute; 500 francs par r&ocirc;le de moyen papier, contenant quarante lignes &agrave; la page &agrave; vingt syllabes &agrave; la ligne, pour chaque extrait ou copie d&apos;enregistrement ou d&apos;acte d&eacute;pos&eacute;, outre le papier timbr&eacute;; tout r&ocirc;le commenc&eacute; est d&ucirc; en entier.</P>
+
+
+<H6 CLASS="Modification">
+Loi n<b>&deg;-</b> 86-1383 du 19 d&eacute;c. 1986, an. fiscale,Art. 9.</H6>
+
+
+<span id="#A0492"></span>
+<H6 CLASS="NoArticle">
+Art. 492</H6>
+<P CLASS="Liste2-Enumeree">
+1<b>&deg;-</b>Aucune autorit&eacute; publique, ne peut accorder de remise ou mod&eacute;ration des droits &eacute;tablis par le pr&eacute;sent Livre, ni en suspendre ou faire suspendre le recouvrement sans en devenir personnellement responsable.</P>
+<P CLASS="Liste2-Enumeree">
+2<b>&deg;-</b>Toutefois, le Ministre des Finances est habilit&eacute; &agrave; d&eacute;cider, par mesure de r&eacute;ciprocit&eacute;, l&apos;exon&eacute;ration ou le remboursement des droits exigibles ou per&ccedil;us par application du pr&eacute;sent Livre sur des actes pass&eacute;s au nom d&apos;Etats &eacute;trangers par leurs agents diplomatiques ou consulaires, lorsqu&apos;il est justifi&eacute; que les actes de m&ecirc;me nature pass&eacute;s dans ces Etats &eacute;trangers par le Gouvernement ivoirien b&eacute;n&eacute;ficient de la m&ecirc;me exon&eacute;ration.</P>
+
+<H6 CLASS="Modification">
+Loi n<b>&deg;-</b> 2003-206 du 7 juillet 2003, an. fiscale,Art. 31.</H6>
+
+
+
+
+
+</div></div> <p>&nbsp;</p><p>&nbsp;</p></div></div> <!-- wrapper -->
+	  <div id="articleList"><div id="contenu" style='height:auto; background-color:#FFFFCC'>&nbsp;</div>
+      </div><p>&nbsp;</p><p>&nbsp;</p><p>&nbsp;</p><p>&nbsp;</p><p>&nbsp;</p><p>&nbsp;</p><p>&nbsp;</p><p>&nbsp;</p><p>&nbsp;</p><p>&nbsp;</p>
+	  <p>&nbsp;</p><p>&nbsp;</p><p>&nbsp;</p><p>&nbsp;</p><p>&nbsp;</p><p>&nbsp;</p></BODY></HTML>
+	  

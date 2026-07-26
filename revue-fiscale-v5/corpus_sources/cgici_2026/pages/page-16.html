@@ -1,0 +1,390 @@
+<!DOCTYPE HTML><HTML><HEAD><META HTTP-EQUIV="Content-Type" CONTENT="text/html; charset=UTF-8">
+<TITLE>Code des impots -16</TITLE><LINK REL="STYLESHEET" HREF="/cicgi.css" CHARSET="ISO-8859-1" TYPE="text/css">
+<style type="text/css">
+body {margin-left: 5px;	margin-top: 0px; margin-right: .5em;margin-bottom: 0px;background-color:#fafafa ;}
+.Liste-Numerote {font-size: 12pt;font-weight: regular;font-style: italic;color: #000000;text-transform: none;margin-left:8px ;margin-bottom:8px ;margin-top:4px ;margin-right:10px ;font-family:Georgia, "Times New Roman", Times, serif}
+li {list-style-type: none; margin-left:0px ; padding-left:0em ; }
+.Paratext {font-size: 12pt;font-weight: regular;font-style: italic;color: #000000;text-decoration: none;vertical-align: baseline;text-transform: none;margin-left:0px ;font-family:Georgia, "Times New Roman", Times, serif}
+.Normal {font-size: 12pt;font-weight: regular;font-style: italic;color: #000000;text-decoration: none;vertical-align: baseline;text-transform: none;margin-left:0px ;font-family:Georgia, "Times New Roman", Times, serif}
+ul {list-style-type: none; margin-left:0px ; padding-left:0em ;  }
+.Liste2-Enumeree {font-size: 12pt;font-weight: regular;font-style: italic;color: #000000;text-decoration: none;vertical-align: baseline;text-transform: none;list-style-type:none ;margin-left:16px ;margin-bottom:8px;margin-right:10px;font-family:Georgia, "Times New Roman", Times, serif}
+P.Liste2-Enumeree {font-size: 12pt;font-weight: regular;font-style: italic;color: #000000;text-decoration: none;vertical-align: baseline;text-transform: none;list-style-type:none ;margin-left:16px ;margin-bottom:8px;margin-right:10px;font-family:Georgia, "Times New Roman", Times, serif}
+.Entete {font-size: 13pt;font-weight: regular;font-style: italic;color:#000000 ;text-decoration: none;vertical-align: baseline;text-transform: none;margin-left:8px ;font-family:Georgia, "Times New Roman", Times, serif}
+table, TABLE {border-width:1px; width:99% ;border-collapse:collapse;border-color: #9ecaed;box-shadow: 0 0 10px #9ecaed;}
+tr,td {text-align:left;vertical-align:bottom;border:1px solid #9ecaed;padding:.2em;marging-left:.2em}
+th, TH{text-align:center;vertical-align:middle;padding:.2em;}
+P.TableauEntete {font-size: 13pt;font-weight: regular;font-style: italic;color: #000000;font-family:Georgia, "Times New Roman"}
+P.TableauCelluleLeft, P.TableauCellule {text-align:right;margin-right:1em;font-size: 13pt;font-weight: regular;font-style: italic;color: #000000;font-family:Georgia, "Times New Roman"}
+P.TableauCelluleRight {text-align:left;margin-left:1em;font-size: 13pt;font-weight: regular;font-style: italic;color: #000000;font-family:Georgia, "Times New Roman"}
+.ui-buttonh {padding: .1em .1em ; border: 1px solid #dadada;border-radius: 4px; box-shadow: 0 0 4px #9ecaed;color:#FF3300 ;margin-left:8px ;margin-right:8px ;margin-bottom:2px ;margin-top:2px ;text-decoration:none ;font-size:12pt ;font-family:"Times New Roman"}   
+.ui-button {padding: .1em .1em ; border: 1px solid #dadada;border-radius: 4px; box-shadow: 0 0 4px #9ecaed;color:#FF3300 ;margin-left:8px ;margin-right:8px ;margin-bottom:2px ;margin-top:2px ;text-decoration:none ;font-size:12pt ;font-family:"Times New Roman"}   
+H3 {display: block;text-align: center;text-indent: 0pt;margin-top: 10pt;margin-bottom: 10pt;margin-right: 10pt;margin-left: 10pt;font-size: 12pt;font-weight: Bold;font-style: Regular;color: #00A000;text-decoration: none;vertical-align: baseline;text-transform: none;font-family: "Times New Roman";}
+H4 {display: block;text-align: left;text-indent: 0pt;margin-top: 10pt;margin-bottom: 6pt;margin-right: 10pt;margin-left: 10pt;font-size: 12pt;font-weight: Bold;font-style: Regular;color: #000000;text-decoration: none;vertical-align: baseline;text-transform: none;font-family: "Times New Roman";}
+H5 {display: block;text-align: left;text-indent: 0pt;margin-top: 10pt;margin-bottom: 6pt;margin-right: 10pt;margin-left: 10pt;font-size: 11pt;font-weight: Bold;font-style: Regular;color: #000000;text-decoration: none;vertical-align: baseline;text-transform: none;font-family: "Times New Roman";}
+H6.NoArticle {display: block;text-align: left;text-indent: 0pt;margin-top: 14pt;margin-bottom: 0pt;margin-right: 0pt;margin-left: 0pt;font-size: 14pt;font-weight: regular;font-style: Regular;color: #00a000;text-decoration: none;vertical-align: baseline;text-transform: none;font-family: "Times New Roman";}
+H2 {text-align:center;font-size:16pt;font-family:Georgia, "Times New Roman", Times, serif}
+P.ParaText {font-size: 12pt;font-weight: regular;font-style: italic;color: #000000;	text-decoration: none;vertical-align: baseline;text-transform: none;font-family:Georgia, "Times New Roman", Times, serif;}
+H2.Section,P.Section {font-size:12pt;font-weight:bold;font-style:Regular;color:#008000;font-family:Georgia,"Times New Roman"}
+P.Paragraphe, p.Paragraphe {Text-Align:center;Text-decoration:none;font-size:12pt;font-weight:bold;font-style:Normal;color:#00A000;font-family:Georgia,"Times New Roman"}
+H2.Livre,P.Livre {text-align:center;font-size:16pt;font-weight:bold;font-style:Regular;color:#008000;font-family:Georgia,"Times New Roman"}
+P.Partie,H2.Partie,P.TitreSub {text-align:center;font-size:14pt;font-weight:bold;font-style:Regular;color:#008000;font-family:Georgia,"Times New Roman"}
+H2.ChapitreNo,H2.TitreNo {text-align:center;font-size:14pt;font-weight:bold;font-style:Regular;color:#008000;font-family:Georgia,"Times New Roman"}
+H2.Chapitre, h2.Chapitre {text-align:center;font-size:14pt;font-weight:bold;font-style:Regular;color:#008000;font-family:Georgia,"Times New Roman"}
+H2.TitreNo {text-align:center;font-size:14pt;font-weight:bold;font-style:Regular;color:#008000;font-family:Georgia,"Times New Roman"}
+h3.Sous-Section, H3.Sous-Section, h3.Sous-section, h2.Section {font-size:12pt;font-weight:bold;font-style:Italic;color:#008000;font-family:Georgia,"Times New Roman"}
+hr,HR { display: block; width:90%;  margin-top: 0.5em; margin-bottom: 0.5em; margin-left: auto;  margin-right: auto;  border-style: inset; border-width: 1px;}
+P.TitreSub {text-align:center;font-size:14pt;font-weight:bold;font-style:Regular;color:#008000;font-family:Georgia,"Times New Roman"}
+.Reference {display: block;text-align: left;text-indent: 0pt;margin-top: 10pt;margin-bottom: 6pt;margin-right: 10pt;margin-left: 10pt;font-size: 14pt;font-weight: Bold;font-style: Regular;color: #7F5434;text-decoration: none;vertical-align: baseline;text-transform: none;font-family: "Times New Roman";}
+.ludwig,blockquote {padding-left:1em;background-color:#fafafa;font-size:12pt;font-weight:100;font-style:italic;}
+#articleList {position:absolute ;	z-index: 1 ;left: 10px ;top: 80px ;height:340px;width: 620px;border: 2px solid #cacaca ;border-radius: 5px ;background-color:#fafafa ;    box-shadow: 0 0 12px #333333;	margin-left:0px ;	padding: .3em .3em ;		overflow:hidden ;	visibility:hidden ;  }			
+#articleList h3 { text-align: center; margin: 0; }		
+
+.historique {
+  display:none ;
+  padding: .1em .3em ;
+  border: solid 2px #dadada;
+  border-radius: 7px;
+  box-shadow: 0 0 5px #9ecaed;  
+  
+}
+.histText {
+    display: block;
+    font-family: ;"Times New Roman"
+	padding: .1em .3em ;
+    margin: 1em 0px;
+	font-style:italic;
+	color:#000000;
+	overflow:auto;
+}
+.highlight {
+  font-weight:bold ;
+  color:#000000 ;
+  background-color:#FFFFCC ;
+  }
+.articleList-scroll {
+	overflow-x:hidden ;
+	overflow-y:scroll ;
+	scrollbar-width:thin ;
+	scrollbar-color:blue orange ;
+}
+
+#contenu {
+	overflow-x:hidden ;
+    overflow-y:scroll ;
+	scrollbar-width:thin ;
+	scrollbar-color:blue orange ;
+}		
+
+table, TABLE {
+ text-align:center; 
+    margin-left:.5em; 
+    margin-right:.5em; 
+    border:1px solid #000000;	
+	border-collapse:collapse ;
+    border-color: #9ecaed;
+    box-shadow: 0 0 10px #9ecaed;
+	
+   }
+  tr,td {text-align:left;}
+  
+
+
+ </style>
+ 
+<script src="/js/iscroll.js"></script>
+<script src="/js/jquery.js"></script>   
+<script src="/js/jquery-ui-1.10.3.custom.js"></script>    	    
+<script src="/js/jquery.ui.draggable.js" type="text/javascript"></script>			
+<script src="/js/jquery.ui.core.js"></script> 			
+<script src="/js/jquery.ui.widget.js"></script>			
+<script src="/js/jquery.ui.position.js"></script>			
+<script src="/js/jquery.ui.menu.js"></script>    		
+<script type="text/javascript" src="./xpages.js"></script>
+/* VERSION POUR PAGE HTML SUR SITE DGI.CGICI.COM */
+<script language="javascript">
+ function showButton(id) {
+    var x = document.getElementById(id) ;
+	if(x.style.display === "none") {
+	   x.style.display = "block" ;
+	  } else {
+	   x.style.display = "none" ;
+	   }
+	 }   
+	 var pagenumber="018";
+function loadpage(page, art) {
+      showHideHistoric(art);
+	  return false;
+	  } 
+function loadArticle(page, art) { var artno = art ;var pgno=page;scrolltoelementTag(pgno,artno) ;return false ;} 
+
+</script>
+</HEAD>
+<BODY><div ID="wrapper"><div ID="scroller">
+
+
+<H2 CLASS="Section">
+Section V - Retenues &agrave; la source</H2>
+<P CLASS="Paragraphe">
+Professions m&eacute;dicales ou param&eacute;dicales</P>
+
+<DIV>
+    <span id="#A0093"></span>
+	<H6 class="NoArticle">
+Art. 93 &nbsp;&nbsp;&nbsp;&nbsp; <a href="#" onClick="loadpage('016','h2293');return false;" class="ui-button"  title="Consultez l'historique">2022...</a></H6>
+
+<P CLASS="Liste2-Enumeree">
+1&deg; Les personnes morales, les organismes publics ou priv&eacute;s quels que soient leur forme juridique, leur nationalit&eacute; et leur r&eacute;gime fiscal, et les personnes physiques relevant de l&apos;imp&ocirc;t sur les b&eacute;n&eacute;fices industriels et commerciaux, de l&apos;imp&ocirc;t sur les b&eacute;n&eacute;fices non commerciaux et de l&apos;imp&ocirc;t sur les b&eacute;n&eacute;fices agricoles qui versent des honoraires, vacations et autres r&eacute;mun&eacute;rations &agrave; des personnes non salari&eacute;es exer&ccedil;ant une profession m&eacute;dicale ou param&eacute;dicale, sont tenus de pr&eacute;lever &agrave; la source pour le compte du Tr&eacute;sor, une retenue de 7,5 % des sommes brutes mises en paiement.</P>
+<H6 CLASS="Modification">
+Loi n&deg; 2003-206 du 7juillet 2003, an. fiscale,Art.9; Ord. n&deg; 2009-382 du 26 novembre 2009, an. fiscale,Art.13.</H6>
+</DIV>
+<DIV>
+<H4 CLASS="Liste2-EnumereeA">
+2&deg;	</H4>
+<P CLASS="Liste2-Enumeree">
+a)	Les entreprises soumises &agrave; un r&eacute;gime du r&eacute;el d&apos;imposition doivent verser les retenues aff&eacute;rentes aux sommes mises en paiement au cours d&apos;un mois donn&eacute;, au plus tard le 15 du mois suivant.</P>
+<P CLASS="Liste2-Enumeree">
+En ce qui concerne les entreprises relevant de la Direction des grandes Entreprises ou de la Direction  des moyennes Entreprises, les retenues aff&eacute;rentes aux sommes mises en paiement au cours d&apos;un mois donn&eacute; doivent &ecirc;tre vers&eacute;es:</P>
+<P CLASS="Liste2-Enumeree">
+-	au plus tard le 15 du mois suivant, pour les entreprises industrielles et les entreprises p&eacute;troli&egrave;res et mini&egrave;res;</P>
+<P CLASS="Liste2-Enumeree">
+-	au plus tard le 15 du mois suivant, pour les entreprises commerciales;</P>
+<P CLASS="Liste2-Enumeree">
+-	au plus tard le 20 du mois suivant, pour les entreprises prestataires de services.</P>
+<H6 CLASS="Modification">
+Ord. n&deg; 2009-382 du 26 novembre 2009, an. fiscale,Art.24-2; loi n&deg; 2014-861 du 22 d&eacute;cembre 2014, an. fiscale,Art.12-4; Ord. n&deg; 2015-797 du 18 d&eacute;cembre 2015,Art. 11.</H6>
+<P CLASS="Liste2-Enumeree">
+b)	1- Le paiement des retenues s&apos;effectue au moyen d&apos;un bordereau avis de versement en triple exemplaire. A l&apos;appui de ce bordereau doivent &ecirc;tre joints des &eacute;tats nominatifs devant obligatoirement comporter les indications suivantes, pour chaque b&eacute;n&eacute;ficiaire des sommes vers&eacute;es :</P>
+<P CLASS="Liste2-Enumeree">&nbsp;
+</P>
+<P CLASS="Liste2-Enumeree">
+-	nom et pr&eacute;noms;</P>
+<P CLASS="Liste2-Enumeree">
+-	profession;</P>
+<P CLASS="Liste2-Enumeree">
+-	adresse g&eacute;ographique, postale et t&eacute;l&eacute;phonique;</P>
+<P CLASS="Liste2-Enumeree">
+-	nature des prestations r&eacute;mun&eacute;r&eacute;es;</P>
+<P CLASS="Liste2-Enumeree">
+-	montant mis en paiement;</P>
+<P CLASS="Liste2-Enumeree">
+-	date du paiement;</P>
+<P CLASS="Liste2-Enumeree">
+-	montant de la retenue effectu&eacute;e.</P>
+<P CLASS="Liste2-Enumeree">
+2 -	Les &eacute;tats nominatifs &eacute;num&eacute;r&eacute;s au 1 ci-dessus doivent &ecirc;tre accompagn&eacute;s, pour chaque b&eacute;n&eacute;ficiaire, d&apos;une attestation individuelle de retenue &eacute;tablie conform&eacute;ment au mod&egrave;le prescrit par l&apos;Administration.</P>
+<P CLASS="Liste2-Enumeree">
+3 -	Les attestations individuelles vis&eacute;es par le receveur des Imp&ocirc;ts comp&eacute;tent sont remises par la partie versante aux b&eacute;n&eacute;ficiaires pour leur permettre de faire valoir ult&eacute;rieurement les retenues qu&apos;ils ont subies.</P>
+</DIV>
+<DIV>
+<H4 CLASS="Liste2-EnumereeA">
+3&deg;	</H4>
+<P CLASS="Liste2-Enumeree"><font color='#000000'>
+a)	 Les omissions ou insuffisances constatées dans les retenues à la source sont sanctionnées conformément aux dispositions prévues par le Livre de Procédures fiscales.</font></P>
+<h6 CLASS="Modification">
+Loi n° 2022-974 du 20 déc. 2022, an. fiscale, art. 7-1</h6>
+<P CLASS="Liste2-Enumeree">
+b)	Sera consid&eacute;r&eacute; comme un d&eacute;lit d&apos;escroquerie et sanctionn&eacute; conform&eacute;ment aux dispositions de l&apos;article 7 de l&apos;annexe fiscale &agrave; la loi n&deg; 67-588 du 31 d&eacute;cembre 1967 portant loi de Finances pour la gestion 1968, le fait pour une personne ou tout organisme de ne pas reverser au Tr&eacute;sor public les retenues effectivement op&eacute;r&eacute;es.</P>
+<P CLASS="Liste2-Enumeree">
+c)	Le refus ou le d&eacute;faut de production des &eacute;tats vis&eacute;s au 2&deg; b) est sanctionn&eacute; par une amende de 100 000 francs.</P>
+<P CLASS="Liste2-Enumeree">
+L&apos;amende est per&ccedil;ue autant de fois qu&apos;il y a d&apos;&eacute;tats non produits.</P>
+<H6 CLASS="Modification">
+Loi n&deg; 94-201 du 8 avril 1994, an. fiscale,Art. 7.</H6>
+
+</DIV>
+
+<P CLASS="Section">
+
+Revendeurs de billets de jeux de hasard, courtiers, interm&eacute;diaires et b&eacute;n&eacute;ficiaires des gains de jeux de hasard</P>
+<H6 CLASS="Modification">
+Loi n&deg; 2017-870 du 27 d&eacute;cembre 2017, an. fiscaleArt. 39.</H6>
+
+<span id="#A0094"></span>
+<H6 CLASS="NoArticle">
+Art. 94</H6>
+<P CLASS="ParaText">
+Les personnes et organismes se livrant &agrave; l&apos;organisation de jeux de hasard, de loterie et de paris mutuels hippiques, quels que soient leur forme juridique, leur nationalit&eacute; et leur r&eacute;gime fiscal, qui versent des commissions, honoraires et autres r&eacute;mun&eacute;rations &agrave; des personnes non salari&eacute;es relevant d&apos;un r&eacute;gime r&eacute;el d&apos;imposition, notamment aux revendeurs de billets, courtiers et autres interm&eacute;diaires, sont tenus de pr&eacute;lever &agrave; la source pour le compte du Tr&eacute;sor public, une retenue de 7,5 %  des sommes brutes mises en paiement.</P>
+<P CLASS="ParaText">
+<FONT COLOR='#000000'>
+L&apos;obligation de retenue &agrave; la source institu&eacute;e &agrave; l&apos;alin&eacute;a 1 ci-dessus s&apos;applique &eacute;galement aux montants des lots vers&eacute;s aux b&eacute;n&eacute;ficiaires des gains de jeux de hasard autres que ceux provenant des jeux de machine &agrave; sous lorsque le gain est sup&eacute;rieur ou &eacute;gal &agrave; 1000 000 de francs .</FONT></P>
+<H6 CLASS="Modification">
+Ord. n&deg; 2006-234 du 02 ao&ucirc;t 2006, an. fiscale,Art. 44-4; 
+Ord. n&deg; 2007-675 du 28 d&eacute;cembre 2007, an. fiscale,Art. 31-3
+; Ord. n&deg; 2009-382 du 26 novembre 2009, an. fiscale,Art.13; loi n&deg; 2017-870 du 27 d&eacute;cembre 2017, an. fiscaleArt. 39.</H6>
+<P CLASS="ParaText">
+La retenue est recouvr&eacute;e dans les m&ecirc;mes conditions et sous les m&ecirc;mes proc&eacute;dures, sanctions et s&ucirc;ret&eacute;s que celles pr&eacute;vues &agrave; l&apos;article 93-2&deg; et 3&deg; du pr&eacute;sent Code.</H6>
+<H6 CLASS="Modification">
+Loi n&deg; 95-05 du 11 janv. 1995, an. fiscale,Art. 14.</H6>
+
+
+<P CLASS="Paragraphe">
+Enseignants vacataires<BR>
+Prestations de consultance ou d'expertise</P>
+
+
+<span id="#A0095"></span>
+<H6 CLASS="NoArticle">
+Art. 95</H6>
+<P CLASS="Liste2-Enumeree">
+1<b>&deg;-</b>Les organismes publics ou priv&eacute;s d&apos;enseignement quels que soient leur forme juridique et leur r&eacute;gime fiscal, sont tenus de proc&eacute;der &agrave; une retenue &agrave; la source au titre des r&eacute;mun&eacute;rations de toute nature qu&apos;ils versent &agrave; leurs enseignants vacataires.</P>
+<P CLASS="Liste2-Enumeree">
+Sont exon&eacute;r&eacute;s de cette retenue, les enseignants vacataires justifiant d&apos;une immatriculation au fichier des contribuables de la Direction g&eacute;n&eacute;rale des Imp&ocirc;ts sous le r&eacute;gime du r&eacute;el normal d&apos;imposition.</P>
+
+<H6 CLASS="Modification">
+Loi n<b>&deg;-</b> 2002-156 du 15 mars 2002, an. fiscale,Art. 13.</H6>
+<P CLASS="Liste2-Enumeree">
+2<b>&deg;-</b>Les personnes physiques ou morales quels que soient leur objet social et leur forme juridique, sont tenues d&apos;effectuer la retenue sur les r&eacute;mun&eacute;rations vers&eacute;es au titre de prestations de consultance ou d&apos;expertise &agrave; des entreprises individuelles.</P>
+<P CLASS="Liste2-Enumeree">
+Sont exon&eacute;r&eacute;es de cette retenue, les entreprises individuelles de consultance justifiant d&apos;une immatriculation au fichier des contribuables de la Direction g&eacute;n&eacute;rale des Imp&ocirc;ts sous le r&eacute;gime du r&eacute;el normal d&apos;imposition.</P>
+
+
+<H6 CLASS="Modification">
+Loi n<b>&deg;-</b> 2002-156 du 15 mars 2002, an. fiscale,Art. 13.</H6>
+<P CLASS="Liste2-Enumeree">
+3<b>&deg;-</b>La retenue est per&ccedil;ue au taux de 7,5 %  des r&eacute;mun&eacute;rations brutes vers&eacute;es.</P>
+
+
+<H6 CLASS="Modification">
+Ord. n<b>&deg;-</b> 2009-382 du 26 novembre 2009Art.13.</H6>
+<P CLASS="Liste2-Enumeree">
+4<b>&deg;-</b>Les dispositions pr&eacute;vues &agrave; l&apos;article <a class='ui-button' href='' onClick="loadArticle('018','0093');return false;">93</a>-2<b>&deg;-</b> et 3<b>&deg;-</b> sont applicables mutatis mutandis &agrave; la retenue institu&eacute;e par le pr&eacute;sent article.</P>
+
+
+<H6 CLASS="Modification">
+Loi n<b>&deg;-</b> 2001-338 du 14 juin 2001, an. fiscale,Art.10.</H6>
+<P CLASS="Paragraphe"><FONT COLOR='#d00000'>
+<A NAME="pgfId-1148756"></A>Artistes musiciens, sportifs, organisateurs de spectacles, acteurs, figurants et autres personnes assimil&eacute;es</FONT></P>
+<H6 CLASS="Modification">
+<A NAME="pgfId-1151963"></A>Loi n&#176; 2025-987 du 19  d&eacute;cembre 2025, art. 1er </H6>
+
+
+<span id="#A0096"></span>
+<H6 CLASS="NoArticle">
+Art. 96 &nbsp;&nbsp;&nbsp;&nbsp; <a href="#" onClick="loadpage('016','h2596');return false;" class="ui-button"  title="Consultez l'historique">2025...</a></H6>
+<P CLASS="ParaText">Les personnes physiques ou morales qui versent des sommes et autres r&eacute;mun&eacute;rations au profit des artistes musiciens du spectacle, aux organisateurs de spectacle, aux sportifs et autres intervenants dans ces secteurs, non-salari&eacute;s, sont tenues de pr&eacute;lever &agrave; la source une retenue de 7,5 % des sommes brutes mises en paiement.</P>
+
+<P CLASS="ParaText"><FONT COLOR='#d00000'>Cette retenue s&rsquo;applique &eacute;galement aux sommes et autres r&eacute;mun&eacute;rations  vers&eacute;es aux acteurs, figurants, personnes assimil&eacute;es et autres intervenants  non-salari&eacute;s des productions radiophoniques, t&eacute;l&eacute;visuelles ou  cin&eacute;matographiques.</FONT><p>
+
+<H6 CLASS="Modification">
+Ord. n&deg; 2009-382 du 26 novembre 2009, an. Fiscale, art. 13&nbsp;; loi n&deg;  2025-987 du 19 d&eacute;c. 2025, an.fiscale, art. 1er.</H6>
+<P CLASS="Paragraphe">
+Collaborateurs non salari&eacute;s des avocats, notaires, huissiers et commissaires priseurs</P>
+
+<span id="#A0097"></span>
+<H6 CLASS="NoArticle">
+Art. 97</H6>
+<P CLASS="Liste2-Enumeree">
+1<b>&deg;-</b>Les personnes physiques ou morales exer&ccedil;ant la profession d&apos;avocat, de notaire, d&apos;huissier ou de commissaire-priseur sont tenues d&apos;effectuer une retenue &agrave; la source sur les r&eacute;mun&eacute;rations qu&apos;elles versent &agrave; leurs collaborateurs non salari&eacute;s.</P>
+<P CLASS="Liste2-Enumeree">
+2<b>&deg;-</b>La retenue est per&ccedil;ue au taux de 7,5 %  des r&eacute;mun&eacute;rations brutes vers&eacute;es.</P>
+
+<H6 CLASS="Modification">
+Ord. n<b>&deg;-</b> 2009-382 du 26 novembre 2009Art.13.</H6>
+<P CLASS="Liste2-Enumeree">
+3<b>&deg;-</b>Les dispositions pr&eacute;vues &agrave; l&apos;article <a class='ui-button' href='' onClick="loadArticle('018','0093');return false;">93</a>-2<b>&deg;-</b> et 3<b>&deg;-</b> du pr&eacute;sent Code sont applicables mutatis mutandis &agrave; la retenue institu&eacute;e par le pr&eacute;sent article.</P>
+
+
+<H6 CLASS="Modification">
+Loi n<b>&deg;-</b>2003 - 206 du 7 juillet 2003, an. fiscale,Art. 8.</H6>
+<P CLASS="Paragraphe">
+Avocats, huissiers de justice, conseils juridiques et fiscaux, comptables, commissaires priseurs <BR>
+et notaires</P>
+
+
+<span id="#A0098"></span>
+<H6 CLASS="NoArticle">
+Art. 98</H6>
+<P CLASS="Liste2-Enumeree">
+1<b>&deg;-</b> Les personnes physiques ou morales, passibles de l&apos;imp&ocirc;t sur les b&eacute;n&eacute;fices, ainsi que les organismes publics ou priv&eacute;s quels que soient leur forme juridique et leur r&eacute;gime fiscal, qui versent des sommes &agrave; titre de r&eacute;mun&eacute;rations aux avocats, huissiers de justice, conseils juridiques et fiscaux, comptables, commissaires priseurs et notaires, sont tenus de pr&eacute;lever &agrave; la source pour le compte du Tr&eacute;sor public, une retenue de 7,5 % des r&eacute;mun&eacute;rations brutes vers&eacute;es.</P>
+
+<H6 CLASS="Modification">
+Ord. n<b>&deg;-</b> 2007-488 du 31 mai 2007Art. 8; Ord. n<b>&deg;-</b> 2009-382 du 26 novembre 2009Art.13.</H6>
+<P CLASS="Liste2-Enumeree">
+2<b>&deg;-</b>Les dispositions pr&eacute;vues &agrave; l&apos;article <a class='ui-button' href='' onClick="loadArticle('018','0093');return false;">93</a>-2<b>&deg;-</b> et 3<b>&deg;-</b> du Code g&eacute;n&eacute;ral des Imp&ocirc;ts sont applicables mutatis mutandis &agrave; la retenue institu&eacute;e par le pr&eacute;sent article.</P>
+
+
+<H6 CLASS="Modification">
+Loi n<b>&deg;-</b> 2003 - 206 du 7 juillet 2003, an. fiscale,Art. 12.</H6>
+<P CLASS="Paragraphe">
+Greffiers-notaires</P>
+
+
+<span id="#A0099"></span>
+<H6 CLASS="NoArticle">
+Art. 99</H6>
+<P CLASS="ParaText">
+Les greffiers-notaires sont tenus de reverser aupr&egrave;s de la recette des Imp&ocirc;ts du si&egrave;ge de leur activit&eacute;, dans les dix jours qui suivent soit la fin du trimestre pour les op&eacute;rations r&eacute;alis&eacute;es au cours du trimestre pr&eacute;c&eacute;dent, soit la date de cessation de leur fonction, une redevance due sur les &eacute;moluments qu&apos;ils per&ccedil;oivent &agrave; titre d&apos;honoraires dans l&apos;exercice de leur fonction de notaire.</P>
+<P CLASS="ParaText">
+Le taux du reversement est fix&eacute; &agrave; 50 % du montant de toutes les sommes effectivement per&ccedil;ues &agrave; titre d&apos;honoraires.</P>
+
+<H6 CLASS="Modification">
+Loi n<b>&deg;-</b> 2005-161 du 27 avril 2005, an. fiscale,Art. 19.</H6>
+
+<H6 CLASS="NoArticle">
+<A NAME="50434094_pgfId-1140820"></A>99 bis</H6>
+<P CLASS="ParaText">
+<A NAME="50434094_pgfId-1140814"></A>Les retenues prévues aux articles 93 à 99 du Code général des Impôts, ne sont pas applicables aux contribuables relevant de la taxe d’Etat de l’entreprenant ou du régime des microentreprises. </P>
+<H6 CLASS="Modification">
+<A NAME="50434094_pgfId-1140855"></A>Loi n° 2024-1109 du 18 déc. 2024, an. fiscale, art. 7-7</H6>
+
+<!-- Old wrapper body -->
+<span class="historique" id="h2293">
+   <div class="histText"> Art. 93 <br>
+	<br>	1°	Les personnes morales, les organismes publics ou privés quels que soient leur forme juridique, leur nationalité et leur régime fiscal, et les personnes physiques relevant de l’impôt sur les bénéfices industriels et commerciaux, de l’impôt sur les bénéfices non commerciaux et de l’impôt sur les bénéfices agricoles qui versent des honoraires, vacations et autres rémunérations à des personnes non salariées exerçant une profession médicale ou paramédicale, sont tenus de prélever à la source pour le compte du Trésor, une retenue de 7,5 % des sommes brutes mises en paiement.	
+<br>			
+<br>	Loi n° 2003-206 du 7juillet 2003, an. fiscale, art.9; ord. n° 2009-382 du 26 novembre 2009, an. fiscale, art.13.		
+<br>			
+<br>	2°		
+<br>			
+<br>	a)	Les entreprises soumises à un régime du réel d’imposition doivent verser les retenues afférentes aux sommes mises en paiement au cours d’un mois donné, au plus tard le 15 du mois suivant.	
+<br>			
+<br>	En ce qui concerne les entreprises relevant de la Direction des grandes Entreprises ou de la Direction des moyennes Entreprises, les retenues afférentes aux sommes mises en paiement au cours d’un mois donné doivent être versées:		
+<br>			
+<br>	– au plus tard le 10 du mois suivant, pour les entreprises industrielles et les entreprises pétrolières et minières;	
+<br>		
+<br>	– au plus tard le 15 du mois suivant, pour les entreprises commerciales;	
+<br>			
+<br>	– au plus tard le 20 du mois suivant, pour les entreprises prestataires de services.	
+<br>			
+<br>	Ord. n° 2009-382 du 26 novembre 2009, an. fiscale, art.24-2; loi n° 2014-861 du 22 décembre 2014, an. fiscale, art.12-4; ord. n° 2015-797 du 18 décembre 2015, art. 11.		
+<br>			
+<br>	b)	1- Le paiement des retenues s’effectue au moyen d’un bordereau avis de versement en triple exemplaire. A l’appui de ce bordereau doivent être joints des états nominatifs devant obligatoirement comporter les indications suivantes, pour chaque bénéficiaire des sommes versées :	
+<br>			
+<br>	– nom et prénoms;		
+<br>			
+<br>	– profession;		
+<br>			
+<br>	– adresse géographique, postale et téléphonique;		
+<br>			
+<br>	– nature des prestations rémunérées;	
+<br>			
+<br>	– montant mis en paiement;		
+<br>			
+<br>	– date du paiement;		
+<br>			
+<br>	– montant de la retenue effectuée.	
+<br>			
+<br>	2 – Les états nominatifs énumérés au 1 ci-dessus doivent être accompagnés, pour chaque bénéficiaire, d’une attestation individuelle de retenue établie conformément au modèle prescrit par l’Administration.	
+<br>			
+<br>	3 – Les attestations individuelles visées par le receveur des Impôts compétent sont remises par la partie versante aux bénéficiaires pour leur permettre de faire valoir ultérieurement les retenues qu’ils ont subies.	
+<br>						
+<br>			
+<br>	3°		
+<br>			
+<br>	a) Sans préjudice des sanctions prévues par le Livre de Procédures fiscales, les omissions ou insuffisances constatées dans les retenues sont sanctionnées par la non déductibilité des sommes versées. 	
+<br>			
+<br>	b) Sera considéré comme un délit d’escroquerie et sanctionné conformément aux dispositions de l’article 7 de l’annexe fiscale à la loi n° 67-588 du 31 décembre 1967 portant loi de Finances pour la gestion 1968, le fait pour une personne ou tout organisme de ne pas reverser au Trésor public les retenues effectivement opérées.		
+<br>			
+<br>	c) Le refus ou le défaut de production des états visés au 2° b) est sanctionné par une amende de 100 000 francs.		
+<br>			
+<br>	L’amende est perçue autant de fois qu’il y a d’états non produits.
+
+   </div>
+ </span>
+ <finh2293>
+
+</div></div> <!-- wrapper -->
+	  <div id="articleList"><div id="contenu" style='height:auto; background-color:#FFFFCC'>&nbsp;</div>
+      </div><p>&nbsp;</p><p>&nbsp;</p><p>&nbsp;</p><p>&nbsp;</p><p>&nbsp;</p><p>&nbsp;</p><p>&nbsp;</p><p>&nbsp;</p><p>&nbsp;</p><p>&nbsp;</p>
+	  <p>&nbsp;</p><p>&nbsp;</p><p>&nbsp;</p><p>&nbsp;</p><p>&nbsp;</p><p>&nbsp;</p></BODY></HTML>
+	  

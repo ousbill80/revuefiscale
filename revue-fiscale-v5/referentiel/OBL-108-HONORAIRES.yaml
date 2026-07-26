@@ -1,0 +1,45 @@
+reference_source: CGI 2026 — doc client 2/5 format pivot (propositions metier)
+date_effet: '2026-01-01'
+effets_croises:
+- cible: TVA-DED-PRORATA
+  type: remet_en_cause
+  commentaire: Perte possible TVA — A CONFIRMER
+identifiant: OBL-108-HONORAIRES
+impot: OBL
+reference_legale: CGI 2026, art. 108 ; note 002/MFB/DGI-DLCD
+profils_applicables:
+- Toutes entreprises
+comptes_declencheurs:
+- '622'
+- '628'
+nature: sans_objet
+condition_declenchement: reponse(q_seuil_depasse) = vrai et reponse(q_declaration) = faux
+conditions_fond: Declaration des sommes versees ; seuils a confirmer.
+formule_plafonnement: sans objet
+questions_generees:
+- id: q_seuil_depasse
+  texte: Seuil de declaration depasse ?
+  type: booleen
+- id: q_declaration
+  texte: Declaration souscrite ?
+  type: booleen
+- id: q_montant
+  texte: Montant non declare ?
+  type: montant
+resultat: reponse(q_montant)
+niveau_risque: eleve
+a_confirmer:
+- date d effet
+- seuils 50 000 / 10 000
+- comptes 622/628
+cas_test:
+  soldes:
+    '622': '1'
+    '628': '0'
+  agregats: {}
+  reponses:
+    q_seuil_depasse: true
+    q_declaration: false
+    q_montant: '7500000'
+  declenche_attendu: true
+  montant_attendu: '7500000'

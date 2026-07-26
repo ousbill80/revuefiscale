@@ -1,0 +1,44 @@
+reference_source: CGI 2026 — docs client 6/9/10 (propositions metier)
+date_effet: '2026-01-01'
+effets_croises: []
+a_confirmer:
+- date d effet 01/01/2026
+- valeurs issues docs client 6/9/10 — a valider metier
+formule_plafonnement: sans objet
+questions_generees:
+- id: q_ecart_ca_tva
+  texte: Ecart CA comptable / CA declare TVA ?
+  type: booleen
+- id: q_montant_ecart
+  texte: Montant de l ecart a signaler ?
+  type: montant
+profils_applicables:
+- Entreprises au regime reel
+nature: sans_objet
+identifiant: TVA-COL-RAPPRO-CA
+impot: TVA
+reference_legale: CGI 2026, art. 339 et s. — rapprochement CA / TVA collectee
+comptes_declencheurs:
+- '701'
+- '702'
+- '703'
+- '704'
+- '705'
+- '706'
+- '707'
+- '443'
+condition_declenchement: agregat(CA) > 0 et reponse(q_ecart_ca_tva) = vrai
+conditions_fond: Ecart entre CA comptable et CA declare a la TVA ?
+resultat: reponse(q_montant_ecart)
+niveau_risque: eleve
+cas_test:
+  soldes:
+    '701': '100000000'
+    '443': '18000000'
+  agregats:
+    CA: '100000000'
+  reponses:
+    q_ecart_ca_tva: true
+    q_montant_ecart: '5000000'
+  declenche_attendu: true
+  montant_attendu: '5000000'

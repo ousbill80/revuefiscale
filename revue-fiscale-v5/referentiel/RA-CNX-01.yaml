@@ -1,0 +1,37 @@
+reference_source: CGI 2026 — docs client 6/9/10 (propositions metier)
+date_effet: '2026-01-01'
+effets_croises: []
+a_confirmer:
+- date d effet 01/01/2026
+- valeurs issues docs client 6/9/10 — a valider metier
+formule_plafonnement: sans objet
+questions_generees:
+- id: q_revue_cnx
+  texte: Lancer connexion fiscalo-comptable ?
+  type: booleen
+- id: q_montant
+  texte: Resultat avant impot retenu ?
+  type: montant
+profils_applicables:
+- Entreprises au regime reel
+nature: sans_objet
+identifiant: RA-CNX-01
+impot: RA
+reference_legale: Revue analytique — Connexion fiscalo-comptable (doc client 6)
+comptes_declencheurs:
+- '13'
+- '695'
+condition_declenchement: reponse(q_revue_cnx) = vrai
+conditions_fond: Connexion fiscalo-comptable
+resultat: reponse(q_montant)
+niveau_risque: eleve
+cas_test:
+  soldes:
+    '13': '200000000'
+    '695': '50000000'
+  agregats: {}
+  reponses:
+    q_revue_cnx: true
+    q_montant: '200000000'
+  declenche_attendu: true
+  montant_attendu: '200000000'

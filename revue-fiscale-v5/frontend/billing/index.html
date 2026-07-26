@@ -1,0 +1,1368 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+  <meta name="theme-color" content="#0f766e" />
+  <meta name="color-scheme" content="light" />
+  <title>Revue Fiscale — Billing</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700&family=Syne:wght@600;700;800&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="/shared/saas-ds.css" />
+  <style>
+    :root {
+      --accent: #0f766e;
+      --accent-deep: #115e59;
+      --accent-soft: #ecfdf8;
+      --accent-ring: rgba(15, 118, 110, 0.18);
+      --sidebar-active-bar: #2dd4bf;
+    }
+  </style>
+</head>
+<body>
+  <div id="vue-login" class="login-screen">
+    <aside class="login-aside" aria-hidden="true">
+      <p class="login-eyebrow">Billing</p>
+      <div class="login-aside-brand">
+        <svg class="brand-mark brand-mark--hero" viewBox="0 0 40 40" width="40" height="40" aria-hidden="true" focusable="false">
+          <rect class="brand-mark__plate" x="1" y="1" width="38" height="38" rx="10" />
+          <rect class="brand-mark__sheet" x="10" y="9" width="16" height="20" rx="2.5" />
+          <path class="brand-mark__lines" d="M14 15h8M14 19h8M14 23h5" />
+          <path class="brand-mark__scan" d="M22 11.5c5.2 2.2 7.8 6.4 7.8 11.2" />
+          <circle class="brand-mark__dot" cx="29.5" cy="23" r="2.4" />
+        </svg>
+        <span class="login-aside-brand-text">Revue Fiscale</span>
+      </div>
+      <p class="login-aside-tagline">Abonnés, quotas et facturation — l’outil de production de l’éditeur pour tous les cabinets.</p>
+      <p class="login-aside-foot">Édité par 2AàZ · Billing</p>
+    </aside>
+    <section class="login-card">
+      <div class="login-card-inner">
+        <p class="login-eyebrow">Billing</p>
+        <div class="brand">
+          <svg class="brand-mark brand-mark--card" viewBox="0 0 40 40" width="40" height="40" aria-hidden="true" focusable="false">
+            <rect class="brand-mark__plate" x="1" y="1" width="38" height="38" rx="10" />
+            <rect class="brand-mark__sheet" x="10" y="9" width="16" height="20" rx="2.5" />
+            <path class="brand-mark__lines" d="M14 15h8M14 19h8M14 23h5" />
+            <path class="brand-mark__scan" d="M22 11.5c5.2 2.2 7.8 6.4 7.8 11.2" />
+            <circle class="brand-mark__dot" cx="29.5" cy="23" r="2.4" />
+          </svg>
+          <span class="brand-text">Revue Fiscale</span>
+        </div>
+        <p class="brand-byline">Édité par 2AàZ</p>
+        <h1 class="login-form-title">Connexion</h1>
+        <p class="sub">Abonnés, quotas et factures.</p>
+        <form id="form-login">
+          <div class="field-stack">
+            <label for="email">Email</label>
+            <input id="email" type="email" autocomplete="username" required placeholder="vous@2aaz.ci" />
+          </div>
+          <div class="field-stack">
+            <label for="mdp">Mot de passe</label>
+            <input id="mdp" type="password" autocomplete="current-password" required placeholder="••••••••" />
+          </div>
+          <div class="actions">
+            <button type="submit" class="btn btn-primary btn-block">Se connecter</button>
+          </div>
+        </form>
+        <div id="demo-access" class="demo-access hidden" hidden>
+          <div class="demo-access-head">
+            <span class="demo-badge">Démo</span>
+            <span class="demo-access-hint">Clic = remplir · double-clic = connexion</span>
+          </div>
+          <div class="demo-chips" role="group" aria-label="Accès démo">
+            <button type="button" class="demo-chip" data-demo="billing">Remplir Billing</button>
+            <button type="button" class="demo-chip demo-chip-submit" data-demo-submit="billing">Connexion démo</button>
+          </div>
+        </div>
+        <div class="status" id="status-login"></div>
+      </div>
+    </section>
+  </div>
+
+  <div id="vue-app" class="app-frame hidden">
+    <header class="topbar">
+      <div class="topbar-left">
+        <button type="button" class="btn-menu" id="btn-menu" aria-label="Menu">
+          <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 7h16M4 12h16M4 17h16" stroke-linecap="round"/></svg>
+        </button>
+        <div class="brand-bar">Revue<span> Fiscale</span></div>
+        <span class="surface-pill">Billing</span>
+        <span class="surface-pill" id="badge-tarifs" title="Bornes techniques provisoires — pas une grille officielle" style="background:#fef3c7;color:#92400e;border:1px solid #f59e0b">Tarifs À CONFIRMER</span>
+      </div>
+      <div class="topbar-search" aria-hidden="true">
+        <svg viewBox="0 0 24 24"><circle cx="11" cy="11" r="7"/><path d="M20 20l-3.5-3.5" stroke-linecap="round"/></svg>
+        Rechercher un abonné…
+      </div>
+      <div class="topbar-right">
+        <div class="user-chip" id="who-chip">
+          <span class="avatar" id="who-avatar">B</span>
+          <span class="who" id="who"></span>
+        </div>
+        <button type="button" class="btn btn-logout" id="btn-logout">Déconnexion</button>
+      </div>
+    </header>
+
+    <aside class="sidebar" id="sidebar" aria-label="Navigation billing">
+      <div class="sidebar-collapse-row">
+        <button type="button" class="btn-sidebar-collapse" id="btn-sidebar-collapse"
+          aria-expanded="true" aria-controls="sidebar" title="Réduire le menu"
+          aria-label="Réduire le menu">
+          <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M15 6l-6 6 6 6" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        </button>
+      </div>
+      <div class="nav-label">Gestion</div>
+      <button type="button" class="side-nav-item nav-btn active" data-view="abonnes">
+        <span class="nav-ico-wrap" aria-hidden="true">
+          <svg class="nav-ico" viewBox="0 0 24 24"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87M16 3.13a4 4 0 0 1 0 7.75"/></svg>
+        </span>
+        <span class="nav-label-txt">Abonnés</span>
+      </button>
+      <button type="button" class="side-nav-item nav-btn" data-view="creer">
+        <span class="nav-ico-wrap" aria-hidden="true">
+          <svg class="nav-ico" viewBox="0 0 24 24"><path d="M12 5v14M5 12h14" stroke-linecap="round"/></svg>
+        </span>
+        <span class="nav-label-txt">Créer un abonné</span>
+      </button>
+      <div class="nav-label">Suivi</div>
+      <button type="button" class="side-nav-item nav-btn" data-view="usage">
+        <span class="nav-ico-wrap" aria-hidden="true">
+          <svg class="nav-ico" viewBox="0 0 24 24"><path d="M4 19V5M4 19h16M8 17V9M12 17v-6M16 17V7" stroke-linecap="round"/></svg>
+        </span>
+        <span class="nav-label-txt">Usage</span>
+      </button>
+      <button type="button" class="side-nav-item nav-btn" data-view="factures">
+        <span class="nav-ico-wrap" aria-hidden="true">
+          <svg class="nav-ico" viewBox="0 0 24 24"><rect x="4" y="3" width="16" height="18" rx="2"/><path d="M8 7h8M8 11h8M8 15h5" stroke-linecap="round"/></svg>
+        </span>
+        <span class="nav-label-txt">Factures</span>
+      </button>
+      <button type="button" class="side-nav-item nav-btn" data-view="demandes">
+        <span class="nav-ico-wrap" aria-hidden="true">
+          <svg class="nav-ico" viewBox="0 0 24 24"><path d="M9 11l3 3L22 4"/><path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"/></svg>
+        </span>
+        <span class="nav-label-txt">Demandes</span>
+      </button>
+      <button type="button" class="side-nav-item nav-btn" data-view="emails">
+        <span class="nav-ico-wrap" aria-hidden="true">
+          <svg class="nav-ico" viewBox="0 0 24 24"><path d="M4 6h16v12H4z"/><path d="M4 6l8 6 8-6" stroke-linecap="round"/></svg>
+        </span>
+        <span class="nav-label-txt">Emails / Outbox</span>
+      </button>
+      <div class="nav-label">Éditeur</div>
+      <button type="button" class="side-nav-item nav-btn" data-view="tarifs-ac">
+        <span class="nav-ico-wrap" aria-hidden="true">
+          <svg class="nav-ico" viewBox="0 0 24 24"><path d="M12 3v18M5 8h14M7 12h10M9 16h6" stroke-linecap="round"/></svg>
+        </span>
+        <span class="nav-label-txt">Tarifs &amp; mentions</span>
+      </button>
+      <button type="button" class="side-nav-item nav-btn" data-view="parametres">
+        <span class="nav-ico-wrap" aria-hidden="true">
+          <svg class="nav-ico" viewBox="0 0 24 24"><circle cx="12" cy="12" r="3"/><path d="M12 2v2M12 20v2M4.9 4.9l1.4 1.4M17.7 17.7l1.4 1.4M2 12h2M20 12h2M4.9 19.1l1.4-1.4M17.7 6.3l1.4-1.4"/></svg>
+        </span>
+        <span class="nav-label-txt">Paramètres</span>
+      </button>
+      <div class="sidebar-foot">
+        <p>Édité par 2AàZ</p>
+        <p>Données plateforme uniquement</p>
+        <p>Aucune mission abonné</p>
+      </div>
+    </aside>
+
+    <main class="main">
+      <section id="view-abonnes">
+        <div class="page-head">
+          <div>
+            <p class="page-eyebrow">Portefeuille</p>
+            <h1>Abonnés</h1>
+            <p>Tenants, paliers et quotas — sans données de mission.</p>
+          </div>
+          <button type="button" class="btn btn-ghost" id="btn-refresh">Actualiser</button>
+        </div>
+        <div class="stat-row">
+          <div class="stat"><div class="k">Total</div><div class="v" id="stat-total">—</div></div>
+          <div class="stat"><div class="k">Actifs</div><div class="v" id="stat-actifs">—</div></div>
+          <div class="stat"><div class="k">Suspendus</div><div class="v" id="stat-suspendus">—</div></div>
+        </div>
+        <div class="toolbar toolbar-filtres">
+          <label>Statut
+            <select id="filtre-abonne-statut">
+              <option value="">Tous</option>
+              <option value="actif">actif</option>
+              <option value="suspendu">suspendu</option>
+              <option value="resilie">résilié</option>
+            </select>
+          </label>
+          <label>Palier
+            <select id="filtre-abonne-palier">
+              <option value="">Tous</option>
+              <option value="essentiel">essentiel</option>
+              <option value="standard">standard</option>
+              <option value="premium">premium</option>
+              <option value="souverain">souverain</option>
+            </select>
+          </label>
+        </div>
+        <div class="panel panel-flush">
+          <div class="table-wrap">
+            <table>
+              <thead>
+                <tr>
+                  <th>Id</th>
+                  <th>Dénomination</th>
+                  <th>Palier</th>
+                  <th>Statut</th>
+                  <th>Quota</th>
+                  <th>Actions</th>
+                </tr>
+              </thead>
+              <tbody id="tenants"></tbody>
+            </table>
+          </div>
+          <div class="status" id="status-list"></div>
+        </div>
+      </section>
+
+      <section id="view-creer" class="hidden">
+        <div class="page-head">
+          <div>
+            <p class="page-eyebrow">Onboarding</p>
+            <h1>Créer un abonné</h1>
+            <p>Cabinet ou entreprise + admin initial + quota + abonnement.</p>
+          </div>
+        </div>
+        <div class="panel" style="max-width:480px">
+          <form id="form-creer">
+            <label for="denom">Dénomination</label>
+            <input id="denom" required maxlength="200" />
+            <label for="type">Type</label>
+            <select id="type">
+              <option value="cabinet">Cabinet</option>
+              <option value="entreprise">Entreprise</option>
+            </select>
+            <p class="sub" style="margin:0 0 0.5rem;color:#92400e">Tarifs À CONFIRMER — montants techniques provisoires (voir /api/v1/billing/paliers).</p>
+            <label for="palier">Palier</label>
+            <select id="palier">
+              <option value="essentiel">Essentiel</option>
+              <option value="standard" selected>Standard</option>
+              <option value="premium">Premium</option>
+              <option value="souverain">Souverain</option>
+            </select>
+            <label for="email-admin">Email admin</label>
+            <input id="email-admin" type="email" required />
+            <label for="mdp-admin">Mot de passe admin</label>
+            <input id="mdp-admin" type="password" minlength="8" required />
+            <label for="note">Note (optionnel)</label>
+            <input id="note" maxlength="500" />
+            <div class="actions">
+              <button type="submit" class="btn btn-primary btn-block">Créer l&apos;abonné</button>
+            </div>
+          </form>
+          <div class="status" id="status-creer"></div>
+        </div>
+      </section>
+
+      <section id="view-usage" class="hidden">
+        <div class="page-head">
+          <div>
+            <p class="page-eyebrow">Capacité</p>
+            <h1>Usage</h1>
+            <p>Missions utilisées / incluses et métrage IA agrégé.</p>
+          </div>
+          <button type="button" class="btn btn-ghost" id="btn-usage">Actualiser</button>
+        </div>
+        <div class="panel panel-flush">
+          <div class="table-wrap">
+            <table>
+              <thead>
+                <tr><th>Tenant</th><th>Quota</th><th>Ratio</th><th>Alerte 80%</th><th>Métrage IA</th></tr>
+              </thead>
+              <tbody id="usage-rows"></tbody>
+            </table>
+          </div>
+          <div class="status" id="status-usage"></div>
+        </div>
+      </section>
+
+      <section id="view-factures" class="hidden">
+        <div class="page-head">
+          <div>
+            <p class="page-eyebrow">Commercial</p>
+            <h1>Factures</h1>
+            <p>Montants d&apos;abonnement — <strong>À CONFIRMER</strong> (pas fiscaux). Badge « Tarifs À CONFIRMER » = bornes techniques provisoires, pas grille officielle.</p>
+          </div>
+          <div class="actions" style="margin:0">
+            <button type="button" class="btn btn-ghost" id="btn-factures">Actualiser</button>
+            <button type="button" class="btn btn-ghost" id="btn-export-csv">Export CSV</button>
+          </div>
+        </div>
+        <div class="split">
+          <div class="panel panel-flush">
+            <div class="toolbar toolbar-filtres" style="padding:0.65rem 0.75rem 0;margin:0">
+              <label>Statut facture
+                <select id="filtre-facture-statut">
+                  <option value="">Tous</option>
+                  <option value="brouillon">brouillon</option>
+                  <option value="emise">émise</option>
+                  <option value="payee">payée</option>
+                  <option value="annulee">annulée</option>
+                </select>
+              </label>
+            </div>
+            <div class="table-wrap">
+              <table>
+                <thead>
+                  <tr><th>N°</th><th>Cabinet</th><th class="num">Montant</th><th>Statut</th><th>Actions</th></tr>
+                </thead>
+                <tbody id="factures"></tbody>
+              </table>
+            </div>
+            <div class="status" id="status-factures"></div>
+          </div>
+          <div class="panel">
+            <h2>Nouveau brouillon</h2>
+            <p class="sub">Depuis le palier courant du tenant.</p>
+            <label for="facture-tenant">Abonné</label>
+            <select id="facture-tenant">
+              <option value="">— Choisir un abonné —</option>
+            </select>
+            <div class="actions">
+              <button type="button" class="btn btn-primary btn-block" id="btn-creer-facture">Créer brouillon</button>
+            </div>
+          </div>
+        </div>
+      </section>
+      <section id="view-demandes" class="hidden">
+        <div class="page-head">
+          <div>
+            <p class="page-eyebrow">File commerciale</p>
+            <h1>Demandes abonnés</h1>
+            <p>
+              Rapprochements paiement (signalement ≠ payée) et changements de palier
+              (acceptation via <code>patcher_tenant</code>). Aucun PSP.
+            </p>
+          </div>
+          <button type="button" class="btn btn-ghost" id="btn-demandes">Actualiser</button>
+        </div>
+        <div class="split" style="align-items:flex-start">
+          <div class="panel panel-flush">
+            <h2 style="padding:0.75rem 0.75rem 0;margin:0;font-size:1rem">Paiements</h2>
+            <div class="table-wrap">
+              <table>
+                <thead>
+                  <tr>
+                    <th>Id</th><th>Cabinet</th><th>Facture</th><th class="num">Montant</th>
+                    <th>Statut</th><th>Actions</th>
+                  </tr>
+                </thead>
+                <tbody id="demandes-paiement"></tbody>
+              </table>
+            </div>
+          </div>
+          <div class="panel panel-flush">
+            <h2 style="padding:0.75rem 0.75rem 0;margin:0;font-size:1rem">Paliers</h2>
+            <div class="table-wrap">
+              <table>
+                <thead>
+                  <tr>
+                    <th>Id</th><th>Cabinet</th><th>Actuel → Cible</th>
+                    <th>Statut</th><th>Actions</th>
+                  </tr>
+                </thead>
+                <tbody id="demandes-palier"></tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+        <div class="status" id="status-demandes"></div>
+      </section>
+      <section id="view-emails" class="hidden">
+        <div class="page-head">
+          <div>
+            <p class="page-eyebrow">Resend</p>
+            <h1>Outbox email</h1>
+            <p>Sans <code>RESEND_API_KEY</code> : emails <strong>simulés</strong> (dev) ou <strong>échec</strong> explicite (prod) — pas de faux envoi.</p>
+          </div>
+          <button type="button" class="btn btn-ghost" id="btn-emails">Actualiser</button>
+        </div>
+        <div class="panel" id="resend-status" style="margin-bottom:0.75rem">
+          <p class="sub" id="resend-note">Chargement…</p>
+        </div>
+        <div class="panel panel-flush">
+          <div class="table-wrap">
+            <table>
+              <thead>
+                <tr><th>Id</th><th>Destinataire</th><th>Sujet</th><th>Statut</th><th>Erreur / note</th><th>Créé</th></tr>
+              </thead>
+              <tbody id="emails-rows"></tbody>
+            </table>
+          </div>
+          <div class="status" id="status-emails"></div>
+        </div>
+      </section>
+
+      <section id="view-tarifs-ac" class="hidden">
+        <div class="page-head">
+          <div>
+            <p class="page-eyebrow">Lecture seule — à valider 2AàZ</p>
+            <h1>Tarifs &amp; mentions (a_confirmer)</h1>
+            <p>
+              Inventaire honnête des prix / quotas provisoires et des mentions facture
+              encore marquées À CONFIRMER. Aucune édition ici — saisie officielle via
+              <strong>Paramètres</strong> uniquement quand 2AàZ fournit les vraies valeurs.
+            </p>
+          </div>
+          <button type="button" class="btn btn-ghost" id="btn-tarifs-ac">Actualiser</button>
+        </div>
+
+        <div class="panel" style="margin-bottom:1rem;border:1px solid #f59e0b;background:#fffbeb">
+          <p class="sub" id="tarifs-ac-avert" style="margin:0;color:#92400e;font-weight:600">Chargement…</p>
+        </div>
+
+        <div class="stat-row" id="tarifs-ac-stats">
+          <div class="stat"><div class="k">Paliers à confirmer</div><div class="v" id="stat-paliers-ac">—</div></div>
+          <div class="stat"><div class="k">Mentions à confirmer</div><div class="v" id="stat-mentions-ac">—</div></div>
+          <div class="stat"><div class="k">Source grille</div><div class="v" id="stat-source-grille" style="font-size:0.95rem">—</div></div>
+        </div>
+
+        <div class="split" style="align-items:flex-start">
+          <div class="panel panel-flush" style="flex:1.2">
+            <div style="padding:0.85rem 1rem 0.35rem">
+              <h2 style="margin:0;font-size:1.05rem">Paliers (provisoires / saisis)</h2>
+              <p class="sub" style="margin:0.35rem 0 0">Prix mensuels XOF et quotas missions — pas une offre commerciale certifiée.</p>
+            </div>
+            <div class="table-wrap">
+              <table>
+                <thead>
+                  <tr>
+                    <th>Palier</th>
+                    <th class="num">Prix / mois</th>
+                    <th class="num">Missions</th>
+                    <th>Statut</th>
+                  </tr>
+                </thead>
+                <tbody id="tarifs-ac-paliers"></tbody>
+              </table>
+            </div>
+          </div>
+          <div class="panel panel-flush" style="flex:1">
+            <div style="padding:0.85rem 1rem 0.35rem">
+              <h2 style="margin:0;font-size:1.05rem">Mentions légales facture</h2>
+              <p class="sub" style="margin:0.35rem 0 0">Valeurs effectives (saisie → env → À CONFIRMER). Pas d&apos;invention RCCM / IDU / TVA.</p>
+            </div>
+            <div class="table-wrap">
+              <table>
+                <thead>
+                  <tr><th>Champ</th><th>Valeur</th><th>Source</th><th>Statut</th></tr>
+                </thead>
+                <tbody id="tarifs-ac-mentions"></tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+        <div class="status" id="status-tarifs-ac" style="margin-top:0.75rem"></div>
+      </section>
+
+      <section id="view-parametres" class="hidden">
+        <div class="page-head">
+          <div>
+            <p class="page-eyebrow">Saisie éditeur — responsabilité 2AàZ</p>
+            <h1>Paramètres commerciaux</h1>
+            <p>
+              Paliers et mentions facture : <strong>saisie humaine</strong>.
+              Vides = À CONFIRMER. Aucune grille / RCCM inventés ici.
+              La clé Resend reste dans <code>.env</code> (jamais affichée).
+            </p>
+          </div>
+          <button type="button" class="btn btn-ghost" id="btn-parametres">Actualiser</button>
+        </div>
+
+        <div class="bandeau-a-confirmer" id="bandeau-param-ac">
+          À CONFIRMER — paliers et mentions facture sont une saisie humaine 2AàZ.
+          Champs vides = provisoire technique (pas une grille officielle).
+          Aucune invention RCCM / IDU / TVA. Resend reste dans <code>.env</code>.
+        </div>
+
+        <div class="panel" style="margin-bottom:1rem">
+          <h2>Resend</h2>
+          <p class="sub" id="param-resend-note">Chargement…</p>
+          <p class="hint" style="font-size:0.8rem;color:var(--muted)">
+            Documenter dans <code>.env</code> : <code>RESEND_API_KEY</code> + <code>RESEND_FROM</code>
+            (voir <code>.env.example</code>). La clé n’est <strong>pas</strong> stockée ni renvoyée au frontend.
+          </p>
+        </div>
+
+        <div class="split" style="align-items:flex-start">
+          <div class="panel" style="flex:1.2">
+            <h2>Paliers (XOF / mois)</h2>
+            <p class="sub" id="param-paliers-avert">—</p>
+            <div id="param-paliers-fields"></div>
+            <div class="actions" style="margin-top:0.75rem">
+              <button type="button" class="btn btn-primary" id="btn-sauver-paliers">Enregistrer paliers</button>
+            </div>
+            <div class="status" id="status-param-paliers"></div>
+          </div>
+          <div class="panel" style="flex:1">
+            <h2>Mentions légales facture</h2>
+            <p class="sub">Laisser vide = À CONFIRMER (env / défaut).</p>
+            <label for="m-raison">Raison sociale</label>
+            <input id="m-raison" placeholder="À CONFIRMER" />
+            <label for="m-siege">Siège social</label>
+            <input id="m-siege" placeholder="À CONFIRMER" />
+            <label for="m-rccm">RCCM</label>
+            <input id="m-rccm" placeholder="À CONFIRMER — ne pas inventer" />
+            <label for="m-idu">IDU</label>
+            <input id="m-idu" placeholder="À CONFIRMER" />
+            <label for="m-banque">Compte bancaire</label>
+            <input id="m-banque" placeholder="À CONFIRMER" />
+            <label for="m-regime">Régime TVA</label>
+            <input id="m-regime" placeholder="A_CONFIRMER" />
+            <label for="m-taux">Taux TVA</label>
+            <input id="m-taux" placeholder="À CONFIRMER" />
+            <div class="actions" style="margin-top:0.75rem">
+              <button type="button" class="btn btn-primary" id="btn-sauver-mentions">Enregistrer mentions</button>
+            </div>
+            <div class="status" id="status-param-mentions"></div>
+          </div>
+        </div>
+      </section>
+
+    </main>
+  </div>
+
+  <div class="drawer-backdrop" id="backdrop"></div>
+
+  <script src="/shared/sidebar-collapse.js"></script>
+  <script>
+    const CLE = "billing_jeton";
+    let jeton = localStorage.getItem(CLE) || "";
+    let cacheTenants = [];
+    let cacheFactures = [];
+    const $ = (id) => document.getElementById(id);
+
+    function setStatus(el, msg, err = false) {
+      el.textContent = msg || "";
+      el.classList.toggle("err", !!err);
+    }
+
+    function setWho(text) {
+      $("who").textContent = text || "";
+      const initial = (text || "B").trim().charAt(0).toUpperCase() || "B";
+      $("who-avatar").textContent = initial;
+    }
+
+    async function api(path, opts = {}) {
+      const headers = { "Content-Type": "application/json", ...(opts.headers || {}) };
+      if (jeton) headers.Authorization = `Bearer ${jeton}`;
+      const r = await fetch(path, { ...opts, headers });
+      const text = await r.text();
+      let data = null;
+      try { data = text ? JSON.parse(text) : null; } catch { data = { detail: text }; }
+      if (!r.ok) {
+        const d = data && data.detail;
+        throw new Error(typeof d === "string" ? d : (d ? JSON.stringify(d) : r.statusText));
+      }
+      return data;
+    }
+
+    function badgeStatut(s) {
+      const map = {
+        actif: "badge-ok", suspendu: "badge-suspendu", resilie: "badge-resilie",
+        brouillon: "badge-brouillon", emise: "badge-emise", payee: "badge-payee", annulee: "badge-annulee",
+      };
+      return `<span class="badge ${map[s] || "badge-brouillon"}">${s || "—"}</span>`;
+    }
+
+    function escapeHtml(s) {
+      return String(s ?? "").replace(/[&<>"']/g, (c) => ({
+        "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;"
+      }[c]));
+    }
+    function fmtDate(v) {
+      if (!v) return null;
+      try { return new Date(v).toLocaleString("fr-FR", { dateStyle: "short", timeStyle: "short" }); }
+      catch { return String(v); }
+    }
+    function escapeAttr(s) { return escapeHtml(s).replace(/`/g, ""); }
+
+    function showApp(on) {
+      $("vue-login").classList.toggle("hidden", on);
+      $("vue-app").classList.toggle("hidden", !on);
+      if (!on) closeDrawer();
+    }
+
+    function closeDrawer() {
+      $("sidebar").classList.remove("open");
+      $("backdrop").classList.remove("open");
+    }
+
+    function showView(name) {
+      ["abonnes", "creer", "usage", "factures", "demandes", "emails", "tarifs-ac", "parametres"].forEach((v) => {
+        $("view-" + v).classList.toggle("hidden", v !== name);
+      });
+      document.querySelectorAll(".nav-btn").forEach((b) => {
+        b.classList.toggle("active", b.dataset.view === name);
+      });
+      closeDrawer();
+      if (name === "usage") chargerUsage();
+      if (name === "factures") chargerFactures();
+      if (name === "demandes") chargerDemandes();
+      if (name === "emails") chargerEmails();
+      if (name === "tarifs-ac") chargerTarifsAConfirmer();
+      if (name === "parametres") chargerParametres();
+    }
+
+    async function chargerDemandes() {
+      setStatus($("status-demandes"), "Chargement…");
+      try {
+        const [paiements, paliers] = await Promise.all([
+          api("/api/v1/billing/demandes-paiement"),
+          api("/api/v1/billing/demandes-palier"),
+        ]);
+        const tbP = $("demandes-paiement");
+        tbP.innerHTML = "";
+        if (!paiements.length) {
+          tbP.innerHTML = "<tr><td colspan='6'>Aucune demande paiement</td></tr>";
+        }
+        for (const d of paiements) {
+          const tr = document.createElement("tr");
+          const actions = d.statut === "ouvert"
+            ? `<button type="button" class="btn btn-primary btn-sm" data-dp-acc="${d.id}">Accepter</button>
+               <button type="button" class="btn btn-ghost btn-sm" data-dp-ref="${d.id}">Refuser</button>`
+            : "—";
+          tr.innerHTML = `<td>${d.id}</td><td>${escapeHtml(d.denomination)}</td>
+            <td>${escapeHtml(d.facture_numero || d.facture_id)}</td>
+            <td class="num">${escapeHtml(d.facture_montant)} XOF</td>
+            <td>${escapeHtml(d.statut)}</td><td>${actions}</td>`;
+          tbP.appendChild(tr);
+        }
+        const tbL = $("demandes-palier");
+        tbL.innerHTML = "";
+        if (!paliers.length) {
+          tbL.innerHTML = "<tr><td colspan='5'>Aucune demande palier</td></tr>";
+        }
+        for (const d of paliers) {
+          const tr = document.createElement("tr");
+          const actions = d.statut === "ouvert"
+            ? `<button type="button" class="btn btn-primary btn-sm" data-dl-acc="${d.id}">Accepter</button>
+               <button type="button" class="btn btn-ghost btn-sm" data-dl-ref="${d.id}">Refuser</button>`
+            : "—";
+          tr.innerHTML = `<td>${d.id}</td><td>${escapeHtml(d.denomination)}</td>
+            <td>${escapeHtml(d.palier_actuel)} → ${escapeHtml(d.palier_cible)}</td>
+            <td>${escapeHtml(d.statut)}</td><td>${actions}</td>`;
+          tbL.appendChild(tr);
+        }
+        setStatus($("status-demandes"),
+          `${paiements.length} paiement(s) · ${paliers.length} palier(s)`);
+      } catch (e) {
+        setStatus($("status-demandes"), e.message, true);
+      }
+    }
+
+    const PALIERS_ORDRE = ["essentiel", "standard", "premium", "souverain"];
+
+    async function chargerTarifsAConfirmer() {
+      setStatus($("status-tarifs-ac"), "Chargement…");
+      try {
+        const data = await api("/api/v1/billing/tarifs-a-confirmer");
+        const avert = $("tarifs-ac-avert");
+        if (avert) avert.textContent = data.avertissement || "";
+        const tarifs = data.tarifs || {};
+        const ment = data.mentions_facture || {};
+        const resumeT = tarifs.resume || {};
+        const resumeM = ment.resume || {};
+        $("stat-paliers-ac").textContent =
+          (resumeT.paliers_a_confirmer ?? "—") + " / " + (resumeT.paliers_total ?? "—");
+        $("stat-mentions-ac").textContent =
+          (resumeM.champs_a_confirmer ?? "—") + " / " + (resumeM.champs_total ?? "—");
+        const src = tarifs.source_effectif || "—";
+        $("stat-source-grille").textContent =
+          src === "provisoire_technique" ? "Provisoire" :
+          src === "saisie_editeur" ? "Saisie 2AàZ" : src;
+        const badge = $("badge-tarifs");
+        if (badge) {
+          badge.style.display = tarifs.tarifs_a_confirmer === false ? "none" : "";
+        }
+        const tbP = $("tarifs-ac-paliers");
+        tbP.innerHTML = "";
+        const paliers = tarifs.paliers || [];
+        if (!paliers.length) {
+          tbP.innerHTML = `<tr><td colspan="4" class="empty-hint">Aucun palier.</td></tr>`;
+        }
+        for (const p of paliers) {
+          const tr = document.createElement("tr");
+          const ac = !!p.a_confirmer;
+          tr.innerHTML =
+            "<td><span class='cell-strong'>" + escapeHtml(p.palier) + "</span></td>" +
+            "<td class='num'>" + escapeHtml(String(p.prix_mensuel_xof ?? "—")) + " XOF</td>" +
+            "<td class='num'>" + escapeHtml(String(p.missions_par_mois ?? "—")) + "</td>" +
+            "<td>" + (ac
+              ? "<span class='badge badge-suspendu'>à confirmer</span>"
+              : "<span class='badge badge-ok'>saisi</span>") +
+            "<br><span class='cell-muted'>" + escapeHtml(p.label || "") + "</span></td>";
+          tbP.appendChild(tr);
+        }
+        const tbM = $("tarifs-ac-mentions");
+        tbM.innerHTML = "";
+        const champs = ment.champs || [];
+        if (!champs.length) {
+          tbM.innerHTML = `<tr><td colspan="4" class="empty-hint">Aucune mention.</td></tr>`;
+        }
+        for (const c of champs) {
+          const tr = document.createElement("tr");
+          const ac = !!c.a_confirmer;
+          const srcLabel = {
+            saisie_editeur: "Saisie éditeur",
+            env: "Variable env",
+            defaut_a_confirmer: "Défaut À CONFIRMER",
+          }[c.source] || (c.source || "—");
+          tr.innerHTML =
+            "<td class='cell-strong'>" + escapeHtml(c.libelle || c.cle) + "</td>" +
+            "<td>" + escapeHtml(c.valeur_effective || "—") + "</td>" +
+            "<td class='cell-muted'>" + escapeHtml(srcLabel) + "</td>" +
+            "<td>" + (ac
+              ? "<span class='badge badge-suspendu'>à confirmer</span>"
+              : "<span class='badge badge-ok'>renseigné</span>") + "</td>";
+          tbM.appendChild(tr);
+        }
+        const bloq = data.bloqueurs_ouverts || {};
+        setStatus(
+          $("status-tarifs-ac"),
+          (bloq.tarifs || bloq.mentions_facture)
+            ? "Bloqueurs ouverts — voir docs/15-bloqueurs-humains.md (pas d'invention ici)."
+            : "Tous les champs saisis côté éditeur (responsabilité 2AàZ)."
+        );
+      } catch (err) {
+        setStatus($("status-tarifs-ac"), err.message, true);
+      }
+    }
+
+    async function chargerParametres() {
+      setStatus($("status-param-paliers"), "Chargement…");
+      setStatus($("status-param-mentions"), "");
+      try {
+        const data = await api("/api/v1/billing/parametres");
+        const resend = data.resend || {};
+        const rn = $("param-resend-note");
+        if (rn) {
+          rn.innerHTML = resend.configure
+            ? "<strong>Resend configuré</strong> — from : " + escapeHtml(resend.from || "—")
+            : "<strong>RESEND_API_KEY absent</strong> — mode " +
+              escapeHtml(String(resend.mode_sans_cle || "?")) + ". " +
+              escapeHtml(resend.note || "");
+        }
+        const paliers = data.paliers || {};
+        const avert = $("param-paliers-avert");
+        if (avert) avert.textContent = paliers.avertissement || "";
+        const badge = $("badge-tarifs");
+        if (badge) {
+          badge.style.display = paliers.tarifs_a_confirmer === false ? "none" : "";
+        }
+        const saisie = (paliers.saisie_editeur || {});
+        const prix = saisie.prix_mensuel_xof || {};
+        const miss = saisie.missions_par_palier || {};
+        const box = $("param-paliers-fields");
+        box.innerHTML = "";
+        for (const pal of PALIERS_ORDRE) {
+          const wrap = document.createElement("div");
+          wrap.style.marginBottom = "0.65rem";
+          wrap.innerHTML =
+            "<div style='font-weight:600;margin-bottom:0.25rem'>" + escapeHtml(pal) + "</div>" +
+            "<label style='font-size:0.78rem'>Prix mensuel XOF</label>" +
+            "<input data-pal-prix='" + pal + "' type='text' inputmode='numeric' placeholder='vide = À CONFIRMER / provisoire' value='" +
+            escapeHtml(prix[pal] != null ? String(prix[pal]) : "") + "' />" +
+            "<label style='font-size:0.78rem'>Missions / mois</label>" +
+            "<input data-pal-miss='" + pal + "' type='number' min='0' placeholder='vide = provisoire technique' value='" +
+            escapeHtml(miss[pal] != null ? String(miss[pal]) : "") + "' />";
+          box.appendChild(wrap);
+        }
+        const ment = (data.mentions_facture && data.mentions_facture.saisie_editeur) || {};
+        $("m-raison").value = ment.raison_sociale || "";
+        $("m-siege").value = ment.siege || "";
+        $("m-rccm").value = ment.rccm || "";
+        $("m-idu").value = ment.idu || "";
+        $("m-banque").value = ment.compte_bancaire || "";
+        $("m-regime").value = ment.regime_tva || "";
+        $("m-taux").value = ment.taux_tva || "";
+        setStatus($("status-param-paliers"), paliers.tarifs_a_confirmer
+          ? "Tarifs encore À CONFIRMER (provisoire technique actif)."
+          : "Grille saisie éditeur active.");
+      } catch (err) {
+        setStatus($("status-param-paliers"), err.message, true);
+      }
+    }
+
+
+    async function chargerEmails() {
+      setStatus($("status-emails"), "Chargement…");
+      try {
+        const data = await api("/api/v1/billing/email-outbox?limit=50");
+        const resend = data.resend || {};
+        const note = $("resend-note");
+        if (note) {
+          note.innerHTML = resend.resend_configure
+            ? "<strong>Resend configuré</strong> — " + escapeHtml(resend.note || "")
+            : "<strong>RESEND_API_KEY absent</strong> — mode " + escapeHtml(String(resend.mode_sans_cle || "?")) +
+              ". " + escapeHtml(resend.note || "") +
+              " Dernier email simulé / échec listé ci-dessous.";
+        }
+        const tb = $("emails-rows");
+        tb.innerHTML = "";
+        const rows = data.lignes || [];
+        if (!rows.length) {
+          tb.innerHTML = `<tr><td colspan="6" class="empty-hint">Aucun email en outbox. Envoyez une invitation depuis /app pour voir une simulation.</td></tr>`;
+        }
+        for (const r of rows) {
+          const tr = document.createElement("tr");
+          const st = r.statut || "";
+          const badge = st === "simule_dev" ? "badge-draft" : (st === "envoye" ? "badge-ok" : "badge-suspendu");
+          tr.innerHTML = `
+            <td class="num cell-muted">${r.id}</td>
+            <td>${escapeHtml(r.destinataire)}</td>
+            <td>${escapeHtml(r.sujet)}</td>
+            <td><span class="badge ${badge}">${escapeHtml(st)}</span></td>
+            <td class="cell-muted" style="max-width:220px;white-space:normal">${escapeHtml(r.dernier_erreur || "—")}</td>
+            <td class="cell-muted">${escapeHtml(fmtDate(r.cree_le) || "—")}</td>`;
+          tb.appendChild(tr);
+        }
+        setStatus($("status-emails"), rows.length ? rows.length + " email(s)" : "");
+      } catch (err) {
+        setStatus($("status-emails"), err.message, true);
+      }
+    }
+
+    function peuplerSelectAbonnes(selectedId) {
+      const sel = $("facture-tenant");
+      if (!sel) return;
+      const cur = selectedId != null ? String(selectedId) : sel.value;
+      sel.innerHTML = '<option value="">— Choisir un abonné —</option>';
+      for (const t of cacheTenants) {
+        const opt = document.createElement("option");
+        opt.value = String(t.tenant_id);
+        opt.textContent = (t.denomination || "Sans nom") + " (#" + t.tenant_id + ")";
+        sel.appendChild(opt);
+      }
+      if (cur && [...sel.options].some((o) => o.value === cur)) sel.value = cur;
+    }
+
+    function rendreTenants() {
+      const rows = cacheTenants || [];
+      const filtreS = ($("filtre-abonne-statut") && $("filtre-abonne-statut").value) || "";
+      const filtreP = ($("filtre-abonne-palier") && $("filtre-abonne-palier").value) || "";
+      const tb = $("tenants");
+      tb.innerHTML = "";
+      let actifs = 0, suspendus = 0, affichees = 0;
+      for (const t of rows) {
+        if (t.statut === "actif") actifs += 1;
+        if (t.statut === "suspendu") suspendus += 1;
+        if (filtreS && t.statut !== filtreS) continue;
+        if (filtreP && t.palier !== filtreP) continue;
+        affichees += 1;
+        const quota = t.missions_incluses != null
+          ? `${t.missions_utilisees ?? 0}/${t.missions_incluses}`
+          : "—";
+        const tr = document.createElement("tr");
+        tr.innerHTML = `
+          <td class="num cell-muted">${t.tenant_id}</td>
+          <td><span class="cell-strong">${escapeHtml(t.denomination)}</span><br><span class="cell-muted">${t.type}</span></td>
+          <td>${escapeHtml(t.palier)}</td>
+          <td>${badgeStatut(t.statut)}</td>
+          <td class="num">${quota}</td>
+          <td>
+            <div class="actions" style="margin:0;gap:0.3rem">
+              <button type="button" class="btn btn-sm btn-ghost" data-act="palier" data-id="${t.tenant_id}" data-palier="${escapeAttr(t.palier)}">Palier</button>
+              ${t.statut === "suspendu"
+                ? `<button type="button" class="btn btn-sm btn-teal" data-act="reactiver" data-id="${t.tenant_id}">Réactiver</button>`
+                : `<button type="button" class="btn btn-sm btn-danger" data-act="suspendre" data-id="${t.tenant_id}">Suspendre</button>`}
+            </div>
+          </td>`;
+        tb.appendChild(tr);
+      }
+      if (!rows.length) {
+        tb.innerHTML = `<tr><td colspan="6" class="empty-hint">Aucun abonné pour l'instant. Créez le premier depuis le menu.</td></tr>`;
+      } else if (!affichees) {
+        tb.innerHTML = `<tr><td colspan="6" class="empty-hint">Aucun abonné pour ce filtre.</td></tr>`;
+      }
+      $("stat-total").textContent = String(rows.length);
+      $("stat-actifs").textContent = String(actifs);
+      $("stat-suspendus").textContent = String(suspendus);
+      setStatus(
+        $("status-list"),
+        rows.length
+          ? (filtreS || filtreP
+            ? `${affichees} affiché(s) / ${rows.length} abonné(s)`
+            : `${rows.length} abonné(s)`)
+          : ""
+      );
+    }
+
+    async function chargerTenants() {
+      setStatus($("status-list"), "Chargement…");
+      try {
+        const rows = await api("/api/v1/billing/tenants");
+        cacheTenants = rows || [];
+        peuplerSelectAbonnes();
+        rendreTenants();
+      } catch (e) {
+        setStatus($("status-list"), e.message, true);
+      }
+    }
+
+    function rendreFactures() {
+      const rows = cacheFactures || [];
+      const filtreS = ($("filtre-facture-statut") && $("filtre-facture-statut").value) || "";
+      const tb = $("factures");
+      tb.innerHTML = "";
+      let affichees = 0;
+      for (const f of rows) {
+        if (filtreS && f.statut !== filtreS) continue;
+        affichees += 1;
+        let actions = "";
+        if (f.statut === "brouillon") {
+          actions =
+            `<button type="button" class="btn btn-sm btn-teal" data-fid="${f.id}" data-fact="emettre">Émettre</button>`
+            + ` <button type="button" class="btn btn-sm btn-ghost" data-fid="${f.id}" data-pdf="1">PDF</button>`
+            + ` <button type="button" class="btn btn-sm btn-danger" data-fid="${f.id}" data-fact="annuler">Annuler</button>`;
+        } else if (f.statut === "emise") {
+          actions =
+            `<button type="button" class="btn btn-sm btn-teal" data-fid="${f.id}" data-fact="payer">Payée</button>`
+            + ` <button type="button" class="btn btn-sm btn-ghost" data-fid="${f.id}" data-pdf="1">PDF</button>`
+            + ` <button type="button" class="btn btn-sm btn-danger" data-fid="${f.id}" data-fact="annuler">Annuler</button>`;
+        } else {
+          actions = `<button type="button" class="btn btn-sm btn-ghost" data-fid="${f.id}" data-pdf="1">PDF</button>`;
+        }
+        const tr = document.createElement("tr");
+        tr.innerHTML =
+          `<td class="cell-strong">${escapeHtml(f.numero || "")}</td>`
+          + `<td>${escapeHtml(f.denomination || "")} <span class="cell-muted">#${f.tenant_id}</span></td>`
+          + `<td class="num">${escapeHtml(String(f.montant ?? "—"))} ${escapeHtml(f.devise || "XOF")}</td>`
+          + `<td>${badgeStatut(f.statut)}</td>`
+          + `<td><div class="actions" style="margin:0;gap:0.3rem">${actions || "—"}</div></td>`;
+        tb.appendChild(tr);
+      }
+      if (!rows.length) {
+        tb.innerHTML = `<tr><td colspan="5" class="empty-hint">Aucune facture. Créez un brouillon à droite.</td></tr>`;
+      } else if (!affichees) {
+        tb.innerHTML = `<tr><td colspan="5" class="empty-hint">Aucune facture pour ce statut.</td></tr>`;
+      }
+      setStatus(
+        $("status-factures"),
+        rows.length
+          ? (filtreS ? `${affichees} / ${rows.length} facture(s)` : `${rows.length} facture(s)`)
+          : ""
+      );
+    }
+
+    async function chargerFactures() {
+      setStatus($("status-factures"), "Chargement…");
+      try {
+        if (!cacheTenants.length) {
+          try { cacheTenants = await api("/api/v1/billing/tenants") || []; } catch { /* ignore */ }
+          peuplerSelectAbonnes();
+        }
+        const rows = await api("/api/v1/billing/factures");
+        cacheFactures = rows || [];
+        rendreFactures();
+      } catch (e) {
+        setStatus($("status-factures"), e.message, true);
+      }
+    }
+
+    async function chargerUsage() {
+      setStatus($("status-usage"), "Chargement…");
+      try {
+        const rows = await api("/api/v1/billing/usage");
+        const tb = $("usage-rows");
+        tb.innerHTML = "";
+        if (!rows.length) {
+          tb.innerHTML = `<tr><td colspan="5" class="empty-hint">Aucun usage à afficher.</td></tr>`;
+        }
+        for (const u of rows) {
+          const met = (u.metrage_ia || []).map(m => `${m.modele}/${m.usage}:${m.n_appels}`).join(", ") || "—";
+          const tr = document.createElement("tr");
+          tr.innerHTML = `
+            <td><span class="cell-strong">${escapeHtml(u.denomination)}</span><br><span class="cell-muted">#${u.tenant_id}</span></td>
+            <td class="num">${u.missions_utilisees ?? 0}/${u.missions_incluses ?? "—"}</td>
+            <td class="num">${((u.ratio || 0) * 100).toFixed(0)}%</td>
+            <td>${u.alerte_80 ? '<span class="badge badge-suspendu">oui</span>' : '<span class="cell-muted">non</span>'}</td>
+            <td class="cell-muted">${escapeHtml(met)}</td>`;
+          tb.appendChild(tr);
+        }
+        setStatus($("status-usage"), rows.length ? rows.length + " tenant(s)" : "");
+      } catch (e) {
+        setStatus($("status-usage"), e.message, true);
+      }
+    }
+
+    $("form-login").addEventListener("submit", async (e) => {
+      e.preventDefault();
+      setStatus($("status-login"), "Connexion…");
+      try {
+        const data = await api("/api/v1/billing/auth/connexion", {
+          method: "POST",
+          body: JSON.stringify({
+            email: $("email").value.trim(),
+            mot_de_passe: $("mdp").value,
+          }),
+        });
+        jeton = data.jeton;
+        localStorage.setItem(CLE, jeton);
+        setWho(`${data.email} · ${data.role}`);
+        showApp(true);
+        showView("abonnes");
+        setStatus($("status-login"), "");
+        await chargerTenants();
+      } catch (err) {
+        setStatus($("status-login"), err.message, true);
+      }
+    });
+
+    $("btn-logout").addEventListener("click", () => {
+      jeton = "";
+      localStorage.removeItem(CLE);
+      showApp(false);
+    });
+    $("btn-refresh").addEventListener("click", () => chargerTenants());
+    $("btn-usage").addEventListener("click", () => chargerUsage());
+    $("btn-factures").addEventListener("click", () => chargerFactures());
+    $("btn-demandes").addEventListener("click", () => chargerDemandes());
+
+    $("demandes-paiement").addEventListener("click", async (e) => {
+      const acc = e.target.closest("[data-dp-acc]");
+      const ref = e.target.closest("[data-dp-ref]");
+      try {
+        if (acc) {
+          await api(`/api/v1/billing/demandes-paiement/${acc.dataset.dpAcc}/accepter`, {
+            method: "POST",
+            body: JSON.stringify({ marquer_facture_payee: true }),
+          });
+          setStatus($("status-demandes"), "Demande paiement acceptée (facture payée).");
+          await chargerDemandes();
+          await chargerFactures();
+        } else if (ref) {
+          await api(`/api/v1/billing/demandes-paiement/${ref.dataset.dpRef}/refuser`, {
+            method: "POST",
+            body: JSON.stringify({}),
+          });
+          setStatus($("status-demandes"), "Demande paiement refusée.");
+          await chargerDemandes();
+        }
+      } catch (err) {
+        setStatus($("status-demandes"), err.message, true);
+      }
+    });
+
+    $("demandes-palier").addEventListener("click", async (e) => {
+      const acc = e.target.closest("[data-dl-acc]");
+      const ref = e.target.closest("[data-dl-ref]");
+      try {
+        if (acc) {
+          await api(`/api/v1/billing/demandes-palier/${acc.dataset.dlAcc}/accepter`, {
+            method: "POST",
+            body: JSON.stringify({}),
+          });
+          setStatus($("status-demandes"), "Demande palier acceptée (patcher_tenant).");
+          await chargerDemandes();
+          await chargerTenants();
+        } else if (ref) {
+          await api(`/api/v1/billing/demandes-palier/${ref.dataset.dlRef}/refuser`, {
+            method: "POST",
+            body: JSON.stringify({}),
+          });
+          setStatus($("status-demandes"), "Demande palier refusée.");
+          await chargerDemandes();
+        }
+      } catch (err) {
+        setStatus($("status-demandes"), err.message, true);
+      }
+    });
+    if ($("btn-emails")) $("btn-emails").addEventListener("click", () => chargerEmails());
+    if ($("btn-tarifs-ac")) $("btn-tarifs-ac").addEventListener("click", () => chargerTarifsAConfirmer());
+    if ($("btn-parametres")) $("btn-parametres").addEventListener("click", () => chargerParametres());
+    if ($("btn-sauver-paliers")) {
+      $("btn-sauver-paliers").addEventListener("click", async () => {
+        const prix = {};
+        const miss = {};
+        let vides = 0;
+        document.querySelectorAll("[data-pal-prix]").forEach((inp) => {
+          const v = (inp.value || "").trim();
+          if (v === "") vides += 1;
+          prix[inp.dataset.palPrix] = v === "" ? null : v;
+        });
+        document.querySelectorAll("[data-pal-miss]").forEach((inp) => {
+          const v = (inp.value || "").trim();
+          if (v === "") vides += 1;
+          miss[inp.dataset.palMiss] = v === "" ? null : Number(v);
+        });
+        if (vides > 0) {
+          const ok = confirm(
+            vides + " champ(s) palier vide(s).\n"
+            + "Les vides restent À CONFIRMER / provisoire technique.\n"
+            + "Confirmer l’enregistrement ?"
+          );
+          if (!ok) {
+            setStatus($("status-param-paliers"), "Enregistrement annulé — champs vides non validés.");
+            return;
+          }
+        }
+        setStatus($("status-param-paliers"), "Enregistrement…");
+        try {
+          await api("/api/v1/billing/parametres/paliers", {
+            method: "PUT",
+            body: JSON.stringify({
+              prix_mensuel_xof: prix,
+              missions_par_palier: miss,
+            }),
+          });
+          setStatus($("status-param-paliers"), "Paliers enregistrés (responsabilité 2AàZ).");
+          await chargerParametres();
+        } catch (err) {
+          setStatus($("status-param-paliers"), err.message, true);
+        }
+      });
+    }
+    if ($("btn-sauver-mentions")) {
+      $("btn-sauver-mentions").addEventListener("click", async () => {
+        const payload = {
+          raison_sociale: ($("m-raison").value || "").trim() || null,
+          siege: ($("m-siege").value || "").trim() || null,
+          rccm: ($("m-rccm").value || "").trim() || null,
+          idu: ($("m-idu").value || "").trim() || null,
+          compte_bancaire: ($("m-banque").value || "").trim() || null,
+          regime_tva: ($("m-regime").value || "").trim() || null,
+          taux_tva: ($("m-taux").value || "").trim() || null,
+        };
+        const vides = Object.values(payload).filter((v) => v == null || v === "").length;
+        if (vides > 0) {
+          const ok = confirm(
+            vides + " mention(s) vide(s).\n"
+            + "Les vides restent À CONFIRMER (pas d’invention RCCM / IDU / TVA).\n"
+            + "Confirmer l’enregistrement ?"
+          );
+          if (!ok) {
+            setStatus($("status-param-mentions"), "Enregistrement annulé — champs vides non validés.");
+            return;
+          }
+        }
+        setStatus($("status-param-mentions"), "Enregistrement…");
+        try {
+          await api("/api/v1/billing/parametres/mentions-facture", {
+            method: "PUT",
+            body: JSON.stringify(payload),
+          });
+          setStatus($("status-param-mentions"), "Mentions enregistrées.");
+          await chargerParametres();
+        } catch (err) {
+          setStatus($("status-param-mentions"), err.message, true);
+        }
+      });
+    }
+    $("btn-menu").addEventListener("click", () => {
+      $("sidebar").classList.add("open");
+      $("backdrop").classList.add("open");
+    });
+    $("backdrop").addEventListener("click", closeDrawer);
+    RfSidebarCollapse.init({ storageKey: "rf-sidebar-collapsed-billing" });
+
+    if ($("filtre-abonne-statut")) {
+      $("filtre-abonne-statut").addEventListener("change", () => rendreTenants());
+    }
+    if ($("filtre-abonne-palier")) {
+      $("filtre-abonne-palier").addEventListener("change", () => rendreTenants());
+    }
+    if ($("filtre-facture-statut")) {
+      $("filtre-facture-statut").addEventListener("change", () => rendreFactures());
+    }
+
+    document.querySelectorAll(".nav-btn").forEach((btn) => {
+      btn.addEventListener("click", () => showView(btn.dataset.view));
+    });
+
+    $("form-creer").addEventListener("submit", async (e) => {
+      e.preventDefault();
+      setStatus($("status-creer"), "Création…");
+      try {
+        const data = await api("/api/v1/billing/tenants", {
+          method: "POST",
+          body: JSON.stringify({
+            denomination: $("denom").value.trim(),
+            type_tenant: $("type").value,
+            palier: $("palier").value,
+            email_admin: $("email-admin").value.trim(),
+            mot_de_passe_admin: $("mdp-admin").value,
+            note: $("note").value.trim() || null,
+            creer_demo: false,
+          }),
+        });
+        setStatus($("status-creer"), `Créé · tenant #${data.tenant_id} · ${data.email_admin}`);
+        $("form-creer").reset();
+        $("palier").value = "standard";
+        await chargerTenants();
+        showView("abonnes");
+      } catch (err) {
+        setStatus($("status-creer"), err.message, true);
+      }
+    });
+
+    $("tenants").addEventListener("click", async (e) => {
+      const btn = e.target.closest("button[data-act]");
+      if (!btn) return;
+      const id = Number(btn.dataset.id);
+      const act = btn.dataset.act;
+      try {
+        if (act === "suspendre") {
+          if (!confirm(`Suspendre le tenant #${id} ?`)) return;
+          await api(`/api/v1/billing/tenants/${id}`, {
+            method: "PATCH", body: JSON.stringify({ statut: "suspendu" }),
+          });
+        } else if (act === "reactiver") {
+          await api(`/api/v1/billing/tenants/${id}`, {
+            method: "PATCH", body: JSON.stringify({ statut: "actif" }),
+          });
+        } else if (act === "palier") {
+          const choix = prompt(
+            "Nouveau palier (essentiel | standard | premium | souverain)",
+            btn.dataset.palier || "standard"
+          );
+          if (!choix) return;
+          await api(`/api/v1/billing/tenants/${id}`, {
+            method: "PATCH", body: JSON.stringify({ palier: choix.trim() }),
+          });
+        }
+        await chargerTenants();
+      } catch (err) {
+        setStatus($("status-list"), err.message, true);
+      }
+    });
+
+    $("btn-creer-facture").addEventListener("click", async () => {
+      const tid = Number($("facture-tenant").value);
+      if (!tid) { setStatus($("status-factures"), "Choisissez un abonné", true); return; }
+      try {
+        const r = await api("/api/v1/billing/factures", {
+          method: "POST", body: JSON.stringify({ tenant_id: tid }),
+        });
+        setStatus($("status-factures"), `Brouillon ${r.numero} · ${r.montant} XOF`);
+        await chargerFactures();
+      } catch (e) {
+        setStatus($("status-factures"), e.message, true);
+      }
+    });
+
+    $("btn-export-csv").addEventListener("click", async () => {
+      try {
+        const r = await fetch("/api/v1/billing/factures/export.csv", {
+          headers: { Authorization: `Bearer ${jeton}` },
+        });
+        if (!r.ok) throw new Error("export impossible");
+        const blob = await r.blob();
+        const url = URL.createObjectURL(blob);
+        const a = document.createElement("a");
+        a.href = url; a.download = "factures.csv"; a.click();
+        URL.revokeObjectURL(url);
+      } catch (e) {
+        setStatus($("status-factures"), e.message, true);
+      }
+    });
+
+    $("factures").addEventListener("click", async (e) => {
+      const pdfBtn = e.target.closest("button[data-pdf]");
+      if (pdfBtn) {
+        const fid = pdfBtn.dataset.fid;
+        try {
+          const r = await fetch(`/api/v1/billing/factures/${fid}/pdf`, {
+            headers: { Authorization: `Bearer ${jeton}` },
+          });
+          if (!r.ok) throw new Error("export PDF impossible");
+          const blob = await r.blob();
+          const url = URL.createObjectURL(blob);
+          const a = document.createElement("a");
+          a.href = url;
+          a.download = `facture-${fid}.pdf`;
+          a.click();
+          URL.revokeObjectURL(url);
+        } catch (err) {
+          setStatus($("status-factures"), err.message, true);
+        }
+        return;
+      }
+      const btn = e.target.closest("button[data-fact]");
+      if (!btn) return;
+      try {
+        await api(`/api/v1/billing/factures/${btn.dataset.fid}/${btn.dataset.fact}`, {
+          method: "POST", body: "{}",
+        });
+        await chargerFactures();
+      } catch (err) {
+        setStatus($("status-factures"), err.message, true);
+      }
+    });
+
+    if (jeton) {
+      showApp(true);
+      setWho("Session restaurée");
+      showView("abonnes");
+      chargerTenants().catch(() => {
+        jeton = "";
+        localStorage.removeItem(CLE);
+        showApp(false);
+      });
+    }
+
+    /* Mode démo : ENV=dev via /sante, sinon localhost uniquement — jamais en prod. */
+    const DEMO_ACCOUNTS = {
+      billing: { email: "billing@2aaz.ci", mdp: "BillingDemo2026!" },
+    };
+
+    function isLocalHost() {
+      const h = location.hostname;
+      return h === "localhost" || h === "127.0.0.1" || h === "[::1]";
+    }
+
+    async function detectDemoMode() {
+      /* Jamais hors localhost — credentials démo ne doivent pas fuiter en prod. */
+      if (!isLocalHost()) return false;
+      try {
+        const r = await fetch("/sante");
+        if (r.ok) {
+          const data = await r.json();
+          if (data && data.env === "dev") return true;
+          if (data && data.env && data.env !== "dev") return false;
+        }
+      } catch { /* API indisponible */ }
+      return true; /* localhost sans /sante = mode démo local */
+    }
+
+    function fillDemo(key) {
+      const acc = DEMO_ACCOUNTS[key];
+      if (!acc) return;
+      $("email").value = acc.email;
+      $("mdp").value = acc.mdp;
+      $("email").focus();
+    }
+
+    function submitDemo(key) {
+      fillDemo(key);
+      $("form-login").requestSubmit();
+    }
+
+    detectDemoMode().then((demo) => {
+      const box = $("demo-access");
+      if (!demo || !box) return;
+      box.hidden = false;
+      box.classList.remove("hidden");
+      box.querySelectorAll("[data-demo]").forEach((btn) => {
+        btn.addEventListener("click", () => fillDemo(btn.dataset.demo));
+        btn.addEventListener("dblclick", (e) => {
+          e.preventDefault();
+          submitDemo(btn.dataset.demo);
+        });
+      });
+      box.querySelectorAll("[data-demo-submit]").forEach((btn) => {
+        btn.addEventListener("click", () => submitDemo(btn.dataset.demoSubmit));
+      });
+    });
+  </script>
+</body>
+</html>

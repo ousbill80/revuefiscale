@@ -1,0 +1,37 @@
+reference_source: CGI 2026 — docs client 6/9/10 (propositions metier)
+date_effet: '2026-01-01'
+effets_croises: []
+a_confirmer:
+- date d effet 01/01/2026
+- valeurs issues docs client 6/9/10 — a valider metier
+formule_plafonnement: sans objet
+questions_generees:
+- id: q_reprise_taxee
+  texte: Reprise anterieurement taxee ?
+  type: booleen
+- id: q_montant
+  texte: Montant deduction temporaire ?
+  type: montant
+profils_applicables:
+- Entreprises au regime reel
+nature: sans_objet
+identifiant: RA-FISC-04
+impot: RA
+reference_legale: Revue analytique — Differences temporaires deductions (doc client 6)
+comptes_declencheurs:
+- '781'
+- '151'
+condition_declenchement: solde(781) > 0 et reponse(q_reprise_taxee) = vrai
+conditions_fond: Differences temporaires deductions
+resultat: reponse(q_montant)
+niveau_risque: moyen
+cas_test:
+  soldes:
+    '781': '2000000'
+    '151': '0'
+  agregats: {}
+  reponses:
+    q_reprise_taxee: true
+    q_montant: '2000000'
+  declenche_attendu: true
+  montant_attendu: '2000000'

@@ -1,0 +1,875 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+  <meta name="theme-color" content="#0f7a6c" />
+  <meta name="color-scheme" content="light" />
+  <title>Revue Fiscale</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700&family=Syne:wght@600;700;800&display=swap" rel="stylesheet" />
+  <style>
+    :root {
+      --ink: #0b1220;
+      --muted: #5b6577;
+      --line: #d7dde8;
+      --surface: rgba(255, 255, 255, 0.86);
+      --surface-solid: #ffffff;
+      --teal: #0f7a6c;
+      --teal-deep: #0a5a50;
+      --teal-soft: #e6f5f2;
+      --sky: #e8eef8;
+      --warn: #b42318;
+      --radius: 16px;
+      --font-ui: "Manrope", system-ui, sans-serif;
+      --font-brand: "Syne", system-ui, sans-serif;
+      --safe-top: env(safe-area-inset-top, 0px);
+      --safe-bottom: env(safe-area-inset-bottom, 0px);
+      --touch: 48px;
+    }
+
+    *, *::before, *::after { box-sizing: border-box; }
+    html { scroll-behavior: smooth; -webkit-text-size-adjust: 100%; }
+    body {
+      margin: 0;
+      min-height: 100dvh;
+      font-family: var(--font-ui);
+      color: var(--ink);
+      background:
+        radial-gradient(1000px 520px at 90% -8%, #c8e8e2 0%, transparent 55%),
+        radial-gradient(820px 460px at -8% 18%, #d4dff2 0%, transparent 50%),
+        linear-gradient(160deg, #f4f7fb 0%, #eef2f7 48%, #e9f3f0 100%);
+    }
+    body::before {
+      content: "";
+      position: fixed;
+      inset: 0;
+      pointer-events: none;
+      opacity: 0.28;
+      background-image:
+        linear-gradient(rgba(15, 122, 108, 0.045) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(15, 122, 108, 0.045) 1px, transparent 1px);
+      background-size: 44px 44px;
+      mask-image: radial-gradient(ellipse at 50% 0%, #000 18%, transparent 72%);
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      *, *::before, *::after {
+        animation: none !important;
+        transition: none !important;
+      }
+    }
+
+    .shell {
+      position: relative;
+      width: min(960px, 100%);
+      margin: 0 auto;
+      padding:
+        max(1rem, var(--safe-top))
+        max(1rem, 1.15rem)
+        calc(5.5rem + var(--safe-bottom));
+    }
+
+    @keyframes rise {
+      from { opacity: 0; transform: translateY(14px); }
+      to { opacity: 1; transform: none; }
+    }
+    @keyframes fadein {
+      from { opacity: 0; transform: translateY(8px); }
+      to { opacity: 1; transform: none; }
+    }
+
+    .viewport {
+      min-height: calc(100dvh - 4rem);
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      padding: 1.5rem 0 1rem;
+      animation: rise 0.65s ease both;
+    }
+
+    .brand {
+      font-family: var(--font-brand);
+      font-weight: 800;
+      font-size: clamp(2.4rem, 11vw, 4.1rem);
+      letter-spacing: -0.045em;
+      line-height: 0.95;
+      margin: 0 0 0.85rem;
+    }
+    .brand span { color: var(--teal); }
+    .tagline {
+      margin: 0 0 1.5rem;
+      max-width: 28rem;
+      font-size: clamp(0.98rem, 3.4vw, 1.1rem);
+      line-height: 1.55;
+      color: var(--muted);
+      font-weight: 500;
+    }
+
+    .btn {
+      appearance: none;
+      border: none;
+      font: inherit;
+      font-weight: 700;
+      min-height: var(--touch);
+      padding: 0.8rem 1.25rem;
+      border-radius: 999px;
+      cursor: pointer;
+      transition: transform 0.15s, background 0.15s, box-shadow 0.15s;
+      -webkit-tap-highlight-color: transparent;
+    }
+    .btn:focus-visible {
+      outline: 3px solid rgba(15, 122, 108, 0.35);
+      outline-offset: 2px;
+    }
+    .btn:active { transform: translateY(1px) scale(0.99); }
+    .btn-primary {
+      background: var(--teal);
+      color: #fff;
+      box-shadow: 0 8px 22px rgba(15, 122, 108, 0.22);
+    }
+    .btn-primary:hover { background: var(--teal-deep); }
+    .btn-ghost {
+      background: var(--surface-solid);
+      color: var(--ink);
+      border: 1.5px solid var(--line);
+    }
+    .btn-ghost:hover {
+      border-color: var(--teal);
+      color: var(--teal-deep);
+      background: var(--teal-soft);
+    }
+    .btn-block { width: 100%; }
+    .btn-sm { min-height: 44px; padding: 0.55rem 1rem; font-size: 0.9rem; }
+
+    .panel {
+      background: var(--surface);
+      backdrop-filter: blur(14px);
+      -webkit-backdrop-filter: blur(14px);
+      border: 1px solid rgba(255, 255, 255, 0.75);
+      border-radius: var(--radius);
+      padding: 1.2rem 1.15rem;
+      box-shadow: 0 10px 40px rgba(15, 23, 42, 0.05);
+      animation: fadein 0.4s ease both;
+    }
+    .auth-panel { width: min(100%, 420px); }
+
+    .tabs {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 0.35rem;
+      padding: 0.3rem;
+      background: rgba(15, 23, 42, 0.055);
+      border-radius: 999px;
+      margin-bottom: 1rem;
+    }
+    .tab {
+      border: none;
+      background: transparent;
+      font: inherit;
+      font-weight: 700;
+      min-height: 44px;
+      border-radius: 999px;
+      cursor: pointer;
+      color: var(--muted);
+      transition: background 0.2s, color 0.2s;
+    }
+    .tab.active {
+      background: var(--surface-solid);
+      color: var(--ink);
+      box-shadow: 0 1px 4px rgba(15, 23, 42, 0.08);
+    }
+    .tab:focus-visible {
+      outline: 3px solid rgba(15, 122, 108, 0.3);
+      outline-offset: 1px;
+    }
+
+    label {
+      display: block;
+      font-size: 0.72rem;
+      font-weight: 700;
+      letter-spacing: 0.05em;
+      text-transform: uppercase;
+      color: var(--muted);
+      margin: 0.85rem 0 0.35rem;
+    }
+    input, select, textarea {
+      width: 100%;
+      font: inherit;
+      font-size: 16px; /* anti-zoom iOS */
+      font-weight: 500;
+      min-height: var(--touch);
+      padding: 0.7rem 0.9rem;
+      border: 1.5px solid var(--line);
+      border-radius: 12px;
+      background: var(--surface-solid);
+      color: var(--ink);
+      transition: border-color 0.15s, box-shadow 0.15s;
+    }
+    input:focus, select:focus, textarea:focus {
+      outline: none;
+      border-color: var(--teal);
+      box-shadow: 0 0 0 3px rgba(15, 122, 108, 0.15);
+    }
+    textarea {
+      min-height: 9rem;
+      font-family: ui-monospace, "SF Mono", Menlo, monospace;
+      font-size: 14px;
+      line-height: 1.45;
+      resize: vertical;
+    }
+    .grid-2 {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 0.7rem;
+    }
+
+    .hint { margin: 0.5rem 0 0; font-size: 0.84rem; color: var(--muted); }
+    .status {
+      margin-top: 0.9rem;
+      padding: 0.85rem 1rem;
+      border-radius: 12px;
+      background: var(--teal-soft);
+      color: var(--teal-deep);
+      font-size: 0.9rem;
+      font-weight: 600;
+      white-space: pre-wrap;
+    }
+    .status.err { background: #fdecea; color: var(--warn); }
+    .status:empty { display: none; }
+
+    .workspace { display: none; animation: fadein 0.45s ease both; }
+    .workspace.on { display: block; }
+
+    .topbar {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 0.75rem;
+      padding: 0.35rem 0 1.1rem;
+      position: sticky;
+      top: 0;
+      z-index: 20;
+      backdrop-filter: blur(10px);
+      background: linear-gradient(180deg, rgba(244, 247, 251, 0.95), rgba(244, 247, 251, 0.75));
+    }
+    .brand-mini {
+      font-family: var(--font-brand);
+      font-weight: 800;
+      font-size: 1.2rem;
+      letter-spacing: -0.03em;
+    }
+    .brand-mini span { color: var(--teal); }
+    .topbar-actions { display: flex; align-items: center; gap: 0.45rem; flex-shrink: 0; }
+    .chip {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.35rem;
+      max-width: 11rem;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+      padding: 0.4rem 0.7rem;
+      border-radius: 999px;
+      background: var(--teal-soft);
+      color: var(--teal-deep);
+      font-size: 0.75rem;
+      font-weight: 700;
+    }
+    .chip::before {
+      content: "";
+      width: 7px;
+      height: 7px;
+      flex-shrink: 0;
+      border-radius: 50%;
+      background: var(--teal);
+    }
+
+    .progress {
+      height: 4px;
+      background: rgba(15, 23, 42, 0.08);
+      border-radius: 999px;
+      margin-bottom: 0.85rem;
+      overflow: hidden;
+    }
+    .progress > i {
+      display: block;
+      height: 100%;
+      width: 0;
+      background: linear-gradient(90deg, var(--teal), #14b8a6);
+      border-radius: inherit;
+      transition: width 0.4s ease;
+    }
+
+    .steps {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 0.35rem;
+      margin-bottom: 1.1rem;
+    }
+    .step {
+      text-align: center;
+      padding: 0.55rem 0.25rem;
+      border-radius: 12px;
+      font-size: 0.68rem;
+      font-weight: 700;
+      color: var(--muted);
+      background: rgba(255, 255, 255, 0.5);
+      border: 1.5px solid transparent;
+      transition: all 0.2s ease;
+    }
+    .step .n {
+      display: block;
+      font-family: var(--font-brand);
+      font-size: 0.95rem;
+      margin-bottom: 0.1rem;
+      color: var(--ink);
+    }
+    .step .lbl { display: block; }
+    .step.active {
+      background: var(--surface-solid);
+      border-color: var(--teal);
+      color: var(--teal-deep);
+      box-shadow: 0 4px 14px rgba(15, 122, 108, 0.12);
+    }
+    .step.done { background: var(--teal-soft); color: var(--teal-deep); }
+
+    h2.section-title {
+      font-family: var(--font-brand);
+      font-size: clamp(1.25rem, 4.5vw, 1.45rem);
+      font-weight: 700;
+      letter-spacing: -0.03em;
+      margin: 0 0 0.3rem;
+    }
+    .section-sub {
+      margin: 0 0 1rem;
+      color: var(--muted);
+      font-size: 0.92rem;
+      line-height: 1.45;
+    }
+
+    .cta-row {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.55rem;
+      align-items: center;
+      margin-top: 1.15rem;
+    }
+
+    /* Barre d'actions mobile collante */
+    .dock {
+      display: none;
+      position: fixed;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      z-index: 40;
+      padding: 0.75rem max(1rem, env(safe-area-inset-right))
+               calc(0.75rem + var(--safe-bottom)) max(1rem, env(safe-area-inset-left));
+      background: rgba(255, 255, 255, 0.92);
+      backdrop-filter: blur(14px);
+      -webkit-backdrop-filter: blur(14px);
+      border-top: 1px solid var(--line);
+      gap: 0.5rem;
+    }
+    .dock .btn { flex: 1; }
+
+    .rapport {
+      margin-top: 1rem;
+      padding: 1rem;
+      border-radius: 12px;
+      background: #0b1220;
+      color: #e8eef8;
+      font-family: ui-monospace, Menlo, monospace;
+      font-size: 0.78rem;
+      line-height: 1.5;
+      white-space: pre-wrap;
+      max-height: min(50vh, 22rem);
+      overflow: auto;
+      -webkit-overflow-scrolling: touch;
+    }
+    .rapport:empty { display: none; }
+
+    .metrics {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 0.55rem;
+      margin-top: 0.85rem;
+    }
+    .metric {
+      padding: 0.85rem 0.9rem;
+      border-radius: 12px;
+      background: var(--sky);
+    }
+    .metric .k {
+      font-size: 0.68rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.04em;
+      color: var(--muted);
+    }
+    .metric .v {
+      font-family: var(--font-brand);
+      font-size: clamp(1rem, 4vw, 1.2rem);
+      font-weight: 700;
+      margin-top: 0.2rem;
+      word-break: break-word;
+    }
+
+    .gate { display: none; }
+    .gate.on { display: block; }
+
+    footer.note {
+      margin-top: 2rem;
+      font-size: 0.78rem;
+      color: var(--muted);
+      text-align: center;
+      line-height: 1.4;
+    }
+
+    /* ——— Mobile ——— */
+    @media (max-width: 720px) {
+      .grid-2 { grid-template-columns: 1fr; }
+      .metrics { grid-template-columns: 1fr; }
+      .viewport { min-height: auto; padding-top: 2rem; justify-content: flex-start; }
+      .auth-panel { width: 100%; }
+      .cta-row .btn-primary { width: 100%; }
+      .cta-row .btn-ghost { width: 100%; }
+      .step .lbl { display: none; }
+      .step { padding: 0.65rem 0.2rem; }
+      .step .n { margin: 0; font-size: 1rem; }
+      .chip { max-width: 8.5rem; }
+      .dock.on { display: flex; }
+      /* Masquer les CTA desktop uniquement dans l'espace mission */
+      .workspace.on .panel .cta-row { display: none; }
+    }
+
+    @media (min-width: 721px) {
+      .dock { display: none !important; }
+      body { background-attachment: fixed; }
+    }
+  </style>
+</head>
+<body>
+  <div class="shell">
+    <div class="viewport" id="gate-auth">
+      <h1 class="brand">Revue<span> Fiscale</span></h1>
+      <p class="tagline">Mission de revue — de la balance au passage fiscal — sur le référentiel épinglé de votre cabinet.</p>
+
+      <div class="panel auth-panel">
+        <div class="tabs" role="tablist" aria-label="Mode d'accès">
+          <button type="button" class="tab active" role="tab" aria-selected="true" id="tab-conn">Connexion</button>
+          <button type="button" class="tab" role="tab" aria-selected="false" id="tab-prov">Nouveau cabinet</button>
+        </div>
+
+        <div id="pane-conn" class="gate on" role="tabpanel">
+          <label for="email-conn">Email</label>
+          <input id="email-conn" type="email" inputmode="email" autocomplete="username" value="admin@demo.local" />
+          <label for="mdp-conn">Mot de passe</label>
+          <input id="mdp-conn" type="password" autocomplete="current-password" value="demo-demo1" />
+          <div class="cta-row">
+            <button type="button" class="btn btn-primary btn-block" id="btn-conn">Entrer</button>
+          </div>
+        </div>
+
+        <div id="pane-prov" class="gate" role="tabpanel" hidden>
+          <label for="denom">Nom du cabinet</label>
+          <input id="denom" value="Cabinet Démo" />
+          <label for="email-prov">Email administrateur</label>
+          <input id="email-prov" type="email" inputmode="email" value="admin@demo.local" />
+          <label for="mdp-prov">Mot de passe</label>
+          <input id="mdp-prov" type="password" value="demo-demo1" />
+          <div class="cta-row">
+            <button type="button" class="btn btn-primary btn-block" id="btn-prov">Créer le cabinet</button>
+          </div>
+        </div>
+        <p class="status" id="auth-status" role="status"></p>
+      </div>
+    </div>
+
+    <div class="workspace" id="workspace" hidden>
+      <div class="topbar">
+        <div class="brand-mini">Revue<span> Fiscale</span></div>
+        <div class="topbar-actions">
+          <span class="chip" id="session-chip">Session</span>
+          <button type="button" class="btn btn-ghost btn-sm" id="btn-logout" aria-label="Déconnexion">Sortir</button>
+        </div>
+      </div>
+
+      <div class="progress" aria-hidden="true"><i id="progress-bar"></i></div>
+      <nav class="steps" aria-label="Étapes de la mission">
+        <div class="step active" data-s="1"><span class="n">1</span><span class="lbl">Client</span></div>
+        <div class="step" data-s="2"><span class="n">2</span><span class="lbl">Mission</span></div>
+        <div class="step" data-s="3"><span class="n">3</span><span class="lbl">Balance</span></div>
+        <div class="step" data-s="4"><span class="n">4</span><span class="lbl">Résultat</span></div>
+      </nav>
+
+      <div class="panel" id="step-panel">
+        <div id="s1">
+          <h2 class="section-title">Contribuable</h2>
+          <p class="section-sub">Le client de votre cabinet pour cette mission.</p>
+          <label for="contrib-nom">Dénomination</label>
+          <input id="contrib-nom" value="Société Démo CI" />
+          <div class="cta-row desktop-only">
+            <button type="button" class="btn btn-primary" data-next="2">Continuer</button>
+          </div>
+        </div>
+
+        <div id="s2" class="gate" hidden>
+          <h2 class="section-title">Paramètres de mission</h2>
+          <p class="section-sub">Profil et exercice. Le référentiel publié sera épinglé à la création.</p>
+          <div class="grid-2">
+            <div>
+              <label for="exercice">Exercice</label>
+              <input id="exercice" type="number" inputmode="numeric" value="2025" />
+            </div>
+            <div>
+              <label for="regime">Régime</label>
+              <input id="regime" value="reel" />
+            </div>
+          </div>
+          <label for="forme">Forme juridique</label>
+          <input id="forme" value="SA" />
+          <div class="grid-2">
+            <div>
+              <label for="secteur">Secteur</label>
+              <input id="secteur" value="services" />
+            </div>
+            <div>
+              <label for="type-entite">Type d'entité</label>
+              <input id="type-entite" placeholder="ex. sa, obnl, startup" />
+            </div>
+          </div>
+          <label><input type="checkbox" id="cross-border" /> Opérations cross-border</label>
+          <div class="cta-row desktop-only">
+            <button type="button" class="btn btn-ghost" data-back="1">Retour</button>
+            <button type="button" class="btn btn-primary" data-next="3">Continuer</button>
+          </div>
+        </div>
+
+        <div id="s3" class="gate" hidden>
+          <h2 class="section-title">Balance SYSCOHADA</h2>
+          <p class="section-sub">JSON équilibré (débit = crédit). Contrôles bloquants avant calcul.</p>
+          <label for="balance">Lignes (JSON)</label>
+          <textarea id="balance" spellcheck="false">{
+  "lignes": [
+    {"compte": "7011", "libelle": "Ventes", "debit": "0", "credit": "1000000000"},
+    {"compte": "6582", "libelle": "Dons", "debit": "150000000", "credit": "0"},
+    {"compte": "622", "libelle": "Honoraires", "debit": "50000000", "credit": "0"},
+    {"compte": "6011", "libelle": "Achats", "debit": "600000000", "credit": "0"},
+    {"compte": "5121", "libelle": "Banque", "debit": "200000000", "credit": "0"}
+  ]
+}</textarea>
+          <label for="balance-file">Ou fichier CSV / Excel (.xlsx)</label>
+          <input id="balance-file" type="file" accept=".csv,.tsv,.txt,.xlsx,.xlsm" />
+          <p class="hint">Échantillon : <code>fixtures/balance_demo.csv</code></p>
+          <div class="cta-row desktop-only">
+            <button type="button" class="btn btn-ghost" data-back="2">Retour</button>
+            <button type="button" class="btn btn-primary" id="btn-run">Lancer la revue</button>
+          </div>
+        </div>
+
+        <div id="s4" class="gate" hidden>
+          <h2 class="section-title">Restitution</h2>
+          <p class="section-sub">Passage comptable / fiscal et rapport.</p>
+          <div class="metrics" id="metrics"></div>
+          <p class="status" id="mission-status" role="status"></p>
+          <div class="rapport" id="rapport"></div>
+          <div class="cta-row" id="export-row" hidden>
+            <a class="btn btn-ghost" id="btn-docx" href="#">Word</a>
+            <a class="btn btn-ghost" id="btn-pdf" href="#">PDF</a>
+            <button type="button" class="btn btn-ghost" id="btn-audit">Audit</button>
+          </div>
+          <pre class="rapport" id="audit-box" hidden></pre>
+          <div class="cta-row desktop-only">
+            <button type="button" class="btn btn-ghost" id="btn-restart">Nouvelle mission</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <footer class="note">CGI Côte d'Ivoire · calcul déterministe · isolation multi-cabinets</footer>
+  </div>
+
+  <!-- Dock mobile -->
+  <div class="dock" id="dock" aria-label="Actions">
+    <button type="button" class="btn btn-ghost" id="dock-back">Retour</button>
+    <button type="button" class="btn btn-primary" id="dock-next">Continuer</button>
+  </div>
+
+  <script>
+    const API = location.origin.includes("8000") ? location.origin : "http://localhost:8000";
+    let jeton = null;
+    let tenantId = null;
+    let step = 1;
+
+    const $ = (id) => document.getElementById(id);
+
+    function setStatus(el, msg, err = false) {
+      el.textContent = msg || "";
+      el.classList.toggle("err", !!err);
+    }
+
+    async function api(path, opts = {}) {
+      const headers = Object.assign({ "Content-Type": "application/json" }, opts.headers || {});
+      if (jeton) headers["Authorization"] = "Bearer " + jeton;
+      const res = await fetch(API + path, { ...opts, headers });
+      const text = await res.text();
+      let data;
+      try { data = text ? JSON.parse(text) : null; } catch { data = { detail: text }; }
+      if (!res.ok) {
+        const detail = data && data.detail != null
+          ? (typeof data.detail === "string" ? data.detail : JSON.stringify(data.detail))
+          : res.statusText;
+        throw new Error(detail);
+      }
+      return data;
+    }
+
+    function showTab(name) {
+      const conn = name === "conn";
+      $("tab-conn").classList.toggle("active", conn);
+      $("tab-prov").classList.toggle("active", !conn);
+      $("tab-conn").setAttribute("aria-selected", String(conn));
+      $("tab-prov").setAttribute("aria-selected", String(!conn));
+      $("pane-conn").classList.toggle("on", conn);
+      $("pane-prov").classList.toggle("on", !conn);
+      $("pane-conn").hidden = !conn;
+      $("pane-prov").hidden = conn;
+    }
+    $("tab-conn").onclick = () => showTab("conn");
+    $("tab-prov").onclick = () => showTab("prov");
+
+    function apresAuth(data) {
+      jeton = data.jeton;
+      tenantId = data.tenant_id;
+      $("gate-auth").hidden = true;
+      $("gate-auth").style.display = "none";
+      $("workspace").hidden = false;
+      $("workspace").classList.add("on");
+      $("session-chip").textContent = (data.email || "session") + " · #" + tenantId;
+      setStep(1);
+      setStatus($("auth-status"), "");
+    }
+
+    $("btn-prov").onclick = async () => {
+      try {
+        const data = await api("/api/v1/provisionnement", {
+          method: "POST",
+          body: JSON.stringify({
+            denomination: $("denom").value,
+            type_tenant: "cabinet",
+            palier: "standard",
+            email_admin: $("email-prov").value,
+            mot_de_passe_admin: $("mdp-prov").value,
+            creer_demo: false,
+          }),
+        });
+        apresAuth({ ...data, email: data.email_admin });
+      } catch (e) { setStatus($("auth-status"), e.message, true); }
+    };
+
+    $("btn-conn").onclick = async () => {
+      try {
+        const data = await api("/api/v1/auth/connexion", {
+          method: "POST",
+          body: JSON.stringify({
+            email: $("email-conn").value,
+            mot_de_passe: $("mdp-conn").value,
+          }),
+        });
+        apresAuth(data);
+      } catch (e) { setStatus($("auth-status"), e.message, true); }
+    };
+
+    $("btn-logout").onclick = () => {
+      jeton = null;
+      tenantId = null;
+      $("workspace").classList.remove("on");
+      $("workspace").hidden = true;
+      $("gate-auth").hidden = false;
+      $("gate-auth").style.display = "";
+      $("dock").classList.remove("on");
+      showTab("conn");
+    };
+
+    function setStep(n) {
+      step = n;
+      for (let i = 1; i <= 4; i++) {
+        const el = $("s" + i);
+        const on = i === n;
+        el.classList.toggle("on", on);
+        el.hidden = !on;
+        el.style.display = on ? "block" : "none";
+      }
+      document.querySelectorAll(".step").forEach((el) => {
+        const s = Number(el.dataset.s);
+        el.classList.toggle("active", s === n);
+        el.classList.toggle("done", s < n);
+      });
+      $("progress-bar").style.width = (((n - 1) / 3) * 100) + "%";
+      syncDock();
+    }
+
+    function syncDock() {
+      const dock = $("dock");
+      const ws = $("workspace").classList.contains("on");
+      const mobile = window.matchMedia("(max-width: 720px)").matches;
+      dock.classList.toggle("on", ws && mobile);
+      const back = $("dock-back");
+      const next = $("dock-next");
+      back.style.display = step > 1 && step < 4 ? "" : (step === 4 ? "none" : "none");
+      if (step === 1) {
+        back.style.display = "none";
+        next.textContent = "Continuer";
+        next.onclick = () => setStep(2);
+      } else if (step === 2) {
+        back.style.display = "";
+        back.onclick = () => setStep(1);
+        next.textContent = "Continuer";
+        next.onclick = () => setStep(3);
+      } else if (step === 3) {
+        back.style.display = "";
+        back.onclick = () => setStep(2);
+        next.textContent = "Lancer la revue";
+        next.onclick = () => $("btn-run").click();
+      } else {
+        back.style.display = "none";
+        next.textContent = "Nouvelle mission";
+        next.onclick = () => {
+          $("rapport").textContent = "";
+          $("metrics").innerHTML = "";
+          setStatus($("mission-status"), "");
+          setStep(1);
+        };
+      }
+    }
+
+    document.querySelectorAll("[data-next]").forEach((b) => {
+      b.onclick = () => setStep(Number(b.dataset.next));
+    });
+    document.querySelectorAll("[data-back]").forEach((b) => {
+      b.onclick = () => setStep(Number(b.dataset.back));
+    });
+    $("btn-restart") && ($("btn-restart").onclick = () => {
+      $("rapport").textContent = "";
+      $("metrics").innerHTML = "";
+      setStatus($("mission-status"), "");
+      setStep(1);
+    });
+
+    window.addEventListener("resize", syncDock);
+
+    $("btn-run").onclick = async () => {
+      const st = $("mission-status");
+      const rapport = $("rapport");
+      const metrics = $("metrics");
+      rapport.textContent = "";
+      metrics.innerHTML = "";
+      try {
+        setStep(4);
+        setStatus(st, "Création du contribuable…");
+        const contrib = await api("/api/v1/contribuables", {
+          method: "POST",
+          body: JSON.stringify({ denomination: $("contrib-nom").value }),
+        });
+        setStatus(st, "Création de la mission…");
+        const profil = {
+          regime: $("regime").value,
+          forme_juridique: $("forme").value,
+        };
+        if ($("secteur").value) profil.secteur = $("secteur").value;
+        if ($("type-entite").value) profil.type_entite = $("type-entite").value;
+        if ($("cross-border").checked) profil.cross_border = true;
+        const mission = await api("/api/v1/missions", {
+          method: "POST",
+          body: JSON.stringify({
+            contribuable_id: contrib.id,
+            exercice: Number($("exercice").value),
+            profil,
+          }),
+        });
+        setStatus(st, "Import de la balance…");
+        const fichier = $("balance-file").files && $("balance-file").files[0];
+        if (fichier) {
+          const fd = new FormData();
+          fd.append("fichier", fichier);
+          const res = await fetch(API + "/api/v1/missions/" + mission.id + "/balance", {
+            method: "POST",
+            headers: jeton ? { Authorization: "Bearer " + jeton } : {},
+            body: fd,
+          });
+          const text = await res.text();
+          let data;
+          try { data = text ? JSON.parse(text) : null; } catch { data = { detail: text }; }
+          if (!res.ok) throw new Error((data && data.detail) || res.statusText);
+        } else {
+          await api("/api/v1/missions/" + mission.id + "/balance", {
+            method: "POST",
+            body: JSON.stringify(JSON.parse($("balance").value)),
+          });
+        }
+        setStatus(st, "Exécution du moteur…");
+        await api("/api/v1/missions/" + mission.id + "/executer", {
+          method: "POST",
+          body: JSON.stringify({ reponses: {} }),
+        });
+        setStatus(st, "Restitution…");
+        const rest = await api("/api/v1/missions/" + mission.id + "/restitution");
+        $("progress-bar").style.width = "100%";
+        metrics.innerHTML =
+          '<div class="metric"><div class="k">Réintégrations</div><div class="v">' + fmt(rest.passage.total_reintegration) + "</div></div>" +
+          '<div class="metric"><div class="k">Déductions</div><div class="v">' + fmt(rest.passage.total_deduction) + "</div></div>" +
+          '<div class="metric"><div class="k">Mission</div><div class="v">#' + mission.id + "</div></div>";
+        setStatus(st, "Terminé — exécution " + (rest.execution_id ?? "—"));
+        rapport.textContent = rest.rapport_markdown;
+        const base = API + "/api/v1/missions/" + mission.id + "/restitution/rapport";
+        $("btn-docx").href = base + ".docx";
+        $("btn-pdf").href = base + ".pdf";
+        $("export-row").hidden = false;
+        $("btn-audit").onclick = async () => {
+          const audit = await api("/api/v1/missions/" + mission.id + "/audit");
+          $("audit-box").hidden = false;
+          const synth = audit.synthese
+            ? "Synthèse : " + audit.synthese.total + " entrée(s) — " +
+              Object.entries(audit.synthese.par_action || {})
+                .map(([a, n]) => a + "=" + n)
+                .join(", ") +
+              "\n" + (audit.synthese.note || "") + "\n\n"
+            : "";
+          $("audit-box").textContent =
+            synth + JSON.stringify(audit.entrees, null, 2);
+        };
+        // Auth header for download links via fetch blob
+        for (const id of ["btn-docx", "btn-pdf"]) {
+          $(id).onclick = async (ev) => {
+            ev.preventDefault();
+            const url = $(id).href;
+            const res = await fetch(url, { headers: jeton ? { Authorization: "Bearer " + jeton } : {} });
+            if (!res.ok) throw new Error("export impossible");
+            const blob = await res.blob();
+            const a = document.createElement("a");
+            a.href = URL.createObjectURL(blob);
+            a.download = id === "btn-docx" ? "rapport.docx" : "rapport.pdf";
+            a.click();
+          };
+        }
+        syncDock();
+      } catch (e) {
+        setStatus(st, e.message, true);
+        syncDock();
+      }
+    };
+
+    function fmt(v) {
+      try { return new Intl.NumberFormat("fr-FR").format(Number(v)); }
+      catch { return String(v); }
+    }
+
+    setStep(1);
+    $("workspace").classList.remove("on");
+    $("workspace").hidden = true;
+  </script>
+</body>
+</html>

@@ -1,0 +1,62 @@
+---
+description: Frontend — application cabinet et console éditoriale
+globs: ["**/*.ts", "**/*.tsx"]
+alwaysApply: false
+---
+
+# Frontend — conventions
+
+React 18 · TypeScript strict · Vite · TanStack Query.
+
+**Deux applications distinctes** : `frontend/app/` pour les cabinets abonnés,
+`frontend/admin/` pour la console éditoriale 2AàZ. Elles ne partagent que la bibliothèque de
+composants. Un écran éditorial ne doit jamais être atteignable depuis l'application cabinet.
+
+## Règles
+
+- `strict: true`. Pas de `any` : `unknown` puis rétrécissement.
+- Types générés depuis le schéma de l'API, jamais recopiés.
+- **Le front ne calcule aucun montant fiscal.** Il affiche et collecte.
+- État serveur via TanStack Query, jamais dupliqué localement.
+- Pas d'export par défaut sauf pour une page.
+
+## Parcours de mission — six écrans
+
+1. Cadrage et profil — **bloquant**, rien ne démarre sans profil validé
+2. Import et fiabilisation — le rapport d'anomalies s'affiche avant de continuer
+3. Analyse par impôt
+4. Questionnement — questions typées, enchaînement conditionnel
+5. Synthèse des risques — hiérarchisée et chiffrée
+6. Rapport de mission
+
+## Version du référentiel
+
+Chaque mission affiche la **version de référentiel épinglée** avec laquelle elle tourne, et signale
+qu'une version plus récente est disponible — sans jamais l'appliquer d'office.
+
+## Infobulles pédagogiques
+
+Tout chiffre, indicateur, terme technique et widget porte une infobulle en trois niveaux :
+définition, interprétation de la valeur, recommandation.
+
+**Le frontend n'écrit aucun texte pédagogique.** Définitions, seuils et gabarits viennent du
+référentiel via l'API — une infobulle qui interprète un chiffre fiscal est une règle fiscale, elle
+ne vit pas dans un composant React.
+
+Survol ou appui → bulle courte, deux lignes maximum. Clic → panneau latéral avec les trois niveaux,
+l'article fondateur et les renvois. Sur tactile, pastille explicitement tapable : il n'y a pas de
+survol. Le ton (neutre, attention, alerte, opportunité) est annoncé par une icône et un libellé,
+jamais par la seule couleur.
+
+Un chiffre affiché sans infobulle est un défaut. Voir @docs/10-pedagogie-infobulles.md
+
+## Propositions du copilote
+
+Visuellement distinctes des conclusions du moteur, avec leur source, et trois actions explicites :
+accepter, corriger, rejeter. Jamais d'application automatique.
+
+## Console éditoriale
+
+Saisie d'une règle avec validation de syntaxe en direct · file de propositions du copilote ·
+prévisualisation de l'effet d'une modification · publication d'une version · suivi des
+contestations remontées par les cabinets.

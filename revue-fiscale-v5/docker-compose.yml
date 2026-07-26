@@ -1,0 +1,88 @@
+# Compose local « prod-like » ZenAPI : PostgreSQL + API (FastAPI).
+# Dev quotidien sans image : `make db-up` + `make dev` (db seule).
+# Prod-like : `docker compose up -d --build`  — voir docs/20-deploiement.md
+#
+# Ne pas committer de secrets. Copier .env.example → .env avant le premier up.
+
+services:
+  db:
+    image: postgres:16-alpine
+    environment:
+      POSTGRES_USER: ${POSTGRES_USER:-postgres}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-postgres}
+      POSTGRES_DB: ${POSTGRES_DB:-revue_fiscale}
+    ports:
+      # 5433 côté hôte : évite le conflit avec un PostgreSQL local déjà sur 5432
+      - "${POSTGRES_HOST_PORT:-5433}:5432"
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U postgres -d revue_fiscale"]
+      interval: 5s
+      timeout: 5s
+      retries: 10
+      start_period: 5s
+    restart: unless-stopped
+
+  api:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    ports:
+      - "${API_HOST_PORT:-8000}:8000"
+    env_file:
+      - .env
+    environment:
+      # URLs internes au réseau compose (écrasent localhost:5433 du .env hôte)
+      DATABASE_URL: postgresql+psycopg://app_revue:${APP_DB_PASSWORD:-changeme}@db:5432/${POSTGRES_DB:-revue_fiscale}
+      DATABASE_URL_ADMIN: postgresql+psycopg://${POSTGRES_USER:-postgres}:${POSTGRES_PASSWORD:-postgres}@db:5432/${POSTGRES_DB:-revue_fiscale}
+      ENV: ${ENV:-prod}
+      SECRET_KEY: ${SECRET_KEY:-changeme-en-production}
+      ALLOW_PUBLIC_PROVISIONING: ${ALLOW_PUBLIC_PROVISIONING:-false}
+      POSTGRES_USER: ${POSTGRES_USER:-postgres}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-postgres}
+      POSTGRES_DB: ${POSTGRES_DB:-revue_fiscale}
+      DB_HOST: db
+      DB_PORT: "5432"
+      MIGRATE_ON_START: ${MIGRATE_ON_START:-1}
+    volumes:
+      # Domaine abonné — pièces jointes mission (persistance hors conteneur)
+      - pieces_data:/app/var/pieces
+    depends_on:
+      db:
+        condition: service_healthy
+    healthcheck:
+      test: ["CMD", "curl", "-fsS", "http://127.0.0.1:8000/sante"]
+      interval: 15s
+      timeout: 5s
+      retries: 5
+      start_period: 45s
+    restart: unless-stopped
+
+  # Optionnel : charger le référentiel YAML après un up réussi
+  # Usage : docker compose --profile seed run --rm seed
+  seed:
+    profiles: ["seed"]
+    build:
+      context: .
+      dockerfile: Dockerfile
+    env_file:
+      - .env
+    environment:
+      DATABASE_URL: postgresql+psycopg://app_revue:${APP_DB_PASSWORD:-changeme}@db:5432/${POSTGRES_DB:-revue_fiscale}
+      ENV: ${ENV:-prod}
+      SECRET_KEY: ${SECRET_KEY:-changeme-en-production}
+      MIGRATE_ON_START: "0"
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-postgres}
+      DB_HOST: db
+    depends_on:
+      db:
+        condition: service_healthy
+      api:
+        condition: service_healthy
+    entrypoint: ["python", "-m", "backend.scripts.seed_referentiel"]
+    restart: "no"
+
+volumes:
+  pgdata:
+  pieces_data:

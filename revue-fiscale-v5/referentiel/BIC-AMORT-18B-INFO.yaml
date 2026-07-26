@@ -1,0 +1,35 @@
+reference_source: CGI 2026 — doc client 2/5 format pivot (propositions metier)
+date_effet: '2026-01-01'
+effets_croises: []
+identifiant: BIC-AMORT-18B-INFO
+impot: BIC
+reference_legale: CGI 2026, art. 18 B 1°
+profils_applicables:
+- Entreprises au reel — materiel informatique
+comptes_declencheurs:
+- '681'
+nature: temporaire
+condition_declenchement: solde(681) > 0 et reponse(q_duree_ok) = faux
+conditions_fond: Duree d amortissement informatique entre 2 et 5 ans.
+formule_plafonnement: sans objet
+questions_generees:
+- id: q_duree_comptable
+  texte: Duree comptable (annees) ?
+  type: montant
+- id: q_duree_ok
+  texte: Duree comprise entre 2 et 5 ans ?
+  type: booleen
+resultat: solde(681)
+niveau_risque: moyen
+a_confirmer:
+- date d effet
+- fraction recalculee vs dotation entiere
+cas_test:
+  soldes:
+    '681': '5000000'
+  agregats: {}
+  reponses:
+    q_duree_ok: false
+    q_duree_comptable: '1'
+  declenche_attendu: true
+  montant_attendu: '5000000'

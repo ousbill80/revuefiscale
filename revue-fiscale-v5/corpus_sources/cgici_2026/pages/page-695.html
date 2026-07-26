@@ -1,0 +1,356 @@
+<!DOCTYPE HTML><HTML><HEAD><META HTTP-EQUIV="Content-Type" CONTENT="text/html; charset=UTF-8">
+<TITLE>Code des impots -304</TITLE><LINK REL="STYLESHEET" HREF="/cicgi.css" CHARSET="ISO-8859-1" TYPE="text/css">
+<style type="text/css">
+body {margin-left: 5px;	margin-top: 0px; margin-right: .5em;margin-bottom: 0px;background-color:#fafafa ;}
+.Liste-Numerote {font-size: 12pt;font-weight: regular;font-style: italic;color: #000000;text-transform: none;margin-left:8px ;margin-bottom:8px ;margin-top:4px ;margin-right:10px ;font-family:Georgia, "Times New Roman", Times, serif}
+li {list-style-type: none; margin-left:0px ; padding-left:0em ; }
+.Paratext {font-size: 12pt;font-weight: regular;font-style: italic;color: #000000;text-decoration: none;vertical-align: baseline;text-transform: none;margin-left:0px ;font-family:Georgia, "Times New Roman", Times, serif}
+.Normal {font-size: 12pt;font-weight: regular;font-style: italic;color: #000000;text-decoration: none;vertical-align: baseline;text-transform: none;margin-left:0px ;font-family:Georgia, "Times New Roman", Times, serif}
+ul {list-style-type: none; margin-left:0px ; padding-left:0em ;  }
+.Liste2-Enumeree {font-size: 12pt;font-weight: regular;font-style: italic;color: #000000;text-decoration: none;vertical-align: baseline;text-transform: none;list-style-type:none ;margin-left:16px ;margin-bottom:8px;margin-right:10px;font-family:Georgia, "Times New Roman", Times, serif}
+P.Liste2-Enumeree {font-size: 12pt;font-weight: regular;font-style: italic;color: #000000;text-decoration: none;vertical-align: baseline;text-transform: none;list-style-type:none ;margin-left:16px ;margin-bottom:8px;margin-right:10px;font-family:Georgia, "Times New Roman", Times, serif}
+.Entete {font-size: 13pt;font-weight: regular;font-style: italic;color:#000000 ;text-decoration: none;vertical-align: baseline;text-transform: none;margin-left:8px ;font-family:Georgia, "Times New Roman", Times, serif}
+table, TABLE {border-width:1px; width:99% ;border-collapse:collapse;border-color: #9ecaed;box-shadow: 0 0 10px #9ecaed;}
+tr,td {text-align:left;vertical-align:bottom;border:1px solid #9ecaed;padding:.2em;marging-left:.2em}
+th, TH{text-align:center;vertical-align:middle;padding:.2em;}
+P.TableauEntete {font-size: 13pt;font-weight: regular;font-style: italic;color: #000000;font-family:Georgia, "Times New Roman"}
+P.TableauCelluleLeft, P.TableauCellule {text-align:right;margin-right:1em;font-size: 13pt;font-weight: regular;font-style: italic;color: #000000;font-family:Georgia, "Times New Roman"}
+P.TableauCelluleRight {text-align:left;margin-left:1em;font-size: 13pt;font-weight: regular;font-style: italic;color: #000000;font-family:Georgia, "Times New Roman"}
+.ui-buttonh {padding: .1em .1em ; border: 1px solid #dadada;border-radius: 4px; box-shadow: 0 0 4px #9ecaed;color:#FF3300 ;margin-left:8px ;margin-right:8px ;margin-bottom:2px ;margin-top:2px ;text-decoration:none ;font-size:12pt ;font-family:"Times New Roman"}   
+.ui-button {padding: .1em .1em ; border: 1px solid #dadada;border-radius: 4px; box-shadow: 0 0 4px #9ecaed;color:#FF3300 ;margin-left:8px ;margin-right:8px ;margin-bottom:2px ;margin-top:2px ;text-decoration:none ;font-size:12pt ;font-family:"Times New Roman"}   
+H3 {display: block;text-align: center;text-indent: 0pt;margin-top: 10pt;margin-bottom: 10pt;margin-right: 10pt;margin-left: 10pt;font-size: 12pt;font-weight: Bold;font-style: Regular;color: #00A000;text-decoration: none;vertical-align: baseline;text-transform: none;font-family: "Times New Roman";}
+H4 {display: block;text-align: left;text-indent: 0pt;margin-top: 10pt;margin-bottom: 6pt;margin-right: 10pt;margin-left: 10pt;font-size: 12pt;font-weight: Bold;font-style: Regular;color: #000000;text-decoration: none;vertical-align: baseline;text-transform: none;font-family: "Times New Roman";}
+H5 {display: block;text-align: left;text-indent: 0pt;margin-top: 10pt;margin-bottom: 6pt;margin-right: 10pt;margin-left: 10pt;font-size: 11pt;font-weight: Bold;font-style: Regular;color: #000000;text-decoration: none;vertical-align: baseline;text-transform: none;font-family: "Times New Roman";}
+H6.NoArticle {display: block;text-align: left;text-indent: 0pt;margin-top: 14pt;margin-bottom: 0pt;margin-right: 0pt;margin-left: 0pt;font-size: 14pt;font-weight: regular;font-style: Regular;color: #00a000;text-decoration: none;vertical-align: baseline;text-transform: none;font-family: "Times New Roman";}
+H2 {text-align:center;font-size:16pt;font-family:Georgia, "Times New Roman", Times, serif}
+P.ParaText {font-size: 12pt;font-weight: regular;font-style: italic;color: #000000;	text-decoration: none;vertical-align: baseline;text-transform: none;font-family:Georgia, "Times New Roman", Times, serif;}
+H2.Section,P.Section {font-size:12pt;font-weight:bold;font-style:Regular;color:#008000;font-family:Georgia,"Times New Roman"}
+P.Paragraphe, p.Paragraphe {Text-Align:center;Text-decoration:none;font-size:12pt;font-weight:bold;font-style:Normal;color:#00A000;font-family:Georgia,"Times New Roman"}
+H2.Livre,P.Livre {text-align:center;font-size:16pt;font-weight:bold;font-style:Regular;color:#008000;font-family:Georgia,"Times New Roman"}
+P.Partie,H2.Partie,P.TitreSub {text-align:center;font-size:14pt;font-weight:bold;font-style:Regular;color:#008000;font-family:Georgia,"Times New Roman"}
+H2.ChapitreNo,H2.TitreNo {text-align:center;font-size:14pt;font-weight:bold;font-style:Regular;color:#008000;font-family:Georgia,"Times New Roman"}
+H2.Chapitre, h2.Chapitre {text-align:center;font-size:14pt;font-weight:bold;font-style:Regular;color:#008000;font-family:Georgia,"Times New Roman"}
+H2.TitreNo {text-align:center;font-size:14pt;font-weight:bold;font-style:Regular;color:#008000;font-family:Georgia,"Times New Roman"}
+h3.Sous-Section, H3.Sous-Section, h3.Sous-section, h2.Section {font-size:12pt;font-weight:bold;font-style:Italic;color:#008000;font-family:Georgia,"Times New Roman"}
+hr,HR { display: block; width:90%;  margin-top: 0.5em; margin-bottom: 0.5em; margin-left: auto;  margin-right: auto;  border-style: inset; border-width: 1px;}
+P.TitreSub {text-align:center;font-size:14pt;font-weight:bold;font-style:Regular;color:#008000;font-family:Georgia,"Times New Roman"}
+.Reference {display: block;text-align: left;text-indent: 0pt;margin-top: 10pt;margin-bottom: 6pt;margin-right: 10pt;margin-left: 10pt;font-size: 14pt;font-weight: Bold;font-style: Regular;color: #7F5434;text-decoration: none;vertical-align: baseline;text-transform: none;font-family: "Times New Roman";}
+.ludwig,blockquote {padding-left:1em;background-color:#fafafa;font-size:12pt;font-weight:100;font-style:italic;}
+#articleList {position:absolute ;	z-index: 1 ;left: 10px ;top: 80px ;height:340px;width: 620px;border: 2px solid #cacaca ;border-radius: 5px ;background-color:#fafafa ;    box-shadow: 0 0 12px #333333;	margin-left:0px ;	padding: .3em .3em ;		overflow:hidden ;	visibility:hidden ;  }			
+#articleList h3 { text-align: center; margin: 0; }		
+
+.historique {
+  display:none ;
+  padding: .1em .3em ;
+  border: solid 2px #dadada;
+  border-radius: 7px;
+  box-shadow: 0 0 5px #9ecaed;  
+  
+}
+.histText {
+    display: block;
+    font-family: ;"Times New Roman"
+	padding: .1em .3em ;
+    margin: 1em 0px;
+	font-style:italic;
+	color:#000000;
+	overflow:auto;
+}
+.highlight {
+  font-weight:bold ;
+  color:#000000 ;
+  background-color:#FFFFCC ;
+  }
+.articleList-scroll {
+	overflow-x:hidden ;
+	overflow-y:scroll ;
+	scrollbar-width:thin ;
+	scrollbar-color:blue orange ;
+}
+
+#contenu {
+	overflow-x:hidden ;
+    overflow-y:scroll ;
+	scrollbar-width:thin ;
+	scrollbar-color:blue orange ;
+}		
+
+table, TABLE {
+ text-align:center; 
+    margin-left:.5em; 
+    margin-right:.5em; 
+    border:1px solid #000000;	
+	border-collapse:collapse ;
+    border-color: #9ecaed;
+    box-shadow: 0 0 10px #9ecaed;
+	
+   }
+  tr,td {text-align:left;}
+  
+
+
+ </style>
+ 
+<script src="/js/iscroll.js"></script>
+<script src="/js/jquery.js"></script>   
+<script src="/js/jquery-ui-1.10.3.custom.js"></script>    	    
+<script src="/js/jquery.ui.draggable.js" type="text/javascript"></script>			
+<script src="/js/jquery.ui.core.js"></script> 			
+<script src="/js/jquery.ui.widget.js"></script>			
+<script src="/js/jquery.ui.position.js"></script>			
+<script src="/js/jquery.ui.menu.js"></script>    		
+<script type="text/javascript" src="./xpages.js"></script>
+/* VERSION POUR PAGE HTML SUR SITE DGI.CGICI.COM */
+<script language="javascript">
+ function showButton(id) {
+    var x = document.getElementById(id) ;
+	if(x.style.display === "none") {
+	   x.style.display = "block" ;
+	  } else {
+	   x.style.display = "none" ;
+	   }
+	 }   
+	 var pagenumber="304";
+function loadpage(page, art) {
+      showHideHistoric(art);
+	  return false;
+	  } 
+function loadArticle(page, art) { var artno = art ;var pgno=page;scrolltoelementTag(pgno,artno) ;return false ;} 
+
+</script>
+</HEAD>
+<BODY><div ID="wrapper"><div ID="scroller">
+
+
+
+<H2 CLASS="Section">
+Section II - Renseignements sur demande</H2>
+<span id="#A5034"></span>
+<H6 CLASS="NoArticle">
+Art. 34</H6>
+<P CLASS="ParaText">
+Les Administrations de l&apos;Etat et des collectivit&eacute;s territoriales, les entreprises concessionnaires ou contr&ocirc;l&eacute;es par l&apos;Etat et les collectivit&eacute;s territoriales, ainsi que les &eacute;tablissements ou organismes de toute nature soumis au contr&ocirc;le de l&apos;autorit&eacute; administrative, doivent communiquer &agrave; l&apos;Administration, sur sa demande, les documents de service qu&apos;ils d&eacute;tiennent sans pouvoir opposer le secret professionnel.</P>
+
+<span id="#A5035"></span>
+<H6 CLASS="NoArticle">
+Art. 35</H6>
+<P CLASS="ParaText">
+Doivent communiquer sur place &agrave; l&apos;Administration leurs registres et actes :</P>
+<P CLASS="Liste2-Enumeree">
+1-Les d&eacute;positaires des registres de l&apos;&eacute;tat civil et toutes les autres personnes charg&eacute;es des archives et d&eacute;p&ocirc;ts de titres publics.</P>
+<P CLASS="Liste2-Enumeree">
+2-Les notaires, les auxiliaires de justice et les autorit&eacute;s administratives pour les actes qu&apos;ils r&eacute;digent ou re&ccedil;oivent en d&eacute;p&ocirc;t, &agrave; l&apos;exception des testaments et des autres actes de lib&eacute;ralit&eacute; &agrave; cause de mort tant que leurs auteurs sont encore en vie.</P>
+<P CLASS="ParaText">
+Cette communication peut s&apos;accompagner gratuitement de la prise d&apos;extraits et de copies.</P>
+
+<span id="#A5036"></span>
+<H6 CLASS="NoArticle">
+Art. 36</H6>
+<P CLASS="ParaText">
+La Banque Centrale des Etats de l&apos;Afrique de l&apos;Ouest, les banques, les &eacute;tablissements de cr&eacute;dit, les &eacute;tablissements financiers d&apos;une mani&egrave;re g&eacute;n&eacute;rale, et les compagnies d&apos;assurances, ne peuvent opposer le secret professionnel pour les renseignements individuels d&apos;ordre &eacute;conomique ou financier qu&apos;ils d&eacute;tiennent.</P>
+<P CLASS="ParaText">
+Ils doivent notamment communiquer &agrave; l&apos;Administration tous renseignements relatifs aux op&eacute;rations sur comptes courants et comptes titres, ouvertures de cr&eacute;dit, allocations de devises et op&eacute;rations avec l&apos;&eacute;tranger.</P>
+<P CLASS="ParaText">
+L&apos;Administration peut demander copie de tous documents notamment, relev&eacute;s de comptes, ch&egrave;ques, correspondances commerciales.</P>
+
+<span id="#A5037"></span>
+<H6 CLASS="NoArticle">
+Art. 37</H6>
+<P CLASS="ParaText">
+A l&apos;occasion de toute instance devant les juridictions civiles ou criminelles, le Minist&egrave;re public peut communiquer les dossiers &agrave; l&apos;Administration.</P>
+<H3 CLASS="Sous-Section">
+Personnes physiques et morales ayant la qualit&eacute; de commer&ccedil;ant et personnes assujetties &agrave; l&apos;imp&ocirc;t BIC</H3>
+
+<span id="#A5038"></span>
+<H6 CLASS="NoArticle">
+Art. 38 </H6>
+<P CLASS="ParaText"><FONT COLOR='#000000'>
+Les contribuables ayant la qualit&eacute; de commer&ccedil;ant doivent communiquer &agrave; l&apos;Administration, sur sa demande les livres dont la tenue est obligatoire en vertu des dispositions  de l&apos;Acte uniforme relatif au Droit commercial et du Syst&egrave;me comptable de l&apos;Organisation pour l&apos;Harmonisation en Afrique du Droit des Affaires, ainsi que tous les livres et documents annexes, pi&egrave;ces de recettes et de d&eacute;penses, correspondances commerciales.</FONT></P>
+<H6 CLASS="Modification">
+Loi n&deg; 2017-870 du 27 d&eacute;cembre 2017, an. fiscaleArt. 27-2.</H6>
+
+<span id="#A5039"></span>
+<H6 CLASS="NoArticle">
+Art. 39</H6>
+<P CLASS="ParaText">
+En ce qui concerne les soci&eacute;t&eacute;s, le droit de communication porte &eacute;galement sur les registres de transfert d&apos;actions et d&apos;obligations, sur les feuilles de pr&eacute;sence aux assembl&eacute;es g&eacute;n&eacute;rales, les proc&egrave;s-verbaux des conseils d&apos;Administration, et sur les rapports des commissaires aux comptes.</P>
+
+<span id="#A5040"></span>
+<H6 CLASS="NoArticle">
+Art. 40</H6>
+<P CLASS="ParaText">
+En ce qui concerne les personnes assujetties &agrave; l&apos;imp&ocirc;t sur les b&eacute;n&eacute;fices industriels et commerciaux et &agrave; l&apos;imp&ocirc;t sur les b&eacute;n&eacute;fices agricoles qui n&apos;ont pas la qualit&eacute; de commer&ccedil;ant, le droit de communication porte sur les livres et documents dont la tenue est obligatoire en vertu du Code g&eacute;n&eacute;ral des Imp&ocirc;ts ou en vertu des r&egrave;glements dont elles rel&egrave;vent.</P>
+
+<span id="#A5041"></span>
+<H6 CLASS="NoArticle">
+Art. 41</H6>
+<P CLASS="ParaText">
+Sur demande de l&apos;Administration, les personnes vis&eacute;es aux articles <a class='ui-button' href='' onclick="loadArticle('304','5038');return false;">38</a> et suivants sont tenues, dans un d&eacute;lai de trente jours, de communiquer les soldes des comptes clients, fournisseurs, d&eacute;biteurs et cr&eacute;diteurs divers ouverts dans leurs &eacute;critures.</P>
+<P CLASS="ParaText">
+Sur sa demande, elles sont &eacute;galement tenues d&apos;adresser dans le m&ecirc;me d&eacute;lai, le relev&eacute; d&eacute;taill&eacute; des op&eacute;rations r&eacute;alis&eacute;es avec leurs clients, fournisseurs, d&eacute;biteurs et cr&eacute;diteurs divers nomm&eacute;ment d&eacute;sign&eacute;s et pour les p&eacute;riodes indiqu&eacute;es.</P>
+
+<span id="#A5042"></span>
+<H6 CLASS="NoArticle">
+Art. 42</H6>
+<P CLASS="ParaText">
+Le d&eacute;clarant est tenu de repr&eacute;senter, &agrave; toute r&eacute;quisition du fonctionnaire charg&eacute; de l&apos;assiette de l&apos;imp&ocirc;t, tous documents comptables, inventaires, copies de lettres, pi&egrave;ces de recettes et de d&eacute;penses, de nature &agrave; justifier l&apos;exactitude des r&eacute;sultats indiqu&eacute;s dans sa d&eacute;claration.</P>
+<P CLASS="ParaText">
+Si la comptabilit&eacute; est tenue en une langue autre que la langue officielle, une traduction certifi&eacute;e par un traducteur asserment&eacute; doit &ecirc;tre repr&eacute;sent&eacute;e &agrave; toute r&eacute;quisition de l&apos;Administration.</P>
+<H3 CLASS="Sous-Section">
+Personnes exer&ccedil;ant des activit&eacute;s non commerciales</H3>
+
+<span id="#A5043"></span>
+<H6 CLASS="NoArticle">
+Art. 43</H6>
+<P CLASS="ParaText">
+Le droit de communication s&apos;exerce &agrave; l&apos;&eacute;gard des membres des professions non commerciales et des personnes qui se livrent &agrave; des activit&eacute;s non commerciales qui, r&eacute;gies par un ordre ou par un statut particulier, ou qui, sans relever d&apos;un tel ordre ou statut, interviennent dans des transactions, des prestations &agrave; caract&egrave;re juridique, financier ou comptable ou qui d&eacute;tiennent des fonds ou des biens pour le compte de tiers.</P>
+<P CLASS="ParaText">
+Il s&apos;exerce &eacute;galement &agrave; l&apos;&eacute;gard des groupements, collectivit&eacute;s et associations, m&ecirc;me &agrave; but non lucratif.</P>
+
+<span id="#A5044"></span>
+<H6 CLASS="NoArticle">
+Art. 44</H6>
+<P CLASS="ParaText">
+Les officiers publics ou minist&eacute;riels doivent &agrave; toute r&eacute;quisition de l&apos;Administration repr&eacute;senter leurs livres, registres, pi&egrave;ces de recettes, de d&eacute;penses ou de comptabilit&eacute; &agrave; l&apos;appui des &eacute;nonciations de leurs d&eacute;clarations. Ils ne peuvent opposer le secret professionnel aux demandes d&apos;&eacute;claircissements, de justifications ou de communications de documents concernant les indications de leur livre journal ou de leur comptabilit&eacute;.</P>
+<H3 CLASS="Sous-Section">
+Employeurs</P>
+
+<span id="#A5045"></span>
+<H6 CLASS="NoArticle">
+Art. 45</H6>
+<P CLASS="ParaText">
+Toute personne physique ou morale qui verse des salaires, pensions et rentes viag&egrave;res doit, pour chaque b&eacute;n&eacute;ficiaire d&apos;un paiement, communiquer &agrave; l&apos;Administration sur sa demande, les documents sur lesquels sont enregistr&eacute;s les paiements.</P>
+<H3 CLASS="Sous-Section">
+Personnes versant des honoraires et autres r&eacute;mun&eacute;rations</H3>
+
+<span id="#A5046"></span>
+<H6 CLASS="NoArticle">
+Art. 46</H6>
+<P CLASS="ParaText">
+Les personnes qui doivent souscrire la d&eacute;claration pr&eacute;vue &agrave; l&apos;article <a class='ui-button' href='' onclick="loadArticle('304','0108');return false;">108</a> du Code g&eacute;n&eacute;ral des Imp&ocirc;ts doivent tenir &agrave; la disposition de l&apos;Administration , les documents comptables permettant de conna&icirc;tre le montant des honoraires et revenus assimil&eacute;s vis&eacute;s &agrave; l&apos;article 108 susvis&eacute; qu&apos;elles versent &agrave; des tiers.</P>
+<P CLASS="ParaText">
+La m&ecirc;me obligation s&apos;impose aux personnes qui versent des r&eacute;mun&eacute;rations entrant dans le champ d&apos;application des articles <a class='ui-button' href='' onclick="loadArticle('304','0058');return false;">58</a>, <a class='ui-button' href='' onclick="loadArticle('304','0059');return false;">59</a>, <a class='ui-button' href='' onclick="loadArticle('304','0060');return false;">60</a>, <a class='ui-button' href='' onclick="loadArticle('304','0085');return false;">85</a>, <a class='ui-button' href='' onclick="loadArticle('304','0092');return false;">92</a> &agrave; <a class='ui-button' href='' onclick="loadArticle('304','0099');return false;">99</a> du Code g&eacute;n&eacute;ral des Imp&ocirc;ts.</P>
+
+<span id="#A5047"></span>
+<H6 CLASS="NoArticle">
+Art. 47</H6>
+<P CLASS="ParaText">
+Les agents immobiliers et les administrateurs de biens doivent tenir &agrave; la disposition de l&apos;Administration le registre de leurs mandats de gestion, les baux des biens dont ils assurent la gestion et les comptes d&apos;administration de chacun de leurs clients.</P>
+<H3 CLASS="Sous-Section">
+Banques, &eacute;tablissements financiers et de cr&eacute;dit, fonds commun de placement, clubs d&apos;investissement</H3>
+
+<span id="#A5048"></span>
+<H6 CLASS="NoArticle">
+Art. 48</H6>
+<P CLASS="ParaText">
+Toute personne ou soci&eacute;t&eacute;, qui fait profession de payer des int&eacute;r&ecirc;ts, dividendes, revenus et autres produits de valeurs mobili&egrave;res, ou dont la profession comporte &agrave; titre accessoire des op&eacute;rations de cette nature, est tenue de repr&eacute;senter &agrave; la demande de l&apos;Administration les livres, pi&egrave;ces et documents de nature &agrave; permettre la v&eacute;rification des sommes vers&eacute;es au titre des revenus de capitaux et valeurs mobiliers.</P>
+<P CLASS="ParaText">
+Cette obligation s&apos;&eacute;tend &eacute;galement aux soci&eacute;t&eacute;s ou compagnies, changeurs, banquiers, escompteurs, officiers publics ou minist&eacute;riels et toutes personnes, soci&eacute;t&eacute;s ou associations recevant habituellement en d&eacute;p&ocirc;t des valeurs mobili&egrave;res en vue de contr&ocirc;ler l&apos;ouverture et la cl&ocirc;ture des comptes de d&eacute;p&ocirc;t de titres, valeurs ou esp&egrave;ces, comptes d&apos;avances, comptes courants ou autres.</P>
+<H3 CLASS="Sous-Section">
+Marchands de biens et de fonds de commerce</H3>
+
+<span id="#A5049"></span>
+<H6 CLASS="NoArticle">
+Art. 49</H6>
+<P CLASS="ParaText">
+Toute personne ou soci&eacute;t&eacute; se livrant &agrave; des op&eacute;rations d&apos;interm&eacute;diaire pour l&apos;achat ou la vente des immeubles ou des fonds de commerce ou qui, habituellement, ach&egrave;te en son nom les m&ecirc;mes biens dont elle devient propri&eacute;taire en vue de les revendre, doit pr&eacute;senter aux agents de l&apos;Administration sur leur demande les documents qui leur sont prescrits par la l&eacute;gislation et notamment:</P>
+<P CLASS="Liste2-Enumeree">
+1-Souscrire une d&eacute;claration dans le d&eacute;lai d&apos;un mois, &agrave; compter du commencement des op&eacute;rations ci-dessus vis&eacute;es, aupr&egrave;s de la recette de l&apos;Enregistrement de sa r&eacute;sidence et, s&apos;il y a lieu de chacune de ses succursales ou agences.</P>
+<P CLASS="Liste2-Enumeree">
+2-Tenir deux r&eacute;pertoires &agrave; colonnes, non sujets au timbre, pr&eacute;sentant jour par jour, sans blanc ni interligne et par ordre de num&eacute;ros, tous les mandats, promesses de vente, actes translatifs de propri&eacute;t&eacute; et, d&apos;une mani&egrave;re g&eacute;n&eacute;rale, tous actes se rattachant &agrave; sa profession d&apos;interm&eacute;diaire ou &agrave; sa qualit&eacute; de propri&eacute;taire. L&apos;un des r&eacute;pertoires est affect&eacute; aux op&eacute;rations d&apos;interm&eacute;diaire et l&apos;autre, aux op&eacute;rations effectu&eacute;es en qualit&eacute; de propri&eacute;taire.</P>
+
+<DIV>
+<a name="#A5049b"></a>
+<H3 CLASS="Sous-Section">
+Registres des titres,des actionnaires et des associ&eacute;s des soci&eacute;t&eacute;s</H3>
+<H6 CLASS="NoArticle">
+Art. 49 bis</H6>
+<P CLASS="ParaText"><FONT COLOR='#000000'>
+<a name="50634993_pgfId-1042247"></a>1&deg; Les soci&eacute;t&eacute;s anonymes et les soci&eacute;t&eacute;s par actions simplifi&eacute;es doivent tenir &agrave; la disposition de l&#8216;Administration :</FONT></P>
+<P CLASS="Liste2-Enumeree"><FONT COLOR='#000000'>
+<a name="50634993_pgfId-1042215"></a>-	le registre de leurs titres nominatifs institu&eacute; par les articles 746-1 et 746-2 de l&#8216;Acte uniforme de l&#8216;OHADA sur le droit des soci&eacute;t&eacute;s commerciales et du groupement d&#8216;int&eacute;r&ecirc;t &eacute;conomique ;</FONT></P>
+<P CLASS="Liste2-Enumeree"><FONT COLOR='#000000'>
+<a name="50634993_pgfId-1042216"></a>-	un registre des titres au porteur &eacute;mis et encore en circulation, faisant notamment appara&icirc;tre l&#8216;identit&eacute; des d&eacute;tenteurs et des propri&eacute;taires de ces titres, leur nombre ainsi que leur montant. </FONT></P>
+<P CLASS="ParaText"><FONT COLOR='#000000'>
+<a name="50634993_pgfId-1042217"></a>2&deg; Les soci&eacute;t&eacute;s commerciales autres que celles vis&eacute;es au 1&deg; pr&eacute;c&eacute;dent ainsi que les soci&eacute;t&eacute;s civiles doivent tenir un registre de leurs actionnaires ou associ&eacute;s.</FONT> </P>
+<P CLASS="ParaText"><FONT COLOR='#000000'>
+<a name="50634993_pgfId-1042218"></a>3&deg; Les registres vis&eacute;s aux paragraphes 1&deg; et 2&deg; ci-dessus doivent &ecirc;tre tenus &agrave; jour de toutes les modifications intervenant dans la propri&eacute;t&eacute;, la d&eacute;tention et la r&eacute;partition des titres, parts et actions de la soci&eacute;t&eacute; et pr&eacute;sent&eacute;s &agrave; toute   r&eacute;quisition de l&#8216;Administration.</FONT></P>
+<H6 CLASS="Modification">
+<a name="50634993_pgfId-1042207"></a>Loi n&deg; 2018-984 du 28 d&eacute;cembre 2018, an. fiscaleArt. 16-3</H6>
+
+<H3 CLASS="Sous-Section">
+Registres des b&eacute;n&eacute;ficiaires effectifs des soci&eacute;t&eacute;s</H3>
+<H6 CLASS="Modification">
+<a name="50634993_pgfId-1042879"></a>Loi n&deg; 2018-984 du 28 d&eacute;cembre 2018, an. fiscaleArt. 16-4</H6>
+</DIV>
+<DIV>
+<a name="#A5049t"></a>
+<H6 CLASS="NoArticle">
+Art. 49 ter &nbsp;&nbsp;&nbsp;&nbsp; 
+<a href="#" onclick="loadpage('304','h195049t');return false;" class="ui-button"  title="Consultez l'historique">2019...</a></H6>
+
+
+<P CLASS="ParaText">
+Les soci&eacute;t&eacute;s commerciales et les soci&eacute;t&eacute;s civiles, quelles que soient leur forme et leurs activit&eacute;s, doivent tenir &agrave; la disposition de l&apos;Administration un registre de leurs b&eacute;n&eacute;ficiaires effectifs.
+ Le b&eacute;n&eacute;ficiaire effectif d&apos;une personne morale s&apos;entend de la personne physique identifi&eacute;e comme telle en application des dispositions de la l&eacute;gislation nationale relative &agrave; la lutte contre le blanchiment de capitaux et le financement du terrorisme et des Normes internationales sur la lutte contre le blanchiment de capitaux et le financement du terrorisme et la prolif&eacute;ration &eacute;dict&eacute;es par le Groupe d&apos;Action financi&egrave;re (GAFI).</P>
+<H6 CLASS="Modification">
+Loi n&deg; 2019-1080 du 18 d&eacute;cembre 2019, an. fiscale,Art. 24-2.</H6>
+<P CLASS="ParaText">
+Le registre pr&eacute;vu au paragraphe ci-dessus doit &ecirc;tre tenu &agrave; jour de toutes les modifications intervenant dans la propri&eacute;t&eacute; effective de la personne morale et pr&eacute;sent&eacute; &agrave; toute r&eacute;quisition de l&#8216;Administration.</P>
+<H6 CLASS="Modification">
+Loi n&deg; 2018-984 du 28 d&eacute;cembre 2018, an. fiscaleArt. 16-4</H6>
+</DIV>
+
+ 
+
+
+<span id="#A5050"></span>
+<H6 CLASS="NoArticle">
+Art. 50</H6>
+<P CLASS="ParaText">
+Toute personne ou soci&eacute;t&eacute; se livrant &agrave; des op&eacute;rations d&apos;exportation, est tenue de repr&eacute;senter &agrave; la demande de l&apos;Administration, tout document bancaire de nature &agrave; &eacute;tablir la preuve du paiement par l&apos;importateur &eacute;tranger des exportations d&eacute;clar&eacute;es en C&ocirc;te d&apos;Ivoire.</P>
+
+<H6 CLASS="Modification">
+Loi n<b>&deg;-</b> 2001-338 du 14 juin 2001, an. fiscale,Art. 32.</H6>
+<H3 CLASS="Sous-Section">
+Groupes de soci&eacute;t&eacute;s</H3>
+
+
+<span id="#A5050b"></span>
+<H6 CLASS="NoArticle">
+Art. 50 bis</H6>
+<P CLASS="ParaText">
+Lorsque, au cours d'une v&eacute;rification de comptabilit&eacute;, l'Administration a r&eacute;uni des &eacute;l&eacute;ments faisant pr&eacute;sumer qu'une entreprise a op&eacute;r&eacute; un transfert indirect de b&eacute;n&eacute;fices, au sens des dispositions de l'article <a class='ui-button' href='' onclick="loadArticle('304','0038');return false;">38</a> du Code g&eacute;n&eacute;ral des Imp&ocirc;ts, elle peut demander &agrave; cette entreprise des informations et documents pr&eacute;cisant :</P>
+<P CLASS="Liste2-Enumeree">
+1-La nature des relations entre cette entreprise et une ou plusieurs entreprises exploit&eacute;es  &agrave; l&apos;&eacute;tranger.</P>
+<P CLASS="Liste2-Enumeree">
+2-La m&eacute;thode de d&eacute;termination des prix des op&eacute;rations de nature industrielle, commerciale, financi&egrave;re ou de toute autre nature qu'elle effectue avec des entreprises &agrave; l&apos;&eacute;tranger et les &eacute;l&eacute;ments qui la justifient ainsi que, le cas &eacute;ch&eacute;ant, les contreparties consenties.</P>
+<P CLASS="Liste2-Enumeree">
+3-Les activit&eacute;s exerc&eacute;es par les entreprises exploit&eacute;es &agrave; l&apos;&eacute;tranger, li&eacute;es aux op&eacute;rations vis&eacute;es au 2;</P>
+<P CLASS="Liste2-Enumeree">
+4-Le traitement fiscal r&eacute;serv&eacute; aux op&eacute;rations vis&eacute;es au 2 et r&eacute;alis&eacute;es par les entreprises qu'elle exploite hors de C&ocirc;te d&apos;Ivoire ou par les entreprises &agrave; l&apos;&eacute;tranger dont elle est la filiale ou l&apos;&eacute;tablissement.</P>
+<P CLASS="ParaText">
+Les demandes de l&apos;Administration doivent &ecirc;tre pr&eacute;cises et indiquer explicitement, par nature d&apos;activit&eacute; ou par produit, le pays ou le territoire concern&eacute;, l'entreprise vis&eacute;e ainsi que, le cas &eacute;ch&eacute;ant, les montants en cause. Elles doivent, en outre, pr&eacute;ciser &agrave; l'entreprise v&eacute;rifi&eacute;e le d&eacute;lai de r&eacute;ponse qui lui est ouvert. Ce d&eacute;lai, qui ne peut &ecirc;tre inf&eacute;rieur &agrave; un mois et sup&eacute;rieur &agrave; deux mois, peut &ecirc;tre prorog&eacute; sur demande motiv&eacute;e pour une p&eacute;riode n&apos;exc&eacute;dant pas un mois.</P>
+
+<H6 CLASS="Modification">
+Ord. n<b>&deg;-</b> 2007-488 du 31 mai 2007Art. 31.</H6>
+<P CLASS="ParaText">
+Lorsque l'entreprise ne r&eacute;pond pas ou a r&eacute;pondu de fa&ccedil;on insuffisante, l'Administration lui adresse une mise en demeure pour compl&eacute;ter sa r&eacute;ponse dans un d&eacute;lai de quinze jours en pr&eacute;cisant les compl&eacute;ments de r&eacute;ponse qu'elle souhaite. </P>
+<P CLASS="ParaText">
+Si malgr&eacute; la mise en demeure, l&apos;entreprise ne r&eacute;pond pas ou r&eacute;pond de fa&ccedil;on insuffisante, l&apos;Administration effectue ses redressements en fonction des &eacute;l&eacute;ments en sa possession, la charge de la preuve contraire incombant au contribuable au cours de la proc&eacute;dure de redressement contradictoire.</P>
+
+
+<H6 CLASS="Modification">
+Ord. n<b>&deg;-</b> 2006-234 du 02 ao&ucirc;t 2006Art. 33. </H6>
+
+
+
+</div></div> <p>&nbsp;</p><p>&nbsp;</p><span class="historique" ID="h195049t">
+<div class="histText">
+<BR> <BR>Art. 49 ter Les soci&eacute;t&eacute;s commerciales et les soci&eacute;t&eacute;s civiles, quelles que soient leur forme et leurs activit&eacute;s, doivent tenir &agrave; la disposition de lAdministration un registre de leurs b&eacute;n&eacute;ficiaires effectifs. Le b&eacute;n&eacute;ficiaire effectif sentend de la personne vis&eacute;e par lalin&eacute;a 11 de larticle 1er de la loi n° 2016-992 du 14 novembre 2016 relative &agrave; la lutte contre le blanchiment de capitaux et le financement du terrorisme.<BR> <BR>Le registre pr&eacute;vu au paragraphe ci-dessus doit &ecirc;tre tenu &agrave; jour de toutes les modifications intervenant dans la propri&eacute;t&eacute; effective de la personne morale et pr&eacute;sent&eacute; &agrave; toute r&eacute;quisition de lAdministration. <BR> <BR>Loi n° 2018-984 du 28 d&eacute;cembre 2018, an. fiscaleArt. 16-4 <BR> 
+<BR><BR><BR></div></span><finh195049t>
+</div></div> <!-- wrapper -->
+	  <div id="articleList"><div id="contenu" style='height:auto; background-color:#FFFFCC'>&nbsp;</div>
+      </div><p>&nbsp;</p><p>&nbsp;</p><p>&nbsp;</p><p>&nbsp;</p><p>&nbsp;</p><p>&nbsp;</p><p>&nbsp;</p><p>&nbsp;</p><p>&nbsp;</p><p>&nbsp;</p>
+	  <p>&nbsp;</p><p>&nbsp;</p><p>&nbsp;</p><p>&nbsp;</p><p>&nbsp;</p><p>&nbsp;</p></BODY></HTML>
+	  

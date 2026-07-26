@@ -1,0 +1,320 @@
+<!DOCTYPE HTML><HTML><HEAD><META HTTP-EQUIV="Content-Type" CONTENT="text/html; charset=UTF-8">
+<TITLE>Code des impots -30</TITLE><LINK REL="STYLESHEET" HREF="/cicgi.css" CHARSET="ISO-8859-1" TYPE="text/css">
+<style type="text/css">
+body {margin-left: 5px;	margin-top: 0px; margin-right: .5em;margin-bottom: 0px;background-color:#fafafa ;}
+.Liste-Numerote {font-size: 12pt;font-weight: regular;font-style: italic;color: #000000;text-transform: none;margin-left:8px ;margin-bottom:8px ;margin-top:4px ;margin-right:10px ;font-family:Georgia, "Times New Roman", Times, serif}
+li {list-style-type: none; margin-left:0px ; padding-left:0em ; }
+.Paratext {font-size: 12pt;font-weight: regular;font-style: italic;color: #000000;text-decoration: none;vertical-align: baseline;text-transform: none;margin-left:0px ;font-family:Georgia, "Times New Roman", Times, serif}
+.Normal {font-size: 12pt;font-weight: regular;font-style: italic;color: #000000;text-decoration: none;vertical-align: baseline;text-transform: none;margin-left:0px ;font-family:Georgia, "Times New Roman", Times, serif}
+ul {list-style-type: none; margin-left:0px ; padding-left:0em ;  }
+.Liste2-Enumeree {font-size: 12pt;font-weight: regular;font-style: italic;color: #000000;text-decoration: none;vertical-align: baseline;text-transform: none;list-style-type:none ;margin-left:16px ;margin-bottom:8px;margin-right:10px;font-family:Georgia, "Times New Roman", Times, serif}
+P.Liste2-Enumeree {font-size: 12pt;font-weight: regular;font-style: italic;color: #000000;text-decoration: none;vertical-align: baseline;text-transform: none;list-style-type:none ;margin-left:16px ;margin-bottom:8px;margin-right:10px;font-family:Georgia, "Times New Roman", Times, serif}
+.Entete {font-size: 13pt;font-weight: regular;font-style: italic;color:#000000 ;text-decoration: none;vertical-align: baseline;text-transform: none;margin-left:8px ;font-family:Georgia, "Times New Roman", Times, serif}
+table, TABLE {border-width:1px; width:99% ;border-collapse:collapse;border-color: #9ecaed;box-shadow: 0 0 10px #9ecaed;}
+tr,td {text-align:left;vertical-align:bottom;border:1px solid #9ecaed;padding:.2em;marging-left:.2em}
+th, TH{text-align:center;vertical-align:middle;padding:.2em;}
+P.TableauEntete {font-size: 13pt;font-weight: regular;font-style: italic;color: #000000;font-family:Georgia, "Times New Roman"}
+P.TableauCelluleLeft, P.TableauCellule {text-align:right;margin-right:1em;font-size: 13pt;font-weight: regular;font-style: italic;color: #000000;font-family:Georgia, "Times New Roman"}
+P.TableauCelluleRight {text-align:left;margin-left:1em;font-size: 13pt;font-weight: regular;font-style: italic;color: #000000;font-family:Georgia, "Times New Roman"}
+.ui-buttonh {padding: .1em .1em ; border: 1px solid #dadada;border-radius: 4px; box-shadow: 0 0 4px #9ecaed;color:#FF3300 ;margin-left:8px ;margin-right:8px ;margin-bottom:2px ;margin-top:2px ;text-decoration:none ;font-size:12pt ;font-family:"Times New Roman"}   
+.ui-button {padding: .1em .1em ; border: 1px solid #dadada;border-radius: 4px; box-shadow: 0 0 4px #9ecaed;color:#FF3300 ;margin-left:8px ;margin-right:8px ;margin-bottom:2px ;margin-top:2px ;text-decoration:none ;font-size:12pt ;font-family:"Times New Roman"}   
+H3 {display: block;text-align: center;text-indent: 0pt;margin-top: 10pt;margin-bottom: 10pt;margin-right: 10pt;margin-left: 10pt;font-size: 12pt;font-weight: Bold;font-style: Regular;color: #00A000;text-decoration: none;vertical-align: baseline;text-transform: none;font-family: "Times New Roman";}
+H4 {display: block;text-align: left;text-indent: 0pt;margin-top: 10pt;margin-bottom: 6pt;margin-right: 10pt;margin-left: 10pt;font-size: 12pt;font-weight: Bold;font-style: Regular;color: #000000;text-decoration: none;vertical-align: baseline;text-transform: none;font-family: "Times New Roman";}
+H5 {display: block;text-align: left;text-indent: 0pt;margin-top: 10pt;margin-bottom: 6pt;margin-right: 10pt;margin-left: 10pt;font-size: 11pt;font-weight: Bold;font-style: Regular;color: #000000;text-decoration: none;vertical-align: baseline;text-transform: none;font-family: "Times New Roman";}
+H6.NoArticle {display: block;text-align: left;text-indent: 0pt;margin-top: 14pt;margin-bottom: 0pt;margin-right: 0pt;margin-left: 0pt;font-size: 14pt;font-weight: regular;font-style: Regular;color: #00a000;text-decoration: none;vertical-align: baseline;text-transform: none;font-family: "Times New Roman";}
+H2 {text-align:center;font-size:16pt;font-family:Georgia, "Times New Roman", Times, serif}
+P.ParaText {font-size: 12pt;font-weight: regular;font-style: italic;color: #000000;	text-decoration: none;vertical-align: baseline;text-transform: none;font-family:Georgia, "Times New Roman", Times, serif;}
+H2.Section,P.Section {font-size:12pt;font-weight:bold;font-style:Regular;color:#008000;font-family:Georgia,"Times New Roman"}
+P.Paragraphe, p.Paragraphe {Text-Align:center;Text-decoration:none;font-size:12pt;font-weight:bold;font-style:Normal;color:#00A000;font-family:Georgia,"Times New Roman"}
+H2.Livre,P.Livre {text-align:center;font-size:16pt;font-weight:bold;font-style:Regular;color:#008000;font-family:Georgia,"Times New Roman"}
+P.Partie,H2.Partie,P.TitreSub {text-align:center;font-size:14pt;font-weight:bold;font-style:Regular;color:#008000;font-family:Georgia,"Times New Roman"}
+H2.ChapitreNo,H2.TitreNo {text-align:center;font-size:14pt;font-weight:bold;font-style:Regular;color:#008000;font-family:Georgia,"Times New Roman"}
+H2.Chapitre, h2.Chapitre {text-align:center;font-size:14pt;font-weight:bold;font-style:Regular;color:#008000;font-family:Georgia,"Times New Roman"}
+H2.TitreNo {text-align:center;font-size:14pt;font-weight:bold;font-style:Regular;color:#008000;font-family:Georgia,"Times New Roman"}
+h3.Sous-Section, H3.Sous-Section, h3.Sous-section, h2.Section {font-size:12pt;font-weight:bold;font-style:Italic;color:#008000;font-family:Georgia,"Times New Roman"}
+hr,HR { display: block; width:90%;  margin-top: 0.5em; margin-bottom: 0.5em; margin-left: auto;  margin-right: auto;  border-style: inset; border-width: 1px;}
+P.TitreSub {text-align:center;font-size:14pt;font-weight:bold;font-style:Regular;color:#008000;font-family:Georgia,"Times New Roman"}
+.Reference {display: block;text-align: left;text-indent: 0pt;margin-top: 10pt;margin-bottom: 6pt;margin-right: 10pt;margin-left: 10pt;font-size: 14pt;font-weight: Bold;font-style: Regular;color: #7F5434;text-decoration: none;vertical-align: baseline;text-transform: none;font-family: "Times New Roman";}
+.ludwig,blockquote {padding-left:1em;background-color:#fafafa;font-size:12pt;font-weight:100;font-style:italic;}
+#articleList {position:absolute ;	z-index: 1 ;left: 10px ;top: 80px ;height:340px;width: 620px;border: 2px solid #cacaca ;border-radius: 5px ;background-color:#fafafa ;    box-shadow: 0 0 12px #333333;	margin-left:0px ;	padding: .3em .3em ;		overflow:hidden ;	visibility:hidden ;  }			
+#articleList h3 { text-align: center; margin: 0; }		
+
+.historique {
+  display:none ;
+  padding: .1em .3em ;
+  border: solid 2px #dadada;
+  border-radius: 7px;
+  box-shadow: 0 0 5px #9ecaed;  
+  
+}
+.histText {
+    display: block;
+    font-family: ;"Times New Roman"
+	padding: .1em .3em ;
+    margin: 1em 0px;
+	font-style:italic;
+	color:#000000;
+	overflow:auto;
+}
+.highlight {
+  font-weight:bold ;
+  color:#000000 ;
+  background-color:#FFFFCC ;
+  }
+.articleList-scroll {
+	overflow-x:hidden ;
+	overflow-y:scroll ;
+	scrollbar-width:thin ;
+	scrollbar-color:blue orange ;
+}
+
+#contenu {
+	overflow-x:hidden ;
+    overflow-y:scroll ;
+	scrollbar-width:thin ;
+	scrollbar-color:blue orange ;
+}		
+
+table, TABLE {
+ text-align:center; 
+    margin-left:.5em; 
+    margin-right:.5em; 
+    border:1px solid #000000;	
+	border-collapse:collapse ;
+    border-color: #9ecaed;
+    box-shadow: 0 0 10px #9ecaed;
+	
+   }
+  tr,td {text-align:left;}
+  
+
+
+ </style>
+ 
+<script src="/js/iscroll.js"></script>
+<script src="/js/jquery.js"></script>   
+<script src="/js/jquery-ui-1.10.3.custom.js"></script>    	    
+<script src="/js/jquery.ui.draggable.js" type="text/javascript"></script>			
+<script src="/js/jquery.ui.core.js"></script> 			
+<script src="/js/jquery.ui.widget.js"></script>			
+<script src="/js/jquery.ui.position.js"></script>			
+<script src="/js/jquery.ui.menu.js"></script>    		
+<script type="text/javascript" src="./xpages.js"></script>
+/* VERSION POUR PAGE HTML SUR SITE DGI.CGICI.COM */
+<script language="javascript">
+ function showButton(id) {
+    var x = document.getElementById(id) ;
+	if(x.style.display === "none") {
+	   x.style.display = "block" ;
+	  } else {
+	   x.style.display = "none" ;
+	   }
+	 }   
+	 var pagenumber="030";
+function loadpage(page, art) {
+      showHideHistoric(art);
+	  return false;
+	  } 
+function loadArticle(page, art) { var artno = art ;var pgno=page;scrolltoelementTag(pgno,artno) ;return false ;} 
+
+</script>
+</HEAD>
+<BODY><div ID="wrapper"><span ID="scroller">
+
+
+<H2 CLASS="Section">
+Section V - Obligations des employeurs et d&eacute;birentiers</H2>
+<span id="#A0124"></span>
+<H6 CLASS="NoArticle">
+Art. 124</H6>
+<P CLASS="ParaText">
+Les dispositions relatives &agrave; la d&eacute;claration d&apos;existence pr&eacute;vues par l&apos;article <a class='ui-button' href='' onClick="loadArticle('030','0436');return false;">436</a> du Code sont applicables &agrave; l&apos;imp&ocirc;t sur les traitements et salaires. </P>
+
+<H6 CLASS="Modification">
+Loi n<b>&deg;-</b> 66-37 du 7 mars 1966, annexe I, deuxi&egrave;me partie,Art. premier.</H6>
+
+<span id="#A0125"></span>
+<H6 CLASS="NoArticle">
+Art. 125</H6>
+<P CLASS="ParaText">
+Toute personne physique ou morale qui paie des sommes imposables aux b&eacute;n&eacute;ficiaires vis&eacute;s aux alin&eacute;as a) et b) du paragraphe 1<b>&deg;-</b> des articles <a class='ui-button' href='' onClick="loadArticle('030','0121');return false;">121</a> et <a class='ui-button' href='' onClick="loadArticle('030','0122');return false;">122</a> pr&eacute;c&eacute;dents est tenue d&apos;effectuer pour le compte du Tr&eacute;sor la retenue de l&apos;imp&ocirc;t.</P>
+<P CLASS="ParaText">
+Elle doit, pour chaque b&eacute;n&eacute;ficiaire d&apos;un paiement imposable, mentionner sur son livre, fichier ou autre document destin&eacute; &agrave; l&apos;enregistrement de la paie ou &agrave; d&eacute;faut, sur un livre sp&eacute;cial, la date, la nature et le montant de ce paiement y compris l&apos;&eacute;valuation des avantages en nature, le montant des retenues op&eacute;r&eacute;es, la r&eacute;f&eacute;rence du bordereau de versement pr&eacute;vu &agrave; l&apos;article <a class='ui-button' href='' onClick="loadArticle('030','0126');return false;">126</a> ci-apr&egrave;s.</P>
+<P CLASS="ParaText">
+Les documents sur lesquels sont enregistr&eacute;s les paiements et les retenues effectu&eacute;es doivent &ecirc;tre conserv&eacute;s jusqu&apos;&agrave; l&apos;expiration de la troisi&egrave;me ann&eacute;e suivant celle au titre de laquelle les retenues sont faites, ils doivent &agrave; toute &eacute;poque et sous peine de sanctions pr&eacute;vues par le Livre de Proc&eacute;dures fiscales &ecirc;tre communiqu&eacute;s, sur leur demande, aux agents de la Direction g&eacute;n&eacute;rale des Imp&ocirc;ts.</P>
+<P CLASS="ParaText">
+Les employeurs ou d&eacute;birentiers sont tenus de d&eacute;livrer &agrave; chaque b&eacute;n&eacute;ficiaire de paiement, ayant support&eacute; les retenues, une pi&egrave;ce justificative mentionnant le montant desdites retenues.</P>
+
+
+<DIV>
+<span id="#A0126"></span>
+<H6 CLASS="NoArticle">
+    Art. 126 &nbsp;&nbsp;&nbsp;&nbsp; <a href="#" onClick="loadpage('126','h23126');return false;" class="ui-button"  title="Consultez l'historique">2023...</a ></H6>
+<P CLASS="Liste2-Enumeree">
+1&deg;	Les retenues aff&eacute;rentes aux paiements effectu&eacute;s pendant un mois d&eacute;termin&eacute;, doivent &ecirc;tre vers&eacute;es &agrave; la recette des Imp&ocirc;ts dont d&eacute;pend le contribuable:</P>
+<P CLASS="Liste2-Enumeree">
+a) au plus tard le 15 du mois suivant, pour les contribuables soumis &agrave; un r&eacute;gime du r&eacute;el d&apos;imposition;</P>
+<H6 CLASS="Modification">
+Ord. n&deg; 2015-797 du 18 d&eacute;cembre 2015,Art. 16.</H6>
+<P CLASS="Liste2-Enumeree">
+b) en ce qui concerne les entreprises relevant de la Direction des grandes Entreprises ou de la Direction  des moyennes Entreprises:</P>
+<P CLASS="Liste2-Enumeree">
+-	au plus tard le 10 du mois suivant, pour les entreprises industrielles et les entreprises p&eacute;troli&egrave;res et mini&egrave;res;</P>
+<P CLASS="Liste2-Enumeree">
+-	au plus tard le 15 du mois suivant, pour les entreprises commerciales;</P>
+<P CLASS="Liste2-Enumeree">
+-	au plus tard le 20 du mois suivant, pour les entreprises prestataires de services.</P>
+<H6 CLASS="Modification">
+Ord. n&deg; 2009-382 du 26 novembre 2009, an. fiscale,Art. 24-3; loi n&deg; 2014-861 du 22 d&eacute;cembre 2014, an. fiscale,Art.12-7.</H6>
+<P CLASS="Liste2-Enumeree">
+Les versements pourront &ecirc;tre effectu&eacute;s par ch&egrave;que bancaire ou ch&egrave;que postal.</P>
+<P CLASS="Liste2-Enumeree">
+En ce qui concerne les retenues op&eacute;r&eacute;es sur les  sommes vers&eacute;es aux salari&eacute;s de l&apos;Etat, les versements seront effectu&eacute;s au moyen de bon de virement &agrave; l&apos;ordre du receveur des Imp&ocirc;ts de la Direction des grandes Entreprises.</P>
+<H6 CLASS="Modification">
+Ord. n&deg; 2006-234 du 02 ao&ucirc;t 2006, an. fiscale,Art. 23.</H6>
+<P CLASS="Liste2-Enumeree">
+2&deg;	Lorsque le montant des retenues mensuelles n&apos;exc&egrave;de pas 10 000 francs, le versement peut n&apos;&ecirc;tre effectu&eacute; que dans les quinze premiers jours des mois de juillet et de janvier pour le semestre &eacute;coul&eacute;. Si pour un mois d&eacute;termin&eacute;, le montant des retenues vient &agrave; exc&eacute;der 5 000 francs, toutes les retenues faites depuis le d&eacute;but du semestre en cours doivent &ecirc;tre vers&eacute;es dans les quinze premiers jours du mois suivant.</P>
+<H6 CLASS="Modification">
+Loi n&deg; 2014-861 du 22 d&eacute;cembre 2014, an. fiscale,Art.11.</H6>
+<P CLASS="Liste2-Enumeree">
+3&deg;	Dans le cas de cession ou de cessation d&apos;entreprise, les retenues effectu&eacute;es doivent &ecirc;tre imm&eacute;diatement vers&eacute;es.</P>
+<P CLASS="Liste2-Enumeree">
+4&deg;	En cas de d&eacute;c&egrave;s de l&apos;employeur ou du d&eacute;birentier, les retenues op&eacute;r&eacute;es doivent &ecirc;tre vers&eacute;es dans les quinze premiers jours du mois suivant celui du d&eacute;c&egrave;s.</P>
+<P CLASS="Liste2-Enumeree"><FONT COLOR='#000000'>
+5&deg;	Chaque versement est accompagné de la déclaration unique de l’impôt sur les traitements, salaires, pensions et rentes viagères et des cotisations sociales. </FONT></P>
+<P CLASS="Liste2-Enumeree"><FONT COLOR='#000000'>
+<A NAME="50618371_pgfId-1024461"></A>	Les employeurs ne seront tenus de souscrire la déclaration unique qu’après l’opérationnalisation de la plateforme dédiée à cette déclaration.</FONT></P>
+<H6 CLASS="Modification">
+<A NAME="50618371_pgfId-1124235"></A>Loi n° 2023-1000 du 18 déc. 2023, an. fiscale, art. 5.</H6>
+</DIV>
+
+
+
+<DIV>
+ <span id="#A0127"></span>
+<H6 CLASS="NoArticle">
+Art. 127 </H6>
+<P CLASS="ParaText">
+Tous particuliers et toutes soci&eacute;t&eacute;s ou associations occupant des employ&eacute;s, commis, ouvriers ou auxiliaires, moyennant traitement, salaire ou r&eacute;tribution, sont tenus de d&eacute;poser &agrave; la Direction g&eacute;n&eacute;rale des Imp&ocirc;ts, un &eacute;tat pr&eacute;sentant pour chacune des personnes qu&apos;ils ont occup&eacute;es au cours de l&apos;ann&eacute;e pr&eacute;c&eacute;dente, au plus tard :</P>
+<P CLASS="Liste2-Enumeree">
+- le 30 juin de chaque ann&eacute;e, pour les entreprises soumises &agrave; l&apos;obligation de certification de leurs comptes par un commissaire aux comptes ;</P>
+<P CLASS="Liste2-Enumeree">
+-  le 30 mai de chaque ann&eacute;e pour les autres entreprises, les particuliers et les associations. </P>
+<H6 CLASS="Modification">
+Loi n&deg; 2016-1116 du 08 d&eacute;cembre 2016, an. fiscale,Art. 18.</H6>
+<P CLASS="ParaText">
+Cet &eacute;tat comporte les indications suivantes :</P>
+<H6 CLASS="Modification">
+Loi n&deg; 2001-338 du 14 juin 2001, an. fiscale,Art.12-2&deg;; loi n&deg; 2013-908 du 26 d&eacute;cembre  2013, an. fiscale,Art. 8; loi n&deg; 2014-861 du 22 d&eacute;cembre 2014, an. fiscale,Art.12-8.</H6>
+<P CLASS="Liste2-Enumeree">
+1-	Nom, pr&eacute;noms, emploi et adresse.</P>
+<P CLASS="Liste2-Enumeree">
+2-	Montant des traitements, salaires et r&eacute;tributions pay&eacute;s, soit en argent, soit en nature pendant ladite ann&eacute;e avant et apr&egrave;s d&eacute;duction des retenues pour la retraite.</P>
+<P CLASS="Liste2-Enumeree">
+3-	Montant des retenues effectu&eacute;es au titre de l&apos;imp&ocirc;t sur les traitements et salaires, pensions et rentes viag&egrave;res.</P>
+<P CLASS="Liste2-Enumeree">
+4-	La p&eacute;riode &agrave; laquelle s&apos;appliquent les paiements lorsqu&apos;elle est inf&eacute;rieure &agrave; une ann&eacute;e.</P>
+<P CLASS="Liste2-Enumeree">
+5-	Nombre d&apos;enfants indiqu&eacute; par le contribuable comme &eacute;tant &agrave; sa charge.</P>
+<P CLASS="Liste2-Enumeree">
+
+<H6 CLASS="Modification">
+Abrog&eacute;. Ord. n&deg; 2007-488 du 31 mai 2007, an. fiscale,Art. 11-8; Ord. n&deg; 2008-381 du 18  d&eacute;cembre 2008, an. fiscale,Art.18-3/ .</H6>
+<P CLASS="Liste2-Enumeree">
+6-	Montant des indemnit&eacute;s pour frais d&apos;emploi ou de service.</P>
+<P CLASS="Liste2-Enumeree">
+<FONT COLOR='#000000'>
+<a name="50634779_pgfId-1083099"></a>7- Num&eacute;ro de la Caisse nationale de Pr&eacute;voyance sociale des salari&eacute;s.</FONT></P>
+<H6 CLASS="Modification">
+<a name="50634779_pgfId-1083161"></a>Loi n&deg; 2018 - 984 du 28 d&eacute;cembre 2018, an. fiscaleArt. 35 </H6>
+<P CLASS="ParaText">
+Les entreprises relevant de la Direction des grandes Entreprises ou de la Direction  des moyennes Entreprises  doivent produire l&apos;&eacute;tat vis&eacute; au paragraphe premier ci-dessus, aussi bien sur support papier que sur support magn&eacute;tique ou par voie d&apos;internet.</P>
+<H6 CLASS="Modification">
+loi n&deg; 2014-861 du 22 d&eacute;cembre 2014, an. fiscale,Art.12-8.</H6>
+
+<P CLASS="ParaText">
+En cas de discordances constat&eacute;es entre les informations port&eacute;es sur les diff&eacute;rents supports ci-dessus indiqu&eacute;s, celles figurant sur la version papier font foi.</P>
+<H6 CLASS="Modification">
+Ord. n&deg; 2011-121 du 22 juin 2011, an. fiscale,Art. 26-3.</H6>
+<P CLASS="Liste2-Enumeree">
+Les ordonnateurs d&eacute;l&eacute;gu&eacute;s ou sous-ordonnateurs des budgets de l&apos;Etat, des d&eacute;partements, des communes ou &eacute;tablissements publics sont tenus de fournir dans le m&ecirc;me d&eacute;lai les m&ecirc;mes renseignements concernant le personnel qu&apos;ils administrent.</P>
+<P CLASS="Liste2-Enumeree">
+Additionnellement &agrave; l&apos;&eacute;tat vis&eacute; ci-dessus, les employeurs sont tenus de fournir la liste de leurs employ&eacute;s ayant quitt&eacute; d&eacute;finitivement l&apos;entreprise, mentionnant pour chacun d&apos;eux la date du d&eacute;part, le montant du salaire d&apos;activit&eacute;, la dur&eacute;e du pr&eacute;avis et celle du cong&eacute;, la nature et le montant de toutes les r&eacute;mun&eacute;rations per&ccedil;ues &agrave; l&apos;occasion du d&eacute;part d&eacute;finitif.</P>
+<H6 CLASS="Modification">
+Loi n&deg; 86-88 du 31 Janv. 1986. an. fiscale,Art. 10.</H6>
+
+</DIV>
+
+
+<span id="#A0128"></span>
+<H6 CLASS="NoArticle">
+Art. 128</H6>
+<P CLASS="ParaText">
+En ce qui concerne les personnes r&eacute;tribu&eacute;es par un seul employeur, la d&eacute;claration pr&eacute;vue &agrave; l&apos;article pr&eacute;c&eacute;dent n&apos;est exig&eacute;e que pour celles dont les traitements, salaires ou r&eacute;tributions y compris les avantages en nature ramen&eacute;s &agrave; l&apos;ann&eacute;e exc&egrave;dent 235 000 francs.</P>
+<P CLASS="ParaText">
+La d&eacute;claration doit &ecirc;tre produite quel que soit le montant ramen&eacute; &agrave; l&apos;ann&eacute;e des r&eacute;mun&eacute;rations qui leur ont &eacute;t&eacute; vers&eacute;es, pour les personnes qui remplissent des fonctions susceptibles d&apos;&ecirc;tre exerc&eacute;es simultan&eacute;ment aupr&egrave;s de plusieurs entreprises, telles que les fonctions de membre ou secr&eacute;taire de comit&eacute; ou conseil de direction, de gestion ou de surveillance, quelle qu&apos;en soit la d&eacute;nomination, commissaire aux comptes, tr&eacute;sorier, repr&eacute;sentant de commerce, etc.</P>
+
+<span id="#A0129"></span>
+<H6 CLASS="NoArticle">
+Art. 129</H6>
+<P CLASS="ParaText">
+Tous particuliers et toutes soci&eacute;t&eacute;s ou associations payant des pensions ou rentes viag&egrave;res sont tenus, dans les conditions pr&eacute;vues &agrave; l&apos;article <a class='ui-button' href='' onClick="loadArticle('030','0127');return false;">127</a> ci-dessus, de fournir les indications relatives aux titulaires de ces pensions ou rentes, lorsqu&apos;elles d&eacute;passent 20 000 francs.</P>
+
+    <span id="#A0130"></span>
+<H6 CLASS="NoArticle">
+Art. 130</H6>
+<P CLASS="ParaText">
+Dans le cas de cession ou de cessation en totalit&eacute; ou en partie de l&apos;entreprise ou de cessation de l&apos;exercice de la profession, l&apos;&eacute;tat vis&eacute; &agrave; l&apos;article <a class='ui-button' href='' onClick="loadArticle('030','0127');return false;">127</a> ci-dessus doit &ecirc;tre produit, en ce qui concerne les r&eacute;mun&eacute;rations pay&eacute;es pendant l&apos;ann&eacute;e de la cession ou de la cessation dans un d&eacute;lai de dix jours d&eacute;termin&eacute; comme il est indiqu&eacute; aux articles <a class='ui-button' href='' onClick="loadArticle('030','0071');return false;">71</a> et <a class='ui-button' href='' onClick="loadArticle('030','0105');return false;">105</a>.</P>
+<P CLASS="ParaText">
+Il en est de m&ecirc;me de l&apos;&eacute;tat concernant les r&eacute;mun&eacute;rations vers&eacute;es au cours de l&apos;ann&eacute;e pr&eacute;c&eacute;dente s&apos;il n&apos;a pas encore &eacute;t&eacute; produit.</P>
+<P CLASS="ParaText">
+En cas de d&eacute;c&egrave;s de l&apos;employeur ou du d&eacute;birentier, la d&eacute;claration des traitements, salaires, pensions ou rentes viag&egrave;res, pay&eacute;s par le d&eacute;funt pendant l&apos;ann&eacute;e au cours de laquelle il est d&eacute;c&eacute;d&eacute;, doit &ecirc;tre souscrite par les h&eacute;ritiers dans les six mois du d&eacute;c&egrave;s. Ce d&eacute;lai ne peut toutefois s&apos;&eacute;tendre au-del&agrave; du 31 janvier de l&apos;ann&eacute;e suivante.</P>
+
+ <span class="historique" ID="h23126">
+<div class="histText">
+        Art. 126 <br>
+        <br>
+<P CLASS="Liste2-Enumeree">
+1&deg;	Les retenues aff&eacute;rentes aux paiements effectu&eacute;s pendant un mois d&eacute;termin&eacute;, doivent &ecirc;tre vers&eacute;es &agrave; la recette des Imp&ocirc;ts dont d&eacute;pend le contribuable:</P>
+<P CLASS="Liste2-Enumeree">
+a) au plus tard le 15 du mois suivant, pour les contribuables soumis &agrave; un r&eacute;gime du r&eacute;el d&apos;imposition;</P>
+<H6 CLASS="Modification">
+Ord. n&deg; 2015-797 du 18 d&eacute;cembre 2015,Art. 16.</H6>
+<P CLASS="Liste2-Enumeree">
+b) en ce qui concerne les entreprises relevant de la Direction des grandes Entreprises ou de la Direction  des moyennes Entreprises:</P>
+<P CLASS="Liste2-Enumeree">
+-	au plus tard le 10 du mois suivant, pour les entreprises industrielles et les entreprises p&eacute;troli&egrave;res et mini&egrave;res;</P>
+<P CLASS="Liste2-Enumeree">
+-	au plus tard le 15 du mois suivant, pour les entreprises commerciales;</P>
+<P CLASS="Liste2-Enumeree">
+-	au plus tard le 20 du mois suivant, pour les entreprises prestataires de services.</P>
+<H6 CLASS="Modification">
+Ord. n&deg; 2009-382 du 26 novembre 2009, an. fiscale,Art. 24-3; loi n&deg; 2014-861 du 22 d&eacute;cembre 2014, an. fiscale,Art.12-7.</H6>
+<P CLASS="Liste2-Enumeree">
+Les versements pourront &ecirc;tre effectu&eacute;s par ch&egrave;que bancaire ou ch&egrave;que postal.</P>
+<P CLASS="Liste2-Enumeree">
+En ce qui concerne les retenues op&eacute;r&eacute;es sur les  sommes vers&eacute;es aux salari&eacute;s de l&apos;Etat, les versements seront effectu&eacute;s au moyen de bon de virement &agrave; l&apos;ordre du receveur des Imp&ocirc;ts de la Direction des grandes Entreprises.</P>
+<H6 CLASS="Modification">
+Ord. n&deg; 2006-234 du 02 ao&ucirc;t 2006, an. fiscale,Art. 23.</H6>
+<P CLASS="Liste2-Enumeree">
+2&deg;	Lorsque le montant des retenues mensuelles n&apos;exc&egrave;de pas 10 000 francs, le versement peut n&apos;&ecirc;tre effectu&eacute; que dans les quinze premiers jours des mois de juillet et de janvier pour le semestre &eacute;coul&eacute;. Si pour un mois d&eacute;termin&eacute;, le montant des retenues vient &agrave; exc&eacute;der 5 000 francs, toutes les retenues faites depuis le d&eacute;but du semestre en cours doivent &ecirc;tre vers&eacute;es dans les quinze premiers jours du mois suivant.</P>
+<H6 CLASS="Modification">
+Loi n&deg; 2014-861 du 22 d&eacute;cembre 2014, an. fiscale,Art.11.</H6>
+<P CLASS="Liste2-Enumeree">
+3&deg;	Dans le cas de cession ou de cessation d&apos;entreprise, les retenues effectu&eacute;es doivent &ecirc;tre imm&eacute;diatement vers&eacute;es.</P>
+<P CLASS="Liste2-Enumeree">
+4&deg;	En cas de d&eacute;c&egrave;s de l&apos;employeur ou du d&eacute;birentier, les retenues op&eacute;r&eacute;es doivent &ecirc;tre vers&eacute;es dans les quinze premiers jours du mois suivant celui du d&eacute;c&egrave;s.</P>
+<P CLASS="Liste2-Enumeree">
+5&deg;	Chaque versement est accompagn&eacute; d&apos;une d&eacute;claration d&apos;un mod&egrave;le r&eacute;glementaire, dat&eacute;e et sign&eacute;e par la partie versante et indiquant la p&eacute;riode au cours de laquelle les retenues ont &eacute;t&eacute; faites, la d&eacute;signation, l&apos;adresse et la profession de la personne, soci&eacute;t&eacute;, association ou Administration qui les a op&eacute;r&eacute;es et le montant total des retenues effectu&eacute;es.</P>
+<P CLASS="Liste2-Enumeree">
+Les employeurs seront approvisionn&eacute;s, sur leur demande, en d&eacute;clarations r&eacute;glementaires par la Direction g&eacute;n&eacute;rale des Imp&ocirc;ts.</P>
+      </div>
+    </span>
+    <finh23126>
+
+
+</div></div> <p>&nbsp;</p><p>&nbsp;</p></div></div> <!-- wrapper -->
+	  <div id="articleList"><div id="contenu" style='height:auto; background-color:#FFFFCC'>&nbsp;</div>
+      </div><p>&nbsp;</p><p>&nbsp;</p><p>&nbsp;</p><p>&nbsp;</p><p>&nbsp;</p><p>&nbsp;</p><p>&nbsp;</p><p>&nbsp;</p><p>&nbsp;</p><p>&nbsp;</p>
+	  <p>&nbsp;</p><p>&nbsp;</p><p>&nbsp;</p><p>&nbsp;</p><p>&nbsp;</p><p>&nbsp;</p></BODY></HTML>
+	  

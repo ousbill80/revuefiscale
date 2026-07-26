@@ -1,0 +1,487 @@
+<!DOCTYPE HTML><HTML><HEAD><META HTTP-EQUIV="Content-Type" CONTENT="text/html; charset=UTF-8">
+<TITLE>Code des impots -180</TITLE><LINK REL="STYLESHEET" HREF="/cicgi.css" CHARSET="ISO-8859-1" TYPE="text/css">
+<style type="text/css">
+body {margin-left: 5px;	margin-top: 0px; margin-right: .5em;margin-bottom: 0px;background-color:#fafafa ;}
+.Liste-Numerote {font-size: 12pt;font-weight: regular;font-style: italic;color: #000000;text-transform: none;margin-left:8px ;margin-bottom:8px ;margin-top:4px ;margin-right:10px ;font-family:Georgia, "Times New Roman", Times, serif}
+li {list-style-type: none; margin-left:0px ; padding-left:0em ; }
+.Paratext {font-size: 12pt;font-weight: regular;font-style: italic;color: #000000;text-decoration: none;vertical-align: baseline;text-transform: none;margin-left:0px ;font-family:Georgia, "Times New Roman", Times, serif}
+.Normal {font-size: 12pt;font-weight: regular;font-style: italic;color: #000000;text-decoration: none;vertical-align: baseline;text-transform: none;margin-left:0px ;font-family:Georgia, "Times New Roman", Times, serif}
+ul {list-style-type: none; margin-left:0px ; padding-left:0em ;  }
+.Liste2-Enumeree {font-size: 12pt;font-weight: regular;font-style: italic;color: #000000;text-decoration: none;vertical-align: baseline;text-transform: none;list-style-type:none ;margin-left:16px ;margin-bottom:8px;margin-right:10px;font-family:Georgia, "Times New Roman", Times, serif}
+P.Liste2-Enumeree {font-size: 12pt;font-weight: regular;font-style: italic;color: #000000;text-decoration: none;vertical-align: baseline;text-transform: none;list-style-type:none ;margin-left:16px ;margin-bottom:8px;margin-right:10px;font-family:Georgia, "Times New Roman", Times, serif}
+.Entete {font-size: 13pt;font-weight: regular;font-style: italic;color:#000000 ;text-decoration: none;vertical-align: baseline;text-transform: none;margin-left:8px ;font-family:Georgia, "Times New Roman", Times, serif}
+table, TABLE {border-width:1px; width:99% ;border-collapse:collapse;border-color: #9ecaed;box-shadow: 0 0 10px #9ecaed;}
+tr,td {text-align:left;vertical-align:bottom;border:1px solid #9ecaed;padding:.2em;marging-left:.2em}
+th, TH{text-align:center;vertical-align:middle;padding:.2em;}
+P.TableauEntete {font-size: 13pt;font-weight: regular;font-style: italic;color: #000000;font-family:Georgia, "Times New Roman"}
+P.TableauCelluleLeft, P.TableauCellule {text-align:right;margin-right:1em;font-size: 13pt;font-weight: regular;font-style: italic;color: #000000;font-family:Georgia, "Times New Roman"}
+P.TableauCelluleRight {text-align:left;margin-left:1em;font-size: 13pt;font-weight: regular;font-style: italic;color: #000000;font-family:Georgia, "Times New Roman"}
+.ui-buttonh {padding: .1em .1em ; border: 1px solid #dadada;border-radius: 4px; box-shadow: 0 0 4px #9ecaed;color:#FF3300 ;margin-left:8px ;margin-right:8px ;margin-bottom:2px ;margin-top:2px ;text-decoration:none ;font-size:12pt ;font-family:"Times New Roman"}   
+.ui-button {padding: .1em .1em ; border: 1px solid #dadada;border-radius: 4px; box-shadow: 0 0 4px #9ecaed;color:#FF3300 ;margin-left:8px ;margin-right:8px ;margin-bottom:2px ;margin-top:2px ;text-decoration:none ;font-size:12pt ;font-family:"Times New Roman"}   
+H3 {display: block;text-align: center;text-indent: 0pt;margin-top: 10pt;margin-bottom: 10pt;margin-right: 10pt;margin-left: 10pt;font-size: 12pt;font-weight: Bold;font-style: Regular;color: #00A000;text-decoration: none;vertical-align: baseline;text-transform: none;font-family: "Times New Roman";}
+H4 {display: block;text-align: left;text-indent: 0pt;margin-top: 10pt;margin-bottom: 6pt;margin-right: 10pt;margin-left: 10pt;font-size: 12pt;font-weight: Bold;font-style: Regular;color: #000000;text-decoration: none;vertical-align: baseline;text-transform: none;font-family: "Times New Roman";}
+H5 {display: block;text-align: left;text-indent: 0pt;margin-top: 10pt;margin-bottom: 6pt;margin-right: 10pt;margin-left: 10pt;font-size: 11pt;font-weight: Bold;font-style: Regular;color: #000000;text-decoration: none;vertical-align: baseline;text-transform: none;font-family: "Times New Roman";}
+H6.NoArticle {display: block;text-align: left;text-indent: 0pt;margin-top: 14pt;margin-bottom: 0pt;margin-right: 0pt;margin-left: 0pt;font-size: 14pt;font-weight: regular;font-style: Regular;color: #00a000;text-decoration: none;vertical-align: baseline;text-transform: none;font-family: "Times New Roman";}
+H2 {text-align:center;font-size:16pt;font-family:Georgia, "Times New Roman", Times, serif}
+P.ParaText {font-size: 12pt;font-weight: regular;font-style: italic;color: #000000;	text-decoration: none;vertical-align: baseline;text-transform: none;font-family:Georgia, "Times New Roman", Times, serif;}
+H2.Section,P.Section {font-size:12pt;font-weight:bold;font-style:Regular;color:#008000;font-family:Georgia,"Times New Roman"}
+P.Paragraphe, p.Paragraphe {Text-Align:center;Text-decoration:none;font-size:12pt;font-weight:bold;font-style:Normal;color:#00A000;font-family:Georgia,"Times New Roman"}
+H2.Livre,P.Livre {text-align:center;font-size:16pt;font-weight:bold;font-style:Regular;color:#008000;font-family:Georgia,"Times New Roman"}
+P.Partie,H2.Partie,P.TitreSub {text-align:center;font-size:14pt;font-weight:bold;font-style:Regular;color:#008000;font-family:Georgia,"Times New Roman"}
+H2.ChapitreNo,H2.TitreNo {text-align:center;font-size:14pt;font-weight:bold;font-style:Regular;color:#008000;font-family:Georgia,"Times New Roman"}
+H2.Chapitre, h2.Chapitre {text-align:center;font-size:14pt;font-weight:bold;font-style:Regular;color:#008000;font-family:Georgia,"Times New Roman"}
+H2.TitreNo {text-align:center;font-size:14pt;font-weight:bold;font-style:Regular;color:#008000;font-family:Georgia,"Times New Roman"}
+h3.Sous-Section, H3.Sous-Section, h3.Sous-section, h2.Section {font-size:12pt;font-weight:bold;font-style:Italic;color:#008000;font-family:Georgia,"Times New Roman"}
+hr,HR { display: block; width:90%;  margin-top: 0.5em; margin-bottom: 0.5em; margin-left: auto;  margin-right: auto;  border-style: inset; border-width: 1px;}
+P.TitreSub {text-align:center;font-size:14pt;font-weight:bold;font-style:Regular;color:#008000;font-family:Georgia,"Times New Roman"}
+.Reference {display: block;text-align: left;text-indent: 0pt;margin-top: 10pt;margin-bottom: 6pt;margin-right: 10pt;margin-left: 10pt;font-size: 14pt;font-weight: Bold;font-style: Regular;color: #7F5434;text-decoration: none;vertical-align: baseline;text-transform: none;font-family: "Times New Roman";}
+.ludwig,blockquote {padding-left:1em;background-color:#fafafa;font-size:12pt;font-weight:100;font-style:italic;}
+#articleList {position:absolute ;	z-index: 1 ;left: 10px ;top: 80px ;height:340px;width: 620px;border: 2px solid #cacaca ;border-radius: 5px ;background-color:#fafafa ;    box-shadow: 0 0 12px #333333;	margin-left:0px ;	padding: .3em .3em ;		overflow:hidden ;	visibility:hidden ;  }			
+#articleList h3 { text-align: center; margin: 0; }		
+
+.historique {
+  display:none ;
+  padding: .1em .3em ;
+  border: solid 2px #dadada;
+  border-radius: 7px;
+  box-shadow: 0 0 5px #9ecaed;  
+  
+}
+.histText {
+    display: block;
+    font-family: ;"Times New Roman"
+	padding: .1em .3em ;
+    margin: 1em 0px;
+	font-style:italic;
+	color:#000000;
+	overflow:auto;
+}
+.highlight {
+  font-weight:bold ;
+  color:#000000 ;
+  background-color:#FFFFCC ;
+  }
+.articleList-scroll {
+	overflow-x:hidden ;
+	overflow-y:scroll ;
+	scrollbar-width:thin ;
+	scrollbar-color:blue orange ;
+}
+
+#contenu {
+	overflow-x:hidden ;
+    overflow-y:scroll ;
+	scrollbar-width:thin ;
+	scrollbar-color:blue orange ;
+}		
+
+table, TABLE {
+ text-align:center; 
+    margin-left:.5em; 
+    margin-right:.5em; 
+    border:1px solid #000000;	
+	border-collapse:collapse ;
+    border-color: #9ecaed;
+    box-shadow: 0 0 10px #9ecaed;
+	
+   }
+  tr,td {text-align:left;}
+  
+
+
+ </style>
+ 
+<script src="/js/iscroll.js"></script>
+<script src="/js/jquery.js"></script>   
+<script src="/js/jquery-ui-1.10.3.custom.js"></script>    	    
+<script src="/js/jquery.ui.draggable.js" type="text/javascript"></script>			
+<script src="/js/jquery.ui.core.js"></script> 			
+<script src="/js/jquery.ui.widget.js"></script>			
+<script src="/js/jquery.ui.position.js"></script>			
+<script src="/js/jquery.ui.menu.js"></script>    		
+<script type="text/javascript" src="./xpages.js"></script>
+/* VERSION POUR PAGE HTML SUR SITE DGI.CGICI.COM */
+<script language="javascript">
+ function showButton(id) {
+    var x = document.getElementById(id) ;
+	if(x.style.display === "none") {
+	   x.style.display = "block" ;
+	  } else {
+	   x.style.display = "none" ;
+	   }
+	 }   
+	 var pagenumber="180";
+function loadpage(page, art) {
+      showHideHistoric(art);
+	  return false;
+	  } 
+function loadArticle(page, art) { var artno = art ;var pgno=page;scrolltoelementTag(pgno,artno) ;return false ;} 
+
+</script>
+</HEAD>
+<BODY><div ID="wrapper"><div ID="scroller">
+
+
+<H2 CLASS="ChapitreNo">
+
+<HR>
+
+Chapitre II</H2>
+
+
+<H2 CLASS="Chapitre">
+Tarifs des droits
+<HR>
+
+</H2>
+<span id="#A0702"></span>
+<H6 CLASS="NoArticle">
+Art. 702</H6>
+<P CLASS="ParaText">
+Les droits &agrave; percevoir pour l&apos;enregistrement des actes et mutations sont fix&eacute;s aux taux et tarifs pr&eacute;vus par les articles <a class='ui-button' href='' onClick="loadArticle('180','0703');return false;">703</a> &agrave; <a class='ui-button' href='' onClick="loadArticle('180','0766');return false;">766</a> du pr&eacute;sent Code.</P>
+
+
+
+<H2 CLASS="Section">
+Section I - Droits fixes</H2>
+<span id="#A0703"></span>
+
+<H6 CLASS="NoArticle">
+    Art. 703 &nbsp;&nbsp;&nbsp;&nbsp;<a href="#" onClick="loadpage('176','h23703');return false;" class="ui-button"  title="Consultez l'historique">2023...</a></H6>
+<P CLASS="ParaText">
+Sont enregistr&eacute;s au droit fixe de <FONT COLOR='#000000'>25 000 </FONT> francs :</P>
+
+<H6 CLASS="Modification">
+Loi n<b>&deg;-</b> 83-1421 du 30 d&eacute;c. 1983, an. fiscale,Art. 43; loi n<b>&deg;-</b> 2004-271 du 15 avril 2004, an. fiscale,Art. 28-4.</H6>
+<P CLASS="Liste2-Enumeree">
+1-Les renonciations pures et simples &agrave; successions, legs ou communaut&eacute;s.</P>
+<P CLASS="Liste2-Enumeree">
+2-Les inventaires de meubles, objets mobiliers, titres et papiers.</P>
+<P CLASS="Liste2-Enumeree">
+Il est d&ucirc; un droit pour chaque vacation.</P>
+<P CLASS="Liste2-Enumeree">
+Toutefois, les inventaires dress&eacute;s apr&egrave;s faillite, dans les cas pr&eacute;vus par les articles 505, 507 et 509 <FONT COLOR='#000000'>de l&apos;Acte uniforme relatif au Droit commercial</FONT> ne sont assujettis chacun qu&apos;&agrave; un seul droit fixe d&apos;enregistrement de <FONT COLOR='#000000'>25 000 </FONT> francs quel que soit le nombre des vacations.</P>
+<H6 CLASS="Modification">
+Loi n&deg; 83-1421 du 30 d&eacute;c. 1983, an. fiscale, art 43; loi n&deg; 2004-271 du 15 avril 2004, an. fiscale,Art. 28-2; loi n&deg; 2017-870 du 27 d&eacute;cembre 2017, an. fiscaleArt. 27-1; loi n° 2023-1000 du 18  déc. 2023, an. fiscale, art. 2-1.</H6>
+
+<P CLASS="Liste2-Enumeree">
+3-Les cl&ocirc;tures d&apos;inventaires.</P>
+<P CLASS="Liste2-Enumeree">
+4-Les pris&eacute;es de meubles.</P>
+
+
+<H6 CLASS="Modification">
+Loi n<b>&deg;-</b> 83-1421 du 30 d&eacute;c. 1983, an. fiscale,Art. 43.</H6>
+<P CLASS="Liste2-Enumeree">
+5-Les actes de dissolution de soci&eacute;t&eacute; qui ne portent aucune transmission de biens meubles ou immeubles entre les associ&eacute;s ou autres personnes.</P>
+<P CLASS="Liste2-Enumeree">
+6-Les actes constatant la constitution de soci&eacute;t&eacute;s d&apos;investissement, de fonds communs de placement, de clubs d&apos;investissement, ainsi que la transformation de soci&eacute;t&eacute;s existantes en soci&eacute;t&eacute;s d&apos;investissement ou toutes op&eacute;rations de fusion, de scission, de fusion scission mentionn&eacute;es par les articles 11 et 35 de la loi n<b>&deg;-</b> 92-945 du 23 d&eacute;cembre 1992 relative &agrave; la cr&eacute;ation et &agrave; l&apos;organisation des organismes de placements collectifs en valeurs mobili&egrave;res, sans pr&eacute;judice des dispositions de l&apos;article 19 de ladite loi.</P>
+<P CLASS="Liste2-Enumeree">
+7-Les adjudications &agrave; la folle ench&egrave;re, lorsque le prix n&apos;est pas sup&eacute;rieur &agrave; celui de la pr&eacute;c&eacute;dente adjudication si elle a &eacute;t&eacute; enregistr&eacute;e.</P>
+<P CLASS="Liste2-Enumeree">
+8-Les d&eacute;clarations ou &eacute;lections de command ou d&apos;ami, lorsque la facult&eacute; d&apos;&eacute;lire command a &eacute;t&eacute; r&eacute;serv&eacute;e dans l&apos;acte d&apos;adjudication ou le contrat de vente et que la d&eacute;claration est faite par acte public et notifi&eacute;e dans les vingt quatre heures de l&apos;adjudication ou du contrat.</P>
+<P CLASS="Liste2-Enumeree">
+9-Les r&eacute;unions d&apos;usufruit &agrave; la propri&eacute;t&eacute; op&eacute;r&eacute;es par actes de cession lorsque la cession n&apos;est pas faite pour un prix sup&eacute;rieur &agrave; celui sur lequel le droit a &eacute;t&eacute; per&ccedil;u lors de l&apos;ali&eacute;nation de la propri&eacute;t&eacute;.</P>
+<P CLASS="Liste2-Enumeree">
+10-Les jugements en mati&egrave;re gracieuse :</P>
+<P CLASS="Liste2-Enumeree">
+-les jugements rendus sur incidents au cours d&apos;instances et sur les exceptions pr&eacute;vues aux articles 115 &agrave; 122 de la loi n<b>&deg;-</b> 72-833 du 21 d&eacute;cembre 1972 portant Code de Proc&eacute;dure civile, commerciale et administrative;</P>
+
+
+<H6 CLASS="Modification">
+Loi n<b>&deg;-</b> 86-1383 du 19 d&eacute;c, 1986, an. fiscale,Art. 9.</H6>
+<P CLASS="Liste2-Enumeree">
+-les arr&ecirc;ts sur appels d&apos;ordonnance de toute nature, lorsqu&apos;ils ne peuvent donner lieu au droit proportionnel ou au droit progressif ou lorsqu&apos;ils donnent ouverture &agrave; moins de <FONT COLOR='#000000'>25 000 </FONT> francs de droits.</P>
+
+<H6 CLASS="Modification">
+Loi n<b>&deg;-</b> 83-1421 du 30 d&eacute;c. 1983, an. fiscale,Art. 43; loi n° 2023-1000 du 18 déc. 2023, an. fiscale, art. 2-1.</H6>
+<P CLASS="Liste2-Enumeree">
+11-Les cessions, subrogations, r&eacute;trocessions et r&eacute;siliations de baux de biens de toute nature.</P>
+<P CLASS="Liste2-Enumeree">
+12-Les proc&egrave;s-verbaux de conciliation dress&eacute;s par les juges, desquels il ne r&eacute;sulte aucune disposition donnant lieu au droit proportionnel ou au droit progressif ou dont le droit proportionnel ou le droit progressif ne s&apos;&eacute;l&egrave;ve pas &agrave; <FONT COLOR='#000000'>25 000 </FONT> francs.</P>
+<H6 CLASS="Modification">
+Loi n° 2023-1000 du 18  déc. 2023, an. fiscale, art. 2-1.</H6>
+<P CLASS="Liste2-Enumeree">
+13-Les jugements de police ordinaire et des juges, les ordonnances de r&eacute;f&eacute;r&eacute;, lorsque ces jugements et ordonnances ne peuvent donner lieu au droit proportionnel ou au droit progressif ou donnent ouverture &agrave; moins de <FONT COLOR='#000000'>25 000 </FONT> francs de droit proportionnel ou de droit progressif.</P>
+<H6 CLASS="Modification">
+Loi n° 2023-1000 du 18  déc. 2023, an. fiscale, art. 2-1.</H6>
+<P CLASS="Liste2-Enumeree">
+14-Les contrats de mariage ne contenant que la d&eacute;claration du r&eacute;gime adopt&eacute; par les futurs, sans constater de leur part aucun apport ou qui constatent des apports donnant ouverture &agrave; un droit proportionnel moins &eacute;lev&eacute;.</P>
+<P CLASS="Liste2-Enumeree">
+15-Les testaments ou tous autres actes de lib&eacute;ralit&eacute;s qui ne contiennent que des dispositions soumises &agrave; l&apos;&eacute;v&eacute;nement du d&eacute;c&egrave;s et les dispositions de m&ecirc;me nature qui sont faites par contrats de mariage entre les futurs ou par d&apos;autres personnes.</P>
+<P CLASS="Liste2-Enumeree">
+16-Les actes de transfert, pr&eacute;vus par l&apos;article 2 de la loi n<b>&deg;-</b> 94-338 du 9 juin 1994 relative &agrave; la privatisation des participations et actifs de l&apos;Etat dans certaines entreprises et &eacute;tablissements publics nationaux.</P>
+
+
+<H6 CLASS="Modification">
+Loi n<b>&deg;-</b> 96-218 du 13 mars 1996, an. fiscale,Art. 37.</H6>
+<P CLASS="Liste2-Enumeree">
+17-Les acceptations pures et simples de successions, legs et communaut&eacute;s.</P>
+<P CLASS="Liste2-Enumeree">
+18-Les certificats de propri&eacute;t&eacute;.</P>
+
+<P CLASS="Liste2-Enumeree">
+19-	 Abrog&eacute;</P>
+<H6 CLASS="Modification">
+Ord. n&deg; 2000-252 du 28 mars 2000, an. fiscale,Art. 12; loi n&deg; 2015-840 du 18 d&eacute;cembre 2015, an. fiscale,Art. 12-1</H6>
+<P CLASS="Liste2-Enumeree">
+20-Et g&eacute;n&eacute;ralement tous actes qui ne se trouvent tarif&eacute;s par aucun autre article du pr&eacute;sent Livre et qui ne peuvent donner lieu au droit proportionnel ou au droit progressif.</P>
+<P CLASS="Liste2-Enumeree">
+21-Les jugements de police correctionnelle et les jugements de premi&egrave;re instance en premier ou en dernier ressort, contenant des dispositions d&eacute;finitives qui ne peuvent donner lieu au droit proportionnel ou au droit progressif ou donnent ouverture &agrave; moins de 18000 francs de droit proportionnel ou de droit progressif.</P>
+<P CLASS="Liste2-Enumeree">
+22-Les arr&ecirc;ts sur les jugements en mati&egrave;re gracieuse ainsi que les arr&ecirc;ts sur les jugements rendus sur incident au cours de l&apos;instance et sur les exceptions pr&eacute;vues aux articles 115 &agrave; 122 de la loi n<b>&deg;-</b> 72-833 du 21 d&eacute;cembre 1972 portant Code de Proc&eacute;dure civile, commerciale et administrative lorsqu&apos;ils ne peuvent donner lieu au droit proportionnel ou au droit progressif ou lorsqu&apos;ils donnent ouverture &agrave; moins de <FONT COLOR='#000000'>25 000 </FONT> francs de droit proportionnel ou de droit progressif.</P>
+
+
+<H6 CLASS="Modification">
+Loi n<b>&deg;-</b> 87-1476 du 18 d&eacute;c. 1987, an. fiscale, Art. 11; loi n° 2023-1000 du 18  déc. 2023, an. fiscale, art. 2-1.</H6>
+<P CLASS="Liste2-Enumeree">
+23-Les actes constatant des apports faits aux soci&eacute;t&eacute;s de cr&eacute;dit-bail.</P>
+<P CLASS="Liste2-Enumeree">
+24-Les jugements et arr&ecirc;ts vis&eacute;s &agrave; l&apos;article 15 de l&apos;Acte uniforme portant organisation des proc&eacute;dures simplifi&eacute;es de recouvrement et voies d&apos;ex&eacute;cution et &agrave; l&apos;article 18 de la loi n<b>&deg;-</b> 93-669 du 9 ao&ucirc;t 1993.</P>
+
+
+<H6 CLASS="Modification">
+Loi n<b>&deg;-</b> 87-1476 du 18 d&eacute;c. 1987, an. fiscale,Art. 11.</H6>
+<P CLASS="Liste2-Enumeree">
+25-Les actes portant location-vente de biens immeubles.</P>
+
+
+<H6 CLASS="Modification">
+Loi n<b>&deg;-</b> 2005-161 du 27 avril 2005, an. fiscale,Art. 18-2.</H6>
+<P CLASS="Liste2-Enumeree">
+26-Les baux de biens meubles quelle que soit leur dur&eacute;e.</P>
+
+
+<H6 CLASS="Modification">
+Ord. n<b>&deg;-</b> 74-173 du 19 avril 1974,Art. 13; loi n<b>&deg;-</b> 83-1421 du 30 d&eacute;c, 1983, an. fiscale,Art. 43, loi n<b>&deg;-</b> 2004-271 du 15 avril 2004, an. fiscale,Art. 28-2.</H6>
+<P CLASS="Liste2-Enumeree">
+27-Les parts et portions acquises par licitation de biens meubles indivis.</P>
+
+
+<H6 CLASS="Modification">
+Loi n<b>&deg;-</b> 83-1421 du 30 d&eacute;c. 1983, an. fiscale,Art. 43; loi n<b>&deg;-</b> 2004-271 du 15 avril 2004, an. fiscale,Art. 28-2.</H6>
+<P CLASS="Liste2-Enumeree">
+28-Les retours de partage de biens meubles.</P>
+
+
+<H6 CLASS="Modification">
+Loi n<b>&deg;-</b> 83-1421 du 30 d&eacute;c. 1983, an. fiscale,Art. 43; loi n<b>&deg;-</b> 2004-271 du 15 avril 2004, an. fiscale,Art. 28-2.</H6>
+<P CLASS="Liste2-Enumeree">
+29-Les actes ayant pour objet la constitution des soci&eacute;t&eacute;s de construction vis&eacute;es par le d&eacute;cret n<b>&deg;-</b> 98-119 du 6 mars 1998 modifiant et compl&eacute;tant le d&eacute;cret n<b>&deg;-</b> 49-299 du 23 f&eacute;vrier 1949 portant r&egrave;glement du statut de la copropri&eacute;t&eacute; des immeubles divis&eacute;s par &eacute;tages ou par appartements et qui ne portent aucune transmission de biens meubles ou immeubles entre les associ&eacute;s ou autres personnes.</P>
+<P CLASS="Liste2-Enumeree">
+L&apos;application de cette mesure est &eacute;tendue, sous les m&ecirc;mes conditions, &agrave; la copropri&eacute;t&eacute; des immeubles constitu&eacute;s de maisons individuelles accol&eacute;es ou s&eacute;par&eacute;es.</P>
+
+
+<H6 CLASS="Modification">
+Loi n<b>&deg;-</b> 83-1421 du 30 d&eacute;c. 1983, an. fiscale,Art. 37; loi n<b>&deg;-</b> 2004-271 du 15 avril 2004, an. fiscale,Art. 28-2.</H6>
+<P CLASS="Liste2-Enumeree">
+30-Les actes par lesquels les soci&eacute;t&eacute;s vis&eacute;es &agrave; l&apos;alin&eacute;a 29 ci-dessus font &agrave; leurs membres par voie de partage en nature &agrave; titre pur et simple attribution exclusive en propri&eacute;t&eacute; de la fraction des immeubles qu&apos;elles ont construite et pour laquelle ils ont vocation &agrave; condition que l&apos;attribution intervienne dans les 7 ann&eacute;es de la constitution desdites soci&eacute;t&eacute;s. Cette attribution ne donne lieu, en ce cas, &agrave; aucune autre perception au profit du Tr&eacute;sor.</P>
+
+
+<H6 CLASS="Modification">
+Loi n<b>&deg;-</b> 2004-271 du 15 avril 2004, an. fiscale,Art. 28-2.</H6>
+<P CLASS="Liste2-Enumeree">
+31-Les actes pr&eacute;vus &agrave; l&apos;alin&eacute;a 30 ci-dessus qui concernent les soci&eacute;t&eacute;s de construction vis&eacute;es au d&eacute;cret n<b>&deg;-</b> 98-119 du 6 mars 1998 modifiant et compl&eacute;tant le d&eacute;cret n<b>&deg;-</b> 49-299 du 23 f&eacute;vrier 1949 portant r&egrave;glement du statut de la copropri&eacute;t&eacute; des immeubles divis&eacute;s par &eacute;tages ou par appartements. L&apos;application du droit fixe de <FONT COLOR='#000000'>25 000 </FONT> francs est subordonn&eacute;e &agrave; la condition que les soci&eacute;t&eacute;s dont il s&apos;agit fassent enregistrer le proc&egrave;s-verbal de la d&eacute;lib&eacute;ration de l&apos;assembl&eacute;e g&eacute;n&eacute;rale approuvant le projet de partage avant l&apos;expiration d&apos;un d&eacute;lai de sept ans &agrave; compter de la date de leur constitution.</P>
+
+
+<H6 CLASS="Modification">
+Loi n<b>&deg;-</b> 83-1421 du 30 d&eacute;c. 1983, an. fiscale,Art. 43; loi n<b>&deg;-</b> 2004-271 du 15 avril 2004, an. fiscale,Art. 28-2; loi n° 2023-1000 du 18  déc. 2023, an. fiscale, art. 2-1.</H6>
+<P CLASS="ParaText">
+L&apos;acte de partage lui-m&ecirc;me devra &ecirc;tre enregistr&eacute; au plus tard un an apr&egrave;s l&apos;enregistrement du proc&egrave;s-verbal de d&eacute;lib&eacute;ration de l&apos;assembl&eacute;e approuvant le projet de partage.</P>
+<P CLASS="Liste2-Enumeree">
+32-Les actes de saisine du juge des r&eacute;f&eacute;r&eacute;s, des tribunaux de premi&egrave;re instance et des tribunaux d&apos;arbitrage.</P>
+
+
+<H6 CLASS="Modification">
+Ord. n<b>&deg;-</b> 2006-234 du 02 ao&ucirc;t 2006, Art. 27-1.  </H6>
+<P CLASS="Liste2-Enumeree">
+33-Les actes ayant pour objet la transformation d&apos;une entreprise individuelle en soci&eacute;t&eacute;.</P>
+
+<H6 CLASS="Modification">
+Ord. n<b>&deg;-</b> 2007-488 du 31 mai 2007Art. 22.</H6>
+
+<P CLASS="ParaText">
+    <a name="pgfId-1025137"></a>34- Les acquisitions d&apos;immeubles effectu&eacute;es par le cr&eacute;dit-preneur au moment de la lev&eacute;e de l&apos;option	.
+</P>
+<H6 CLASS="Modification">
+Ord. n&deg; 2015-771 du 09 d?c. 2015, Art. 2.</H6>
+<P CLASS="Liste2-Enumeree">
+35- Les proc&egrave;s-verbaux d&apos;assembl&eacute;e g&eacute;n&eacute;rale des soci&eacute;t&eacute;s, qui ne contiennent aucune stipulation donnant lieu &agrave; la perception d&apos;un droit proportionnel, d&apos;un droit progressif ou d&apos;un droit d&eacute;gressif.</P>
+<H6 CLASS="Modification">
+Loi n&deg; 2020-972 du 23 d&eacute;c. 2020, an. fiscale,Art. 13.</H6>
+
+<span id="#A0704"></span>
+<H6 CLASS="NoArticle">
+Art. 704</H6>
+<P CLASS="ParaText">
+Les jugements des tribunaux en mati&egrave;re de contributions publiques ou locales et autres sommes dues aux collectivit&eacute;s publiques sont assujettis aux m&ecirc;mes droits d&apos;enregistrement que ceux rendus entre particuliers.</P>
+<P CLASS="ParaText">
+Les d&eacute;cisions judiciaires auxquelles sont parties soit l&apos;Agence judiciaire du Tr&eacute;sor, soit le service d&apos;apurement des comptes sp&eacute;ciaux du Tr&eacute;sor, sont enregistr&eacute;es en d&eacute;bet.</P>
+<P CLASS="ParaText">
+Les droits d&apos;enregistrement liquid&eacute;s par les receveurs sont assimil&eacute;s pour le recouvrement, les poursuites, la proc&eacute;dure et la prescription, au principal de la condamnation.</P>
+<P CLASS="ParaText">
+Toutefois, si le Tr&eacute;sor est condamn&eacute;, il est dispens&eacute; du paiement des droits.</P>
+
+<span id="#A0705"></span>
+<H6 CLASS="NoArticle">
+Art. 705</H6>
+<P CLASS="ParaText">
+Sont enregistr&eacute;s au droit fixe de<FONT COLOR='#d00000'> 30 000 francs </FONT>, les jugements des tribunaux criminels et les arr&ecirc;ts des cours d&apos;appel contenant des dispositions d&eacute;finitives qui ne peuvent donner lieu au droit proportionnel ou au droit progressif ou donner ouverture &agrave; moins de 24 000 francs de droit proportionnel ou de droit progressif ainsi que les arr&ecirc;ts et jugements vis&eacute;s &agrave; l&apos;article 15 de l&apos;Acte uniforme portant organisation des proc&eacute;dures simplifi&eacute;es de recouvrement et voies d&apos;ex&eacute;cution et &agrave; l&apos;article 18 de la loi n<b>&deg;-</b> 93-669 du 9 ao&ucirc;t 1993.</P>
+
+<H6 CLASS="Modification">
+Loi n<b>&deg;-</b> 87-1476 du 18 d&eacute;c. 1987, an. fiscale,Art. 11; loi n&#176; 2025-987 du 19  d&eacute;cembre 2025, art. 29.</H6>
+
+
+<span id="#A0706"></span>
+<H6 CLASS="NoArticle">
+Art. 706</H6>
+<P CLASS="ParaText">
+Les sentences arbitrales, les accords survenus en cours d&apos;instance, en cours ou en suite d&apos;expertise ou d&apos;arbitrage donnent ouverture aux droits pr&eacute;vus par les articles qui pr&eacute;c&egrave;dent pour les jugements et arr&ecirc;ts selon le degr&eacute; de la juridiction saisie du litige ou normalement comp&eacute;tente pour conna&icirc;tre de l&apos;affaire, soit en premier, soit en dernier ressort.</P>
+
+<span id="#A0707"></span>
+<H6 CLASS="NoArticle">
+Art. 707 &nbsp;&nbsp;&nbsp;&nbsp;<a href="#" onClick="loadpage('176','h25707');return false;" class="ui-button"  title="Consultez l'historique">2025...</a>
+&nbsp;&nbsp;&nbsp;&nbsp;<a href="#" onClick="loadpage('176','h23707');return false;" class="ui-button"  title="Consultez l'historique">2023...</a></H6>
+<P CLASS="ParaText">
+Les jugements de premi&egrave;re instance et les arr&ecirc;ts des cours d&apos;appel pronon&ccedil;ant un divorce sont soumis au droit fixe de <FONT COLOR='#000000'>25 000 </FONT> francs.</P>
+
+<H6 CLASS="Modification">
+Loi n<b>&deg;-</b> 83-1421 du 30 d&eacute;c. 1983, an. fiscale,Art. 43; loi n° 2023-1000 du 18  déc. 2023, an. fiscale, art. 2-1.</H6>
+
+
+<span id="#A0708"></span>
+<H6 CLASS="NoArticle">
+Art. 708</H6>
+<P CLASS="ParaText">
+Sont assujetties au droit fixe de 90 000 francs :</P>
+<P CLASS="Liste2-Enumeree">
+-les demandes de r&eacute;int&eacute;gration dans la nationalit&eacute; ivoirienne;</P>
+<P CLASS="Liste2-Enumeree">
+-les demandes d&apos;autorisation de perdre la nationalit&eacute; ivoirienne.</P>
+
+<H6 CLASS="Modification">
+Loi n<b>&deg;-</b> 83-1421 du 30 d&eacute;c. 1983, an. fiscale,Art. 43.</H6>
+<P CLASS="Paragraphe">
+Command (Elections de, d&eacute;clarations de)</P>
+
+
+<span id="#A0709"></span>
+<H6 CLASS="NoArticle">
+Art. 709 &nbsp;&nbsp;&nbsp;&nbsp;<a href="#" onClick="loadpage('176','h23709');return false;" class="ui-button"  title="Consultez l'historique">2023...</a></H6>
+<P CLASS="ParaText">
+Les &eacute;lections ou d&eacute;clarations de command ou d&apos;ami sur l&apos;adjudication ou contrat de vente de biens meubles, lorsque l&apos;&eacute;lection est faite apr&egrave;s les vingt-quatre heures ou sans que la facult&eacute; d&apos;&eacute;lire un command ait &eacute;t&eacute; r&eacute;serv&eacute;e dans l&apos;acte d&apos;adjudication ou du contrat de vente, sont assujetties au droit fixe de <FONT COLOR='#000000'>25 000 </FONT> francs.</P>
+
+<H6 CLASS="Modification">
+Loi n<b>&deg;-</b> 83-1421 du 30 d&eacute;c. 1983, an. fiscale,Art. 43; loi n<b>&deg;-</b> 2004-271 du 15 avril 2004, an. fiscale,Art. 28-2; loi n° 2023-1000 du 18  déc. 2023, an. fiscale, art. 2-1.</H6>
+
+<H6 CLASS="NoArticle">
+<a name="50499595_pgfId-1046634"></a>Art. 709 bis  &nbsp;&nbsp;&nbsp;&nbsp;<a href="#" onClick="loadpage('176','h23709b');return false;" class="ui-button"  title="Consultez l'historique">2023...</a></H6>
+<P CLASS="ParaText"><FONT COLOR='#000000'>
+<a name="50499595_pgfId-1046661"></a>Sont enregistr&eacute;s &agrave; un droit fixe de <FONT COLOR='#000000'>10 000 </FONT> francs, les conventions de        microassurance vie et non-vie, conclues avec les soci&eacute;t&eacute;s ou compagnies d&rsquo;assurance ayant obtenu l&rsquo;agr&eacute;ment pour exercer l&rsquo;activit&eacute; de microassurance ou avec les entreprises exer&ccedil;ant exclusivement l&rsquo;activit&eacute; de microassurance, et tout &eacute;crit qui en constate la modification ou la r&eacute;siliation amiable, ainsi que les exp&eacute;ditions, extraits ou copies qui en sont  d&eacute;livr&eacute;s.</FONT></P>
+<H6 CLASS="Modification">
+<a name="50499595_pgfId-1046708"></a>Loi n&deg; 2021-899 du 21 d&eacute;c. 2021, an. fiscale,Art. 15-2; loi n° 2023-1000 du 18  déc. 2023, an. fiscale, art. 2-3.</H6>
+
+<span class="historique" ID="h23703">
+<div class="histText">
+
+<BR> 
+<p>Sont enregistr&eacute;s au droit fixe de 18 000 francs :</p>
+<p>Loi n&deg; 83-1421 du 30 d&eacute;c. 1983, an. fiscale, art. 43; loi n&deg; 2004-271 du 15 avril 2004, an. fiscale, art. 28-4.</p>
+<p>1&ndash;	Les renonciations pures et simples &agrave; successions, legs ou communaut&eacute;s.</p>
+<p>2&ndash;	Les inventaires de meubles, objets mobiliers, titres et papiers.</p>
+<p>Il est d&ucirc; un droit pour chaque vacation.</p>
+<p>Toutefois, les inventaires dress&eacute;s apr&egrave;s faillite, dans les cas pr&eacute;vus par les articles 505, 507 et 509 de l&rsquo;Acte uniforme relatif au Droit commercial ne sont assujettis chacun qu&rsquo;&agrave; un seul droit fixe d&rsquo;enregistrement de 18 000 francs quel que soit le nombre des vacations.</p>
+<p>Loi n&deg; 83-1421 du 30 d&eacute;c. 1983, an. fiscale, art 43; loi n&deg; 2004-271 du 15 avril 2004, an. fiscale, art. 28-2; loi n&deg; 2017-870 du 27 d&eacute;cembre 2017, an. fiscale art. 27-1.</p>
+<p>3&ndash;	Les cl&ocirc;tures d&rsquo;inventaires.</p>
+<p>4&ndash;	Les pris&eacute;es de meubles.</p>
+<p>Loi n&deg; 83-1421 du 30 d&eacute;c. 1983, an. fiscale, art. 43.</p>
+<p>5&ndash;	Les actes de dissolution de soci&eacute;t&eacute; qui ne portent aucune transmission de biens meubles ou immeubles entre les associ&eacute;s ou autres personnes.</p>
+<p>6&ndash;	Les actes constatant la constitution de soci&eacute;t&eacute;s d&rsquo;investissement, de fonds communs de placement, de clubs d&rsquo;investissement, ainsi que la transformation de soci&eacute;t&eacute;s existantes en soci&eacute;t&eacute;s d&rsquo;investissement ou toutes op&eacute;rations de fusion, de scission, de fusion scission mentionn&eacute;es par les articles 11 et 35 de la loi n&deg; 92-945 du 23 d&eacute;cembre 1992 relative &agrave; la cr&eacute;ation et &agrave; l&rsquo;organisation des organismes de placements collectifs en valeurs mobili&egrave;res, sans pr&eacute;judice des dispositions de l&rsquo;article 19 de ladite loi.</p>
+<p>7&ndash;	Les adjudications &agrave; la folle ench&egrave;re, lorsque le prix n&rsquo;est pas sup&eacute;rieur &agrave; celui de la pr&eacute;c&eacute;dente adjudication si elle a &eacute;t&eacute; enregistr&eacute;e.</p>
+<p>8&ndash;	Les d&eacute;clarations ou &eacute;lections de command ou d&rsquo;ami, lorsque la facult&eacute; d&rsquo;&eacute;lire command a &eacute;t&eacute; r&eacute;serv&eacute;e dans l&rsquo;acte d&rsquo;adjudication ou le contrat de vente et que la d&eacute;claration est faite par acte public et notifi&eacute;e dans les vingt quatre heures de l&rsquo;adjudication ou du contrat.</p>
+<p>9&ndash;	Les r&eacute;unions d&rsquo;usufruit &agrave; la propri&eacute;t&eacute; op&eacute;r&eacute;es par actes de cession lorsque la cession n&rsquo;est pas faite pour un prix sup&eacute;rieur &agrave; celui sur lequel le droit a &eacute;t&eacute; per&ccedil;u lors de l&rsquo;ali&eacute;nation de la propri&eacute;t&eacute;.</p>
+<p>10&ndash;	Les jugements en mati&egrave;re gracieuse :</p>
+<p>&ndash;	les jugements rendus sur incidents au cours d&rsquo;instances et sur les exceptions pr&eacute;vues aux articles 115 &agrave; 122 de la loi n&deg; 72-833 du 21 d&eacute;cembre 1972 portant Code de Proc&eacute;dure civile, commerciale et administrative;</p>
+<p>Loi n&deg; 86-1383 du 19 d&eacute;c, 1986, an. fiscale, art. 9.</p>
+<p>&ndash;	les arr&ecirc;ts sur appels d&rsquo;ordonnance de toute nature, lorsqu&rsquo;ils ne peuvent donner lieu au droit proportionnel ou au droit progressif ou lorsqu&rsquo;ils donnent ouverture &agrave; moins de 18 000 francs de droits.</p>
+<p>Loi n&deg; 83-1421 du 30 d&eacute;c. 1983, an. fiscale, art. 43.</p>
+<p>11&ndash;	Les cessions, subrogations, r&eacute;trocessions et r&eacute;siliations de baux de biens de toute nature.</p>
+<p>12&ndash;	Les proc&egrave;s-verbaux de conciliation dress&eacute;s par les juges, desquels il ne r&eacute;sulte aucune disposition donnant lieu au droit proportionnel ou au droit progressif ou dont le droit proportionnel ou le droit progressif ne s&rsquo;&eacute;l&egrave;ve pas &agrave; 18 000 francs.</p>
+<p>13&ndash;	Les jugements de police ordinaire et des juges, les ordonnances de r&eacute;f&eacute;r&eacute;, lorsque ces jugements et ordonnances ne peuvent donner lieu au droit proportionnel ou au droit progressif ou donnent ouverture &agrave; moins de 18 000 francs de droit proportionnel ou de droit progressif.</p>
+<p>14&ndash;	Les contrats de mariage ne contenant que la d&eacute;claration du r&eacute;gime adopt&eacute; par les futurs, sans constater de leur part aucun apport ou qui constatent des apports donnant ouverture &agrave; un droit proportionnel moins &eacute;lev&eacute;.</p>
+<p>15&ndash;	Les testaments ou tous autres actes de lib&eacute;ralit&eacute;s qui ne contiennent que des dispositions soumises &agrave; l&rsquo;&eacute;v&eacute;nement du d&eacute;c&egrave;s et les dispositions de m&ecirc;me nature qui sont faites par contrats de mariage entre les futurs ou par d&rsquo;autres personnes.</p>
+<p>16&ndash;	Les actes de transfert, pr&eacute;vus par l&rsquo;article 2 de la loi n&deg; 94-338 du 9 juin 1994 relative &agrave; la privatisation des participations et actifs de l&rsquo;Etat dans certaines entreprises et &eacute;tablissements publics nationaux.</p>
+<p>Loi n&deg; 96-218 du 13 mars 1996, an. fiscale, art. 37.</p>
+<p>17&ndash;	Les acceptations pures et simples de successions, legs et communaut&eacute;s.</p>
+<p>18&ndash;	Les certificats de propri&eacute;t&eacute;.</p>
+<p>19&ndash;	Abrog&eacute;</p>
+<p>Ord. n&deg; 2000-252 du 28 mars 2000, an. fiscale, art. 12; loi n&deg; 2015-840 du 18 d&eacute;cembre. 2015, an. fiscale, art. 12-1</p>
+<p>20&ndash;	Et g&eacute;n&eacute;ralement tous actes qui ne se trouvent tarif&eacute;s par aucun autre article du pr&eacute;sent Livre et qui ne peuvent donner lieu au droit proportionnel ou au droit progressif.</p>
+<p>21&ndash;	Les jugements de police correctionnelle et les jugements de premi&egrave;re instance en premier ou en dernier ressort, contenant des dispositions d&eacute;finitives qui ne peuvent donner lieu au droit proportionnel ou au droit progressif ou donnent ouverture &agrave; moins de 18000 francs de droit proportionnel ou de droit progressif.</p>
+<p>22&ndash;	Les arr&ecirc;ts sur les jugements en mati&egrave;re gracieuse ainsi que les arr&ecirc;ts sur les jugements rendus sur incident au cours de l&rsquo;instance et sur les exceptions pr&eacute;vues aux articles 115 &agrave; 122 de la loi n&deg; 72-833 du 21 d&eacute;cembre 1972 portant Code de Proc&eacute;dure civile, commerciale et administrative lorsqu&rsquo;ils ne peuvent donner lieu au droit proportionnel ou au droit progressif ou lorsqu&rsquo;ils donnent ouverture &agrave; moins de 18 000 francs de droit proportionnel ou de droit progressif.</p>
+<p>Loi n&deg; 87-1476 du 18 d&eacute;c. 1987, an. fiscale, art. 11.</p>
+<p>23&ndash;	Les actes constatant des apports faits aux soci&eacute;t&eacute;s de cr&eacute;dit-bail.</p>
+<p>24&ndash;	Les jugements et arr&ecirc;ts vis&eacute;s &agrave; l&rsquo;article 15 de l&rsquo;Acte uniforme portant organisation des proc&eacute;dures simplifi&eacute;es de recouvrement et voies d&rsquo;ex&eacute;cution et &agrave; l&rsquo;article 18 de la loi n&deg; 93-669 du 9 ao&ucirc;t 1993.</p>
+<p>Loi n&deg; 87-1476 du 18 d&eacute;c. 1987, an. fiscale, art. 11.</p>
+<p>25&ndash;	Les actes portant location-vente de biens immeubles.</p>
+<p>Loi n&deg; 2005-161 du 27 avril 2005, an. fiscale, art. 18-2.</p>
+<p>26&ndash;	Les baux de biens meubles quelle que soit leur dur&eacute;e.</p>
+<p>Ord. n&deg; 74-173 du 19 avril 1974, art. 13; loi n&deg; 83-1421 du 30 d&eacute;c, 1983, an. fiscale, art. 43, loi n&deg; 2004-271 du 15 avril 2004, an. fiscale, art. 28-2.</p>
+<p>27&ndash;	Les parts et portions acquises par licitation de biens meubles indivis.</p>
+<p>Loi n&deg; 83-1421 du 30 d&eacute;c. 1983, an. fiscale, art. 43; loi n&deg; 2004-271 du 15 avril 2004, an. fiscale, art. 28-2.</p>
+<p>28&ndash;	Les retours de partage de biens meubles.</p>
+<p>Loi n&deg; 83-1421 du 30 d&eacute;c. 1983, an. fiscale, art. 43; loi n&deg; 2004-271 du 15 avril 2004, an. fiscale, art. 28-2.</p>
+<p>29&ndash;	Les actes ayant pour objet la constitution des soci&eacute;t&eacute;s de construction vis&eacute;es par le d&eacute;cret n&deg; 98-119 du 6 mars 1998 modifiant et compl&eacute;tant le d&eacute;cret n&deg; 49-299 du 23 f&eacute;vrier 1949 portant r&egrave;glement du statut de la copropri&eacute;t&eacute; des immeubles divis&eacute;s par &eacute;tages ou par appartements et qui ne portent aucune transmission de biens meubles ou immeubles entre les associ&eacute;s ou autres personnes.</p>
+<p>L&rsquo;application de cette mesure est &eacute;tendue, sous les m&ecirc;mes conditions, &agrave; la copropri&eacute;t&eacute; des immeubles constitu&eacute;s de maisons individuelles accol&eacute;es ou s&eacute;par&eacute;es.</p>
+<p>Loi n&deg; 83-1421 du 30 d&eacute;c. 1983, an. fiscale, art. 37; loi n&deg; 2004-271 du 15 avril 2004, an. fiscale, art. 28-2.</p>
+<p>30&ndash;	Les actes par lesquels les soci&eacute;t&eacute;s vis&eacute;es &agrave; l&rsquo;alin&eacute;a 29 ci-dessus font &agrave; leurs membres par voie de partage en nature &agrave; titre pur et simple attribution exclusive en propri&eacute;t&eacute; de la fraction des immeubles qu&rsquo;elles ont construite et pour laquelle ils ont vocation &agrave; condition que l&rsquo;attribution intervienne dans les 7 ann&eacute;es de la constitution desdites soci&eacute;t&eacute;s. Cette attribution ne donne lieu, en ce cas, &agrave; aucune autre perception au profit du Tr&eacute;sor.</p>
+<p>Loi n&deg; 2004-271 du 15 avril 2004, an. fiscale, art. 28-2.</p>
+<p>31&ndash;	Les actes pr&eacute;vus &agrave; l&rsquo;alin&eacute;a 30 ci-dessus qui concernent les soci&eacute;t&eacute;s de construction vis&eacute;es au d&eacute;cret n&deg; 98-119 du 6 mars 1998 modifiant et compl&eacute;tant le d&eacute;cret n&deg; 49-299 du 23 f&eacute;vrier 1949 portant r&egrave;glement du statut de la copropri&eacute;t&eacute; des immeubles divis&eacute;s par &eacute;tages ou par appartements. L&rsquo;application du droit fixe de 18 000 francs est subordonn&eacute;e &agrave; la condition que les soci&eacute;t&eacute;s dont il s&rsquo;agit fassent enregistrer le proc&egrave;s-verbal de la d&eacute;lib&eacute;ration de l&rsquo;assembl&eacute;e g&eacute;n&eacute;rale approuvant le projet de partage avant l&rsquo;expiration d&rsquo;un d&eacute;lai de sept ans &agrave; compter de la date de leur constitution.</p>
+<p>Loi n&deg; 83-1421 du 30 d&eacute;c. 1983, an. fiscale, art. 43; loi n&deg; 2004-271 du 15 avril 2004, an. fiscale, art. 28-2.</p>
+<p>L&rsquo;acte de partage lui-m&ecirc;me devra &ecirc;tre enregistr&eacute; au plus tard un an apr&egrave;s l&rsquo;enregistrement du proc&egrave;s-verbal de d&eacute;lib&eacute;ration de l&rsquo;assembl&eacute;e approuvant le projet de partage.</p>
+<p>32&ndash;	Les actes de saisine du juge des r&eacute;f&eacute;r&eacute;s, des tribunaux de premi&egrave;re instance et des tribunaux d&rsquo;arbitrage.</p>
+<p>Ord. n&deg; 2006-234 du 02 ao&ucirc;t 2006, an. fiscale, art. 27-1. </p>
+<p>33&ndash;	Les actes ayant pour objet la transformation d&rsquo;une entreprise individuelle en soci&eacute;t&eacute;.</p>
+<p>Ord. n&deg; 2007-488 du 31 mai 2007, an. fiscale, art. 22.</p>
+<p>34&ndash; Les acquisitions d&rsquo;immeubles effectu&eacute;es par le cr&eacute;dit-preneur au moment de la lev&eacute;e de l&rsquo;option	.</p>
+<p>Ord. n&deg; 2015-771 du 09 d&eacute;cembre 2015, art. 2.</p>
+<p>35&ndash; Les proc&egrave;s-verbaux d&rsquo;assembl&eacute;e g&eacute;n&eacute;rale des soci&eacute;t&eacute;s, qui ne contiennent aucune stipulation donnant lieu &agrave; la perception d&rsquo;un droit proportionnel, d&rsquo;un droit progressif ou d&rsquo;un droit d&eacute;gressif.</p>
+<p>Loi n&deg; 2020-972 du 23 d&eacute;c. 2020, an. fiscale, art. 13.</p>
+<p>&nbsp;</p>
+</div></span><finh23703>
+
+<span class="historique" ID="h23707">
+<div class="histText">
+
+<BR> 
+<p>Les jugements de premi&egrave;re instance et les arr&ecirc;ts des cours d&rsquo;appel pronon&ccedil;ant un divorce sont soumis au droit fixe de 18 000 francs.</p>
+<p>Loi n&deg; 83-1421 du 30 d&eacute;c. 1983, an. fiscale, art. 43.</p>
+<p>&nbsp;</p>
+</div></span><finh23707>
+
+<span class="historique" ID="h23709">
+<div class="histText">
+
+<BR> 
+<p>Les &eacute;lections ou d&eacute;clarations de command ou d&rsquo;ami sur l&rsquo;adjudication ou contrat de vente de biens meubles, lorsque l&rsquo;&eacute;lection est faite apr&egrave;s les vingt-quatre heures ou sans que la facult&eacute; d&rsquo;&eacute;lire un command ait &eacute;t&eacute; r&eacute;serv&eacute;e dans l&rsquo;acte d&rsquo;adjudication ou du contrat de vente, sont assujetties au droit fixe de 18 000 francs.</p>
+<p>Loi n&deg; 83-1421 du 30 d&eacute;c. 1983, an. fiscale, art. 43; loi n&deg; 2004-271 du 15 avril 2004, an. fiscale, art. 28-2.</p>
+<p>Convention de microassurance</p>
+<p>&nbsp;</p>
+</div></span><finh23709>
+
+<span class="historique" ID="h23709b">
+<div class="histText">
+
+<BR> 
+<p>Sont enregistr&eacute;s &agrave; un droit fixe de 5000 francs, les conventions de microassurance vie et non-vie, conclues avec les soci&eacute;t&eacute;s ou compagnies d&rsquo;assurance ayant obtenu l&rsquo;agr&eacute;ment pour exercer l&rsquo;activit&eacute; de microassurance ou avec les entreprises exer&ccedil;ant exclusivement l&rsquo;activit&eacute; de microassurance, et tout &eacute;crit qui en constate la modification ou la r&eacute;siliation amiable, ainsi que les exp&eacute;ditions, extraits ou copies qui en sont d&eacute;livr&eacute;s.</p>
+<p>Loi n&deg; 2021-899 du 21 d&eacute;c. 2021, an. fiscale, art. 15-2.</p>
+</div></span><finh23709b>
+
+
+
+<!-- Old wrapper body -->
+</div></div> <!-- wrapper -->
+	  <div id="articleList"><div id="contenu" style='height:auto; background-color:#FFFFCC'>&nbsp;</div>
+      </div><p>&nbsp;</p><p>&nbsp;</p><p>&nbsp;</p><p>&nbsp;</p><p>&nbsp;</p><p>&nbsp;</p><p>&nbsp;</p><p>&nbsp;</p><p>&nbsp;</p><p>&nbsp;</p>
+	  <p>&nbsp;</p><p>&nbsp;</p><p>&nbsp;</p><p>&nbsp;</p><p>&nbsp;</p><p>&nbsp;</p></BODY></HTML>
+	  

@@ -1,0 +1,63 @@
+name: ci
+
+on:
+  push:
+    branches: [main, master, develop]
+  pull_request:
+
+jobs:
+  ci:
+    runs-on: ubuntu-latest
+    services:
+      postgres:
+        image: postgres:16-alpine
+        env:
+          POSTGRES_USER: postgres
+          POSTGRES_PASSWORD: postgres
+          POSTGRES_DB: revue_fiscale
+        ports:
+          - 5433:5432
+        options: >-
+          --health-cmd "pg_isready -U postgres -d revue_fiscale"
+          --health-interval 5s
+          --health-timeout 5s
+          --health-retries 10
+
+    env:
+      DATABASE_URL: postgresql+psycopg://app_revue:changeme@localhost:5433/revue_fiscale
+      DATABASE_URL_ADMIN: postgresql+psycopg://postgres:postgres@localhost:5433/revue_fiscale
+      ENV: dev
+      SECRET_KEY: ci-secret-not-for-production
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+          cache: pip
+          cache-dependency-path: pyproject.toml
+
+      - name: Installer dépendances
+        run: make install
+
+      - name: Créer rôle applicatif + migrations
+        run: |
+          PGPASSWORD=postgres psql -h localhost -p 5433 -U postgres -d revue_fiscale -v ON_ERROR_STOP=1 <<'SQL'
+          DO $$ BEGIN
+            IF NOT EXISTS (SELECT FROM pg_roles WHERE rolname = 'app_revue') THEN
+              CREATE ROLE app_revue LOGIN PASSWORD 'changeme';
+            END IF;
+          END $$;
+          SQL
+          for f in migrations/*.sql; do
+            echo "→ $f"
+            PGPASSWORD=postgres psql -h localhost -p 5433 -U postgres -d revue_fiscale -v ON_ERROR_STOP=1 -f "$f"
+          done
+
+      - name: Seed référentiel
+        run: .venv/bin/python -m backend.scripts.seed_referentiel
+
+      # Aligné sur Makefile — évite la dérive lint NEW_CODE / tests.
+      - name: make ci
+        run: make ci

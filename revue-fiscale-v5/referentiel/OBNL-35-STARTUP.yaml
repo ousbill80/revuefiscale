@@ -1,0 +1,35 @@
+reference_source: CGI 2026 — docs client 6/9/10 (propositions metier)
+date_effet: '2026-01-01'
+effets_croises: []
+a_confirmer:
+- date d effet 01/01/2026
+- valeurs issues docs client 6/9/10 — a valider metier
+formule_plafonnement: sans objet
+questions_generees:
+- id: q_startup_anomalie
+  texte: Conditions regime non respectees ?
+  type: booleen
+- id: q_montant
+  texte: Avantage indu ?
+  type: montant
+profils_applicables:
+- Startups / innovants
+nature: sans_objet
+identifiant: OBNL-35-STARTUP
+impot: OBNL
+reference_legale: CGI 2026, art. 35 — regime startup / innovant
+comptes_declencheurs:
+- '701'
+condition_declenchement: reponse(q_startup_anomalie) = vrai
+conditions_fond: Conditions du regime startup respectees ?
+resultat: reponse(q_montant)
+niveau_risque: moyen
+cas_test:
+  soldes:
+    '701': '1'
+  agregats: {}
+  reponses:
+    q_startup_anomalie: true
+    q_montant: '1000000'
+  declenche_attendu: true
+  montant_attendu: '1000000'

@@ -1,0 +1,879 @@
+<!DOCTYPE HTML><HTML><HEAD><META HTTP-EQUIV="Content-Type" CONTENT="text/html; charset=UTF-8">
+<TITLE>Code des impots -105</TITLE><LINK REL="STYLESHEET" HREF="/cicgi.css" CHARSET="ISO-8859-1" TYPE="text/css">
+<style type="text/css">
+body {margin-left: 5px;	margin-top: 0px; margin-right: .5em;margin-bottom: 0px;background-color:#fafafa ;}
+.Liste-Numerote {font-size: 12pt;font-weight: regular;font-style: italic;color: #000000;text-transform: none;margin-left:8px ;margin-bottom:8px ;margin-top:4px ;margin-right:10px ;font-family:Georgia, "Times New Roman", Times, serif}
+li {list-style-type: none; margin-left:0px ; padding-left:0em ; }
+.Paratext {font-size: 12pt;font-weight: regular;font-style: italic;color: #000000;text-decoration: none;vertical-align: baseline;text-transform: none;margin-left:0px ;font-family:Georgia, "Times New Roman", Times, serif}
+.Normal {font-size: 12pt;font-weight: regular;font-style: italic;color: #000000;text-decoration: none;vertical-align: baseline;text-transform: none;margin-left:0px ;font-family:Georgia, "Times New Roman", Times, serif}
+ul {list-style-type: none; margin-left:0px ; padding-left:0em ;  }
+.Liste2-Enumeree {font-size: 12pt;font-weight: regular;font-style: italic;color: #000000;text-decoration: none;vertical-align: baseline;text-transform: none;list-style-type:none ;margin-left:16px ;margin-bottom:8px;margin-right:10px;font-family:Georgia, "Times New Roman", Times, serif}
+P.Liste2-Enumeree {font-size: 12pt;font-weight: regular;font-style: italic;color: #000000;text-decoration: none;vertical-align: baseline;text-transform: none;list-style-type:none ;margin-left:16px ;margin-bottom:8px;margin-right:10px;font-family:Georgia, "Times New Roman", Times, serif}
+.Entete {font-size: 13pt;font-weight: regular;font-style: italic;color:#000000 ;text-decoration: none;vertical-align: baseline;text-transform: none;margin-left:8px ;font-family:Georgia, "Times New Roman", Times, serif}
+table, TABLE {border-width:1px; width:99% ;border-collapse:collapse;border-color: #9ecaed;box-shadow: 0 0 10px #9ecaed;}
+tr,td {text-align:left;vertical-align:bottom;border:1px solid #9ecaed;padding:.2em;marging-left:.2em}
+th, TH{text-align:center;vertical-align:middle;padding:.2em;}
+P.TableauEntete {font-size: 13pt;font-weight: regular;font-style: italic;color: #000000;font-family:Georgia, "Times New Roman"}
+P.TableauCelluleLeft, P.TableauCellule {text-align:right;margin-right:1em;font-size: 13pt;font-weight: regular;font-style: italic;color: #000000;font-family:Georgia, "Times New Roman"}
+P.TableauCelluleRight {text-align:left;margin-left:1em;font-size: 13pt;font-weight: regular;font-style: italic;color: #000000;font-family:Georgia, "Times New Roman"}
+.ui-buttonh {padding: .1em .1em ; border: 1px solid #dadada;border-radius: 4px; box-shadow: 0 0 4px #9ecaed;color:#FF3300 ;margin-left:8px ;margin-right:8px ;margin-bottom:2px ;margin-top:2px ;text-decoration:none ;font-size:12pt ;font-family:"Times New Roman"}   
+.ui-button {padding: .1em .1em ; border: 1px solid #dadada;border-radius: 4px; box-shadow: 0 0 4px #9ecaed;color:#FF3300 ;margin-left:8px ;margin-right:8px ;margin-bottom:2px ;margin-top:2px ;text-decoration:none ;font-size:12pt ;font-family:"Times New Roman"}   
+H3 {display: block;text-align: center;text-indent: 0pt;margin-top: 10pt;margin-bottom: 10pt;margin-right: 10pt;margin-left: 10pt;font-size: 12pt;font-weight: Bold;font-style: Regular;color: #00A000;text-decoration: none;vertical-align: baseline;text-transform: none;font-family: "Times New Roman";}
+H4 {display: block;text-align: left;text-indent: 0pt;margin-top: 10pt;margin-bottom: 6pt;margin-right: 10pt;margin-left: 10pt;font-size: 12pt;font-weight: Bold;font-style: Regular;color: #000000;text-decoration: none;vertical-align: baseline;text-transform: none;font-family: "Times New Roman";}
+H5 {display: block;text-align: left;text-indent: 0pt;margin-top: 10pt;margin-bottom: 6pt;margin-right: 10pt;margin-left: 10pt;font-size: 11pt;font-weight: Bold;font-style: Regular;color: #000000;text-decoration: none;vertical-align: baseline;text-transform: none;font-family: "Times New Roman";}
+H6.NoArticle {display: block;text-align: left;text-indent: 0pt;margin-top: 14pt;margin-bottom: 0pt;margin-right: 0pt;margin-left: 0pt;font-size: 14pt;font-weight: regular;font-style: Regular;color: #00a000;text-decoration: none;vertical-align: baseline;text-transform: none;font-family: "Times New Roman";}
+H2 {text-align:center;font-size:16pt;font-family:Georgia, "Times New Roman", Times, serif}
+P.ParaText {font-size: 12pt;font-weight: regular;font-style: italic;color: #000000;	text-decoration: none;vertical-align: baseline;text-transform: none;font-family:Georgia, "Times New Roman", Times, serif;}
+H2.Section,P.Section {font-size:12pt;font-weight:bold;font-style:Regular;color:#008000;font-family:Georgia,"Times New Roman"}
+P.Paragraphe, p.Paragraphe {Text-Align:center;Text-decoration:none;font-size:12pt;font-weight:bold;font-style:Normal;color:#00A000;font-family:Georgia,"Times New Roman"}
+H2.Livre,P.Livre {text-align:center;font-size:16pt;font-weight:bold;font-style:Regular;color:#008000;font-family:Georgia,"Times New Roman"}
+P.Partie,H2.Partie,P.TitreSub {text-align:center;font-size:14pt;font-weight:bold;font-style:Regular;color:#008000;font-family:Georgia,"Times New Roman"}
+H2.ChapitreNo,H2.TitreNo {text-align:center;font-size:14pt;font-weight:bold;font-style:Regular;color:#008000;font-family:Georgia,"Times New Roman"}
+H2.Chapitre, h2.Chapitre {text-align:center;font-size:14pt;font-weight:bold;font-style:Regular;color:#008000;font-family:Georgia,"Times New Roman"}
+H2.TitreNo {text-align:center;font-size:14pt;font-weight:bold;font-style:Regular;color:#008000;font-family:Georgia,"Times New Roman"}
+h3.Sous-Section, H3.Sous-Section, h3.Sous-section, h2.Section {font-size:12pt;font-weight:bold;font-style:Italic;color:#008000;font-family:Georgia,"Times New Roman"}
+hr,HR { display: block; width:90%;  margin-top: 0.5em; margin-bottom: 0.5em; margin-left: auto;  margin-right: auto;  border-style: inset; border-width: 1px;}
+P.TitreSub {text-align:center;font-size:14pt;font-weight:bold;font-style:Regular;color:#008000;font-family:Georgia,"Times New Roman"}
+.Reference {display: block;text-align: left;text-indent: 0pt;margin-top: 10pt;margin-bottom: 6pt;margin-right: 10pt;margin-left: 10pt;font-size: 14pt;font-weight: Bold;font-style: Regular;color: #7F5434;text-decoration: none;vertical-align: baseline;text-transform: none;font-family: "Times New Roman";}
+.ludwig,blockquote {padding-left:1em;background-color:#fafafa;font-size:12pt;font-weight:100;font-style:italic;}
+#articleList {position:absolute ;	z-index: 1 ;left: 10px ;top: 80px ;height:340px;width: 620px;border: 2px solid #cacaca ;border-radius: 5px ;background-color:#fafafa ;    box-shadow: 0 0 12px #333333;	margin-left:0px ;	padding: .3em .3em ;		overflow:hidden ;	visibility:hidden ;  }			
+#articleList h3 { text-align: center; margin: 0; }		
+
+.historique {
+  display:none ;
+  padding: .1em .3em ;
+  border: solid 2px #dadada;
+  border-radius: 7px;
+  box-shadow: 0 0 5px #9ecaed;  
+  
+}
+.histText {
+    display: block;
+    font-family: ;"Times New Roman"
+	padding: .1em .3em ;
+    margin: 1em 0px;
+	font-style:italic;
+	color:#000000;
+	overflow:auto;
+}
+.highlight {
+  font-weight:bold ;
+  color:#000000 ;
+  background-color:#FFFFCC ;
+  }
+.articleList-scroll {
+	overflow-x:hidden ;
+	overflow-y:scroll ;
+	scrollbar-width:thin ;
+	scrollbar-color:blue orange ;
+}
+
+#contenu {
+	overflow-x:hidden ;
+    overflow-y:scroll ;
+	scrollbar-width:thin ;
+	scrollbar-color:blue orange ;
+}		
+
+table, TABLE {
+ text-align:center; 
+    margin-left:.5em; 
+    margin-right:.5em; 
+    border:1px solid #000000;	
+	border-collapse:collapse ;
+    border-color: #9ecaed;
+    box-shadow: 0 0 10px #9ecaed;
+	
+   }
+  tr,td {text-align:left;}
+  
+
+
+ </style>
+ 
+<script src="/js/iscroll.js"></script>
+<script src="/js/jquery.js"></script>   
+<script src="/js/jquery-ui-1.10.3.custom.js"></script>    	    
+<script src="/js/jquery.ui.draggable.js" type="text/javascript"></script>			
+<script src="/js/jquery.ui.core.js"></script> 			
+<script src="/js/jquery.ui.widget.js"></script>			
+<script src="/js/jquery.ui.position.js"></script>			
+<script src="/js/jquery.ui.menu.js"></script>    		
+<script type="text/javascript" src="./xpages.js"></script>
+/* VERSION POUR PAGE HTML SUR SITE DGI.CGICI.COM */
+<script language="javascript">
+ function showButton(id) {
+    var x = document.getElementById(id) ;
+	if(x.style.display === "none") {
+	   x.style.display = "block" ;
+	  } else {
+	   x.style.display = "none" ;
+	   }
+	 }   
+	 var pagenumber="105";
+function loadpage(page, art) {
+      showHideHistoric(art);
+	  return false;
+	  } 
+function loadArticle(page, art) { var artno = art ;var pgno=page;scrolltoelementTag(pgno,artno) ;return false ;} 
+
+</script>
+</HEAD>
+<BODY><div ID="wrapper"><div ID="scroller">
+
+
+<H2 CLASS="Section">
+Section VI - R&egrave;gles de d&eacute;ductions</H2>
+
+<H3 CLASS="Sous-section">
+I - Principe de d&eacute;duction</H3>
+<span id="#A0362"></span>
+<H6 CLASS="NoArticle">
+Art. 362</H6>
+<P CLASS="Liste2-Enumeree">
+1<b>&deg;-</b>Les assujettis au r&eacute;gime de la taxe sur la valeur ajout&eacute;e sont autoris&eacute;s &agrave; d&eacute;duire du montant de cette taxe aff&eacute;rente &agrave; leurs op&eacute;rations, la taxe sur la valeur ajout&eacute;e ayant grev&eacute; les achats et les importations de biens acquis pour les besoins de leurs exploitations, et qu&apos;ils affectent exclusivement &agrave; la fabrication et &agrave; la vente de produits soumis &agrave; la m&ecirc;me taxe ou export&eacute;s.</P>
+<P CLASS="Liste2-Enumeree">
+2<b>&deg;-</b>Ces assujettis ne peuvent b&eacute;n&eacute;ficier d&apos;aucune d&eacute;duction du chef d&apos;acquisition de biens et services affect&eacute;s &agrave; la fabrication et &agrave; la vente de produits exon&eacute;r&eacute;s ou plac&eacute;s hors du champ d&apos;application de la taxe sur la valeur ajout&eacute;e, m&ecirc;me si ces produits sont export&eacute;s.</P>
+<P CLASS="Liste2-Enumeree">
+3<b>&deg;-</b>En ce qui concerne les biens affect&eacute;s concurremment &agrave; la fabrication et &agrave; la vente de l&apos;une ou de l&apos;autre des cat&eacute;gories de produits d&eacute;finis aux paragraphes pr&eacute;c&eacute;dents, la d&eacute;taxation est r&eacute;duite au prorata de la valeur des seuls produits vis&eacute;s au paragraphe premier du pr&eacute;sent article. Cette valeur est d&eacute;termin&eacute;e en fonction des op&eacute;rations de l&apos;exercice pendant lequel les biens ont &eacute;t&eacute; acquis. Sous r&eacute;serve de r&eacute;gularisation, elle peut &ecirc;tre provisoirement d&eacute;termin&eacute;e en fonction des op&eacute;rations de l&apos;exercice pr&eacute;c&eacute;dent.</P>
+<P CLASS="Liste2-Enumeree">
+Nonobstant les dispositions des alin&eacute;as ci-dessus, les acquisitions de biens et services par les entreprises agricoles, pastorales et industrielles int&eacute;gr&eacute;es qui sont affect&eacute;s exclusivement &agrave; l&apos;activit&eacute; agricole ou pastorale ouvrent int&eacute;gralement droit &agrave; d&eacute;duction.</P>
+
+<H6 CLASS="Modification">
+Loi n<b>&deg;-</b> 2003-206 du 7 juillet 2003, an. fiscale,Art. 43-4.</H6>
+
+
+<span id="#A0363"></span>
+<H6 CLASS="NoArticle">
+Art. 363</H6>
+<P CLASS="ParaText">
+Le b&eacute;n&eacute;fice de la d&eacute;duction est r&eacute;serv&eacute; aux redevables l&eacute;galement assujettis au r&eacute;gime de la taxe sur la valeur ajout&eacute;e ainsi qu&apos;aux redevables ayant opt&eacute; pour leur assujettissement &agrave; cette taxe, conform&eacute;ment aux dispositions de l&apos;article <a class='ui-button' href='' onClick="loadArticle('105','0348');return false;">348</a> du pr&eacute;sent Code.</P>
+
+<span id="#A0364"></span>
+<H6 CLASS="NoArticle">
+Art. 364</H6>
+<P CLASS="ParaText">
+Les assujettis au r&eacute;gime de la taxe sur la valeur ajout&eacute;e sont autoris&eacute;s, apr&egrave;s que la taxe soit devenue exigible au sens des dispositions de l&apos;article <a class='ui-button' href='' onClick="loadArticle('105','0361');return false;">361</a> du pr&eacute;sent Code, &agrave; d&eacute;duire chaque mois de la taxe sur la valeur ajout&eacute;e applicable &agrave; leurs op&eacute;rations de vente ou de prestations de services :</P>
+<P CLASS="Liste2-Enumeree">
+-le montant de celle qui figure sur leurs factures d&apos;achat de mati&egrave;res ou produits vis&eacute;s &agrave; l&apos;article <a class='ui-button' href='' onClick="loadArticle('105','0365');return false;">365</a> du pr&eacute;sent Code, ou qui a &eacute;t&eacute; acquitt&eacute;e lors de l&apos;importation des m&ecirc;mes mati&egrave;res ou produits;</P>
+<P CLASS="Liste2-Enumeree">
+-le montant de la taxe sur les op&eacute;rations bancaires portant sur les agios bancaires et sur tous les autres frais et services expos&eacute;s par les entreprises, pour les besoins de leur exploitation;</P>
+
+<H6 CLASS="Modification">
+
+Ord. n<b>&deg;-</b> 2007-675 du 28 d&eacute;cembre 2007Art. 3
+; Ord. n<b>&deg;-</b> 2011-480 du 28 d&eacute;cembre 2011Art. 3.</H6>
+<P CLASS="Liste2-Enumeree">
+-Le montant de la taxe sur les op&eacute;rations bancaires support&eacute;e lors de l&apos;acquisition de devises par les bureaux de change manuel relevant d&apos;un r&eacute;gime r&eacute;el d&apos;imposition.</P>
+
+
+<H6 CLASS="Modification">
+Ord. n<b>&deg;-</b> 2008-381 du 18 d&eacute;cembre 2008,Art. 6.</H6>
+
+
+
+
+<H3 CLASS="Sous-section">
+II - Biens et op&eacute;rations ouvrant droit &agrave; d&eacute;duction</H3>
+<span id="#A0365"></span>
+<H6 CLASS="NoArticle">
+Art. 365  &nbsp;&nbsp;&nbsp;&nbsp;<a href="#" onClick="loadpage('105','h25365');return false;" class="ui-button"  title="Consultez l'historique">2025 </a>
+&nbsp;&nbsp;&nbsp;&nbsp;<a href="#" onClick="loadpage('105','h24365');return false;" class="ui-button"  title="Consultez l'historique">2024</a></H6>
+<P CLASS="ParaText">
+Ouvrent droit &agrave; d&eacute;duction, dans les conditions pr&eacute;vues &agrave; l&apos;article <a class='ui-button' href='' onClick="loadArticle('105','0364');return false;">364</a> du pr&eacute;sent Code :</P>
+<P CLASS="Liste2-Enumeree">
+1-Les achats et les importations portant sur :</P>
+<P CLASS="Liste2-Enumeree">
+-les mati&egrave;res premi&egrave;res et produits entr&eacute;s int&eacute;gralement ou pour une partie de leurs &eacute;l&eacute;ments dans la composition de produits ou objets passibles de la taxe sur la valeur ajout&eacute;e et les marchandises destin&eacute;es &agrave; &ecirc;tre revendues en l&apos;&eacute;tat;</P>
+<P CLASS="Liste2-Enumeree">
+-les mati&egrave;res ou produits ne constituant pas un outillage qui, normalement et sans entrer dans le produit fini, sont d&eacute;truits ou perdent leurs qualit&eacute;s sp&eacute;cifiques au cours d&apos;une seule op&eacute;ration de fabrication.</P>
+<P CLASS="Liste2-Enumeree"><FONT COLOR='#000000'>
+Pour les produits pétroliers, ouvrent droit à déduction, le pétrole utilisé pour le fonctionnement des usines et les produits noirs (gas-oil, fuel-oil 180, distillate diesel-oil) ainsi que les produits utilisés comme carburant dans les véhicules de transport public de personnes et/ou de marchandises relevant d’un régime du réel d’imposition. </FONT></P>
+<H6 CLASS="Modification">
+Loi n° 2003-206 du 7 juillet 2003, an. fiscale, art. 4-1;       loi n°2004-271 du 15 avril 2004, an. fiscale, art. 11;  loi n° 2024-1109 du 18 déc. 2024, an. fiscale, art. 1er-6. </H6>
+<P CLASS="Liste2-Enumeree">
+<A NAME="pgfId-1149380"></A>Ouvrent &eacute;galement droit &agrave; d&eacute;duction, le gaz utilis&eacute; comme combustible pour le fonctionnement des usines, ainsi que le gas-oil, les huiles et les graisses utilis&eacute;s par les entreprises du secteur des b&acirc;timents et travaux publics (BTP)<FONT COLOR='#d00000'> et les exploitants de produits agricoles qui sont dans le champ d&#8217;application de la taxe sur la valeur ajout&eacute;e  ayant opt&eacute; </FONT>pour leur assujettissement &agrave; ladite taxe, pour le fonctionnement de leurs engins, &agrave; l&#8217;exclusion des produits destin&eacute;s aux v&eacute;hicules de tourisme et au transport des personnes. </P>
+<H6 CLASS="Modification">
+Loi n&#176; 2025-987 du 19  d&eacute;cembre 2025, art. 38-2.</H6>
+<P CLASS="Liste2-Enumeree">
+En ce qui concerne les entreprises des BTP, <FONT COLOR='#d00000'> et les exploitants de produits agricoles qui sont dans le champ d&rsquo;application de la taxe sur la valeur ajout&eacute;e ayant opt&eacute; pour leur assujettissement &agrave; ladite taxe,</FONT> cette d&eacute;duction est limit&eacute;e &agrave; 95 % de la TVA support&eacute;e figurant sur la facture d&#8217;achat.</P>
+<H6 CLASS="Modification">
+Ord. n&#176; 2007-675 du 28 d&eacute;cembre 2007, an. fiscale, art. 1er; loi n&#176; 2018 - 984 du 28  d&eacute;cembre 2018, an. fiscale art. 2;     loi n&#176; 2025-987 du 19  d&eacute;cembre 2025, art. 38-2.</H6>
+<P CLASS="Liste2-Enumeree">
+2-Les achats, importations et livraisons &agrave; soi-m&ecirc;me portant sur des biens autres que ceux vis&eacute;s au paragraphe 1 du pr&eacute;sent article op&eacute;r&eacute;s pour les besoins de l&apos;exploitation; les biens donnant lieu &agrave; ces d&eacute;ductions sont inscrits dans la comptabilit&eacute; de l&apos;entreprise pour leur prix d&apos;achat ou de revient diminu&eacute; des d&eacute;ductions y aff&eacute;rentes.</P>
+<P CLASS="Liste2-Enumeree">
+Les modalit&eacute;s d&apos;application des dispositions du pr&eacute;sent paragraphe sont d&eacute;termin&eacute;es aux articles <a class='ui-button' href='' onClick="loadArticle('105','0362');return false;">362</a> &agrave; <a class='ui-button' href='' onClick="loadArticle('105','0373');return false;">373</a> du pr&eacute;sent Code qui fixent &eacute;galement les exclusions et restrictions qui peuvent &ecirc;tre apport&eacute;es aux d&eacute;ductions pr&eacute;vues par ces dispositions.</P>
+
+<span id="#A0366"></span>
+<H6 CLASS="NoArticle">
+Art. 366</H6>
+<P CLASS="ParaText">
+Ouvrent &eacute;galement droit &agrave; d&eacute;duction :</P>
+<P CLASS="Liste2-Enumeree">
+-dans les m&ecirc;mes conditions et sous les m&ecirc;mes r&eacute;serves, les achats et importations op&eacute;r&eacute;s par des personnes effectuant des livraisons &agrave; l&apos;exportation;</P>
+<P CLASS="Liste2-Enumeree">
+-dans les conditions pr&eacute;vues &agrave; l&apos;article <a class='ui-button' href='' onClick="loadArticle('105','0364');return false;">364</a>, les prestations de services sous r&eacute;serve des exclusions pr&eacute;vues aux articles <a class='ui-button' href='' onClick="loadArticle('105','0362');return false;">362</a> &agrave; <a class='ui-button' href='' onClick="loadArticle('105','0373');return false;">373</a> du pr&eacute;sent Code.</P>
+
+<span id="#A0367"></span>
+<H6 CLASS="NoArticle">
+Art. 367</H6>
+<P CLASS="ParaText">
+Les soci&eacute;t&eacute;s de cr&eacute;dit-bail r&eacute;guli&egrave;rement agr&eacute;&eacute;es sont autoris&eacute;es &agrave; d&eacute;duire de la taxe sur la valeur ajout&eacute;e dont elles sont redevables sur leurs loyers, la taxe sur la valeur ajout&eacute;e ayant grev&eacute; le mat&eacute;riel c&eacute;d&eacute;, m&ecirc;me si ce dernier se trouve r&eacute;glementairement exclu du droit &agrave; d&eacute;duction; la pr&eacute;sente disposition ne peut avoir pour effet de diminuer le montant de la taxe normalement exigible si le mat&eacute;riel &eacute;tait vendu directement.</P>
+
+<span id="#A0368"></span>
+<H6 CLASS="NoArticle">
+Art. 368 &nbsp;&nbsp;&nbsp;&nbsp;<a href="#" onClick="loadpage('323','h24368');return false;" class="ui-button"  title="Consultez l'historique">2024...</a>
+
+
+<FONT COLOR='#000000'></H6>
+<P CLASS="ParaText">
+Les entreprises de location de v&eacute;hicules sont autoris&eacute;es &agrave; exercer un droit &agrave; d&eacute;duction &agrave; l&apos;occasion de l&apos;acquisition, de l&apos;entretien de v&eacute;hicules exclusivement destin&eacute;s &agrave; la location.</P>
+<P CLASS="ParaText">
+Les entreprises de transport public de personnes et de marchandises sont &eacute;galement autoris&eacute;es &agrave; exercer un droit &agrave; d&eacute;duction &agrave; l&apos;occasion de l&apos;acquisition des pi&egrave;ces de rechange et des r&eacute;parations des v&eacute;hicules exclusivement destin&eacute;s au transport public.</P>
+
+<H6 CLASS="Modification">
+Loi n° 2003-206 du 7 juillet 2003, an. fiscale, art. 4-2; <FONT COLOR='#000000'>   loi n° 2024-1109 du 18 déc. 2024, an. fiscale, art. 1er-7.</FONT></H6>
+
+
+<span id="#A0369"></span>
+<H6 CLASS="NoArticle">
+Art. 369</H6>
+<P CLASS="ParaText">
+Le droit &agrave; d&eacute;duction est &eacute;galement accord&eacute; pour les op&eacute;rations suivantes :</P>
+<P CLASS="Liste2-Enumeree">
+-les exportations de biens, dont la livraison serait imposable si elle &eacute;tait effectu&eacute;e en C&ocirc;te d&apos;Ivoire;</P>
+<P CLASS="Liste2-Enumeree">
+-les services assimil&eacute;s &agrave; des exportations;</P>
+<P CLASS="Liste2-Enumeree">
+-les prestations de services li&eacute;es aux biens plac&eacute;s sous le r&eacute;gime douanier du transit;</P>
+<P CLASS="Liste2-Enumeree">
+-les livraisons, les transformations, les r&eacute;parations, l&apos;entretien, l&apos;affr&egrave;tement et les locations de bateaux destin&eacute;s &agrave; une activit&eacute; de p&ecirc;che, une activit&eacute; industrielle ou commerciale exerc&eacute;e en haute mer, les livraisons, locations, r&eacute;parations et entretien des objets qui leur sont incorpor&eacute;s ou qui servent &agrave; leur exploitation, les livraisons de biens destin&eacute;s &agrave; leur avitaillement, ainsi que les prestations de services effectu&eacute;es pour les besoins directs de ces bateaux et de leur cargaison;</P>
+<P CLASS="Liste2-Enumeree">
+-les livraisons, les transformations, les r&eacute;parations, l&apos;entretien, l&apos;affr&egrave;tement et les locations d&apos;a&eacute;ronefs, utilis&eacute;s par des compagnies de navigation a&eacute;rienne pratiquant essentiellement un trafic international r&eacute;mun&eacute;r&eacute;, les livraisons, locations, r&eacute;parations et entretien des objets qui leur sont incorpor&eacute;s ou qui servent &agrave; leur exploitation, les livraisons des biens destin&eacute;s &agrave; leur avitaillement, ainsi que les prestations de services effectu&eacute;es pour les besoins directs de ces a&eacute;ronefs et de leur cargaison;</P>
+<P CLASS="Liste2-Enumeree">
+-Les acquisitions d&apos;immobilisations et de pi&egrave;ces d&eacute;tach&eacute;es affect&eacute;es exclusivement &agrave; l&apos;activit&eacute; agricole ou pastorale des entreprises agricoles, pastorales et industrielles int&eacute;gr&eacute;es.</P>
+<P CLASS="Liste2-Enumeree">
+Cette disposition s&apos;applique &eacute;galement aux fournitures de services de r&eacute;paration &agrave; ces m&ecirc;mes entreprises.</P>
+
+<H6 CLASS="Modification">
+Loi n<b>&deg;-</b> 2003-206 du 7 juillet 2003, an. fiscale,Art. 43-3.</H6>
+
+
+<span id="#A0370"></span>
+<H6 CLASS="NoArticle">
+Art. 370</H6>
+<P CLASS="ParaText">
+Les biens ouvrant droit &agrave; d&eacute;duction comprennent :</P>
+<P CLASS="Liste2-Enumeree">
+-les investissements et &eacute;quipements mobiliers ou immobiliers inscrits en comptabilit&eacute; &agrave; un compte d&apos;immobilisation;</P>
+<P CLASS="Liste2-Enumeree">
+-les services et autres biens directement ou indirectement utilis&eacute;s pour les fabrications ou &agrave; l&apos;occasion des ventes et dont l&apos;acquisition constitue des charges de l&apos;entreprise.</P>
+<P CLASS="Liste2-Enumeree">
+Ne sauraient toutefois ouvrir droit &agrave; d&eacute;duction, les cat&eacute;gories de biens d&eacute;finies aux articles <a class='ui-button' href='' onClick="loadArticle('105','0372');return false;">372</a> et <a class='ui-button' href='' onClick="loadArticle('105','0373');return false;">373</a> du pr&eacute;sent Code.</P>
+
+<span id="#A0371"></span>
+<H6 CLASS="NoArticle">
+Art. 371</H6>
+<P CLASS="ParaText">
+Les n&eacute;gociants de biens d&apos;occasion, d&apos;&#339;uvres d&apos;art, d&apos;objets de collection ou d&apos;antiquit&eacute;, &agrave; l&apos;exception des engins de chantier, ne sont autoris&eacute;s &agrave; exercer des droits &agrave; d&eacute;duction, dans les conditions pr&eacute;vues aux articles 365 et suivants du pr&eacute;sent Code, qu&apos;en ce qui concerne leurs acquisitions d&apos;une part, de biens constituant des immobilisations et d&apos;autre part, de biens meubles corporels utilis&eacute;s exclusivement pour la r&eacute;paration et la remise en &eacute;tat des biens vendus.</P>
+<P CLASS="ParaText"><FONT COLOR='#000000'>
+Les engins de chantier vis&eacute;s au paragraphe pr&eacute;c&eacute;dent sont les suivants :</FONT></P>
+<P CLASS="Liste2-Enumeree"><FONT COLOR='#000000'>
+ - les bouteurs (bulldozer), les bouteurs biais (chargeuses sur pneus) et les bouteurs sur chenilles (chargeuses sur chenilles) ;</FONT></P>
+<P CLASS="Liste2-Enumeree"><FONT COLOR='#000000'>
+- les autres pelles m&eacute;caniques, excavateurs, chargeuses, pelleteuses (tractopelle) ;</FONT></P>
+<P CLASS="Liste2-Enumeree"><FONT COLOR='#000000'>
+ - les chargeuses et chargeuses pelles &agrave; chargement frontal ;</FONT></P>
+<P CLASS="Liste2-Enumeree"><FONT COLOR='#000000'>
+ - les niveleuses (finisher/asphaltfinisher) ;</FONT></P>
+<P CLASS="Liste2-Enumeree"><FONT COLOR='#000000'>
+ - les compacteuses et rouleaux compresseurs ;</FONT></P>
+<P CLASS="Liste2-Enumeree"><FONT COLOR='#000000'>
+ - les grues/camions grue ;</FONT></P>
+<P CLASS="Liste2-Enumeree"><FONT COLOR='#000000'>
+ - les tombereaux ;</FONT></P>
+<P CLASS="Liste2-Enumeree"><FONT COLOR='#000000'>
+  - les tombereaux articul&eacute;s (camions articul&eacute;s).</FONT></P>
+
+<H6 CLASS="Modification">
+Loi n&deg; 2017-870 du 27 d&eacute;cembre 2017, an. fiscaleArt. 4-2.</H6>
+
+
+<H3 CLASS="Sous-section">
+III - Exclusions</H3>
+<span id="#A0372"></span>
+<H6 CLASS="NoArticle">
+Art. 372  &nbsp;&nbsp;&nbsp;&nbsp;<a href="#" onClick="loadpage('323','h24372');return false;" class="ui-button"  title="Consultez l'historique">2024...</a></H6>
+<P CLASS="ParaText">
+N&apos;ouvrent pas droit au b&eacute;n&eacute;fice des d&eacute;ductions vis&eacute;es &agrave; l&apos;article 365 du Code g&eacute;n&eacute;ral des Imp&ocirc;ts :</P>
+<P CLASS="Liste2-Enumeree">
+1-	Les immeubles autres que :</P>
+<P CLASS="Liste2-Enumeree">
+-	les b&acirc;timents et locaux &agrave; usage industriel et assimil&eacute;s;</P>
+<P CLASS="Liste2-Enumeree">
+-	les b&acirc;timents administratifs et commerciaux. </P>
+<H6 CLASS="Modification">
+Loi n&deg; 2003-206 du 7 juillet 2003, an. fiscale,Art. 42-1; ord. n&deg; 2006-234 du 02 ao&ucirc;t 2006, an. fiscale,Art. 1er -8. </H6>
+<P CLASS="Liste2-Enumeree">
+2-	Les v&eacute;hicules, autres que :</P>
+<P CLASS="Liste2-Enumeree">
+-	les moyens internes de manutention, les v&eacute;hicules sp&eacute;ciaux;</P>
+<P CLASS="Liste2-Enumeree">
+-	les v&eacute;hicules de tourisme dont la puissance fiscale n&apos;exc&egrave;de pas 12 chevaux ainsi que les v&eacute;hicules &agrave; deux roues dont le prix d&apos;acquisition n&apos;exc&egrave;de pas trois millions de francs hors taxes;</P>
+<H6 CLASS="Modification">
+Ord. n&deg; 2011-121 du 22 juin 2011, an. fiscale, art; 3;</H6>
+<P CLASS="Liste2-Enumeree">
+-	les v&eacute;hicules utilitaires quelle que soit leur charge utile;</P>
+<H6 CLASS="Modification">
+Ord. n&deg; 2006-234 du 02 ao&ucirc;t 2006, an. fiscale,Art. 1er-11.</H6>
+<P CLASS="Liste2-Enumeree"><FONT COLOR='#000000'>
+– 	les véhicules acquis par les entreprises de transport relevant d’un régime réel d’imposition, qui sont affectés au transport public de personnes et/ou de marchandises.</FONT></P>
+<H6 CLASS="Modification">
+Loi n° 2003-206 du 7 juillet 2003, an. fiscale, art. 4-3;             loi n° 2024-1109 du 18 déc. 2024, an. fiscale, art. 1er-8.</H6>
+<P CLASS="Liste2-Enumeree">
+3-	Les objets de mobilier.</P>
+<P CLASS="Liste2-Enumeree">
+4-	Les op&eacute;rations bancaires effectu&eacute;es &agrave; titre personnel pour le compte des dirigeants de l&apos;entreprise.</P>
+<P CLASS="Liste2-Enumeree">
+5-	Les services se rattachant &agrave; des biens exclus : location, entretien et r&eacute;paration de mat&eacute;riel, locaux, objets ou v&eacute;hicules n&apos;ouvrant pas droit &agrave; d&eacute;duction.</P>
+<P CLASS="Liste2-Enumeree">
+<FONT COLOR='#000000'>
+6-	Les frais d&apos;h&ocirc;tel et de restaurant, &agrave; l&apos;exception de la fourniture de repas sur les plates-formes p&eacute;troli&egrave;res.</FONT></P>
+<H6 CLASS="Modification">
+Loi n&deg; 2017-870 du 27 d&eacute;cembre 2017, an. fiscaleArt. 2-1.</H6>
+<P CLASS="Liste2-Enumeree">
+7-	Les frais de repr&eacute;sentation.</P>
+<P CLASS="Liste2-Enumeree"><FONT COLOR='#000000'>
+8–	Les frais de carburant pour véhicules autres que ceux affectés au transport public de personnes et/ou de marchandises des entreprises relevant d’un régime réel d’imposition.</FONT> </P>
+<H6 CLASS="Modification">
+Loi n° 2003-206 du 7 juillet 2003, an. fiscale, art. 4-4;            loi n° 2024-1109 du 18 déc. 2024, an. fiscale, art. 1er-8.</H6>
+<P CLASS="Liste2-Enumeree">
+<FONT COLOR='#000000'>
+9 - Les prestations de r&eacute;paration et de maintenance des v&eacute;hicules de fonction des dirigeants des soci&eacute;t&eacute;s p&eacute;troli&egrave;res, de gardiennage de leurs domiciles ainsi que les prestations diverses fournies aux consultants auxquels les soci&eacute;t&eacute;s p&eacute;troli&egrave;res ont recours.</FONT></P>
+<H6 CLASS="Modification">
+Loi n&deg; 2017-870 du 27 d&eacute;cembre 2017, an. fiscaleArt. 2-2.</H6>
+
+<span id="#A0373"></span>
+<H6 CLASS="NoArticle">
+Art. 373  &nbsp;&nbsp;&nbsp;&nbsp;<a href="#" onClick="loadpage('324','h25373');return false;" class="ui-button"  title="Consultez l'historique">2025...</a></H6></H6>
+<P CLASS="ParaText">
+N&apos;ouvre &eacute;galement pas droit &agrave; d&eacute;duction, la taxe ayant grev&eacute; les achats, travaux ou services dont le montant est sup&eacute;rieur &agrave; 250 000 francs et dont le r&egrave;glement est effectu&eacute; en esp&egrave;ces.</P>
+<H6 CLASS="Modification">
+Loi n<b>&deg;-</b> 2001-338 du 14 juin 2001 an. fiscaleArt. 4.</H6>
+
+<P CLASS="ParaText"><FONT COLOR='#d00000'>
+<A NAME="pgfId-1153640"></A>Ne sont pas vis&eacute;es par le pr&eacute;sent article, les transactions dont le r&egrave;glement est effectu&eacute; par mobile money. Dans ce cas, les charges sont d&eacute;ductibles quel que soit leur montant.</FONT></P>
+<H6 CLASS="Modification">
+<A NAME="pgfId-1153662"></A>Loi n&#176; 2025-987 du 19  d&eacute;cembre 2025, art. 7-2</H6>
+
+
+
+<span id="#A0374"></span>
+<H6 CLASS="NoArticle">
+Art. 374</H6>
+<P CLASS="ParaText">
+La d&eacute;duction est op&eacute;r&eacute;e dans les conditions et selon les modalit&eacute;s prescrites par l&apos;article <a class='ui-button' href='' onClick="loadArticle('105','0364');return false;">364</a> du pr&eacute;sent Code.</P>
+<P CLASS="ParaText">
+Elle porte, sous r&eacute;serve des dispositions de l&apos;article <a class='ui-button' href='' onClick="loadArticle('105','0362');return false;">362</a>-3<b>&deg;-</b> du pr&eacute;sent Code :</P>
+<P CLASS="Liste2-Enumeree">
+-sur la totalit&eacute; de la taxe sur la valeur ajout&eacute;e mentionn&eacute;e distinctement sur les factures d&apos;achat ou acquitt&eacute;e lors du d&eacute;douanement des biens import&eacute;s directement par les utilisateurs;</P>
+<P CLASS="Liste2-Enumeree">
+-sur la totalit&eacute; de la taxe acquitt&eacute;e, le cas &eacute;ch&eacute;ant, lors de la livraison faite &agrave; lui-m&ecirc;me par un assujetti d&apos;un bien utilis&eacute; pour les besoins de son exploitation. Toutefois, dans la mesure o&ugrave; il s&apos;agit d&apos;un bien d&eacute;fini au paragraphe premier de l&apos;article <a class='ui-button' href='' onClick="loadArticle('105','0362');return false;">362</a> du pr&eacute;sent Code, l&apos;assujetti est, par d&eacute;rogation aux dispositions de l&apos;article <a class='ui-button' href='' onClick="loadArticle('105','0344');return false;">344</a> du m&ecirc;me Code, dispens&eacute; d&apos;acquitter la taxe sur la valeur du bien. Dans cette hypoth&egrave;se, la d&eacute;duction porte sur la taxe ayant grev&eacute; l&apos;achat ou l&apos;importation des mati&egrave;res premi&egrave;res et produits utilis&eacute;s &agrave; sa fabrication.</P>
+
+<span id="#A0375"></span>
+<H6 CLASS="NoArticle">
+Art. 375</H6>
+<P CLASS="Liste2-Enumeree">
+1<b>&deg;-</b>Les assujettis au r&eacute;gime de la taxe sur la valeur ajout&eacute;e op&egrave;rent les d&eacute;ductions sous leur responsabilit&eacute; et sont tenus de justifier de l&apos;affectation r&eacute;elle des biens dont l&apos;acquisition a ouvert droit &agrave; d&eacute;duction.</P>
+<P CLASS="Liste2-Enumeree">
+Toute d&eacute;duction injustifi&eacute;e donnera lieu &agrave; r&eacute;p&eacute;tition du montant de la taxe irr&eacute;guli&egrave;rement imput&eacute;e sans pr&eacute;judice, le cas &eacute;ch&eacute;ant, de l&apos;application des p&eacute;nalit&eacute;s pr&eacute;vues au Livre de Proc&eacute;dures fiscales.</P>
+<P CLASS="Liste2-Enumeree">
+2<b>&deg;-</b>Lorsque, par suite d&apos;une modification intervenue dans l&apos;activit&eacute; de l&apos;entreprise, les conditions pr&eacute;vues &agrave; l&apos;article <a class='ui-button' href='' onClick="loadArticle('105','0362');return false;">362</a>-1<b>&deg;-</b> ne se trouvent plus r&eacute;unies, et notamment en cas de cessation d&apos;entreprise, de cession s&eacute;par&eacute;e &agrave; titre on&eacute;reux ou gratuit d&apos;&eacute;l&eacute;ments de l&apos;actif, d&apos;abandon de la qualit&eacute; d&apos;assujetti &agrave; la taxe sur la valeur ajout&eacute;e, d&apos;affectation d&apos;un bien &agrave; une destination n&apos;ouvrant pas droit ou n&apos;ouvrant plus droit &agrave; d&eacute;duction, les redevables auront &agrave; reverser :</P>
+<P CLASS="Liste2-Enumeree">
+-s&apos;il s&apos;agit de biens non soumis &agrave; amortissement, le montant de la taxe sur la valeur ajout&eacute;e imput&eacute;e lors de l&apos;acquisition de ces biens, &agrave; concurrence de la partie de ces biens demeurant en stock lors de l&apos;&eacute;v&eacute;nement motivant la r&eacute;p&eacute;tition de la taxe;</P>
+<P CLASS="Liste2-Enumeree">
+-s&apos;il s&apos;agit d&apos;un bien soumis &agrave; amortissement, une fraction de la m&ecirc;me taxe calcul&eacute;e au prorata du temps d&apos;amortissement restant &agrave; courir.</P>
+<P CLASS="Liste2-Enumeree">
+La r&eacute;gularisation de la taxe sur la valeur ajout&eacute;e n&apos;est pas exig&eacute;e lorsque les biens non amortissables ont fait l&apos;objet de destruction par incendie, inondation, pillage ou saccage.</P>
+<P CLASS="Liste2-Enumeree">
+En ce qui concerne les immobilisations, la fraction de la taxe sur la valeur ajout&eacute;e d&eacute;duite et qui correspond &agrave; la partie non amortie de l&apos;immobilisation, ne donne pas lieu &agrave; r&eacute;gularisation en cas de destruction par incendie, inondation, pillage ou saccage.</P>
+<P CLASS="Liste2-Enumeree">
+La destruction par incendie, inondation, pillage ou saccage peut &ecirc;tre justifi&eacute;e par tout moyen de droit.</P>
+
+<H6 CLASS="Modification">
+Ord. n<b>&deg;-</b> 2011-121 du 22 juin 2011Art. 9; Loi n<b>&deg;-</b> 2012-1179 du 27 d&eacute;cembre 2012, an. fiscale,Art. 4.</H6>
+<P CLASS="Liste2-Enumeree">
+En cas de cession globale de l&apos;entreprise, le reversement de taxe indiqu&eacute; ci-dessus ne sera pas exig&eacute; du c&eacute;dant, mais le cessionnaire sera tenu, en ses lieu et place, des m&ecirc;mes obligations en ce qui concerne les biens c&eacute;d&eacute;s ayant ouvert droit &agrave; d&eacute;duction au profit du c&eacute;dant.</P>
+<P CLASS="Liste2-Enumeree">
+Le reversement est effectu&eacute; par le redevable &agrave; la date fix&eacute;e pour son plus prochain versement de taxes sur le chiffre d&apos;affaires, ou au plus tard, le 15 du mois suivant l&apos;&eacute;v&eacute;nement. Tout retard ou toute irr&eacute;gularit&eacute; sera sanctionn&eacute; dans les conditions pr&eacute;vues au Livre de Proc&eacute;dures fiscales.</P>
+<P CLASS="Liste2-Enumeree">
+3<b>&deg;-</b>Les redevables qui prennent la position d&apos;assujetti &agrave; la taxe sur la valeur ajout&eacute;e sont autoris&eacute;s &agrave; d&eacute;duire dans les conditions pr&eacute;vues &agrave; l&apos;article <a class='ui-button' href='' onClick="loadArticle('105','0362');return false;">362</a> du pr&eacute;sent Code, une part calcul&eacute;e au prorata du temps d&apos;amortissement.</P>
+<P CLASS="Liste2-Enumeree">
+Les biens d&eacute;j&agrave; amortis, ainsi que les autres biens ne donnant pas lieu &agrave; amortissement, d&eacute;tenus &agrave; la date de la prise de position d&apos;assujetti, n&apos;ouvrent droit &agrave; aucune d&eacute;duction.</P>
+
+
+<span id="#A0376"></span>
+<H6 CLASS="NoArticle">
+Art. 376</H6>
+<P CLASS="ParaText">
+Les assujettis au r&eacute;gime de la taxe sur la valeur ajout&eacute;e sont tenus d&apos;indiquer distinctement sur la d&eacute;claration qu&apos;ils souscrivent pour le paiement de cette taxe, la valeur nette des biens soumis &agrave; amortissement et pour lesquels ils ont b&eacute;n&eacute;fici&eacute; de la d&eacute;duction de taxe.</P>
+
+<span id="#A0377"></span>
+<H6 CLASS="NoArticle">
+Art. 377</H6>
+<P CLASS="ParaText">
+Les dispositions des articles <a class='ui-button' href='' onClick="loadArticle('105','0363');return false;">363</a>, <a class='ui-button' href='' onClick="loadArticle('105','0370');return false;">370</a> et <a class='ui-button' href='' onClick="loadArticle('105','0374');return false;">374</a> &agrave; <a class='ui-button' href='' onClick="loadArticle('105','0376');return false;">376</a> du pr&eacute;sent Code sont applicables dans les m&ecirc;mes conditions et sous les m&ecirc;mes r&eacute;serves, aux achats et importations de biens affect&eacute;s &agrave; la r&eacute;alisation de prestations de services plac&eacute;es sous le r&eacute;gime de la taxe sur la valeur ajout&eacute;e.</P>
+
+<span id="#A0378"></span>
+<H6 CLASS="NoArticle">
+Art. 378</H6>
+<P CLASS="ParaText">
+En ce qui concerne les redevables qui ne sont pas passibles de la taxe sur la valeur ajout&eacute;e sur la totalit&eacute; de leurs op&eacute;rations, ces d&eacute;ductions sont r&eacute;duites au prorata de la valeur des produits soumis &agrave; cette taxe ou export&eacute;s.</P>
+
+<span id="#A0379"></span>
+<H6 CLASS="NoArticle">
+Art. 379</H6>
+<P CLASS="ParaText">
+Dans le cas o&ugrave; le fournisseur de biens ou de services n&apos;acquitterait pas la taxe port&eacute;e sur ses factures, le b&eacute;n&eacute;ficiaire de la d&eacute;duction sera consid&eacute;r&eacute; comme solidairement responsable du paiement des droits s&apos;il s&apos;av&egrave;re que le fournisseur n&apos;est pas identifi&eacute; au r&eacute;pertoire de la Direction g&eacute;n&eacute;rale des Imp&ocirc;ts.</P>
+
+<span id="#A0380"></span>
+<H6 CLASS="NoArticle">
+Art. 380</H6>
+<P CLASS="ParaText">
+Par d&eacute;rogation aux dispositions qui pr&eacute;c&egrave;dent, les producteurs de plantes et fleurs, de bananes et d&apos;ananas, assujettis au r&eacute;gime de la taxe sur la valeur ajout&eacute;e par option dans les conditions pr&eacute;vues par l&apos;article <a class='ui-button' href='' onClick="loadArticle('105','0348');return false;">348</a> pr&eacute;c&eacute;dent, sont exclus du r&eacute;gime des droits &agrave; d&eacute;duction r&eacute;els lorsque leur chiffre d&apos;affaires annuel toutes taxes comprises n&apos;exc&egrave;de pas 150 000 000 de francs.</P>
+
+<H6 CLASS="Modification">
+Loi n<b>&deg;-</b> 2005-161 du 27 avril 2005, an. fiscale,Art. 3-2.</H6>
+<P CLASS="ParaText">
+Leurs droits &agrave; d&eacute;duction mensuels sont fix&eacute;s forfaitairement &agrave; un pourcentage du montant de leur chiffre d&apos;affaires toutes taxes comprises effectivement r&eacute;alis&eacute; et d&eacute;clar&eacute; au titre de chaque mois.</P>
+<P CLASS="ParaText">
+Ce pourcentage est fix&eacute; &agrave; :</P>
+<P CLASS="Liste2-Enumeree">
+-5 % pour les bananes;</P>
+<P CLASS="Liste2-Enumeree">
+-5,5 % pour les ananas;</P>
+<P CLASS="Liste2-Enumeree">
+-6 % pour les plantes et fleurs.</P>
+
+
+<span id="#A0381"></span>
+<H6 class="NoArticle">
+Art. 381 &nbsp;&nbsp;&nbsp;&nbsp; <a href="#" onClick="loadpage('105','h22381');return false;" class="ui-button"  title="Consultez l'historique">2022...</a></H6>
+<P CLASS="ParaText">
+Les déductions de taxes qui n’auraient pas été effectuées dans le délai prévu par l’article 364 précédent, peuvent néanmoins l’être dans les douze mois à compter de la date <FONT COLOR='#000000'>d’exigibilité.</font></P>
+<H6 CLASS="Modification">
+Loi n° 2022-974 du 20 déc. 2022, an. fiscale, art. 3</H6>
+
+
+
+<H3 CLASS="Sous-section">
+V - Remboursement</H3>
+<span id="#A0382"></span>
+<H6 CLASS="NoArticle">
+Art. 382</H6>
+<P CLASS="ParaText">
+Les d&eacute;ductions susvis&eacute;es ne peuvent aboutir au remboursement m&ecirc;me partiel de la taxe ayant grev&eacute; un produit d&eacute;termin&eacute;, sauf dans les cas suivants :</P>
+<P CLASS="Liste2-Enumeree">
+1-Op&eacute;rations &agrave; l&apos;exportation et assimil&eacute;es.</P>
+<P CLASS="Liste2-Enumeree">
+2-Cessation d&apos;entreprise.</P>
+<P CLASS="Liste2-Enumeree">
+3-Investissements r&eacute;alis&eacute;s par les entreprises industrielles assujetties au r&eacute;gime de la taxe sur la valeur ajout&eacute;e.</P>
+<P CLASS="Liste2-Enumeree">
+4-Op&eacute;rations de cr&eacute;dit-bail.</P>
+<P CLASS="Liste2-Enumeree"><FONT COLOR='#000000'>
+<a name="50634770_pgfId-1027971"></a>5-	Investissements r&eacute;alis&eacute;s par les entreprises agr&eacute;&eacute;es au Code des Investissements.</FONT></P>
+<H6 CLASS="Modification">
+<a name="50634770_pgfId-1047905"></a>Loi n&deg; 2018 - 984 du 28  d&eacute;cembre 2018, an. fiscaleArt. 27-1</H6>
+<P CLASS="Liste2-Enumeree">
+6-Les acquisitions de biens d&apos;investissement ouvrant droit &agrave; d&eacute;duction pour une valeur sup&eacute;rieure &agrave; 40 000 000 de francs toutes taxes comprises.</P>
+<P CLASS="Liste2-Enumeree">
+7- Op&eacute;rations passibles de la taxe au taux r&eacute;duit.</P>
+
+<H6 CLASS="Modification">
+Ord. n<b>&deg;-</b> 2008-381 du 18 d&eacute;cembre 2008,Art. 2-2/.</H6>
+<P CLASS="Liste2-Enumeree">
+
+8- Op&eacute;rations b&eacute;n&eacute;ficiant d&apos;une exon&eacute;ration conventionnelle, ainsi que celles effectu&eacute;es avec les membres des missions diplomatiques et assimil&eacute;es, en application des r&egrave;gles de r&eacute;ciprocit&eacute;.</P>
+
+
+<H6 CLASS="Modification">
+ Loi n<b>&deg;-</b> 2013 - 908 du 26 d&eacute;cembre  2013, an. fiscale,Art. 2 .</H6>
+ 
+ <P CLASS="Liste1-Numerotee"><FONT COLOR='#d00000'>
+9- Le cr&eacute;dit de taxe sur la valeur ajout&eacute;e r&eacute;sultant des op&eacute;rations des fournisseurs et prestataires locaux effectu&eacute;es avec les titulaires de march&eacute;s publics ou leurs sous-traitants dans le cadre des projets &eacute;tatiques cofinanc&eacute;s ou financ&eacute;s par des partenaires ext&eacute;rieurs et dont la prise en charge de la taxe sur la valeur ajout&eacute;e et des droits de douane est effectu&eacute;e au moyen des ch&egrave;ques sp&eacute;ciaux du Tr&eacute;sor.</FONT></P>
+<H6 CLASS="Modification">
+Loi n&#176; 2025-987 du 19  d&eacute;cembre 2025, art. 27-2</H6>
+
+<DIV>
+<span id="#A0382b"></span>
+<H6 CLASS="NoArticle">
+Art. 382 bis </H6>
+<P CLASS="ParaText">
+Il est institu&eacute; une proc&eacute;dure acc&eacute;l&eacute;r&eacute;e de remboursement des cr&eacute;dits de TVA pour :</P>
+<P CLASS="Liste2-Enumeree">
+-	Les entreprises r&eacute;alisant au moins 75% de leur chiffre d&apos;affaires a l&apos;exportation, <FONT COLOR='#000000'>autre que par voie terrestre ;</FONT></P>
+<H6 CLASS="Modification"><FONT COLOR='#000000'>
+Loi n&deg; 2020-972 du 23 d&eacute;c. 2020, an. fiscale,Art. 12.</FONT></H6>
+<P CLASS="Liste2-Enumeree">
+-	Les banques et &eacute;tablissements financiers dans le cadre strict de leurs op&eacute;rations de cr&eacute;dit-bail.</P>
+<P CLASS="ParaText">
+Sont &eacute;ligibles a ladite proc&eacute;dure, les entreprises remplissant les conditions ci-apr&egrave;s :</P>
+<P CLASS="Liste2-Enumeree">
+-	Souscrire r&eacute;guli&egrave;rement ses d&eacute;clarations de TVA ;</P>
+<P CLASS="Liste2-Enumeree">
+-	N&apos;avoir pas fait l&apos;objet d&apos;une proc&eacute;dure de redressement ayant r&eacute;v&eacute;l&eacute; des pratiques frauduleuses.</P>
+<H6 CLASS="Modification">
+Ord. n&deg; 2015-771 du 09 d&eacute;c. 2015, Art. 1.</H6>
+</DIV>
+
+
+
+
+<span id="#A0383"></span>
+<DIV>
+<H6 CLASS="NoArticle">
+    Art. 383 &nbsp;&nbsp;&nbsp;&nbsp; <a href="#" onClick="loadpage('105','h21383');return false;" class="ui-button"  title="Consultez l'historique">2021...</a></H6>
+
+<P CLASS="ParaText"><FONT COLOR='#000000'>
+<a name="50499597_pgfId-1062290"></a>Les demandes de remboursement des cr&eacute;dits de TVA doivent &ecirc;tre adress&eacute;es au Directeur g&eacute;n&eacute;ral des Imp&ocirc;ts, au plus tard &agrave; la fin de la deuxi&egrave;me ann&eacute;e suivant celle au cours de laquelle les cr&eacute;dits ont &eacute;t&eacute; constitu&eacute;s.</FONT></P>
+<P CLASS="ParaText"><FONT COLOR='#000000'>
+<a name="50499597_pgfId-1034455"></a>En ce qui concerne les contribuables d&eacute;tenteurs de cr&eacute;dits &eacute;ligibles au remboursement constitu&eacute;s dans le d&eacute;lai de 3 ans anciennement pr&eacute;vu par le dispositif mais dont les demandes n&rsquo;ont pas &eacute;t&eacute; introduites dans ce d&eacute;lai, ils sont autoris&eacute;s &agrave; d&eacute;clarer leurs stocks de cr&eacute;dits au titre de cette p&eacute;riode, aupr&egrave;s de leur service des Imp&ocirc;ts de gestion au plus tard le 30 juin 2022.</FONT></P>
+<H6 CLASS="Modification">
+<a name="50499597_pgfId-1062309"></a>Loi n&deg; 2021-899 du 21 d&eacute;c. 2021, an. fiscale,Art. 8-2.</H6>
+<P CLASS="ParaText">
+Les cr&eacute;dits qui n&apos;ont pas fait l&apos;objet de demande de remboursement dans le d&eacute;lai pr&eacute;vu &agrave; l&apos;alin&eacute;a pr&eacute;c&eacute;dent, ne peuvent plus donner lieu &agrave; remboursement. </P>
+
+<H6 CLASS="Modification">
+<a name="50483208_pgfId-1063654"></a>Loi n&deg; 2021-899 du 21 d&eacute;c. 2021, an. fiscale,Art. 8-2.</H6>
+<P CLASS="ParaText">
+Les entreprises nouvellement admises &agrave; la proc&eacute;dure de remboursement des cr&eacute;dits de TVA sont tenues de d&eacute;clarer le stock de cr&eacute;dits de taxe existant au moment de leur &eacute;ligibilit&eacute;, au moyen d'un imprim&eacute; conforme au mod&egrave;le prescrit par l'Administration. Le remboursement des cr&eacute;dits d&eacute;clar&eacute;s est subordonn&eacute; au contr&ocirc;le pr&eacute;alable par les services comp&eacute;tents de la Direction g&eacute;n&eacute;rale des Imp&ocirc;ts.</P>
+
+<H6 CLASS="Modification">
+Loi n&deg; 2015-840 du 18 d&eacute;cembre 2015, an. fiscale,Art. 6</H6>
+<P CLASS="ParaText">
+Les demandes de remboursement r&eacute;guli&egrave;rement pr&eacute;sent&eacute;es sont instruites dans un d&eacute;lai maximum de deux mois &agrave; compter de leur date de r&eacute;ception.</P>
+<P CLASS="ParaText">
+Pour les entreprises &eacute;ligibles &agrave; la proc&eacute;dure acc&eacute;l&eacute;r&eacute;e, l&apos;instruction des demandes est faite dans un d&eacute;lai maximum de quinze jours.</P>
+<P CLASS="ParaText">
+Le remboursement s&apos;effectue dans un d&eacute;lai de huit jours suivant la date de r&eacute;ception de l&apos;ordre de paiement.</P>
+<H6 CLASS="Modification">
+Loi n&deg; 2003-206 du 7 juillet 2003, an. fiscale,Art. 1er-2; Ord. n&deg; 2011-121 du 22  juin 2011, an. fiscale,Art. 12.</H6>
+</DIV>
+
+
+
+<span id="#A0383b"></span>
+<H6 CLASS="NoArticle">
+Art. 383 bis  &nbsp;&nbsp;&nbsp;&nbsp; <a href="#" onClick="loadpage('100','h23383b');return false;" class="ui-button"  title="Consultez l'historique">2023...</a>
+&nbsp;&nbsp;&nbsp;&nbsp; <a href="#" onClick="loadpage('100','h24383b');return false;" class="ui-button"  title="Consultez l'historique">2024...</a></H6>
+<P CLASS="ParaText">
+Sont mises en &#339;uvre par voie de remboursement :</P>
+<P CLASS="ParaText">
+- Abrog&eacute;.</P>
+
+<H6 CLASS="Modification">
+Loi n<b>&deg;-</b> 2012-1179 du 27 d&eacute;cembre 2012, an. fiscale,Art. 34-4.</H6>
+<P CLASS="ParaText">
+<a name="50499597_pgfId-1062200"></a>&ndash; les exon&eacute;rations contenues dans le Code des Investissements ;</P>
+<P CLASS="ParaText">
+<a name="50499597_pgfId-1062201"></a>&ndash;	les exon&eacute;rations relatives aux op&eacute;rations r&eacute;alis&eacute;es dans le cadre des conventions sign&eacute;es par le Gouvernement ivoirien avec des entreprises priv&eacute;es. <FONT COLOR='#000000'> Toutefois, en ce qui concerne les entreprises relevant de la Direction des grandes Entreprises, lorsque lesdits contrats ou conventions pr&eacute;voient l&rsquo;exon&eacute;ration par voie d&rsquo;une attestation, la mise en &oelig;uvre de cette  exon&eacute;ration est subordonn&eacute;e &agrave; la production pr&eacute;alable au fournisseur, d&rsquo;une attestation d&rsquo;exon&eacute;ration, d&eacute;livr&eacute;e par les services comp&eacute;tents de la Direction g&eacute;n&eacute;rale des Imp&ocirc;ts. Cette attestation dont la validit&eacute; ne peut exc&eacute;der la dur&eacute;e du contrat ou de la convention est annuellement renouvelable.</FONT></P>
+<P CLASS="ParaText">
+<A NAME="50618378_pgfId-1050898"></A>   Pour chaque opération d’achat de biens et de services, une copie de l’attestation d’exonération, authentifiée par l’apposition d’un  sticker sécurisé, doit être délivrée au fournisseur par le bénéficiaire de l’exonération.</P>
+<P CLASS="ParaText"><FONT COLOR='#000000'>
+<A NAME="50618378_pgfId-1065447"></A> Les fournisseurs de biens ou services doivent produire en même temps que leur déclaration de TVA, un imprimé réglementaire comportant la liste nominative des clients ayant bénéficié de l’exonération et indiquant la nature des biens et services ainsi que les montants facturés.   </FONT></P>
+<P CLASS="ParaText"><FONT COLOR='#000000'>
+<A NAME="50618378_pgfId-1065448"></A>   Les entreprises bénéficiaires de biens et  services exonérés doivent produire au plus tard le 10 du mois suivant chaque trimestre, la liste nominative de leurs fournisseurs sur un imprimé réglementaire faisant apparaître la nature et les montants des biens et services acquis en exonération de la taxe.</FONT></P>
+<H6 CLASS="Modification">
+<A NAME="50618378_pgfId-1050914"></A>Loi n° 2019-1080 du 18 décembre 2019, an. fiscale, art. 13;   loi n° 2021-899 du 21 déc. 2021, an. fiscale, art. 4-8;              loi n° 2023-1000 du 18  déc. 2023, an. fiscale, art. 21-2.</H6>
+
+<P CLASS="ParaText"><FONT COLOR='#000000'>
+<A NAME="50434096_pgfId-1027989"></A>&ndash; les exonérations relatives aux frais généraux exposés par la Société Ivoirienne de Raffinage, jusqu’au 25 décembre 2025. </FONT></P>
+<H6 CLASS="Modification">
+<A NAME="50434096_pgfId-1027990"></A>Ord. n° 2008-381 du 18 décembre 2008, an. fiscale, art. 5-2; ord. n° 2009-382 du 26 novembre 2009, an. fiscale, art.7-3;    loi n° 2024-1109 du 18 déc. 2024, an. fiscale, art. 4-3.</H6>
+<P CLASS="ParaText">
+Les modalit&eacute;s du remboursement de la TVA vis&eacute; au paragraphe ci-dessus sont fix&eacute;es par arr&ecirc;t&eacute; du Ministre charg&eacute; du Budget 
+.</P>
+<P CLASS="ParaText">
+La proc&eacute;dure d&apos;exon&eacute;ration par voie d&apos;attestation est maintenue pour :</P>
+<P CLASS="Liste2-Enumeree">
+-les privil&egrave;ges fiscaux des missions diplomatiques et consulaires, des organisations internationales et assimil&eacute;es ainsi que ceux consacr&eacute;s par les r&egrave;gles de r&eacute;ciprocit&eacute;;</P>
+<P CLASS="Liste2-Enumeree"><FONT COLOR='#000000'>
+<A NAME="50618378_pgfId-1028938"></A>– Abrogé.</FONT></P>
+<H6 CLASS="Modification">
+<A NAME="50618378_pgfId-1065296"></A>Loi n° 2023-1000 du 18  déc. 2023, an. fiscale, art. 7-3</H6>
+<P CLASS="ParaText"><FONT COLOR='#000000'>
+<A NAME="50618378_pgfId-1028939"></A>  Abrogé.</FONT></P>
+<H6 CLASS="Modification">
+<A NAME="50618378_pgfId-1027996"></A>Loi n° 2012-1179 du 27 décembre 2012, an. fiscale, art. 34-4; loi n° 2013-908 du 26 décembre 2013, an. fiscale, art. 5-3;      loi n° 2015-840 du 18 décembre 2015, an. fiscale, art. 8;              loi n° 2023-1000 du 18  déc. 2023, an. fiscale, art. 7-3</H6>
+<P CLASS="ParaText">
+Cette proc&eacute;dure est &eacute;tendue aux importations effectu&eacute;es par les entreprises agr&eacute;&eacute;es au Code des Investissements, 
+<FONT COLOR='#000000'>ainsi qu’aux programmes de construction de logements à caractère économique et social et les grands investissements dans le secteur de l’habitat.</FONT></P>
+
+
+<H6 CLASS="Modification">
+Ord. n<b>&deg;-</b> 2006-234 du 02 ao&ucirc;t 2006, Art. 8</H6>
+<P CLASS="ParaText">
+ [Obsol&egrave;te].</P>
+
+
+<H6 CLASS="Modification">
+Ord. n<b>&deg;-</b> 2009-382 du 26 novembre 2009Art.2-11; Ord. n<b>&deg;-</b> 2011-121 du 22 juin 2011Art. 2 -12.</H6>
+
+
+
+
+<DIV>
+<span id="#A0383t"></span>
+<H6 CLASS="NoArticle">
+ Art. 383 ter &nbsp;&nbsp;&nbsp;&nbsp;<a href="#" onClick="loadpage('105','h24383t');return false;" class="ui-button"  title="Consultez l'historique">2024...</a>
+  </H6>
+<P CLASS="Liste2-Enumeree">
+1&deg;	 Il est cr&eacute;&eacute;  une r&eacute;gie de remboursement des cr&eacute;dits de TVA.</P>
+<P CLASS="Liste2-Enumeree">
+La r&eacute;gie, g&eacute;r&eacute;e par un comptable public, est aliment&eacute;e par affectation:</P>
+<P CLASS="Liste2-Enumeree">
+<A NAME="50434096_pgfId-1030428"></A>– de<FONT COLOR='#000000'> 14 % </FONT>du montant total de la TVA déposé par le Receveur des grandes Entreprises,<FONT COLOR='#000000'> le Receveur des Vérifications fiscales nationales</FONT>, les Receveurs des moyennes Entreprises,<FONT COLOR='#000000'> le Receveur des Douanes de San Pedro, le Receveur des Douanes de Bouaké</FONT>, le Receveur des Douanes de l’Aéroport Félix Houphouët-Boigny d’Abidjan et le Receveur principal des Douanes, sur le compte dénommé « Taxe sur la valeur ajoutée » ouvert à cet effet dans les livres de la Banque Centrale des Etats de l’Afrique de l’Ouest (BCEAO) au nom de l’Agent comptable central du Trésor (ACCT). </P>
+<H6 CLASS="Modification"> Loi n° 2024-1109 du 18 déc. 2024, an. fiscale, art. 1er-10.</H6>
+<P CLASS="Liste2-Enumeree">
+L&apos;ACCT, titulaire dudit compte, donne un ordre de virement &agrave; la BCEAO.</P>
+<P CLASS="Liste2-Enumeree">
+La BCEAO ex&eacute;cute journellement l&apos;ordre de virement en transf&eacute;rant 10 % du montant du compte &#171; Taxe sur la valeur ajout&eacute;e &#187;, sur le compte de la R&eacute;gie ouvert dans les livres de la Banque nationale d&apos;Investissement (BNI). </P>
+<H6 CLASS="Modification">
+Loi n&deg; 2012-1179 du 27 d&eacute;cembre 2012, an. fiscale,Art. 1er- 1, loi n&deg; 2014-861 du 22 d&eacute;cembre 2014, an. fiscale,Art. 1er .Loi n&deg; 2015-840 du 18 d&eacute;cembre 2015, an. fiscale,Art. 4.</H6>
+<P CLASS="Liste2-Enumeree">
+- Abrog&eacute;.</P>
+<H6 CLASS="Modification">
+Ord. n&deg; 2011-480 du 28 d&eacute;cembre 2011, an. fiscale,Art. 6; Loi n&deg; 2015-840 du 18 d&eacute;cembre 2015, an. fiscale,Art. 4.</H6>
+<P CLASS="Liste2-Enumeree">
+2&deg;	Les demandes de remboursement de cr&eacute;dits sont introduites aupr&egrave;s du Directeur g&eacute;n&eacute;ral des Imp&ocirc;ts.</P>
+<P CLASS="Liste2-Enumeree">
+Le remboursement est ordonnanc&eacute; par le Directeur g&eacute;n&eacute;ral des Imp&ocirc;ts et ex&eacute;cut&eacute; par le r&eacute;gisseur.</P>
+<P CLASS="Liste2-Enumeree">
+3&deg;	Les modalit&eacute;s de remboursement, les pi&egrave;ces et documents &agrave; produire &agrave; l&apos;appui de la demande de remboursement sont fix&eacute;s par arr&ecirc;t&eacute; du Ministre des Finances.</P>
+<P CLASS="Liste2-Enumeree">
+En ce qui concerne les stocks de cr&eacute;dits non ordonnanc&eacute;s et de cr&eacute;dits ordonnanc&eacute;s non rembours&eacute;s existant avant la date d&apos;entr&eacute;e en vigueur de l&apos;annexe fiscale 2006, ils seront rembours&eacute;s au plus tard le 31 d&eacute;cembre 2012. </P>
+<P CLASS="Liste2-Enumeree">
+Les modalit&eacute;s de remboursement de ces cr&eacute;dits sont d&eacute;termin&eacute;es par le Directeur g&eacute;n&eacute;ral du Tr&eacute;sor et de la Comptabilit&eacute; publique. </P>
+<H6 CLASS="Modification">
+Ord. n&deg; 2006-234 du 02 ao&ucirc;t 2006, an. fiscale,Art. 7-1; Ord. n&deg; 2011-480 du 28 d&eacute;cembre 2011, an. fiscale,Art. 5.</H6>
+</DIV>
+
+ <p>&nbsp;</p><p>&nbsp;</p>
+ 
+ <span class="historique" ID="h24365">
+<div class="histText">
+
+<BR> 
+Art. 365 
+<p>Ouvrent droit &agrave; d&eacute;duction, dans les conditions pr&eacute;vues &agrave; l'article 364 du pr&eacute;sent Code :</p>
+<p>1-Les achats et les importations portant sur :</p>
+<p>-les mati&egrave;res premi&egrave;res et produits entr&eacute;s int&eacute;gralement ou pour une partie de leurs &eacute;l&eacute;ments dans la composition de produits ou objets passibles de la taxe sur la valeur ajout&eacute;e et les marchandises destin&eacute;es &agrave; &ecirc;tre revendues en l'&eacute;tat;</p>
+<p>-les mati&egrave;res ou produits ne constituant pas un outillage qui, normalement et sans entrer dans le produit fini, sont d&eacute;truits ou perdent leurs qualit&eacute;s sp&eacute;cifiques au cours d'une seule op&eacute;ration de fabrication.</p>
+<p>Pour les produits p&eacute;troliers, seuls ouvrent droit &agrave; d&eacute;duction, le p&eacute;trole utilis&eacute; pour le fonctionnement des usines et les produits noirs (gas-oil, fuel-oil 180, distillate diesel-oil) &agrave; l'exclusion des produits utilis&eacute;s comme carburant dans les v&eacute;hicules de transport.</p>
+<p>Loi n&deg;-2004-271 du 15 avril 2004, an. fiscale,Art. 11.</p>
+<p>Toutefois, ouvrent droit &agrave; d&eacute;duction, les produits p&eacute;troliers utilis&eacute;s par les entreprises de transport ayant effectu&eacute; l'option pr&eacute;vue &agrave; l'article 348 du pr&eacute;sent Code.</p>
+<p>Cette d&eacute;duction s'exerce dans la limite de 95 % de la TVA support&eacute;e figurant sur la facture d'achat d&eacute;livr&eacute;e par une compagnie de distribution &agrave; l'exclusion des stations-service.</p>
+<p>Loi n&deg;- 2003-206 du 7 juillet 2003, an. fiscale,Art. 4-1.</p>
+<p>Ouvrent &eacute;galement droit &agrave; d&eacute;duction, le gaz utilis&eacute; comme combustible pour le fonctionnement des usines, ainsi que le gas-oil, les huiles et les graisses utilis&eacute;s par les entreprises du secteur des b&acirc;timents et travaux publics (BTP) pour le fonctionnement de leurs engins, &agrave; l&lsquo;exclusion des produits destin&eacute;s aux v&eacute;hicules de tourisme et au transport des personnes. </p>
+<p>En ce qui concerne les entreprises des BTP, cette d&eacute;duction est limit&eacute;e &agrave; 95 % de la TVA support&eacute;e figurant sur la facture d&lsquo;achat.</p>
+<p>Ord. n&deg; 2007-675 du 28 d&eacute;cembre 2007, an. fiscale,Art. 1er; loi n&deg; 2018 - 984 du 28 d&eacute;cembre 2018, an. fiscaleArt. 2</p>
+<p>2-Les achats, importations et livraisons &agrave; soi-m&ecirc;me portant sur des biens autres que ceux vis&eacute;s au paragraphe 1 du pr&eacute;sent article op&eacute;r&eacute;s pour les besoins de l'exploitation; les biens donnant lieu &agrave; ces d&eacute;ductions sont inscrits dans la comptabilit&eacute; de l'entreprise pour leur prix d'achat ou de revient diminu&eacute; des d&eacute;ductions y aff&eacute;rentes.</p>
+<p>Les modalit&eacute;s d'application des dispositions du pr&eacute;sent paragraphe sont d&eacute;termin&eacute;es aux articles 362 &agrave; 373 du pr&eacute;sent Code qui fixent &eacute;galement les exclusions et restrictions qui peuvent &ecirc;tre apport&eacute;es aux d&eacute;ductions pr&eacute;vues par ces dispositions.</p>
+<p>
+<BR><BR><BR></div></span><finh24365>
+
+<span class="historique" ID="h24368">
+<div class="histText">
+<BR> 
+Art. 368
+<p>Les entreprises de location de v&eacute;hicules sont autoris&eacute;es &agrave; exercer un droit &agrave; d&eacute;duction &agrave; l'occasion de l'acquisition, de l'entretien de v&eacute;hicules exclusivement destin&eacute;s &agrave; la location.</p>
+<p>Les entreprises de transport public de personnes et de marchandises ayant opt&eacute; pour leur assujettissement &agrave; la taxe sont &eacute;galement autoris&eacute;es &agrave; exercer un droit &agrave; d&eacute;duction &agrave; l'occasion de l'acquisition des pi&egrave;ces de rechange et des r&eacute;parations des v&eacute;hicules exclusivement destin&eacute;s au transport public.</p>
+<p>Loi n&deg;- 2003-206 du 7 juillet 2003, an. fiscale,Art. 4-2.</p>
+<BR><BR><BR></div></span><finh24368>
+
+<span class="historique" ID="h24372">
+<div class="histText">
+<BR> 
+  Art. 372
+
+<p>N'ouvrent pas droit au b&eacute;n&eacute;fice des d&eacute;ductions vis&eacute;es &agrave; l'article 365 du Code g&eacute;n&eacute;ral des Imp&ocirc;ts :</p>
+<p>1-	Les immeubles autres que :</p>
+<p>-	les b&acirc;timents et locaux &agrave; usage industriel et assimil&eacute;s;</p>
+<p>-	les b&acirc;timents administratifs et commerciaux. </p>
+<p>Loi n&deg; 2003-206 du 7 juillet 2003, an. fiscale,Art. 42-1; ord. n&deg; 2006-234 du 02 ao&ucirc;t 2006, an. fiscale,Art. 1er -8. </p>
+<p>2-	Les v&eacute;hicules, autres que :</p>
+<p>-	les moyens internes de manutention, les v&eacute;hicules sp&eacute;ciaux;</p>
+<p>-	les v&eacute;hicules de tourisme dont la puissance fiscale n'exc&egrave;de pas 12 chevaux ainsi que les v&eacute;hicules &agrave; deux roues dont le prix d'acquisition n'exc&egrave;de pas trois millions de francs hors taxes;</p>
+<p>Ord. n&deg; 2011-121 du 22 juin 2011, an. fiscale, art; 3;</p>
+<p>-	les v&eacute;hicules utilitaires quelle que soit leur charge utile;</p>
+<p>Ord. n&deg; 2006-234 du 02 ao&ucirc;t 2006, an. fiscale,Art. 1er-11.</p>
+<p>-	les v&eacute;hicules acquis par les entreprises de transport ayant exerc&eacute; l'option pr&eacute;vue &agrave; l'article 348 du pr&eacute;sent Code et qui sont affect&eacute;s au transport public de personnes et de marchandises.</p>
+<p>Loi n&deg; 2003-206 du 7 juillet 2003, an. fiscale,Art. 4-3.</p>
+<p>3-	Les objets de mobilier.</p>
+<p>4-	Les op&eacute;rations bancaires effectu&eacute;es &agrave; titre personnel pour le compte des dirigeants de l'entreprise.</p>
+<p>5-	Les services se rattachant &agrave; des biens exclus : location, entretien et r&eacute;paration de mat&eacute;riel, locaux, objets ou v&eacute;hicules n'ouvrant pas droit &agrave; d&eacute;duction.</p>
+<p>6-	Les frais d'h&ocirc;tel et de restaurant, &agrave; l'exception de la fourniture de repas sur les plates-formes p&eacute;troli&egrave;res.</p>
+<p>Loi n&deg; 2017-870 du 27 d&eacute;cembre 2017, an. fiscaleArt. 2-1.</p>
+<p>7-	Les frais de repr&eacute;sentation.</p>
+<p>8-	Les frais de carburant pour v&eacute;hicules autres que ceux affect&eacute;s au transport public de personnes et de marchandises par les entreprises de transport ayant effectu&eacute; l'option pr&eacute;vue &agrave; l'article 348 du pr&eacute;sent Code.</p>
+<p>Loi n&deg; 2003-206 du 7 juillet 2003, an. fiscale,Art. 4-4.</p>
+<p>9 - Les prestations de r&eacute;paration et de maintenance des v&eacute;hicules de fonction des dirigeants des soci&eacute;t&eacute;s p&eacute;troli&egrave;res, de gardiennage de leurs domiciles ainsi que les prestations diverses fournies aux consultants auxquels les soci&eacute;t&eacute;s p&eacute;troli&egrave;res ont recours.</p>
+<p>Loi n&deg; 2017-870 du 27 d&eacute;cembre 2017, an. fiscaleArt. 2-2.</p>
+<p>
+<BR><BR><BR></div></span><finh24372>
+ 
+ 
+<span class="historique" ID="h20382b">
+<div class="histText">
+
+<BR> 
+<BR>Art. 382 bis 
+<BR> 
+<BR>Il est institu&eacute; une proc&eacute;dure acc&eacute;l&eacute;r&eacute;e de remboursement des cr&eacute;dits de TVA pour : 
+<BR> 
+<BR>-Les entreprises r&eacute;alisant au moins 75% de leur chiffre d'affaires a l'exportation ; 
+<BR> 
+<BR>-Les banques et &eacute;tablissements financiers dans le cadre strict de leurs op&eacute;rations de cr&eacute;dit-bail. 
+<BR> 
+<BR>Sont &eacute;ligibles a ladite proc&eacute;dure, les entreprises remplissant les conditions ci-apr&egrave;s : 
+<BR> 
+<BR>-Souscrire r&eacute;guli&egrave;rement ses d&eacute;clarations de TVA ; 
+<BR> 
+<BR>-N'avoir pas fait l'objet d'une proc&eacute;dure de redressement ayant r&eacute;v&eacute;l&eacute; des pratiques frauduleuses. 
+<BR> 
+<BR>Ord. n° 2015-771 du 09 d&eacute;c. 2015, Art. 1.  
+<BR><BR><BR></div></span><finh20382b>
+
+<span class="historique" ID="h21383">
+<div class="histText">
+
+<BR> 
+<BR>Art. 383 
+<BR>Les demandes de remboursement des cr&eacute;dits de TVA doivent &ecirc;tre adress&eacute;es au Directeur g&eacute;n&eacute;ral des Imp&ocirc;ts, au plus tard &agrave; la fin de la troisi&egrave;me ann&eacute;e qui suit celle au titre de laquelle les cr&eacute;dits ont &eacute;t&eacute; constitu&eacute;s. 
+<BR> 
+<BR>Les cr&eacute;dits qui n'ont pas fait l'objet de demande de remboursement dans le d&eacute;lai pr&eacute;vu &agrave; l'alin&eacute;a pr&eacute;c&eacute;dent, ne peuvent plus donner lieu &agrave; remboursement.
+<BR> 
+<BR>Toutefois, &agrave; titre exceptionnel, les contribuables concern&eacute;s sont autoris&eacute;s &agrave; d&eacute;clarer leurs stocks de cr&eacute;dit de plus de trois ans, aupr&egrave;s de leurs services des Imp&ocirc;ts de gestion au plus tard le 30 avril 2016. Ces stocks feront l'objet de remboursement &agrave; titre exceptionnel apr&egrave;s contr&ocirc;le. 
+<BR> 
+<BR>Cette mesure exceptionnelle de d&eacute;claration ne vaut que pour les cr&eacute;dits ant&eacute;rieurs &agrave; l'entr&eacute;e en vigueur de la pr&eacute;sente annexe fiscale. 
+<BR> 
+<BR>Ainsi, les cr&eacute;dits de plus de trois ans qui ne seront pas d&eacute;clar&eacute;s aupr&egrave;s de l'Administration fiscale dans le d&eacute;lai prescrit ci-dessus ainsi que les demandes de remboursementde cr&eacute;dits ne remplissant pas les conditions requises, ne seront plus admis en remboursement 
+<BR> 
+<BR>Les entreprises nouvellement admises &agrave; la proc&eacute;dure de remboursement des cr&eacute;dits de TVA sont tenues de d&eacute;clarer le stock de cr&eacute;dits de taxe existant au moment de leur &eacute;ligibilit&eacute;, au moyen d'un imprim&eacute; conforme au mod&egrave;le prescrit par l'Administration. Le remboursement des cr&eacute;dits d&eacute;clar&eacute;s est subordonn&eacute; au contr&ocirc;le pr&eacute;alable par les services comp&eacute;tents de la Direction g&eacute;n&eacute;rale des Imp&ocirc;ts.  
+<BR>Loi n° 2015-840 du 18 d&eacute;cembre 2015, an. fiscale,Art. 6 
+<BR> 
+<BR>Les demandes de remboursement r&eacute;guli&egrave;rement pr&eacute;sent&eacute;es sont instruites dans un d&eacute;lai maximum de deux mois &agrave; compter de leur date de r&eacute;ception. 
+<BR> 
+<BR>Pour les entreprises &eacute;ligibles &agrave; la proc&eacute;dure acc&eacute;l&eacute;r&eacute;e, l'instruction des demandes est faite dans un d&eacute;lai maximum de quinze jours. 
+<BR> 
+<BR>Le remboursement s'effectue dans un d&eacute;lai de huit jours suivant la date de r&eacute;ception de l'ordre de paiement. 
+<BR> 
+<BR>Loi n° 2003-206 du 7 juillet 2003, an. fiscale,Art. 1er-2; Ord. n° 2011-121 du 22juin 2011, an. fiscale,Art. 12. 
+<BR> 
+<BR><BR><BR></div></span><finh21383>
+
+<span class="historique" ID="h21383b">
+<div class="histText">
+
+<BR> 
+<BR>Art. 383 bis
+<BR> 
+<BR>Sont mises en uvre par voie de remboursement : 
+<BR> 
+<BR>- Abrog&eacute;.  
+<BR>Loi n °-2012-1179 du 27 d&eacute;cembre 2012, an. fiscale,Art. 34-4. 
+<BR> 
+<BR>- les exon&eacute;rations contenues dans le Code des Investissements ; 
+<BR> 
+<BR>-les exon&eacute;rations relatives aux op&eacute;rations r&eacute;alis&eacute;es dans le cadre des conventions sign&eacute;es par le Gouvernement ivoirien avec des entreprises priv&eacute;es.
+<BR> Toutefois, en ce qui concerne les entreprises relevant de la Direction des grandes Entreprises, lorsque lesdits contrats ou conventions pr&eacute;voient l'exon&eacute;ration par voie d'une attestation, celle-ci est mise en uvre suivant la proc&eacute;dure d'attestation annuelle unique pr&eacute;vue aux paragraphes 6 et 7 de l'article 355-23 du pr&eacute;sent Code. Les obligations d&eacute;claratives pr&eacute;vues &agrave; cet effet sont applicables aux contribuables concern&eacute;s.
+<BR> 
+<BR>Loi n° 2019-1080 du 18 d&eacute;cembre 2019, an. fiscale,Art. 13 
+<BR> 
+<BR>-les exon&eacute;rations relatives aux frais g&eacute;n&eacute;raux expos&eacute;s par la Soci&eacute;t&eacute; Ivoirienne de Raffinage et par la Soci&eacute;t&eacute; Multinationale de Bitumes, jusqu'en 2020.  
+<BR>Ord. n °-2008-381 du 18 d&eacute;cembre 2008,Art. 5-2. Ord. n °-2009-382 du 26 novembre 2009Art.7-3. 
+<BR> 
+<BR>Les modalit&eacute;s du remboursement de la TVA vis&eacute; au paragraphe ci-dessus sont fix&eacute;es par arr&ecirc;t&eacute; du Ministre charg&eacute; du Budget 
+<BR>. 
+<BR> 
+<BR>La proc&eacute;dure d'exon&eacute;ration par voie d'attestation est maintenue pour : 
+<BR> 
+<BR>-les privil&egrave;ges fiscaux des missions diplomatiques et consulaires, des organisations internationales et assimil&eacute;es ainsi que ceux consacr&eacute;s par les r&egrave;gles de r&eacute;ciprocit&eacute;; 
+<BR> 
+<BR>- les exon&eacute;rations dont b&eacute;n&eacute;ficient les programmes de construction de logements &agrave; caract&egrave;re &eacute;conomique et social et les grands investissements dans le secteur de l'habitat. 
+<BR> 
+<BR>Un Comit&eacute; de suivi, d'&eacute;valuation et de contr&ocirc;le des biens et services exon&eacute;r&eacute;s dans le cadre de ces programmes, 
+<BR>ainsi que les quantit&eacute;s de mat&eacute;riaux de construction produites par les unit&eacute;s industrielles int&eacute;gr&eacute;es
+<BR> dont les modalit&eacute;s de fonctionnement seront d&eacute;finies par arr&ecirc;t&eacute; conjoint du Ministre de l'Economie et des Finances et du Ministre en charge du Logement, sera cr&eacute;&eacute; &agrave; cet effet.  
+<BR>Loi n °-2012-1179 du 27 d&eacute;cembre 2012, an. fiscale,Art. 34-4; loi n °-2013- 908 du 26 d&eacute;cembre2013, an. fiscale,Art. 25; Loi n° 2015-840 du 18 d&eacute;cembre 2015, an. fiscale,Art. 7-2 
+<BR> 
+<BR>Cette proc&eacute;dure est &eacute;tendue aux importations effectu&eacute;es par les entreprises agr&eacute;&eacute;es au Code des Investissements.  
+<BR>Ord. n °-2006-234 du 02 ao&ucirc;t 2006Art. 8 
+<BR> 
+<BR> [Obsol&egrave;te].  
+<BR>Ord. n °-2009-382 du 26 novembre 2009Art.2-11; Ord. n °-2011-121 du 22 juin 2011Art. 2 -12. 
+<BR> 
+<BR><BR><BR></div></span><finh21383b>
+
+<span class="historique" ID="h23383b">
+<div class="histText">
+
+<BR> 
+<BR>Art. 383 bis
+<BR> 
+<p>Sont mises en &oelig;uvre par voie de remboursement :</p>
+<p>- Abrog&eacute;.</p>
+<p>Loi n&deg;- 2012-1179 du 27 d&eacute;cembre 2012, an. fiscale,Art. 34-4.</p>
+<p>- les exon&eacute;rations contenues dans le Code des Investissements ;</p>
+<p>&ndash;	les exon&eacute;rations relatives aux op&eacute;rations r&eacute;alis&eacute;es dans le cadre des conventions sign&eacute;es par le Gouvernement ivoirien avec des entreprises priv&eacute;es. Toutefois, en ce qui concerne les entreprises relevant de la Direction des grandes Entreprises, lorsque lesdits contrats ou conventions pr&eacute;voient l&rsquo;exon&eacute;ration par voie d&rsquo;une attestation, la mise en &oelig;uvre de cette exon&eacute;ration est subordonn&eacute;e &agrave; la production pr&eacute;alable au fournisseur, d&rsquo;une attestation d&rsquo;exon&eacute;ration, d&eacute;livr&eacute;e par les services comp&eacute;tents de la Direction g&eacute;n&eacute;rale des Imp&ocirc;ts. Cette attestation dont la validit&eacute; ne peut exc&eacute;der la dur&eacute;e du contrat ou de la convention est annuellement renouvelable. </p>
+<p>Pour chaque op&eacute;ration d&rsquo;achat de biens et de services, une copie de l&rsquo;attestation d&rsquo;exon&eacute;ration, authentifi&eacute;e par l&rsquo;apposition d&rsquo;un sticker s&eacute;curis&eacute;, doit &ecirc;tre d&eacute;livr&eacute;e au fournisseur par le b&eacute;n&eacute;ficiaire de l&rsquo;exon&eacute;ration. </p>
+<p>Loi n&deg; 2019-1080 du 18 d&eacute;cembre 2019, an. fiscale,Art. 13; loi n&deg; 2021-899 du 21 d&eacute;c. 2021, an. fiscale,Art. 4-8.</p>
+<p>&ndash; les exon&eacute;rations relatives aux frais g&eacute;n&eacute;raux expos&eacute;s par la Soci&eacute;t&eacute; Ivoirienne de Raffinage et par la Soci&eacute;t&eacute; Multinationale de Bitumes, jusqu'en 2020.</p>
+<p>Ord. n&deg;- 2008-381 du 18 d&eacute;cembre 2008,Art. 5-2. Ord. n&deg;- 2009-382 du 26 novembre 2009Art.7-3.</p>
+<p>Les modalit&eacute;s du remboursement de la TVA vis&eacute; au paragraphe ci-dessus sont fix&eacute;es par arr&ecirc;t&eacute; du Ministre charg&eacute; du Budget .</p>
+<p>La proc&eacute;dure d'exon&eacute;ration par voie d'attestation est maintenue pour :</p>
+<p>-les privil&egrave;ges fiscaux des missions diplomatiques et consulaires, des organisations internationales et assimil&eacute;es ainsi que ceux consacr&eacute;s par les r&egrave;gles de r&eacute;ciprocit&eacute;;</p>
+<p>- les exon&eacute;rations dont b&eacute;n&eacute;ficient les programmes de construction de logements &agrave; caract&egrave;re &eacute;conomique et social et les grands investissements dans le secteur de l'habitat.</p>
+<p>Un Comit&eacute; de suivi, d'&eacute;valuation et de contr&ocirc;le des biens et services exon&eacute;r&eacute;s dans le cadre de ces programmes, ainsi que les quantit&eacute;s de mat&eacute;riaux de construction produites par les unit&eacute;s industrielles int&eacute;gr&eacute;es dont les modalit&eacute;s de fonctionnement seront d&eacute;finies par arr&ecirc;t&eacute; conjoint du Ministre de l'Economie et des Finances et du Ministre en charge du Logement, sera cr&eacute;&eacute; &agrave; cet effet.</p>
+<p>Loi n&deg;- 2012-1179 du 27 d&eacute;cembre 2012, an. fiscale,Art. 34-4; loi n&deg;- 2013- 908 du 26 d&eacute;cembre 2013, an. fiscale,Art. 25; Loi n&deg; 2015-840 du 18 d&eacute;cembre 2015, an. fiscale,Art. 7-2</p>
+<p>Cette proc&eacute;dure est &eacute;tendue aux importations effectu&eacute;es par les entreprises agr&eacute;&eacute;es au Code des Investissements.</p>
+<p>Ord. n&deg;- 2006-234 du 02 ao&ucirc;t 2006Art. 8</p>
+<p>[Obsol&egrave;te].</p>
+<p>Ord. n&deg;- 2009-382 du 26 novembre 2009Art.2-11; Ord. n&deg;- 2011-121 du 22 juin 2011Art. 2 -12.</p>
+<BR> 
+<BR><BR><BR></div></span><finh23383b>
+
+<span class="historique" ID="h24383t">
+<div class="histText">
+
+<BR> 
+  Art. 383 ter 
+<p>1&deg;	Il est cr&eacute;&eacute; une r&eacute;gie de remboursement des cr&eacute;dits de TVA.</p>
+<p>La r&eacute;gie, g&eacute;r&eacute;e par un comptable public, est aliment&eacute;e par affectation:</p>
+<p>- de 12 % du montant total de la TVA d&eacute;pos&eacute; par le Receveur des grandes Entreprises, le Receveur des Enqu&ecirc;tes et V&eacute;rifications fiscales, les receveurs des moyennes Entreprises, le Receveur des Douanes de l'A&eacute;roport F&eacute;lix Houphou&euml;t-Boigny d'Abidjan et le Receveur principal des Douanes, sur le compte d&eacute;nomm&eacute; &laquo; Taxe sur la valeur ajout&eacute;e &raquo; ouvert &agrave; cet effet dans les livres de la Banque Centrale des Etats de l'Afrique de l'Ouest (BCEAO) au nom de l'Agent comptable central du Tr&eacute;sor (ACCT). </p>
+<p>L'ACCT, titulaire dudit compte, donne un ordre de virement &agrave; la BCEAO.</p>
+<p>La BCEAO ex&eacute;cute journellement l'ordre de virement en transf&eacute;rant 10 % du montant du compte &laquo; Taxe sur la valeur ajout&eacute;e &raquo;, sur le compte de la R&eacute;gie ouvert dans les livres de la Banque nationale d'Investissement (BNI). </p>
+<p>Loi n&deg; 2012-1179 du 27 d&eacute;cembre 2012, an. fiscale,Art. 1er- 1, loi n&deg; 2014-861 du 22 d&eacute;cembre 2014, an. fiscale,Art. 1er .Loi n&deg; 2015-840 du 18 d&eacute;cembre 2015, an. fiscale,Art. 4.</p>
+<p>- Abrog&eacute;.</p>
+<p>Ord. n&deg; 2011-480 du 28 d&eacute;cembre 2011, an. fiscale,Art. 6; Loi n&deg; 2015-840 du 18 d&eacute;cembre 2015, an. fiscale,Art. 4.</p>
+<p>2&deg;	Les demandes de remboursement de cr&eacute;dits sont introduites aupr&egrave;s du Directeur g&eacute;n&eacute;ral des Imp&ocirc;ts.</p>
+<p>Le remboursement est ordonnanc&eacute; par le Directeur g&eacute;n&eacute;ral des Imp&ocirc;ts et ex&eacute;cut&eacute; par le r&eacute;gisseur.</p>
+<p>3&deg;	Les modalit&eacute;s de remboursement, les pi&egrave;ces et documents &agrave; produire &agrave; l'appui de la demande de remboursement sont fix&eacute;s par arr&ecirc;t&eacute; du Ministre des Finances.</p>
+<p>En ce qui concerne les stocks de cr&eacute;dits non ordonnanc&eacute;s et de cr&eacute;dits ordonnanc&eacute;s non rembours&eacute;s existant avant la date d'entr&eacute;e en vigueur de l'annexe fiscale 2006, ils seront rembours&eacute;s au plus tard le 31 d&eacute;cembre 2012. </p>
+<p>Les modalit&eacute;s de remboursement de ces cr&eacute;dits sont d&eacute;termin&eacute;es par le Directeur g&eacute;n&eacute;ral du Tr&eacute;sor et de la Comptabilit&eacute; publique. </p>
+<p>Ord. n&deg; 2006-234 du 02 ao&ucirc;t 2006, an. fiscale,Art. 7-1; Ord. n&deg; 2011-480 du 28 d&eacute;cembre 2011, an. fiscale,Art. 5.</p>
+<BR><BR><BR></div></span><finh24383t>
+
+<span class="historique" id="h22381">
+   <div class="histText"> Art. 381 <br>
+	
+<BR> Les d&eacute;ductions de taxes qui n&apos;auraient pas &eacute;t&eacute; effectu&eacute;es dans le d&eacute;lai pr&eacute;vu par l&apos;article 364 pr&eacute;c&eacute;dent, peuvent n&eacute;anmoins l&apos;&ecirc;tre dans les douze mois &agrave; compter de la date de facturation.   </div>
+ </span>
+ <finh22381>
+</div></div> 
+<!-- wrapper -->
+	  <div id="articleList"><div id="contenu" style='height:auto; background-color:#FFFFCC'>&nbsp;</div>
+      </div><p>&nbsp;</p><p>&nbsp;</p><p>&nbsp;</p><p>&nbsp;</p><p>&nbsp;</p><p>&nbsp;</p><p>&nbsp;</p><p>&nbsp;</p><p>&nbsp;</p><p>&nbsp;</p>
+	  <p>&nbsp;</p><p>&nbsp;</p><p>&nbsp;</p><p>&nbsp;</p><p>&nbsp;</p><p>&nbsp;</p></BODY></HTML>
+	  

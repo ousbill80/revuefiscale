@@ -1,0 +1,884 @@
+<!DOCTYPE HTML><HTML><HEAD><META HTTP-EQUIV="Content-Type" CONTENT="text/html; charset=UTF-8">
+<TITLE>Code des impots -5</TITLE><LINK REL="STYLESHEET" HREF="/cicgi.css" CHARSET="ISO-8859-1" TYPE="text/css">
+<style type="text/css">
+body {margin-left: 5px;	margin-top: 0px; margin-right: .5em;margin-bottom: 0px;background-color:#fafafa ;}
+.Liste-Numerote {font-size: 12pt;font-weight: regular;font-style: italic;color: #000000;text-transform: none;margin-left:8px ;margin-bottom:8px ;margin-top:4px ;margin-right:10px ;font-family:Georgia, "Times New Roman", Times, serif}
+li {list-style-type: none; margin-left:0px ; padding-left:0em ; }
+.Paratext {font-size: 12pt;font-weight: regular;font-style: italic;color: #000000;text-decoration: none;vertical-align: baseline;text-transform: none;margin-left:0px ;font-family:Georgia, "Times New Roman", Times, serif}
+.Normal {font-size: 12pt;font-weight: regular;font-style: italic;color: #000000;text-decoration: none;vertical-align: baseline;text-transform: none;margin-left:0px ;font-family:Georgia, "Times New Roman", Times, serif}
+ul {list-style-type: none; margin-left:0px ; padding-left:0em ;  }
+.Liste2-Enumeree {font-size: 12pt;font-weight: regular;font-style: italic;color: #000000;text-decoration: none;vertical-align: baseline;text-transform: none;list-style-type:none ;margin-left:16px ;margin-bottom:8px;margin-right:10px;font-family:Georgia, "Times New Roman", Times, serif}
+P.Liste2-Enumeree {font-size: 12pt;font-weight: regular;font-style: italic;color: #000000;text-decoration: none;vertical-align: baseline;text-transform: none;list-style-type:none ;margin-left:16px ;margin-bottom:8px;margin-right:10px;font-family:Georgia, "Times New Roman", Times, serif}
+.Entete {font-size: 13pt;font-weight: regular;font-style: italic;color:#000000 ;text-decoration: none;vertical-align: baseline;text-transform: none;margin-left:8px ;font-family:Georgia, "Times New Roman", Times, serif}
+table, TABLE {border-width:1px; width:99% ;border-collapse:collapse;border-color: #9ecaed;box-shadow: 0 0 10px #9ecaed;}
+tr,td {text-align:left;vertical-align:bottom;border:1px solid #9ecaed;padding:.2em;marging-left:.2em}
+th, TH{text-align:center;vertical-align:middle;padding:.2em;}
+P.TableauEntete {font-size: 13pt;font-weight: regular;font-style: italic;color: #000000;font-family:Georgia, "Times New Roman"}
+P.TableauCelluleLeft, P.TableauCellule {text-align:right;margin-right:1em;font-size: 13pt;font-weight: regular;font-style: italic;color: #000000;font-family:Georgia, "Times New Roman"}
+P.TableauCelluleRight {text-align:left;margin-left:1em;font-size: 13pt;font-weight: regular;font-style: italic;color: #000000;font-family:Georgia, "Times New Roman"}
+.ui-buttonh {padding: .1em .1em ; border: 1px solid #dadada;border-radius: 4px; box-shadow: 0 0 4px #9ecaed;color:#FF3300 ;margin-left:8px ;margin-right:8px ;margin-bottom:2px ;margin-top:2px ;text-decoration:none ;font-size:12pt ;font-family:"Times New Roman"}   
+.ui-button {padding: .1em .1em ; border: 1px solid #dadada;border-radius: 4px; box-shadow: 0 0 4px #9ecaed;color:#FF3300 ;margin-left:8px ;margin-right:8px ;margin-bottom:2px ;margin-top:2px ;text-decoration:none ;font-size:12pt ;font-family:"Times New Roman"}   
+H3 {display: block;text-align: center;text-indent: 0pt;margin-top: 10pt;margin-bottom: 10pt;margin-right: 10pt;margin-left: 10pt;font-size: 12pt;font-weight: Bold;font-style: Regular;color: #00A000;text-decoration: none;vertical-align: baseline;text-transform: none;font-family: "Times New Roman";}
+H4 {display: block;text-align: left;text-indent: 0pt;margin-top: 10pt;margin-bottom: 6pt;margin-right: 10pt;margin-left: 10pt;font-size: 12pt;font-weight: Bold;font-style: Regular;color: #000000;text-decoration: none;vertical-align: baseline;text-transform: none;font-family: "Times New Roman";}
+H5 {display: block;text-align: left;text-indent: 0pt;margin-top: 10pt;margin-bottom: 6pt;margin-right: 10pt;margin-left: 10pt;font-size: 11pt;font-weight: Bold;font-style: Regular;color: #000000;text-decoration: none;vertical-align: baseline;text-transform: none;font-family: "Times New Roman";}
+H6.NoArticle {display: block;text-align: left;text-indent: 0pt;margin-top: 14pt;margin-bottom: 0pt;margin-right: 0pt;margin-left: 0pt;font-size: 14pt;font-weight: regular;font-style: Regular;color: #00a000;text-decoration: none;vertical-align: baseline;text-transform: none;font-family: "Times New Roman";}
+H2 {text-align:center;font-size:16pt;font-family:Georgia, "Times New Roman", Times, serif}
+P.ParaText {font-size: 12pt;font-weight: regular;font-style: italic;color: #000000;	text-decoration: none;vertical-align: baseline;text-transform: none;font-family:Georgia, "Times New Roman", Times, serif;}
+H2.Section,P.Section {font-size:12pt;font-weight:bold;font-style:Regular;color:#008000;font-family:Georgia,"Times New Roman"}
+P.Paragraphe, p.Paragraphe {Text-Align:center;Text-decoration:none;font-size:12pt;font-weight:bold;font-style:Normal;color:#00A000;font-family:Georgia,"Times New Roman"}
+H2.Livre,P.Livre {text-align:center;font-size:16pt;font-weight:bold;font-style:Regular;color:#008000;font-family:Georgia,"Times New Roman"}
+P.Partie,H2.Partie,P.TitreSub {text-align:center;font-size:14pt;font-weight:bold;font-style:Regular;color:#008000;font-family:Georgia,"Times New Roman"}
+H2.ChapitreNo,H2.TitreNo {text-align:center;font-size:14pt;font-weight:bold;font-style:Regular;color:#008000;font-family:Georgia,"Times New Roman"}
+H2.Chapitre, h2.Chapitre {text-align:center;font-size:14pt;font-weight:bold;font-style:Regular;color:#008000;font-family:Georgia,"Times New Roman"}
+H2.TitreNo {text-align:center;font-size:14pt;font-weight:bold;font-style:Regular;color:#008000;font-family:Georgia,"Times New Roman"}
+h3.Sous-Section, H3.Sous-Section, h3.Sous-section, h2.Section {font-size:12pt;font-weight:bold;font-style:Italic;color:#008000;font-family:Georgia,"Times New Roman"}
+hr,HR { display: block; width:90%;  margin-top: 0.5em; margin-bottom: 0.5em; margin-left: auto;  margin-right: auto;  border-style: inset; border-width: 1px;}
+P.TitreSub {text-align:center;font-size:14pt;font-weight:bold;font-style:Regular;color:#008000;font-family:Georgia,"Times New Roman"}
+.Reference {display: block;text-align: left;text-indent: 0pt;margin-top: 10pt;margin-bottom: 6pt;margin-right: 10pt;margin-left: 10pt;font-size: 14pt;font-weight: Bold;font-style: Regular;color: #7F5434;text-decoration: none;vertical-align: baseline;text-transform: none;font-family: "Times New Roman";}
+.ludwig,blockquote {padding-left:1em;background-color:#fafafa;font-size:12pt;font-weight:100;font-style:italic;}
+#articleList {position:absolute ;	z-index: 1 ;left: 10px ;top: 80px ;height:340px;width: 620px;border: 2px solid #cacaca ;border-radius: 5px ;background-color:#fafafa ;    box-shadow: 0 0 12px #333333;	margin-left:0px ;	padding: .3em .3em ;		overflow:hidden ;	visibility:hidden ;  }			
+#articleList h3 { text-align: center; margin: 0; }		
+
+.historique {
+  display:none ;
+  padding: .1em .3em ;
+  border: solid 2px #dadada;
+  border-radius: 7px;
+  box-shadow: 0 0 5px #9ecaed;  
+  
+}
+.histText {
+    display: block;
+    font-family: ;"Times New Roman"
+	padding: .1em .3em ;
+    margin: 1em 0px;
+	font-style:italic;
+	color:#000000;
+	overflow:auto;
+}
+.highlight {
+  font-weight:bold ;
+  color:#000000 ;
+  background-color:#FFFFCC ;
+  }
+.articleList-scroll {
+	overflow-x:hidden ;
+	overflow-y:scroll ;
+	scrollbar-width:thin ;
+	scrollbar-color:blue orange ;
+}
+
+#contenu {
+	overflow-x:hidden ;
+    overflow-y:scroll ;
+	scrollbar-width:thin ;
+	scrollbar-color:blue orange ;
+}		
+
+table, TABLE {
+ text-align:center; 
+    margin-left:.5em; 
+    margin-right:.5em; 
+    border:1px solid #000000;	
+	border-collapse:collapse ;
+    border-color: #9ecaed;
+    box-shadow: 0 0 10px #9ecaed;
+	
+   }
+  tr,td {text-align:left;}
+  
+
+
+ </style>
+ 
+<script src="/js/iscroll.js"></script>
+<script src="/js/jquery.js"></script>   
+<script src="/js/jquery-ui-1.10.3.custom.js"></script>    	    
+<script src="/js/jquery.ui.draggable.js" type="text/javascript"></script>			
+<script src="/js/jquery.ui.core.js"></script> 			
+<script src="/js/jquery.ui.widget.js"></script>			
+<script src="/js/jquery.ui.position.js"></script>			
+<script src="/js/jquery.ui.menu.js"></script>    		
+<script type="text/javascript" src="./xpages.js"></script>
+/* VERSION POUR PAGE HTML SUR SITE DGI.CGICI.COM */
+<script language="javascript">
+ function showButton(id) {
+    var x = document.getElementById(id) ;
+	if(x.style.display === "none") {
+	   x.style.display = "block" ;
+	  } else {
+	   x.style.display = "none" ;
+	   }
+	 }   
+	 var pagenumber="005";
+function loadpage(page, art) {
+      showHideHistoric(art);
+	  return false;
+	  } 
+function loadArticle(page, art) { var artno = art ;var pgno=page;scrolltoelementTag(pgno,artno) ;return false ;} 
+
+</script>
+</HEAD>
+<BODY><div ID="wrapper"><div ID="scroller">
+
+
+<H2 CLASS="Section">
+Section V - R&eacute;gime du b&eacute;n&eacute;fice r&eacute;el normal</H2>
+
+<H3 CLASS="Sous-section">
+I - Personnes imposables</H3>
+
+<DIV>
+<span id="#A0034"></span>
+<H6 CLASS="NoArticle">
+Art. 34&nbsp;&nbsp;&nbsp;&nbsp;
+<a href="#" onClick="loadpage('005','h2234');return false;" class="ui-button"   title="Consultez l'historique">2022...</a>
+<a href="#" onClick="loadpage('005','h2434');return false;" class="ui-button"   title="Consultez l'historique">2024...</a></H6>
+<P CLASS="Liste2-Enumeree">
+1&deg; Sont obligatoirement soumises au r&eacute;gime du b&eacute;n&eacute;fice r&eacute;el, les entreprises dont le chiffre d&apos;affaires annuel, toutes taxes incluses, exc&egrave;de <FONT COLOR='#000000'>500 000 000</FONT>  de francs.</P>
+<P CLASS="Liste2-Enumeree">
+   Les entreprises dont le chiffre d&apos;affaires s&apos;abaisse en dessous de la limite pr&eacute;vue au paragraphe ci-dessus, ne sont soumises au r&eacute;gime du b&eacute;n&eacute;fice r&eacute;el simplifi&eacute;, ou le cas &eacute;ch&eacute;ant, au r&eacute;gime de <FONT COLOR='#000000'>
+la taxe d&apos;Etat de l&apos;Entreprenant</FONT>, que lorsque leur chiffre d&apos;affaires est rest&eacute; inf&eacute;rieur &agrave; cette limite pendant trois exercices cons&eacute;cutifs.</P>
+<P CLASS="Liste2-Enumeree">
+<A NAME="50434094_pgfId-1139316"></A><FONT COLOR='#000000'>Le délai de trois exercices consécutifs    visé au paragraphe précédent est ramené à un exercice, en ce qui concerne les entreprises nouvelles.</FONT></P>
+<H6 CLASS="Modification">
+<A NAME="50434094_pgfId-1139335"></A>Loi n° 2024-1109 du 18 déc. 2024, an. fiscale, art. 9</H6>
+<P CLASS="Liste2-Enumeree">
+  Le chiffre d&apos;affaires pr&eacute;vu au paragraphe premier est ajust&eacute; au prorata du temps d&apos;exploitation pour les entreprises qui commencent ou cessent leurs activit&eacute;s en cours d&apos;ann&eacute;e.</P>
+<P CLASS="Liste2-Enumeree">
+2&deg;	Les entreprises qui remplissent les conditions pour &ecirc;tre impos&eacute;es sous le r&eacute;gime du b&eacute;n&eacute;fice r&eacute;el simplifi&eacute; peuvent opter, avant le 1er f&eacute;vrier de chaque ann&eacute;e, pour le r&eacute;gime du b&eacute;n&eacute;fice r&eacute;el. L&apos;option prend effet &agrave; compter du 1er janvier de l&apos;ann&eacute;e au cours de laquelle elle est exerc&eacute;e. Elle est r&eacute;vocable apr&egrave;s les trois exercices comptables qui suivent sa date d&apos;effet et sur autorisation expresse des services de la Direction g&eacute;n&eacute;rale des Imp&ocirc;ts.</P>
+<P CLASS="Liste2-Enumeree">
+Les entreprises qui d&eacute;butent leur activit&eacute; peuvent opter dans les trente jours du commencement de leur activit&eacute;. L&apos;option est valable de mani&egrave;re irr&eacute;vocable pour les trois premiers exercices comptables.</P>
+
+<H6 CLASS="Modification">
+Loi n&deg; 2017-870 du 27 d&eacute;cembre 2017, an. fiscaleArt. 11-1, 11-2 et 11-3; loi n&deg; 2014-861 du 22 d&eacute;cembre 2014, an. fiscale,Art.2-1; ordonnance n&deg; 2018-145 du 14 f&eacute;vrier 2018,Art. 1;<FONT COLOR='#000000'> loi n&deg; 2020-972 du 23 d&eacute;c. 2020, an. fiscale,Art. 33-2.</FONT></H6>
+</DIV>
+
+<P CLASS="Paragraphe">
+D&eacute;claration de r&eacute;sultats </P>
+<H6 CLASS="Modification"> 
+Loi n&deg; 2016-1116 du 08 d&eacute;cembre 2016, an. fiscale,Art. 23-1.</H6>
+<H3 CLASS="Sous-section">
+II - Obligations des contribuables</H3>
+<DIV>
+    <span id="#A0035"></span>
+<H6 CLASS="NoArticle">
+Art. 35 &nbsp;&nbsp;&nbsp;&nbsp;
+<a href="#" onClick="loadpage('005','h2535');return false;" class="ui-button"   title="Consultez l'historique">2025...</a></H6>
+<P CLASS="Liste2-Enumeree">
+1&deg;				Les contribuables vis&eacute;s &agrave; l&apos;article pr&eacute;c&eacute;dent sont tenus de souscrire leur d&eacute;claration des r&eacute;sultats selon le syst&egrave;me normal.</P>
+<H6 CLASS="Modification">
+Ord. n&deg; 2000-252 du 26 mars 2000, an. fiscale,Art. 16-5&deg;.</H6>
+<P CLASS="Liste2-Enumeree">
+2&deg;	La d&eacute;claration de r&eacute;sultats doit &ecirc;tre produite:</P>
+<P CLASS="Liste2-Enumeree">
+-	  le 30 juin suivant la date de cl&ocirc;ture de l&apos;exercice comptable, pour les entreprises soumises &agrave; l&apos;obligation de certification de leurs comptes par un commissaire aux comptes ;</P>
+<P CLASS="Liste2-Enumeree">
+-  	le 30 mai suivant la date de cl&ocirc;ture de l&apos;exercice comptable, pour les autres entreprises. </P>
+<H6 CLASS="Modification">
+Ord. n&deg; 2000-252 du 28 mars 2000, an. fiscale,Art. 17; Ord. n&deg; 2009-382 du 26 novembre 2009, an. fiscale,Art.15-1; loi n&deg; 2014-861 du 22 d&eacute;cembre 2014, an. fiscale,Art.12-1; loi n&deg; 2016-1116 du 08 d&eacute;cembre 2016, an. fiscale,Art. 23-2.</H6>
+<P CLASS="ParaText"><font color='#d00000'>
+<A NAME="pgfId-1151135"></A>3&#176; En ce  qui concerne les plateformes &eacute;trang&egrave;res de services en ligne vis&eacute;es &agrave; l&#8217;alin&eacute;a 11 de l&#8217;article 3 du pr&eacute;sent Code, la d&eacute;claration des r&eacute;sultats imposables est faite en ligne et &agrave; distance au plus tard le 30 juin de l&#8217;ann&eacute;e suivant celle au titre de laquelle le chiffre d&#8217;affaires a &eacute;t&eacute; r&eacute;alis&eacute; en C&ocirc;te d&#8217;Ivoire, selon une proc&eacute;dure simplifi&eacute;e d&eacute;finie par l&#8217;Administration fiscale. </font></P>
+<P CLASS="ParaText"><font color='#d00000'>
+<A NAME="pgfId-1151107"></A>Elle est accompagn&eacute;e d&#8217;&eacute;tats, de pi&egrave;ces et de documents dont la liste est d&eacute;termin&eacute;e par arr&ecirc;t&eacute; du Ministre en charge du Budget.</font></H6>
+<H6 CLASS="Modification">
+<A NAME="pgfId-1151174"></A>Loi n&#176; 2025-987 du 19  d&eacute;cembre 2025, art. 33-4</H6>
+</DIV>
+
+
+<DIV>
+<span id="#A0035b"></span>
+<H6 CLASS="NoArticle">
+    Art. 35 bis </H6>
+<P CLASS="ParaText">
+    Abrog&eacute; 
+</P>
+
+<H6 CLASS="Modification">
+Ord. n&deg; 2008-381 du 18 d&eacute;cembre 2008, an. fiscale,Art. 12; ord. n&deg; 2015-797 du 18 d&eacute;cembre 2015,Art. 1; loi n&deg; 2016-1116 du 08 d&eacute;cembre 2016, an. fiscale,Art. 23-3.</H6>
+</DIV>
+
+
+<P CLASS="Paragraphe">
+Etats financiers </P>
+<H6 CLASS="Modification">
+Loi n&deg; 2016-1116 du 08 d&eacute;cembre 2016, an. fiscale,Art. 23-4.</H6>
+
+<DIV>
+ <span id="#A0036"></span>
+ <H6 class="NoArticle">
+        Art. 36 &nbsp;&nbsp;&nbsp;&nbsp;
+		<a href="#" onClick="loadpage('005','h2436');return false;" class="ui-button"  title="Consultez l'historique">2024...</a>	
+		&nbsp;&nbsp;&nbsp;&nbsp;<a href="#" onClick="loadpage('005','h2536');return false;" class="ui-button"  title="Consultez l'historique">2025...</a></H6>
+<P CLASS="ParaText">
+<A NAME="pgfId-1139659"></A>Les contribuables vis&eacute;s &agrave; l&#8217;article 34-1&#176; sont tenus de <FONT COLOR='#000000'>transmettre </FONT> &agrave; l&#8217;Administration fiscale, leurs &eacute;tats financiers annuels &eacute;tablis et pr&eacute;sent&eacute;s selon le cas, conform&eacute;ment au <FONT COLOR='#000000'>r&eacute;f&eacute;rentiel comptable </FONT> SYSCOHADA r&eacute;vis&eacute;, au droit comptable bancaire ou au Code de la Conf&eacute;rence Interafricaine des March&eacute;s des Assurances (CIMA). </P>
+<H6 CLASS="Modification">
+<A NAME="pgfId-1139660"></A>Loi n&#176; 2018 - 984 du 28 d&eacute;cembre 2018, an. fiscale art. 27-2; loi n&#176; 2023-1000 du 18 d&eacute;c. 2023, an. fiscale, art. 10-1.</H6>
+
+<P CLASS="ParaText"><FONT COLOR='#d00000'>
+<A NAME="pgfId-1150274"></A>Les &eacute;tats financiers comprennent obligatoirement le bilan, le compte de r&eacute;sultats, le tableau des flux de tr&eacute;sorerie, les notes annexes lorsqu&#8217;elles sont obligatoires et, s&#8217;il y a lieu, tous les autres documents comptables exig&eacute;s par les syst&egrave;mes comptables vis&eacute;s au paragraphe premier ci-dessus. </FONT></P>
+<P CLASS="ParaText"><FONT COLOR='#d00000'>
+<A NAME="pgfId-1150270"></A>La non-production des notes annexes ou la production de notes annexes non conformes ou comportant des insuffisances, est sanctionn&eacute;e comme la            non-transmission des &eacute;tats financiers conform&eacute;ment aux dispositions du Livre de Proc&eacute;dures fiscales.</FONT></P>
+<P CLASS="ParaText"><FONT COLOR='#d00000'>
+<A NAME="pgfId-1150257"></A>Ces &eacute;tats sont transmis uniquement en version &eacute;lectronique sur l&#8217;espace e-impot pour les entreprises relevant de la Direction des grandes Entreprises ou de la Direction des moyennes Entreprises. </FONT></P>
+<P CLASS="ParaText"><FONT COLOR='#d00000'>
+<A NAME="pgfId-1148282"></A>Ils doivent comporter le ou les num&eacute;ros de comptes bancaires du contribuable.  </FONT></P>
+<H6 CLASS="Modification">
+<A NAME="pgfId-1148283"></A>Loi n&#176; 2023-1000 du 18 d&eacute;c. 2023, an. fiscale, art. 10-1;         loi n&#176; 2024-1109 du 18 d&eacute;c. 2024, an. fiscale, art. 33-1;           loi n&#176; 2025-987 du 19  d&eacute;cembre 2025, art. 21-1.</H6>
+<P CLASS="ParaText">
+<A NAME="50434094_pgfId-1139602"></A><FONT COLOR='#d00000'>Les contribuables relevant de la Direction des  grandes Entreprises ou de la Direction des moyennes Entreprises</FONT>, ont l’obligation de renseigner en ligne sur l’espace e-impots des attestations de dépôt des procès-verbaux d’assemblée générale ordinaire de fin d’exercice dans les mêmes délais et conditions que les états financiers. Le défaut de renseignement des attestations susvisées est sanctionné conformément aux dispositions de l’article 169 bis du Livre de Procédures fiscales. </P>
+<H6 CLASS="Modification">
+<A NAME="50434094_pgfId-1139621"></A>Loi n° 2024-1109 du 18 déc. 2024, an. fiscale, art. 12; loi n&#176; 2025-987 du 19  d&eacute;cembre 2025, art. 21-2</H6>
+
+<P CLASS="ParaText">
+<A NAME="pgfId-1140105"></A>Ces &eacute;tats peuvent &ecirc;tre transmis en version papier ou par la voie &eacute;lectronique. Les entreprises relevant de la Direction des grandes Entreprises ou de la Direction des moyennes Entreprises doivent transmettre lesdits &eacute;tats financiers uniquement par la voie &eacute;lectronique. </P>
+<H6 CLASS="Modification">
+<A NAME="pgfId-1140188"></A>Loi n&#176; 2023-1000 du 18 d&eacute;c. 2023, an. fiscale, art. 10-1</H6>
+<P CLASS="ParaText">
+Seuls sont recevables par l&apos;Administration fiscale, les &eacute;tats financiers qui auront &eacute;t&eacute; pr&eacute;alablement pr&eacute;sent&eacute;s &agrave; la formalit&eacute; de la certification en ce qui concerne les entreprises soumises &agrave; cette proc&eacute;dure, conform&eacute;ment aux dispositions de l&apos;Acte uniforme relatif au droit des soci&eacute;t&eacute;s commerciales et du groupement d&apos;int&eacute;r&ecirc;t &eacute;conomique.</P>
+<P CLASS="ParaText">
+Les autres entreprises sont soumises &agrave; la proc&eacute;dure du visa pr&eacute;alable de leurs &eacute;tats financiers, effectu&eacute;e par un expert-comptable inscrit &agrave; l&apos;Ordre. Les modalit&eacute;s de cette proc&eacute;dure sont d&eacute;finies par arr&ecirc;t&eacute; du Ministre en charge du Budget. </P>
+<P CLASS="ParaText">
+La proc&eacute;dure de visa est applicable pour la premi&egrave;re fois aux &eacute;tats financiers de l&apos;exercice clos au 31 d&eacute;cembre 2016. Toutefois, les entreprises ont la possibilit&eacute; d&apos;appliquer ladite proc&eacute;dure aux &eacute;tats financiers &agrave; produire au titre de l&apos;exercice clos le 31 d&eacute;cembre 2015.</P>
+<H6 CLASS="Modification"><FONT COLOR='#000000'>
+<A NAME="pgfId-1139664"></A>Loi n&#176; 2023-1000 du 18 d&eacute;c. 2023, an. fiscale, art. 10-1</FONT></H6>
+<P CLASS="ParaText">
+Sont obligatoirement joints aux &eacute;tats financiers &agrave; d&eacute;poser, les documents suivants :</P>
+<P CLASS="Liste2-Enumeree"><FONT COLOR='#000000'> 
+<a name="50499599_pgfId-1120404"></a>-	les copies des actes modificatifs des statuts, des comptes rendus des d&eacute;lib&eacute;rations des assembl&eacute;es statutaires et du proc&egrave;s-verbal de l&#8216;assembl&eacute;e g&eacute;n&eacute;rale, relatifs &agrave; l&#8216;exercice faisant l&#8216;objet de d&eacute;claration ;</FONT></P>
+<H6 CLASS="Modification">
+<a name="50499599_pgfId-1036964"></a>Loi n&deg; 2021-899 du 21 d&eacute;c. 2021, an. fiscale,Art. 24.</H6>
+<P CLASS="Liste2-Enumeree">
+-	le double du compte rendu d&eacute;taill&eacute; et des <FONT COLOR='#000000'>notes annexes </FONT> fournis &agrave; la Direction des Assurances dans les d&eacute;lais l&eacute;gaux par les entreprises d&apos;assurance ou r&eacute;assurance, de capitalisation ou d&apos;&eacute;pargne. </P>
+<H6 CLASS="Modification">
+<FONT COLOR='#000000'>Loi n&deg; 2020-972 du 23 d&eacute;c. 2020, an. fiscale,Art. 3-1.</FONT></H6>
+
+<P CLASS="Liste2-Enumeree">
+<FONT COLOR='#000000'>
+- un relev&eacute; des provisions constitu&eacute;es au cours de l&apos;exercice fiscal faisant l&apos;objet de la d&eacute;claration.</FONT></P>
+<H6 CLASS="Modification">
+<FONT COLOR='#000000'>Loi n&deg; 2020-972 du 23 d&eacute;c. 2020, an. fiscale,Art. 14-1.</FONT></H6>
+<P CLASS="Liste2-Enumeree"><FONT COLOR='#d00000'>
+- le formulaire d&#8217;identification de leurs b&eacute;n&eacute;ficiaires effectifs vis&eacute; &agrave; l&#8217;article 49 ter du Livre de Proc&eacute;dures fiscales, &agrave; jour. </FONT></P>
+<H6 CLASS="Modification">
+<A NAME="pgfId-1150584"></A>Loi n&#176; 2025-987 du 19  d&eacute;cembre 2025, art. 24-1.</H6>
+<P CLASS="ParaText">
+<FONT COLOR='#000000'>
+Les banques et &eacute;tablissements financiers sont tenus de joindre en plus des documents susindiqu&eacute;s :</FONT></P>
+<P CLASS="Liste2-Enumeree">
+<FONT COLOR='#000000'>
+- l&apos;&eacute;tat pr&eacute;vu par les normes de la BCEAO se rapportant aux cr&eacute;ances class&eacute;es douteuses ou litigieuses pass&eacute;es en perte ainsi que l&apos;&eacute;tat de suivi du recouvrement desdites cr&eacute;ances;</FONT></P>
+<H6 CLASS="Modification"><FONT COLOR='#000000'>
+Loi n&deg; 2020-972 du 23 d&eacute;c. 2020, an. fiscale,Art. 5-2.</FONT></H6>
+<P CLASS="Liste2-Enumeree">
+<FONT COLOR='#000000'>
+- le d&eacute;tail des comptes des classes 6 et 7 du Plan comptable bancaire r&eacute;vis&eacute;.</FONT></P>
+<P CLASS="ParaText">
+<FONT COLOR='#000000'>
+Les compagnies d&apos;assurances sont, quant &agrave; elles, tenues de produire en plus des documents vis&eacute;s aux paragraphes 1 &agrave; 6 pr&eacute;c&eacute;dents :</FONT></P>
+<P CLASS="Liste2-Enumeree">
+<FONT COLOR='#000000'>
+- le d&eacute;tail des comptes des classes 61 &agrave; 68 ;</FONT></P>
+<P CLASS="Liste2-Enumeree">
+<FONT COLOR='#000000'>
+- le d&eacute;tail des comptes des classes 70 &agrave; 77.</FONT></P>
+<H6 CLASS="Modification"><FONT COLOR='#000000'>
+Loi n&deg; 2020-972 du 23 d&eacute;c. 2020, an. fiscale,Art. 14-2.</FONT></H6>
+<P CLASS="ParaText">
+Les entreprises dont le si&egrave;ge social est situ&eacute; hors de la C&ocirc;te d&apos;Ivoire, remettent en outre, un exemplaire de leurs &eacute;tats financiers.</P>
+<P CLASS="ParaText">
+<FONT COLOR='#000000'>
+Les entreprises qui exploitent des &eacute;tablissements secondaires, sont tenues de joindre &agrave; leurs &eacute;tats financiers, un &eacute;tat faisant ressortir pour chaque &eacute;tablissement secondaire, les achats et les ventes effectu&eacute;s et d&apos;une fa&ccedil;on g&eacute;n&eacute;rale, les agr&eacute;gats comptables et &eacute;conomiques permettant de conna&icirc;tre le niveau d&apos;activit&eacute; et de rentabilit&eacute; de chaque &eacute;tablissement secondaire. La non-production de cet &eacute;tat est passible d&apos;une amende de 1 000 000 de francs.</FONT></P>
+<P CLASS="ParaText">
+Les &eacute;tats financiers et ces documents doivent &ecirc;tre transmis au plus tard :</P>
+<P CLASS="Liste2-Enumeree">
+-	le 30 juin suivant la date de cl&ocirc;ture de l&apos;exercice comptable, pour les entreprises soumises &agrave; l&apos;obligation de certification de leurs comptes par un commissaire aux comptes ;</P>
+<P CLASS="Liste2-Enumeree">
+-	le 30 mai suivant la date de cl&ocirc;ture de l&apos;exercice comptable, pour les autres entreprises.</P>
+<P CLASS="ParaText">
+En ce qui concerne les soci&eacute;t&eacute;s n&apos;ayant pu tenir leur assembl&eacute;e statutaire avant l&apos;expiration des d&eacute;lais pr&eacute;vus ci-dessus, la transmission du compte rendu de d&eacute;lib&eacute;ration de l&apos;assembl&eacute;e statutaire doit se faire au plus tard le 31 juillet.</P>
+<P CLASS="ParaText">
+Toutefois, ce d&eacute;lai est port&eacute; au 31 octobre au plus tard en cas de prorogation du d&eacute;lai fix&eacute; pour la tenue de l&apos;assembl&eacute;e statutaire de ces soci&eacute;t&eacute;s, dans le respect des dispositions de l&apos;Acte uniforme relatif au droit des soci&eacute;t&eacute;s commerciales et du groupement d&apos;int&eacute;r&ecirc;t &eacute;conomique.</P>
+<P CLASS="ParaText"><FONT COLOR='#000000'>
+<A NAME="pgfId-1139687"></A>L&#8217;Administration fiscale transmet la version &eacute;lectronique des &eacute;tats financiers ainsi que les documents annexes re&ccedil;us, &agrave; l&#8217;Institut national de la Statistique, &agrave; la Comptabilit&eacute; nationale et &agrave; la Banque centrale des Etats de l&#8217;Afrique de l&#8217;Ouest. Les organismes priv&eacute;s notamment les banques, peuvent &agrave; leur demande recevoir de la part de la Direction g&eacute;n&eacute;rale des Imp&ocirc;ts, ces &eacute;tats financiers et documents annexes.&nbsp; </FONT></P>
+<H6 CLASS="Modification">
+<A NAME="pgfId-1139689"></A>Loi n&#176; 84-1367 du 26 d&eacute;c. 1984, an. fiscale., art. 15; l<A NAME="_Toc110589852"></A>oi n&#176; 2001-338 du 14 juin 2001, an. fiscale, art. 13 ; ord. n&#176; 2008-381 du 18 d&eacute;cembre 2008, an. fiscale, art. 12; ord. n&#176; 2008-381 du 18 d&eacute;cembre 2008, an. fiscale, art. 14-1; ord. n&#176;2011-121 du 22 juin 2011, an. fiscale, art. 26-1; ord. n&#176;2011-121 du 22 juin 2011, an. fiscale, art. 28-2; loi n&#176;2013-908 du 26 d&eacute;cembre 2013, an. fiscale, art. 5; loi n&#176;2014-861 du 22 d&eacute;cembre 2014, an. fiscale, art.7-1;<A NAME="_Toc110589853"></A> loi n&#176; 2015-840 du 18 d&eacute;cembre 2015, an. fiscale, art. 24-1; loi n&#176; 2017-870 du 27 d&eacute;cembre 2017, an. fiscale art. 13-1; loi n&#176; 2023-1000 du 18 d&eacute;c. 2023, an. fiscale, art. 10-1.</H6>
+
+<P CLASS="ParaText">
+Les entreprises qui sont sous la d&eacute;pendance ou qui poss&egrave;dent le contr&ocirc;le d&apos;entreprises situ&eacute;es hors de C&ocirc;te d&apos;Ivoire, sont tenues de joindre &agrave; leurs &eacute;tats financiers, une documentation contenant notamment :</P>
+<P CLASS="Liste2-Enumeree">
+-	une description g&eacute;n&eacute;rale des structures juridiques et op&eacute;rationnelles du groupe d'entreprises associ&eacute;es, comportant l&apos;identification et la localisation g&eacute;ographique des entreprises associ&eacute;es engag&eacute;es dans des transactions intragroupes au cours de l&apos;exercice ;</P>
+<P CLASS="Liste2-Enumeree">
+-	une pr&eacute;sentation g&eacute;n&eacute;rale des op&eacute;rations r&eacute;alis&eacute;es avec les entreprises associ&eacute;es au cours de l&apos;exercice, incluant la nature et le montant des transactions, ainsi que l&apos;identit&eacute; et la localisation g&eacute;ographique des soci&eacute;t&eacute;s du groupe impliqu&eacute;es.</P>
+
+<P CLASS="Liste2-Enumeree"><FONT COLOR='#000000'>
+<a name="50499599_pgfId-1116099"></a>-  une description des m&eacute;thodes de d&eacute;termination des prix de transfert utilis&eacute;es par le contribuable, pour la valorisation des transactions internationales intragroupes concern&eacute;es par l&#8216;&eacute;tat.</FONT></P>
+<H6 CLASS="Modification">
+<a name="50499599_pgfId-1116126"></a>Loi n&deg; 2021-899 du 21 d&eacute;c. 2021, an. fiscale,Art. 6-1.</H6>
+<P CLASS="ParaText">
+<a name="50499599_pgfId-1097700"></a>La non-production de la documentation vis&eacute;e au paragraphe pr&eacute;c&eacute;dent ou la production d&#8216;une documentation incompl&egrave;te est sanctionn&eacute;e par le rejet comme charges d&eacute;ductibles, <FONT COLOR='#000000'> des sommes inscrites en comptabilit&eacute;</FONT> au titre des op&eacute;rations r&eacute;alis&eacute;es avec les entreprises associ&eacute;es et par une amende de    <FONT COLOR='#000000'>5 000 000</FONT> de francs.</P>
+<H6 CLASS="Modification">
+<A NAME="pgfId-1139697"></A>Loi n&#176; 2021-899 du 21 d&eacute;c. 2021, an. fiscale, art. 6-1; loi n&#176; 2023-1000 du 18 d&eacute;c. 2023, an. fiscale, art. 14-1</H6>
+<P CLASS="ParaText"><FONT COLOR='#000000'>
+L&apos;amende ci-dessus est major&eacute;e de 100 000 francs par mois ou fraction de mois de retard suppl&eacute;mentaire.</FONT></P>
+<H6 CLASS="Modification">
+Loi n&deg; 2016-1116 du 08 d&eacute;cembre 2016, an. fiscale,Art. 15-1; <FONT COLOR='#000000'>loi n&deg; 2020-972 du 23 d&eacute;c. 2020, an. fiscale,Art. 1-2.</FONT></H6>
+</DIV>
+
+<DIV>
+<span id="#A0036b"></span>
+<H6 CLASS="NoArticle">
+Art. 36 bis &nbsp;&nbsp;&nbsp;&nbsp;<a href="#" onClick="loadpage('005','h2336b');return false;" class="ui-button"  title="Consultez l'historique">2023...</a></H6>
+<P CLASS="ParaText">
+<FONT COLOR='#000000'>
+Les entreprises qui contr&ocirc;lent des entreprises situ&eacute;es hors de C&ocirc;te d&apos;Ivoire sont tenues de produire aupr&egrave;s de l&apos;Administration et suivant la fin de chaque exercice fiscal, une d&eacute;claration annuelle comportant la r&eacute;partition pays par pays des b&eacute;n&eacute;fices du groupe et de divers agr&eacute;gats &eacute;conomiques, comptables et fiscaux.</FONT></P>
+<P CLASS="ParaText">
+<FONT COLOR='#000000'>
+Sont concern&eacute;es par l&apos;obligation pr&eacute;vue au paragraphe pr&eacute;c&eacute;dent, les personnes morales &eacute;tablies en C&ocirc;te d&apos;Ivoire, remplissant les conditions suivantes :</FONT></P>
+<P CLASS="Liste2-Enumeree">
+- r&eacute;aliser au titre de l&#8216;exercice pr&eacute;c&eacute;dant l&#8216;exercice fiscal soumis &agrave; d&eacute;claration, un chiffre d'affaires hors taxes consolid&eacute; &eacute;gal ou sup&eacute;rieur &agrave; <FONT COLOR='#000000'> 250 000 000 000 de francs ;</FONT></P>
+<H6 CLASS="Modification">
+<A NAME="pgfId-1139706"></A>Loi n&#176; 2019-1080 du 18 d&eacute;cembre 2019, an. fiscale, art. 23; loi n&#176; 2023-1000 du 18 d&eacute;c. 2023, an. fiscale, art. 14-2.</H6>
+<P CLASS="Liste2-Enumeree">
+<FONT COLOR='#000000'>
+- &ecirc;tre soumise &agrave; l&apos;obligation d&apos;&eacute;tablissement d&apos;&eacute;tats financiers consolid&eacute;s, aux termes des articles 74 et suivants de l&apos;Acte uniforme de l&apos;OHADA relatif au droit comptable et &agrave; l'information financi&egrave;re ;</FONT></P>
+<P CLASS="Liste2-Enumeree">
+<FONT COLOR='#000000'>
+- contr&ocirc;ler des entit&eacute;s &eacute;tablies hors de C&ocirc;te d&apos;Ivoire ;</FONT></P>
+<P CLASS="Liste2-Enumeree">
+<FONT COLOR='#000000'>
+- ne pas &ecirc;tre sous le contr&ocirc;le d&apos;une entreprise situ&eacute;e en C&ocirc;te d&apos;Ivoire et soumise elle-m&ecirc;me au d&eacute;p&ocirc;t de la pr&eacute;sente d&eacute;claration, ou &eacute;tablie dans un pays li&eacute; &agrave; la C&ocirc;te d&apos;Ivoire par un accord pr&eacute;voyant l&apos;&eacute;change de renseignements &agrave; des fins fiscales et soumise &agrave; une obligation d&eacute;clarative similaire.</FONT></P>
+<P CLASS="ParaText">
+<FONT COLOR='#000000'>
+La d&eacute;claration comprend obligatoirement pour chaque pays ou territoire dans lequel le groupe poss&egrave;de des entit&eacute;s, les informations suivantes :</FONT></P>
+<P CLASS="Liste2-Enumeree">
+<FONT COLOR='#000000'>
+-  le chiffre d'affaires global r&eacute;sultant des transactions intragroupes r&eacute;alis&eacute;es ;</FONT></P>
+<P CLASS="Liste2-Enumeree">
+<FONT COLOR='#000000'>
+-  le chiffre d'affaires r&eacute;sultant des transactions avec des entreprises ind&eacute;pendantes ;</FONT></P>
+<P CLASS="Liste2-Enumeree">
+<FONT COLOR='#000000'>
+-  le chiffre d&apos;affaires total r&eacute;alis&eacute; dans le pays ou sur le territoire ;</FONT></P>
+<P CLASS="Liste2-Enumeree">
+<FONT COLOR='#000000'>
+-  le r&eacute;sultat avant imp&ocirc;t sur les b&eacute;n&eacute;fices ;</FONT></P>
+<P CLASS="Liste2-Enumeree">
+<FONT COLOR='#000000'>
+-  l&apos;imp&ocirc;t sur les b&eacute;n&eacute;fices d&ucirc; dans le pays ou territoire, au titre de l&apos;ann&eacute;e faisant l&apos;objet de la d&eacute;claration ;</FONT></P>
+<P CLASS="Liste2-Enumeree">
+<FONT COLOR='#000000'>
+ - le montant de l&apos;imp&ocirc;t sur les b&eacute;n&eacute;fices effectivement acquitt&eacute; ;</FONT></P>
+<P CLASS="Liste2-Enumeree">
+<FONT COLOR='#000000'>
+-  le montant total des b&eacute;n&eacute;fices non distribu&eacute;s &agrave; la fin de l&apos;exercice ;</FONT></P>
+<P CLASS="Liste2-Enumeree">
+<FONT COLOR='#000000'>
+-  le capital social cumul&eacute; des entit&eacute;s &eacute;tablies dans le pays ou sur le territoire ;</FONT></P>
+<P CLASS="Liste2-Enumeree">
+<FONT COLOR='#000000'>
+-  l&apos;effectif total du personnel employ&eacute; dans le pays ou sur le territoire ;</FONT></P>
+<P CLASS="Liste2-Enumeree">
+<FONT COLOR='#000000'>
+-  l&apos;identification des actifs corporels hors tr&eacute;sorerie et &eacute;quivalents de tr&eacute;sorerie, d&eacute;tenus ou utilis&eacute;s dans le pays ou sur le territoire ;</FONT></P>
+<P CLASS="Liste2-Enumeree">
+<FONT COLOR='#000000'>
+-  la localisation, l&apos;identit&eacute; et les principales activit&eacute;s des entit&eacute;s du groupe, concern&eacute;es par les donn&eacute;es agr&eacute;g&eacute;es d&eacute;clar&eacute;es.</FONT></P>
+<P CLASS="ParaText">
+<FONT COLOR='#000000'>
+La d&eacute;claration est &agrave; produire sur un support administratif con&ccedil;u &agrave; cet effet, dans les douze mois suivant la fin de chaque exercice fiscal. Elle doit &eacute;galement &ecirc;tre transmise par voie &eacute;lectronique. En cas de discordance entre la version &eacute;lectronique et la version papier, cette derni&egrave;re fait foi.</FONT></P>
+<P CLASS="ParaText">
+<FONT COLOR='#000000'>
+Le d&eacute;faut de production dans les d&eacute;lais l&eacute;gaux de la d&eacute;claration ci-dessus, est sanctionn&eacute; par une amende de 5 000 000 de francs, sans pr&eacute;judice de l&apos;application des autres sanctions pr&eacute;vues par la loi.</FONT></P>
+<H6 CLASS="Modification">
+Loi n&deg; 2017-870 du 27 d&eacute;cembre 2017, an. fiscaleArt. 14-2.</H6>
+<P CLASS="ParaText">
+<FONT COLOR='#000000'>
+<a name="50634779_pgfId-1078892"></a>La production d&#8216;une d&eacute;claration incompl&egrave;te ou comportant des erreurs est sanctionn&eacute;e par une amende de 2 000 000 de francs par erreur ou omission, sans pr&eacute;judice des autres     sanctions pr&eacute;vues par la loi.</FONT></P>
+
+<H6 CLASS="Modification">
+<a name="50634779_pgfId-1078910"></a>Loi n&deg; 2018 - 984 du 28 d&eacute;cembre 2018, an. fiscaleArt. 17-2</H6>
+</DIV>
+
+<DIV>
+<span id="#A0036t"></span>
+<H6 CLASS="NoArticle">
+<A NAME="50401290_pgfId-1121858"></A>Art. 36 ter </H6>
+<P CLASS="ParaText"><font color='#000000'>
+<A NAME="50401290_pgfId-1121885"></A> 1&deg; Les personnes morales &eacute;tablies en Côte d’Ivoire relevant de la Direction des grandes Entreprises ou de la Direction des moyennes Entreprises et qui sont sous la d&eacute;pendance ou qui possèdent le contrôle d’entreprises situ&eacute;es hors de Côte d’Ivoire, sont tenues de produire à l’Administration fiscale lors des op&eacute;rations de contrôle, en sus de l’&eacute;tat des transactions internationales intragroupes pr&eacute;vu à l’article 36 bis ci-dessus, une documentation compos&eacute;e d’un fichier principal et d’un fichier local.</font></P>
+<P CLASS="ParaText"><font color='#000000'>
+<A NAME="50401290_pgfId-1121959"></A>2&deg; Le fichier principal comprend :</font></P>
+<P CLASS="Liste2-Enumeree"><font color='#000000'>
+<A NAME="50401290_pgfId-1121960"></A>-	 un sch&eacute;ma illustrant la structure juridique et capitalistique du groupe ainsi que la situation g&eacute;ographique des entit&eacute;s op&eacute;rationnelles ;</font></P>
+<P CLASS="Liste2-Enumeree"><font color='#000000'>
+<A NAME="50401290_pgfId-1121962"></A>-	 une liste et une description des accords importants de prestations de services entre entreprises associ&eacute;es, à l'exclusion des accords aff&eacute;rents à des services de recherche et d&eacute;veloppement. Ces informations incluent une description des capacit&eacute;s des principaux sites fournissant les services importants et des politiques appliqu&eacute;es en matière de prix de transfert pour r&eacute;partir les coûts des services et d&eacute;terminer les prix factur&eacute;s pour les services intragroupes ;</font></P>
+<P CLASS="Liste2-Enumeree"><font color='#000000'>
+<A NAME="50401290_pgfId-1121964"></A>-	 les sources importantes de b&eacute;n&eacute;fices du groupe ;</font></P>
+<P CLASS="Liste2-Enumeree"><font color='#000000'>
+<A NAME="50401290_pgfId-1121966"></A>-	 une description de la chaîne d'approvisionnement des cinq principaux biens et services offerts par des entreprises du groupe ainsi que de tout autre bien et service repr&eacute;sentant plus de 5 % du chiffre d'affaires du groupe ;</font></P>
+<P CLASS="Liste2-Enumeree"><font color='#000000'> 
+<A NAME="50401290_pgfId-1121968"></A>-	 une description des principaux march&eacute;s g&eacute;ographiques sur lesquels les biens et services du groupe sont vendus ;</P>
+<P CLASS="Liste2-Enumeree"><font color='#000000'> 
+<A NAME="50401290_pgfId-1121970"></A>- 	une analyse fonctionnelle d&eacute;crivant les principales contributions des diff&eacute;rentes entit&eacute;s du groupe à la cr&eacute;ation de valeur, c'est-à-dire les fonctions cl&eacute;s exerc&eacute;es, les risques importants assum&eacute;s et les actifs importants utilis&eacute;s ;</P>
+<P CLASS="Liste2-Enumeree"><font color='#000000'>
+<A NAME="50401290_pgfId-1121972"></A>-	 une description des op&eacute;rations importantes de r&eacute;organisations d'entreprises ainsi que d'acquisitions et de cessions d'&eacute;l&eacute;ments d'actif intervenues au cours de l'exercice ;</font></P>
+<P CLASS="Liste2-Enumeree"><font color='#000000'>
+<A NAME="50401290_pgfId-1121974"></A>-	 une description g&eacute;n&eacute;rale de la strat&eacute;gie du groupe en matière de mise au point de propri&eacute;t&eacute; et d'exploitation des actifs incorporels. Cette description comporte notamment la localisation des principales installations de recherche et d&eacute;veloppement et celle de la direction des activit&eacute;s de recherche et d&eacute;veloppement  </font></P>
+<P CLASS="Liste2-Enumeree"><font color='#000000'>
+<A NAME="50401290_pgfId-1121976"></A>-	 une liste des actifs incorporels ou des cat&eacute;gories d'actifs incorporels qui sont importants pour l'&eacute;tablissement des prix de transfert ainsi que des entit&eacute;s qui en sont l&eacute;galement propri&eacute;taires ;</font></P>
+<P CLASS="Liste2-Enumeree">
+<A NAME="50401290_pgfId-1121978"></A>-<font color='#000000'>	 une liste des accords importants entre entreprises associ&eacute;es relatifs aux actifs incorporels, y compris les accords de r&eacute;partition de coûts, les principaux accords de services de recherche et les accords de licence ;</font></P>
+<P CLASS="Liste2-Enumeree"><font color='#000000'>
+<A NAME="50401290_pgfId-1121980"></A>-	 une description g&eacute;n&eacute;rale des &eacute;ventuels transferts importants de parts d'actifs incorporels entre entreprises associ&eacute;es, mentionnant les pays et les r&eacute;mun&eacute;rations correspondantes ;</font></P>
+<P CLASS="Liste2-Enumeree"><font color='#000000'>
+<A NAME="50401290_pgfId-1121982"></A>-	 une description g&eacute;n&eacute;rale de la façon dont le groupe est financé, y compris une description des accords de financement importants conclus avec des prêteurs ind&eacute;pendants du groupe ;</font></P>
+<P CLASS="Liste2-Enumeree"><font color='#000000'>
+<A NAME="50401290_pgfId-1121984"></A>-	 l'identification de tous les membres du groupe multinational exerçant une fonction de centrale de financement pour le groupe, y compris du pays de constitution des entit&eacute;s consid&eacute;r&eacute;es et de leur siège de direction effective ;</font></P>
+<P CLASS="Liste2-Enumeree"><font color='#000000'>
+<A NAME="50401290_pgfId-1121986"></A>-	 une description g&eacute;n&eacute;rale des politiques du groupe en matière de prix de transfert relatives aux accords de financement entre entreprises associ&eacute;es ;</font></P>
+<P CLASS="Liste2-Enumeree"><font color='#000000'>
+<A NAME="50401290_pgfId-1121988"></A>- 	les &eacute;tats financiers consolid&eacute;s annuels du groupe pour l'exercice fiscal s'ils sont pr&eacute;par&eacute;s par ailleurs à des fins d'information financière, r&eacute;glementaires, de gestion interne, fiscales ou autres ;</font></P>
+<P CLASS="Liste2-Enumeree"><font color='#000000'>
+<A NAME="50401290_pgfId-1121990"></A>-	 le cas &eacute;ch&eacute;ant, une liste et une description des accords pr&eacute;alables en matière de prix de transfert unilat&eacute;raux conclus par le groupe et des autres d&eacute;cisions rendus par des autorit&eacute;s fiscales concernant la r&eacute;partition des b&eacute;n&eacute;fices du groupe entre pays.</font></P>
+<P CLASS="ParaText"><font color='#000000'>
+<A NAME="50401290_pgfId-1121991"></A>3&deg; Le fichier local comprend :</font></P>
+<P CLASS="Liste2-Enumeree"><font color='#000000'>
+<A NAME="50401290_pgfId-1121992"></A>- 	une description de la structure de gestion et un organigramme de l'entreprise ivoirienne ;</font></P>
+<P CLASS="Liste2-Enumeree"><font color='#000000'>
+<A NAME="50401290_pgfId-1121994"></A>-	 une description des activit&eacute;s effectu&eacute;es et de la strat&eacute;gie d'entreprise mise en œuvre, en indiquant notamment si l'entreprise a &eacute;t&eacute;́ impliqu&eacute;e dans ou affect&eacute;e par des r&eacute;organisations d'entreprises ou des transferts d'actifs incorporels pendant l'exercice ou l'exercice pr&eacute;c&eacute;dent et en expliquant les aspects de ces transactions qui affectent l'entreprise ;</font></P>
+<P CLASS="Liste2-Enumeree"><font color='#000000'>
+<A NAME="50401290_pgfId-1121996"></A>- 	une description des transactions importantes avec des entreprises associ&eacute;es et des conditions dans lesquelles elles sont r&eacute;alis&eacute;es. Cette description porte notamment sur les achats de services de fabrication, les acquisitions de biens, la fourniture de services, les prêts, les garanties financières et garanties de bonne ex&eacute;cution, la concession de licences portant sur des actifs incorporels ;</font></P>
+<P CLASS="Liste2-Enumeree"><font color='#000000'>
+<A NAME="50401290_pgfId-1121998"></A>-	 les montants des paiements et recettes    intragroupes pour chaque cat&eacute;gorie de transactions impliquant l'entreprise ivoirienne, ventil&eacute;s en fonction de la juridiction fiscale du payeur ou du b&eacute;n&eacute;ficiaire &eacute;tranger </font>;</P>
+<P CLASS="Liste2-Enumeree"><font color='#000000'>
+<A NAME="50401290_pgfId-1122000"></A>-	 une identification des entreprises associ&eacute;es impliqu&eacute;es dans chaque cat&eacute;gorie de transactions contrôl&eacute;es et des relations qu'elles entretiennent avec l'entreprise v&eacute;rifi&eacute;e ;</font></P>
+<P CLASS="Liste2-Enumeree"><font color='#000000'>
+<A NAME="50401290_pgfId-1122002"></A>-	 une copie de tous les accords intragroupes importants conclus par l'entreprise v&eacute;rifi&eacute;e ;</font></P>
+<P CLASS="Liste2-Enumeree"><font color='#000000'>
+<A NAME="50401290_pgfId-1122004"></A>-	 une analyse de comparabilit&eacute;́ et une analyse fonctionnelle d&eacute;taill&eacute;es de l'entreprise ivoirienne et des entreprises associ&eacute;es pour chaque cat&eacute;gorie de transactions, y compris les &eacute;ventuels changements par rapport aux exercices pr&eacute;c&eacute;dents ;</P>
+<P CLASS="Liste2-Enumeree"><font color='#000000'>
+<A NAME="50401290_pgfId-1122006"></A>- 	une indication de la m&eacute;thode de d&eacute;termination des prix de transfert la plus adapt&eacute;e pour chaque cat&eacute;gorie de transactions et des raisons pour lesquelles cette m&eacute;thode a &eacute;t&eacute; choisie ;</font></P>
+<P CLASS="Liste2-Enumeree"><font color='#000000'>
+<A NAME="50401290_pgfId-1122008"></A>-	 le cas &eacute;ch&eacute;ant, une indication de l'entreprise associ&eacute;e qui a &eacute;t&eacute; choisie comme partie test&eacute;e et une explication des raisons de cette s&eacute;lection ;</font></P>
+<P CLASS="Liste2-Enumeree"><font color='#000000'>
+<A NAME="50401290_pgfId-1122010"></A>-	 une synthèse des hypothèses importantes qui ont &eacute;t&eacute; pos&eacute;es pour appliquer les m&eacute;thodes de fixation des prix de transfert ;</font></P>
+<P CLASS="Liste2-Enumeree"><font color='#000000'>
+<A NAME="50401290_pgfId-1122012"></A>-	 le cas &eacute;ch&eacute;ant, une explication des raisons pour lesquelles une analyse pluriannuelle des m&eacute;thodes de prix de transfert a &eacute;t&eacute; appliqu&eacute;e ; </font> </P>
+<P CLASS="Liste2-Enumeree"><font color='#000000'>
+<A NAME="50401290_pgfId-1122014"></A>-	 une liste et une description des transactions comparables sur le march&eacute; libre et des indicateurs financiers relatifs à des entreprises ind&eacute;pendantes utilis&eacute;s dans le cadre de l'analyse des prix de transfert, y compris une description de la m&eacute;thode de recherche de donn&eacute;es comparables avec l'indication de la source de ces informations ;</font></P>
+<P CLASS="Liste2-Enumeree"><font color='#000000'>
+<A NAME="50401290_pgfId-1122912"></A>-	une description des &eacute;ventuels ajustements effectu&eacute;s en indiquant si ces ajustements ont &eacute;t&eacute; apport&eacute;s aux r&eacute;sultats de la partie test&eacute;e le cas &eacute;ch&eacute;ant, aux transactions comparables sur le march&eacute; libre ou aux deux ;</font></P>
+<P CLASS="Liste2-Enumeree">
+<A NAME="50401290_pgfId-1122913"></A>&nbsp;</P>
+<P CLASS="Liste2-Enumeree"><font color='#000000'>
+<A NAME="50401290_pgfId-1122914"></A>-	une description des raisons pour lesquelles il a &eacute;t&eacute; conclu que les prix des transactions avaient &eacute;t&eacute; &eacute;tablis conform&eacute;ment au principe de pleine concurrence en application de la m&eacute;thode de prix de transfert retenue ;  </font></P>
+<P CLASS="Liste2-Enumeree"><font color='#000000'>
+<A NAME="50401290_pgfId-1122916"></A>-	une synthèse des informations financières utilis&eacute;es pour appliquer la m&eacute;thode de d&eacute;termination des prix de transfert ;</font></P>
+<P CLASS="Liste2-Enumeree"><font color='#000000'>
+<A NAME="50401290_pgfId-1122918"></A>-	le cas &eacute;ch&eacute;ant, une copie des accords de fixation pr&eacute;alable des prix de transfert unilat&eacute;raux, bilat&eacute;raux et multilat&eacute;raux existants ainsi que des d&eacute;cisions d'autres autorit&eacute;s fiscales et qui sont li&eacute;s à des transactions contrôl&eacute;es avec l'entreprise v&eacute;rifi&eacute;e ;</font></P>
+<P CLASS="Liste2-Enumeree"><font color='#000000'>
+<A NAME="50401290_pgfId-1122920"></A>-	les &eacute;tats financiers annuels de synthèse de l'entreprise ivoirienne ;</font></P>
+<P CLASS="Liste2-Enumeree"><font color='#000000'>
+<A NAME="50401290_pgfId-1122922"></A>-	des informations et des tableaux de r&eacute;partition indiquant comment les donn&eacute;es financières utilis&eacute;es pour appliquer la m&eacute;thode de d&eacute;termination des prix de transfert peuvent être reli&eacute;es aux &eacute;tats financiers annuels ;</font></P>
+<P CLASS="Liste2-Enumeree"><font color='#000000'>
+<A NAME="50401290_pgfId-1122924"></A>-	des tableaux synth&eacute;tiques des donn&eacute;es financières se rapportant aux transactions comparables utilis&eacute;es avec l'indication des sources d’où ces donn&eacute;es sont tir&eacute;es.</font></P>
+<P CLASS="Liste2-Enumeree"><font color='#000000'>
+<A NAME="50401290_pgfId-1122908"></A>4&deg; Le fichier principal et le fichier local, qui ne se substituent pas aux justificatifs aff&eacute;rents à chaque transaction r&eacute;alis&eacute;e par l’entreprise, doivent être tenus en langue française sous format papier et/ou d&eacute;mat&eacute;rialis&eacute; et produits à toute r&eacute;quisition de l'Administration fiscale lors des op&eacute;rations de contrôle.</font></P>
+<h6 CLASS="Modification">
+<A NAME="50401290_pgfId-1121900"></A>
+Loi n&deg; 2022-974 du 20 d&eacute;c. 2022, an. fiscale, art. 12-1
+</h6>
+</DIV>
+
+<span id="#A0037"></span>
+<H6 CLASS="NoArticle">
+Art. 37</H6>
+<P CLASS="ParaText">
+Les contribuables susvis&eacute;s doivent, le cas &eacute;ch&eacute;ant, indiquer le nom et l&apos;adresse du ou des comptables ou experts charg&eacute;s de tenir leur comptabilit&eacute; ou d&apos;en d&eacute;terminer ou contr&ocirc;ler les r&eacute;sultats g&eacute;n&eacute;raux, en pr&eacute;cisant si ces techniciens font ou non partie du personnel salari&eacute; de leur entreprise. Ils peuvent joindre &agrave; leur d&eacute;claration les observations essentielles et les conclusions qui ont pu leur &ecirc;tre remises par les experts-comptables ou les comptables agr&eacute;&eacute;s charg&eacute;s par eux, dans les limites de leur comp&eacute;tence, d&apos;&eacute;tablir, contr&ocirc;ler ou appr&eacute;cier leurs &eacute;tats financiers annuels.</P>
+
+<H6 CLASS="Modification">
+Ord. n<b>&deg;-</b> 2008-381 du 18 d&eacute;cembre 2008,Art. 13-2/.</H6>
+
+
+<H3 CLASS="Sous-section">
+III - Contr&ocirc;le des d&eacute;clarations</H3>
+<span id="#A0038"></span>
+<H6 CLASS="NoArticle">
+Art. 38 	&nbsp;&nbsp;&nbsp;&nbsp;<a href="#" onClick="loadpage('005','h2538');return false;" class="ui-button"  title="Consultez l'historique">2025...</a></H6>
+<P CLASS="Liste1-Enumeree"><font color='#d00000'>
+<A NAME="pgfId-1150890"></A>1&#176; Pour l&#8217;&eacute;tablissement de l&#8217;imp&ocirc;t sur les b&eacute;n&eacute;fices d&ucirc; par les entreprises qui sont sous la d&eacute;pendance ou qui poss&egrave;dent le contr&ocirc;le d&#8217;entreprises situ&eacute;es hors de C&ocirc;te d&#8217;Ivoire, les b&eacute;n&eacute;fices indirectement transf&eacute;r&eacute;s &agrave; ces derni&egrave;res, soit par la majoration ou la diminution des prix d&#8217;achat ou de vente, soit par tout autre moyen, seront incorpor&eacute;s aux r&eacute;sultats. Il est proc&eacute;d&eacute; de m&ecirc;me &agrave; l&#8217;&eacute;gard des entreprises qui sont sous la d&eacute;pendance d&#8217;une entreprise ou d&#8217;un groupe poss&eacute;dant &eacute;galement le contr&ocirc;le d&#8217;entreprises situ&eacute;es hors de C&ocirc;te d&#8217;Ivoire.</font></P>
+<P CLASS="Liste1-Enumeree"><font color='#d00000'>
+<A NAME="pgfId-1150892"></A>A d&eacute;faut d&#8217;&eacute;l&eacute;ments pr&eacute;cis pour op&eacute;rer les redressements pr&eacute;vus &agrave; l&#8217;alin&eacute;a pr&eacute;c&eacute;dent, les produits imposables seront d&eacute;termin&eacute;s par comparaison avec ceux des entreprises similaires, exploit&eacute;es dans des conditions d&#8217;ind&eacute;pendance.</font></P>
+<P CLASS="Liste1-Enumeree"><font color='#d00000'>
+<A NAME="pgfId-1150894"></A>2&#176; Pour la d&eacute;termination des produits imposables susvis&eacute;s, les entreprises et l&#8217;Administration appliquent la m&eacute;thode de d&eacute;termination du prix de pleine concurrence qu&#8217;elles jugent la plus appropri&eacute;e aux circonstances de l&#8217;esp&egrave;ce.</font></P>
+<P CLASS="Liste1-Enumeree"><font color='#d00000'>
+<A NAME="pgfId-1150896"></A>Les entreprises sont tenues d&#8217;apporter la preuve, au moyen de la production de l&#8217;&eacute;tat pr&eacute;vu &agrave; l&#8217;article 36 bis du pr&eacute;sent Code, de la conformit&eacute; des prix de leurs transactions susvis&eacute;es avec ceux qui auraient &eacute;t&eacute; convenus entre entreprises ind&eacute;pendantes exploit&eacute;es dans des conditions analogues, pour les m&ecirc;mes transactions.</font></P>
+<P CLASS="Liste1-Enumeree"><font color='#d00000'>
+<A NAME="pgfId-1150898"></A>3&#176; Les int&eacute;r&ecirc;ts, arr&eacute;rages et autres produits des obligations, cr&eacute;ances, d&eacute;p&ocirc;ts et cautionnements, les redevances de cession ou concession de licences d&#8217;exploitation, de brevets d&#8217;invention, de marques de fabrique, proc&eacute;d&eacute;s ou formules de fabrication et autres droits analogues ou les r&eacute;mun&eacute;rations de services pay&eacute;s ou dus par une personne physique ou morale domicili&eacute;e ou &eacute;tablie en C&ocirc;te d&#8217;Ivoire &agrave; des personnes physiques ou morales qui sont domicili&eacute;es ou &eacute;tablies hors de C&ocirc;te d&#8217;Ivoire, ne sont admis comme charges d&eacute;ductibles pour l&#8217;&eacute;tablissement de l&#8217;imp&ocirc;t que si le d&eacute;biteur apporte la preuve que ces d&eacute;penses correspondent &agrave; des op&eacute;rations r&eacute;elles, et qu&#8217;elles ne pr&eacute;sentent pas un caract&egrave;re anormal ou exag&eacute;r&eacute;.</font></P>
+<P CLASS="Liste1-Enumeree"><font color='#d00000'>
+<A NAME="pgfId-1150900"></A>Les sommes vers&eacute;es ne sont admises comme charges d&eacute;ductibles pour l&#8217;&eacute;tablissement de l&#8217;imp&ocirc;t que dans la double limite de 5 % du chiffre d&#8217;affaires et de 20 % des frais g&eacute;n&eacute;raux de l&#8217;entreprise d&eacute;bitrice.</font></P>
+<P CLASS="Liste1-Enumeree"><font color='#d00000'>
+<A NAME="pgfId-1150902"></A>Lorsque le b&eacute;n&eacute;ficiaire est situ&eacute; dans un pays ou territoire non coop&eacute;ratif ou &agrave; fiscalit&eacute; privil&eacute;gi&eacute;e, la d&eacute;duction des sommes susvis&eacute;es est limit&eacute;e &agrave; 50 % de leur montant brut, sans pr&eacute;judice de la double limite vis&eacute;e pr&eacute;c&eacute;demment.</font></P>
+<P CLASS="Liste1-Enumeree"><font color='#d00000'>
+<A NAME="pgfId-1150905"></A>4&#176; Des liens de d&eacute;pendance ou de contr&ocirc;le sont r&eacute;put&eacute;s exister entre deux entreprises lorsque :</font></P>
+<P CLASS="Liste1-Enumeree"><font color='#d00000'>
+<A NAME="pgfId-1150907"></A>- 	l&#8217;une d&eacute;tient, directement ou indirectement, une part significative du capital social ou des droits de vote de l&#8217;autre ; ou</font></P>
+<P CLASS="Liste1-Enumeree"><font color='#d00000'>
+<A NAME="pgfId-1150909"></A>-	 l&#8217;une exerce en fait et par tous moyens, sur cette autre entreprise, directement ou indirectement, le pouvoir de d&eacute;cision, de contr&ocirc;le, de gestion ou est en mesure d&#8217;influencer ses d&eacute;cisions.</font></P>
+<P CLASS="ParaText"><font color='#d00000'>
+<A NAME="pgfId-1150911"></A>De m&ecirc;me, la condition de d&eacute;pendance ou de contr&ocirc;le est remplie lorsque les m&ecirc;mes personnes ou entreprises :</font></P>
+<P CLASS="Liste1-Enumeree"><font color='#d00000'>
+<A NAME="pgfId-1150913"></A>-	 poss&egrave;dent, directement ou indirectement, une part significative du capital ou des droits de vote des deux entreprises ; ou</font></P>
+<P CLASS="Liste1-Enumeree"><font color='#d00000'>
+<A NAME="pgfId-1150915"></A>-	 exercent en fait et par tous moyens, directement ou indirectement, sur ces deux entreprises, le pouvoir de d&eacute;cision, de contr&ocirc;le, de gestion ou sont en mesure d&#8217;influencer leurs d&eacute;cisions. </font></P>
+<P CLASS="ParaText"><font color='#d00000'>
+<A NAME="pgfId-1150916"></A>&nbsp;</font></P>
+<P CLASS="ParaText"><font color='#d00000'>
+<A NAME="pgfId-1150917"></A>La condition de d&eacute;pendance ou de contr&ocirc;le n'est pas exig&eacute;e pour l&#8217;application des paragraphes 1&#176;, 2&#176; et 3&#176; du pr&eacute;sent article, lorsque la transaction ou le transfert s'effectue avec des personnes situ&eacute;es ou &eacute;tablies dans un pays ou territoire non coop&eacute;ratif ou &agrave; fiscalit&eacute; privil&eacute;gi&eacute;e.</font></P>
+<P CLASS="Liste1-Enumeree"><font color='#d00000'>
+<A NAME="pgfId-1150919"></A>5&#176; Sont consid&eacute;r&eacute;s comme pays ou territoires non coop&eacute;ratifs, les pays ou territoires identifi&eacute;s comme tels par les autorit&eacute;s fiscales ivoiriennes ou ceux figurant sur la liste de l&#8217;Union Europ&eacute;enne (UE), &agrave; condition d&#8217;avoir &eacute;t&eacute; class&eacute;s comme non conformes &agrave; l&#8217;issue de la derni&egrave;re &eacute;valuation dont ils ont fait l&#8217;objet, en mati&egrave;re de transparence et d'&eacute;change de renseignements &agrave; des fins fiscales.</font></P>
+<P CLASS="Liste1-Enumeree"><font color='#d00000'>
+<A NAME="pgfId-1150921"></A>Toutefois, nonobstant les dispositions du paragraphe pr&eacute;c&eacute;dent, ne sont pas &agrave; consid&eacute;rer comme pays ou territoires non coop&eacute;ratifs, les pays ou territoires li&eacute;s &agrave; la C&ocirc;te d&#8217;Ivoire par un accord en vigueur pr&eacute;voyant l&#8217;&eacute;change r&eacute;ciproque de renseignements &agrave; des fins fiscales.<P CLASS="Liste1-Enumeree"><font color='#d00000'>
+<A NAME="pgfId-1150923"></A>6&#176; Sont consid&eacute;r&eacute;s comme pays ou territoires &agrave; fiscalit&eacute; privil&eacute;gi&eacute;e, les pays ou territoires dans lesquels les revenus ou les sommes provenant de la C&ocirc;te d&#8217;Ivoire sont taxables &agrave; un imp&ocirc;t sur les b&eacute;n&eacute;fices ou &agrave; tout autre imp&ocirc;t de nature analogue, dont le montant est inf&eacute;rieur &agrave; la moiti&eacute; de l&#8217;imp&ocirc;t qui aurait &eacute;t&eacute; per&ccedil;u en C&ocirc;te d&#8217;Ivoire, si de tels revenus ou sommes y &eacute;taient imposables. </font></P>
+<H6 CLASS="Modification">
+<A NAME="pgfId-1147966"></A>Loi n&#176; 2016-1116 du 08 d&eacute;cembre 2016, an. fiscale, art. 15-2; loi n&#176; 2017-870 du 27 d&eacute;cembre 2017, an. fiscale art. 14-1;    loi n&#176; 2025-987 du 19  d&eacute;cembre 2025, art. 25.</H6>
+
+<H3 CLASS="Sous-section">
+IV - Paiement de l&apos;imp&ocirc;t</H3>
+<P CLASS="Paragraphe">
+A - Imp&ocirc;t minimum forfaitaire</P>
+
+<H6 CLASS="Modification">
+Loi n<b>&deg;-</b> 94-201 du 8 avril 1994, an. fiscale,Art. 6.</H6>
+
+<span id="#A0039"></span>
+<H6 CLASS="NoArticle">
+Art. 39&nbsp;&nbsp;&nbsp;&nbsp;<a href="#" onClick="loadpage('005','h1939');return false;" class="ui-button"  title="Consultez l'historique">2019...</a>
+&nbsp;&nbsp;&nbsp;&nbsp;<a href="#" onClick="loadpage('005','h2039');return false;" class="ui-button"  title="Consultez l'historique">2020...</a></H6>
+<P CLASS="ParaText">
+Un imp&ocirc;t minimum forfaitaire frappe les personnes physiques ou morales soumises au r&eacute;gime du b&eacute;n&eacute;fice r&eacute;el normal.</P>
+<P CLASS="ParaText"><FONT COLOR='#000000'>
+Il est exigible dans l&apos;un des cas suivants :</FONT></P>
+<P CLASS="Liste2-Enumeree"><FONT COLOR='#000000'>
+a) le montant de l&apos;imp&ocirc;t sur les b&eacute;n&eacute;fices de l&apos;exercice est inf&eacute;rieur &agrave; l&apos;imp&ocirc;t minimum forfaitaire dudit exercice;</FONT></P>
+<P CLASS="Liste2-Enumeree"><FONT COLOR='#000000'>
+1<b>&deg;</b>	La cotisation due au titre d&apos;un exercice comptable donn&eacute; est &eacute;gale &agrave; 0,5% du chiffre d&apos;affaires, toutes taxes comprises, de cet exercice. Cette cotisation ne peut &ecirc;tre inf&eacute;rieure &agrave; un minimum de perception de 3 000 000 de francs. Pour les stations-service et les distributeurs de gaz butane, ce montant est ramen&eacute; &agrave; 500 000 francs.</FONT></P>
+<P CLASS="Liste2-Enumeree"><FONT COLOR='#000000'>
+Toutefois, lorsque l&apos;imp&ocirc;t minimum forfaitaire est d&ucirc; &agrave; raison de la condition d&eacute;finie au b) ci-dessus, le minimum de perception est major&eacute; de la diff&eacute;rence entre le montant cumul&eacute; des imp&ocirc;ts et taxes dus au titre d&apos;un exercice et le montant maximum de l&apos;imp&ocirc;t des microentreprises d&eacute;termin&eacute; sur la base du seuil sup&eacute;rieur du chiffre d&apos;affaires du r&eacute;gime des microentreprises, affect&eacute; d&apos;un coefficient de 1,2.</FONT></P>
+<H6 CLASS="Modification">
+Loi n&deg; 95-05 du 11 janv. 1995, an. fiscale,Art. 12;  loi n&deg; 2012-1179 du 27 d&eacute;cembre 2012,  an. fiscale,Art. 6  et 7-1; loi n&deg; 2017-870 du 27 d&eacute;cembre 2017, an. fiscaleArt. 12-1; ord. n&deg; 2018-145 du 14 f&eacute;vrier 2018,Art. 1;<FONT COLOR='#000000'> loi n&deg; 2020-972 du 23 d&eacute;c. 2020, an. fiscale,Art. 33-3.</FONT></H6>
+<P CLASS="Liste2-Enumeree">
+ [Obsol&egrave;te].</P>
+
+
+<H6 CLASS="Modification">
+Ord. n<b>&deg;-</b> 2007-675 du 28 d&eacute;cembre 2007Art. 32-1; loi n<b>&deg;-</b> 2012-1179 du 27 d&eacute;cembre 2012, an. fiscale,  art 6.</H6>
+<P CLASS="Liste2-Enumeree"><FONT COLOR='#000000'>
+Sans pr&eacute;judice de l&apos;exigibilit&eacute; du minimum de perception, le taux de l&apos;imp&ocirc;t minimum forfaitaire est fix&eacute; &agrave; :</FONT></P>
+<P CLASS="Liste2-Enumeree"><FONT COLOR='#000000'>
+-0,10 % pour les entreprises de production, transformation et ventes de produits p&eacute;troliers,  pour les entreprises de production, de distribution d&apos;eau et d&apos;&eacute;lectricit&eacute; ainsi que pour les entreprises de distribution de gaz butane;</FONT></P>
+
+<P CLASS="Liste2-Enumeree"><FONT COLOR='#000000'>
+-0,15 % pour les &eacute;tablissements bancaires et financiers et les entreprises d&apos;assurance et de r&eacute;assurance.</FONT></P>
+<H6 CLASS="Modification">
+Loi n<b>&deg;-</b> 2012-1179 du 27 d&eacute;cembre 2012, an. fiscale,Art. 7-2; loi n&deg; 2017-870 du 27 d&eacute;cembre 2017, an. fiscaleArt. 12-2; ord. n&deg; 2018-145 du 14 f&eacute;vrier 2018,Art. 1. </H6>
+
+<P CLASS="Liste2-Enumeree">
+Le maximum de perception de l&apos;imp&ocirc;t minimum forfaitaire est fix&eacute; &agrave; <FONT COLOR='#000000'>35 000 000</FONT> de francs.</P>
+
+
+<H6 CLASS="Modification">
+Loi n<b>&deg;-</b> 2012-1179 du 27 d&eacute;cembre 2012,  an. fiscale,Art. 6; loi n&deg; 2017-870 du 27 d&eacute;cembre 2017, an. fiscaleArt. 12-3; ord. n&deg; 2018-145 du 14 f&eacute;vrier 2018,Art. 1. </H6>
+<P CLASS="Liste2-Enumeree">
+ [Obsol&egrave;te].</P>
+
+
+<H6 CLASS="Modification">
+Loi n<b>&deg;-</b>2004-271 du 15 avril 2004, an. fiscale,Art. 5-2. Ord. n<b>&deg;-</b> 2006-234 du 02 ao&ucirc;t 2006Art. 1er-13. Ord. n<b>&deg;-</b> 2007-488 du 31 mai 2007Art. 28-1; Ord. n<b>&deg;-</b> 2008-381 du 18 d&eacute;cembre 2008,Art. 27-1.</H6>
+<P CLASS="Liste2-Enumeree">
+ [Obsol&egrave;te].</P>
+
+
+<H6 CLASS="Modification">
+Ord. n<b>&deg;-</b> 2007-675 du 28 d&eacute;cembre 2007Art. 32-2.
+</H6>
+<P CLASS="Liste2-Enumeree">
+2<b>&deg;-</b>Le chiffre d&apos;affaires s&apos;entend de l&apos;ensemble des recettes et produits acquis dans le cadre de l&apos;exercice de l&apos;activit&eacute;, y compris toutes les sommes provenant des activit&eacute;s annexes et accessoires ou de la gestion de l&apos;actif commercial, quelle que soit leur situation fiscale au regard des taxes sur le chiffre d&apos;affaires.</P>
+<P CLASS="Liste2-Enumeree">
+3<b>&deg;-</b>La cotisation exigible doit &ecirc;tre acquitt&eacute;e spontan&eacute;ment aupr&egrave;s de la recette des Imp&ocirc;ts du lieu d&apos;exercice de l&apos;activit&eacute; dans les m&ecirc;mes conditions et sous les m&ecirc;mes sanctions que l&apos;imp&ocirc;t sur les b&eacute;n&eacute;fices industriels et commerciaux.</P>
+<P CLASS="ParaText">
+<FONT COLOR='#000000'>
+A titre transitoire, et jusqu&apos;au 31 d&eacute;cembre 2020, le paiement de l&apos;imp&ocirc;t pr&eacute;vu au pr&eacute;sent article est suspendu. </FONT></P>
+<H6 CLASS="Modification">
+Loi n&deg; 2019-1080 du 18 d&eacute;cembre 2019, an. fiscale,Art. 7</H6>
+
+<span id="#A0040"></span>
+<H6 CLASS="NoArticle">
+Art. 40</H6>
+<P CLASS="ParaText">
+Les entreprises nouvelles sont exon&eacute;r&eacute;es de l&apos;imp&ocirc;t minimum forfaitaire au titre de leur premier exercice comptable.</P>
+<P CLASS="ParaText">
+ [Obsol&egrave;te].</P>
+
+<H6 CLASS="Modification">
+Loi n<b>&deg;-</b> 2003-206 du 7 juillet 2003, an. fiscale,Art. 11-1; loi n<b>&deg;-</b> 2004-271 du 15 avril 2004, an. fiscale,Art.5-3; 
+Ord. n<b>&deg;-</b> 2007-675 du 28 d&eacute;cembre 2007Art. 7-1
+.</H6>
+<P CLASS="ParaText">
+  [Obsol&egrave;te].</P>
+
+
+<H6 CLASS="Modification">
+Ord. n<b>&deg;-</b> 2011-121 du 22 juin 2011Art.2-2.</H6>
+
+<span id="#A0041"></span>
+<H6 CLASS="NoArticle">
+Art. 41</H6>
+<P CLASS="ParaText">
+Les personnes physiques ou morales qui b&eacute;n&eacute;ficient d&apos;un r&eacute;gime d&apos;exon&eacute;ration totale ou partielle d&apos;imp&ocirc;t sur les b&eacute;n&eacute;fices industriels et commerciaux sont exon&eacute;r&eacute;es, dans les m&ecirc;mes conditions et quotit&eacute;s, de l&apos;imp&ocirc;t minimum forfaitaire.</P>
+<P CLASS="Paragraphe">
+B - Imp&ocirc;t sur les b&eacute;n&eacute;fices industriels et commerciaux</P>
+
+<H6 CLASS="Modification">
+Loi n<b>&deg;-</b> 95-05 du 11 janv. 1995, an. fiscale,Art. 9.</H6>
+
+
+<span id="#A0042"></span>
+<H6 CLASS="NoArticle">
+Art. 42</H6>
+<P CLASS="ParaText">A compter des exercices ouverts apr&egrave;s le 31 d&eacute;cembre 2002, l&apos;imp&ocirc;t sur les b&eacute;n&eacute;fices industriels et commerciaux ou l&apos;imp&ocirc;t minimum forfaitaire d&ucirc; au titre d&apos;un exercice est payable spontan&eacute;ment en trois fractions &eacute;gales au plus tard le 15 avril, le 15 juin et le 15 septembre de chaque ann&eacute;e.</P>
+<H6 CLASS="Modification">
+Loi n&deg; 2003-206 du 7 juillet 2003, an. fiscale,Art. 13 -1; Ord. n&deg; 2015-797 du 18 d&eacute;cembre 2015,Art. 2</H6>
+<P CLASS="ParaText">
+    En ce qui concerne les entreprises relevant de la Direction des grandes Entreprises ou de la Direction des moyennes Entreprises, ces dates sont fix&eacute;es au :
+</P>
+<P CLASS="ParaText">
+    -	10 avril, 10 juin et 10 septembre pour les entreprises industrielles et les entreprises p&eacute;troli&egrave;res et mini&egrave;res ;
+</P>
+<P CLASS="ParaText">
+    -	15 avril, 15 juin et 15 septembre, pour les entreprises commerciales ;
+</P>
+<P CLASS="ParaText">
+    -	20 avril, 20 juin et 20 septembre, pour les entreprises de prestations de services.
+</P>
+<H6 CLASS="Modification">
+Loi n&deg; 2003-206 du 7 juillet 2003, an. fiscale,Art. 13 -1; Ord. n&deg; 2015-797 du 18 d&eacute;cembre 2015,Art. 3</H6>
+<P CLASS="ParaText">
+Le paiement est effectu&eacute; aupr&egrave;s de la recette des Imp&ocirc;ts dont d&eacute;pend le contribuable .</P>
+<H6 CLASS="Modification">
+Ord. n&deg; 97-478 du 4 sept. 1997.Art. 1&deg;-V; loi n&deg; 2016-1116 du 08 d&eacute;cembre 2016, an. fiscale,Art. 19-1.</H6>
+
+
+<span id="#A0043"></span>
+<H6 CLASS="NoArticle">
+Art. 43</H6>
+<P CLASS="ParaText">
+ [Obsol&egrave;te].</P>
+
+<H6 CLASS="Modification">
+Loi n<b>&deg;-</b> 2003-206 du 7 juillet 2003, an. fiscale,Art. 13-4.</H6>
+
+
+<span id="#A0044"></span>
+<H6 CLASS="NoArticle">
+Art. 44</H6>
+<P CLASS="ParaText">
+ [Obsol&egrave;te].</P>
+
+
+<H6 CLASS="Modification">
+Loi n<b>&deg;-</b>2004-271 du 15 avril 2004, an. fiscale,Art.17; 
+ord. n<b>&deg;-</b> 2006-234 du 02 ao&ucirc;t 2006Art. 1er -7;
+ord. n<b>&deg;-</b> 2008-381 du 18 d&eacute;cembre 2008,Art. 9-1;
+ord. n<b>&deg;-</b> 2008-381 du 18 d&eacute;cembre 2008,Art. 9-2/.</H6>
+
+
+</div></div> <p>&nbsp;</p><p>&nbsp;</p><span class="historique" ID="h2434">
+<div class="histText">
+Art. 34 
+<p>1&deg; Sont obligatoirement soumises au r&eacute;gime du b&eacute;n&eacute;fice r&eacute;el, les entreprises dont le chiffre d&rsquo;affaires annuel, toutes taxes incluses, exc&egrave;de 500 000 000 de francs.</p>
+<p>Les entreprises dont le chiffre d&rsquo;affaires s&rsquo;abaisse en dessous de la limite pr&eacute;vue au paragraphe ci-dessus, ne sont soumises au r&eacute;gime du b&eacute;n&eacute;fice r&eacute;el simplifi&eacute;, ou le cas &eacute;ch&eacute;ant, au r&eacute;gime de la taxe d&rsquo;Etat de l&rsquo;entreprenant, que lorsque leur chiffre d&rsquo;affaires est rest&eacute; inf&eacute;rieur &agrave; cette limite pendant trois exercices cons&eacute;cutifs.</p>
+<p>Le chiffre d&rsquo;affaires pr&eacute;vu au paragraphe premier est ajust&eacute; au prorata du temps d&rsquo;exploitation pour les entreprises qui commencent ou cessent leurs activit&eacute;s en cours d&rsquo;ann&eacute;e.</p>
+<p>Loi n&deg; 2014-861 du 22 d&eacute;c. 2014, an. fiscale, art.2-1; loi n&deg; 2017-870 du 27 d&eacute;c. 2017, an. fiscale art. 11-1 et 11-2; ord. n&deg; 2018-145 du 14 f&eacute;vr. 2018, art. 1; loi n&deg; 2020-972 du 23 d&eacute;c. 2020, an. fiscale, art. 33-2.</p>
+<p>2&deg;	Les entreprises qui remplissent les conditions pour &ecirc;tre impos&eacute;es sous le r&eacute;gime du b&eacute;n&eacute;fice r&eacute;el simplifi&eacute; peuvent opter, avant le 1er f&eacute;vrier de chaque ann&eacute;e, pour le r&eacute;gime du b&eacute;n&eacute;fice r&eacute;el. L&rsquo;option prend effet &agrave; compter du 1er janvier de l&rsquo;ann&eacute;e au cours de laquelle elle est exerc&eacute;e. Elle est r&eacute;vocable apr&egrave;s les trois exercices comptables qui suivent sa date d&rsquo;effet et sur autorisation expresse des services de la Direction g&eacute;n&eacute;rale des Imp&ocirc;ts.</p>
+<p>Les entreprises qui d&eacute;butent leur activit&eacute; peuvent opter dans les trente jours du commencement de leur activit&eacute;. L&rsquo;option est valable de mani&egrave;re irr&eacute;vocable pour les trois premiers exercices comptables.</p>
+<p>Loi n&deg; 2017-870 du 27 d&eacute;cembre 2017, an. fiscale art. 11-3; ord. n&deg; 2018-145 du 14 f&eacute;vrier 2018, art. 1.</p>
+<BR>
+<BR></div></span><finh2234>
+
+
+</div></div> <p>&nbsp;</p><p>&nbsp;</p><span class="historique" ID="h2234">
+<div class="histText">
+Art. 34 
+<p>1&deg; Sont obligatoirement soumises au r&eacute;gime du b&eacute;n&eacute;fice r&eacute;el, les entreprises dont le chiffre d'affaires annuel, toutes taxes incluses, exc&egrave;de 500 000 000 de francs.</p>
+<p>Les entreprises dont le chiffre d'affaires s'abaisse en dessous de la limite pr&eacute;vue au paragraphe ci-dessus, ne sont soumises au r&eacute;gime du b&eacute;n&eacute;fice r&eacute;el simplifi&eacute;, ou le cas &eacute;ch&eacute;ant, au r&eacute;gime de la taxe d'Etat de l'Entreprenant, que lorsque leur chiffre d'affaires est rest&eacute; inf&eacute;rieur &agrave; cette limite pendant trois exercices cons&eacute;cutifs.</p>
+<p>Le chiffre d'affaires pr&eacute;vu au paragraphe premier est ajust&eacute; au prorata du temps d'exploitation pour les entreprises qui commencent ou cessent leurs activit&eacute;s en cours d'ann&eacute;e.</p>
+<p>2&deg;	Les entreprises qui remplissent les conditions pour &ecirc;tre impos&eacute;es sous le r&eacute;gime du b&eacute;n&eacute;fice r&eacute;el simplifi&eacute; peuvent opter, avant le 1er f&eacute;vrier de chaque ann&eacute;e, pour le r&eacute;gime du b&eacute;n&eacute;fice r&eacute;el. L'option prend effet &agrave; compter du 1er janvier de l'ann&eacute;e au cours de laquelle elle est exerc&eacute;e. Elle est r&eacute;vocable apr&egrave;s les trois exercices comptables qui suivent sa date d'effet et sur autorisation expresse des services de la Direction g&eacute;n&eacute;rale des Imp&ocirc;ts.</p>
+<p>Les entreprises qui d&eacute;butent leur activit&eacute; peuvent opter dans les trente jours du commencement de leur activit&eacute;. L'option est valable de mani&egrave;re irr&eacute;vocable pour les trois premiers exercices comptables.</p>
+<p>Loi n&deg; 2017-870 du 27 d&eacute;cembre 2017, an. fiscaleArt. 11-1, 11-2 et 11-3; loi n&deg; 2014-861 du 22 d&eacute;cembre 2014, an. fiscale,Art.2-1; ordonnance n&deg; 2018-145 du 14 f&eacute;vrier 2018,Art. 1; loi n&deg; 2020-972 du 23 d&eacute;c. 2020, an. fiscale,Art. 33-2.<br />
+</p>
+<BR>
+<BR></div></span><finh2234>
+
+<span class="historique" ID="h2535">
+<div class="histText">
+Art. 35
+<p>1&deg;	Les contribuables vis&eacute;s &agrave; l'article pr&eacute;c&eacute;dent sont tenus de souscrire leur d&eacute;claration des r&eacute;sultats selon le syst&egrave;me normal.</p>
+<p>Ord. n&deg; 2000-252 du 26 mars 2000, an. fiscale,Art. 16-5&deg;.</p>
+<p>2&deg;	La d&eacute;claration de r&eacute;sultats doit &ecirc;tre produite:</p>
+<p>-	le 30 juin suivant la date de cl&ocirc;ture de l'exercice comptable, pour les entreprises soumises &agrave; l'obligation de certification de leurs comptes par un commissaire aux comptes ;</p>
+<p>- le 30 mai suivant la date de cl&ocirc;ture de l'exercice comptable, pour les autres entreprises. </p>
+<p>Ord. n&deg; 2000-252 du 28 mars 2000, an. fiscale,Art. 17; Ord. n&deg; 2009-382 du 26 novembre 2009, an. fiscale,Art.15-1; loi n&deg; 2014-861 du 22 d&eacute;cembre 2014, an. fiscale,Art.12-1; loi n&deg; 2016-1116 du 08 d&eacute;cembre 2016, an. fiscale,Art. 23-2.</p>
+</div></span><finh2535>
+
+<span class="historique" ID="h2436">
+<div class="histText">
+
+<BR>  
+<BR>Art. 36 
+<p>Les contribuables vis&eacute;s &agrave; l&rsquo;article 34-1&deg; sont tenus de transmettre &agrave; l&rsquo;Administration fiscale, leurs &eacute;tats financiers annuels &eacute;tablis et pr&eacute;sent&eacute;s selon le cas, conform&eacute;ment au r&eacute;f&eacute;rentiel comptable SYSCOHADA r&eacute;vis&eacute;, au droit comptable bancaire ou au Code de la Conf&eacute;rence Interafricaine des March&eacute;s des Assurances (CIMA). </p>
+<p>Loi n&deg; 2018 - 984 du 28 d&eacute;cembre 2018, an. fiscale art. 27-2; loi n&deg; 2023-1000 du 18 d&eacute;c. 2023, an. fiscale, art. 10-1.</p>
+<p>Ces &eacute;tats peuvent &ecirc;tre transmis en version papier ou par la voie &eacute;lectronique. Les entreprises relevant de la Direction des grandes Entreprises ou de la Direction des moyennes Entreprises doivent transmettre lesdits &eacute;tats financiers uniquement par la voie &eacute;lectronique. </p>
+<p>Loi n&deg; 2023-1000 du 18 d&eacute;c. 2023, an. fiscale, art. 10-1</p>
+<p>Seuls sont recevables par l'Administration fiscale, les &eacute;tats financiers qui auront &eacute;t&eacute; pr&eacute;alablement pr&eacute;sent&eacute;s &agrave; la formalit&eacute; de la certification en ce qui concerne les entreprises soumises &agrave; cette proc&eacute;dure, conform&eacute;ment aux dispositions de l'Acte uniforme relatif au droit des soci&eacute;t&eacute;s commerciales et du groupement d'int&eacute;r&ecirc;t &eacute;conomique.</p>
+<p>Les autres entreprises sont soumises &agrave; la proc&eacute;dure du visa pr&eacute;alable de leurs &eacute;tats financiers, effectu&eacute;e par un expert-comptable inscrit &agrave; l'Ordre. Les modalit&eacute;s de cette proc&eacute;dure sont d&eacute;finies par arr&ecirc;t&eacute; du Ministre en charge du Budget. </p>
+<p>La proc&eacute;dure de visa est applicable pour la premi&egrave;re fois aux &eacute;tats financiers de l'exercice clos au 31 d&eacute;cembre 2016. Toutefois, les entreprises ont la possibilit&eacute; d'appliquer ladite proc&eacute;dure aux &eacute;tats financiers &agrave; produire au titre de l'exercice clos le 31 d&eacute;cembre 2015.</p>
+<p>Loi n&deg; 2023-1000 du 18 d&eacute;c. 2023, an. fiscale, art. 10-1</p>
+<p>Sont obligatoirement joints aux &eacute;tats financiers &agrave; d&eacute;poser, les documents suivants :</p>
+<p>-	les copies des actes modificatifs des statuts, des comptes rendus des d&eacute;lib&eacute;rations des assembl&eacute;es statutaires et du proc&egrave;s-verbal de l&lsquo;assembl&eacute;e g&eacute;n&eacute;rale, relatifs &agrave; l&lsquo;exercice faisant l&lsquo;objet de d&eacute;claration ;</p>
+<p>Loi n&deg; 2021-899 du 21 d&eacute;c. 2021, an. fiscale,Art. 24.</p>
+<p>-	le double du compte rendu d&eacute;taill&eacute; et des notes annexes fournis &agrave; la Direction des Assurances dans les d&eacute;lais l&eacute;gaux par les entreprises d'assurance ou r&eacute;assurance, de capitalisation ou d'&eacute;pargne. </p>
+<p>Loi n&deg; 2020-972 du 23 d&eacute;c. 2020, an. fiscale,Art. 3-1.</p>
+<p>- un relev&eacute; des provisions constitu&eacute;es au cours de l'exercice fiscal faisant l'objet de la d&eacute;claration.</p>
+<p>Loi n&deg; 2020-972 du 23 d&eacute;c. 2020, an. fiscale,Art. 14-1.</p>
+<p>Les banques et &eacute;tablissements financiers sont tenus de joindre en plus des documents susindiqu&eacute;s :</p>
+<p>- l'&eacute;tat pr&eacute;vu par les normes de la BCEAO se rapportant aux cr&eacute;ances class&eacute;es douteuses ou litigieuses pass&eacute;es en perte ainsi que l'&eacute;tat de suivi du recouvrement desdites cr&eacute;ances;</p>
+<p>Loi n&deg; 2020-972 du 23 d&eacute;c. 2020, an. fiscale,Art. 5-2.</p>
+<p>- le d&eacute;tail des comptes des classes 6 et 7 du Plan comptable bancaire r&eacute;vis&eacute;.</p>
+<p>Les compagnies d'assurances sont, quant &agrave; elles, tenues de produire en plus des documents vis&eacute;s aux paragraphes 1 &agrave; 6 pr&eacute;c&eacute;dents :</p>
+<p>- le d&eacute;tail des comptes des classes 61 &agrave; 68 ;</p>
+<p>- le d&eacute;tail des comptes des classes 70 &agrave; 77.</p>
+<p>Loi n&deg; 2020-972 du 23 d&eacute;c. 2020, an. fiscale,Art. 14-2.</p>
+<p>Les entreprises dont le si&egrave;ge social est situ&eacute; hors de la C&ocirc;te d'Ivoire, remettent en outre, un exemplaire de leurs &eacute;tats financiers.</p>
+<p>Les entreprises qui exploitent des &eacute;tablissements secondaires, sont tenues de joindre &agrave; leurs &eacute;tats financiers, un &eacute;tat faisant ressortir pour chaque &eacute;tablissement secondaire, les achats et les ventes effectu&eacute;s et d'une fa&ccedil;on g&eacute;n&eacute;rale, les agr&eacute;gats comptables et &eacute;conomiques permettant de conna&icirc;tre le niveau d'activit&eacute; et de rentabilit&eacute; de chaque &eacute;tablissement secondaire. La non-production de cet &eacute;tat est passible d'une amende de 1 000 000 de francs.</p>
+<p>Les &eacute;tats financiers et ces documents doivent &ecirc;tre transmis au plus tard :</p>
+<p>-	le 30 juin suivant la date de cl&ocirc;ture de l'exercice comptable, pour les entreprises soumises &agrave; l'obligation de certification de leurs comptes par un commissaire aux comptes ;</p>
+<p>-	le 30 mai suivant la date de cl&ocirc;ture de l'exercice comptable, pour les autres entreprises.</p>
+<p>En ce qui concerne les soci&eacute;t&eacute;s n'ayant pu tenir leur assembl&eacute;e statutaire avant l'expiration des d&eacute;lais pr&eacute;vus ci-dessus, la transmission du compte rendu de d&eacute;lib&eacute;ration de l'assembl&eacute;e statutaire doit se faire au plus tard le 31 juillet.</p>
+<p>Toutefois, ce d&eacute;lai est port&eacute; au 31 octobre au plus tard en cas de prorogation du d&eacute;lai fix&eacute; pour la tenue de l'assembl&eacute;e statutaire de ces soci&eacute;t&eacute;s, dans le respect des dispositions de l'Acte uniforme relatif au droit des soci&eacute;t&eacute;s commerciales et du groupement d'int&eacute;r&ecirc;t &eacute;conomique.</p>
+<p>L&rsquo;Administration fiscale transmet la version &eacute;lectronique des &eacute;tats financiers ainsi que les documents annexes re&ccedil;us, &agrave; l&rsquo;Institut national de la Statistique, &agrave; la Comptabilit&eacute; nationale et &agrave; la Banque centrale des Etats de l&rsquo;Afrique de l&rsquo;Ouest. Les organismes priv&eacute;s notamment les banques, peuvent &agrave; leur demande recevoir de la part de la Direction g&eacute;n&eacute;rale des Imp&ocirc;ts, ces &eacute;tats financiers et documents annexes.&nbsp;</p>
+<p>Loi n&deg; 84-1367 du 26 d&eacute;c. 1984, an. fiscale., art. 15; loi n&deg; 2001-338 du 14 juin 2001, an. fiscale, art. 13 ; ord. n&deg; 2008-381 du 18 d&eacute;cembre 2008, an. fiscale, art. 12; ord. n&deg; 2008-381 du 18 d&eacute;cembre 2008, an. fiscale, art. 14-1; ord. n&deg;2011-121 du 22 juin 2011, an. fiscale, art. 26-1; ord. n&deg;2011-121 du 22 juin 2011, an. fiscale, art. 28-2; loi n&deg;2013-908 du 26 d&eacute;cembre 2013, an. fiscale, art. 5; loi n&deg;2014-861 du 22 d&eacute;cembre 2014, an. fiscale, art.7-1; loi n&deg; 2015-840 du 18 d&eacute;cembre 2015, an. fiscale, art. 24-1; loi n&deg; 2017-870 du 27 d&eacute;cembre 2017, an. fiscale art. 13-1; loi n&deg; 2023-1000 du 18 d&eacute;c. 2023, an. fiscale, art. 10-1.</p>
+<p>Les entreprises qui sont sous la d&eacute;pendance ou qui poss&egrave;dent le contr&ocirc;le d'entreprises situ&eacute;es hors de C&ocirc;te d'Ivoire, sont tenues de joindre &agrave; leurs &eacute;tats financiers, une documentation contenant notamment :</p>
+<p>-	une description g&eacute;n&eacute;rale des structures juridiques et op&eacute;rationnelles du groupe d'entreprises associ&eacute;es, comportant l'identification et la localisation g&eacute;ographique des entreprises associ&eacute;es engag&eacute;es dans des transactions intragroupes au cours de l'exercice ;</p>
+<p>-	une pr&eacute;sentation g&eacute;n&eacute;rale des op&eacute;rations r&eacute;alis&eacute;es avec les entreprises associ&eacute;es au cours de l'exercice, incluant la nature et le montant des transactions, ainsi que l'identit&eacute; et la localisation g&eacute;ographique des soci&eacute;t&eacute;s du groupe impliqu&eacute;es.</p>
+<p>- une description des m&eacute;thodes de d&eacute;termination des prix de transfert utilis&eacute;es par le contribuable, pour la valorisation des transactions internationales intragroupes concern&eacute;es par l&lsquo;&eacute;tat.</p>
+<p>Loi n&deg; 2021-899 du 21 d&eacute;c. 2021, an. fiscale,Art. 6-1.</p>
+<p>La non-production de la documentation vis&eacute;e au paragraphe pr&eacute;c&eacute;dent ou la production d&lsquo;une documentation incompl&egrave;te est sanctionn&eacute;e par le rejet comme charges d&eacute;ductibles, des sommes inscrites en comptabilit&eacute; au titre des op&eacute;rations r&eacute;alis&eacute;es avec les entreprises associ&eacute;es et par une amende de 5 000 000 de francs.</p>
+<p>Loi n&deg; 2021-899 du 21 d&eacute;c. 2021, an. fiscale, art. 6-1; loi n&deg; 2023-1000 du 18 d&eacute;c. 2023, an. fiscale, art. 14-1</p>
+<p>L'amende ci-dessus est major&eacute;e de 100 000 francs par mois ou fraction de mois de retard suppl&eacute;mentaire.</p>
+<p>Loi n&deg; 2016-1116 du 08 d&eacute;cembre 2016, an. fiscale,Art. 15-1; loi n&deg; 2020-972 du 23 d&eacute;c. 2020, an. fiscale,Art. 1-2.</p>
+<BR><BR><BR></div></span><finh2436>
+
+
+<span class="historique" ID="h2336">
+<div class="histText">
+<BR> 
+<p>Art. 36</p>
+<p>Les contribuables vis&eacute;s &agrave; l&rsquo;article 34-1&deg; sont tenus de d&eacute;poser &agrave; l&rsquo;Administration fiscale, leurs &eacute;tats financiers annuels &eacute;tablis et pr&eacute;sent&eacute;s selon le cas, conform&eacute;ment au droit comptable SYSCOHADA r&eacute;vis&eacute;, au droit comptable bancaire ou au Code de la Conf&eacute;rence Interafricaine des March&eacute;s des Assurances (CIMA). </p>
+<p>Loi n&deg; 2018 - 984 du 28 d&eacute;cembre 2018, an. fiscale art. 27-2</p>
+<p>Seuls sont recevables par l&rsquo;Administration fiscale, les &eacute;tats financiers qui auront &eacute;t&eacute; pr&eacute;alablement pr&eacute;sent&eacute;s &agrave; la formalit&eacute; de la certification en ce qui concerne les entreprises soumises &agrave; cette proc&eacute;dure, conform&eacute;ment aux dispositions de l&rsquo;Acte uniforme relatif au droit des soci&eacute;t&eacute;s commerciales et du groupement d&rsquo;int&eacute;r&ecirc;t &eacute;conomique.</p>
+<p>Les autres entreprises sont soumises &agrave; la proc&eacute;dure du visa pr&eacute;alable de leurs &eacute;tats financiers, effectu&eacute;e par un expert-comptable inscrit &agrave; l&rsquo;Ordre. Les modalit&eacute;s de cette proc&eacute;dure sont d&eacute;finies par arr&ecirc;t&eacute; du Ministre en charge du Budget. </p>
+<p>La proc&eacute;dure de visa est applicable pour la premi&egrave;re fois aux &eacute;tats financiers de l&rsquo;exercice clos au 31 d&eacute;cembre 2016. Toutefois, les entreprises ont la possibilit&eacute; d&rsquo;appliquer ladite proc&eacute;dure aux &eacute;tats financiers &agrave; produire au titre de l&rsquo;exercice clos le 31 d&eacute;cembre 2015.</p>
+<p>Les &eacute;tats financiers doivent &eacute;galement &ecirc;tre transmis par voie &eacute;lectronique. En cas de discordances entre la version &eacute;lectronique et la version papier, la version papier fait foi.</p>
+<p>Sont obligatoirement joints aux &eacute;tats financiers &agrave; d&eacute;poser, les documents suivants :</p>
+<p>-	les copies des actes modificatifs des statuts, des comptes rendus des d&eacute;lib&eacute;rations des assembl&eacute;es statutaires et du proc&egrave;s-verbal de l&rsquo;assembl&eacute;e g&eacute;n&eacute;rale, relatifs &agrave; l&rsquo;exercice faisant l&rsquo;objet de d&eacute;claration ;</p>
+<p>Loi n&deg; 2021-899 du 21 d&eacute;c. 2021, an. fiscale, art. 24.</p>
+<p>-	le double du compte rendu d&eacute;taill&eacute; et des notes annexes fournis &agrave; la Direction des Assurances dans les d&eacute;lais l&eacute;gaux par les entreprises d&rsquo;assurance ou r&eacute;assurance, de capitalisation ou d&rsquo;&eacute;pargne ;</p>
+<p>Loi n&deg; 2020-972 du 23 d&eacute;c. 2020, an. fiscale, art. 3-1.</p>
+<p>- un relev&eacute; des provisions constitu&eacute;es au cours de l&rsquo;exercice fiscal faisant l&rsquo;objet de la d&eacute;claration.</p>
+<p>Loi n&deg; 2020-972 du 23 d&eacute;c. 2020, an. fiscale, art. 14-1.</p>
+<p>Les banques et &eacute;tablissements financiers sont tenus de joindre en plus des documents susindiqu&eacute;s :</p>
+<p>- l&rsquo;&eacute;tat pr&eacute;vu par les normes de la BCEAO se rapportant aux cr&eacute;ances class&eacute;es douteuses ou litigieuses pass&eacute;es en perte ainsi que l&rsquo;&eacute;tat de suivi du recouvrement desdites cr&eacute;ances;</p>
+<p>Loi n&deg; 2020-972 du 23 d&eacute;c. 2020, an. fiscale, art. 5-2.</p>
+<p>- le d&eacute;tail des comptes des classes 6 et 7 du Plan comptable bancaire r&eacute;vis&eacute;.</p>
+<p>Les compagnies d&rsquo;assurances sont, quant &agrave; elles, tenues de produire en plus des documents vis&eacute;s aux paragraphes 1 &agrave; 6 pr&eacute;c&eacute;dents :</p>
+<p>- le d&eacute;tail des comptes des classes 61 &agrave; 68 ;</p>
+<p>- le d&eacute;tail des comptes des classes 70 &agrave; 77.</p>
+<p>Loi n&deg; 2020-972 du 23 d&eacute;c. 2020, an. fiscale, art. 14-2.</p>
+<p>Les entreprises dont le si&egrave;ge social est situ&eacute; hors de la C&ocirc;te d&rsquo;Ivoire, remettent en outre, un exemplaire de leurs &eacute;tats financiers.</p>
+<p>Les entreprises qui exploitent des &eacute;tablissements secondaires, sont tenues de joindre &agrave; leurs &eacute;tats financiers, un &eacute;tat faisant ressortir pour chaque &eacute;tablissement secondaire, les achats et les ventes effectu&eacute;s et d&rsquo;une fa&ccedil;on g&eacute;n&eacute;rale, les agr&eacute;gats comptables et &eacute;conomiques permettant de conna&icirc;tre le niveau d&rsquo;activit&eacute; et de rentabilit&eacute; de chaque &eacute;tablissement secondaire. La non-production de cet &eacute;tat est passible d&rsquo;une amende de 1 000 000 de francs.</p>
+<p>Les &eacute;tats financiers et ces documents doivent &ecirc;tre transmis au plus tard :</p>
+<p>-	le 30 juin suivant la date de cl&ocirc;ture de l&rsquo;exercice comptable, pour les entreprises soumises &agrave; l&rsquo;obligation de certification de leurs comptes par un commissaire aux comptes ;</p>
+<p>-	le 30 mai suivant la date de cl&ocirc;ture de l&rsquo;exercice comptable, pour les autres entreprises.</p>
+<p>En ce qui concerne les soci&eacute;t&eacute;s n&rsquo;ayant pu tenir leur assembl&eacute;e statutaire avant l&rsquo;expiration des d&eacute;lais pr&eacute;vus ci-dessus, la transmission du compte rendu de d&eacute;lib&eacute;ration de l&rsquo;assembl&eacute;e statutaire doit se faire au plus tard le 31 juillet.</p>
+<p>Toutefois, ce d&eacute;lai est port&eacute; au 31 octobre au plus tard en cas de prorogation du d&eacute;lai fix&eacute; pour la tenue de l&rsquo;assembl&eacute;e statutaire de ces soci&eacute;t&eacute;s, dans le respect des dispositions de l&rsquo;Acte uniforme relatif au droit des soci&eacute;t&eacute;s commerciales et du groupement d&rsquo;int&eacute;r&ecirc;t &eacute;conomique.</p>
+<p>Les &eacute;tats financiers ainsi que les documents annexes vis&eacute;s par le pr&eacute;sent article sont &agrave; fournir en cinq exemplaires destin&eacute;s &agrave; l&rsquo;Administration fiscale, &agrave; l&rsquo;Institut national de la Statistique, &agrave; la Comptabilit&eacute; nationale et &agrave; la Banque centrale des Etats de l&rsquo;Afrique de l&rsquo;Ouest.</p>
+<p>Loi n&deg; 84-1367 du 26 d&eacute;c. 1984, an. fiscale., art. 15; loi n&deg; 2001-338 du 14 juin 2001, an. fiscale, art. 13 ; ord. n&deg; 2008-381 du 18 d&eacute;cembre 2008, an. fiscale, art. 12; ord. n&deg; 2008-381 du 18 d&eacute;cembre 2008, an. fiscale, art. 14-1; ord. n&deg;2011-121 du 22 juin 2011, an. fiscale, art. 26-1; ord. n&deg;2011-121 du 22 juin 2011, an. fiscale, art. 28-2; loi n&deg;2013-908 du 26 d&eacute;cembre 2013, an. fiscale, art. 5; loi n&deg;2014-861 du 22 d&eacute;cembre 2014, an. fiscale, art.7-1; loi n&deg; 2015-840 du 18 d&eacute;cembre 2015, an. fiscale, art. 24-1; loi n&deg; 2017-870 du 27 d&eacute;cembre 2017, an. fiscale art. 13-1.</p>
+<p>Les entreprises qui sont sous la d&eacute;pendance ou qui poss&egrave;dent le contr&ocirc;le d&rsquo;entreprises situ&eacute;es hors de C&ocirc;te d&rsquo;Ivoire, sont tenues de joindre &agrave; leurs &eacute;tats financiers, une documentation contenant notamment:</p>
+<p>-	une description g&eacute;n&eacute;rale des structures juridiques et op&eacute;rationnelles du groupe d'entreprises associ&eacute;es, comportant l&rsquo;identification et la localisation g&eacute;ographique des entreprises associ&eacute;es engag&eacute;es dans des transactions intragroupes au cours de l&rsquo;exercice ;</p>
+<p>-	une pr&eacute;sentation g&eacute;n&eacute;rale des op&eacute;rations r&eacute;alis&eacute;es avec les entreprises associ&eacute;es au cours de l&rsquo;exercice, incluant la nature et le montant des transactions, ainsi que l&rsquo;identit&eacute; et la localisation g&eacute;ographique des soci&eacute;t&eacute;s du groupe impliqu&eacute;es;</p>
+<p>- une description des m&eacute;thodes de d&eacute;termination des prix de transfert utilis&eacute;es par le contribuable, pour la valorisation des transactions internationales intragroupes concern&eacute;es par l&rsquo;&eacute;tat.</p>
+<p>Loi n&deg; 2021-899 du 21 d&eacute;c. 2021, an. fiscale, art. 6-1.</p>
+<p>La non-production de la documentation vis&eacute;e au paragraphe pr&eacute;c&eacute;dent ou la production d&rsquo;une documentation incompl&egrave;te est sanctionn&eacute;e par le rejet comme charges d&eacute;ductibles, des sommes inscrites en comptabilit&eacute; au titre des op&eacute;rations r&eacute;alis&eacute;es avec les entreprises associ&eacute;es et par une amende de 3 000 000 de francs.</p>
+<p>Loi n&deg; 2021-899 du 21 d&eacute;c. 2021, an. fiscale, art. 6-1.</p>
+<p>L&rsquo;amende ci-dessus est major&eacute;e de 100 000 francs par mois ou fraction de mois de retard suppl&eacute;mentaire.</p>
+<p>Loi n&deg; 2016-1116 du 08 d&eacute;cembre 2016, an. fiscale, art. 15-1, loi n&deg; 2020-972 du 23 d&eacute;c. 2020, an. fiscale, art. 1-2.<br />
+<BR>
+<BR><BR><BR></div></span><finh2336>
+<span class="historique" ID="h2336b">
+<div class="histText">
+
+<BR>  
+<p>Art. 36 bis </p>
+<p>Les entreprises qui contr&ocirc;lent des entreprises situ&eacute;es hors de C&ocirc;te d'Ivoire sont tenues de produire aupr&egrave;s de l'Administration et suivant la fin de chaque exercice fiscal, une d&eacute;claration annuelle comportant la r&eacute;partition pays par pays des b&eacute;n&eacute;fices du groupe et de divers agr&eacute;gats &eacute;conomiques, comptables et fiscaux.</p>
+<p>Sont concern&eacute;es par l'obligation pr&eacute;vue au paragraphe pr&eacute;c&eacute;dent, les personnes morales &eacute;tablies en C&ocirc;te d'Ivoire, remplissant les conditions suivantes :</p>
+<p>- r&eacute;aliser au titre de l&lsquo;exercice pr&eacute;c&eacute;dant l&lsquo;exercice fiscal soumis &agrave; d&eacute;claration, un chiffre d'affaires hors taxes consolid&eacute; &eacute;gal ou sup&eacute;rieur &agrave; 491 967 750 000 francs ;</p>
+<p>Loi n&deg; 2019-1080 du 18 d&eacute;cembre 2019, an. fiscale,Art. 23</p>
+<p>- &ecirc;tre soumise &agrave; l'obligation d'&eacute;tablissement d'&eacute;tats financiers consolid&eacute;s, aux termes des articles 74 et suivants de l'Acte uniforme de l'OHADA relatif au droit comptable et &agrave; l'information financi&egrave;re ;</p>
+<p>- contr&ocirc;ler des entit&eacute;s &eacute;tablies hors de C&ocirc;te d'Ivoire ;</p>
+<p>- ne pas &ecirc;tre sous le contr&ocirc;le d'une entreprise situ&eacute;e en C&ocirc;te d'Ivoire et soumise elle-m&ecirc;me au d&eacute;p&ocirc;t de la pr&eacute;sente d&eacute;claration, ou &eacute;tablie dans un pays li&eacute; &agrave; la C&ocirc;te d'Ivoire par un accord pr&eacute;voyant l'&eacute;change de renseignements &agrave; des fins fiscales et soumise &agrave; une obligation d&eacute;clarative similaire.</p>
+<p>La d&eacute;claration comprend obligatoirement pour chaque pays ou territoire dans lequel le groupe poss&egrave;de des entit&eacute;s, les informations suivantes :</p>
+<p>- le chiffre d'affaires global r&eacute;sultant des transactions intragroupes r&eacute;alis&eacute;es ;</p>
+<p>- le chiffre d'affaires r&eacute;sultant des transactions avec des entreprises ind&eacute;pendantes ;</p>
+<p>- le chiffre d'affaires total r&eacute;alis&eacute; dans le pays ou sur le territoire ;</p>
+<p>- le r&eacute;sultat avant imp&ocirc;t sur les b&eacute;n&eacute;fices ;</p>
+<p>- l'imp&ocirc;t sur les b&eacute;n&eacute;fices d&ucirc; dans le pays ou territoire, au titre de l'ann&eacute;e faisant l'objet de la d&eacute;claration ;</p>
+<p>- le montant de l'imp&ocirc;t sur les b&eacute;n&eacute;fices effectivement acquitt&eacute; ;</p>
+<p>- le montant total des b&eacute;n&eacute;fices non distribu&eacute;s &agrave; la fin de l'exercice ;</p>
+<p>- le capital social cumul&eacute; des entit&eacute;s &eacute;tablies dans le pays ou sur le territoire ;</p>
+<p>- l'effectif total du personnel employ&eacute; dans le pays ou sur le territoire ;</p>
+<p>- l'identification des actifs corporels hors tr&eacute;sorerie et &eacute;quivalents de tr&eacute;sorerie, d&eacute;tenus ou utilis&eacute;s dans le pays ou sur le territoire ;</p>
+<p>- la localisation, l'identit&eacute; et les principales activit&eacute;s des entit&eacute;s du groupe, concern&eacute;es par les donn&eacute;es agr&eacute;g&eacute;es d&eacute;clar&eacute;es.</p>
+<p>La d&eacute;claration est &agrave; produire sur un support administratif con&ccedil;u &agrave; cet effet, dans les douze mois suivant la fin de chaque exercice fiscal. Elle doit &eacute;galement &ecirc;tre transmise par voie &eacute;lectronique. En cas de discordance entre la version &eacute;lectronique et la version papier, cette derni&egrave;re fait foi.</p>
+<p>Le d&eacute;faut de production dans les d&eacute;lais l&eacute;gaux de la d&eacute;claration ci-dessus, est sanctionn&eacute; par une amende de 5 000 000 de francs, sans pr&eacute;judice de l'application des autres sanctions pr&eacute;vues par la loi.</p>
+<p>Loi n&deg; 2017-870 du 27 d&eacute;cembre 2017, an. fiscaleArt. 14-2.</p>
+<p>La production d&lsquo;une d&eacute;claration incompl&egrave;te ou comportant des erreurs est sanctionn&eacute;e par une amende de 2 000 000 de francs par erreur ou omission, sans pr&eacute;judice des autres sanctions pr&eacute;vues par la loi.</p>
+<p>Loi n&deg; 2018 - 984 du 28 d&eacute;cembre 2018, an. fiscaleArt. 17-2</p>
+<BR><BR><BR></div></span><finh2336b>
+
+<span class="historique" ID="h2538">
+<div class="histText">
+<p>Art. 38 </p>
+<p>Pour l'&eacute;tablissement de l'imp&ocirc;t sur les b&eacute;n&eacute;fices industriels et commerciaux d&ucirc; par les entreprises qui sont sous la d&eacute;pendance ou qui poss&egrave;dent le contr&ocirc;le d'entreprises situ&eacute;es hors de C&ocirc;te d'Ivoire, les b&eacute;n&eacute;fices indirectement transf&eacute;r&eacute;s &agrave; ces derni&egrave;res soit par la majoration ou la diminution des prix d'achat ou de vente, soit par tout autre moyen, seront incorpor&eacute;s aux r&eacute;sultats. Il est proc&eacute;d&eacute; de m&ecirc;me &agrave; l'&eacute;gard des entreprises qui sont sous la d&eacute;pendance d'une entreprise ou d'un groupe poss&eacute;dant &eacute;galement le contr&ocirc;le d'entreprises situ&eacute;es hors de C&ocirc;te d'Ivoire.</p>
+<p>A d&eacute;faut d'&eacute;l&eacute;ments pr&eacute;cis pour op&eacute;rer les redressements pr&eacute;vus &agrave; l'alin&eacute;a pr&eacute;c&eacute;dent, les produits imposables seront d&eacute;termin&eacute;s par comparaison avec ceux des entreprises similaires exploit&eacute;es normalement.</p>
+<p>Les int&eacute;r&ecirc;ts, arr&eacute;rages et autres produits des obligations, cr&eacute;ances, d&eacute;p&ocirc;ts et cautionnements, les redevances de cession ou concession de licences d'exploitation, de brevets d'invention, de marques de fabrique, proc&eacute;d&eacute;s ou formules de fabrication et autres droits analogues ou les r&eacute;mun&eacute;rations de services pay&eacute;s ou dus par une personne physique ou morale domicili&eacute;e ou &eacute;tablie en C&ocirc;te d'Ivoire &agrave; des personnes physiques ou morales qui sont domicili&eacute;es ou &eacute;tablies hors de C&ocirc;te d'Ivoire, ne sont admis comme charges d&eacute;ductibles pour l'&eacute;tablissement de l'imp&ocirc;t que si le d&eacute;biteur apporte la preuve que ces d&eacute;penses correspondent &agrave; des op&eacute;rations r&eacute;elles et qu'elles ne pr&eacute;sentent pas un caract&egrave;re anormal ou exag&eacute;r&eacute;.</p>
+<p>Loi n&deg; 81-1127 du 30 d&eacute;c. 1981, an. fiscale,Art. 9.</p>
+<p>Les sommes vers&eacute;es ne sont admises comme charges d&eacute;ductibles pour l'&eacute;tablissement de l'imp&ocirc;t que dans la double limite de 5 % du chiffre d'affaires hors taxes et de 20 % des frais g&eacute;n&eacute;raux de l'entreprise d&eacute;bitrice.</p>
+<p>Loi n&deg; 2002-156 du 15 mars 2002, an. fiscale,Art. 7.</p>
+<p>La condition de d&eacute;pendance ou de contr&ocirc;le n'est pas exig&eacute;e pour l'application de la double limite, lorsque la transaction ou le transfert s'effectue avec des personnes situ&eacute;es ou &eacute;tablies dans un pays ou territoire non coop&eacute;ratif ou &agrave; fiscalit&eacute; privil&eacute;gi&eacute;e.</p>
+<p>Lorsque le b&eacute;n&eacute;ficiaire des sommes vers&eacute;es est situ&eacute; dans un tel pays ou territoire, la d&eacute;duction desdites sommes est plafonn&eacute;e &agrave; 50 % de leur montant brut, sans pr&eacute;judice de la double limite pr&eacute;vue ci-dessus. </p>
+<p>Pour l&lsquo;application des paragraphes pr&eacute;c&eacute;dents, sont consid&eacute;r&eacute;s comme pays ou territoires non coop&eacute;ratifs, les pays ou territoires identifi&eacute;s comme tels par les autorit&eacute;s fiscales ivoiriennes ou figurant sur la liste de l&lsquo;Organisation de Coop&eacute;ration et de D&eacute;veloppement &eacute;conomiques (OCDE) ou celle de l&lsquo;Union europ&eacute;enne (UE).</p>
+<p>Sont consid&eacute;r&eacute;s comme territoires &agrave; fiscalit&eacute; privil&eacute;gi&eacute;e, les territoires dans lesquels les revenus ou sommes provenant de la C&ocirc;te d&lsquo;Ivoire sont taxables &agrave; un imp&ocirc;t au titre des b&eacute;n&eacute;fices ou &agrave; toute autre nature d&lsquo;imp&ocirc;t sur le revenu, dont le montant est inf&eacute;rieur &agrave; la moiti&eacute; de l&lsquo;imp&ocirc;t qui aurait &eacute;t&eacute; per&ccedil;u en C&ocirc;te d&lsquo;Ivoire, si de tels revenus ou sommes y &eacute;taient imposables.</p>
+<p>Loi n&deg; 2018 - 984 du 28 d&eacute;cembre 2018, an. fiscaleArt. 17-1</p>
+<p>Toutefois, ne peuvent &ecirc;tre consid&eacute;r&eacute;s comme pays ou territoires &agrave; fiscalit&eacute; privil&eacute;gi&eacute;e ou non coop&eacute;ratifs, les pays ou territoires ayant conclu avec la C&ocirc;te d'Ivoire, un accord pr&eacute;voyant l'&eacute;change r&eacute;ciproque de renseignements &agrave; des fins fiscales.</p>
+<p>Loi n&deg; 2016-1116 du 08 d&eacute;cembre 2016, an. fiscale,Art. 15-2; loi n&deg; 2017-870 du 27 d&eacute;cembre 2017, an. fiscaleArt. 14-1.</p>
+
+
+<BR><BR><BR></div></span><finh2538>
+
+
+</div></div> <!-- wrapper -->
+	  <div id="articleList"><div id="contenu" style='height:auto; background-color:#FFFFCC'>&nbsp;</div>
+      </div><p>&nbsp;</p><p>&nbsp;</p><p>&nbsp;</p><p>&nbsp;</p><p>&nbsp;</p><p>&nbsp;</p><p>&nbsp;</p><p>&nbsp;</p><p>&nbsp;</p><p>&nbsp;</p>
+	  <p>&nbsp;</p><p>&nbsp;</p><p>&nbsp;</p><p>&nbsp;</p><p>&nbsp;</p><p>&nbsp;</p></BODY></HTML>
+	  

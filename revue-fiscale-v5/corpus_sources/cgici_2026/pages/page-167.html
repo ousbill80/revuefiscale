@@ -1,0 +1,476 @@
+<!DOCTYPE HTML><HTML><HEAD><META HTTP-EQUIV="Content-Type" CONTENT="text/html; charset=UTF-8">
+<TITLE>Code des impots -171</TITLE><LINK REL="STYLESHEET" HREF="/cicgi.css" CHARSET="ISO-8859-1" TYPE="text/css">
+<style type="text/css">
+body {margin-left: 5px;	margin-top: 0px; margin-right: .5em;margin-bottom: 0px;background-color:#fafafa ;}
+.Liste-Numerote {font-size: 12pt;font-weight: regular;font-style: italic;color: #000000;text-transform: none;margin-left:8px ;margin-bottom:8px ;margin-top:4px ;margin-right:10px ;font-family:Georgia, "Times New Roman", Times, serif}
+li {list-style-type: none; margin-left:0px ; padding-left:0em ; }
+.Paratext {font-size: 12pt;font-weight: regular;font-style: italic;color: #000000;text-decoration: none;vertical-align: baseline;text-transform: none;margin-left:0px ;font-family:Georgia, "Times New Roman", Times, serif}
+.Normal {font-size: 12pt;font-weight: regular;font-style: italic;color: #000000;text-decoration: none;vertical-align: baseline;text-transform: none;margin-left:0px ;font-family:Georgia, "Times New Roman", Times, serif}
+ul {list-style-type: none; margin-left:0px ; padding-left:0em ;  }
+.Liste2-Enumeree {font-size: 12pt;font-weight: regular;font-style: italic;color: #000000;text-decoration: none;vertical-align: baseline;text-transform: none;list-style-type:none ;margin-left:16px ;margin-bottom:8px;margin-right:10px;font-family:Georgia, "Times New Roman", Times, serif}
+P.Liste2-Enumeree {font-size: 12pt;font-weight: regular;font-style: italic;color: #000000;text-decoration: none;vertical-align: baseline;text-transform: none;list-style-type:none ;margin-left:16px ;margin-bottom:8px;margin-right:10px;font-family:Georgia, "Times New Roman", Times, serif}
+.Entete {font-size: 13pt;font-weight: regular;font-style: italic;color:#000000 ;text-decoration: none;vertical-align: baseline;text-transform: none;margin-left:8px ;font-family:Georgia, "Times New Roman", Times, serif}
+table, TABLE {border-width:1px; width:99% ;border-collapse:collapse;border-color: #9ecaed;box-shadow: 0 0 10px #9ecaed;}
+tr,td {text-align:left;vertical-align:bottom;border:1px solid #9ecaed;padding:.2em;marging-left:.2em}
+th, TH{text-align:center;vertical-align:middle;padding:.2em;}
+P.TableauEntete {font-size: 13pt;font-weight: regular;font-style: italic;color: #000000;font-family:Georgia, "Times New Roman"}
+P.TableauCelluleLeft, P.TableauCellule {text-align:right;margin-right:1em;font-size: 13pt;font-weight: regular;font-style: italic;color: #000000;font-family:Georgia, "Times New Roman"}
+P.TableauCelluleRight {text-align:left;margin-left:1em;font-size: 13pt;font-weight: regular;font-style: italic;color: #000000;font-family:Georgia, "Times New Roman"}
+.ui-buttonh {padding: .1em .1em ; border: 1px solid #dadada;border-radius: 4px; box-shadow: 0 0 4px #9ecaed;color:#FF3300 ;margin-left:8px ;margin-right:8px ;margin-bottom:2px ;margin-top:2px ;text-decoration:none ;font-size:12pt ;font-family:"Times New Roman"}   
+.ui-button {padding: .1em .1em ; border: 1px solid #dadada;border-radius: 4px; box-shadow: 0 0 4px #9ecaed;color:#FF3300 ;margin-left:8px ;margin-right:8px ;margin-bottom:2px ;margin-top:2px ;text-decoration:none ;font-size:12pt ;font-family:"Times New Roman"}   
+H3 {display: block;text-align: center;text-indent: 0pt;margin-top: 10pt;margin-bottom: 10pt;margin-right: 10pt;margin-left: 10pt;font-size: 12pt;font-weight: Bold;font-style: Regular;color: #00A000;text-decoration: none;vertical-align: baseline;text-transform: none;font-family: "Times New Roman";}
+H4 {display: block;text-align: left;text-indent: 0pt;margin-top: 10pt;margin-bottom: 6pt;margin-right: 10pt;margin-left: 10pt;font-size: 12pt;font-weight: Bold;font-style: Regular;color: #000000;text-decoration: none;vertical-align: baseline;text-transform: none;font-family: "Times New Roman";}
+H5 {display: block;text-align: left;text-indent: 0pt;margin-top: 10pt;margin-bottom: 6pt;margin-right: 10pt;margin-left: 10pt;font-size: 11pt;font-weight: Bold;font-style: Regular;color: #000000;text-decoration: none;vertical-align: baseline;text-transform: none;font-family: "Times New Roman";}
+H6.NoArticle {display: block;text-align: left;text-indent: 0pt;margin-top: 14pt;margin-bottom: 0pt;margin-right: 0pt;margin-left: 0pt;font-size: 14pt;font-weight: regular;font-style: Regular;color: #00a000;text-decoration: none;vertical-align: baseline;text-transform: none;font-family: "Times New Roman";}
+H2 {text-align:center;font-size:16pt;font-family:Georgia, "Times New Roman", Times, serif}
+P.ParaText {font-size: 12pt;font-weight: regular;font-style: italic;color: #000000;	text-decoration: none;vertical-align: baseline;text-transform: none;font-family:Georgia, "Times New Roman", Times, serif;}
+H2.Section,P.Section {font-size:12pt;font-weight:bold;font-style:Regular;color:#008000;font-family:Georgia,"Times New Roman"}
+P.Paragraphe, p.Paragraphe {Text-Align:center;Text-decoration:none;font-size:12pt;font-weight:bold;font-style:Normal;color:#00A000;font-family:Georgia,"Times New Roman"}
+H2.Livre,P.Livre {text-align:center;font-size:16pt;font-weight:bold;font-style:Regular;color:#008000;font-family:Georgia,"Times New Roman"}
+P.Partie,H2.Partie,P.TitreSub {text-align:center;font-size:14pt;font-weight:bold;font-style:Regular;color:#008000;font-family:Georgia,"Times New Roman"}
+H2.ChapitreNo,H2.TitreNo {text-align:center;font-size:14pt;font-weight:bold;font-style:Regular;color:#008000;font-family:Georgia,"Times New Roman"}
+H2.Chapitre, h2.Chapitre {text-align:center;font-size:14pt;font-weight:bold;font-style:Regular;color:#008000;font-family:Georgia,"Times New Roman"}
+H2.TitreNo {text-align:center;font-size:14pt;font-weight:bold;font-style:Regular;color:#008000;font-family:Georgia,"Times New Roman"}
+h3.Sous-Section, H3.Sous-Section, h3.Sous-section, h2.Section {font-size:12pt;font-weight:bold;font-style:Italic;color:#008000;font-family:Georgia,"Times New Roman"}
+hr,HR { display: block; width:90%;  margin-top: 0.5em; margin-bottom: 0.5em; margin-left: auto;  margin-right: auto;  border-style: inset; border-width: 1px;}
+P.TitreSub {text-align:center;font-size:14pt;font-weight:bold;font-style:Regular;color:#008000;font-family:Georgia,"Times New Roman"}
+.Reference {display: block;text-align: left;text-indent: 0pt;margin-top: 10pt;margin-bottom: 6pt;margin-right: 10pt;margin-left: 10pt;font-size: 14pt;font-weight: Bold;font-style: Regular;color: #7F5434;text-decoration: none;vertical-align: baseline;text-transform: none;font-family: "Times New Roman";}
+.ludwig,blockquote {padding-left:1em;background-color:#fafafa;font-size:12pt;font-weight:100;font-style:italic;}
+#articleList {position:absolute ;	z-index: 1 ;left: 10px ;top: 80px ;height:340px;width: 620px;border: 2px solid #cacaca ;border-radius: 5px ;background-color:#fafafa ;    box-shadow: 0 0 12px #333333;	margin-left:0px ;	padding: .3em .3em ;		overflow:hidden ;	visibility:hidden ;  }			
+#articleList h3 { text-align: center; margin: 0; }		
+
+.historique {
+  display:none ;
+  padding: .1em .3em ;
+  border: solid 2px #dadada;
+  border-radius: 7px;
+  box-shadow: 0 0 5px #9ecaed;  
+  
+}
+.histText {
+    display: block;
+    font-family: ;"Times New Roman"
+	padding: .1em .3em ;
+    margin: 1em 0px;
+	font-style:italic;
+	color:#000000;
+	overflow:auto;
+}
+.highlight {
+  font-weight:bold ;
+  color:#000000 ;
+  background-color:#FFFFCC ;
+  }
+.articleList-scroll {
+	overflow-x:hidden ;
+	overflow-y:scroll ;
+	scrollbar-width:thin ;
+	scrollbar-color:blue orange ;
+}
+
+#contenu {
+	overflow-x:hidden ;
+    overflow-y:scroll ;
+	scrollbar-width:thin ;
+	scrollbar-color:blue orange ;
+}		
+
+table, TABLE {
+ text-align:center; 
+    margin-left:.5em; 
+    margin-right:.5em; 
+    border:1px solid #000000;	
+	border-collapse:collapse ;
+    border-color: #9ecaed;
+    box-shadow: 0 0 10px #9ecaed;
+	
+   }
+  tr,td {text-align:left;}
+  
+
+
+ </style>
+ 
+<script src="/js/iscroll.js"></script>
+<script src="/js/jquery.js"></script>   
+<script src="/js/jquery-ui-1.10.3.custom.js"></script>    	    
+<script src="/js/jquery.ui.draggable.js" type="text/javascript"></script>			
+<script src="/js/jquery.ui.core.js"></script> 			
+<script src="/js/jquery.ui.widget.js"></script>			
+<script src="/js/jquery.ui.position.js"></script>			
+<script src="/js/jquery.ui.menu.js"></script>    		
+<script type="text/javascript" src="./xpages.js"></script>
+/* VERSION POUR PAGE HTML SUR SITE DGI.CGICI.COM */
+<script language="javascript">
+ function showButton(id) {
+    var x = document.getElementById(id) ;
+	if(x.style.display === "none") {
+	   x.style.display = "block" ;
+	  } else {
+	   x.style.display = "none" ;
+	   }
+	 }   
+	 var pagenumber="171";
+function loadpage(page, art) {
+      showHideHistoric(art);
+	  return false;
+	  } 
+function loadArticle(page, art) { var artno = art ;var pgno=page;scrolltoelementTag(pgno,artno) ;return false ;} 
+
+</script>
+</HEAD>
+<BODY><div ID="wrapper"><div ID="scroller">
+
+
+
+<H2 CLASS="Section">
+Section II - Exemption des actes de certains organismes et personnes</H2>
+<P CLASS="Paragraphe">
+Assurances mutuelles agricoles</P>
+<span id="#A0626"></span>
+<H6 CLASS="NoArticle">
+Art. 626</H6>
+<P CLASS="ParaText">
+Les soci&eacute;t&eacute;s ou caisses d&apos;assurances mutuelles agricoles constitu&eacute;es conform&eacute;ment &agrave; la loi sont exemptes des droits d&apos;enregistrement.</P>
+
+<span id="#A0627"></span>
+<H6 CLASS="NoArticle">
+Art. 627</H6>
+<P CLASS="ParaText">
+Les imprim&eacute;s, &eacute;crits et actes de toute esp&egrave;ce n&eacute;cessaire pour le service des caisses d&apos;&eacute;pargne sont exempts de la formalit&eacute; de l&apos;enregistrement.</P>
+<P CLASS="ParaText">
+Les certificats de propri&eacute;t&eacute; et actes de notori&eacute;t&eacute;, exig&eacute;s par les caisses d&apos;&eacute;pargne pour effectuer le remboursement, le transfert ou le renouvellement des livrets appartenant aux titulaires d&eacute;c&eacute;d&eacute;s ou d&eacute;clar&eacute;s absents, sont exempt&eacute;s de la formalit&eacute; de l&apos;enregistrement.</P>
+
+<span id="#A0628"></span>
+<H6 CLASS="NoArticle">
+Art. 628</H6>
+<P CLASS="ParaText">
+Les actes de pr&ecirc;ts aux soci&eacute;t&eacute;s d&apos;assurances et de r&eacute;assurances mutuelles agricoles sont dispens&eacute;s du droit d&apos;enregistrement.</P>
+<P CLASS="Paragraphe">
+Structures exer&ccedil;ant dans le secteur de la microfinance</P>
+
+<span id="#A0629"></span>
+<H6 CLASS="NoArticle">
+Art. 629</H6>
+<P CLASS="ParaText">
+Sont exon&eacute;r&eacute;s des droits d&apos;enregistrement, les actes concernant les op&eacute;rations de collecte de l&apos;&eacute;pargne et de distribution du cr&eacute;dit, ainsi que les actes portant sur les acquisitions immobili&egrave;res des structures de microfinance quelle que soit leur forme.</P>
+
+<H6 CLASS="Modification">
+Loi n<b>&deg;-</b> 96-562 du 22 juillet 1996,Art. 30; Ord. n<b>&deg;-</b> 2011-480 du 28 d&eacute;cembre 2011Art. 28</H6>
+<P CLASS="Paragraphe">
+Conseils de famille</P>
+
+
+<span id="#A0630"></span>
+<H6 CLASS="NoArticle">
+Art. 630</H6>
+<P CLASS="ParaText">
+Les procurations vis&eacute;es par l&apos;article 75 de la loi n<b>&deg;-</b> 70-483 du 3 ao&ucirc;t 1970 portant loi sur la minorit&eacute; sont exempt&eacute;es de la formalit&eacute; de l&apos;enregistrement.</P>
+
+<H6 CLASS="Modification">
+Loi n<b>&deg;-</b> 86-1383 du 19 d&eacute;c. 1986, an. fiscale,Art. 9.</H6>
+<P CLASS="Paragraphe">
+Croix Rouge</P>
+
+
+<span id="#A0631"></span>
+<H6 CLASS="NoArticle">
+Art. 631</H6>
+<P CLASS="ParaText">
+Les dons et legs de toute nature consentis au b&eacute;n&eacute;fice de l&apos;association &#171; La Croix Rouge ivoirienne &#187;, sont exempts de tous droits d&apos;enregistrement.</P>
+<P CLASS="ParaText">
+Sont &eacute;galement exon&eacute;r&eacute;es de tous droits d&apos;enregistrement l&apos;acquisition et la location par la Croix Rouge Ivoirienne des immeubles n&eacute;cessaires &agrave; son fonctionnement.</P>
+
+<span id="#A0632"></span>
+<H6 CLASS="NoArticle">
+Art. 632</H6>
+<P CLASS="ParaText">
+Sont exempt&eacute;s de la formalit&eacute; de l&apos;enregistrement les proc&egrave;s-verbaux rapport&eacute;s &agrave; la requ&ecirc;te de l&apos;Administration des Douanes et les soumissions en tenant lieu.</P>
+<P CLASS="Paragraphe">
+Indigents</P>
+
+<span id="#A0633"></span>
+<H6 CLASS="NoArticle">
+Art. 633</H6>
+<P CLASS="ParaText">
+Les extraits des registres de l&apos;&eacute;tat civil, les actes de notori&eacute;t&eacute;, de consentement, de publication, les d&eacute;lib&eacute;rations de conseils de famille, la notification, s&apos;il y a lieu, les certificats de lib&eacute;ration du service militaire, les dispenses pour cause de parent&eacute;, d&apos;alliance ou d&apos;&acirc;ge, les actes de reconnaissance des enfants naturels, les certificats constatant la c&eacute;l&eacute;bration civile du mariage, les actes de proc&eacute;dure, les ordonnances, jugements et arr&ecirc;ts dont la production sera n&eacute;cessaire dans les cas pr&eacute;vus par la loi ayant pour objet de faciliter le mariage des indigents, la l&eacute;gitimation de leurs enfants naturels et le retrait de ces enfants d&eacute;pos&eacute;s dans les hospices et autres &eacute;tablissements similaires, sont dispens&eacute;s d&apos;enregistrement.</P>
+<P CLASS="ParaText">
+Les actes, extraits, copies ou d&eacute;lib&eacute;rations d&eacute;livr&eacute;s mentionnent express&eacute;ment qu&apos;ils sont destin&eacute;s &agrave; servir &agrave; la c&eacute;l&eacute;bration d&apos;un mariage entre indigents, &agrave; la l&eacute;gitimation ou au retrait de leurs enfants naturels d&eacute;pos&eacute;s dans les hospices.</P>
+<P CLASS="ParaText">
+Ils ne peuvent servir &agrave; d&apos;autres fins sous peine d&apos;une amende de 6 000 francs outre le paiement des droits, contre ceux qui en font usage ou qui les ont ind&ucirc;ment d&eacute;livr&eacute;s ou re&ccedil;us.</P>
+
+<H6 CLASS="Modification">
+Loi n<b>&deg;-</b> 83-1421 du 30 d&eacute;c. 1983, an. fiscale,Art. 43.</H6>
+<P CLASS="ParaText">
+Les avis de parents de mineurs, dont l&apos;indigence est constat&eacute;e officiellement, sont affranchis de droits de toute nature.</P>
+<P CLASS="ParaText">
+La m&ecirc;me dispense est conc&eacute;d&eacute;e aux actes n&eacute;cessaires pour la convocation et &agrave; la constitution des conseils de famille et l&apos;homologation des d&eacute;lib&eacute;rations prises dans ces conseils dans le cas d&apos;indigence des mineurs. Ces actes sont exempt&eacute;s de la formalit&eacute; de l&apos;enregistrement, &agrave; l&apos;exclusion des proc&egrave;s-verbaux de d&eacute;lib&eacute;ration et des d&eacute;cisions accordant ou refusant l&apos;homologation. Les d&eacute;cisions et proc&egrave;s-verbaux ainsi except&eacute;s sont enregistr&eacute;s gratis.</P>
+<P CLASS="ParaText">
+Les personnes dont l&apos;interdiction est demand&eacute;e et les interdits sont dans le m&ecirc;me cas assimil&eacute;s aux mineurs.</P>
+
+
+<span id="#A0634"></span>
+<H6 CLASS="NoArticle">
+Art. 634</H6>
+<P CLASS="ParaText">
+Sont applicables aux actes et jugements n&eacute;cessaires pour l&apos;organisation et la surveillance de la tutelle des enfants naturels, les dispositions et dispenses de droits d&eacute;termin&eacute;es, en ce qui concerne la tutelle des enfants l&eacute;gitimes et interdits, par l&apos;article pr&eacute;c&eacute;dent.</P>
+<P CLASS="Paragraphe">
+Logements &agrave; caract&egrave;re &eacute;conomique et social</P>
+
+<span id="#A0635"></span>
+<H6 CLASS="NoArticle">
+Art. 635 &nbsp;&nbsp;&nbsp;&nbsp;<a href="#" onClick="loadpage('162','h23635');return false;" class="ui-button"  title="Consultez l'historique">2023...</a></H6>
+<P CLASS="ParaText"><FONT COLOR='#000000'>
+<A NAME="50618389_pgfId-1049284"></A>Sont enregistrés gratis, les actes de ventes aux primo-accédants de logements à caractère économique et social de programmes immobiliers agréés.</FONT></P>
+<H6 CLASS="Modification">
+Ord. n° 2006-234 du 02 août 2006, an. fiscale, art. 4-3; ord. n° 2008-381 du 18 décembre 2008, an. fiscale, art.25; ord. n° 2017-279 du 10 mai 2017, art. 6; loi n° 2023-1000 du 18 déc. 2023, an. fiscale, art. 7-15</H6>
+<P CLASS="ParaText"><FONT COLOR='#000000'>
+L’éligibilité à l’enregistrement gratis est subordonnée aux conditions prévues à l’article 355-42 du présent Code. </FONT></P>
+<H6 CLASS="Modification">
+Loi n° 95-05 du 11 janv. 1995, an. fiscale, art. 22; loi n° 2023-1000 du 18 déc. 2023, an. fiscale, art. 7-15.</H6>
+<P CLASS="ParaText">
+Sont &eacute;galement enregistr&eacute;s gratis, les actes de ventes de logements &agrave; caract&egrave;re  &eacute;conomique et social acquis en dehors d&apos;un programme agr&eacute;&eacute;, &agrave; condition que lesdits logements constituent pour l&apos;acqu&eacute;reur la premi&egrave;re habitation en qualit&eacute; de propri&eacute;taire.</P>
+
+
+<H6 CLASS="Modification">
+Ord. n<b>&deg;-</b> 2006-234 du 02 ao&ucirc;t 2006Art. 4-3.</H6>
+<P CLASS="Paragraphe">
+Passeports</P>
+
+
+<span id="#A0636"></span>
+<H6 CLASS="NoArticle">
+Art. 636</H6>
+<P CLASS="ParaText">
+Les passeports d&eacute;livr&eacute;s par l&apos;Administration publique sont exempts de la formalit&eacute; de l&apos;enregistrement.</P>
+<P CLASS="Paragraphe">
+Police g&eacute;n&eacute;rale</P>
+
+<span id="#A0637"></span>
+<H6 CLASS="NoArticle">
+Art. 637</H6>
+<P CLASS="ParaText">
+Sont exempts de la formalit&eacute; de l&apos;enregistrement, tous les actes et proc&egrave;s-verbaux (autres que ceux des huissiers et gendarmes) et jugements concernant la police g&eacute;n&eacute;rale et de s&ucirc;ret&eacute; et la vindicte publique.</P>
+
+<span id="#A0638"></span>
+<H6 CLASS="NoArticle">
+Art. 638</H6>
+<P CLASS="ParaText">
+Sont &eacute;galement exempt&eacute;s de la formalit&eacute; de l&apos;enregistrement, les actes des huissiers et gendarmes en mati&egrave;re criminelle, ceux concernant la police g&eacute;n&eacute;rale et de s&ucirc;ret&eacute; et la vindicte publique, les actes de la proc&eacute;dure d&apos;assises, &agrave; l&apos;exception des actes soumis &agrave; l&apos;enregistrement en d&eacute;bet par suite de l&apos;existence d&apos;une partie civile.</P>
+<P CLASS="Paragraphe">
+Prestation de serment</P>
+
+<span id="#A0639"></span>
+<H6 CLASS="NoArticle">
+Art. 639</H6>
+<P CLASS="ParaText">
+Les actes de prestation de serment des agents salari&eacute;s des collectivit&eacute;s publiques sont dispens&eacute;s de l&apos;enregistrement.</P>
+<P CLASS="Paragraphe">
+Propri&eacute;t&eacute; industrielle</P>
+
+<span id="#A0640"></span>
+<H6 CLASS="NoArticle">
+Art. 640</H6>
+<P CLASS="ParaText">
+Les certificats de d&eacute;p&ocirc;t de dessins et mod&egrave;les d&eacute;livr&eacute;s par les greffiers ou secr&eacute;taires des tribunaux du travail, en ex&eacute;cution des textes sur la propri&eacute;t&eacute; industrielle, sont exempt&eacute;s de la formalit&eacute; de l&apos;enregistrement.</P>
+<P CLASS="Paragraphe">
+Pupilles de la nation</P>
+
+<span id="#A0641"></span>
+<H6 CLASS="NoArticle">
+Art. 641</H6>
+<P CLASS="ParaText">
+Tous les actes ou pi&egrave;ces ayant exclusivement pour objet la protection des pupilles de la nation sont exempt&eacute;s de la formalit&eacute; de l&apos;enregistrement.</P>
+<P CLASS="Paragraphe">
+Grands investissements dans l&apos;habitat</P>
+
+<span id="#A0642"></span>
+<H6 CLASS="NoArticle">
+Art. 642 &nbsp;&nbsp;&nbsp;&nbsp;<a href="#" onClick="loadpage('162','h23642');return false;" class="ui-button"  title="Consultez l'historique">2023...</a></H6>
+<P CLASS="ParaText"><FONT COLOR='#000000'>
+Abrogé.</FONT></P>
+<H6 CLASS="Modification">
+Loi n° 2004-271 du 15 avril 2004, an. fiscale, art. 1er; loi n° 2023-1000 du 18  déc. 2023, an. fiscale, art. 7-3</H6>
+
+
+<span id="#A0643"></span>
+<H6 CLASS="NoArticle">
+Art. 643</H6>
+<P CLASS="ParaText">
+Les reconnaissances d&apos;enfants naturels, quelle qu&apos;en soit la forme, sont exempt&eacute;es de la formalit&eacute; de l&apos;enregistrement.</P>
+<P CLASS="Paragraphe">
+R&eacute;habilitation</P>
+
+<span id="#A0644"></span>
+<H6 CLASS="NoArticle">
+Art. 644</H6>
+<P CLASS="ParaText">
+La proc&eacute;dure de r&eacute;habilitation des faillis, pr&eacute;vue par les articles 208 &agrave; 214 de l&apos;Acte uniforme de l&apos;OHADA portant organisation des proc&eacute;dures collectives d&apos;apurement du passif, est dispens&eacute;e d&apos;enregistrement.</P>
+<P CLASS="Paragraphe">
+R&eacute;quisitions</P>
+
+<span id="#A0645"></span>
+<H6 CLASS="NoArticle">
+Art. 645</H6>
+<P CLASS="ParaText">
+Les proc&egrave;s-verbaux, certificats, significations, jugements, contrats, quittances et autres actes, faits en vertu de la loi du 3 juillet 1877, sur les r&eacute;quisitions militaires et exclusivement relatifs aux r&egrave;glements de l&apos;indemnit&eacute;, sont enregistr&eacute;s gratis lorsqu&apos;il y a lieu &agrave; la formalit&eacute; de l&apos;enregistrement.</P>
+<P CLASS="ParaText">
+Les proc&egrave;s-verbaux, certificats, significations, jugements, contrats, quittances, dress&eacute;s en vertu de l&apos;article 14 de la m&ecirc;me loi du 3 juillet 1877 (modifi&eacute;e par la loi du 20 juillet 1918) et relatifs aux d&eacute;g&acirc;ts et dommages caus&eacute;s aux propri&eacute;t&eacute;s par les troupes et aux r&eacute;quisitions militaires, sont exempt&eacute;s de la formalit&eacute; de l&apos;enregistrement.</P>
+<P CLASS="Paragraphe">
+Saisie-arr&ecirc;t des petits salaires et petits traitements</P>
+
+<span id="#A0646"></span>
+<H6 CLASS="NoArticle">
+Art. 646</H6>
+<P CLASS="ParaText">
+Tous les actes, d&eacute;cisions et formalit&eacute;s, vis&eacute;s dans l&apos;article 72 du livre premier du Code du Travail et de la Pr&eacute;voyance sociale en mati&egrave;re de saisie-arr&ecirc;t sur les petits salaires et petits traitements, sont exempt&eacute;s de la formalit&eacute; de l&apos;enregistrement, &agrave; l&apos;exception des jugements qui sont enregistr&eacute;s gratis.</P>
+<P CLASS="ParaText">
+Les lettres recommand&eacute;es, les procurations du saisi et tiers saisi et les quittances donn&eacute;es au cours de la proc&eacute;dure, sont exempt&eacute;es de la formalit&eacute; de l&apos;enregistrement.</P>
+<P CLASS="ParaText">
+Les parties peuvent se faire repr&eacute;senter par un avocat r&eacute;guli&egrave;rement inscrit ou par tout autre officier minist&eacute;riel du ressort, dispens&eacute; de procuration, ou encore partout mandataire de leur choix, auquel cas les procurations donn&eacute;es par le cr&eacute;ancier saisissant doivent &ecirc;tre sp&eacute;ciales pour chaque affaire.</P>
+
+<span id="#A0647"></span>
+<H6 CLASS="NoArticle">
+Art. 647</H6>
+<P CLASS="ParaText">
+Les dispositions de l&apos;article 646 sont applicables en mati&egrave;re de saisie-arr&ecirc;t et de cession :</P>
+<P CLASS="Liste2-Enumeree">
+a)Des salaires, appointements et traitements des fonctionnaires civils.</P>
+<P CLASS="Liste2-Enumeree">
+b)Des soldes nettes des officiers et assimil&eacute;s et des militaires &agrave; solde mensuelle des arm&eacute;es de terre et de mer en activit&eacute;, en disponibilit&eacute;, en non-activit&eacute;, en r&eacute;forme et des officiers g&eacute;n&eacute;raux du cadre de r&eacute;serve.</P>
+<P CLASS="Liste2-Enumeree">
+c)Des soldes nettes des officiers mariniers et assimil&eacute;s en fonctions au-del&agrave; de la dur&eacute;e l&eacute;gale de service, lorsque ces salaires, appointements, traitements et soldes rentrent dans les pr&eacute;visions de la loi du 27 juillet 1921.</P>
+<P CLASS="Paragraphe">
+Soci&eacute;t&eacute;s coop&eacute;ratives agricoles</P>
+
+<span id="#A0648"></span>
+<H6 CLASS="NoArticle">
+Art. 648</H6>
+<P CLASS="Liste2-Enumeree">
+1<b>&deg;-</b>Ne donnent lieu &agrave; aucune perception au profit du Tr&eacute;sor :</P>
+<P CLASS="Liste2-Enumeree">
+a)Les actes de constitution des syndicats agricoles ou des soci&eacute;t&eacute;s coop&eacute;ratives agricoles.</P>
+<P CLASS="Liste2-Enumeree">
+b)La d&eacute;volution faite &agrave; des oeuvres d&apos;int&eacute;r&ecirc;t g&eacute;n&eacute;ral agricole de l&apos;exc&eacute;dent de l&apos;actif net sur le capital social des soci&eacute;t&eacute;s coop&eacute;ratives agricoles dissoutes.</P>
+<P CLASS="Liste2-Enumeree">
+2<b>&deg;-</b>S&apos;effectue sans autres frais que la r&eacute;mun&eacute;ration du greffier, le d&eacute;p&ocirc;t au greffe de la copie de la d&eacute;lib&eacute;ration de l&apos;assembl&eacute;e g&eacute;n&eacute;rale constitutive des soci&eacute;t&eacute;s coop&eacute;ratives agricoles, ou des unions de soci&eacute;t&eacute;s coop&eacute;ratives agricoles ainsi que du double ou de l&apos;exp&eacute;dition de l&apos;acte de soci&eacute;t&eacute;.</P>
+
+<span id="#A0649"></span>
+<H6 CLASS="NoArticle">
+Art. 649</H6>
+<P CLASS="ParaText">
+Sont dispens&eacute;s de droits d&apos;enregistrement tous les actes concernant les fusions de soci&eacute;t&eacute;s coop&eacute;ratives agricoles, ainsi que les dissolutions de syndicats professionnels agricoles comportant &eacute;ventuellement d&eacute;volution de l&apos;exc&eacute;dent d&apos;actif &agrave; des soci&eacute;t&eacute;s coop&eacute;ratives agricoles.</P>
+<P CLASS="Paragraphe">
+Soci&eacute;t&eacute;s mutualistes</P>
+
+<span id="#A0650"></span>
+<H6 CLASS="NoArticle">
+Art. 650</H6>
+<P CLASS="ParaText">
+Sont exempt&eacute;s du droit d&apos;enregistrement, &agrave; l&apos;exclusion de ceux portant transmission de propri&eacute;t&eacute;, d&apos;usufruit ou de jouissance de biens meubles ou immeubles, les actes dont ces droits seraient support&eacute;s par les soci&eacute;t&eacute;s mutualistes ou de secours mutuel.</P>
+<P CLASS="Paragraphe">
+Soci&eacute;t&eacute;s mutuelles de productions rurales</P>
+
+<span id="#A0651"></span>
+<H6 CLASS="NoArticle">
+Art. 651</H6>
+<P CLASS="ParaText">
+Sont exempt&eacute;s d&apos;enregistrement tous actes ou transmissions pass&eacute;s par les soci&eacute;t&eacute;s mutuelles de production rurale et dont les droits seraient support&eacute;s par lesdites soci&eacute;t&eacute;s.</P>
+<P CLASS="Paragraphe">
+Soci&eacute;t&eacute;s par actions</P>
+
+<span id="#A0652"></span>
+<H6 CLASS="NoArticle">
+Art. 652</H6>
+<P CLASS="ParaText">
+Les actes ou pi&egrave;ces exclusivement relatifs &agrave; l&apos;ex&eacute;cution des dispositions des articles 516 et suivants de l&apos;Acte uniforme relatif au droit des soci&eacute;t&eacute;s commerciales et du groupement d&apos;int&eacute;r&ecirc;t &eacute;conomique et r&eacute;glementant le droit de vote dans les assembl&eacute;es des actionnaires des soci&eacute;t&eacute;s par actions, sont dispens&eacute;s des droits d&apos;enre-gistrement &agrave; l&apos;exclusion du droit d&apos;apport &eacute;dict&eacute; par l&apos;article <a class='ui-button' href='' onClick="loadArticle('171','0754');return false;">754</a> du pr&eacute;sent Code.</P>
+
+<span id="#A0653"></span>
+<H6 CLASS="NoArticle">
+Art. 653</H6>
+<P CLASS="ParaText">
+Sont exempt&eacute;s de la formalit&eacute; de l&apos;enregistrement tous actes ou transmissions pass&eacute;s par les organismes de coordination ou mutualit&eacute;s agricoles et dont les droits seraient &agrave; la charge de ces organismes.</P>
+
+<span id="#A0654"></span>
+<H6 CLASS="NoArticle">
+Art. 654</H6>
+<P CLASS="ParaText">
+Sont exempt&eacute;es de la d&eacute;claration de mutation, les successions comportant un actif brut inf&eacute;rieur &agrave; 300 000 francs.</P>
+
+<H6 CLASS="Modification">
+Loi n<b>&deg;-</b> 86-1383 du 19 d&eacute;c. 1986, an. fiscale,Art. 9.</H6>
+<P CLASS="Paragraphe">
+Travail</P>
+
+
+<span id="#A0655"></span>
+<H6 CLASS="NoArticle">
+Art. 655</H6>
+<P CLASS="ParaText">
+Le contrat de travail entre les chefs ou directeurs des &eacute;tablissements industriels ou commerciaux, des exploitations agricoles ou foresti&egrave;res et leurs ouvriers est exempt d&apos;enregistrement.</P>
+<P CLASS="ParaText">
+Sont &eacute;galement exempts d&apos;enregistrement les certificats de travail d&eacute;livr&eacute;s aux ouvriers, employ&eacute;s ou serviteurs encore qu&apos;ils contiennent d&apos;autres mentions que celles pr&eacute;vues par la loi, toutes les fois que ces mentions ne contiennent ni obligation ni quittance, ni aucune autre convention donnant lieu au droit proportionnel.</P>
+<P CLASS="ParaText">
+La formule &#171; libre de tout engagement &#187; et toute autre constatant l&apos;expiration r&eacute;guli&egrave;re du contrat de travail, les qualit&eacute;s professionnelles et les services rendus, sont comprises dans l&apos;exemption.</P>
+<P CLASS="Paragraphe">
+Nantissements agricoles</P>
+
+<span id="#A0656"></span>
+<H6 CLASS="NoArticle">
+Art. 656</H6>
+<P CLASS="ParaText">
+Sont dispens&eacute;s de la formalit&eacute; de l&apos;enregistrement les lettres et accus&eacute;s de r&eacute;ception, les renonciations, acceptations et consentements pr&eacute;vus aux articles 2, 3, 10 et 11 de la loi du 30 avril 1906, sur les nantissements agricoles, le registre sur lequel les nantissements sont inscrits, la copie des inscriptions d&apos;emprunts, le certificat n&eacute;gatif et le certificat de radiation mentionn&eacute;s aux articles 6 et 7 de la m&ecirc;me loi.</P>
+<P CLASS="Paragraphe">
+Centres de gestion agr&eacute;&eacute;s</P>
+
+<span id="#A0657"></span>
+<H6 CLASS="NoArticle">
+Art. 657 </H6>
+<P CLASS="ParaText">
+Sont exon&eacute;r&eacute;s de la formalit&eacute; de l&apos;enregistrement, les actes constitutifs des centres de gestion agr&eacute;&eacute;s et les contrats d&apos;adh&eacute;sion des entreprises aux centres de gestion agr&eacute;&eacute;s.</P>
+
+<H6 CLASS="Modification">
+Loi n<b>&deg;-</b> 2001-338 du 14 juin 2001, an. fiscale,Art. 34; Ord. n<b>&deg;-</b> 2009-382 du 26 novembre 2009Art. 26-3.</H6>
+<P CLASS="ParaText">
+Le b&eacute;n&eacute;fice de cet avantage est subordonn&eacute;, pour les entreprises immatricul&eacute;es au fichier de la Direction g&eacute;n&eacute;rale des Imp&ocirc;ts, &agrave; l&apos;adh&eacute;sion &agrave; un centre de gestion agr&eacute;&eacute; au plus tard le 31 janvier de l&apos;ann&eacute;e en cours.</P>
+<P CLASS="ParaText">
+Pour les nouvelles immatriculations, le b&eacute;n&eacute;fice de cet avantage est subordonn&eacute; &agrave; l&apos;adh&eacute;sion &agrave; un centre de gestion agr&eacute;&eacute; dans un d&eacute;lai de trente (30) jours &agrave; compter de la date de r&eacute;ception de la d&eacute;claration fiscale d&apos;existence. </P>
+<H6 CLASS="Modification">
+<a name="_Toc110590280"></a>Loi n&deg; 2001-338 du 14 juin 2001, an. fiscale,Art. 34; ord. n&deg; 2009-382 du 26 novembre 2009, an. fiscale,Art. 26-3;  loi n&deg; 2016-1116 du 08 d&eacute;cembre 2016, an. fiscale,Art. 26-5</H6>
+
+<P CLASS="Paragraphe">
+Entreprises cr&eacute;&eacute;es, r&eacute;implant&eacute;es ou rouvertes  dans les zones Centre, Nord et Ouest</P>
+
+<H6 CLASS="NoArticle">
+657 bis</H6>
+<P CLASS="ParaText">
+[Obsol&egrave;te].
+<H6 CLASS="Modification">
+Ord. n<b>&deg;-</b> 2009-382 du 26 novembre 2009Art.2-14; Ord. n<b>&deg;-</b> 2011-121  du 22 juin 2011, an. fiscale,Art. 2 -14.</H6>
+
+<H6 CLASS="NoArticle">
+<a name="50499595_pgfId-1046786"></a>Art. 657 ter </H6>
+<P CLASS="ParaText"><FONT COLOR='#000000'>
+<a name="50499595_pgfId-1046815"></a>Sont enregistr&eacute;s gratis, les actes de prorogation, d'augmentation ou de r&eacute;duction de capital et de dissolution des entreprises d'investissement &agrave; capital fixe ainsi que les actes constatant les prises de participations effectu&eacute;es dans le capital d'autres soci&eacute;t&eacute;s par les entreprises d'investissement &agrave; capital fixe.</FONT></P>
+<H6 CLASS="Modification">
+<a name="50499595_pgfId-1046779"></a>Loi n&deg; 2021-899 du 21 d&eacute;c. 2021, an. fiscale,Art. 23-3</H6>
+
+<span class="historique" ID="h23635">
+<div class="histText">
+<BR> 
+<p>Sont enregistr&eacute;s gratis, les actes de location, d'&eacute;change ou de ventes d&rsquo;immeubles b&acirc;tis remplissant les crit&egrave;res de logements &agrave; caract&egrave;re &eacute;conomique et social.</p>
+<p>Ord. n&deg; 2006-234 du 02 ao&ucirc;t 2006, an. fiscale, art. 4-3; ord. n&deg; 2008-381 du 18 d&eacute;cembre 2008, an. fiscale, art.25; ord. n&deg; 2017-279 du 10 mai 2017, art. 6</p>
+<p>L&rsquo;enregistrement gratis est subordonn&eacute; &agrave; la mention expresse, dans l&rsquo;acte, de l&rsquo;agr&eacute;ment administratif qui est d&eacute;livr&eacute; dans les m&ecirc;mes conditions et formes que celles pr&eacute;vues par la loi n&deg; 71-683 du 28 d&eacute;cembre 1971, annexe fiscale article 17, en mati&egrave;re d&rsquo;imp&ocirc;ts sur les b&eacute;n&eacute;fices, de taxe sur la valeur ajout&eacute;e et de patente.</p>
+<p>Loi n&deg; 95-05 du 11 janv. 1995, an. fiscale, art. 22.</p>
+<p>Sont &eacute;galement enregistr&eacute;s gratis, les actes de ventes de logements &agrave; caract&egrave;re &eacute;conomique et social acquis en dehors d&rsquo;un programme agr&eacute;&eacute;, &agrave; condition que lesdits logements constituent pour l&rsquo;acqu&eacute;reur la premi&egrave;re habitation en qualit&eacute; de propri&eacute;taire.</p>
+<p>Ord. n&deg; 2006-234 du 02 ao&ucirc;t 2006, an. fiscale, art. 4-3.</p>
+<p>Passeports</p>
+<p>&nbsp;</p>
+</div></span><finh23635>
+
+<!-- Old wrapper body -->
+</div></div> <!-- wrapper -->
+	  <div id="articleList"><div id="contenu" style='height:auto; background-color:#FFFFCC'>&nbsp;</div>
+      </div><p>&nbsp;</p><p>&nbsp;</p><p>&nbsp;</p><p>&nbsp;</p><p>&nbsp;</p><p>&nbsp;</p><p>&nbsp;</p><p>&nbsp;</p><p>&nbsp;</p><p>&nbsp;</p>
+	  <p>&nbsp;</p><p>&nbsp;</p><p>&nbsp;</p><p>&nbsp;</p><p>&nbsp;</p><p>&nbsp;</p></BODY></HTML>
+	  

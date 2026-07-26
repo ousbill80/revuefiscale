@@ -1,0 +1,435 @@
+<!DOCTYPE HTML><HTML><HEAD><META HTTP-EQUIV="Content-Type" CONTENT="text/html; charset=UTF-8">
+<TITLE>Code des impots -184</TITLE><LINK REL="STYLESHEET" HREF="/cicgi.css" CHARSET="ISO-8859-1" TYPE="text/css">
+<style type="text/css">
+body {margin-left: 5px;	margin-top: 0px; margin-right: .5em;margin-bottom: 0px;background-color:#fafafa ;}
+.Liste-Numerote {font-size: 12pt;font-weight: regular;font-style: italic;color: #000000;text-transform: none;margin-left:8px ;margin-bottom:8px ;margin-top:4px ;margin-right:10px ;font-family:Georgia, "Times New Roman", Times, serif}
+li {list-style-type: none; margin-left:0px ; padding-left:0em ; }
+.Paratext {font-size: 12pt;font-weight: regular;font-style: italic;color: #000000;text-decoration: none;vertical-align: baseline;text-transform: none;margin-left:0px ;font-family:Georgia, "Times New Roman", Times, serif}
+.Normal {font-size: 12pt;font-weight: regular;font-style: italic;color: #000000;text-decoration: none;vertical-align: baseline;text-transform: none;margin-left:0px ;font-family:Georgia, "Times New Roman", Times, serif}
+ul {list-style-type: none; margin-left:0px ; padding-left:0em ;  }
+.Liste2-Enumeree {font-size: 12pt;font-weight: regular;font-style: italic;color: #000000;text-decoration: none;vertical-align: baseline;text-transform: none;list-style-type:none ;margin-left:16px ;margin-bottom:8px;margin-right:10px;font-family:Georgia, "Times New Roman", Times, serif}
+P.Liste2-Enumeree {font-size: 12pt;font-weight: regular;font-style: italic;color: #000000;text-decoration: none;vertical-align: baseline;text-transform: none;list-style-type:none ;margin-left:16px ;margin-bottom:8px;margin-right:10px;font-family:Georgia, "Times New Roman", Times, serif}
+.Entete {font-size: 13pt;font-weight: regular;font-style: italic;color:#000000 ;text-decoration: none;vertical-align: baseline;text-transform: none;margin-left:8px ;font-family:Georgia, "Times New Roman", Times, serif}
+table, TABLE {border-width:1px; width:99% ;border-collapse:collapse;border-color: #9ecaed;box-shadow: 0 0 10px #9ecaed;}
+tr,td {text-align:left;vertical-align:bottom;border:1px solid #9ecaed;padding:.2em;marging-left:.2em}
+th, TH{text-align:center;vertical-align:middle;padding:.2em;}
+P.TableauEntete {font-size: 13pt;font-weight: regular;font-style: italic;color: #000000;font-family:Georgia, "Times New Roman"}
+P.TableauCelluleLeft, P.TableauCellule {text-align:right;margin-right:1em;font-size: 13pt;font-weight: regular;font-style: italic;color: #000000;font-family:Georgia, "Times New Roman"}
+P.TableauCelluleRight {text-align:left;margin-left:1em;font-size: 13pt;font-weight: regular;font-style: italic;color: #000000;font-family:Georgia, "Times New Roman"}
+.ui-buttonh {padding: .1em .1em ; border: 1px solid #dadada;border-radius: 4px; box-shadow: 0 0 4px #9ecaed;color:#FF3300 ;margin-left:8px ;margin-right:8px ;margin-bottom:2px ;margin-top:2px ;text-decoration:none ;font-size:12pt ;font-family:"Times New Roman"}   
+.ui-button {padding: .1em .1em ; border: 1px solid #dadada;border-radius: 4px; box-shadow: 0 0 4px #9ecaed;color:#FF3300 ;margin-left:8px ;margin-right:8px ;margin-bottom:2px ;margin-top:2px ;text-decoration:none ;font-size:12pt ;font-family:"Times New Roman"}   
+H3 {display: block;text-align: center;text-indent: 0pt;margin-top: 10pt;margin-bottom: 10pt;margin-right: 10pt;margin-left: 10pt;font-size: 12pt;font-weight: Bold;font-style: Regular;color: #00A000;text-decoration: none;vertical-align: baseline;text-transform: none;font-family: "Times New Roman";}
+H4 {display: block;text-align: left;text-indent: 0pt;margin-top: 10pt;margin-bottom: 6pt;margin-right: 10pt;margin-left: 10pt;font-size: 12pt;font-weight: Bold;font-style: Regular;color: #000000;text-decoration: none;vertical-align: baseline;text-transform: none;font-family: "Times New Roman";}
+H5 {display: block;text-align: left;text-indent: 0pt;margin-top: 10pt;margin-bottom: 6pt;margin-right: 10pt;margin-left: 10pt;font-size: 11pt;font-weight: Bold;font-style: Regular;color: #000000;text-decoration: none;vertical-align: baseline;text-transform: none;font-family: "Times New Roman";}
+H6.NoArticle {display: block;text-align: left;text-indent: 0pt;margin-top: 14pt;margin-bottom: 0pt;margin-right: 0pt;margin-left: 0pt;font-size: 14pt;font-weight: regular;font-style: Regular;color: #00a000;text-decoration: none;vertical-align: baseline;text-transform: none;font-family: "Times New Roman";}
+H2 {text-align:center;font-size:16pt;font-family:Georgia, "Times New Roman", Times, serif}
+P.ParaText {font-size: 12pt;font-weight: regular;font-style: italic;color: #000000;	text-decoration: none;vertical-align: baseline;text-transform: none;font-family:Georgia, "Times New Roman", Times, serif;}
+H2.Section,P.Section {font-size:12pt;font-weight:bold;font-style:Regular;color:#008000;font-family:Georgia,"Times New Roman"}
+P.Paragraphe, p.Paragraphe {Text-Align:center;Text-decoration:none;font-size:12pt;font-weight:bold;font-style:Normal;color:#00A000;font-family:Georgia,"Times New Roman"}
+H2.Livre,P.Livre {text-align:center;font-size:16pt;font-weight:bold;font-style:Regular;color:#008000;font-family:Georgia,"Times New Roman"}
+P.Partie,H2.Partie,P.TitreSub {text-align:center;font-size:14pt;font-weight:bold;font-style:Regular;color:#008000;font-family:Georgia,"Times New Roman"}
+H2.ChapitreNo,H2.TitreNo {text-align:center;font-size:14pt;font-weight:bold;font-style:Regular;color:#008000;font-family:Georgia,"Times New Roman"}
+H2.Chapitre, h2.Chapitre {text-align:center;font-size:14pt;font-weight:bold;font-style:Regular;color:#008000;font-family:Georgia,"Times New Roman"}
+H2.TitreNo {text-align:center;font-size:14pt;font-weight:bold;font-style:Regular;color:#008000;font-family:Georgia,"Times New Roman"}
+h3.Sous-Section, H3.Sous-Section, h3.Sous-section, h2.Section {font-size:12pt;font-weight:bold;font-style:Italic;color:#008000;font-family:Georgia,"Times New Roman"}
+hr,HR { display: block; width:90%;  margin-top: 0.5em; margin-bottom: 0.5em; margin-left: auto;  margin-right: auto;  border-style: inset; border-width: 1px;}
+P.TitreSub {text-align:center;font-size:14pt;font-weight:bold;font-style:Regular;color:#008000;font-family:Georgia,"Times New Roman"}
+.Reference {display: block;text-align: left;text-indent: 0pt;margin-top: 10pt;margin-bottom: 6pt;margin-right: 10pt;margin-left: 10pt;font-size: 14pt;font-weight: Bold;font-style: Regular;color: #7F5434;text-decoration: none;vertical-align: baseline;text-transform: none;font-family: "Times New Roman";}
+.ludwig,blockquote {padding-left:1em;background-color:#fafafa;font-size:12pt;font-weight:100;font-style:italic;}
+#articleList {position:absolute ;	z-index: 1 ;left: 10px ;top: 80px ;height:340px;width: 620px;border: 2px solid #cacaca ;border-radius: 5px ;background-color:#fafafa ;    box-shadow: 0 0 12px #333333;	margin-left:0px ;	padding: .3em .3em ;		overflow:hidden ;	visibility:hidden ;  }			
+#articleList h3 { text-align: center; margin: 0; }		
+
+.historique {
+  display:none ;
+  padding: .1em .3em ;
+  border: solid 2px #dadada;
+  border-radius: 7px;
+  box-shadow: 0 0 5px #9ecaed;  
+  
+}
+.histText {
+    display: block;
+    font-family: ;"Times New Roman"
+	padding: .1em .3em ;
+    margin: 1em 0px;
+	font-style:italic;
+	color:#000000;
+	overflow:auto;
+}
+.highlight {
+  font-weight:bold ;
+  color:#000000 ;
+  background-color:#FFFFCC ;
+  }
+.articleList-scroll {
+	overflow-x:hidden ;
+	overflow-y:scroll ;
+	scrollbar-width:thin ;
+	scrollbar-color:blue orange ;
+}
+
+#contenu {
+	overflow-x:hidden ;
+    overflow-y:scroll ;
+	scrollbar-width:thin ;
+	scrollbar-color:blue orange ;
+}		
+
+table, TABLE {
+ text-align:center; 
+    margin-left:.5em; 
+    margin-right:.5em; 
+    border:1px solid #000000;	
+	border-collapse:collapse ;
+    border-color: #9ecaed;
+    box-shadow: 0 0 10px #9ecaed;
+	
+   }
+  tr,td {text-align:left;}
+  
+
+
+ </style>
+ 
+<script src="/js/iscroll.js"></script>
+<script src="/js/jquery.js"></script>   
+<script src="/js/jquery-ui-1.10.3.custom.js"></script>    	    
+<script src="/js/jquery.ui.draggable.js" type="text/javascript"></script>			
+<script src="/js/jquery.ui.core.js"></script> 			
+<script src="/js/jquery.ui.widget.js"></script>			
+<script src="/js/jquery.ui.position.js"></script>			
+<script src="/js/jquery.ui.menu.js"></script>    		
+<script type="text/javascript" src="./xpages.js"></script>
+/* VERSION POUR PAGE HTML SUR SITE DGI.CGICI.COM */
+<script language="javascript">
+ function showButton(id) {
+    var x = document.getElementById(id) ;
+	if(x.style.display === "none") {
+	   x.style.display = "block" ;
+	  } else {
+	   x.style.display = "none" ;
+	   }
+	 }   
+	 var pagenumber="184";
+function loadpage(page, art) {
+      showHideHistoric(art);
+	  return false;
+	  } 
+function loadArticle(page, art) { var artno = art ;var pgno=page;scrolltoelementTag(pgno,artno) ;return false ;} 
+
+</script>
+</HEAD>
+<BODY><div ID="wrapper"><div ID="scroller">
+
+
+
+<H2 CLASS="Section">
+Section III - Actes sous seing priv&eacute; et mutations verbales</H2>
+<span id="#A0773"></span>
+<H6 CLASS="NoArticle">
+Art. 773 &nbsp;&nbsp;&nbsp;&nbsp;<a href="#" onClick="loadpage('180','h23773');return false;" class="ui-button"  title="Consultez l'historique">2023...</a></H6>
+<P CLASS="ParaText">
+A d&eacute;faut d&apos;enregistrement ou de d&eacute;claration dans les d&eacute;lais fix&eacute;s par les articles <a class='ui-button' href='' onClick="scrolltoelementTag('550');return false;">550</a> &agrave; <a class='ui-button' href='' onClick="scrolltoelementTag('552');return false;">552</a> et <a class='ui-button' href='' onClick="scrolltoelementTag('556');return false;">556</a> ci-dessus des actes et mutations vis&eacute;s dans lesdits articles, l&apos;ancien et le nouveau possesseur, le bailleur et le preneur sont tenus solidairement d&apos;un droit en sus, lequel ne peut &ecirc;tre inf&eacute;rieur &agrave; <FONT COLOR='#000000'>25 000 </FONT> francs.</P>
+
+<H6 CLASS="Modification">
+Loi n<b>&deg;-</b> 83-1421 du 30 d&eacute;c. 1983, an. fiscale,Art. 43; loi n<b>&deg;-</b> 2004-271 du 15 avril 2004, an. fiscale,Art. 28-2; loi n° 2023-1000 du 18  déc. 2023, an. fiscale, art. 2-1.</H6>
+
+
+<span id="#A0774"></span>
+<H6 CLASS="NoArticle">
+Art. 774 &nbsp;&nbsp;&nbsp;&nbsp;<a href="#" onClick="loadpage('180','h23774');return false;" class="ui-button"  title="Consultez l'historique">2023...</a></H6>
+<P CLASS="ParaText">
+A d&eacute;faut de d&eacute;claration dans le d&eacute;lai fix&eacute; par l&apos;article <a class='ui-button' href='' onClick="scrolltoelementTag('557');return false;">557</a>, des mutations de jouissance d&apos;immeubles vis&eacute;es audit article, le bailleur est tenu personnellement et sans recours, nonobstant toute stipulation contraire, d&apos;un droit en sus, lequel ne peut &ecirc;tre inf&eacute;rieur &agrave; <FONT COLOR='#000000'>25 000 </FONT> francs.</P>
+
+<H6 CLASS="Modification">
+Loi n<b>&deg;-</b> 83-1421 du 30 d&eacute;c. 1983, an. fiscale,Art. 43; loi n<b>&deg;-</b> 2004-271 du 15 avril 2004, an. fiscale,Art. 28-2; loi n° 2023-1000 du 18  déc. 2023, an. fiscale, art. 2-1.</H6>
+
+
+<span id="#A0775"></span>
+<H6 CLASS="NoArticle">
+Art. 775 &nbsp;&nbsp;&nbsp;&nbsp;<a href="#" onClick="loadpage('180','h23775');return false;" class="ui-button"  title="Consultez l'historique">2023...</a></H6>
+<P CLASS="ParaText">
+A d&eacute;faut de d&eacute;claration dans le d&eacute;lai fix&eacute; par l&apos;article <a class='ui-button' href='' onClick="scrolltoelementTag('558');return false;">558</a>, des mutations verbales de jouissance de fonds de commerce vis&eacute;es audit article, le bailleur est tenu personnellement et sans recours, nonobstant toute stipulation contraire, d&apos;un droit en sus, lequel ne peut &ecirc;tre inf&eacute;rieur &agrave; <FONT COLOR='#000000'>25 000 </FONT> francs.</P>
+
+<H6 CLASS="Modification">
+Loi n<b>&deg;-</b> 83-1421 du 30 d&eacute;c. 1983, an. fiscale,Art. 43; loi n<b>&deg;-</b> 2004-271 du 15 avril 2004, an. fiscale,Art. 28-2; loi n° 2023-1000 du 18  déc. 2023, an. fiscale, art. 2-1.</H6>
+
+
+<span id="#A0776"></span>
+<H6 CLASS="NoArticle">
+Art. 776 &nbsp;&nbsp;&nbsp;&nbsp;<a href="#" onClick="loadpage('180','h23776');return false;" class="ui-button"  title="Consultez l'historique">2023...</a></H6>
+<P CLASS="ParaText">
+A d&eacute;faut d&apos;enregistrement dans le d&eacute;lai fix&eacute; par l&apos;article <a class='ui-button' href='' onClick="scrolltoelementTag('554');return false;">554</a>, des actes ou &eacute;crits vis&eacute;s audit article, les parties sont tenues solidairement au paiement d&apos;un droit en sus, lequel ne peut &ecirc;tre inf&eacute;rieur &agrave; <FONT COLOR='#000000'>25 000 </FONT> francs.</P>
+
+<H6 CLASS="Modification">
+Loi n<b>&deg;-</b> 83-1421 du 30 d&eacute;c. 1983, an. fiscale,Art. 43; loi n<b>&deg;-</b> 2004-271 du 15 avril 2004, an. fiscale,Art. 28-2; loi n° 2023-1000 du 18  déc. 2023, an. fiscale, art. 2-1.</H6>
+
+
+<span id="#A0777"></span>
+<H6 CLASS="NoArticle">
+Art. 777 &nbsp;&nbsp;&nbsp;&nbsp;<a href="#" onClick="loadpage('180','h2377è');return false;" class="ui-button"  title="Consultez l'historique">2023...</a></H6>
+<P CLASS="ParaText">
+A d&eacute;faut d&apos;enregistrement dans le d&eacute;lai fix&eacute; par l&apos;article <a class='ui-button' href='' onClick="scrolltoelementTag('553');return false;">553</a> des actes vis&eacute;s audit article, il est per&ccedil;u un droit en sus avec minimum de perception de <FONT COLOR='#000000'>25 000 </FONT> francs.</P>
+
+<H6 CLASS="Modification">
+Loi n<b>&deg;-</b> 83-1421 du 30 d&eacute;c. 1983, an. fiscale,Art. 43; loi n<b>&deg;-</b> 2004-271 du 15 avril 2004, an. fiscale,Art. 28-2; loi n° 2023-1000 du 18  déc. 2023, an. fiscale, art. 2-1.</H6>
+
+
+<span id="#A0778"></span>
+<H6 CLASS="NoArticle">
+Art. 778 &nbsp;&nbsp;&nbsp;&nbsp;<a href="#" onClick="loadpage('180','h23778');return false;" class="ui-button"  title="Consultez l'historique">2023...</a></H6></H6>
+<P CLASS="ParaText">
+En ce qui concerne les baux ayant donn&eacute; lieu au fractionnement pr&eacute;vu au paragraphe 2 de l&apos;article <a class='ui-button' href='' onClick="scrolltoelementTag('539');return false;">539</a>, le paiement des droits aff&eacute;rents aux p&eacute;riodes autres que la premi&egrave;re a lieu dans le d&eacute;lai fix&eacute; au paragraphe 2 dudit article <a class='ui-button' href='' onClick="scrolltoelementTag('539');return false;">539</a> &agrave; peine pour chacune des parties d&apos;un droit en sus &eacute;gal au droit simple, sans pouvoir &ecirc;tre inf&eacute;rieur &agrave; <FONT COLOR='#000000'>25 000 </FONT> francs.</P>
+
+<H6 CLASS="Modification">
+Loi n<b>&deg;-</b> 83-1421 du 30 d&eacute;c. 1983, an. fiscale,Art. 43; loi n<b>&deg;-</b> 2004-271 du 15 avril 2004, an. fiscale,Art. 28-2; loi n° 2023-1000 du 18  déc. 2023, an. fiscale, art. 2-1.</H6>
+<P CLASS="Paragraphe">
+Mutations par d&eacute;c&egrave;s</P>
+
+
+<span id="#A0779"></span>
+<H6 CLASS="NoArticle">
+Art. 779 &nbsp;&nbsp;&nbsp;&nbsp;<a href="#" onClick="loadpage('180','h23779');return false;" class="ui-button"  title="Consultez l'historique">2023...</a></H6></H6>
+<P CLASS="ParaText">
+Les h&eacute;ritiers, donataires ou l&eacute;gataires qui n&apos;ont pas fait, dans les d&eacute;lais prescrits, les d&eacute;clarations des biens &agrave; eux transmis par d&eacute;c&egrave;s, paient, &agrave; titre d&apos;amende, 1 % par mois ou fraction de mois de retard du droit qui est d&ucirc; pour la mutation.</P>
+<P CLASS="ParaText">
+Cette amende ne peut exc&eacute;der en totalit&eacute; la moiti&eacute; du droit simple qui est d&ucirc; pour la mutation, ni &ecirc;tre inf&eacute;rieure &agrave; 18 000 francs. Si la d&eacute;claration ne donne ouverture &agrave; aucun droit et sauf en ce qui concerne les successions vis&eacute;es &agrave; l&apos;article <a class='ui-button' href='' onClick="scrolltoelementTag('740');return false;">740</a>, les h&eacute;ritiers, donataires ou l&eacute;gataires paieront une amende fixe de <FONT COLOR='#000000'>25 000 </FONT> francs.</P>
+
+<H6 CLASS="Modification">
+Loi n<b>&deg;-</b> 83-1421 du 30 d&eacute;c. 1983, an. fiscale, art 43; loi n<b>&deg;-</b> 2004-271 du 15 avril 2004, an. fiscale,Art. 28-2; loi n° 2023-1000 du 18  déc. 2023, an. fiscale, art. 2-1.</H6>
+<P CLASS="ParaText">
+Les tuteurs et curateurs supporteront personnellement la peine ci-dessus, lorsqu&apos;ils auront n&eacute;glig&eacute; de faire les d&eacute;clarations dans les d&eacute;lais.</P>
+<P CLASS="Paragraphe">
+Omissions</P>
+
+
+<span id="#A0780"></span>
+<H6 CLASS="NoArticle">
+Art. 780 &nbsp;&nbsp;&nbsp;&nbsp;<a href="#" onClick="loadpage('180','h23780');return false;" class="ui-button"  title="Consultez l'historique">2023...</a></H6></H6>
+<P CLASS="ParaText">
+La peine pour les omissions qui seront reconnues avoir &eacute;t&eacute; faites dans les d&eacute;clarations de biens transmis par d&eacute;c&egrave;s sera d&apos;un droit en sus de celui qui se trouvera d&ucirc; pour les objets omis, sans que ces droits en sus puissent &ecirc;tre inf&eacute;rieurs &agrave; <FONT COLOR='#000000'>25 000 </FONT> francs.</P>
+
+<H6 CLASS="Modification">
+Loi n<b>&deg;-</b> 83-1421 du 30 d&eacute;c. 1983, an. fiscale,Art. 43; loi n<b>&deg;-</b> 2004-271 du 15 avril 2004, an. fiscale,Art. 28-2; loi n° 2023-1000 du 18  déc. 2023, an. fiscale, art. 2-1.</H6>
+<P CLASS="ParaText">
+Dans tous les cas o&ugrave; l&apos;omission pr&eacute;sentera le caract&egrave;re d&apos;une dissimulation frauduleuse, la peine sera du double droit en sus de celui qui sera d&ucirc; pour les objets omis.</P>
+<P CLASS="ParaText">
+Les tuteurs et curateurs supporteront personnellement les peines ci-dessus, lorsqu&apos;ils auront fait des omissions ou des dissimulations frauduleuses.</P>
+
+
+<span id="#A0781"></span>
+<H6 CLASS="NoArticle">
+Art. 781 &nbsp;&nbsp;&nbsp;&nbsp;<a href="#" onClick="loadpage('180','h23781');return false;" class="ui-button"  title="Consultez l'historique">2023...</a></H6></H6>
+<P CLASS="ParaText">
+Une amende fixe de <FONT COLOR='#000000'>25 000 </FONT> francs est applicable aux omissions constat&eacute;es dans les d&eacute;clarations de successions n&apos;ayant donn&eacute; ouverture &agrave; aucun droit, lorsque la r&eacute;paration de ces irr&eacute;gularit&eacute;s n&apos;entra&icirc;ne pas l&apos;exigibilit&eacute; des p&eacute;nalit&eacute;s pr&eacute;vues &agrave; l&apos;article qui pr&eacute;c&egrave;de.</P>
+
+<H6 CLASS="Modification">
+Loi n<b>&deg;-</b> 83-1421 du 30 d&eacute;c. 1983, an. fiscale,Art. 43; loi n<b>&deg;-</b> 2004 -271 du 15 avril 2004, an. fiscale,Art. 28-2; loi n° 2023-1000 du 18  déc. 2023, an. fiscale, art. 2-1.</H6>
+<P CLASS="ParaText">
+Lorsqu&apos;au contraire la r&eacute;paration desdites irr&eacute;gularit&eacute;s rend applicables les sanctions &eacute;dict&eacute;es par cet article, celles-ci ne peuvent, en aucun cas, &ecirc;tre inf&eacute;rieures &agrave; 10 % du montant total des sommes r&eacute;int&eacute;gr&eacute;es.</P>
+<P CLASS="Paragraphe">
+Fausses d&eacute;clarations ou attestations de dettes</P>
+
+
+<span id="#A0782"></span>
+<H6 CLASS="NoArticle">
+Art. 782 &nbsp;&nbsp;&nbsp;&nbsp;<a href="#" onClick="loadpage('180','h23782');return false;" class="ui-button"  title="Consultez l'historique">2023...</a></H6></H6>
+<P CLASS="ParaText">
+Toute d&eacute;claration souscrite pour le paiement des droits de mutation par d&eacute;c&egrave;s ayant ind&ucirc;ment entra&icirc;n&eacute; la d&eacute;duction d&apos;une dette sera punie d&apos;une amende &eacute;gale au triple du suppl&eacute;ment de droit exigible, sans que cette amende puisse &ecirc;tre inf&eacute;rieure &agrave; <FONT COLOR='#000000'>25 000 </FONT> francs.</P>
+
+<H6 CLASS="Modification">
+Loi n<b>&deg;-</b> 83-1421 du 30 d&eacute;c. 1963, an. fiscale,Art. 43; loi n<b>&deg;-</b> 2004-271 du 15 avril 2004, an. fiscale,Art. 28-2; loi n° 2023-1000 du 18  déc. 2023, an. fiscale, art. 2-1.</H6>
+<P CLASS="ParaText">
+Le pr&eacute;tendu cr&eacute;ancier qui en aura faussement attest&eacute; l&apos;existence sera tenu solidairement avec le d&eacute;clarant au paiement de l&apos;amende et en supportera d&eacute;finitivement le tiers.</P>
+
+
+<span id="#A0783"></span>
+<H6 CLASS="NoArticle">
+Art. 783 &nbsp;&nbsp;&nbsp;&nbsp;<a href="#" onClick="loadpage('180','h23783');return false;" class="ui-button"  title="Consultez l'historique">2023...</a></H6></H6>
+<P CLASS="ParaText">
+Est punie de la peine pr&eacute;vue au premier alin&eacute;a de l&apos;article pr&eacute;c&eacute;dent, toute contravention aux prescriptions des articles <a class='ui-button' href='' onClick="scrolltoelementTag('731');return false;">731</a> et <a class='ui-button' href='' onClick="scrolltoelementTag('736');return false;">736</a> du pr&eacute;sent Livre.</P>
+<P CLASS="ParaText">
+Il est fait application du minimum de <FONT COLOR='#000000'>25 000 </FONT> francs dans le cas o&ugrave; aucun suppl&eacute;ment de droit n&apos;est exigible du fait de la contravention.</P>
+
+<H6 CLASS="Modification">
+Loi n<b>&deg;-</b> 83-1421 du 30 d&eacute;c. 1983, an. fiscale,Art. 43; loi n<b>&deg;-</b> 2004-271 du 15 avril 2004, an. fiscale,Art. 28-2; loi n° 2023-1000 du 18  déc. 2023, an. fiscale, art. 2-1.</H6>
+<P CLASS="Paragraphe">
+Indication inexacte de la date de naissance des usufruitiers</P>
+
+
+<span id="#A0784"></span>
+<H6 CLASS="NoArticle">
+Art. 784 &nbsp;&nbsp;&nbsp;&nbsp;<a href="#" onClick="loadpage('180','h23784');return false;" class="ui-button"  title="Consultez l'historique">2023...</a></H6></H6>
+<P CLASS="ParaText">
+L&apos;indication inexacte de la date de naissance de l&apos;usufruitier dans les actes et d&eacute;clarations r&eacute;gis par les dispositions des num&eacute;ros 2 et 3 de l&apos;article <a class='ui-button' href='' onClick="scrolltoelementTag('692');return false;">692</a> est passible, &agrave; titre d&apos;amende, d&apos;un droit en sus &eacute;gal au suppl&eacute;ment de droit simple exigible, sans pouvoir &ecirc;tre inf&eacute;rieur &agrave;<FONT COLOR='#000000'> 25 000 </FONT> francs.</P>
+
+<H6 CLASS="Modification">
+Loi n<b>&deg;-</b> 83-1421 du 30 d&eacute;c. 1983, an. fiscale,Art. 43; loi n<b>&deg;-</b> 2004-271 du 15 avril 2004, an. fiscale,Art. 28-2; loi n° 2023-1000 du 18  déc. 2023, an. fiscale, art. 2-1.</H6>
+<P CLASS="ParaText">
+Le droit le plus &eacute;lev&eacute; devient exigible si l&apos;inexactitude de la d&eacute;claration porte sur le lieu de naissance, sauf restitution si la date de naissance est reconnue exacte.</P>
+<P CLASS="Paragraphe">
+Indication inexacte des liens de parent&eacute;</P>
+
+
+<span id="#A0785"></span>
+<H6 CLASS="NoArticle">
+Art. 785</H6>
+<P CLASS="ParaText">
+L&apos;indication inexacte dans un acte de donation entre vifs ou dans une d&eacute;claration de mutation par d&eacute;c&egrave;s du lien de parent&eacute; entre le donateur ou le d&eacute;funt et les donataires, h&eacute;ritiers ou l&eacute;gataires, ainsi que toute indication inexacte du nombre d&apos;enfants du d&eacute;funt ou de l&apos;h&eacute;ritier, donataire ou l&eacute;gataire, est passible, &agrave; titre d&apos;amende, d&apos;un double droit en sus de celui qui sera d&ucirc; &agrave; titre suppl&eacute;mentaire.</P>
+<P CLASS="ParaText">
+Les tuteurs, curateurs ou administrateurs l&eacute;gaux supporteront personnellement la peine du double droit en sus lorsqu&apos;ils auront pass&eacute; une d&eacute;claration inexacte.</P>
+<P CLASS="Paragraphe">
+Ouverture du coffre-fort apr&egrave;s d&eacute;c&egrave;s</P>
+
+<span id="#A0786"></span>
+<H6 CLASS="NoArticle">
+Art. 786</H6>
+<P CLASS="ParaText">
+Toute personne qui, ayant connaissance du d&eacute;c&egrave;s, soit du locataire d&apos;un coffre-fort ou compartiment de coffre-fort, soit de l&apos;un des locataires, soit du conjoint de ce locataire ou colocataire, s&apos;il n&apos;y a pas entre eux s&eacute;paration de corps, l&apos;a ouvert ou fait ouvrir sans observer les prescriptions de l&apos;article <a class='ui-button' href='' onClick="scrolltoelementTag('497');return false;">497</a>, est tenue personnellement des droits de mutation par d&eacute;c&egrave;s et des p&eacute;nalit&eacute;s exigibles en raison des sommes, titres ou objets contenus dans le coffre-fort, sauf son recours contre le redevable de ces droits et p&eacute;nalit&eacute;s, s&apos;il y a lieu, et est, en outre, passible d&apos;une amende de 36 000 &agrave; 3 600 000 francs.</P>
+
+<H6 CLASS="Modification">
+Loi n<b>&deg;-</b> 83-1421 du 30 d&eacute;c. 1983, an. fiscale,Art. 43.</H6>
+<P CLASS="ParaText">
+Il en est de m&ecirc;me en cas d&apos;ouverture irr&eacute;guli&egrave;re des plis cachet&eacute;s et caissettes ferm&eacute;es vis&eacute;s &agrave; l&apos;article <a class='ui-button' href='' onClick="scrolltoelementTag('498');return false;">498</a>.</P>
+<P CLASS="ParaText">
+Les m&ecirc;mes sanctions atteindront encore toute personne qui aura sciemment commis une inexactitude dans la d&eacute;claration pr&eacute;vue &agrave; l&apos;article <a class='ui-button' href='' onClick="scrolltoelementTag('496');return false;">496</a>-3<b>&deg;-</b>.</P>
+<P CLASS="ParaText">
+L&apos;h&eacute;ritier, donataire ou l&eacute;gataire est tenu au paiement de l&apos;amende solidairement avec les contrevenants vis&eacute;s aux trois alin&eacute;as pr&eacute;c&eacute;dents s&apos;il omet, dans sa d&eacute;claration, les titres, sommes ou objets en cause.</P>
+<P CLASS="ParaText">
+Le bailleur du coffre-fort ou d&eacute;positaire des plis et caissettes qui a laiss&eacute; ouvrir ceux-ci hors de la pr&eacute;sence du notaire ou greffier-notaire est, s&apos;il avait connaissance du d&eacute;c&egrave;s, tenu personnellement &agrave; la m&ecirc;me obligation et passible &eacute;galement d&apos;une amende de 10 000 &agrave; 1 million de francs.</P>
+<P CLASS="ParaText">
+Chaque contravention aux dispositions de l&apos;article <a class='ui-button' href='' onClick="scrolltoelementTag('499');return false;">499</a> est sanctionn&eacute;e par une amende de 5 000 francs &agrave; 50 000 francs.</P>
+
+
+<span id="#A0787"></span>
+<H6 CLASS="NoArticle">
+Art. 787</H6>
+<P CLASS="ParaText">
+La preuve des contraventions vis&eacute;es &agrave; l&apos;article pr&eacute;c&eacute;dent peut &ecirc;tre &eacute;tablie par tous les modes de preuve de droit commun.</P>
+
+<span class="historique" ID="h23773">
+<div class="histText">
+
+<BR> 
+<p>A d&eacute;faut d&rsquo;enregistrement ou de d&eacute;claration dans les d&eacute;lais fix&eacute;s par les articles 550 &agrave; 552 et 556 ci-dessus des actes et mutations vis&eacute;s dans lesdits articles, l&rsquo;ancien et le nouveau possesseur, le bailleur et le preneur sont tenus solidairement d&rsquo;un droit en sus, lequel ne peut &ecirc;tre inf&eacute;rieur &agrave; 18 000 francs.</p>
+<p>Loi n&deg; 83-1421 du 30 d&eacute;c. 1983, an. fiscale, art. 43; loi n&deg; 2004-271 du 15 avril 2004, an. fiscale, art. 28-2.</p>
+<p>&nbsp;</p>
+</div></span><finh23773>
+
+<span class="historique" ID="h23774">
+<div class="histText">
+
+<BR> 
+<p>A d&eacute;faut de d&eacute;claration dans le d&eacute;lai fix&eacute; par l&rsquo;article 557, des mutations de jouissance d&rsquo;immeubles vis&eacute;es audit article, le bailleur est tenu personnellement et sans recours, nonobstant toute stipulation contraire, d&rsquo;un droit en sus, lequel ne peut &ecirc;tre inf&eacute;rieur &agrave; 18 000 francs.</p>
+<p>Loi n&deg; 83-1421 du 30 d&eacute;c. 1983, an. fiscale, art. 43; loi n&deg; 2004-271 du 15 avril 2004, an. fiscale, art. 28-2.</p>
+<p>&nbsp;</p>
+</div></span><finh23774>
+
+<span class="historique" ID="h23775">
+<div class="histText">
+
+<BR> 
+<p>A d&eacute;faut de d&eacute;claration dans le d&eacute;lai fix&eacute; par l&rsquo;article 558, des mutations verbales de jouissance de fonds de commerce vis&eacute;es audit article, le bailleur est tenu personnellement et sans recours, nonobstant toute stipulation contraire, d&rsquo;un droit en sus, lequel ne peut &ecirc;tre inf&eacute;rieur &agrave; 18 000 francs.</p>
+<p>Loi n&deg; 83-1421 du 30 d&eacute;c. 1983, an. fiscale, art. 43; loi n&deg; 2004-271 du 15 avril 2004, an. fiscale, art. 28-2.</p>
+<p>&nbsp;</p>
+</div></span><finh23775>
+
+<span class="historique" ID="h23776">
+<div class="histText">
+
+<BR> 
+<p>A d&eacute;faut d&rsquo;enregistrement dans le d&eacute;lai fix&eacute; par l&rsquo;article 554, des actes ou &eacute;crits vis&eacute;s audit article, les parties sont tenues solidairement au paiement d&rsquo;un droit en sus, lequel ne peut &ecirc;tre inf&eacute;rieur &agrave; 18 000 francs.</p>
+<p>Loi n&deg; 83-1421 du 30 d&eacute;c. 1983, an. fiscale, art. 43; loi n&deg; 2004-271 du 15 avril 2004, an. fiscale, art. 28-2.</p>
+<p>&nbsp;</p>
+</div></span><finh23776>
+
+<span class="historique" ID="h23777">
+<div class="histText">
+
+<BR> 
+<p>A d&eacute;faut d&rsquo;enregistrement dans le d&eacute;lai fix&eacute; par l&rsquo;article 553 des actes vis&eacute;s audit article, il est per&ccedil;u un droit en sus avec minimum de perception de 18 000 francs.</p>
+<p>Loi n&deg; 83-1421 du 30 d&eacute;c. 1983, an. fiscale, art. 43; loi n&deg; 2004-271 du 15 avril 2004, an. fiscale, art. 28-2.</p>
+<p>&nbsp;</p>
+</div></span><finh23777>
+
+<span class="historique" ID="h23778">
+<div class="histText">
+
+<BR> 
+<p>En ce qui concerne les baux ayant donn&eacute; lieu au fractionnement pr&eacute;vu au paragraphe 2 de l&rsquo;article 539, le paiement des droits aff&eacute;rents aux p&eacute;riodes autres que la premi&egrave;re a lieu dans le d&eacute;lai fix&eacute; au paragraphe 2 dudit article 539 &agrave; peine pour chacune des parties d&rsquo;un droit en sus &eacute;gal au droit simple, sans pouvoir &ecirc;tre inf&eacute;rieur &agrave; 18 000 francs.</p>
+</div></span><finh23778>
+
+<span class="historique" ID="h23779">
+<div class="histText">
+
+<BR> 
+<p>Les h&eacute;ritiers, donataires ou l&eacute;gataires qui n&rsquo;ont pas fait, dans les d&eacute;lais prescrits, les d&eacute;clarations des biens &agrave; eux transmis par d&eacute;c&egrave;s, paient, &agrave; titre d&rsquo;amende, 1 % par mois ou fraction de mois de retard du droit qui est d&ucirc; pour la mutation.</p>
+<p>Cette amende ne peut exc&eacute;der en totalit&eacute; la moiti&eacute; du droit simple qui est d&ucirc; pour la mutation, ni &ecirc;tre inf&eacute;rieure &agrave; 18 000 francs. Si la d&eacute;claration ne donne ouverture &agrave; aucun droit et sauf en ce qui concerne les successions vis&eacute;es &agrave; l&rsquo;article 740, les h&eacute;ritiers, donataires ou l&eacute;gataires paieront une amende fixe de 18 000 francs.</p>
+<p>Loi n&deg; 83-1421 du 30 d&eacute;c. 1983, an. fiscale, art 43; loi n&deg; 2004-271 du 15 avril 2004, an. fiscale, art. 28-2.</p>
+<p>Les tuteurs et curateurs supporteront personnellement la peine ci-dessus, lorsqu&rsquo;ils auront n&eacute;glig&eacute; de faire les d&eacute;clarations dans les d&eacute;lais.</p>
+<p>Omissions</p>
+<p>&nbsp;</p>
+</div></span><finh23779>
+
+<span class="historique" ID="h23780">
+<div class="histText">
+
+<BR> 
+<p>La peine pour les omissions qui seront reconnues avoir &eacute;t&eacute; faites dans les d&eacute;clarations de biens transmis par d&eacute;c&egrave;s sera d&rsquo;un droit en sus de celui qui se trouvera d&ucirc; pour les objets omis, sans que ces droits en sus puissent &ecirc;tre inf&eacute;rieurs &agrave; 18 000 francs.</p>
+<p>Loi n&deg; 83-1421 du 30 d&eacute;c. 1983, an. fiscale, art. 43; loi n&deg; 2004-271 du 15 avril 2004, an. fiscale, art. 28-2.</p>
+<p>Dans tous les cas o&ugrave; l&rsquo;omission pr&eacute;sentera le caract&egrave;re d&rsquo;une dissimulation frauduleuse, la peine sera du double droit en sus de celui qui sera d&ucirc; pour les objets omis.</p>
+<p>Les tuteurs et curateurs supporteront personnellement les peines ci-dessus, lorsqu&rsquo;ils auront fait des omissions ou des dissimulations frauduleuses.</p>
+<p>&nbsp;</p>
+</div></span><finh23780>
+
+<span class="historique" ID="h23781">
+<div class="histText">
+
+<BR> 
+<p>Une amende fixe de 18 000 francs est applicable aux omissions constat&eacute;es dans les d&eacute;clarations de successions n&rsquo;ayant donn&eacute; ouverture &agrave; aucun droit, lorsque la r&eacute;paration de ces irr&eacute;gularit&eacute;s n&rsquo;entra&icirc;ne pas l&rsquo;exigibilit&eacute; des p&eacute;nalit&eacute;s pr&eacute;vues &agrave; l&rsquo;article qui pr&eacute;c&egrave;de.</p>
+<p>Loi n&deg; 83-1421 du 30 d&eacute;c. 1983, an. fiscale, art. 43; loi n&deg; 2004 -271 du 15 avril 2004, an. fiscale, art. 28-2.</p>
+<p>Lorsqu&rsquo;au contraire la r&eacute;paration desdites irr&eacute;gularit&eacute;s rend applicables les sanctions &eacute;dict&eacute;es par cet article, celles-ci ne peuvent, en aucun cas, &ecirc;tre inf&eacute;rieures &agrave; 10 % du montant total des sommes r&eacute;int&eacute;gr&eacute;es.</p>
+<p>Fausses d&eacute;clarations ou attestations de dettes</p>
+<p>&nbsp;</p>
+</div></span><finh23781>
+
+<span class="historique" ID="h23782">
+<div class="histText">
+
+<BR> 
+<p>Toute d&eacute;claration souscrite pour le paiement des droits de mutation par d&eacute;c&egrave;s ayant ind&ucirc;ment entra&icirc;n&eacute; la d&eacute;duction d&rsquo;une dette sera punie d&rsquo;une amende &eacute;gale au triple du suppl&eacute;ment de droit exigible, sans que cette amende puisse &ecirc;tre inf&eacute;rieure &agrave; 18 000 francs.</p>
+<p>Loi n&deg; 83-1421 du 30 d&eacute;c. 1963, an. fiscale, art. 43; loi n&deg; 2004-271 du 15 avril 2004, an. fiscale, art. 28-2.</p>
+<p>Le pr&eacute;tendu cr&eacute;ancier qui en aura faussement attest&eacute; l&rsquo;existence sera tenu solidairement avec le d&eacute;clarant au paiement de l&rsquo;amende et en supportera d&eacute;finitivement le tiers.</p>
+<p>&nbsp;</p>
+</div></span><finh23782>
+
+<span class="historique" ID="h23783">
+<div class="histText">
+
+<BR> 
+<p>Est punie de la peine pr&eacute;vue au premier alin&eacute;a de l&rsquo;article pr&eacute;c&eacute;dent, toute contravention aux prescriptions des articles 731 et 736 du pr&eacute;sent Livre.</p>
+<p>Il est fait application du minimum de 18 000 francs dans le cas o&ugrave; aucun suppl&eacute;ment de droit n&rsquo;est exigible du fait de la contravention.</p>
+<p>Loi n&deg; 83-1421 du 30 d&eacute;c. 1983, an. fiscale, art. 43; loi n&deg; 2004-271 du 15 avril 2004, an. fiscale, art. 28-2.</p>
+<p>Indication inexacte de la date de naissance des usufruitiers</p>
+<p>&nbsp;</p>
+</div></span><finh23783>
+
+<span class="historique" ID="h23784">
+<div class="histText">
+
+<BR> 
+<p>L&rsquo;indication inexacte de la date de naissance de l&rsquo;usufruitier dans les actes et d&eacute;clarations r&eacute;gis par les dispositions des num&eacute;ros 2 et 3 de l&rsquo;article 692 est passible, &agrave; titre d&rsquo;amende, d&rsquo;un droit en sus &eacute;gal au suppl&eacute;ment de droit simple exigible, sans pouvoir &ecirc;tre inf&eacute;rieur &agrave; 18 000 francs.</p>
+<p>Loi n&deg; 83-1421 du 30 d&eacute;c. 1983, an. fiscale, art. 43; loi n&deg; 2004-271 du 15 avril 2004, an. fiscale, art. 28-2.</p>
+<p>Le droit le plus &eacute;lev&eacute; devient exigible si l&rsquo;inexactitude de la d&eacute;claration porte sur le lieu de naissance, sauf restitution si la date de naissance est reconnue exacte.</p>
+<p>Indication inexacte des liens de parent&eacute;</p>
+<p>&nbsp;</p>
+</div></span><finh23784>
+
+
+
+<!-- Old wrapper body -->
+</div></div> <!-- wrapper -->
+	  <div id="articleList"><div id="contenu" style='height:auto; background-color:#FFFFCC'>&nbsp;</div>
+      </div><p>&nbsp;</p><p>&nbsp;</p><p>&nbsp;</p><p>&nbsp;</p><p>&nbsp;</p><p>&nbsp;</p><p>&nbsp;</p><p>&nbsp;</p><p>&nbsp;</p><p>&nbsp;</p>
+	  <p>&nbsp;</p><p>&nbsp;</p><p>&nbsp;</p><p>&nbsp;</p><p>&nbsp;</p><p>&nbsp;</p></BODY></HTML>
+	  

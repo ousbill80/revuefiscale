@@ -1,0 +1,668 @@
+<!DOCTYPE HTML><HTML><HEAD><META HTTP-EQUIV="Content-Type" CONTENT="text/html; charset=UTF-8">
+<TITLE>Code des impots -327</TITLE><LINK REL="STYLESHEET" HREF="/cicgi.css" CHARSET="ISO-8859-1" TYPE="text/css">
+<style type="text/css">
+body {margin-left: 5px;	margin-top: 0px; margin-right: .5em;margin-bottom: 0px;background-color:#fafafa ;}
+.Liste-Numerote {font-size: 12pt;font-weight: regular;font-style: italic;color: #000000;text-transform: none;margin-left:8px ;margin-bottom:8px ;margin-top:4px ;margin-right:10px ;font-family:Georgia, "Times New Roman", Times, serif}
+li {list-style-type: none; margin-left:0px ; padding-left:0em ; }
+.Paratext {font-size: 12pt;font-weight: regular;font-style: italic;color: #000000;text-decoration: none;vertical-align: baseline;text-transform: none;margin-left:0px ;font-family:Georgia, "Times New Roman", Times, serif}
+.Normal {font-size: 12pt;font-weight: regular;font-style: italic;color: #000000;text-decoration: none;vertical-align: baseline;text-transform: none;margin-left:0px ;font-family:Georgia, "Times New Roman", Times, serif}
+ul {list-style-type: none; margin-left:0px ; padding-left:0em ;  }
+.Liste2-Enumeree {font-size: 12pt;font-weight: regular;font-style: italic;color: #000000;text-decoration: none;vertical-align: baseline;text-transform: none;list-style-type:none ;margin-left:16px ;margin-bottom:8px;margin-right:10px;font-family:Georgia, "Times New Roman", Times, serif}
+P.Liste2-Enumeree {font-size: 12pt;font-weight: regular;font-style: italic;color: #000000;text-decoration: none;vertical-align: baseline;text-transform: none;list-style-type:none ;margin-left:16px ;margin-bottom:8px;margin-right:10px;font-family:Georgia, "Times New Roman", Times, serif}
+.Entete {font-size: 13pt;font-weight: regular;font-style: italic;color:#000000 ;text-decoration: none;vertical-align: baseline;text-transform: none;margin-left:8px ;font-family:Georgia, "Times New Roman", Times, serif}
+table, TABLE {border-width:1px; width:99% ;border-collapse:collapse;border-color: #9ecaed;box-shadow: 0 0 10px #9ecaed;}
+tr,td {text-align:left;vertical-align:bottom;border:1px solid #9ecaed;padding:.2em;marging-left:.2em}
+th, TH{text-align:center;vertical-align:middle;padding:.2em;}
+P.TableauEntete {font-size: 13pt;font-weight: regular;font-style: italic;color: #000000;font-family:Georgia, "Times New Roman"}
+P.TableauCelluleLeft, P.TableauCellule {text-align:right;margin-right:1em;font-size: 13pt;font-weight: regular;font-style: italic;color: #000000;font-family:Georgia, "Times New Roman"}
+P.TableauCelluleRight {text-align:left;margin-left:1em;font-size: 13pt;font-weight: regular;font-style: italic;color: #000000;font-family:Georgia, "Times New Roman"}
+.ui-buttonh {padding: .1em .1em ; border: 1px solid #dadada;border-radius: 4px; box-shadow: 0 0 4px #9ecaed;color:#FF3300 ;margin-left:8px ;margin-right:8px ;margin-bottom:2px ;margin-top:2px ;text-decoration:none ;font-size:12pt ;font-family:"Times New Roman"}   
+.ui-button {padding: .1em .1em ; border: 1px solid #dadada;border-radius: 4px; box-shadow: 0 0 4px #9ecaed;color:#FF3300 ;margin-left:8px ;margin-right:8px ;margin-bottom:2px ;margin-top:2px ;text-decoration:none ;font-size:12pt ;font-family:"Times New Roman"}   
+H3 {display: block;text-align: center;text-indent: 0pt;margin-top: 10pt;margin-bottom: 10pt;margin-right: 10pt;margin-left: 10pt;font-size: 12pt;font-weight: Bold;font-style: Regular;color: #00A000;text-decoration: none;vertical-align: baseline;text-transform: none;font-family: "Times New Roman";}
+H4 {display: block;text-align: left;text-indent: 0pt;margin-top: 10pt;margin-bottom: 6pt;margin-right: 10pt;margin-left: 10pt;font-size: 12pt;font-weight: Bold;font-style: Regular;color: #000000;text-decoration: none;vertical-align: baseline;text-transform: none;font-family: "Times New Roman";}
+H5 {display: block;text-align: left;text-indent: 0pt;margin-top: 10pt;margin-bottom: 6pt;margin-right: 10pt;margin-left: 10pt;font-size: 11pt;font-weight: Bold;font-style: Regular;color: #000000;text-decoration: none;vertical-align: baseline;text-transform: none;font-family: "Times New Roman";}
+H6.NoArticle {display: block;text-align: left;text-indent: 0pt;margin-top: 14pt;margin-bottom: 0pt;margin-right: 0pt;margin-left: 0pt;font-size: 14pt;font-weight: regular;font-style: Regular;color: #00a000;text-decoration: none;vertical-align: baseline;text-transform: none;font-family: "Times New Roman";}
+H2 {text-align:center;font-size:16pt;font-family:Georgia, "Times New Roman", Times, serif}
+P.ParaText {font-size: 12pt;font-weight: regular;font-style: italic;color: #000000;	text-decoration: none;vertical-align: baseline;text-transform: none;font-family:Georgia, "Times New Roman", Times, serif;}
+H2.Section,P.Section {font-size:12pt;font-weight:bold;font-style:Regular;color:#008000;font-family:Georgia,"Times New Roman"}
+P.Paragraphe, p.Paragraphe {Text-Align:center;Text-decoration:none;font-size:12pt;font-weight:bold;font-style:Normal;color:#00A000;font-family:Georgia,"Times New Roman"}
+H2.Livre,P.Livre {text-align:center;font-size:16pt;font-weight:bold;font-style:Regular;color:#008000;font-family:Georgia,"Times New Roman"}
+P.Partie,H2.Partie,P.TitreSub {text-align:center;font-size:14pt;font-weight:bold;font-style:Regular;color:#008000;font-family:Georgia,"Times New Roman"}
+H2.ChapitreNo,H2.TitreNo {text-align:center;font-size:14pt;font-weight:bold;font-style:Regular;color:#008000;font-family:Georgia,"Times New Roman"}
+H2.Chapitre, h2.Chapitre {text-align:center;font-size:14pt;font-weight:bold;font-style:Regular;color:#008000;font-family:Georgia,"Times New Roman"}
+H2.TitreNo {text-align:center;font-size:14pt;font-weight:bold;font-style:Regular;color:#008000;font-family:Georgia,"Times New Roman"}
+h3.Sous-Section, H3.Sous-Section, h3.Sous-section, h2.Section {font-size:12pt;font-weight:bold;font-style:Italic;color:#008000;font-family:Georgia,"Times New Roman"}
+hr,HR { display: block; width:90%;  margin-top: 0.5em; margin-bottom: 0.5em; margin-left: auto;  margin-right: auto;  border-style: inset; border-width: 1px;}
+P.TitreSub {text-align:center;font-size:14pt;font-weight:bold;font-style:Regular;color:#008000;font-family:Georgia,"Times New Roman"}
+.Reference {display: block;text-align: left;text-indent: 0pt;margin-top: 10pt;margin-bottom: 6pt;margin-right: 10pt;margin-left: 10pt;font-size: 14pt;font-weight: Bold;font-style: Regular;color: #7F5434;text-decoration: none;vertical-align: baseline;text-transform: none;font-family: "Times New Roman";}
+.ludwig,blockquote {padding-left:1em;background-color:#fafafa;font-size:12pt;font-weight:100;font-style:italic;}
+#articleList {position:absolute ;	z-index: 1 ;left: 10px ;top: 80px ;height:340px;width: 620px;border: 2px solid #cacaca ;border-radius: 5px ;background-color:#fafafa ;    box-shadow: 0 0 12px #333333;	margin-left:0px ;	padding: .3em .3em ;		overflow:hidden ;	visibility:hidden ;  }			
+#articleList h3 { text-align: center; margin: 0; }		
+
+.historique {
+  display:none ;
+  padding: .1em .3em ;
+  border: solid 2px #dadada;
+  border-radius: 7px;
+  box-shadow: 0 0 5px #9ecaed;  
+  
+}
+.histText {
+    display: block;
+    font-family: ;"Times New Roman"
+	padding: .1em .3em ;
+    margin: 1em 0px;
+	font-style:italic;
+	color:#000000;
+	overflow:auto;
+}
+.highlight {
+  font-weight:bold ;
+  color:#000000 ;
+  background-color:#FFFFCC ;
+  }
+.articleList-scroll {
+	overflow-x:hidden ;
+	overflow-y:scroll ;
+	scrollbar-width:thin ;
+	scrollbar-color:blue orange ;
+}
+
+#contenu {
+	overflow-x:hidden ;
+    overflow-y:scroll ;
+	scrollbar-width:thin ;
+	scrollbar-color:blue orange ;
+}		
+
+table, TABLE {
+ text-align:center; 
+    margin-left:.5em; 
+    margin-right:.5em; 
+    border:1px solid #000000;	
+	border-collapse:collapse ;
+    border-color: #9ecaed;
+    box-shadow: 0 0 10px #9ecaed;
+	
+   }
+  tr,td {text-align:left;}
+  
+
+
+ </style>
+ 
+<script src="/js/iscroll.js"></script>
+<script src="/js/jquery.js"></script>   
+<script src="/js/jquery-ui-1.10.3.custom.js"></script>    	    
+<script src="/js/jquery.ui.draggable.js" type="text/javascript"></script>			
+<script src="/js/jquery.ui.core.js"></script> 			
+<script src="/js/jquery.ui.widget.js"></script>			
+<script src="/js/jquery.ui.position.js"></script>			
+<script src="/js/jquery.ui.menu.js"></script>    		
+<script type="text/javascript" src="./xpages.js"></script>
+/* VERSION POUR PAGE HTML SUR SITE DGI.CGICI.COM */
+<script language="javascript">
+ function showButton(id) {
+    var x = document.getElementById(id) ;
+	if(x.style.display === "none") {
+	   x.style.display = "block" ;
+	  } else {
+	   x.style.display = "none" ;
+	   }
+	 }   
+	 var pagenumber="327";
+function loadpage(page, art) {
+      showHideHistoric(art);
+	  return false;
+	  } 
+function loadArticle(page, art) { var artno = art ;var pgno=page;scrolltoelementTag(pgno,artno) ;return false ;} 
+
+</script>
+</HEAD>
+<BODY><div ID="wrapper"><div ID="scroller">
+
+<H2 CLASS="ChapitreNo">
+
+<HR width="90%">
+
+
+Chapitre II</H2>
+
+
+<H2 CLASS="Chapitre">
+Obligations - S&ucirc;ret&eacute;s et garanties du Tr&eacute;sor
+<HR width="90%">
+
+
+</H2>
+
+<H2 CLASS="Section">
+Section I - Les obligations</H2>
+
+<H3 CLASS="Sous-section">
+I - Responsabilit&eacute; des comptables publics en mati&egrave;re de recouvrement d&apos;imp&ocirc;ts, droits et taxes</H3>
+<span id="#A5137"></span>
+<H6 CLASS="NoArticle">
+Art. 137</H6>
+<P CLASS="ParaText">
+Les comptables publics charg&eacute;s du recouvrement des imp&ocirc;ts, droits et taxes pris en charge dans leurs &eacute;critures deviennent personnellement et p&eacute;cuniairement responsables, solidairement avec le redevable des sommes restant &agrave; recouvrer au titre du principal de la dette et de ses accessoires, &agrave; l&apos;expiration d&apos;un d&eacute;lai de quatre ans &agrave; compter du 1er janvier de la premi&egrave;re ann&eacute;e suivant celle de la mise en recouvrement.</P>
+
+<span id="#A5138"></span>
+<H6 CLASS="NoArticle">
+Art. 138</H6>
+<P CLASS="ParaText">
+D&egrave;s l&apos;expiration de ce d&eacute;lai, les comptables doivent verser de leurs deniers personnels les cr&eacute;ances non recouvr&eacute;es qui n&apos;ont pas fait l&apos;objet d&apos;un d&eacute;gr&egrave;vement, d&apos;une annulation, d&apos;une admission en non valeur ou d&apos;une d&eacute;charge de responsabilit&eacute;.</P>
+
+<span id="#A5139"></span>
+<H6 CLASS="NoArticle">
+Art. 139</H6>
+<P CLASS="ParaText">
+Le comptable qui a vers&eacute; de ses deniers personnels, les sommes non recouvr&eacute;es, est subrog&eacute; dans les droits du Tr&eacute;sor public et b&eacute;n&eacute;ficie des m&ecirc;mes s&ucirc;ret&eacute;s et privil&egrave;ges dans son action r&eacute;cursoire &agrave; l&apos;encontre du redevable.</P>
+
+
+
+<H3 CLASS="Sous-section">
+II - Obligations des d&eacute;positaires oblig&eacute;s</H3>
+<span id="#A5140"></span>
+<H6 CLASS="NoArticle">
+Art. 140</H6>
+<P CLASS="Liste2-Enumeree">
+1<b>&deg;-</b>Les d&eacute;positaires oblig&eacute;s, qui d&eacute;tiennent ou g&egrave;rent pour le compte d&apos;autrui des biens, deniers ou valeurs, ne peuvent se dessaisir de ceux-ci au profit de tiers autres que le Tr&eacute;sor qu&apos;apr&egrave;s avoir obtenu un avis de quitus du Directeur g&eacute;n&eacute;ral du Tr&eacute;sor et de la Comptabilit&eacute; publique et du Directeur g&eacute;n&eacute;ral des Imp&ocirc;ts concernant la situation fiscale de la personne dont ils d&eacute;tiennent les biens, deniers ou valeurs. Toutefois, pour la vente de biens immobiliers, seule la situation fiscale du bien objet de l&apos;op&eacute;ration ou de la transaction, est requise.</P>
+
+<H6 CLASS="Modification">
+Ord. n<b>&deg;-</b> 2013-280 du 24 avril 2013,Art. 2.</H6>
+
+<P CLASS="Liste2-Enumeree">
+2<b>&deg;-</b>Les d&eacute;positaires oblig&eacute;s, d&egrave;s qu&apos;ils ont juridiquement re&ccedil;u en d&eacute;p&ocirc;t des biens, deniers ou valeurs appartenant &agrave; un tiers, doivent notifier, par lettre recommand&eacute;e avec accus&eacute; de r&eacute;ception, une demande de quitus concernant ce tiers d&apos;une part, au Directeur g&eacute;n&eacute;ral du Tr&eacute;sor et de la Comptabilit&eacute; publique et d&apos;autre part, au Directeur g&eacute;n&eacute;ral des Imp&ocirc;ts. Ces derniers disposent alors d&apos;un d&eacute;lai de deux mois pour avertir le d&eacute;positaire oblig&eacute; de l&apos;existence d&apos;une cr&eacute;ance du Tr&eacute;sor sur ce tiers.</P>
+<P CLASS="Liste2-Enumeree">
+3<b>&deg;-</b>L&apos;absence de r&eacute;ponse au d&eacute;positaire, dans le d&eacute;lai de deux mois &agrave; compter de la signature de l&apos;accus&eacute; de r&eacute;ception de la lettre recommand&eacute;e, vaut quitus.</P>
+<P CLASS="Liste2-Enumeree">
+4<b>&deg;-</b>Le d&eacute;positaire oblig&eacute; qui ne satisfait pas aux obligations pr&eacute;cit&eacute;es ou qui se dessaisit des biens, deniers ou valeurs qu&apos;il d&eacute;tient avant l&apos;obtention des quitus ou l&apos;expiration du d&eacute;lai de deux mois, s&apos;oblige personnellement et solidairement avec le redevable principal &agrave; payer les cr&eacute;ances du Tr&eacute;sor sur ce redevable, &agrave; concurrence du montant des fonds dont il s&apos;est irr&eacute;guli&egrave;rement dessaisi.</P>
+<P CLASS="Liste2-Enumeree">
+5<b>&deg;-</b>Le d&eacute;positaire oblig&eacute;, peut toutefois valablement se dessaisir au profit d&apos;un cr&eacute;ancier autre que le Tr&eacute;sor, si ce cr&eacute;ancier b&eacute;n&eacute;ficie d&apos;un droit de pr&eacute;f&eacute;rence primant celui du Tr&eacute;sor.</P>
+<P CLASS="Liste2-Enumeree">
+6<b>&deg;-</b>Le d&eacute;positaire oblig&eacute;, qui aura r&eacute;gl&eacute; directement le Tr&eacute;sor pour obtenir les quitus, sera valablement lib&eacute;r&eacute; &agrave; l&apos;&eacute;gard du tiers d&eacute;posant ou des autres cr&eacute;anciers ne primant pas le Tr&eacute;sor par la production de la quittance &agrave; lui remise par les comptables publics lors du r&egrave;glement.</P>
+
+
+<span id="#A5141"></span>
+<H6 CLASS="NoArticle">
+Art. 141</H6>
+<P CLASS="ParaText">
+Ont la qualit&eacute; de d&eacute;positaires oblig&eacute;s au sens du pr&eacute;sent Livre :</P>
+<P CLASS="Liste2-Enumeree">
+-les huissiers, commissaires-priseurs et notaires ayant effectu&eacute; des ventes sur saisie;</P>
+<P CLASS="Liste2-Enumeree">
+-les s&eacute;questres ou administrateurs judiciaires de biens litigieux;</P>
+<P CLASS="Liste2-Enumeree">
+-les syndics de liquidation judiciaire ou de faillite;</P>
+<P CLASS="Liste2-Enumeree">
+-les liquidateurs de soci&eacute;t&eacute;s dissoutes;</P>
+<P CLASS="Liste2-Enumeree">
+-les notaires pour les biens des successions dont ils assurent la liquidation et pour le prix de vente des biens immobiliers et fonds de commerce dont la transaction a &eacute;t&eacute; effectu&eacute;e par devant eux;</P>
+<P CLASS="Liste2-Enumeree">
+-les d&eacute;positaires de d&eacute;p&ocirc;ts et consignations l&eacute;gaux ou judiciaires;</P>
+<P CLASS="Liste2-Enumeree">
+-les comptables publics ayant la qualit&eacute; de d&eacute;positaires publics.</P>
+
+
+
+<H3 CLASS="Sous-section">
+III - Obligations des notaires</H3>
+<span id="#A5142"></span>
+<H6 CLASS="NoArticle">
+Art. 142</H6>
+<P CLASS="Liste2-Enumeree">
+1<b>&deg;-</b>En mati&egrave;re d&apos;actes notari&eacute;s, les parties sont tenues de verser au notaire charg&eacute; d&apos;instrumenter, dans la limite du montant d&eacute;clar&eacute; dans les actes, les sommes dues au Tr&eacute;sor.</P>
+<P CLASS="Liste2-Enumeree">
+2<b>&deg;-</b> Ces sommes qui sont &agrave; reverser au Tr&eacute;sor apr&egrave;s la signature de l&apos;acte notari&eacute; et avant l&apos;enregistrement de celui-ci, donnent lieu &agrave; un certificat administratif du Directeur g&eacute;n&eacute;ral du Tr&eacute;sor et de la Comptabilit&eacute; publique ou du Directeur g&eacute;n&eacute;ral des Imp&ocirc;ts.</P>
+
+<H6 CLASS="Modification">
+Ord. n<b>&deg;-</b> 2006-234 du 02 ao&ucirc;t 2006Art. 28. Ord. n<b>&deg;-</b> 2013-280 du 24 avril 2013,Art. 3.</H6>
+<P CLASS="Liste2-Enumeree">
+3<b>&deg;-</b> Les certificats sont d&eacute;livr&eacute;s, par le Directeur g&eacute;n&eacute;ral du Tr&eacute;sor et de la Comptabilit&eacute; publique, ou par le Directeur g&eacute;n&eacute;ral des Imp&ocirc;ts, au notaire charg&eacute; d&apos;instrumenter, dans les 21 jours &agrave; compter de la demande effectu&eacute;e par pli recommand&eacute;.</P>
+
+
+<H6 CLASS="Modification">
+Ord. n<b>&deg;-</b> 2013-280 du 24 avril 2013,Art. 3.</H6>
+<P CLASS="Liste2-Enumeree">
+4<b>&deg;-</b> En cas de non-reversement au Tr&eacute;sor, des sommes vers&eacute;es par les parties entre ses mains, le notaire est responsable du paiement des droits dus.</P>
+
+
+<H6 CLASS="Modification">
+Ord. n<b>&deg;-</b> 2013-280 du 24 avril 2013,Art. 3.</H6>
+
+
+
+
+<H3 CLASS="Sous-section">
+IV - Obligations des cessionnaires de fonds de commerce ou d&apos;entreprise</H3>
+<span id="#A5143"></span>
+<H6 CLASS="NoArticle">
+Art. 143</H6>
+<P CLASS="ParaText">
+Les cessionnaires de fonds de commerce, d&apos;entreprises industrielles, commerciales, agricoles ou artisanales, de client&egrave;les ou de droits d&apos;exercer une activit&eacute; lib&eacute;rale ou non commerciale, sont solidairement responsables avec les c&eacute;dants du paiement des impositions et p&eacute;nalit&eacute;s de toute nature dues &agrave; la date de la cession, jusqu&apos;&agrave; concurrence du prix de cession en cas de mutation &agrave; titre on&eacute;reux, et de la valeur v&eacute;nale en cas de mutation &agrave; titre gratuit.</P>
+<P CLASS="ParaText">
+Cette solidarit&eacute; ne peut &ecirc;tre mise en oeuvre par l&apos;Administration que durant les trois mois qui suivent la date d&apos;enregistrement de l&apos;acte de cession, si cette formalit&eacute; a &eacute;t&eacute; accomplie dans le d&eacute;lai imparti, ou les trois mois qui suivent le dernier jour de ce d&eacute;lai en cas de d&eacute;faut d&apos;enregistrement.</P>
+
+<H6 CLASS="Modification">
+Ord. n<b>&deg;-</b> 2009-382 du 26 novembre 2009Art.14-2</H6>
+
+
+
+
+<H3 CLASS="Sous-section">
+V - Obligation g&eacute;n&eacute;rale de d&eacute;livrance de factures <FONT COLOR='#000000'>normalis&eacute;es &eacute;lectroniques</FONT></H3>
+<H6 CLASS="Modification">
+<A NAME="50434106_pgfId-1059681"></A>Loi n° 2024-1109 du 18 déc. 2024, an. fiscale, art. 6-6.</H6>
+<span id="#A5144"></span>
+<H6 CLASS="NoArticle">
+Art. 144 <a href="#" onClick="loadpage('327','h245144');return false;" class="ui-button"   title="Consultez l'historique">2024...</a></H6>
+<P CLASS="ParaText">
+Tout industriel, commer&ccedil;ant ou artisan qui livre un bien, ainsi que tout prestataire qui fournit des services pour les besoins d&apos;un autre professionnel ou d&apos;un consommateur ordinaire est tenu de lui d&eacute;livrer une facture <FONT COLOR='#000000'>normalis&eacute;es &eacute;lectroniques</FONT>.</P>
+<P CLASS="ParaText">
+La facture <FONT COLOR='#000000'>normalis&eacute;es &eacute;lectroniques</FONT> doit &ecirc;tre r&eacute;clam&eacute;e par l&apos;acheteur ou client.</P>
+<P CLASS="ParaText">
+Le vendeur ou fournisseur est tenu de la d&eacute;livrer d&egrave;s lors que la vente ou la prestation de service est d&eacute;finitive. Le refus de d&eacute;livrer une facture peut &ecirc;tre constat&eacute; par tout moyen, notamment par mise en demeure, par lettre recommand&eacute;e ou proc&egrave;s-verbal d&apos;huissier ou par tout agent l&eacute;galement habilit&eacute;.</P>
+<P CLASS="ParaText">
+Le d&eacute;taillant, l'artisan, l'agriculteur, l'&eacute;leveur ou le p&ecirc;cheur ne relevant pas d'un r&eacute;gime r&eacute;el d'imposition qui effectue une vente, une prestation de services &agrave; un consommateur ordinaire, n'est tenu de lui d&eacute;livrer une facture qu'&agrave; la demande de celui-ci.</P>
+
+<H6 CLASS="Modification">
+Ord. n<b>&deg;-</b> 2005-292 du 29 ao&ucirc;t 2005.</H6>
+<P CLASS="ParaText">
+Toutefois, si ce professionnel pratique habituellement des ventes en gros et des ventes au d&eacute;tail, il doit n&eacute;cessairement &eacute;tablir une facture, m&ecirc;me si la vente ou la prestation de services s&apos;adresse &agrave; un consommateur ordinaire.</P>
+<P CLASS="ParaText">
+Les factures doivent obligatoirement faire appara&icirc;tre distinctement :</P>
+<P CLASS="Liste2-Enumeree">
+-les prix des biens livr&eacute;s ou des services rendus;</P>
+<P CLASS="Liste2-Enumeree">
+-l&apos;identification pr&eacute;cise du redevable qui d&eacute;livre la facture notamment ses raison sociale, nom, adresse, num&eacute;ro d&apos;immatriculation au registre du commerce, r&eacute;f&eacute;rences bancaires, num&eacute;ro de compte contribuable attribu&eacute; par l&apos;Administration, le r&eacute;gime d&apos;imposition et le service des Imp&ocirc;ts dont il d&eacute;pend pour ses obligations fiscales professionnelles;</P>
+<P CLASS="Liste2-Enumeree">
+- l&apos;identification du client, notamment ses nom et adresse;</P>
+<P CLASS="Liste2-Enumeree">
+- le num&eacute;ro de compte contribuable du client pour ses acquisitions de biens et services &agrave; titre professionnel.</P>
+<P CLASS="Liste2-Enumeree"><FONT COLOR='#000000'>
+– l’identifiant unique du contribuable ; </FONT></P>
+<P CLASS="Liste2-Enumeree"><FONT COLOR='#000000'>
+– l’adresse complète du contribuable ; </FONT></P>
+<P CLASS="Liste2-Enumeree"><FONT COLOR='#000000'>
+– la date et l’heure d’émission de la facture électronique ; </FONT></P>
+<P CLASS="Liste2-Enumeree"><FONT COLOR='#000000'>
+– le numéro d’ordre de la facture ; </FONT></P>
+<P CLASS="Liste2-Enumeree"><FONT COLOR='#000000'>
+– la désignation complète des articles vendus ; </FONT></P>
+<P CLASS="Liste2-Enumeree"><FONT COLOR='#000000'>
+– le total payé et le mode de règlement. </FONT></P>
+<P CLASS="ParaText"><FONT COLOR='#000000'>
+Les modalités de mise en œuvre de la facture normalisée électronique sont déterminées par arrêté du Ministre en charge du Budget.</FONT></P>
+<P CLASS="ParaText"><FONT COLOR='#000000'>
+Dans l’attente de la détermination de ces modalités et de la mise en œuvre effective de la facture normalisée électronique, la facture normalisée sur support papier continue d’être utilisée. </FONT></P>
+
+<H6 CLASS="Modification">
+Loi n<b>&deg;-</b> 2005-161 du 27 avril 2005, an. fiscale,Art. 27-4; loi n° 2024-1109 du 18 déc. 2024, an. fiscale, art. 6-7.</H6>
+
+
+
+<DIV>
+<span id="#A5145"></span>
+<H6 CLASS="NoArticle">
+
+Art.145 <a href="#" onClick="loadpage('327','h255145');return false;" class="ui-button"   title="Consultez l'historique">2025...</a>
+<a href="#" onClick="loadpage('327','h245145');return false;" class="ui-button"   title="Consultez l'historique">2024...</a></H6
+><P CLASS="ParaText">
+Les contribuables doivent obligatoirement utiliser des factures normalis&eacute;es <FONT COLOR='#000000'> &eacute;lectroniques</FONT> dont les conditions d&apos;&eacute;dition et de gestion sont d&eacute;termin&eacute;es par arr&ecirc;t&eacute; du Ministre des Finances. Ces factures comportent outre les mentions pr&eacute;vues &agrave; l&apos;article 144 ci-dessus, les sp&eacute;cifications suivantes :</P>
+<P CLASS="Liste2-Enumeree">
+-	le num&eacute;ro de facture dans une s&eacute;rie ininterrompue;</P>
+<P CLASS="Liste2-Enumeree">
+-	le nom ou la raison sociale et le num&eacute;ro de compte contribuable de l&apos;imprimeur;</P>
+<P CLASS="Liste2-Enumeree">
+-	l&apos;ann&eacute;e et le mois d&apos;&eacute;dition de la facture par l&apos;imprimeur;</P>
+<P CLASS="Liste2-Enumeree">
+-	un hologramme selon un mod&egrave;le d&eacute;termin&eacute; par l&apos;Administration fiscale.</P>
+<H6 CLASS="Modification">
+Loi n° 2024-1109 du 18 déc. 2024, an. fiscale, art. 6-8.</H6>
+<P CLASS="ParaText">
+Les bordereaux ou bons de transfert ou de livraison d&eacute;livr&eacute;s par les entreprises &agrave; leurs succursales et agences, doivent comporter un sticker s&eacute;curis&eacute; ou un hologramme marqu&eacute; &agrave; chaud. </P>
+<P CLASS="ParaText">
+Les entreprises exer&ccedil;ant dans le secteur agricole sont tenues de d&eacute;livrer aux planteurs et coop&eacute;ratives ne poss&eacute;dant pas de num&eacute;ros de compte contribuable, des bordereaux de r&eacute;ception s&eacute;curis&eacute;s &agrave; l&apos;appui de leurs achats.</P>
+<H6 CLASS="Modification">
+Loi n&deg;  2012-1179 du 27 d&eacute;cembre 2012, an. fiscale,Art. 3-2.</H6>
+<P CLASS="ParaText">
+Les entreprises relevant de la Direction des grandes Entreprises ou de la Direction des moyennes Entreprises qui en font la demande peuvent &ecirc;tre autoris&eacute;es &agrave; fabriquer elles-m&ecirc;mes leurs factures. Dans ce cas, la facture doit comporter un sticker sp&eacute;cifique.</P>
+<H6 CLASS="Modification">
+Loi n&deg; 2014-861 du 22 d&eacute;cembre 2014, an. fiscale,Art.12-14.</H6>
+<P CLASS="ParaText">
+Les conditions d&apos;&eacute;dition et de gestion de ces factures sont &eacute;galement fix&eacute;es par arr&ecirc;t&eacute; du Ministre des Finances. </P>
+<P CLASS="ParaText">
+L&apos;Administration publie une fois par an la liste des entreprises autoris&eacute;es &agrave; &eacute;diter elles-m&ecirc;mes leurs factures.</P>
+<H6 CLASS="Modification">
+Loi n&deg;  2012-1179 du 27 d&eacute;cembre 2012, an. fiscale,Art. 3-2; loi n&deg; 2013-908 du 26 d&eacute;cembre 2013, an. fiscale,Art. 24-1.</H6>
+<P CLASS="ParaText">
+Les entreprises suivantes sont dispens&eacute;es de l&apos;usage des factures normalis&eacute;es :</P>
+<P CLASS="Liste2-Enumeree">
+-	les concessionnaires de service public d&apos;eau, d&apos;&eacute;lectricit&eacute; et du t&eacute;l&eacute;phone pour les activit&eacute;s couvertes par la concession, &agrave; l&apos;exclusion des prestations qui rel&egrave;vent des domaines ouverts &agrave; la concurrence;</P>
+<H6 CLASS="Modification">
+Ord. n&deg; 2007-488 du 31 mai 2007, an. fiscale,Art. 30-1.</H6>
+<P CLASS="Liste2-Enumeree">
+-	les entreprises de ventes &agrave; rayons multiples dont les op&eacute;rations au d&eacute;tail donnent lieu &agrave; la d&eacute;livrance de tickets ou de tickets de caisse <FONT COLOR='#000000'> accompagnés de reçus sécurisés par la plateforme facture normalisée électronique; </FONT></P>
+<H6 CLASS="Modification">
+ loi n° 2024-1109 du 18 déc. 2024, an. fiscale, art. 6-8.</H6>
+<P CLASS="Liste2-Enumeree">
+-	les pharmacies;</P>
+<P CLASS="Liste2-Enumeree">
+-	le concessionnaire de service public charg&eacute; de l&apos;identification des personnes;</P>
+<P CLASS="Liste2-Enumeree">
+-	les compagnies a&eacute;riennes;</P>
+<P CLASS="Liste2-Enumeree">
+-	les entreprises p&eacute;troli&egrave;res b&eacute;n&eacute;ficiant des dispositions de contrat de partage de production;</P>
+<P CLASS="Liste2-Enumeree">
+-	les stations services uniquement pour leurs op&eacute;rations de ventes de carburant;</P>
+<P CLASS="Liste2-Enumeree">
+-	la Poste de C&ocirc;te d&apos;Ivoire;</P>
+<P CLASS="Liste2-Enumeree">
+-	les banques;</P>
+<P CLASS="Liste2-Enumeree">
+-	les compagnies d&apos;assurances;</P>
+<P CLASS="Liste2-Enumeree">
+-	les concessionnaires de service de transport pour leurs op&eacute;rations couvertes par la concession;</P>
+<P CLASS="Liste2-Enumeree">
+-	les entreprises de transport non concessionnaires de service public ;</P>
+<P CLASS="Liste2-Enumeree">
+-	les entreprises n&apos;ayant pas d&apos;installations professionnelles en C&ocirc;te d&apos;Ivoire.</P>
+<P CLASS="Liste2-Enumeree">
+-	les entreprises concessionnaires du service public des jeux de hasard pour les ventes aux clients  finaux, &agrave; l&apos;exclusion de celles faites aux revendeurs;</P>
+<P CLASS="Liste2-Enumeree">
+-	les entreprises de t&eacute;l&eacute;phonie titulaires d&apos;une licence d&apos;exploitation.</P>
+<H6 CLASS="Modification">
+Ord. n&deg; 2007-488 du 31 mai 2007, an. fiscale,Art. 30-2;
+Ord. n&deg; 2007-675 du 28 d&eacute;cembre 2007, an. fiscale,Art. 6-2
+; Loi n&deg;  2012-1179 du 27 d&eacute;cembre 2012, an. fiscale,Art. 3-2.</H6>
+<P CLASS="Liste2-Enumeree">
+- les concessionnaires des ouvrages publics routiers pour les droits de p&eacute;age qu&apos;ils per&ccedil;oivent, &agrave; l&apos;exclusion des abonnements. </P>
+<H6 CLASS="Modification">
+Loi n&deg; 2014-861 du 22 d&eacute;cembre 2014, an. fiscale,Art.23; loi n&#176; 2025-987 du 19  d&eacute;cembre 2025, art. 18-7.</H6>
+
+</DIV>
+
+<DIV>
+<span id="#A5145b"></span>
+<H6 CLASS="NoArticle">
+Art. 145 bis </H6>
+<P CLASS="ParaText"><FONT COLOR='#000000'>
+<a name="50634993_pgfId-1042397"></a>Tout professionnel qui livre un bien ou qui fournit un service par voie &eacute;lectronique pour les besoins d&#8216;un autre professionnel ou d&#8216;un consommateur ordinaire, est tenu de lui d&eacute;livrer une facture normalis&eacute;e &eacute;lectronique.</FONT></P>
+<P CLASS="ParaText"><FONT COLOR='#000000'>
+<a name="50634993_pgfId-1042398"></a>Cette facture comporte outre les mentions pr&eacute;vues &agrave; l&#8216;article 144 ci-dessus, les sp&eacute;cifications suivantes :</FONT></P>
+<P CLASS="Liste2-Enumeree"><FONT COLOR='#000000'>
+<a name="50634993_pgfId-1042400"></a>	- la d&eacute;nomination ou la raison sociale (nom du contribuable) ;</FONT></P>
+<P CLASS="Liste2-Enumeree"><FONT COLOR='#000000'>
+<a name="50634993_pgfId-1042401"></a>	- l&#8216;identifiant unique du contribuable ;</FONT></P>
+<P CLASS="Liste2-Enumeree"><FONT COLOR='#000000'>
+<a name="50634993_pgfId-1042402"></a>	- l&#8216;adresse compl&egrave;te du contribuable ;</FONT></P>
+<P CLASS="Liste2-Enumeree"><FONT COLOR='#000000'>
+<a name="50634993_pgfId-1042403"></a>	- la date et l&#8216;heure d&#8216;&eacute;mission de la facture &eacute;lectronique ;</FONT></P>
+<P CLASS="Liste2-Enumeree"><FONT COLOR='#000000'>
+<a name="50634993_pgfId-1042404"></a>	- le num&eacute;ro d&#8216;ordre de la facture ;</FONT></P>
+<P CLASS="Liste2-Enumeree"><FONT COLOR='#000000'>
+<a name="50634993_pgfId-1042405"></a>	- la d&eacute;signation compl&egrave;te des articles vendus ;</FONT></P>
+<P CLASS="Liste2-Enumeree"><FONT COLOR='#000000'>
+<a name="50634993_pgfId-1042406"></a>	- le total pay&eacute; et le mode de r&egrave;glement. </FONT></P>
+<P CLASS="ParaText"><FONT COLOR='#000000'>
+<a name="50634993_pgfId-1042408"></a>Les modalit&eacute;s de mise enoeuvre de la facture normalis&eacute;e &eacute;lectronique sont d&eacute;termin&eacute;es par arr&ecirc;t&eacute; du Ministre en charge du Budget. </FONT></P>
+<H6 CLASS="Modification">
+<a name="50634993_pgfId-1042392"></a>Loi n&deg; 2018 - 984 du 28 d&eacute;cembre 2018, an. fiscaleArt. 15.</H6>
+</DIV>
+
+
+
+
+
+<H3 CLASS="Sous-section">
+VI - Obligation g&eacute;n&eacute;rale de d&eacute;claration d&apos;existence</H3>
+
+<DIV>
+<span id="#A5146"></span>
+<H6 CLASS="NoArticle">
+    Art. 146 	
+	&nbsp;&nbsp;&nbsp;&nbsp;<a href="#" class="ui-buttonh" onClick="showHideHistoric('h245146')" title="Consultez l'historique">2024...</a></H6>
+<P CLASS="ParaText">
+Toute personne qui entreprend l&apos;exercice d&apos;une activit&eacute; lucrative<FONT COLOR='#000000'> ou non</FONT> &agrave; titre professionnel doit avant le commencement de ses activit&eacute;s en faire la d&eacute;claration aupr&egrave;s de la Direction g&eacute;n&eacute;rale des Imp&ocirc;ts quel que soit le niveau de son chiffre d&apos;affaires attendu.</P>
+<H6 CLASS="Modification">
+<A NAME="50434106_pgfId-1060342"></A>Loi n° 2024-1109 du 18 déc. 2024, an. fiscale, art. 10-6</H6>
+<P CLASS="ParaText">
+<FONT COLOR='#000000'>
+<A NAME="50434106_pgfId-1060323"></A>L’Administration fiscale procède à son immatriculation au fichier des contribuables par l’attribution d’un numéro de compte contribuable (NCC) ainsi qu’à son rattachement au service des Impôts dans le ressort territorial duquel elle est installée.</FONT></P>
+<H6 CLASS="Modification">
+<A NAME="50434106_pgfId-1060296"></A>Loi n° 2024-1109 du 18 déc. 2024, an. fiscale, art. 10-6</H6>
+<P CLASS="ParaText">
+La d&eacute;claration sur imprim&eacute; administratif devra notamment indiquer :</P>
+<P CLASS="Liste2-Enumeree">
+-	le nom ou la raison sociale;</P>
+<P CLASS="Liste2-Enumeree">
+-	l&apos;adresse g&eacute;ographique du si&egrave;ge de l&apos;entreprise et &eacute;ventuellement de ses divers magasins, entrep&ocirc;ts et succursales, ainsi que le num&eacute;ro de la bo&icirc;te postale;</P>
+<P CLASS="Liste2-Enumeree">
+-	les diff&eacute;rentes activit&eacute;s commerciales exerc&eacute;es;</P>
+<P CLASS="Liste2-Enumeree">
+-	les noms et adresses des comptables ou experts-comptables non salari&eacute;s de l&apos;entreprise ou du centre de gestion agr&eacute;&eacute;.</P>
+<P CLASS="ParaText">
+Pour toutes les soci&eacute;t&eacute;s, la d&eacute;claration doit &ecirc;tre accompagn&eacute;e d&apos;une copie des statuts, et pour les soci&eacute;t&eacute;s anonymes, de la d&eacute;claration de souscription et de versement.</P>
+<P CLASS="ParaText"><FONT COLOR='#000000'>
+En ce qui concerne les entreprises qui exploitent des &eacute;tablissements secondaires, elles doivent avant toute ouverture d&apos;un &eacute;tablissement secondaire, proc&eacute;der &agrave; la d&eacute;claration de la cr&eacute;ation de celui-ci aupr&egrave;s du Service du lieu de situation du si&egrave;ge social ou de l&apos;&eacute;tablissement principal. Le d&eacute;faut de d&eacute;claration est puni d&apos;une amende de 100 000  francs.</FONT></P>
+<H6 CLASS="Modification">
+ Loi n&deg; 2017-870 du 27 d&eacute;cembre 2017, an. fiscaleArt. 13-4.</H6>
+<P CLASS="ParaText">
+En cas de modification des conditions d&apos;exercice de l&apos;activit&eacute;, une d&eacute;claration modificative est souscrite dans les dix jours suivant ladite modification.</P>
+<H6 CLASS="Modification">
+Ord. n&deg; 2011-480 du 28 d&eacute;cembre 2011, an. fiscale,Art. 26.</H6>
+<P CLASS="ParaText">
+<a name="50634993_pgfId-1025563"></a>Le d&eacute;faut de d&eacute;claration d&#8216;existence est puni d&#8216;une amende de <FONT COLOR='#000000'>1 000 000 de francs</FONT>. </P>
+<H6 CLASS="Modification">
+<a name="50634993_pgfId-1042592"></a>Loi n&deg; 2018-984 du 28 d&eacute;cembre 2018, an. fiscale, art. 27-5; loi n° 2024-1109 du 18 déc. 2024, an. fiscale, art. 10-6.</H6>
+<P CLASS="ParaText">
+Les entreprises non d&eacute;clar&eacute;es aux services de la Direction g&eacute;n&eacute;rale des Imp&ocirc;ts, qui souscrivent une d&eacute;claration fiscale d&apos;existence avant le 30 avril 2020, b&eacute;n&eacute;ficient de l&apos;exon&eacute;ration de tous les imp&ocirc;ts et taxes dus au titre de leurs activit&eacute;s exerc&eacute;es avant cette date.</P>
+<P CLASS="ParaText">
+Le d&eacute;faut de d&eacute;claration modificative des conditions de l&apos;exercice de l&apos;activit&eacute; est puni d&apos;une amende de 100 000 francs.</P>
+<H6 CLASS="Modification">
+Loi n&deg; 2005-161 du 27 avril 2005, an. fiscale, art 28-4; Ord. n&deg; 2011-480 du 28 d&eacute;cembre 2011, an. fiscale,Art. 26; Loi n&deg; 2015-840 du 18 d&eacute;cembre 2015, an. fiscale, art. 3-3</H6>
+<P CLASS="ParaText"><FONT COLOR='#000000'>
+S’agissant des installations d’affaires ou des personnes auxquelles il est reconnu, à l’issue d’opérations d’enquête ou de contrôle, le statut d’établissement stable, les services procèdent à leur immatriculation d’office au fichier des contribuables de la Direction générale des Impôts. </FONT></P>
+<H6 CLASS="Modification">
+Loi n° 2005-161 du 27 avril 2005, an. fiscale, art 28-4;         ord. n° 2011-480 du 28 déc. 2011, an. fiscale, art. 26;               loi n° 2015-840 du 18 déc. 2015, an. fiscale, art. 3-3;                loi n° 2017-870 du 27 décembre 2017, an. fiscale art. 13-4;   loi n° 2019-1080 du 18 déc. 2019, an. fiscale, art. 6;                 loi n° 2024-1109 du 18 déc. 2024, an. fiscale, art. 10-5.</H6>
+
+<H6 CLASS="NoArticle">
+ Art. 146 bis </H6>
+<P CLASS="ParaText"><FONT COLOR='#000000'>
+Les entreprises étrangères ne disposant pas d’installations professionnelles en Côte d’Ivoire sont tenues, aux fins de mise en œuvre des avantages fiscaux dont elles bénéficient dans le cadre de conventions ou de marchés publics et de souscription des obligations fiscales mises à leur charge, de requérir leur immatriculation auprès des services de la Direction générale des Impôts.</FONT></P>
+<P CLASS="ParaText"><FONT COLOR='#000000'>
+Cette immatriculation se fait selon une procédure simplifiée définie par l’Administration fiscale. </FONT></P>
+<H6 CLASS="Modification">
+Loi n° 2024-1109 du 18 déc. 2024, an. fiscale, art. 10-7.</H6>
+
+</DIV>
+
+<span id="#A5147"></span>
+<H6 CLASS="NoArticle">
+Art. 147</H6>
+<P CLASS="ParaText">
+Toute personne qui conclut un bail commercial pour l&apos;exercice de son activit&eacute; doit, dans les dix jours qui suivent, souscrire une d&eacute;claration des locaux lou&eacute;s &agrave; titre professionnel sur un imprim&eacute; administratif, au service des Imp&ocirc;ts du lieu o&ugrave; est situ&eacute; le local professionnel.</P>
+<P CLASS="ParaText">
+Une copie du bail commercial doit &ecirc;tre jointe &agrave; la d&eacute;claration.</P>
+<P CLASS="ParaText">
+En cas de location verbale, la d&eacute;claration sera &eacute;galement souscrite par le locataire sur un imprim&eacute; administratif.</P>
+<P CLASS="ParaText">
+En cas d&apos;expiration, de non renouvellement ou de r&eacute;siliation du contrat de bail ou de la location verbale, une d&eacute;claration de fin de contrat doit &ecirc;tre &eacute;galement souscrite dans les m&ecirc;mes conditions.</P>
+<P CLASS="ParaText">
+Le d&eacute;faut de d&eacute;claration sera sanctionn&eacute; par une amende de 50 000 francs.</P>
+
+<H6 CLASS="Modification">
+Loi n<b>&deg;-</b> 2005-161 du 27 avril 2005, an. fiscale,Art. 28-9.</H6>
+
+<H3 CLASS="Sous-section">VII – Subordination du bénéfice des avantages fiscaux ou douaniers et de l’accomplissement de certains actes et formalités de la vie économique à la régularité de la situation fiscale et/ou douanière </H3>
+<H6 CLASS="Modification">
+<A NAME="50618402_pgfId-1055792"></A>Loi n° 2023-1000 du 18 déc. 2023, an. fiscale, art. 27.1</H6>
+
+<DIV>
+<H6 CLASS="NoArticle">
+<A NAME="50618402_pgfId-1055675"></A>147 bis</H6>
+<P CLASS="ParaText"><FONT COLOR='#000000'>
+<A NAME="50618402_pgfId-1055687"></A>Le bénéfice des avantages fiscaux et douaniers, est subordonné à une  situation fiscale et/ou douanière régulière préalable. </FONT></P>
+<H6 CLASS="Modification">
+<A NAME="50618402_pgfId-1055668"></A>Loi n° 2023-1000 du 18 déc. 2023, an. fiscale, art. 27-2</H6>
+</DIV>
+<DIV>
+<H6 CLASS="NoArticle">
+<A NAME="50618402_pgfId-1055888"></A>147 ter</H6>
+<P CLASS="ParaText"><FONT COLOR='#000000'>
+<A NAME="50618402_pgfId-1055939"></A>L’accomplissement de certaines procédures et formalités de la vie civile et de la vie économique, est subordonné à l’obligation pour les requérants de présenter une situation fiscale et douanière régulière par la production d’une attestation de régularité de situation fiscale et/ou d’une attestation de régularité douanière.</FONT></P>
+<P CLASS="ParaText"><FONT COLOR='#000000'>
+<A NAME="50618402_pgfId-1055890"></A>Les procédures et formalités concernées sont :</FONT></P>
+<P CLASS="ParaText"><FONT COLOR='#000000'>
+<A NAME="50618402_pgfId-1055892"></A>– pour les personnes morales :</FONT></P>
+<P CLASS="Liste2-Enumeree"><FONT COLOR='#000000'>
+<A NAME="50618402_pgfId-1055894"></A>• 	l'ouverture de comptes bancaires entreprises ;</FONT></P>
+<P CLASS="Liste2-Enumeree"><FONT COLOR='#000000'>
+<A NAME="50618402_pgfId-1055896"></A>• l'abonnement aux services publics de distribution d'eau et d’électricité ;</FONT></P>
+<P CLASS="Liste2-Enumeree"><FONT COLOR='#000000'>
+<A NAME="50618402_pgfId-1055898"></A>•	 les autorisations de licences (autorisations accordées pour l’exercice d’une activité) ;</FONT></P>
+<P CLASS="Liste2-Enumeree"><FONT COLOR='#000000'>
+<A NAME="50618402_pgfId-1055900"></A>• la mutation de propriété de biens immeubles ;</FONT></P>
+<P CLASS="Liste2-Enumeree"><FONT COLOR='#000000'>
+<A NAME="50618402_pgfId-1055902"></A>•	 les cessions de véhicules usagers entre particuliers (vignettes).</FONT></P>
+<P CLASS="ParaText"><FONT COLOR='#000000'>
+<A NAME="50618402_pgfId-1055904"></A>– pour les personnes physiques et morales :</FONT></P>
+<P CLASS="Liste2-Enumeree"><FONT COLOR='#000000'>
+<A NAME="50618402_pgfId-1055906"></A>• 	la conclusion d'un contrat de bail à usage professionnel ou d’habitation ; </FONT></P>
+<P CLASS="Liste2-Enumeree"><FONT COLOR='#000000'>
+<A NAME="50618402_pgfId-1055907"></A>• 	la souscription d'un contrat d'assurance, dont notamment l’assurance automobile ;</FONT></P>
+<P CLASS="Liste2-Enumeree"><FONT COLOR='#000000'>
+<A NAME="50618402_pgfId-1055909"></A>• le transfert de propriété de biens immobiliers ;</FONT></P>
+<P CLASS="Liste2-Enumeree"><FONT COLOR='#000000'>
+<A NAME="50618402_pgfId-1055911"></A>• 	la demande d’un permis de construire ;</FONT></P>
+<P CLASS="Liste2-Enumeree"><FONT COLOR='#000000'>
+<A NAME="50618402_pgfId-1055913"></A>• 	l’attestation d’exonération. </FONT></P>
+<H6 CLASS="Modification">
+<A NAME="50618402_pgfId-1055879"></A>Loi n° 2023-1000 du 18 déc. 2023, an. fiscale, art. 28.</H6>
+</DIV>
+<H3 CLASS="Sous-section"><FONT COLOR='#d00000'>VIII-Obligation  de d&eacute;p&ocirc;t des &eacute;tats financiers des entit&eacute;s &agrave; but non lucratif </FONT></H3>
+<H6 CLASS="Modification">
+<A NAME="50618402_pgfId-1055792"></A>Loi n&#176; 2025-987 du 19  d&eacute;cembre 2025, art. 20</H6>
+
+<H6 CLASS="NoArticle">
+Art. 147 quater</H6>
+<P CLASS="ParaText"><FONT COLOR='#d00000'>
+Il est institu&eacute; &agrave; la charge des associations et  ordres professionnels et des entit&eacute;s ayant pour objet la gestion ou  l&rsquo;administration de projets de d&eacute;veloppement financ&eacute;s en g&eacute;n&eacute;ral par les  bailleurs bilat&eacute;raux, multilat&eacute;raux, priv&eacute;s ou &eacute;tatiques, une obligation de  d&eacute;p&ocirc;t des &eacute;tats financiers selon le Syst&egrave;me Comptable des Entit&eacute;s &agrave; But Non  Lucratif (SYCEBNL).</FONT></p>
+<P CLASS="ParaText"><FONT COLOR='#d00000'>
+Les &eacute;tats financiers doivent &ecirc;tre transmis &agrave;  l&rsquo;Administration exclusivement par voie &eacute;lectronique au plus tard le 30 mai de  chaque ann&eacute;e suivant la date de cl&ocirc;ture de l&rsquo;exercice comptable.</FONT></p>
+<P CLASS="ParaText"><FONT COLOR='#d00000'>
+Le d&eacute;p&ocirc;t des premiers &eacute;tats &eacute;labor&eacute;s selon le  mod&egrave;le SYCEBNL interviendra pour la premi&egrave;re fois le 30 mai 2027 au titre de  l&rsquo;exercice clos au 31 d&eacute;cembre 2026.</FONT></p>
+<P CLASS="ParaText"><FONT COLOR='#d00000'>
+Dans l&rsquo;intervalle, les entit&eacute;s concern&eacute;es qui ont  d&eacute;pos&eacute; leurs &eacute;tats financiers selon le r&eacute;f&eacute;rentiel comptable SYSCOHADA sont  r&eacute;put&eacute;es avoir satisfait &agrave; l&rsquo;obligation &agrave; leur charge.</FONT></p>
+<P CLASS="ParaText"><FONT COLOR='#d00000'>
+Pour les autres types d&rsquo;associations, elles sont  tenues de produire un &eacute;tat annuel faisant ressortir leurs ressources et leurs  d&eacute;penses. </FONT></p>
+<P CLASS="ParaText"><FONT COLOR='#d00000'>
+Cet &eacute;tat, accompagn&eacute; du compte financier ainsi que  de l&rsquo;inventaire des biens meubles et immeubles doit &ecirc;tre d&eacute;pos&eacute; au plus tard le  30 mai suivant la cl&ocirc;ture de l&rsquo;exercice comptable au Centre des Imp&ocirc;ts de  rattachement aupr&egrave;s duquel elles sont immatricul&eacute;es ou du si&egrave;ge de leur  association pour celles non encore immatricul&eacute;es.</FONT></p>
+<P CLASS="ParaText"><FONT COLOR='#d00000'>
+Cette obligation ne s&rsquo;applique pas &agrave; toute  association disposant de ressources annuelles de moins de 50&nbsp;000&nbsp;000  de francs.</FONT></p>
+<P CLASS="ParaText"><FONT COLOR='#d00000'>
+Le d&eacute;faut de d&eacute;p&ocirc;t des  &eacute;tats financiers et de l&rsquo;&eacute;tat annuel susvis&eacute; est sanctionn&eacute; par une amende de  100 000 francs, major&eacute;e de 10  000 francs par mois ou fraction de mois de retard suppl&eacute;mentaire. </FONT></p>
+<H6 CLASS="Modification">
+Loi n&#176; 2025-987 du 19  d&eacute;cembre 2025, art. 20</H6>
+
+
+<!-- Old wrapper body -->
+
+<span class="historique" ID="h245144">
+<div class="histText">
+
+<BR> 
+<BR>Art. 144
+<BR> 
+Tout industriel, commer&ccedil;ant ou artisan qui livre un bien, ainsi que tout prestataire qui fournit des services pour les besoins d'un autre professionnel ou d'un consommateur ordinaire est tenu de lui d&eacute;livrer une facture.</p>
+<p>La facture doit &ecirc;tre r&eacute;clam&eacute;e par l'acheteur ou client.</p>
+<p>Le vendeur ou fournisseur est tenu de la d&eacute;livrer d&egrave;s lors que la vente ou la prestation de service est d&eacute;finitive. Le refus de d&eacute;livrer une facture peut &ecirc;tre constat&eacute; par tout moyen, notamment par mise en demeure, par lettre recommand&eacute;e ou proc&egrave;s-verbal d'huissier ou par tout agent l&eacute;galement habilit&eacute;.</p>
+<p>Le d&eacute;taillant, l'artisan, l'agriculteur, l'&eacute;leveur ou le p&ecirc;cheur ne relevant pas d'un r&eacute;gime r&eacute;el d'imposition qui effectue une vente, une prestation de services &agrave; un consommateur ordinaire, n'est tenu de lui d&eacute;livrer une facture qu'&agrave; la demande de celui-ci.</p>
+<p>Ord. n&deg;- 2005-292 du 29 ao&ucirc;t 2005.</p>
+<p>Toutefois, si ce professionnel pratique habituellement des ventes en gros et des ventes au d&eacute;tail, il doit n&eacute;cessairement &eacute;tablir une facture, m&ecirc;me si la vente ou la prestation de services s'adresse &agrave; un consommateur ordinaire.</p>
+<p>Les factures doivent obligatoirement faire appara&icirc;tre distinctement :</p>
+<p>-les prix des biens livr&eacute;s ou des services rendus;</p>
+<p>-l'identification pr&eacute;cise du redevable qui d&eacute;livre la facture notamment ses raison sociale, nom, adresse, num&eacute;ro d'immatriculation au registre du commerce, r&eacute;f&eacute;rences bancaires, num&eacute;ro de compte contribuable attribu&eacute; par l'Administration, le r&eacute;gime d'imposition et le service des Imp&ocirc;ts dont il d&eacute;pend pour ses obligations fiscales professionnelles;</p>
+<p>-l'identification du client, notamment ses nom et adresse;</p>
+<p>-le num&eacute;ro de compte contribuable du client pour ses acquisitions de biens et services &agrave; titre professionnel.</p>
+<p>Loi n&deg;- 2005-161 du 27 avril 2005, an. fiscale,Art. 27-4.</p>
+<BR> 
+<BR><BR><BR></div></span><finh245144>
+
+<span class="historique" ID="h245145">
+<div class="histText">
+
+<BR> 
+<BR>Art. 145
+<BR> 
+Tout industriel, commer&ccedil;ant ou artisan qui livre un bien, ainsi que tout prestataire qui fournit des services pour les besoins d'un autre professionnel ou d'un consommateur ordinaire est tenu de lui d&eacute;livrer une facture.</p>
+<p>La facture doit &ecirc;tre r&eacute;clam&eacute;e par l'acheteur ou client.</p>
+<p>Les contribuables doivent obligatoirement utiliser des factures normalis&eacute;es dont les conditions d'&eacute;dition et de gestion sont d&eacute;termin&eacute;es par arr&ecirc;t&eacute; du Ministre des Finances. Ces factures comportent outre les mentions pr&eacute;vues &agrave; l'article 144 ci-dessus, les sp&eacute;cifications suivantes :</p>
+<p>-	le num&eacute;ro de facture dans une s&eacute;rie ininterrompue;</p>
+<p>-	le nom ou la raison sociale et le num&eacute;ro de compte contribuable de l'imprimeur;</p>
+<p>-	l'ann&eacute;e et le mois d'&eacute;dition de la facture par l'imprimeur;</p>
+<p>-	un hologramme selon un mod&egrave;le d&eacute;termin&eacute; par l'Administration fiscale.</p>
+<p>Les bordereaux ou bons de transfert ou de livraison d&eacute;livr&eacute;s par les entreprises &agrave; leurs succursales et agences, doivent comporter un sticker s&eacute;curis&eacute; ou un hologramme marqu&eacute; &agrave; chaud. </p>
+<p>Les entreprises exer&ccedil;ant dans le secteur agricole sont tenues de d&eacute;livrer aux planteurs et coop&eacute;ratives ne poss&eacute;dant pas de num&eacute;ros de compte contribuable, des bordereaux de r&eacute;ception s&eacute;curis&eacute;s &agrave; l'appui de leurs achats.</p>
+<p>Loi n&deg; 2012-1179 du 27 d&eacute;cembre 2012, an. fiscale,Art. 3-2.</p>
+<p>Les entreprises relevant de la Direction des grandes Entreprises ou de la Direction des moyennes Entreprises qui en font la demande peuvent &ecirc;tre autoris&eacute;es &agrave; fabriquer elles-m&ecirc;mes leurs factures. Dans ce cas, la facture doit comporter un sticker sp&eacute;cifique.</p>
+<p>Loi n&deg; 2014-861 du 22 d&eacute;cembre 2014, an. fiscale,Art.12-14.</p>
+<p>Les conditions d'&eacute;dition et de gestion de ces factures sont &eacute;galement fix&eacute;es par arr&ecirc;t&eacute; du Ministre des Finances. </p>
+<p>L'Administration publie une fois par an la liste des entreprises autoris&eacute;es &agrave; &eacute;diter elles-m&ecirc;mes leurs factures.</p>
+<p>Loi n&deg; 2012-1179 du 27 d&eacute;cembre 2012, an. fiscale,Art. 3-2; loi n&deg; 2013-908 du 26 d&eacute;cembre 2013, an. fiscale,Art. 24-1.</p>
+<p>Les entreprises suivantes sont dispens&eacute;es de l'usage des factures normalis&eacute;es :</p>
+<p>-	les concessionnaires de service public d'eau, d'&eacute;lectricit&eacute; et du t&eacute;l&eacute;phone pour les activit&eacute;s couvertes par la concession, &agrave; l'exclusion des prestations qui rel&egrave;vent des domaines ouverts &agrave; la concurrence;</p>
+<p>Ord. n&deg; 2007-488 du 31 mai 2007, an. fiscale,Art. 30-1.</p>
+<p>-	les entreprises de ventes &agrave; rayons multiples dont les op&eacute;rations au d&eacute;tail donnent lieu &agrave; la d&eacute;livrance de tickets ou de tickets de caisse;</p>
+<p>-	les pharmacies;</p>
+<p>-	le concessionnaire de service public charg&eacute; de l'identification des personnes;</p>
+<p>-	les compagnies a&eacute;riennes;</p>
+<p>-	les entreprises p&eacute;troli&egrave;res b&eacute;n&eacute;ficiant des dispositions de contrat de partage de production;</p>
+<p>-	les stations services uniquement pour leurs op&eacute;rations de ventes de carburant;</p>
+<p>-	la Poste de C&ocirc;te d'Ivoire;</p>
+<p>-	les banques;</p>
+<p>-	les compagnies d'assurances;</p>
+<p>-	les concessionnaires de service de transport pour leurs op&eacute;rations couvertes par la concession;</p>
+<p>-	les entreprises de transport non concessionnaires de service public n'ayant pas opt&eacute; pour leur assujettissement &agrave; la TVA;</p>
+<p>-	les entreprises n'ayant pas d'installations professionnelles en C&ocirc;te d'Ivoire.</p>
+<p>-	les entreprises concessionnaires du service public des jeux de hasard pour les ventes aux clients finaux, &agrave; l'exclusion de celles faites aux revendeurs;</p>
+<p>-	les entreprises de t&eacute;l&eacute;phonie titulaires d'une licence d'exploitation.</p>
+<p>Ord. n&deg; 2007-488 du 31 mai 2007, an. fiscale,Art. 30-2; Ord. n&deg; 2007-675 du 28 d&eacute;cembre 2007, an. fiscale,Art. 6-2 ; Loi n&deg; 2012-1179 du 27 d&eacute;cembre 2012, an. fiscale,Art. 3-2.</p>
+<p>- les concessionnaires des ouvrages publics routiers pour les droits de p&eacute;age qu'ils per&ccedil;oivent, &agrave; l'exclusion des abonnements. </p>
+<p>Loi n&deg; 2014-861 du 22 d&eacute;cembre 2014, an. fiscale,Art.23.<br />
+</p>
+<BR> 
+<BR><BR><BR></div></span><finh245145>
+
+<span class="historique" ID="h245146">
+<div class="histText">
+
+<BR> 
+<BR> 
+<BR>Art. 146
+<BR> 
+Toute personne qui entreprend l'exercice d'une activit&eacute; lucrative &agrave; titre professionnel doit avant le commencement de ses activit&eacute;s en faire la d&eacute;claration aupr&egrave;s de la Direction g&eacute;n&eacute;rale des Imp&ocirc;ts quel que soit le niveau de son chiffre d'affaires attendu.</p>
+<p>La d&eacute;claration sur imprim&eacute; administratif devra notamment indiquer :</p>
+<p>-	le nom ou la raison sociale;</p>
+<p>-	l'adresse g&eacute;ographique du si&egrave;ge de l'entreprise et &eacute;ventuellement de ses divers magasins, entrep&ocirc;ts et succursales, ainsi que le num&eacute;ro de la bo&icirc;te postale;</p>
+<p>-	les diff&eacute;rentes activit&eacute;s commerciales exerc&eacute;es;</p>
+<p>-	les noms et adresses des comptables ou experts-comptables non salari&eacute;s de l'entreprise ou du centre de gestion agr&eacute;&eacute;.</p>
+<p>Pour toutes les soci&eacute;t&eacute;s, la d&eacute;claration doit &ecirc;tre accompagn&eacute;e d'une copie des statuts, et pour les soci&eacute;t&eacute;s anonymes, de la d&eacute;claration de souscription et de versement.</p>
+<p>En ce qui concerne les entreprises qui exploitent des &eacute;tablissements secondaires, elles doivent avant toute ouverture d'un &eacute;tablissement secondaire, proc&eacute;der &agrave; la d&eacute;claration de la cr&eacute;ation de celui-ci aupr&egrave;s du Service du lieu de situation du si&egrave;ge social ou de l'&eacute;tablissement principal. Le d&eacute;faut de d&eacute;claration est puni d'une amende de 100 000 francs.</p>
+<p>Loi n&deg; 2017-870 du 27 d&eacute;cembre 2017, an. fiscaleArt. 13-4.</p>
+<p>En cas de modification des conditions d'exercice de l'activit&eacute;, une d&eacute;claration modificative est souscrite dans les dix jours suivant ladite modification.</p>
+<p>Ord. n&deg; 2011-480 du 28 d&eacute;cembre 2011, an. fiscale,Art. 26.</p>
+<p>Le d&eacute;faut de d&eacute;claration d&lsquo;existence est puni d&lsquo;une amende de 500 000 francs. </p>
+<p>Loi n&deg; 2018-984 du 28 d&eacute;cembre 2018, an. fiscaleArt. 27-5</p>
+<p>Les entreprises non d&eacute;clar&eacute;es aux services de la Direction g&eacute;n&eacute;rale des Imp&ocirc;ts, qui souscrivent une d&eacute;claration fiscale d'existence avant le 30 avril 2020, b&eacute;n&eacute;ficient de l'exon&eacute;ration de tous les imp&ocirc;ts et taxes dus au titre de leurs activit&eacute;s exerc&eacute;es avant cette date.</p>
+<p>Le d&eacute;faut de d&eacute;claration modificative des conditions de l'exercice de l'activit&eacute; est puni d'une amende de 100 000 francs.</p>
+<p>Loi n&deg; 2005-161 du 27 avril 2005, an. fiscale, art 28-4; Ord. n&deg; 2011-480 du 28 d&eacute;cembre 2011, an. fiscale,Art. 26; Loi n&deg; 2015-840 du 18 d&eacute;cembre 2015, an. fiscale,Art. 3-3<br />
+<BR> 
+<BR> 
+<BR><BR><BR></div></span><finh245146>
+</div></div> <!-- wrapper -->
+	  <div id="articleList"><div id="contenu" style='height:auto; background-color:#FFFFCC'>&nbsp;</div>
+      </div><p>&nbsp;</p><p>&nbsp;</p><p>&nbsp;</p><p>&nbsp;</p><p>&nbsp;</p><p>&nbsp;</p><p>&nbsp;</p><p>&nbsp;</p><p>&nbsp;</p><p>&nbsp;</p>
+	  <p>&nbsp;</p><p>&nbsp;</p><p>&nbsp;</p><p>&nbsp;</p><p>&nbsp;</p><p>&nbsp;</p></BODY></HTML>
+	  

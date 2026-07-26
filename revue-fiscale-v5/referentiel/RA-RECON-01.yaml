@@ -1,0 +1,41 @@
+reference_source: CGI 2026 — docs client 6/9/10 (propositions metier)
+date_effet: '2026-01-01'
+effets_croises: []
+a_confirmer:
+- date d effet 01/01/2026
+- valeurs issues docs client 6/9/10 — a valider metier
+formule_plafonnement: sans objet
+questions_generees:
+- id: q_ecart_cp
+  texte: Ecart reconciliation CP ?
+  type: booleen
+- id: q_montant
+  texte: Ecart ?
+  type: montant
+profils_applicables:
+- Entreprises au regime reel
+nature: sans_objet
+identifiant: RA-RECON-01
+impot: RA
+reference_legale: Revue analytique — Reconciliation capitaux propres (doc client 6)
+comptes_declencheurs:
+- '10'
+- '11'
+- '12'
+- '13'
+condition_declenchement: reponse(q_ecart_cp) = vrai
+conditions_fond: Reconciliation capitaux propres
+resultat: reponse(q_montant)
+niveau_risque: eleve
+cas_test:
+  soldes:
+    '10': '1'
+    '11': '1'
+    '12': '1'
+    '13': '1'
+  agregats: {}
+  reponses:
+    q_ecart_cp: true
+    q_montant: '2500000'
+  declenche_attendu: true
+  montant_attendu: '2500000'

@@ -1,0 +1,38 @@
+reference_source: CGI 2026 — doc client 2/5 format pivot (propositions metier)
+date_effet: '2026-01-01'
+effets_croises: []
+identifiant: BIC-PROV-18E1-CREANCES
+impot: BIC
+reference_legale: CGI 2026, art. 18 E 1° ; relevé art. 36
+profils_applicables:
+- Entreprises au regime reel
+comptes_declencheurs:
+- '6594'
+- '691'
+nature: temporaire
+condition_declenchement: (solde(6594) > 0 ou solde(691) > 0) et (reponse(q_individualisee) = faux ou reponse(q_releve)
+  = faux)
+conditions_fond: CGI 2026, art. 18 E 1° ; relevé art. 36
+formule_plafonnement: sans objet
+questions_generees:
+- id: q_individualisee
+  texte: Creances individualisees ?
+  type: booleen
+- id: q_releve
+  texte: Au releve provisions ?
+  type: booleen
+resultat: solde(6594) + solde(691)
+niveau_risque: moyen
+a_confirmer:
+- date d effet 01/01/2026
+- valeurs issues doc client 5 — a valider metier
+cas_test:
+  soldes:
+    '6594': '7000000'
+    '691': '0'
+  reponses:
+    q_individualisee: false
+    q_releve: true
+  agregats: {}
+  declenche_attendu: true
+  montant_attendu: '7000000'

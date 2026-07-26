@@ -1,0 +1,35 @@
+reference_source: CGI 2026 — docs client 6/9/10 (propositions metier)
+date_effet: '2026-01-01'
+effets_croises: []
+a_confirmer:
+- date d effet 01/01/2026
+- valeurs issues docs client 6/9/10 — a valider metier
+formule_plafonnement: sans objet
+questions_generees:
+- id: q_operations_mixtes
+  texte: Operations taxees et exonerees ?
+  type: booleen
+- id: q_tva_non_ded
+  texte: TVA non deductible (prorata) ?
+  type: montant
+profils_applicables:
+- Entreprises au regime reel
+nature: sans_objet
+identifiant: TVA-DED-PRORATA
+impot: TVA
+reference_legale: CGI 2026 — prorata de deduction TVA
+comptes_declencheurs:
+- '445'
+condition_declenchement: solde(445) > 0 et reponse(q_operations_mixtes) = vrai
+conditions_fond: Coexistence operations taxees et exonerees ?
+resultat: reponse(q_tva_non_ded)
+niveau_risque: moyen
+cas_test:
+  soldes:
+    '445': '20000000'
+  agregats: {}
+  reponses:
+    q_operations_mixtes: true
+    q_tva_non_ded: '3000000'
+  declenche_attendu: true
+  montant_attendu: '3000000'

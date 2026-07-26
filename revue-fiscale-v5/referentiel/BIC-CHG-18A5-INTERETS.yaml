@@ -1,0 +1,40 @@
+reference_source: CGI 2026 — doc client 2/5 format pivot (propositions metier)
+date_effet: '2026-01-01'
+effets_croises: []
+identifiant: BIC-CHG-18A5-INTERETS
+impot: BIC
+reference_legale: CGI 2026, art. 18 A 5°
+profils_applicables:
+- Entreprises au regime reel
+comptes_declencheurs:
+- '671'
+- '672'
+- '674'
+nature: permanente
+condition_declenchement: (solde(671) > 0 ou solde(672) > 0 ou solde(674) > 0) et reponse(q_hors_exploitation)
+  = vrai
+conditions_fond: CGI 2026, art. 18 A 5°
+formule_plafonnement: sans objet
+questions_generees:
+- id: q_hors_exploitation
+  texte: Hors exploitation ?
+  type: booleen
+- id: q_montant
+  texte: Montant a reintegrer ?
+  type: montant
+resultat: reponse(q_montant)
+niveau_risque: moyen
+a_confirmer:
+- date d effet 01/01/2026
+- valeurs issues doc client 5 — a valider metier
+cas_test:
+  soldes:
+    '671': '0'
+    '672': '4000000'
+    '674': '0'
+  reponses:
+    q_hors_exploitation: true
+    q_montant: '4000000'
+  agregats: {}
+  declenche_attendu: true
+  montant_attendu: '4000000'

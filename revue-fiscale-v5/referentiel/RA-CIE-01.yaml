@@ -1,0 +1,37 @@
+reference_source: CGI 2026 — docs client 6/9/10 (propositions metier)
+date_effet: '2026-01-01'
+effets_croises: []
+a_confirmer:
+- date d effet 01/01/2026
+- valeurs issues docs client 6/9/10 — a valider metier
+formule_plafonnement: sans objet
+questions_generees:
+- id: q_cie
+  texte: CIE a controler ?
+  type: booleen
+- id: q_montant
+  texte: Montant CIE douteux ?
+  type: montant
+profils_applicables:
+- Entreprises au regime reel
+nature: sans_objet
+identifiant: RA-CIE-01
+impot: RA
+reference_legale: Revue analytique — Credit d impot pour emploi (doc client 6)
+comptes_declencheurs:
+- '4457'
+- '695'
+condition_declenchement: reponse(q_cie) = vrai
+conditions_fond: Credit d impot pour emploi
+resultat: reponse(q_montant)
+niveau_risque: faible
+cas_test:
+  soldes:
+    '4457': '1'
+    '695': '1'
+  agregats: {}
+  reponses:
+    q_cie: true
+    q_montant: '300000'
+  declenche_attendu: true
+  montant_attendu: '300000'

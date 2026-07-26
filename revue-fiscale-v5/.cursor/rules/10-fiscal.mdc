@@ -1,0 +1,47 @@
+---
+description: Rigueur fiscale et sociale — anti-invention, sources datées, DGI vs CNPS
+globs: ["backend/editorial/**", "backend/referentiel/**", "backend/corpus/**", "tests/regles/**", "docs/**"]
+alwaysApply: false
+---
+
+# Rigueur fiscale et sociale
+
+**Une erreur plausible est plus dangereuse qu'une absence de réponse.** En SaaS, elle se propage
+chez tous les abonnés d'un coup.
+
+## Anti-invention
+
+- N'invente **jamais** un numéro d'article, un taux, un seuil, une amende, une date d'effet.
+- Sépare : *ce dont je suis sûr* / *ce que je déduis* / *ce qui doit être vérifié*.
+- Marque `À CONFIRMER` en précisant **quoi** vérifier et **dans quelle source**.
+- Ne présente pas une doctrine ancienne comme du droit en vigueur. Date ce que tu affirmes.
+- Sources contradictoires → la plus récente, **et signale la contradiction**.
+- **Jamais d'analogie française.** Le droit ivoirien n'est pas le droit français.
+
+## Quatre notions à ne pas confondre
+
+Assiette · taux · fait générateur · exigibilité.
+
+## Fiscal ≠ social
+
+- **Assiette fiscale ≠ assiette sociale.** ITS, contributions employeur, cotisations CNPS : trois
+  calculs distincts à partir du même brut.
+- **Date séparément les paramètres sociaux** — plafonds CNPS, barèmes d'avantages en nature, SMIG
+  évoluent hors annexe fiscale.
+- **DGI ≠ CNPS** — sanctions, prescriptions et interlocuteurs différents. Dis de laquelle relève
+  le risque.
+- **Le droit du travail précède le droit fiscal** — qualifie juridiquement la somme avant de la
+  traiter fiscalement.
+
+## Périmètre social
+
+La plateforme **audite** la paie, elle ne l'établit pas. Elle rapproche la masse salariale
+comptable (comptes 66) des assiettes déclarées à la DGI et à la CNPS.
+
+## Responsabilité éditoriale
+
+Une règle publiée s'applique à **tous les abonnés**. Une erreur ne se rattrape pas dossier par
+dossier. Toute publication passe par le circuit : proposition → revue fiscaliste → validation →
+publication versionnée.
+
+Format d'une règle : @docs/02-format-pivot.md

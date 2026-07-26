@@ -1,0 +1,38 @@
+reference_source: CGI 2026 — doc client 2/5 format pivot (propositions metier)
+date_effet: '2026-01-01'
+effets_croises: []
+identifiant: BIC-CHG-18A6-SOUSCAP
+impot: BIC
+reference_legale: CGI 2026, art. 18 A 6°
+profils_applicables:
+- Societes au reel — parties liees
+comptes_declencheurs:
+- '671'
+- '674'
+nature: permanente
+condition_declenchement: solde(671) > 0 ou solde(674) > 0
+conditions_fond: Limites cumulatives art. 18 A 6° — partiellement encodees.
+formule_plafonnement: 0.3 * agregat(RESULTAT_AVANT_IMPOT)
+questions_generees:
+- id: q_capital_libere
+  texte: Capital social libere ?
+  type: montant
+- id: q_taux_applique
+  texte: Taux d interet applique ?
+  type: montant
+resultat: max(0 ; solde(671) + solde(674) - (0.3 * agregat(RESULTAT_AVANT_IMPOT)))
+niveau_risque: eleve
+a_confirmer:
+- date d effet
+- assiette 30 % — RESULTAT_AVANT_IMPOT a figer
+- limites (a)(c)(d)(e)
+- taux BCEAO + 2
+cas_test:
+  soldes:
+    '671': '80000000'
+    '674': '20000000'
+  agregats:
+    RESULTAT_AVANT_IMPOT: '200000000'
+  reponses: {}
+  declenche_attendu: true
+  montant_attendu: '40000000'

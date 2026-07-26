@@ -1,0 +1,656 @@
+<!DOCTYPE HTML><HTML><HEAD><META HTTP-EQUIV="Content-Type" CONTENT="text/html; charset=UTF-8">
+<TITLE>Code des impots -129</TITLE><LINK REL="STYLESHEET" HREF="/cicgi.css" CHARSET="ISO-8859-1" TYPE="text/css">
+<style type="text/css">
+body {margin-left: 5px;	margin-top: 0px; margin-right: .5em;margin-bottom: 0px;background-color:#fafafa ;}
+.Liste-Numerote {font-size: 12pt;font-weight: regular;font-style: italic;color: #000000;text-transform: none;margin-left:8px ;margin-bottom:8px ;margin-top:4px ;margin-right:10px ;font-family:Georgia, "Times New Roman", Times, serif}
+li {list-style-type: none; margin-left:0px ; padding-left:0em ; }
+.Paratext {font-size: 12pt;font-weight: regular;font-style: italic;color: #000000;text-decoration: none;vertical-align: baseline;text-transform: none;margin-left:0px ;font-family:Georgia, "Times New Roman", Times, serif}
+.Normal {font-size: 12pt;font-weight: regular;font-style: italic;color: #000000;text-decoration: none;vertical-align: baseline;text-transform: none;margin-left:0px ;font-family:Georgia, "Times New Roman", Times, serif}
+ul {list-style-type: none; margin-left:0px ; padding-left:0em ;  }
+.Liste2-Enumeree {font-size: 12pt;font-weight: regular;font-style: italic;color: #000000;text-decoration: none;vertical-align: baseline;text-transform: none;list-style-type:none ;margin-left:16px ;margin-bottom:8px;margin-right:10px;font-family:Georgia, "Times New Roman", Times, serif}
+P.Liste2-Enumeree {font-size: 12pt;font-weight: regular;font-style: italic;color: #000000;text-decoration: none;vertical-align: baseline;text-transform: none;list-style-type:none ;margin-left:16px ;margin-bottom:8px;margin-right:10px;font-family:Georgia, "Times New Roman", Times, serif}
+.Entete {font-size: 13pt;font-weight: regular;font-style: italic;color:#000000 ;text-decoration: none;vertical-align: baseline;text-transform: none;margin-left:8px ;font-family:Georgia, "Times New Roman", Times, serif}
+table, TABLE {border-width:1px; width:99% ;border-collapse:collapse;border-color: #9ecaed;box-shadow: 0 0 10px #9ecaed;}
+tr,td {text-align:left;vertical-align:bottom;border:1px solid #9ecaed;padding:.2em;marging-left:.2em}
+th, TH{text-align:center;vertical-align:middle;padding:.2em;}
+P.TableauEntete {font-size: 13pt;font-weight: regular;font-style: italic;color: #000000;font-family:Georgia, "Times New Roman"}
+P.TableauCelluleLeft, P.TableauCellule {text-align:right;margin-right:1em;font-size: 13pt;font-weight: regular;font-style: italic;color: #000000;font-family:Georgia, "Times New Roman"}
+P.TableauCelluleRight {text-align:left;margin-left:1em;font-size: 13pt;font-weight: regular;font-style: italic;color: #000000;font-family:Georgia, "Times New Roman"}
+.ui-buttonh {padding: .1em .1em ; border: 1px solid #dadada;border-radius: 4px; box-shadow: 0 0 4px #9ecaed;color:#FF3300 ;margin-left:8px ;margin-right:8px ;margin-bottom:2px ;margin-top:2px ;text-decoration:none ;font-size:12pt ;font-family:"Times New Roman"}   
+.ui-button {padding: .1em .1em ; border: 1px solid #dadada;border-radius: 4px; box-shadow: 0 0 4px #9ecaed;color:#FF3300 ;margin-left:8px ;margin-right:8px ;margin-bottom:2px ;margin-top:2px ;text-decoration:none ;font-size:12pt ;font-family:"Times New Roman"}   
+H3 {display: block;text-align: center;text-indent: 0pt;margin-top: 10pt;margin-bottom: 10pt;margin-right: 10pt;margin-left: 10pt;font-size: 12pt;font-weight: Bold;font-style: Regular;color: #00A000;text-decoration: none;vertical-align: baseline;text-transform: none;font-family: "Times New Roman";}
+H4 {display: block;text-align: left;text-indent: 0pt;margin-top: 10pt;margin-bottom: 6pt;margin-right: 10pt;margin-left: 10pt;font-size: 12pt;font-weight: Bold;font-style: Regular;color: #000000;text-decoration: none;vertical-align: baseline;text-transform: none;font-family: "Times New Roman";}
+H5 {display: block;text-align: left;text-indent: 0pt;margin-top: 10pt;margin-bottom: 6pt;margin-right: 10pt;margin-left: 10pt;font-size: 11pt;font-weight: Bold;font-style: Regular;color: #000000;text-decoration: none;vertical-align: baseline;text-transform: none;font-family: "Times New Roman";}
+H6.NoArticle {display: block;text-align: left;text-indent: 0pt;margin-top: 14pt;margin-bottom: 0pt;margin-right: 0pt;margin-left: 0pt;font-size: 14pt;font-weight: regular;font-style: Regular;color: #00a000;text-decoration: none;vertical-align: baseline;text-transform: none;font-family: "Times New Roman";}
+H2 {text-align:center;font-size:16pt;font-family:Georgia, "Times New Roman", Times, serif}
+P.ParaText {font-size: 12pt;font-weight: regular;font-style: italic;color: #000000;	text-decoration: none;vertical-align: baseline;text-transform: none;font-family:Georgia, "Times New Roman", Times, serif;}
+H2.Section,P.Section {font-size:12pt;font-weight:bold;font-style:Regular;color:#008000;font-family:Georgia,"Times New Roman"}
+P.Paragraphe, p.Paragraphe {Text-Align:center;Text-decoration:none;font-size:12pt;font-weight:bold;font-style:Normal;color:#00A000;font-family:Georgia,"Times New Roman"}
+H2.Livre,P.Livre {text-align:center;font-size:16pt;font-weight:bold;font-style:Regular;color:#008000;font-family:Georgia,"Times New Roman"}
+P.Partie,H2.Partie,P.TitreSub {text-align:center;font-size:14pt;font-weight:bold;font-style:Regular;color:#008000;font-family:Georgia,"Times New Roman"}
+H2.ChapitreNo,H2.TitreNo {text-align:center;font-size:14pt;font-weight:bold;font-style:Regular;color:#008000;font-family:Georgia,"Times New Roman"}
+H2.Chapitre, h2.Chapitre {text-align:center;font-size:14pt;font-weight:bold;font-style:Regular;color:#008000;font-family:Georgia,"Times New Roman"}
+H2.TitreNo {text-align:center;font-size:14pt;font-weight:bold;font-style:Regular;color:#008000;font-family:Georgia,"Times New Roman"}
+h3.Sous-Section, H3.Sous-Section, h3.Sous-section, h2.Section {font-size:12pt;font-weight:bold;font-style:Italic;color:#008000;font-family:Georgia,"Times New Roman"}
+hr,HR { display: block; width:90%;  margin-top: 0.5em; margin-bottom: 0.5em; margin-left: auto;  margin-right: auto;  border-style: inset; border-width: 1px;}
+P.TitreSub {text-align:center;font-size:14pt;font-weight:bold;font-style:Regular;color:#008000;font-family:Georgia,"Times New Roman"}
+.Reference {display: block;text-align: left;text-indent: 0pt;margin-top: 10pt;margin-bottom: 6pt;margin-right: 10pt;margin-left: 10pt;font-size: 14pt;font-weight: Bold;font-style: Regular;color: #7F5434;text-decoration: none;vertical-align: baseline;text-transform: none;font-family: "Times New Roman";}
+.ludwig,blockquote {padding-left:1em;background-color:#fafafa;font-size:12pt;font-weight:100;font-style:italic;}
+#articleList {position:absolute ;	z-index: 1 ;left: 10px ;top: 80px ;height:340px;width: 620px;border: 2px solid #cacaca ;border-radius: 5px ;background-color:#fafafa ;    box-shadow: 0 0 12px #333333;	margin-left:0px ;	padding: .3em .3em ;		overflow:hidden ;	visibility:hidden ;  }			
+#articleList h3 { text-align: center; margin: 0; }		
+
+.historique {
+  display:none ;
+  padding: .1em .3em ;
+  border: solid 2px #dadada;
+  border-radius: 7px;
+  box-shadow: 0 0 5px #9ecaed;  
+  
+}
+.histText {
+    display: block;
+    font-family: ;"Times New Roman"
+	padding: .1em .3em ;
+    margin: 1em 0px;
+	font-style:italic;
+	color:#000000;
+	overflow:auto;
+}
+.highlight {
+  font-weight:bold ;
+  color:#000000 ;
+  background-color:#FFFFCC ;
+  }
+.articleList-scroll {
+	overflow-x:hidden ;
+	overflow-y:scroll ;
+	scrollbar-width:thin ;
+	scrollbar-color:blue orange ;
+}
+
+#contenu {
+	overflow-x:hidden ;
+    overflow-y:scroll ;
+	scrollbar-width:thin ;
+	scrollbar-color:blue orange ;
+}		
+
+table, TABLE {
+ text-align:center; 
+    margin-left:.5em; 
+    margin-right:.5em; 
+    border:1px solid #000000;	
+	border-collapse:collapse ;
+    border-color: #9ecaed;
+    box-shadow: 0 0 10px #9ecaed;
+	
+   }
+  tr,td {text-align:left;}
+  
+
+
+ </style>
+ 
+<script src="/js/iscroll.js"></script>
+<script src="/js/jquery.js"></script>   
+<script src="/js/jquery-ui-1.10.3.custom.js"></script>    	    
+<script src="/js/jquery.ui.draggable.js" type="text/javascript"></script>			
+<script src="/js/jquery.ui.core.js"></script> 			
+<script src="/js/jquery.ui.widget.js"></script>			
+<script src="/js/jquery.ui.position.js"></script>			
+<script src="/js/jquery.ui.menu.js"></script>    		
+<script type="text/javascript" src="./xpages.js"></script>
+/* VERSION POUR PAGE HTML SUR SITE DGI.CGICI.COM */
+<script language="javascript">
+ function showButton(id) {
+    var x = document.getElementById(id) ;
+	if(x.style.display === "none") {
+	   x.style.display = "block" ;
+	  } else {
+	   x.style.display = "none" ;
+	   }
+	 }   
+	 var pagenumber="129";
+function loadpage(page, art) {
+      showHideHistoric(art);
+	  return false;
+	  } 
+function loadArticle(page, art) { var artno = art ;var pgno=page;scrolltoelementTag(pgno,artno) ;return false ;} 
+
+</script>
+</HEAD>
+<BODY>
+    <div ID="wrapper"><div ID="scroller">
+
+
+<H2 CLASS="Section">
+Section IV - Bases d&apos;imposition et tarifs</H2>
+<H2 CLASS="Section">&nbsp;</H2>
+
+<H6 CLASS="NoArticle">
+
+Art. 418 &nbsp;&nbsp;&nbsp;&nbsp;<a href="#" class="ui-buttonh" onClick="return showHideHistoric('h22418')"  title="Consultez l'historique">2022...</a>
+&nbsp;&nbsp;&nbsp;&nbsp;<a href="#" class="ui-buttonh" onClick="return showHideHistoric('h23418')"  title="Consultez l'historique">2023...</a>
+&nbsp;&nbsp;&nbsp;&nbsp;<a href="#" class="ui-buttonh" onClick="return showHideHistoric('h24418')"  title="Consultez l'historique">2024...</a></H6>
+
+<P CLASS="ParaText">
+Le tableau ci-dessous &eacute;num&egrave;re les produits imposables et les taux qui leur sont applicables :</P>
+<P CLASS="Sous-Section">
+D&eacute;signation des produits</P>
+<H6 CLASS="Modification">
+Loi n&deg; 89-1332 du 26 d&eacute;c. 1989, an fiscale,Art. 16.</H6>
+<P CLASS="Sous-Section">
+I. - Boissons alcoolis&eacute;es</P>
+<P CLASS="Liste2-Enumeree">
+1-	Champagnes : 	<FONT COLOR='#000000'>40 %.</FONT></P>
+<P CLASS="Liste2-Enumeree">
+2-	Vins ordinaires : <FONT COLOR='#000000'>	35 %.</FONT></P>
+<P CLASS="Liste2-Enumeree">
+3-	Vins mousseux et vins AC et assimil&eacute;s :		<FONT COLOR='#000000'>40 %.</FONT></P>
+<P CLASS="Liste2-Enumeree">
+4-	Bi&egrave;res et cidres :	<FONT COLOR='#000000'>17 %.</FONT></P>
+<P CLASS="Liste2-Enumeree">
+5-	Autres boissons alcoolis&eacute;es titrant moins de 35&deg; d&apos;alcool : 		<FONT COLOR='#000000'>40 %.</FONT></P>
+<P CLASS="Liste2-Enumeree"><FONT COLOR='#000000'>
+6-	Autres boissons alcoolis&eacute;es titrant 35&deg; d&apos;alcool et plus : 		45 %.</FONT></P>
+<H6 CLASS="Modification">
+Loi n&deg; 2020-972 du 23 d&eacute;c. 2020, an. fiscale,Art. 4-1.</H6>
+<P CLASS="ParaText">
+Pour l&apos;application des dispositions ci-dessus, les boissons obtenues &agrave; partir d&apos;un m&eacute;lange d&apos;alcool et de boisson sucr&eacute;e, dont la teneur en alcool n&apos;exc&egrave;de pas 9&deg;, sont consid&eacute;r&eacute;es comme des bi&egrave;res.</P>
+<H6 CLASS="Modification">
+Loi n&deg; 2003-206 du 7 juillet 2003, an. fiscale,Art. 2 -1; loi n&deg;2004-271 du 15 avril 2004, an. fiscale,Art. 14; ord. n&deg; 2008-381 du 18 d&eacute;cembre 2008, an. fiscale,Art. 7-1/ ; loi n&deg;2013-908 du 26 d&eacute;cembre 2013, an. fiscale,Art. 3-1; loi n&deg; 2017-870 du 27 d&eacute;cembre 2017, an. fiscaleArt. 8-1; ord. n&deg; 2018-145 du 14 feacute;vrier 2018,Art. 2-2.</H6>
+
+<P CLASS="Sous-Section">
+II. - Boissons non alcoolis&eacute;es &agrave; l&apos;exclusionde l&apos;eau :														     </P>
+<P CLASS="Liste2-Enumeree">
+1- Boissons &eacute;nerg&eacute;tiques : <FONT COLOR='#000000'>14 %</FONT></P>
+<P CLASS="Liste2-Enumeree">
+2- Autres boissons non alcoolis&eacute;es :<FONT COLOR='#000000'> 14 %. </FONT>               </P>
+<H6 CLASS="Modification">
+Loi n&deg; 2003-206 du 7 juillet 2003, an. fiscale,Art. 2 -1; loi n&deg;2004-271 du 15 avril 2004, an. fiscale,Art. 13; Ord. n&deg; 2008-381 du 18 d&eacute;cembre 2008, an. fiscale,Art. 7-1; Loi n&deg; 2017-870 du 27 d&eacute;cembre 2017, an. fiscaleArt. 8-1; ord. n&deg; 2018-145 du 14 feacute;vrier 2018,Art. 2-2.</H6>
+
+<P CLASS="Sous-Section">
+III. - Tabacs</P>
+
+<DIV>
+<H6 CLASS="Ancre">
+<a name="50499597_pgfId-1045892"></a>&nbsp;</H6>
+<TABLE BORDER="1" width="98%">
+<TR>
+<TD width="78%" COLSPAN="1" ROWSPAN="1">
+<P CLASS="TableauEntete">
+<a name="50499597_pgfId-1045912"></a>Type de tabac</P>
+</TD>
+<TD width="15%" COLSPAN="1" ROWSPAN="1">
+<P CLASS="TableauEntete">
+<a name="50499597_pgfId-1045914"></a>Base d&#8216;imposition hors taxes</P>
+</TD>
+<TD width="7%" COLSPAN="1" ROWSPAN="1">
+<P CLASS="TableauEntete">
+<a name="50499597_pgfId-1045916"></a>Taux </P>
+</TD>
+</TR>
+<TR>
+<TD ROWSPAN="1" COLSPAN="1">
+<P CLASS="TableauCellule">
+<a name="50499597_pgfId-1045918"></a>Cigares, cigarillos, cigarettes, tabac &agrave; fumer, autres tabacs et succ&eacute;dan&eacute;s de tabacs,<FONT COLOR='#000000'> la cigarette &eacute;lectronique, les pipes et leurs parties, les pr&eacute;parations pour pipes, les produits et les mat&eacute;riels de la chicha et de la cigarette &eacute;lectronique</FONT></P>
+</TD>
+<TD ROWSPAN="1" COLSPAN="1">
+<P CLASS="TableauCellule">
+<a name="50499597_pgfId-1045920"></a>&nbsp;</P>
+<P CLASS="TableauCellule">
+<a name="50499597_pgfId-1063031"></a>&nbsp;</P>
+<P CLASS="TableauCellule">
+<a name="50499597_pgfId-1063033"></a>&nbsp;</P>
+<P CLASS="TableauCellule">
+<a name="50499597_pgfId-1063035"></a>&nbsp;</P>
+<P CLASS="TableauCellule">
+<a name="50499597_pgfId-1045921"></a>Prix de vente</P>
+</TD>
+<TD ROWSPAN="1" COLSPAN="1">
+<P CLASS="TableauCellule">
+57 %</P>
+</TD>
+</TR>
+</TABLE>
+<H6 CLASS="Modification">
+Loi n&deg; 89-1332 du 26 d&eacute;c. 1989, an. fiscale,Art. 17; loi n&deg; 95-05 du 11 janv. 1995, an. fiscale,Art. 6; loi n&deg; 2003-206 du 7 juillet 2003, an. fiscale,Art. 6; ord. n&deg; 2008-381 du 18            d&eacute;cembre 2008, an. fiscale,Art. 7-1/; loi n&deg; 2013-908 du 26 d&eacute;cembre 2013, an. fiscale,Art. 3-2; loi n&deg; 2014-861 du 22    d&eacute;cembre 2014, an. fiscale,Art.5-1&amp;2; loi n&deg; 2017-870 du 27 d&eacute;cembre 2017, an. fiscaleArt. 9; ord. n&deg; 2018-145 du 14      f&eacute;vrier 2018,Art. 2-3, loi n&deg; 2018 - 984 du 28  d&eacute;cembre 2018, an. fiscaleArt. 10; loi n&deg; 2019-1080 du 18 d&eacute;cembre 2019, an. fiscale,Art. 14 ; loi n&deg; 2020-972 du 23 d&eacute;c. 2020, an. fiscale, Art. 4-1; loi n&deg; 2021-899 du 21 d&eacute;c. 2021, an. fiscale,Art. 5-1 et Art. 5-2; loi n° 2022-974 du 20 déc. 2022, an. fiscale, art. 4,; loi n° 2023-1000 du 18  déc. 2023, an. fiscale, art. 8; loi n° 2024-1109 du 18 déc. 2024, an. fiscale, art. 19-1.</H6>
+</DIV>
+<P CLASS="Sous-Section">
+IV. - Cartouches</P>
+<P CLASS="ParaText">
+Cartouche charg&eacute;e, douille amorc&eacute;e ou amorce : 12 francs</P>
+<H6 CLASS="Modification">
+</a>Loi n&deg; 70-209 du 20 mars 1970, an. fiscaleArt. 19.</H6>
+<P CLASS="Sous-Section">
+V. -  Marbres et v&eacute;hicules de tourisme dont la puissance est sup&eacute;rieure ou &eacute;gale &agrave; 13 chevaux.</P>
+<P CLASS="ParaText">
+Abrogeacute;</P>
+<H6 CLASS="Modification">
+Loi n&deg; 2017-870 du 27 d&eacute;cembre 2017, an. fiscaleArt. 40-1; ord. n&deg; 2018-145 du 14 f&eacute;vrier 2018,Art. 1.</H6>
+
+<P CLASS="Sous-Section">
+VI. -  Produits de parfumerie et cosm&eacute;tiques</P>
+<P CLASS="ParaText">
+Abrogeacute;</P>
+<H6 CLASS="Modification">
+Loi n&deg; 2017-870 du 27 d&eacute;cembre 2017, an. fiscaleArt. 40-2; ord. n&deg; 2018-145 du 14 f&eacute;vrier 2018,Art. 1.</H6>
+<P CLASS="Sous-Section">
+VII - Marbres, v&eacute;hicules de tourisme dont la puissance est sup&eacute;rieure ou &eacute;gale &agrave; 13 chevaux,<FONT COLOR='#000000'> produits de parfumerie et cosm&eacute;tiques.</FONT></P>
+<H6 CLASS="Modification"><FONT COLOR='#000000'>
+Loi n&deg; 2020-972 du 23 d&eacute;c. 2020, an. fiscale,Art. 26-1.</FONT></H6>
+<P CLASS="ParaText"><FONT COLOR='#000000'>
+<a name="50634770_pgfId-1047995"></a>Marbres : 10 %</FONT></P>
+<P CLASS="ParaText"><FONT COLOR='#000000'>
+<a name="50634770_pgfId-1047991"></a>V&eacute;hicules de tourisme dont la puissance est sup&eacute;rieure ou &eacute;gale &agrave; 13 chevaux : 10 %.</FONT></P>
+<H6 CLASS="Modification">
+<a name="50634770_pgfId-1048010"></a>Loi n&deg; 2018 - 984 du 28  d&eacute;cembre 2018, an. fiscaleArt. 9</H6>
+
+<P CLASS="ParaText"><FONT COLOR='#000000'> 
+Produits de beaut&eacute; et cosm&eacute;tiques :</FONT></P>
+<P CLASS="Liste2-Enumeree"><FONT COLOR='#000000'> 
+- les produits de beaut&eacute; ou de maquillage pr&eacute;par&eacute;s et pr&eacute;parations pour l&apos;entretien ou les soins de la peau, autres que les m&eacute;dicaments, y compris les pr&eacute;parations antisolaires et les pr&eacute;parations de bronzage, pour bain et douche et pr&eacute;parations pour manucure ou p&eacute;dicure ;</FONT></P>
+<P CLASS="Liste2-Enumeree"><FONT COLOR='#000000'> 
+- les pr&eacute;parations capillaires : shampoing, pr&eacute;parations pour l&apos;ondulation ou le d&eacute;frisage permanent, les laques pour cheveux et autres pr&eacute;parations destin&eacute;es &agrave; &ecirc;tre appliqu&eacute;es sur les cheveux telles que les brillances, les huiles, les pommades, les fixateurs, les teintures et les produits d&eacute;colorants pour cheveux, les rince-cr&egrave;mes ;</FONT></P>
+<P CLASS="Liste2-Enumeree"><FONT COLOR='#000000'> 
+- les parfums.</FONT></P>
+<P CLASS="ParaText"><FONT COLOR='#000000'> 
+Autres produits :</FONT></P>
+<P CLASS="Liste2-Enumeree"><FONT COLOR='#000000'> 
+- les produits d&apos;extension, ou de rajout de cheveux ;</FONT></P>
+<P CLASS="Liste2-Enumeree"><FONT COLOR='#000000'> 
+- les m&egrave;ches.</FONT></P>
+<P CLASS="ParaText">
+Le taux de la taxe est fix&eacute; &agrave; 10 %. Ce taux est port&eacute; &agrave; <FONT COLOR='#000000'>15 %</FONT> en ce qui concerne les produits de beaut&eacute; et cosm&eacute;tiques contenant de l&apos;hydroquinone.</P>
+<H6 CLASS="Modification">
+<a name="50499597_pgfId-1055159"></a>Loi n&deg; 2020-972 du 23 d&eacute;c. 2020, an. fiscale,Art. 26-1; loi n&deg; 2021-899 du 21 d&eacute;c. 2021, an. fiscale,Art. 5-3.</H6>
+
+<DIV>
+<span id="#A0419"></span>
+<H6 CLASS="NoArticle">
+Art. 419 &nbsp;&nbsp;&nbsp;&nbsp;<a href="#" class="ui-buttonh" onClick="return showHideHistoric('h25419');return false;"  title="Consultez l'historique">2025...</a>
+ &nbsp;&nbsp;&nbsp;&nbsp;<a href="#" class="ui-buttonh" onClick="return showHideHistoric('h24419');return false;"  title="Consultez l'historique">2024...</a></H6>
+<P CLASS="Liste2-Enumeree">
+La base imposable est d&eacute;termin&eacute;e:</P>
+<P CLASS="Liste2-Enumeree">
+1- Pour les champagnes, les vins, bi&egrave;res, cidres, boissons alcoolis&eacute;es, boissons non alcoolis&eacute;es et tabacs : d&apos;apr&egrave;s le prix de vente sortie-usine, &agrave; l&apos;exclusion de la taxe sur la valeur ajout&eacute;e.</P>
+<P CLASS="Liste2-Enumeree">
+ En ce qui concerne les tabacs, ce prix de vente ne peut être inférieur à 20 000 francs les 1 000 cigarettes.</P>
+<H6 CLASS="Modification">
+<A NAME="50434096_pgfId-1068558"></A>Loi n° 2024-1109 du 18 déc. 2024, an. fiscale, art. 19-2.</H6>
+<P CLASS="Liste2-Enumeree">
+2-Pour les cartouches : d&apos;apr&egrave;s le nombre de cartouches charg&eacute;es, douilles amorc&eacute;es ou amorces.</P>
+<P CLASS="Liste2-Enumeree">
+3-Pour les produits import&eacute;s, la base imposable est d&eacute;termin&eacute;e d&apos;apr&egrave;s la valeur taxable en douane augment&eacute;e de tous les droits et taxes de douane, &agrave; l&apos;exclusion de la taxe sur la valeur ajout&eacute;e, major&eacute;e de 25 %.</P>
+<P CLASS="Liste2-Enumeree"><FONT COLOR='#000000'>
+Les intrants import&eacute;s notamment le vin, ne sont pas compris dans la base imposable et ne supportent pas la majoration vis&eacute;e au paragraphe ci-dessus.</FONT></P>
+<H6 CLASS="Modification"><FONT COLOR='#000000'>
+Loi n&deg; 2020-972 du 23 d&eacute;c. 2020, an. fiscale,Art. 4-2.</FONT></H6>
+<P CLASS="Paratext">
+  En ce qui concerne les tabacs import&eacute;s, la base imposable est d&eacute;termin&eacute;e d&apos;apr&egrave;s la valeur taxable en douane, augment&eacute;e de tous les droits et taxes de douane, &agrave; l&apos;exclusion de la taxe sur la valeur ajout&eacute;e.</P>
+<P CLASS="Liste2-Enumeree"><FONT COLOR='#d00000'>
+ Cette valeur ne peut &ecirc;tre inf&eacute;rieure &agrave; : </FONT></P>
+ <P CLASS="Liste2-Enumeree"><FONT COLOR='#d00000'>
+   - 20 000 francs les 1000 cigarettes pour les produits fabriqu&eacute;s dans un Etat li&eacute; &agrave; la C&ocirc;te d&rsquo;Ivoire par un accord d&rsquo;union douani&egrave;re ;</FONT>
+ <P CLASS="Liste2-Enumeree"><FONT COLOR='#d00000'>
+  -	25 000 francs les 1 000 cigarettes pour les produits fabriqu&eacute;s dans un Etat non li&eacute; &agrave; la C&ocirc;te d&rsquo;Ivoire par un accord d&rsquo;union douani&egrave;re.</FONT></P>
+   
+<H6 CLASS="Modification">
+Loi n&deg; 68-612 du 31 d&eacute;c. 1968, an. fiscale,Art. 22-1&deg;; Ord. n&deg; 82-267 du 31 juil. 1982,Art. 2; loi n&deg; 94-201 du 8 avril 1994, an. fiscale,Art. 28; loi n&deg; 2003-206 du 7 juillet 2003, an. fiscale,Art. 2-2. Ord. n&deg; 2006-234 du 02 ao&ucirc;t 2006, an. fiscale,Art. 13. Ord. n&deg; 2007-488 du 31 mai 2007, an. fiscale,Art. 3-1; Ord. n&deg; 2008-381 du 18 d&eacute;cembre 2008, an. fiscale,Art. 7-2/; loi n&deg; 2013-908 du 26 d&eacute;cembre  2013, an. fiscale,Art. 3-3;loi n&deg; 2014-861 du 22 d&eacute;cembre 2014, an. fiscale,Art.5-3; loi n&deg; 2017-870 du 27 d&eacute;cembre 2017, an. fiscaleArt. 8; loi n° 2024-1109 du 18 déc. 2024, an. fiscale, art. 19-2; loi n&#176; 2025-987 du 19  d&eacute;cembre 2025, art. 26-1 .</H6>
+<P CLASS="Liste2-Enumeree"><FONT COLOR='#000000'>
+4- Pour les produits de beaut&eacute;, cosm&eacute;tiques et autres produits fabriqu&eacute;s en C&ocirc;te d&rsquo;Ivoire :d&rsquo;apr&egrave;s le prix de vente sortie-usine, &agrave; l&rsquo;exclusion de la taxe sur la valeur ajout&eacute;e.</FONT></P>
+<H6 CLASS="Modification">
+Loi n&deg; 2017-870 du 27 d&eacute;cembre 2017, an. fiscaleArt. 40-3; ord. n&deg; 2018-145 du 14 f&eacute;vrier 2018,Art. 1; <FONT COLOR='#000000'>loi n&deg; 2020-972 du 23 d&eacute;c. 2020, an. fiscale,Art. 26-2.</FONT></H6>
+</DIV>
+
+
+
+
+    </div> </div><p>&nbsp;</p><p>&nbsp;</p>
+<span class="historique" ID="h21418">
+<div class="histText">
+
+<BR> Art. 418 
+<BR>Le tableau ci-dessous &eacute;num&egrave;re les produits imposables et les taux qui leur sont applicables : 
+<BR> 
+<BR>D&eacute;signation des produits 
+<BR> 
+<BR>Loi n° 89-1332 du 26 d&eacute;c. 1989, an fiscale,Art. 16. 
+<BR> 
+<BR>I. - Boissons alcoolis&eacute;es 
+<BR> 
+<BR>1-Champagnes :40 %.
+<BR> 
+<BR>2-Vins ordinaires :35 %.
+<BR> 
+<BR>3-Vins mousseux et vins AC et assimil&eacute;s : 40 %.
+<BR> 
+<BR>4-Bi&egrave;res et cidres : 17 %.
+<BR> 
+<BR>5-Autres boissons alcoolis&eacute;es titrant moins de 35° d'alcool :40 %.6-Autres boissons alcoolis&eacute;es titrant 35° d'alcool et plus : 45 %.
+<BR> 
+<BR>Loi n° 2020-972 du 23 d&eacute;c. 2020, an. fiscale,Art. 4-1. 
+<BR> 
+<BR>Pour l'application des dispositions ci-dessus, les boissons obtenues &agrave; partir d'un m&eacute;lange d'alcool et de boisson sucr&eacute;e, dont la teneur en alcool n'exc&egrave;de pas 9°, sont consid&eacute;r&eacute;es comme des bi&egrave;res. 
+<BR> 
+<BR>Loi n° 2003-206 du 7 juillet 2003, an. fiscale,Art. 2 -1; loi n°2004-271 du 15 avril 2004, an. fiscale,Art. 14; ord. n° 2008-381 du 18 d&eacute;cembre 2008, an. fiscale,Art. 7-1/ ; loi n°2013-908 du 26 d&eacute;cembre 2013, an. fiscale,Art. 3-1; loi n° 2017-870 du 27 d&eacute;cembre 2017, an. fiscaleArt. 8-1; ord. n° 2018-145 du 14 feacute;vrier 2018,Art. 2-2.  
+<BR>II. - Boissons non alcoolis&eacute;es &agrave; l'exclusionde l'eau :
+<BR> 
+<BR>1- Boissons &eacute;nerg&eacute;tiques :14 %
+<BR> 
+<BR>2- Autres boissons non alcoolis&eacute;es :14 %.
+<BR> 
+<BR>Loi n° 2003-206 du 7 juillet 2003, an. fiscale,Art. 2 -1; loi n°2004-271 du 15 avril 2004, an. fiscale,Art. 13; Ord. n° 2008-381 du 18 d&eacute;cembre 2008, an. fiscale,Art. 7-1; Loi n° 2017-870 du 27 d&eacute;cembre 2017, an. fiscaleArt. 8-1; ord. n° 2018-145 du 14 feacute;vrier 2018,Art. 2-2.  
+<BR>III. - Tabacs  
+<BR> 
+<BR> 
+<BR> 
+<BR>Type de tabac
+<BR> 
+<BR> 
+<BR>Base d'imposition hors taxes
+<BR> 
+<BR> 
+<BR>Taux 
+<BR> 
+<BR> 
+<BR> 
+<BR> 
+<BR>Cigares, cigarillos, cigarettes, tabac &agrave; fumer, autres tabacs et succ&eacute;dan&eacute;s de tabacsPrix de vente
+<BR> 39 %
+<BR> 
+<BR> 
+<BR> 
+<BR> 
+<BR>Loi n° 89-1332 du 26 d&eacute;c. 1989, an. fiscale,Art. 17; loi n° 95-05 du 11 janv. 1995, an. fiscale,Art. 6; loi n° 2003-206 du 7 juillet 2003, an. fiscale,Art. 6; ord. n° 2008-381 du 18d&eacute;cembre 2008, an. fiscale,Art. 7-1/; loi n° 2013-908 du 26 d&eacute;cembre 2013, an. fiscale,Art. 3-2; loi n° 2014-861 du 22d&eacute;cembre 2014, an. fiscale,Art.5-1&2; loi n° 2017-870 du 27 d&eacute;cembre 2017, an. fiscaleArt. 9; ord. n° 2018-145 du 14 f&eacute;vrier 2018,Art. 2-3, loi n° 2018 - 984 du 28d&eacute;cembre 2018, an. fiscaleArt. 10; loi n° 2019-1080 du 18 d&eacute;cembre 2019, an. fiscale,Art. 14;loi n° 2020-972 du 23 d&eacute;c. 2020, an. fiscale,Art. 4-1. 
+<BR> 
+<BR>IV. - Cartouches 
+<BR> 
+<BR>Cartouche charg&eacute;e, douille amorc&eacute;e ou amorce : 12 francs 
+<BR> 
+<BR> Loi n° 70-209 du 20 mars 1970, an. fiscaleArt. 19. 
+<BR> 
+<BR>V. -Marbres et v&eacute;hicules de tourisme dont la puissance est sup&eacute;rieure ou &eacute;gale &agrave; 13 chevaux. 
+<BR> 
+<BR>Abrogeacute; 
+<BR> 
+<BR>Loi n° 2017-870 du 27 d&eacute;cembre 2017, an. fiscaleArt. 40-1; ord. n° 2018-145 du 14 f&eacute;vrier 2018,Art. 1.  
+<BR>VI. -Produits de parfumerie et cosm&eacute;tiques 
+<BR> 
+<BR>Abrogeacute; 
+<BR> 
+<BR>Loi n° 2017-870 du 27 d&eacute;cembre 2017, an. fiscaleArt. 40-2; ord. n° 2018-145 du 14 f&eacute;vrier 2018,Art. 1. 
+<BR> 
+<BR>VII - Marbres, v&eacute;hicules de tourisme dont la puissance est sup&eacute;rieure ou &eacute;gale &agrave; 13 chevaux,produits de parfumerie et cosm&eacute;tiques.Loi n° 2020-972 du 23 d&eacute;c. 2020, an. fiscale,Art. 26-1.Marbres : 10 %V&eacute;hicules de tourisme dont la puissance est sup&eacute;rieure ou &eacute;gale ? 13 chevaux : 10 %.
+<BR> 
+<BR>Loi n° 2018 - 984 du 28d&eacute;cembre 2018, an. fiscaleArt. 9  
+<BR>Produits de beaut&eacute; et cosm&eacute;tiques :
+<BR> 
+<BR>- les produits de beaut&eacute; ou de maquillage pr&eacute;par&eacute;s et pr&eacute;parations pour l'entretien ou les soins de la peau, autres que les m&eacute;dicaments, y compris les pr&eacute;parations antisolaires et les pr&eacute;parations de bronzage, pour bain et douche et pr&eacute;parations pour manucure ou p&eacute;dicure ;
+<BR> 
+<BR>- les pr&eacute;parations capillaires : shampoing, pr&eacute;parations pour l'ondulation ou le d&eacute;frisage permanent, les laques pour cheveux et autres pr&eacute;parations destin&eacute;es &agrave; &ecirc;tre appliqu&eacute;es sur les cheveux telles que les brillances, les huiles, les pommades, les fixateurs, les teintures et les produits d&eacute;colorants pour cheveux, les rince-cr&egrave;mes ;
+<BR> 
+<BR>- les parfums.
+<BR> 
+<BR>Autres produits :
+<BR> 
+<BR>- les produits d'extension, ou de rajout de cheveux ;
+<BR> 
+<BR>- les m&egrave;ches.
+<BR> 
+<BR>Le taux de la taxe est fix&eacute; &agrave; 10 %. Ce taux est port&eacute; &agrave; 50 % en ce qui concerne les produits de beaut&eacute; et cosm&eacute;tiques contenant de l'hydroquinone.
+<BR> 
+<BR>Loi n° 2020-972 du 23 d&eacute;c. 2020, an. fiscale,Art. 26-1.
+<BR>
+<BR><BR><BR></div></span><finh21418>
+
+<span class="historique" ID="h24418">
+<div class="histText">
+
+<BR> Art. 418 
+<BR>
+<P CLASS="ParaText">
+Le tableau ci-dessous &eacute;num&egrave;re les produits imposables et les taux qui leur sont applicables :</P>
+<P CLASS="Sous-Section">
+D&eacute;signation des produits</P>
+<H6 CLASS="Modification">
+Loi n&deg; 89-1332 du 26 d&eacute;c. 1989, an fiscale,Art. 16.</H6>
+<P CLASS="Sous-Section">
+I. - Boissons alcoolis&eacute;es</P>
+<P CLASS="Liste2-Enumeree">
+1-	Champagnes : 	<FONT COLOR='#000000'>40 %.</FONT></P>
+<P CLASS="Liste2-Enumeree">
+2-	Vins ordinaires : <FONT COLOR='#000000'>	35 %.</FONT></P>
+<P CLASS="Liste2-Enumeree">
+3-	Vins mousseux et vins AC et assimil&eacute;s :		<FONT COLOR='#000000'>40 %.</FONT></P>
+<P CLASS="Liste2-Enumeree">
+4-	Bi&egrave;res et cidres :	<FONT COLOR='#000000'>17 %.</FONT></P>
+<P CLASS="Liste2-Enumeree">
+5-	Autres boissons alcoolis&eacute;es titrant moins de 35&deg; d&apos;alcool : 		<FONT COLOR='#000000'>40 %.</FONT></P>
+<P CLASS="Liste2-Enumeree"><FONT COLOR='#000000'>
+6-	Autres boissons alcoolis&eacute;es titrant 35&deg; d&apos;alcool et plus : 		45 %.</FONT></P>
+<H6 CLASS="Modification">
+Loi n&deg; 2020-972 du 23 d&eacute;c. 2020, an. fiscale,Art. 4-1.</H6>
+<P CLASS="ParaText">
+Pour l&apos;application des dispositions ci-dessus, les boissons obtenues &agrave; partir d&apos;un m&eacute;lange d&apos;alcool et de boisson sucr&eacute;e, dont la teneur en alcool n&apos;exc&egrave;de pas 9&deg;, sont consid&eacute;r&eacute;es comme des bi&egrave;res.</P>
+<H6 CLASS="Modification">
+Loi n&deg; 2003-206 du 7 juillet 2003, an. fiscale,Art. 2 -1; loi n&deg;2004-271 du 15 avril 2004, an. fiscale,Art. 14; ord. n&deg; 2008-381 du 18 d&eacute;cembre 2008, an. fiscale,Art. 7-1/ ; loi n&deg;2013-908 du 26 d&eacute;cembre 2013, an. fiscale,Art. 3-1; loi n&deg; 2017-870 du 27 d&eacute;cembre 2017, an. fiscaleArt. 8-1; ord. n&deg; 2018-145 du 14 feacute;vrier 2018,Art. 2-2.</H6>
+
+<P CLASS="Sous-Section">
+II. - Boissons non alcoolis&eacute;es &agrave; l&apos;exclusionde l&apos;eau :														     </P>
+<P CLASS="Liste2-Enumeree">
+1- Boissons &eacute;nerg&eacute;tiques : <FONT COLOR='#000000'>14 %</FONT></P>
+<P CLASS="Liste2-Enumeree">
+2- Autres boissons non alcoolis&eacute;es :<FONT COLOR='#000000'> 14 %. </FONT>               </P>
+<H6 CLASS="Modification">
+Loi n&deg; 2003-206 du 7 juillet 2003, an. fiscale,Art. 2 -1; loi n&deg;2004-271 du 15 avril 2004, an. fiscale,Art. 13; Ord. n&deg; 2008-381 du 18 d&eacute;cembre 2008, an. fiscale,Art. 7-1; Loi n&deg; 2017-870 du 27 d&eacute;cembre 2017, an. fiscaleArt. 8-1; ord. n&deg; 2018-145 du 14 feacute;vrier 2018,Art. 2-2.</H6>
+
+<P CLASS="Sous-Section">
+III. - Tabacs</P>
+
+<DIV>
+<H6 CLASS="Ancre">
+<a name="50499597_pgfId-1045892"></a>&nbsp;</H6>
+<TABLE BORDER="1" width="98%">
+<TR>
+<TD ROWSPAN="1" COLSPAN="1">
+<P CLASS="TableauEntete">
+<a name="50499597_pgfId-1045912"></a>Type de tabac</P>
+</TD>
+<TD ROWSPAN="1" COLSPAN="1">
+<P CLASS="TableauEntete">
+<a name="50499597_pgfId-1045914"></a>Base d&#8216;imposition hors taxes</P>
+</TD>
+<TD ROWSPAN="1" COLSPAN="1">
+<P CLASS="TableauEntete">
+<a name="50499597_pgfId-1045916"></a>Taux </P>
+</TD>
+</TR>
+<TR>
+<TD ROWSPAN="1" COLSPAN="1">
+<P CLASS="TableauCellule">
+<a name="50499597_pgfId-1045918"></a>Cigares, cigarillos, cigarettes, tabac &agrave; fumer, autres tabacs et succ&eacute;dan&eacute;s de tabacs,<FONT COLOR='#000000'> la cigarette &eacute;lectronique, les pipes et leurs parties, les pr&eacute;parations pour pipes, les produits et les mat&eacute;riels de la chicha et de la cigarette &eacute;lectronique</FONT></P>
+</TD>
+<TD ROWSPAN="1" COLSPAN="1">
+<P CLASS="TableauCellule">
+<a name="50499597_pgfId-1045920"></a>&nbsp;</P>
+<P CLASS="TableauCellule">
+<a name="50499597_pgfId-1063031"></a>&nbsp;</P>
+<P CLASS="TableauCellule">
+<a name="50499597_pgfId-1063033"></a>&nbsp;</P>
+<P CLASS="TableauCellule">
+<a name="50499597_pgfId-1063035"></a>&nbsp;</P>
+<P CLASS="TableauCellule">
+<a name="50499597_pgfId-1045921"></a>Prix de vente</P>
+</TD>
+<TD ROWSPAN="1" COLSPAN="1">
+<P CLASS="TableauCellule">
+<FONT COLOR='#000000'>41 %</FONT></P>
+</TD>
+</TR>
+</TABLE>
+<H6 CLASS="Modification">
+Loi n&deg; 89-1332 du 26 d&eacute;c. 1989, an. fiscale,Art. 17; loi n&deg; 95-05 du 11 janv. 1995, an. fiscale,Art. 6; loi n&deg; 2003-206 du 7 juillet 2003, an. fiscale,Art. 6; ord. n&deg; 2008-381 du 18            d&eacute;cembre 2008, an. fiscale,Art. 7-1/; loi n&deg; 2013-908 du 26 d&eacute;cembre 2013, an. fiscale,Art. 3-2; loi n&deg; 2014-861 du 22    d&eacute;cembre 2014, an. fiscale,Art.5-1&amp;2; loi n&deg; 2017-870 du 27 d&eacute;cembre 2017, an. fiscaleArt. 9; ord. n&deg; 2018-145 du 14      f&eacute;vrier 2018,Art. 2-3, loi n&deg; 2018 - 984 du 28  d&eacute;cembre 2018, an. fiscaleArt. 10; loi n&deg; 2019-1080 du 18 d&eacute;cembre 2019, an. fiscale,Art. 14 ; loi n&deg; 2020-972 du 23 d&eacute;c. 2020, an. fiscale, Art. 4-1; loi n&deg; 2021-899 du 21 d&eacute;c. 2021, an. fiscale,Art. 5-1 et Art. 5-2; loi n° 2022-974 du 20 déc. 2022, an. fiscale, art. 4.</H6>
+</DIV>
+<P CLASS="Sous-Section">
+IV. - Cartouches</P>
+<P CLASS="ParaText">
+Cartouche charg&eacute;e, douille amorc&eacute;e ou amorce : 12 francs</P>
+<H6 CLASS="Modification">
+</a>Loi n&deg; 70-209 du 20 mars 1970, an. fiscaleArt. 19.</H6>
+<P CLASS="Sous-Section">
+V. -  Marbres et v&eacute;hicules de tourisme dont la puissance est sup&eacute;rieure ou &eacute;gale &agrave; 13 chevaux.</P>
+<P CLASS="ParaText">
+Abrogeacute;</P>
+<H6 CLASS="Modification">
+Loi n&deg; 2017-870 du 27 d&eacute;cembre 2017, an. fiscaleArt. 40-1; ord. n&deg; 2018-145 du 14 f&eacute;vrier 2018,Art. 1.</H6>
+
+<P CLASS="Sous-Section">
+VI. -  Produits de parfumerie et cosm&eacute;tiques</P>
+<P CLASS="ParaText">
+Abrogeacute;</P>
+<H6 CLASS="Modification">
+Loi n&deg; 2017-870 du 27 d&eacute;cembre 2017, an. fiscaleArt. 40-2; ord. n&deg; 2018-145 du 14 f&eacute;vrier 2018,Art. 1.</H6>
+<P CLASS="Sous-Section">
+VII - Marbres, v&eacute;hicules de tourisme dont la puissance est sup&eacute;rieure ou &eacute;gale &agrave; 13 chevaux,<FONT COLOR='#000000'> produits de parfumerie et cosm&eacute;tiques.</FONT></P>
+<H6 CLASS="Modification"><FONT COLOR='#000000'>
+Loi n&deg; 2020-972 du 23 d&eacute;c. 2020, an. fiscale,Art. 26-1.</FONT></H6>
+<P CLASS="ParaText"><FONT COLOR='#000000'>
+<a name="50634770_pgfId-1047995"></a>Marbres : 10 %</FONT></P>
+<P CLASS="ParaText"><FONT COLOR='#000000'>
+<a name="50634770_pgfId-1047991"></a>V&eacute;hicules de tourisme dont la puissance est sup&eacute;rieure ou &eacute;gale &agrave; 13 chevaux : 10 %.</FONT></P>
+<H6 CLASS="Modification">
+<a name="50634770_pgfId-1048010"></a>Loi n&deg; 2018 - 984 du 28  d&eacute;cembre 2018, an. fiscaleArt. 9</H6>
+
+<P CLASS="ParaText"><FONT COLOR='#000000'> 
+Produits de beaut&eacute; et cosm&eacute;tiques :</FONT></P>
+<P CLASS="Liste2-Enumeree"><FONT COLOR='#000000'> 
+- les produits de beaut&eacute; ou de maquillage pr&eacute;par&eacute;s et pr&eacute;parations pour l&apos;entretien ou les soins de la peau, autres que les m&eacute;dicaments, y compris les pr&eacute;parations antisolaires et les pr&eacute;parations de bronzage, pour bain et douche et pr&eacute;parations pour manucure ou p&eacute;dicure ;</FONT></P>
+<P CLASS="Liste2-Enumeree"><FONT COLOR='#000000'> 
+- les pr&eacute;parations capillaires : shampoing, pr&eacute;parations pour l&apos;ondulation ou le d&eacute;frisage permanent, les laques pour cheveux et autres pr&eacute;parations destin&eacute;es &agrave; &ecirc;tre appliqu&eacute;es sur les cheveux telles que les brillances, les huiles, les pommades, les fixateurs, les teintures et les produits d&eacute;colorants pour cheveux, les rince-cr&egrave;mes ;</FONT></P>
+<P CLASS="Liste2-Enumeree"><FONT COLOR='#000000'> 
+- les parfums.</FONT></P>
+<P CLASS="ParaText"><FONT COLOR='#000000'> 
+Autres produits :</FONT></P>
+<P CLASS="Liste2-Enumeree"><FONT COLOR='#000000'> 
+- les produits d&apos;extension, ou de rajout de cheveux ;</FONT></P>
+<P CLASS="Liste2-Enumeree"><FONT COLOR='#000000'> 
+- les m&egrave;ches.</FONT></P>
+<P CLASS="ParaText">
+Le taux de la taxe est fix&eacute; &agrave; 10 %. Ce taux est port&eacute; &agrave; <FONT COLOR='#000000'>15 %</FONT> en ce qui concerne les produits de beaut&eacute; et cosm&eacute;tiques contenant de l&apos;hydroquinone.</P>
+<H6 CLASS="Modification">
+<a name="50499597_pgfId-1055159"></a>Loi n&deg; 2020-972 du 23 d&eacute;c. 2020, an. fiscale,Art. 26-1; loi n&deg; 2021-899 du 21 d&eacute;c. 2021, an. fiscale,Art. 5-3.</H6>
+<BR>
+<BR><BR><BR></div></span><finh23418>
+
+<span class="historique" ID="h24419">
+<div class="histText">
+
+<p>La base imposable est d&eacute;termin&eacute;e:</p>
+<p>1- Pour les champagnes, les vins, bi&egrave;res, cidres, boissons alcoolis&eacute;es, boissons non alcoolis&eacute;es et tabacs : d'apr&egrave;s le prix de vente sortie-usine, &agrave; l'exclusion de la taxe sur la valeur ajout&eacute;e.</p>
+<p>En ce qui concerne les tabacs, ce prix de vente ne peut &ecirc;tre inf&eacute;rieur &agrave; 15 000 francs.</p>
+<p>2-Pour les cartouches : d'apr&egrave;s le nombre de cartouches charg&eacute;es, douilles amorc&eacute;es ou amorces.</p>
+<p>3-Pour les produits import&eacute;s, la base imposable est d&eacute;termin&eacute;e d'apr&egrave;s la valeur taxable en douane augment&eacute;e de tous les droits et taxes de douane, &agrave; l'exclusion de la taxe sur la valeur ajout&eacute;e, major&eacute;e de 25 %.</p>
+<p>Les intrants import&eacute;s notamment le vin, ne sont pas compris dans la base imposable et ne supportent pas la majoration vis&eacute;e au paragraphe ci-dessus.</p>
+<p>Loi n&deg; 2020-972 du 23 d&eacute;c. 2020, an. fiscale,Art. 4-2.</p>
+<p>En ce qui concerne les tabacs import&eacute;s, la base imposable est d&eacute;termin&eacute;e d'apr&egrave;s la valeur taxable en douane, augment&eacute;e de tous les droits et taxes de douane, &agrave; l'exclusion de la taxe sur la valeur ajout&eacute;e.</p>
+<p>Cette valeur ne peut &ecirc;tre inf&eacute;rieure &agrave; :</p>
+<p>-15 000 francs les 1 000 cigarettes pour les produits fabriqu&eacute;s dans un Etat li&eacute; &agrave; la C&ocirc;te d'Ivoire par un accord d'union douani&egrave;re ;</p>
+<p>-20 000 francs les 1 000 cigarettes pour les produits fabriqu&eacute;s dans un Etat non li&eacute; &agrave; la C&ocirc;te d'Ivoire par un accord d'union douani&egrave;re.</p>
+<p>Loi n&deg; 68-612 du 31 d&eacute;c. 1968, an. fiscale,Art. 22-1&deg;; Ord. n&deg; 82-267 du 31 juil. 1982,Art. 2; loi n&deg; 94-201 du 8 avril 1994, an. fiscale,Art. 28; loi n&deg; 2003-206 du 7 juillet 2003, an. fiscale,Art. 2-2. Ord. n&deg; 2006-234 du 02 ao&ucirc;t 2006, an. fiscale,Art. 13. Ord. n&deg; 2007-488 du 31 mai 2007, an. fiscale,Art. 3-1; Ord. n&deg; 2008-381 du 18 d&eacute;cembre 2008, an. fiscale,Art. 7-2/; loi n&deg; 2013-908 du 26 d&eacute;cembre 2013, an. fiscale,Art. 3-3;loi n&deg; 2014-861 du 22 d&eacute;cembre 2014, an. fiscale,Art.5-3; loi n&deg; 2017-870 du 27 d&eacute;cembre 2017, an. fiscaleArt. 8.</p>
+<p>4- Pour les produits de beaut&eacute;, cosm&eacute;tiques et autres produits fabriqu&eacute;s en C&ocirc;te d&rsquo;Ivoire :d&rsquo;apr&egrave;s le prix de vente sortie-usine, &agrave; l&rsquo;exclusion de la taxe sur la valeur ajout&eacute;e.</p>
+<p>Loi n&deg; 2017-870 du 27 d&eacute;cembre 2017, an. fiscaleArt. 40-3; ord. n&deg; 2018-145 du 14 f&eacute;vrier 2018,Art. 1; loi n&deg; 2020-972 du 23 d&eacute;c. 2020, an. fiscale,Art. 26-2.</p>
+<BR><BR><BR></div></span><finh24419>
+
+<span class="historique" ID="h22418">
+<div class="histText">
+
+<BR> Art. 418 
+<BR>Le tableau ci-dessous &eacute;num&egrave;re les produits imposables et les taux qui leur sont applicables : 
+<BR> 
+<BR>D&eacute;signation des produits 
+<BR> 
+<BR>Loi n° 89-1332 du 26 d&eacute;c. 1989, an fiscale,Art. 16. 
+<BR> 
+<BR>I. - Boissons alcoolis&eacute;es 
+<BR> 
+<BR>1-Champagnes :40 %.
+<BR> 
+<BR>2-Vins ordinaires :35 %.
+<BR> 
+<BR>3-Vins mousseux et vins AC
+<BR>et assimil&eacute;s : 40 %.
+<BR> 
+<BR>4-Bi&egrave;res et cidres : 17 %.
+<BR> 
+<BR>5-Autres boissons alcoolis&eacute;es
+<BR>titrant moins de 35° d'alcool :40 %.
+<BR> 
+<BR>6-Autres boissons alcoolis&eacute;es
+<BR>titrant plus de 35° d'alcool :45 %.
+<BR> 
+<BR>Pour l'application des dispositions ci-dessus, les boissons obtenues &agrave; partir d'un m&eacute;lange d'alcool et de boisson sucr&eacute;e, dont la teneur en alcool n'exc&egrave;de pas 9°, sont consid&eacute;r&eacute;es comme des bi&egrave;res. 
+<BR> 
+<BR>Loi n° 2003-206 du 7 juillet 2003, an. fiscale,Art. 2 -1; loi n°2004-271 du 15 avril 2004, an. fiscale,Art. 14; ord. n° 2008-381 du 18 d&eacute;cembre 2008, an. fiscale,Art. 7-1/ ; loi n°2013-908 du 26 d&eacute;cembre 2013, an. fiscale,Art. 3-1; loi n° 2017-870 du 27 d&eacute;cembre 2017, an. fiscaleArt. 8-1; ord. n° 2018-145 du 14 f&eacute;vrier 2018,Art. 2-2.  
+<BR>II. - Boissons non alcoolis&eacute;es &agrave; l'exclusionde l'eau :
+<BR> 
+<BR>1- Boissons &eacute;nerg&eacute;tiques :14 %
+<BR> 
+<BR>2- Autres boissons non alcoolis&eacute;es :14 %.
+<BR> 
+<BR>Loi n° 2003-206 du 7 juillet 2003, an. fiscale,Art. 2 -1; loi n°2004-271 du 15 avril 2004, an. fiscale,Art. 13; Ord. n° 2008-381 du 18 d&eacute;cembre 2008, an. fiscale,Art. 7-1; Loi n° 2017-870 du 27 d&eacute;cembre 2017, an. fiscaleArt. 8-1; ord. n° 2018-145 du 14 f&eacute;vrier 2018,Art. 2-2.  
+<BR>III. - Tabacs  
+<BR> 
+<BR> 
+<BR> 
+<BR>Type de tabac
+<BR> 
+<BR> 
+<BR>Base d'imposition hors taxes
+<BR> 
+<BR> 
+<BR>Taux 
+<BR> 
+<BR> 
+<BR> 
+<BR> 
+<BR>Cigares, cigarillos, cigarettes, tabac &agrave; fumer, autres tabacs et succ&eacute;dan&eacute;s de tabacsPrix de vente
+<BR> 
+<BR> 
+<BR> 40 % 
+<BR> 
+<BR> 
+<BR> 
+<BR>Ord. n° 2008-381 du 18 d&eacute;cembre 2008, an. fiscale,Art. 7-1/; loi n° 2013-908 du 26 d&eacute;cembre 2013, an. fiscale,Art. 3-2;loi n° 2014-861 du 22 d&eacute;cembre 2014, an. fiscale,Art.5-1; loi n° 2017-870 du 27 d&eacute;cembre 2017, an. fiscaleArt. 9-1; ord. n° 2018-145 du 14 f&eacute;vrier 2018,Art. 2-3; loi n° 2018 - 984 du 28d&eacute;cembre 2018, an. fiscaleArt. 10
+<BR> 
+<BR>Abrog&eacute;. 
+<BR> 
+<BR>Loi n° 89-1332 du 26 d&eacute;c. 1989, an. fiscale,Art. 17; loi n° 95-05 du 11 janv. 1995, an. fiscale,Art. 6; loi n° 2003-206 du 7 juillet 2003, an. fiscale,Art. 6;loi n° 2014-861 du 22 d&eacute;cembre 2014, an. fiscale,Art.5-2. 
+<BR> 
+<BR>IV. - Cartouches 
+<BR> 
+<BR>Cartouche charg&eacute;e, douille amorc&eacute;e ou amorce : 12 francs 
+<BR> 
+<BR> Loi n° 70-209 du 20 mars 1970, an. fiscaleArt. 19. 
+<BR> 
+<BR>V. -Marbres et v&eacute;hicules de tourisme dont la puissance est sup&eacute;rieure ou &eacute;gale &agrave; 13 chevaux. 
+<BR> 
+<BR>Abrog&eacute; 
+<BR> 
+<BR>Loi n° 2017-870 du 27 d&eacute;cembre 2017, an. fiscaleArt. 40-1; ord. n° 2018-145 du 14 f&eacute;vrier 2018,Art. 1.  
+<BR>VI. -Produits de parfumerie et cosm&eacute;tiques 
+<BR> 
+<BR>Abrog&eacute; 
+<BR> 
+<BR>Loi n° 2017-870 du 27 d&eacute;cembre 2017, an. fiscaleArt. 40-2; ord. n° 2018-145 du 14 f&eacute;vrier 2018,Art. 1. VII - Marbres et v&eacute;hicules de tourisme dont la puissance est sup&eacute;rieure ou &eacute;gale ? 13 chevaux.Marbres : 10 %V&eacute;hicules de tourisme dont la puissance est sup&eacute;rieure ou &eacute;gale &agrave; 13 chevaux : 10 %.
+<BR> 
+<BR>Loi n° 2018 - 984 du 28d&eacute;cembre 2018, an. fiscaleArt. 9 
+<BR>
+<BR><BR><BR></div></span><finh22418>
+
+
+</div></div> <!-- wrapper -->
+	  <div id="articleList"><div id="contenu" style='height:auto; background-color:#FFFFCC'>&nbsp;</div>
+      </div><p>&nbsp;</p><p>&nbsp;</p><p>&nbsp;</p><p>&nbsp;</p><p>&nbsp;</p><p>&nbsp;</p><p>&nbsp;</p><p>&nbsp;</p><p>&nbsp;</p><p>&nbsp;</p>
+	  <p>&nbsp;</p><p>&nbsp;</p><p>&nbsp;</p><p>&nbsp;</p><p>&nbsp;</p><p>&nbsp;</p></BODY></HTML>
+	  

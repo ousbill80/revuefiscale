@@ -1,0 +1,39 @@
+reference_source: CGI 2026 — docs client 6/9/10 (propositions metier)
+date_effet: '2026-01-01'
+effets_croises: []
+a_confirmer:
+- date d effet 01/01/2026
+- valeurs issues docs client 6/9/10 — a valider metier
+formule_plafonnement: sans objet
+questions_generees:
+- id: q_distrib
+  texte: Distribution decidee / inscrite ?
+  type: booleen
+- id: q_irvm_due
+  texte: IRVM due ?
+  type: montant
+profils_applicables:
+- Entreprises au regime reel
+nature: sans_objet
+identifiant: IRVM-182-DISTRIB
+impot: IRVM
+reference_legale: CGI 2026, art. 180 a 189 — IRVM distributions
+comptes_declencheurs:
+- '457'
+- '455'
+- '11'
+condition_declenchement: (solde(457) > 0 ou solde(455) > 0) et reponse(q_distrib) = vrai
+conditions_fond: Distribution de resultats / dividendes ?
+resultat: reponse(q_irvm_due)
+niveau_risque: eleve
+cas_test:
+  soldes:
+    '457': '20000000'
+    '455': '0'
+    '11': '0'
+  agregats: {}
+  reponses:
+    q_distrib: true
+    q_irvm_due: '3000000'
+  declenche_attendu: true
+  montant_attendu: '3000000'

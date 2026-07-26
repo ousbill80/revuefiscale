@@ -1,0 +1,37 @@
+reference_source: CGI 2026 — docs client 6/9/10 (propositions metier)
+date_effet: '2026-01-01'
+effets_croises: []
+a_confirmer:
+- date d effet 01/01/2026
+- valeurs issues docs client 6/9/10 — a valider metier
+formule_plafonnement: sans objet
+questions_generees:
+- id: q_apprentissage
+  texte: Anomalie taxe apprentissage ?
+  type: booleen
+- id: q_montant
+  texte: Montant a signaler ?
+  type: montant
+profils_applicables:
+- Entreprises au regime reel
+nature: sans_objet
+identifiant: CE-143-APPRENTISSAGE
+impot: CE
+reference_legale: CGI 2026, art. 143 — taxe d apprentissage
+comptes_declencheurs:
+- '633'
+- '618'
+condition_declenchement: reponse(q_apprentissage) = vrai
+conditions_fond: Taxe d apprentissage / actions formation ?
+resultat: reponse(q_montant)
+niveau_risque: faible
+cas_test:
+  soldes:
+    '633': '1'
+    '618': '0'
+  agregats: {}
+  reponses:
+    q_apprentissage: true
+    q_montant: '100000'
+  declenche_attendu: true
+  montant_attendu: '100000'

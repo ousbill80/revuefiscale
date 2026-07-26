@@ -1,0 +1,50 @@
+---
+description: Conventions Python — typage, erreurs, base, contexte de tenant
+globs: ["**/*.py"]
+alwaysApply: false
+---
+
+# Python — conventions
+
+Python 3.12 · FastAPI · SQLAlchemy 2.0 · Pydantic v2 · pytest · ruff · mypy --strict.
+
+## Typage
+
+Annotations obligatoires partout. `mypy --strict` doit passer. Pas de `Any` sans commentaire
+justifiant pourquoi. Modèles Pydantic à toute frontière : API, contrat d'outil d'agent.
+
+## Contexte de tenant — la règle qui évite l'incident
+
+Toute route touchant le domaine abonné ouvre une transaction et pose le contexte avec
+**`SET LOCAL`**. Jamais `SET`. Un `SET` de session survit au recyclage de connexion du pool.
+
+Une fonction de dépôt qui accède à une table cloisonnée **ne prend pas `tenant_id` en paramètre** —
+c'est la base qui filtre. Si tu écris `WHERE tenant_id = ...` dans une requête applicative, tu as
+mal compris le modèle : le filtre applicatif s'oublie, la politique RLS non.
+
+## Erreurs
+
+Exceptions nommées, dérivées d'une base par domaine : `ErreurReferentiel`, `ErreurExpression`,
+`ErreurFiabilisation`, `ErreurAncrage`, `ErreurTenant`.
+
+**Jamais `except Exception: pass`.** Jamais de valeur par défaut silencieuse sur un calcul fiscal —
+une donnée manquante est une erreur explicite.
+
+## Base de données
+
+- Migrations versionnées, `up` **et** `down`. Une migration non réversible est refusée.
+- Jamais d'altération de type en place : nouvelle colonne, remplissage, suppression séparée.
+- Toute nouvelle table du domaine abonné : `tenant_id BIGINT NOT NULL`, RLS activée **et forcée**,
+  politique créée dans la même migration.
+- Index sur les clés d'accès : `(tenant_id, mission_id)`, `(article_id, date_effet, date_fin)`.
+- Pas de N+1. Une mission traite des milliers de lignes et déclenche des dizaines de règles.
+
+## Interdits
+
+`eval`, `exec`, `pickle` sur donnée externe · secret en dur · taux fiscal dans un `.py` ·
+`print` pour journaliser · `SET` au lieu de `SET LOCAL`.
+
+## Tests
+
+Chaque fonction publique a un test. Chaque règle a son cas dans `tests/regles/`. Chaque table
+cloisonnée a son test dans `tests/isolation/`.

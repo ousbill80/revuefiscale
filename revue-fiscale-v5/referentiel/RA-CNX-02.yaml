@@ -1,0 +1,37 @@
+reference_source: CGI 2026 — docs client 6/9/10 (propositions metier)
+date_effet: '2026-01-01'
+effets_croises: []
+a_confirmer:
+- date d effet 01/01/2026
+- valeurs issues docs client 6/9/10 — a valider metier
+formule_plafonnement: sans objet
+questions_generees:
+- id: q_ecart_taux
+  texte: Ecart taux effectif / normatif ?
+  type: booleen
+- id: q_montant
+  texte: Ecart a signaler ?
+  type: montant
+profils_applicables:
+- Entreprises au regime reel
+nature: sans_objet
+identifiant: RA-CNX-02
+impot: RA
+reference_legale: Revue analytique — Taux d impot effectif vs normatif (doc client 6)
+comptes_declencheurs:
+- '695'
+- '13'
+condition_declenchement: solde(695) > 0 et reponse(q_ecart_taux) = vrai
+conditions_fond: Taux d impot effectif vs normatif
+resultat: reponse(q_montant)
+niveau_risque: moyen
+cas_test:
+  soldes:
+    '695': '50000000'
+    '13': '200000000'
+  agregats: {}
+  reponses:
+    q_ecart_taux: true
+    q_montant: '5000000'
+  declenche_attendu: true
+  montant_attendu: '5000000'

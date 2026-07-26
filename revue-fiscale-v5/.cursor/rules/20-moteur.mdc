@@ -1,0 +1,50 @@
+---
+description: Moteur d'analyse — zone strictement déterministe, aucun LLM
+globs: ["backend/moteur/**", "backend/referentiel/**"]
+alwaysApply: false
+---
+
+# Moteur d'analyse — zone déterministe
+
+**Aucun appel LLM sous `backend/moteur/`.** Si tu penses en avoir besoin, remonte à la couche 6.
+
+## Cycle d'exécution
+
+```
+1. Sélection      profil + exercice + VERSION ÉPINGLÉE du référentiel
+2. Déclenchement  évaluation de la condition contre les soldes normalisés
+3. Questionnement critères non lisibles dans les comptes → questions typées
+4. Calcul         formule de plafonnement
+5. Propagation    graphe d'effets croisés, détection de cycle
+6. Journalisation règle, version, données lues, réponses, conclusion
+```
+
+**L'épinglage.** Une mission fige `version_referentiel_id` à son ouverture. Le moteur lit cette
+version-là, pas la dernière publiée. Sinon une mission ouverte lundi et close vendredi produit deux
+résultats différents — et la reproductibilité, qui est toute la promesse, disparaît.
+
+## Évaluation des expressions
+
+- **Jamais `eval` ni `exec`.** Analyse en arbre syntaxique, interpréteur dédié.
+- **Liste blanche** : `+ - * / min max abs`, comparaisons, `et ou non`, `solde(compte)`,
+  `agregat(nom)`, `reponse(id)`.
+- Expression invalide → échec **à la saisie** dans la console éditoriale, pas à l'exécution.
+- Division par zéro, compte absent, agrégat non défini → erreur nommée, jamais `None` silencieux.
+
+## Agrégats normalisés
+
+Déclarés une fois, référencés par nom. Jamais redéfinis localement.
+
+| Agrégat | Définition |
+|---|---|
+| `CA` | Comptes 701 à 707 (poste XB) |
+| `RESULTAT_AVANT_IMPOT` | XI + RS |
+| `BENEFICE_COMPTABLE` | Poste XI |
+| `FRAIS_GENERAUX` | Charges d'exploitation hors achats et dotations — **à figer** |
+
+## Rejouabilité
+
+Réexécuter une mission produit un **différentiel lisible**, jamais un écrasement. Rejouer avec la
+même version épinglée doit donner un résultat identique **au centime près**.
+
+Schéma : @docs/03-schema-donnees.md

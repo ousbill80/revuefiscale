@@ -1,0 +1,187 @@
+{
+  "lot": "cgi_2026_pistes_claires",
+  "source_document": "CGI-CI-2026-cgici.txt (cgici.com V2026, source_document_id=211)",
+  "texte_juridique": "CGI + LPF Côte d'Ivoire 2026 — extraction HTML cgici.com (brouillon éditorial, offset LPF)",
+  "rapport": "docs/21-cgi-vs-a-confirmer-v2.md",
+  "checklist": "docs/21-cgi-vs-a-confirmer-v2.md",
+  "avertissement": "Propositions sourcées CGI cgici — statut a_valider_humain. Aucune purge YAML auto. Seed = nouvelles pistes seulement.",
+  "pistes": [
+    {
+      "piste_id": "C1-18G-DONS-taux",
+      "entree_id": "BIC-CHG-18G-DONS#0",
+      "rule_id": "BIC-CHG-18G-DONS",
+      "categorie_mention": "taux",
+      "article_corpus": "18",
+      "extrait_cgi": "La valeur des dons et libéralités consentis est déductible dans la double limite de 2,5 % du chiffre d'affaires et de 200 millions de francs par an.",
+      "suggestion": "Croiser le taux seed 2,5 % avec la double limite art. 18 G). Ne pas purger la date #2 sur ce seul passage.",
+      "suggestion_valeur": "0.025 (2,5 % du CA — à valider avec plafond 200 M)",
+      "interdiction": "Ne pas retirer a_confirmer sans visa fiscaliste + lecture intégrale 18 G).",
+      "statut_editorial": "a_valider_humain",
+      "suggestion_structuree": {
+        "champ": null,
+        "valeur": "0.025 (2,5 % du CA — à valider avec plafond 200 M)",
+        "index_a_confirmer": 0,
+        "entree_id": "BIC-CHG-18G-DONS#0",
+        "retirer_a_confirmer_autorise": false,
+        "article_corpus": "18",
+        "extrait": "La valeur des dons et libéralités consentis est déductible dans la double limite de 2,5 % du chiffre d'affaires et de 200 millions de francs par an."
+      },
+      "classe_croisement": "claire"
+    },
+    {
+      "piste_id": "C1-18G-DONS-seuil",
+      "entree_id": "BIC-CHG-18G-DONS#1",
+      "rule_id": "BIC-CHG-18G-DONS",
+      "categorie_mention": "seuil",
+      "article_corpus": "18",
+      "extrait_cgi": "… double limite de 2,5 % du chiffre d'affaires et de 200 millions de francs par an.",
+      "suggestion": "Croiser le plafond seed 200 000 000 FCFA avec « 200 millions de francs par an ». Exceptions bourses d'études : lire la suite de l'alinéa.",
+      "suggestion_valeur": "200000000",
+      "interdiction": "Ne pas purger sans vérifier le périmètre des organismes éligibles (liste G).",
+      "statut_editorial": "a_valider_humain",
+      "suggestion_structuree": {
+        "champ": null,
+        "valeur": "200000000",
+        "index_a_confirmer": 1,
+        "entree_id": "BIC-CHG-18G-DONS#1",
+        "retirer_a_confirmer_autorise": false,
+        "article_corpus": "18",
+        "extrait": "… double limite de 2,5 % du chiffre d'affaires et de 200 millions de francs par an."
+      },
+      "classe_croisement": "claire"
+    },
+    {
+      "piste_id": "C2-18A4-ADMIN-seuil",
+      "entree_id": "BIC-CHG-18A4-ADMIN#1",
+      "rule_id": "BIC-CHG-18A4-ADMIN",
+      "categorie_mention": "seuil",
+      "article_corpus": "18",
+      "extrait_cgi": "Les indemnités de fonction allouées aux administrateurs des sociétés anonymes […] sont déductibles dans la limite de 3 000 000 de francs par an et par bénéficiaire.",
+      "suggestion": "Le plafond 3 000 000 apparaît sous art. 18 A) 4°. Lire les exceptions PDG / missions avant purge.",
+      "suggestion_valeur": "3000000",
+      "interdiction": "Ne pas étendre le plafond aux rémunérations explicitement exclues par l'alinéa.",
+      "statut_editorial": "a_valider_humain",
+      "suggestion_structuree": {
+        "champ": null,
+        "valeur": "3000000",
+        "index_a_confirmer": 1,
+        "entree_id": "BIC-CHG-18A4-ADMIN#1",
+        "retirer_a_confirmer_autorise": false,
+        "article_corpus": "18",
+        "extrait": "Les indemnités de fonction allouées aux administrateurs des sociétés anonymes […] sont déductibles dans la limite de 3 000 000 de francs par an et par bénéficiaire."
+      },
+      "classe_croisement": "claire"
+    },
+    {
+      "piste_id": "C3-18A6-SOUSCAP-taux",
+      "entree_id": "BIC-CHG-18A6-SOUSCAP#3",
+      "rule_id": "BIC-CHG-18A6-SOUSCAP",
+      "categorie_mention": "taux",
+      "article_corpus": "18",
+      "extrait_cgi": "le taux des intérêts servis ne peut excéder le taux moyen des avances de la BCEAO pratiqué au titre de l'année en cours, majoré de deux points",
+      "suggestion": "La mention seed « BCEAO + 2 » a une citation sous 18 A) 6°. Laisser les bloqueurs assiette 30 % / autres limites (#1, #2) hors purge.",
+      "suggestion_valeur": "BCEAO + 2 points (taux — pas l'assiette)",
+      "interdiction": "Ne pas purger les a_confirmer agregat/bloqueur sur la seule citation du taux.",
+      "statut_editorial": "a_valider_humain",
+      "suggestion_structuree": {
+        "champ": null,
+        "valeur": "BCEAO + 2 points (taux — pas l'assiette)",
+        "index_a_confirmer": 3,
+        "entree_id": "BIC-CHG-18A6-SOUSCAP#3",
+        "retirer_a_confirmer_autorise": false,
+        "article_corpus": "18",
+        "extrait": "le taux des intérêts servis ne peut excéder le taux moyen des avances de la BCEAO pratiqué au titre de l'année en cours, majoré de deux points"
+      },
+      "classe_croisement": "claire"
+    },
+    {
+      "piste_id": "C4-108-HONORAIRES-seuil",
+      "entree_id": "OBL-108-HONORAIRES#1",
+      "rule_id": "OBL-108-HONORAIRES",
+      "categorie_mention": "seuil",
+      "article_corpus": "108",
+      "extrait_cgi": "… lorsqu'elles dépassent 50 000 francs par an pour un même bénéficiaire ; … sommes dépassant 10000 francs par an (droits d'auteur / inventeur, §2°).",
+      "suggestion": "Les seuils 50 000 / 10 000 apparaissent dans l'art. 108 CGI. La note 002/MFB/DGI-DLCD n'est pas dans ce corpus — à déposer séparément si requise.",
+      "suggestion_valeur": "50000 / 10000",
+      "interdiction": "Ne pas inventer le contenu de la note DGI absente.",
+      "statut_editorial": "a_valider_humain",
+      "suggestion_structuree": {
+        "champ": null,
+        "valeur": "50000 / 10000",
+        "index_a_confirmer": 1,
+        "entree_id": "OBL-108-HONORAIRES#1",
+        "retirer_a_confirmer_autorise": false,
+        "article_corpus": "108",
+        "extrait": "… lorsqu'elles dépassent 50 000 francs par an pour un même bénéficiaire ; … sommes dépassant 10000 francs par an (droits d'auteur / inventeur, §2°)."
+      },
+      "classe_croisement": "claire"
+    },
+    {
+      "piste_id": "C5-36BIS-CBCR-seuil",
+      "entree_id": "OBL-36BIS-CBCR#2",
+      "rule_id": "OBL-36BIS-CBCR",
+      "categorie_mention": "seuil",
+      "article_corpus": "36 bis",
+      "extrait_cgi": "chiffre d'affaires hors taxes consolidé égal ou supérieur à 250 000 000 000 de francs",
+      "suggestion": "Seuil 250 Md présent dans art. 36 bis. Ne pas confirmer la date seed ni les valeurs client (#0, #1) sur ce seul alinéa.",
+      "suggestion_valeur": "250000000000",
+      "interdiction": "Ne pas purger date / hors_perimetre sans analyse séparée.",
+      "statut_editorial": "a_valider_humain",
+      "suggestion_structuree": {
+        "champ": null,
+        "valeur": "250000000000",
+        "index_a_confirmer": 2,
+        "entree_id": "OBL-36BIS-CBCR#2",
+        "retirer_a_confirmer_autorise": false,
+        "article_corpus": "36 bis",
+        "extrait": "chiffre d'affaires hors taxes consolidé égal ou supérieur à 250 000 000 000 de francs"
+      },
+      "classe_croisement": "claire"
+    },
+    {
+      "piste_id": "C6-18A3-FRAISSIEGE-contraste",
+      "entree_id": "BIC-CHG-18A3-FRAISSIEGE#2",
+      "rule_id": "BIC-CHG-18A3-FRAISSIEGE",
+      "categorie_mention": "taux",
+      "article_corpus": "18",
+      "extrait_cgi": "3°- Le salaire du conjoint de l'exploitant individuel […] (pas de 5 %/20 %). 5°- […] La déduction est plafonnée à 5 % du chiffre d'affaires dans la limite de 20 % des frais généraux de l'entreprise débitrice. « frais de siège » : 0 occurrence littérale dans art. 18.",
+      "suggestion": "Contraste : le plafond 5 %/20 % est sous 18 A) 5° (proche BIC-CHG-18A5-INTERETS), pas sous 3°. Réaligner libellé / fiche avant toute purge. Ne pas affirmer que le 3° « confirme » le taux seed.",
+      "suggestion_valeur": null,
+      "interdiction": "Interdit de purger BIC-CHG-18A3-FRAISSIEGE#2 en citant le 5° comme s'il était le 3°.",
+      "statut_editorial": "a_valider_humain",
+      "suggestion_structuree": {
+        "champ": null,
+        "valeur": null,
+        "index_a_confirmer": 2,
+        "entree_id": "BIC-CHG-18A3-FRAISSIEGE#2",
+        "retirer_a_confirmer_autorise": false,
+        "article_corpus": "18",
+        "extrait": "3°- Le salaire du conjoint de l'exploitant individuel […] (pas de 5 %/20 %). 5°- […] La déduction est plafonnée à 5 % du chiffre d'affaires dans la limite de 20 % des frais généraux de l'entreprise débitrice. « frais de siège » : 0 occurrence littérale dans art. 18."
+      },
+      "classe_croisement": "contraste"
+    },
+    {
+      "piste_id": "X-BIC-CHG-18A6-SOUSCAP-1",
+      "entree_id": "BIC-CHG-18A6-SOUSCAP#1",
+      "rule_id": "BIC-CHG-18A6-SOUSCAP",
+      "categorie_mention": "agregat",
+      "classe_croisement": "contraste",
+      "article_corpus": "18",
+      "extrait_cgi": "- le montant total des intérêts servis au titre des sommes susvisées ne peut excéder 30 % du résultat de l'entreprise avant impôt, intérêts, dotations aux amortissements sur i",
+      "suggestion": "chiffre présent dans l'article allégué, mais mention bloqueur (assiette / agrégat à figer) — pas une piste claire de purge",
+      "suggestion_valeur": "0.3",
+      "suggestion_structuree": {
+        "champ": null,
+        "valeur": "0.3",
+        "index_a_confirmer": 1,
+        "entree_id": "BIC-CHG-18A6-SOUSCAP#1",
+        "retirer_a_confirmer_autorise": false,
+        "source_document_id": 211,
+        "article_corpus": "18",
+        "extrait": "- le montant total des intérêts servis au titre des sommes susvisées ne peut excéder 30 % du résultat de l'entreprise avant impôt, intérêts, dotations aux amortissements sur i"
+      },
+      "interdiction": "Interdit de purger sur un contraste / faux ami.",
+      "statut_editorial": "a_valider_humain"
+    }
+  ]
+}

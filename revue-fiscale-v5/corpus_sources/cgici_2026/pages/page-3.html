@@ -1,0 +1,1183 @@
+<!DOCTYPE HTML><HTML><HEAD><META HTTP-EQUIV="Content-Type" CONTENT="text/html; charset=UTF-8">
+<TITLE>Code des impots -3</TITLE><LINK REL="STYLESHEET" HREF="/cicgi.css" CHARSET="ISO-8859-1" TYPE="text/css">
+<style type="text/css">
+body {margin-left: 5px;	margin-top: 0px; margin-right: .5em;margin-bottom: 0px;background-color:#fafafa ;}
+.Liste-Numerote {font-size: 12pt;font-weight: regular;font-style: italic;color: #000000;text-transform: none;margin-left:8px ;margin-bottom:8px ;margin-top:4px ;margin-right:10px ;font-family:Georgia, "Times New Roman", Times, serif}
+li {list-style-type: none; margin-left:0px ; padding-left:0em ; }
+.Paratext {font-size: 12pt;font-weight: regular;font-style: italic;color: #000000;text-decoration: none;vertical-align: baseline;text-transform: none;margin-left:0px ;font-family:Georgia, "Times New Roman", Times, serif}
+.Normal {font-size: 12pt;font-weight: regular;font-style: italic;color: #000000;text-decoration: none;vertical-align: baseline;text-transform: none;margin-left:0px ;font-family:Georgia, "Times New Roman", Times, serif}
+ul {list-style-type: none; margin-left:0px ; padding-left:0em ;  }
+.Liste2-Enumeree {font-size: 12pt;font-weight: regular;font-style: italic;color: #000000;text-decoration: none;vertical-align: baseline;text-transform: none;list-style-type:none ;margin-left:16px ;margin-bottom:8px;margin-right:10px;font-family:Georgia, "Times New Roman", Times, serif}
+P.Liste2-Enumeree {font-size: 12pt;font-weight: regular;font-style: italic;color: #000000;text-decoration: none;vertical-align: baseline;text-transform: none;list-style-type:none ;margin-left:16px ;margin-bottom:8px;margin-right:10px;font-family:Georgia, "Times New Roman", Times, serif}
+.Entete {font-size: 13pt;font-weight: regular;font-style: italic;color:#000000 ;text-decoration: none;vertical-align: baseline;text-transform: none;margin-left:8px ;font-family:Georgia, "Times New Roman", Times, serif}
+table, TABLE {border-width:1px; width:99% ;border-collapse:collapse;border-color: #9ecaed;box-shadow: 0 0 10px #9ecaed;}
+tr,td {text-align:left;vertical-align:bottom;border:1px solid #9ecaed;padding:.2em;marging-left:.2em}
+th, TH{text-align:center;vertical-align:middle;padding:.2em;}
+P.TableauEntete {font-size: 13pt;font-weight: regular;font-style: italic;color: #000000;font-family:Georgia, "Times New Roman"}
+P.TableauCelluleLeft, P.TableauCellule {text-align:right;margin-right:1em;font-size: 13pt;font-weight: regular;font-style: italic;color: #000000;font-family:Georgia, "Times New Roman"}
+P.TableauCelluleRight {text-align:left;margin-left:1em;font-size: 13pt;font-weight: regular;font-style: italic;color: #000000;font-family:Georgia, "Times New Roman"}
+.ui-buttonh {padding: .1em .1em ; border: 1px solid #dadada;border-radius: 4px; box-shadow: 0 0 4px #9ecaed;color:#FF3300 ;margin-left:8px ;margin-right:8px ;margin-bottom:2px ;margin-top:2px ;text-decoration:none ;font-size:12pt ;font-family:"Times New Roman"}   
+.ui-button {padding: .1em .1em ; border: 1px solid #dadada;border-radius: 4px; box-shadow: 0 0 4px #9ecaed;color:#FF3300 ;margin-left:8px ;margin-right:8px ;margin-bottom:2px ;margin-top:2px ;text-decoration:none ;font-size:12pt ;font-family:"Times New Roman"}   
+H3 {display: block;text-align: center;text-indent: 0pt;margin-top: 10pt;margin-bottom: 10pt;margin-right: 10pt;margin-left: 10pt;font-size: 12pt;font-weight: Bold;font-style: Regular;color: #00A000;text-decoration: none;vertical-align: baseline;text-transform: none;font-family: "Times New Roman";}
+H4 {display: block;text-align: left;text-indent: 0pt;margin-top: 10pt;margin-bottom: 6pt;margin-right: 10pt;margin-left: 10pt;font-size: 12pt;font-weight: Bold;font-style: Regular;color: #000000;text-decoration: none;vertical-align: baseline;text-transform: none;font-family: "Times New Roman";}
+H5 {display: block;text-align: left;text-indent: 0pt;margin-top: 10pt;margin-bottom: 6pt;margin-right: 10pt;margin-left: 10pt;font-size: 11pt;font-weight: Bold;font-style: Regular;color: #000000;text-decoration: none;vertical-align: baseline;text-transform: none;font-family: "Times New Roman";}
+H6.NoArticle {display: block;text-align: left;text-indent: 0pt;margin-top: 14pt;margin-bottom: 0pt;margin-right: 0pt;margin-left: 0pt;font-size: 14pt;font-weight: regular;font-style: Regular;color: #00a000;text-decoration: none;vertical-align: baseline;text-transform: none;font-family: "Times New Roman";}
+H2 {text-align:center;font-size:16pt;font-family:Georgia, "Times New Roman", Times, serif}
+P.ParaText {font-size: 12pt;font-weight: regular;font-style: italic;color: #000000;	text-decoration: none;vertical-align: baseline;text-transform: none;font-family:Georgia, "Times New Roman", Times, serif;}
+H2.Section,P.Section {font-size:12pt;font-weight:bold;font-style:Regular;color:#008000;font-family:Georgia,"Times New Roman"}
+P.Paragraphe, p.Paragraphe {Text-Align:center;Text-decoration:none;font-size:12pt;font-weight:bold;font-style:Normal;color:#00A000;font-family:Georgia,"Times New Roman"}
+H2.Livre,P.Livre {text-align:center;font-size:16pt;font-weight:bold;font-style:Regular;color:#008000;font-family:Georgia,"Times New Roman"}
+P.Partie,H2.Partie,P.TitreSub {text-align:center;font-size:14pt;font-weight:bold;font-style:Regular;color:#008000;font-family:Georgia,"Times New Roman"}
+H2.ChapitreNo,H2.TitreNo {text-align:center;font-size:14pt;font-weight:bold;font-style:Regular;color:#008000;font-family:Georgia,"Times New Roman"}
+H2.Chapitre, h2.Chapitre {text-align:center;font-size:14pt;font-weight:bold;font-style:Regular;color:#008000;font-family:Georgia,"Times New Roman"}
+H2.TitreNo {text-align:center;font-size:14pt;font-weight:bold;font-style:Regular;color:#008000;font-family:Georgia,"Times New Roman"}
+h3.Sous-Section, H3.Sous-Section, h3.Sous-section, h2.Section {font-size:12pt;font-weight:bold;font-style:Italic;color:#008000;font-family:Georgia,"Times New Roman"}
+hr,HR { display: block; width:90%;  margin-top: 0.5em; margin-bottom: 0.5em; margin-left: auto;  margin-right: auto;  border-style: inset; border-width: 1px;}
+P.TitreSub {text-align:center;font-size:14pt;font-weight:bold;font-style:Regular;color:#008000;font-family:Georgia,"Times New Roman"}
+.Reference {display: block;text-align: left;text-indent: 0pt;margin-top: 10pt;margin-bottom: 6pt;margin-right: 10pt;margin-left: 10pt;font-size: 14pt;font-weight: Bold;font-style: Regular;color: #7F5434;text-decoration: none;vertical-align: baseline;text-transform: none;font-family: "Times New Roman";}
+.ludwig,blockquote {padding-left:1em;background-color:#fafafa;font-size:12pt;font-weight:100;font-style:italic;}
+#articleList {position:absolute ;	z-index: 1 ;left: 10px ;top: 80px ;height:340px;width: 620px;border: 2px solid #cacaca ;border-radius: 5px ;background-color:#fafafa ;    box-shadow: 0 0 12px #333333;	margin-left:0px ;	padding: .3em .3em ;		overflow:hidden ;	visibility:hidden ;  }			
+#articleList h3 { text-align: center; margin: 0; }		
+
+.historique {
+  display:none ;
+  padding: .1em .3em ;
+  border: solid 2px #dadada;
+  border-radius: 7px;
+  box-shadow: 0 0 5px #9ecaed;  
+  
+}
+.histText {
+    display: block;
+    font-family: ;"Times New Roman"
+	padding: .1em .3em ;
+    margin: 1em 0px;
+	font-style:italic;
+	color:#000000;
+	overflow:auto;
+}
+.highlight {
+  font-weight:bold ;
+  color:#000000 ;
+  background-color:#FFFFCC ;
+  }
+.articleList-scroll {
+	overflow-x:hidden ;
+	overflow-y:scroll ;
+	scrollbar-width:thin ;
+	scrollbar-color:blue orange ;
+}
+
+#contenu {
+	overflow-x:hidden ;
+    overflow-y:scroll ;
+	scrollbar-width:thin ;
+	scrollbar-color:blue orange ;
+}		
+
+table, TABLE {
+ text-align:center; 
+    margin-left:.5em; 
+    margin-right:.5em; 
+    border:1px solid #000000;	
+	border-collapse:collapse ;
+    border-color: #9ecaed;
+    box-shadow: 0 0 10px #9ecaed;
+	
+   }
+  tr,td {text-align:left;}
+  
+
+
+ </style>
+ 
+<script src="/js/iscroll.js"></script>
+<script src="/js/jquery.js"></script>   
+<script src="/js/jquery-ui-1.10.3.custom.js"></script>    	    
+<script src="/js/jquery.ui.draggable.js" type="text/javascript"></script>			
+<script src="/js/jquery.ui.core.js"></script> 			
+<script src="/js/jquery.ui.widget.js"></script>			
+<script src="/js/jquery.ui.position.js"></script>			
+<script src="/js/jquery.ui.menu.js"></script>    		
+<script type="text/javascript" src="./xpages.js"></script>
+/* VERSION POUR PAGE HTML SUR SITE DGI.CGICI.COM */
+<script language="javascript">
+ function showButton(id) {
+    var x = document.getElementById(id) ;
+	if(x.style.display === "none") {
+	   x.style.display = "block" ;
+	  } else {
+	   x.style.display = "none" ;
+	   }
+	 }   
+	 var pagenumber="003";
+function loadpage(page, art) {
+      showHideHistoric(art);
+	  return false;
+	  } 
+function loadArticle(page, art) { var artno = art ;var pgno=page;scrolltoelementTag(pgno,artno) ;return false ;} 
+
+</script>
+</HEAD>
+<BODY><div ID="wrapper"><div ID="scroller">
+
+
+<H2 CLASS="Section">
+Section III - B&eacute;n&eacute;fices imposables</H2>
+<span id="#A0013"></span>
+<H6 CLASS="NoArticle">
+Art. 13</H6>
+<P CLASS="ParaText">
+A compter des exercices ouverts apr&egrave;s le 30 juin 1996, les contribuables ne sont pas autoris&eacute;s &agrave; clore leurs exercices comptables &agrave; une date autre que celle du 31 d&eacute;cembre de chaque ann&eacute;e, sauf en cas de cession ou de cessation en cours d&apos;ann&eacute;e.</P>
+
+<H6 CLASS="Modification">
+Loi n&deg;- 86-1383 du 19 d&eacute;c. 1986, an. fiscale,Art. 5; loi n&deg;- 96-238 du 13 mars 1996, an. fiscale,Art. 30-2&deg;-; ord. n&deg;- 97-478 du 4 sept. 1997,Art. 1-I.</H6>
+<P CLASS="ParaText">
+Les contribuables qui commencent leur activit&eacute; entre le 1er juillet et le 31 d&eacute;cembre sont autoris&eacute;s &agrave; arr&ecirc;ter leur premier exercice le 31 d&eacute;cembre de l&apos;ann&eacute;e suivante.</P>
+
+
+<H6 CLASS="Modification">
+Ord. n&deg;- 2000-252 du 28 mars 2000Art. 16-7&deg;-.</H6>
+
+
+<span id="#A0014"></span>
+<H6 CLASS="NoArticle">
+Art. 14</H6>
+<P CLASS="ParaText">
+Sous r&eacute;serve de la d&eacute;duction des revenus mobiliers pr&eacute;vus &agrave; l&apos;article <a class='ui-button' href='' onClick="loadArticle('003','0021');return false;">21</a> ci-apr&egrave;s, le b&eacute;n&eacute;fice imposable est le b&eacute;n&eacute;fice net, d&eacute;termin&eacute; d&apos;apr&egrave;s les r&eacute;sultats d&apos;ensemble des op&eacute;rations de toute nature effectu&eacute;es par les entreprises, y compris notamment les cessions d&apos;&eacute;l&eacute;ments quelconques de l&apos;actif, soit en cours, soit en fin d&apos;exploitation.</P>
+
+<span id="#A0015"></span>
+<H6 CLASS="NoArticle">
+Art. 15</H6>
+<P CLASS="ParaText">
+Le b&eacute;n&eacute;fice net est constitu&eacute; par la diff&eacute;rence entre les valeurs de l&apos;actif net &agrave; la cl&ocirc;ture et &agrave; l&apos;ouverture de la p&eacute;riode dont les r&eacute;sultats doivent servir de base &agrave; l&apos;imp&ocirc;t, diminu&eacute;e des suppl&eacute;ments d&apos;apport et augment&eacute;e des pr&eacute;l&egrave;vements effectu&eacute;s au cours de cette p&eacute;riode par l&apos;exploitant ou par les associ&eacute;s. L&apos;actif net s&apos;entend de l&apos;exc&eacute;dent des valeurs d&apos;actif sur le total form&eacute; au passif par les cr&eacute;ances des tiers, les amortissements et les provisions justifi&eacute;s.</P>
+
+<span id="#A0016"></span>
+<H6 CLASS="NoArticle">
+Art. 16</H6>
+<P CLASS="ParaText">
+Les stocks doivent &ecirc;tre &eacute;valu&eacute;s au prix de revient ou au cours du jour de la cl&ocirc;ture de l&apos;exercice, si ce cours est inf&eacute;rieur au prix de revient.</P>
+<P CLASS="ParaText">
+Les travaux en cours sont &eacute;valu&eacute;s au prix de revient.</P>
+
+<span id="#A0017"></span>
+<H6 CLASS="NoArticle">
+Art. 17</H6>
+<P CLASS="ParaText">
+Les &eacute;carts de conversion des devises ainsi que des cr&eacute;ances et dettes libell&eacute;es en monnaies &eacute;trang&egrave;res par rapport aux montants initialement comptabilis&eacute;s sont d&eacute;termin&eacute;s &agrave; la cl&ocirc;ture de chaque exercice en fonction du dernier cours de change et pris en compte pour la d&eacute;termination du r&eacute;sultat imposable de l&apos;exercice.</P>
+
+<H6 CLASS="Modification">
+Loi n&deg;- 95-05 du 11 janv. 1995, an. fiscale,Art. 15.</H6>
+
+<span id="#A0018"></span>
+<H6 CLASS="NoArticle">
+Art. 18 &nbsp;&nbsp;&nbsp;&nbsp;<a href="#" onClick="loadpage('003','h2518');return false;" class="ui-button"  title="Consultez l'historique">2025...</a>
+&nbsp;&nbsp;&nbsp;&nbsp;<a href="#" onClick="loadpage('003','h2318');return false;" class="ui-button"  title="Consultez l'historique">2023...</a>
+</H6>
+<P CLASS="ParaText">
+Le b&eacute;n&eacute;fice net est &eacute;tabli sous d&eacute;duction de toutes charges, celles-ci comprenant notamment :</P>
+
+<H2 CLASS="Section">
+A)</H2>
+<P CLASS="Liste2-Enumeree">
+1&deg;- Les frais g&eacute;n&eacute;raux de toute nature, le loyer des immeubles dont l&apos;entreprise est locataire, les r&eacute;mun&eacute;rations &agrave; titre de d&eacute;penses de personnel et de main-d&apos;&#339;uvre. Toutefois, ces r&eacute;mun&eacute;rations ne sont admises en d&eacute;duction que dans la mesure o&ugrave; elles correspondent &agrave; un travail effectif et ne sont pas excessives eu &eacute;gard &agrave; l&apos;importance du service rendu. Cette disposition s&apos;applique &agrave; toutes les r&eacute;mun&eacute;rations directes ou indirectes, y compris les indemnit&eacute;s, allocations, avantages en nature et remboursement de frais.</P>
+<P CLASS="Liste2-Enumeree">
+2&deg;-   Les appointements que les exploitants individuels pr&eacute;l&egrave;vent sur leurs recettes professionnelles &agrave; titre de r&eacute;mun&eacute;ration de leur travail personnel sont exclus des charges d&eacute;ductibles. Il en est de m&ecirc;me des d&eacute;penses expos&eacute;es dans l&apos;int&eacute;r&ecirc;t personnel de l&apos;exploitant.</P>
+<P CLASS="Liste2-Enumeree">
+3&deg;- Le salaire du conjoint de l&apos;exploitant individuel peut, &agrave; la demande du contribuable, &ecirc;tre d&eacute;duit du b&eacute;n&eacute;fice imposable, dans la mesure o&ugrave; il correspond &agrave; un travail effectif, et n&apos;est pas excessif eu &eacute;gard &agrave; l&apos;importance du service rendu, &agrave; la condition qu&apos;il soit justifi&eacute; que ce salaire a donn&eacute; lieu aux pr&eacute;l&egrave;vements sociaux et fiscaux en vigueur.</P>
+
+<H6 CLASS="Modification">
+Loi n&deg;- 84-1367 du 26 d&eacute;c. 1984, an. fiscale,Art. 4.</H6>
+<P CLASS="Liste2-Enumeree">
+4&deg;- Les indemnit&eacute;s de fonction allou&eacute;es aux administrateurs des soci&eacute;t&eacute;s anonymes, dont le montant est fix&eacute; par l&apos;assembl&eacute;e g&eacute;n&eacute;rale ordinaire desdites soci&eacute;t&eacute;s, sont d&eacute;ductibles dans la limite de 3 000 000 de francs par an et par b&eacute;n&eacute;ficiaire.</P>
+
+
+<H6 CLASS="Modification">
+Ord. n&deg;- 2011-480 du 28 d&eacute;cembre 2011Art. 11.</H6>
+<P CLASS="Liste2-Enumeree">
+Ces limites ne sont pas applicables, selon le cas, aux r&eacute;mun&eacute;rations permanentes et indemnit&eacute;s de fonctions allou&eacute;es au pr&eacute;sident directeur g&eacute;n&eacute;ral et au directeur g&eacute;n&eacute;ral adjoint, ou au pr&eacute;sident du conseil d&apos;administration et au directeur g&eacute;n&eacute;ral, ou &agrave; l&apos;administrateur g&eacute;n&eacute;ral adjoint, ainsi qu&apos;aux r&eacute;mun&eacute;rations exceptionnelles allou&eacute;es par le conseil d&apos;Administration &agrave; ses membres pour des missions et mandats qui leur sont confi&eacute;s, et aux remboursements de frais et d&eacute;penses engag&eacute;s dans l&apos;int&eacute;r&ecirc;t de la soci&eacute;t&eacute; et autoris&eacute;s par le conseil d&apos;administration .</P>
+
+
+<H6 CLASS="Modification">
+Ord. n&deg;- 2000-252 du 28 mars 2000, Art. 15-1&deg;-.</H6>
+<P CLASS="Liste2-Enumeree">
+5&deg;- <FONT COLOR='#000000'>
+Les int&eacute;r&ecirc;ts, arr&eacute;rages et autres produits des obligations, cr&eacute;ances, d&eacute;p&ocirc;ts et cautionnements </FONT>, les redevances de cession ou concession de licence d&apos;exploitation, de brevets d&apos;invention, de marques de fabrique, proc&eacute;d&eacute;s ou formules de fabrication et autres droits analogues ou les r&eacute;mun&eacute;rations de services de toute nature pay&eacute;s ou dus entre entreprises ivoiriennes appartenant au m&ecirc;me groupe.</P>
+<H6 CLASS="Modification"><FONT COLOR='#000000'>
+Loi n&deg; 2020-972 du 23 d&eacute;c. 2020, an. fiscale,Art. 1-1.</FONT></H6>
+<P CLASS="Liste2-Enumeree">
+Les sommes vers&eacute;es ne sont admises comme charges d&eacute;ductibles pour l&apos;&eacute;tablissement de l&apos;imp&ocirc;t que si le d&eacute;biteur apporte la preuve que ces d&eacute;penses correspondent &agrave; des op&eacute;rations r&eacute;elles et qu&apos;elles ne pr&eacute;sentent pas un caract&egrave;re anormal ou exag&eacute;r&eacute;.</P>
+<P CLASS="Liste2-Enumeree">
+La d&eacute;duction est plafonn&eacute;e &agrave; 5 % du chiffre d&apos;affaires dans la limite de 20 % des frais g&eacute;n&eacute;raux de l&apos;entreprise d&eacute;bitrice.</P>
+
+<H6 CLASS="Modification">
+Loi n&deg;-2004-271 du 15 avril 2004, an. fiscale,Art. 18.</H6>
+<P CLASS="Liste2-Enumeree">
+6&deg;- Les int&eacute;r&ecirc;ts servis aux personnes physiques ou morales directement ou indirectement li&eacute;es &agrave; la soci&eacute;t&eacute;, en r&eacute;mun&eacute;ration des sommes qu&apos;elles laissent ou mettent &agrave; la disposition de la soci&eacute;t&eacute; en sus de leur part de capital, quelle que soit la forme de celle-ci, dans les limites suivantes :</P>
+<P CLASS="Liste2-Enumeree">
+- le montant total des sommes laiss&eacute;es &agrave; la disposition de la soci&eacute;t&eacute; par l&apos;ensemble de ces personnes ne peut exc&eacute;der le montant du capital social de celle-ci ;</P>
+<P CLASS="Liste2-Enumeree">
+- le montant total des int&eacute;r&ecirc;ts servis au titre des sommes susvis&eacute;es ne peut exc&eacute;der 30 % du r&eacute;sultat de l'entreprise avant imp&ocirc;t, int&eacute;r&ecirc;ts, dotations aux amortissements sur immobilisations et provisions ;</P>
+<P CLASS="Liste2-Enumeree">
+- le taux des int&eacute;r&ecirc;ts servis ne peut exc&eacute;der le taux moyen des avances de la BCEAO pratiqu&eacute; au titre de l&apos;ann&eacute;e en cours, major&eacute; de deux points ;</P>
+<P CLASS="Liste2-Enumeree">
+- le remboursement des sommes doit intervenir dans les 5 ann&eacute;es suivant leur mise &agrave; disposition et la soci&eacute;t&eacute; ne doit pas faire l&apos;objet d&apos;une liquidation pendant cette p&eacute;riode. Dans le cas contraire, les int&eacute;r&ecirc;ts d&eacute;duits au titre de ces sommes sont rapport&eacute;s au r&eacute;sultat de la sixi&egrave;me ann&eacute;e ou de l&apos;ann&eacute;e de liquidation ;</P>
+<P CLASS="Liste2-Enumeree">
+- les int&eacute;r&ecirc;ts servis &agrave; ces personnes ne sont d&eacute;ductibles, quel que soit leur montant, qu&apos;&agrave; condition que le capital social de la soci&eacute;t&eacute; emprunteuse ait &eacute;t&eacute; enti&egrave;rement lib&eacute;r&eacute;.</P>
+<H6 CLASS="Modification">
+</a>Loi n&deg; 84-1367 du 26 d&eacute;c. 1984, an. fiscale,Art. 4;ord. n&deg; 2000-252 du 28 mars 2000, an. fiscale,Art. 21-1&deg;. ord. n&deg; 2006-234 du 02 ao&ucirc;t 2006, an. fiscale,Art. 1er -9;  loi n&deg; 2017-870 du 27 d&eacute;cembre 2017, an. fiscaleArt. 14-3; 
+loi n&deg; 2018-984 du 28 d&eacute;cembre 2018, an. fiscaleArt. 20-1.</H6>
+
+<P CLASS="Liste2-Enumeree">
+7&deg;-	[Obsol&egrave;te].</P>
+
+
+<H6 CLASS="Modification">
+Loi n&deg;- 2004-271 du 15 avril 2004, an. fiscale,Art.5-1.</H6>
+<P CLASS="Liste2-Enumeree">
+8&deg;- Les primes d&apos;assurances vers&eacute;es par l&apos;entreprise &agrave; une compagnie d&apos;assurances ivoirienne dans le cadre de contrats relatifs aux indemnit&eacute;s de fin de carri&egrave;re.</P>
+<P CLASS="Liste2-Enumeree">
+La d&eacute;duction de ces cotisations n&apos;est admise qu&apos;&agrave; la condition que le contrat d&apos;assurances pr&eacute;sente un caract&egrave;re g&eacute;n&eacute;ral c&apos;est-&agrave;-dire concerne l&apos;ensemble du personnel ou une ou plusieurs cat&eacute;gories d&eacute;termin&eacute;es de celui-ci.</P>
+
+
+<H6 CLASS="Modification">
+Loi n&deg;- 2005-161 du 27 avril 2005, an. fiscale,Art. 8.</H6>
+<P CLASS="Liste2-Enumeree">
+9&deg;- La valeur des biens normalement amortissables, &agrave; condition que leur prix unitaire n&apos;exc&egrave;de pas 300 000 francs et que ceux-ci soient inscrits en frais g&eacute;n&eacute;raux.</P>
+
+
+<H6 CLASS="Modification">
+Ord. n&deg;- 2006-234 du 02 ao&ucirc;t 2006Art. 1er-14; 
+Ord. n&deg;- 2007-675 du 28 d&eacute;cembre 2007Art. 9
+.</H6>
+<P CLASS="Liste2-Enumeree">
+10&deg;- [Obsol&egrave;te].</P>
+
+
+<H6 CLASS="Modification">
+Ord. n&deg;- 2008-381 du 18 d&eacute;cembre 2008,Art. 28.</H6>
+<P CLASS="Liste2-Numerotee"><font color='#d00000'>
+<A NAME="pgfId-1150100"></A>11&#176;- Le montant li&eacute; &agrave; la formation d&#8217;un produit non exon&eacute;r&eacute; d&#8217;imp&ocirc;t sur le b&eacute;n&eacute;fice.</font></P>
+<H6 CLASS="Modification">
+<A NAME="pgfId-1150122"></A>Loi n&#176; 2025-987 du 19  d&eacute;cembre 2025, art. 39.</H6>
+
+
+
+
+<H2 CLASS="Section">
+B)</H2>
+<P CLASS="Liste2-Enumeree">
+1&deg;-  Les amortissements r&eacute;ellement effectu&eacute;s par l&apos;entreprise, dans la limite de ceux qui sont g&eacute;n&eacute;ralement admis d&apos;apr&egrave;s les usages de chaque nature d&apos;industrie, de commerce ou d&apos;exploitation, y compris ceux qui ont &eacute;t&eacute; r&eacute;guli&egrave;rement comptabilis&eacute;s en application des dispositions de l&apos;alin&eacute;a ci-apr&egrave;s, mais r&eacute;put&eacute;s diff&eacute;r&eacute;s en p&eacute;riode d&eacute;ficitaire; ces derniers amortissements doivent obligatoirement &ecirc;tre inscrits &agrave; un compte sp&eacute;cial &#171; amortissements diff&eacute;r&eacute;s&#187; puis pr&eacute;lev&eacute;s sur les r&eacute;sultats des premiers exercices suivants, laissant appara&icirc;tre un b&eacute;n&eacute;fice suffisant en plus de l&apos;annuit&eacute; aff&eacute;rente &agrave; ces b&eacute;n&eacute;fices et du report &eacute;ventuel des d&eacute;ficits ant&eacute;rieurs dans la limite pr&eacute;vue par l&apos;article 26 ci-apr&egrave;s.</P>
+<P CLASS="Liste2-Enumeree">
+A la cl&ocirc;ture de chaque exercice, la somme des amortissements effectivement pratiqu&eacute;s depuis l&apos;acquisition ou la cr&eacute;ation d&apos;un &eacute;l&eacute;ment donn&eacute; doit &ecirc;tre &eacute;gale au montant cumul&eacute; des amortissements calcul&eacute;s suivant le mode lin&eacute;aire et r&eacute;partis sur la dur&eacute;e normale d&apos;utilisation.</P>
+<P CLASS="Liste2-Enumeree">
+A d&eacute;faut de se conformer aux obligations figurant dans les deux pr&eacute;c&eacute;dents alin&eacute;as, l&apos;entreprise perd d&eacute;finitivement le droit de d&eacute;duire la fraction d&apos;amortissements qui n&apos;a pas &eacute;t&eacute; r&eacute;guli&egrave;rement comptabilis&eacute;e ou pr&eacute;lev&eacute;e.</P>
+
+<H6 CLASS="Modification">
+Ord. n&deg;- 76-722 du 15 d&eacute;c. 1976,Art. 1.</H6>
+<P CLASS="Liste2-Enumeree">
+Le taux d&apos;amortissement annuel est fix&eacute; &agrave; 50 % en ce qui concerne :</P>
+<P CLASS="Liste2-Enumeree">
+- le mat&eacute;riel informatique et les logiciels;</P>
+
+
+<H6 CLASS="Modification">
+Ord. n&deg;- 2007-675 du 28 d&eacute;cembre 2007Art. 8-1.
+</H6>
+<P CLASS="Liste2-Enumeree">
+- [Obsol&egrave;te].</P>
+
+
+<H6 CLASS="Modification">
+Loi n&deg;- 2002-156 du 15 mars 2002, an.f icale,Art. 12-1&deg;; loi n&deg;- 2004-271 du 15 avril 2004, an. fiscale,Art.2-1.</H6>
+
+<P CLASS="Liste2-Enumeree">
+S&apos;agissant des biens vis&eacute;s au premier tiret ci-dessus, les entreprises peuvent opter pour l&apos;application du taux pratiqu&eacute; d&apos;apr&egrave;s les usages du secteur d&apos;activit&eacute;. </P>
+
+
+<P CLASS="Liste2-Enumeree">
+Toutefois, cette p&eacute;riode ne peut exc&eacute;der cinq ans.</P>
+
+<H6 CLASS="Modification">
+Ord. n&deg;- 2007-675 du 28 d&eacute;cembre 2007Art. 8-2
+.</H6>
+<P CLASS="Liste2-Enumeree">
+2&deg;-  Les biens donn&eacute;s en location dans le cadre d&apos;une op&eacute;ration de cr&eacute;dit-bail sont amortissables sur la dur&eacute;e du contrat chez le cr&eacute;dit-bailleur et le cr&eacute;dit-preneur.</P>
+<H6 CLASS="Modification">
+Loi n&deg;-  2016-1116 du 08 d&eacute;cembre 2016, an. fiscale,Art. 11.</H6>
+<P CLASS="Liste2-Enumeree">
+En cas de non lev&eacute;e de l&apos;option d&apos;achat par le preneur, la reprise du bien, objet de l&apos;op&eacute;ration de cr&eacute;dit-bail par le cr&eacute;dit-bailleur est assimil&eacute;e &agrave; une op&eacute;ration de cession.</P>
+<H6 CLASS="Modification">
+Loi n&deg;- 97-06 du 6 janv. 1997, an. fiscale,Art. 1-4&deg;; Ord. n&deg;- 2000-252 du 28 mars 2000Art. 16-9&deg;-.</H6>
+<P CLASS="Liste2-Enumeree">
+3&deg;- Les licences d&apos;exploitation des entreprises de t&eacute;l&eacute;phonie cellulaire d&eacute;livr&eacute;es par l&apos;Etat de C&ocirc;te d&apos;Ivoire sont amortissables sur leur dur&eacute;e d&apos;utilisation totale.</P>
+<P CLASS="Liste2-Enumeree">
+En cas de paiement fractionn&eacute;, le droit &agrave; amortissement na&icirc;t &agrave; la date de paiement de l&apos;acompte ou de l&apos;avance. La dur&eacute;e d&apos;amortissement de la licence demeure toutefois &eacute;gale &agrave; la dur&eacute;e d&apos;utilisation.</P>
+<P CLASS="Liste2-Enumeree">
+Pour les entreprises ayant acquis la licence d&apos;exploitation post&eacute;rieurement &agrave; leur d&eacute;but d&apos;activit&eacute;, la dur&eacute;e d&apos;amortissement de la licence est &eacute;gale &agrave; la dur&eacute;e d&apos;utilisation restant &agrave; courir &agrave; sa date d&apos;acquisition.</P>
+
+
+<H6 CLASS="Modification">
+Loi n&deg;- 2002-156 du 15 mars 2002,Art. 15.</H6>
+
+
+<H2 CLASS="Section">
+C)</H2>
+<P CLASS="Liste2-Enumeree">
+1&deg;-  Pourront toutefois faire l&apos;objet d&apos;un amortissement acc&eacute;l&eacute;r&eacute; :</P>
+<P CLASS="Liste2-Enumeree">
+- Les mat&eacute;riels et outillages neufs remplissant &agrave; la fois la double condition :</P>
+<P CLASS="Liste2-Enumeree">
+a)d&apos;&ecirc;tre utilis&eacute;s exclusivement pour les op&eacute;rations industrielles de fabrication, de manutention, de transport ou d&apos;exploitation agricole ;</P>
+<P CLASS="Liste2-Enumeree">
+b)d&apos;&ecirc;tre normalement utilisables pendant plus de cinq ans.</P>
+<P CLASS="Liste2-Enumeree">
+-Les mat&eacute;riels sp&eacute;cifiques &agrave; la t&eacute;l&eacute;phonie acquis par les entreprises concessionnaires de service public de t&eacute;l&eacute;phonie ou titulaires d&apos;une licence d&apos;exploitation. </P>
+
+<H6 CLASS="Modification">
+Ord. n&deg;- 2007-488 du 31 mai 2007Art. 5.</H6>
+<P CLASS="Liste2-Enumeree">
+Pour ces mat&eacute;riels et outillages, le montant de la premi&egrave;re annuit&eacute; d&apos;amortissement, calcul&eacute; d&apos;apr&egrave;s leur dur&eacute;e d&apos;utilisation normale, pourra &ecirc;tre double, cette dur&eacute;e &eacute;tant alors r&eacute;duite d&apos;une ann&eacute;e.</P>
+
+<H6 CLASS="Modification">
+Ord. n&deg;- 2006-234 du 02 ao&ucirc;t 2006Art. 3-2.</H6>
+<P CLASS="Liste2-Enumeree">
+2&deg;-  Sous r&eacute;serve de l&apos;agr&eacute;ment d&apos;une demande d&eacute;pos&eacute;e &agrave; la Direction g&eacute;n&eacute;rale des Imp&ocirc;ts dans les m&ecirc;mes formes que celles d&eacute;finies &agrave; l&apos;article 110-5&deg;- du pr&eacute;sent Code, les entreprises peuvent opter pour l&apos;application &agrave; leurs mat&eacute;riels et outillages neufs d&apos;un amortissement d&eacute;gressif.</P>
+<P CLASS="Liste2-Enumeree">
+Cette d&eacute;gressivit&eacute; est obtenue par l&apos;affectation au taux d&apos;amortissement lin&eacute;aire de coefficients de majoration fix&eacute;s par arr&ecirc;t&eacute; du Minist&egrave;re en charge de l&apos;Economie et des Finances.</P>
+
+<H6 CLASS="Modification">
+Loi n&deg;- 84-1232 du 8 nov. 1984,Art. 4. Voir arr&ecirc;t&eacute; n&deg;- 102/MEF/DGI/ CT du 4 f&eacute;vr. 1985, divers textes fiscaux : texte n&deg;-8 partie r&eacute;glementaire.</H6>
+<P CLASS="Liste2-Enumeree">
+3&deg;-  Un amortissement acc&eacute;l&eacute;r&eacute; de 40 % du prix de revient des immeubles affect&eacute;s au logement du personnel des entreprises industrielles et commerciales pourra &ecirc;tre pratiqu&eacute; &agrave; la cl&ocirc;ture du premier exercice suivant la date d&apos;ach&egrave;vement de ceux de ces immeubles construits en dur, comportant les conditions de salubrit&eacute; et de confort fix&eacute;es par les r&egrave;glements d&apos;hygi&egrave;ne et dont la valeur d&apos;immobilisation correspondant &agrave; un logement de trois pi&egrave;ces habitables avec cuisine, douchi&egrave;re, water-closets et, dans les localit&eacute;s o&ugrave; elles existent, installations d&apos;eau et d&apos;&eacute;clairage &eacute;lectrique, ne d&eacute;passera pas 
+vingt millions de francs hors taxes. </P>
+
+<H6 CLASS="Modification">
+Loi n&deg;- 81-150 du 27 f&eacute;vr. 1981. an. fiscale,Art. 14; loi n&deg;- 2013 - 908 du 26 d&eacute;cembre  2013. an. fiscale,Art.4.</H6>
+<P CLASS="Liste2-Enumeree">
+L&apos;amortissement de la valeur r&eacute;siduelle des immeubles en cause sera effectu&eacute; dans les conditions ordinaires et bas&eacute; sur leur dur&eacute;e normale d&apos;utilisation.</P>
+<P CLASS="Liste2-Enumeree">
+Les immeubles ou portions d&apos;immeubles qui, au cours de cette dur&eacute;e normale d&apos;amortissement, seraient affect&eacute;s &agrave; un usage autre que le logement du personnel de l&apos;entreprise, cesseront d&apos;avoir droit au b&eacute;n&eacute;fice des dispositions ci-dessus et la Direction g&eacute;n&eacute;rale des Imp&ocirc;ts sera fond&eacute;e &agrave; proc&eacute;der au r&eacute;ajustement des amortissements dont ils auront &eacute;t&eacute; l&apos;objet, en vue de r&eacute;int&eacute;grer dans les b&eacute;n&eacute;fices imposables les amortissements exc&eacute;dentaires.</P>
+<H2 CLASS="Section">
+D)
+</H2>
+<P CLASS="Liste2-Enumeree">Les imp&ocirc;ts &agrave; la charge de l&apos;entreprise mis en recouvrement au cours de l&apos;exercice, &agrave; l&apos;exception de l&apos;imp&ocirc;t c&eacute;dulaire sur les b&eacute;n&eacute;fices et de tous imp&ocirc;ts et taxes incombant &agrave; des tiers et dont elle est le redevable l&eacute;gal. Si des d&eacute;gr&egrave;vements sont ult&eacute;rieurement accord&eacute;s sur les imp&ocirc;ts d&eacute;ductibles, leur montant entre dans les recettes de l&apos;exercice au cours duquel l&apos;exploitant est avis&eacute; de ces d&eacute;gr&egrave;vements.</P>
+
+<H6 CLASS="Modification">
+Loi n&deg;-2004-271 du 15 avril 2004, an. fiscaleArt. 15.</H6>
+
+<H2 CLASS="Section">
+E)</H2>
+<P CLASS="Liste2-Enumeree">
+1&deg;-  Les provisions constitu&eacute;es en vue de faire face &agrave; des pertes ou charges nettement pr&eacute;cis&eacute;es et que les &eacute;v&eacute;nements en cours rendent probables, &agrave; condition qu&apos;elles aient &eacute;t&eacute; effectivement constat&eacute;es dans les &eacute;critures de l&apos;exercice et figurent au relev&eacute; des provisions pr&eacute;vu &agrave; l&apos;article 36 ci-apr&egrave;s.</P>
+<P CLASS="Liste2-Enumeree">
+L&apos;indemnit&eacute; pour cong&eacute;s pay&eacute;s rev&ecirc;t du point de vue fiscal le caract&egrave;re d&apos;un salaire de substitution qui constitue une charge normale de l&apos;exercice au cours duquel le salari&eacute; prend le cong&eacute; correspondant et ne peut donc faire l&apos;objet d&apos;une provision fiscalement d&eacute;ductible du b&eacute;n&eacute;fice imposable.</P>
+
+<H6 CLASS="Modification">
+Loi n&deg;- 84-1367 du 26 d&eacute;c. 1984, an. fiscale,Art. 4.</H6>
+<P CLASS="Liste2-Enumeree">
+Les pertes de change ne peuvent donner lieu &agrave; constitution de provisions d&eacute;ductibles.</P>
+
+<H6 CLASS="Modification">
+Loi n&deg;- 95-05 du 11 janv. 1995, an. fiscale,Art. 16.</H6>
+<P CLASS="Liste2-Enumeree">
+2&deg;- Les provisions constitu&eacute;es par les &eacute;tablissements de banque ou de cr&eacute;dit destin&eacute;es &agrave; faire face aux risques particuliers aff&eacute;rents aux pr&ecirc;ts ou op&eacute;rations &agrave; moyen et long terme pourront toutefois &ecirc;tre constitu&eacute;es en franchise d&apos;imp&ocirc;t par ces &eacute;tablissements ainsi que celles constitu&eacute;es par les soci&eacute;t&eacute;s se livrant &agrave; des op&eacute;rations de cr&eacute;dit foncier.</P>
+<P CLASS="Liste2-Enumeree">
+La dotation annuelle de la provision pr&eacute;vue ci-dessus peut atteindre 5% du b&eacute;n&eacute;fice comptable de chaque exercice, sans que le montant de ladite provision puisse exc&eacute;der 5% du total des cr&eacute;dits &agrave; moyen et &agrave; long terme effectivement utilis&eacute;s.</P>
+<P CLASS="Liste2-Enumeree">
+- les provisions pour d&eacute;pr&eacute;ciation de cr&eacute;ances constitu&eacute;es par les banques et &eacute;tablissements financiers en application des normes de prudence &eacute;dict&eacute;es par la Banque Centrale des Etats de l&apos;Afrique de l&apos;Ouest (BCEAO).</P>
+<P CLASS="Liste2-Enumeree">
+Toutefois, la constitution de ces derni&egrave;res provisions n&apos;est pas cumulable avec celle de toute autre provision d&eacute;termin&eacute;e de fa&ccedil;on forfaitaire, notamment celle pr&eacute;vue au premier tiret pr&eacute;c&eacute;dent.</P>
+
+<H6 CLASS="Modification">
+Ord. n&deg;- 2008-381 du 18 d&eacute;cembre 2008,Art. 8.</H6>
+<P CLASS="Liste2-Enumeree">
+3&deg;-  Les provisions destin&eacute;es &agrave; faire face aux risques particuliers qui pourraient r&eacute;sulter des op&eacute;rations de r&eacute;escompte d&apos;effets souscrits par les &eacute;tablissements de banque ou de cr&eacute;dit aupr&egrave;s des caisses de cr&eacute;dit agricole.</P>
+<P CLASS="Liste2-Enumeree">
+Le montant annuel de cette provision ne pourra d&eacute;passer 10 % des utilisations de la fiche de r&eacute;escompte dont le plafond est limit&eacute; &agrave; 250 millions de francs.</P>
+<P CLASS="Liste2-Enumeree">
+La constitution de cette provision cessera lorsque le montant cumul&eacute; des provisions constitu&eacute;es annuellement aura atteint 50 % de la limite susvis&eacute;e, soit 125 millions de francs.</P>
+<P CLASS="Liste2-Enumeree">
+Les pertes qui pourraient provenir de l&apos;irr&eacute;couvrabilit&eacute; &eacute;ventuelle des effets r&eacute;escompt&eacute;s seront imput&eacute;es sur le montant de la provision ainsi constitu&eacute;e.</P>
+<P CLASS="Liste2-Enumeree">
+Lorsqu&apos;il sera mis fin aux op&eacute;rations de r&eacute;escompte vis&eacute;es ci-dessus, le reliquat de la provision sera rapport&eacute; au b&eacute;n&eacute;fice imposable de l&apos;exercice au cours duquel elle sera devenue sans objet.</P>
+<P CLASS="Liste2-Enumeree">
+4&deg;-  Une provision &eacute;gale &agrave; 5 % du montant de leur encours par exercice social pourra &ecirc;tre constitu&eacute;e en franchise d&apos;imp&ocirc;t par les &eacute;tablissements de banques agr&eacute;&eacute;s comme banque de d&eacute;veloppement. Le montant cumul&eacute; des provisions ainsi constitu&eacute;es ne pourra d&eacute;passer 10 % du montant total de l&apos;encours.</P>
+
+<H6 CLASS="Modification">
+Loi n&deg;- 71 -683 du 28 d&eacute;c. 1971, an. fiscale,Art. 18.</H6>
+<P CLASS="Liste2-Enumeree">
+5&deg;- Les provisions statistiques pour cr&eacute;ances douteuses ou litigieuses constitu&eacute;es par les entreprises concessionnaires de service public et les entreprises de t&eacute;l&eacute;phonie titulaires d&apos;une licence d&apos;exploitation.</P>
+
+<H6 CLASS="Modification">
+Ord. n&deg;- 2006-234 du 02 ao&ucirc;t 2006Art. 3-3; 
+Ord. n&deg;- 2007-675 du 28 d&eacute;cembre 2007Art. 6-1
+.</H6>
+<P CLASS="Liste2-Enumeree">
+6&deg;- Les provisions pour remise en &eacute;tat du patrimoine conc&eacute;d&eacute;, constitu&eacute;es par les entreprises concessionnaires de service public.</P>
+<P CLASS="Liste2-Enumeree">
+Les conditions de constitution des provisions vis&eacute;es aux 5&deg;- et 6&deg;- pr&eacute;c&eacute;dents sont fix&eacute;es chaque ann&eacute;e apr&egrave;s accord de l&apos;Administration fiscale.</P>
+
+<H6 CLASS="Modification">
+Ord. n&deg;- 2006-234 du 02 ao&ucirc;t 2006Art. 3-3.</H6>
+<P CLASS="Liste2-Enumeree">
+7&deg;- Les provisions constitu&eacute;es par les compagnies d&apos;assurances destin&eacute;es &agrave; faire face aux sinistres tardifs et aux annulations de primes, &agrave; condition que ces provisions soient d&eacute;termin&eacute;es conform&eacute;ment &agrave; la m&eacute;thode de la cadence pr&eacute;vue par les r&egrave;gles prudentielles de la Conf&eacute;rence Interafricaine des March&eacute;s d&apos;Assurances (CIMA).</P>
+
+<H6 CLASS="Modification">
+Ord. n&deg;- 2007-488 du 31 mai 2007Art. 4.</H6>
+
+<P CLASS="Liste2-Enumeree"><FONT COLOR='#000000'>
+8&deg; Les pertes des banques et &eacute;tablissements financiers se rapportant aux cr&eacute;ances accord&eacute;es dans le respect des normes de prudence &eacute;dict&eacute;es par la Banque Centrale des Etats de l&apos;Afrique de l&apos;Ouest, class&eacute;es douteuses ou litigieuses, ayant pr&eacute;alablement fait l&apos;objet de provisions et non recouvr&eacute;es au terme du cinqui&egrave;me exercice comptable, &agrave; compter de leur transfert en cr&eacute;ances douteuses ou litigieuses. La non-production de l&apos;&eacute;tat des cr&eacute;ances douteuses pr&eacute;vues &agrave; l&apos;article <a class='ui-button' href='' onClick="loadArticle('003','0036');return false;">36</a> du pr&eacute;sent Code entra&icirc;ne le rejet de la charge ant&eacute;rieurement d&eacute;duite.</FONT></P>
+<H6 CLASS="Modification"><FONT COLOR='#000000'>
+Loi n&deg; 2020-972 du 23 d&eacute;c. 2020, an. fiscale,Art. 5-1.</FONT></H6>
+
+<H2 CLASS="Section">
+F)</H2>
+<P CLASS="Liste2-Enumeree">Les provisions vis&eacute;es au E ci-dessus qui, en tout ou en partie, re&ccedil;oivent un emploi non conforme &agrave; leur destination ou deviennent sans objet au cours d&apos;un exercice ult&eacute;rieur, sont rapport&eacute;es aux recettes dudit exercice, sauf disposition r&eacute;glementaire contraire. Lorsque le rapport n&apos;a pas &eacute;t&eacute; effectu&eacute; par l&apos;entreprise elle-m&ecirc;me, l&apos;Administration peut proc&eacute;der aux redressements n&eacute;cessaires d&egrave;s qu&apos;elle constate que les provisions sont devenues sans objet. Dans ce cas, ces provisions sont, s&apos;il y a lieu, rapport&eacute;es aux recettes du plus ancien des exercices soumis &agrave; v&eacute;rification.</P>
+<H2 CLASS="Section">
+G)</H2>
+<P CLASS="Liste2-Enumeree">Les dons et lib&eacute;ralit&eacute;s consentis :</P>
+<P CLASS="Liste2-Enumeree">
+- aux associations sportives reconnues par le Ministre en charge des Sports et d&eacute;sign&eacute;es par arr&ecirc;t&eacute; conjoint du Ministre charg&eacute; du Budget et du Ministre en charge des Sports;</P>
+<P CLASS="Liste2-Enumeree">
+- aux organismes de recherche scientifique d&eacute;sign&eacute;s par arr&ecirc;t&eacute; conjoint du Ministre charg&eacute; du Budget et du Ministre de la Recherche scientifique;</P>
+<P CLASS="Liste2-Enumeree">
+- aux associations et organismes &#339;uvrant dans les domaines de la Sant&eacute; publique et de l&apos;Action sociale, d&eacute;sign&eacute;s par arr&ecirc;t&eacute; conjoint du Ministre charg&eacute; du Budget  et du Ministre de la Sant&eacute; et de la Protection sociale;</P>
+<P CLASS="Liste2-Enumeree"><FONT COLOR='#000000'>
+<A NAME="pgfId-1140129"></A>-	 &agrave; l&#8217;Etat et &agrave; ses d&eacute;membrements dans le cadre de leurs actions en mati&egrave;re de sant&eacute; et d&#8217;hygi&egrave;ne publiques ainsi que dans le domaine des actions sociales&nbsp;;&nbsp;</FONT></P>
+<H6 CLASS="Modification">
+<A NAME="pgfId-1140265"></A>Loi n&#176; 2023-1000 du 18 d&eacute;c. 2023, an. fiscale, art. 23 </H6>
+<P CLASS="Liste2-Enumeree">
+- aux associations &#339;uvrant dans le domaine de la culture et de l&apos;enseignement reconnues par le Ministre de la Culture ou de l&apos;Enseignement et d&eacute;sign&eacute;es par arr&ecirc;t&eacute; conjoint du Ministre charg&eacute; du Budget  et du Ministre de tutelle concern&eacute;;</P>
+<P CLASS="Liste2-Enumeree">
+-&agrave; l&apos;Etat ou &agrave; ses d&eacute;membrements dans les domaines de l&apos;&eacute;ducation, de la sant&eacute; ou des infrastructures collectives dans les zones ex-assi&eacute;g&eacute;es.</P>
+
+
+<H6 CLASS="Modification">
+Ord. n&deg;- 2006-234 du 02 ao&ucirc;t 2006Art. 1er-12; 
+ord. n&deg;- 2007-675 du 28 d&eacute;cembre 2007Art. 5
+; Ord. n&deg;- 2009-382 du 26 novembre 2009Art. 1-1/</H6>
+<P CLASS="Liste2-Enumeree">
+-aux associations religieuses reconnues par le Minist&egrave;re en charge des Cultes sur la base d&apos;un programme ou d&apos;un bilan d&apos;actions sociales prouv&eacute;es;</P>
+<P CLASS="Liste2-Enumeree">
+-aux malades d&eacute;munis pr&eacute;sent&eacute;s par les services sanitaires ou sociaux ou par les centres de sant&eacute; publics;</P>
+<P CLASS="Liste2-Enumeree">
+-aux &eacute;l&egrave;ves et &eacute;tudiants ivoiriens non boursiers de l&apos;Etat sous la forme de bourses d&apos;&eacute;tudes annuelles;</P>
+<P CLASS="Liste2-Enumeree">
+-aux personnes handicap&eacute;es, par les entreprises qui engagent des d&eacute;penses pour la fourniture d&apos;installations de r&eacute;&eacute;ducation, de mat&eacute;riels orthop&eacute;diques et autres mat&eacute;riels sp&eacute;cifiques;</P>
+<P CLASS="Liste2-Enumeree">
+-aux associations de jeunes et de femmes pour les aider &agrave; initier ou &agrave; d&eacute;velopper une activit&eacute; lucrative;</P>
+<P CLASS="Liste2-Enumeree">
+-aux associations qui &#339;uvrent &agrave; la r&eacute;adaptation des toxicomanes et des alcooliques;</P>
+<P CLASS="Liste2-Enumeree">
+-aux organismes priv&eacute;s &agrave; but non lucratif qui &#339;uvrent &agrave; la conservation de l&apos;environnement;</P>
+<P CLASS="Liste2-Enumeree">
+-aux mutuelles pour leurs op&eacute;rations de financement, de construction, de r&eacute;habilitation ou d&apos;&eacute;quipement d&apos;&eacute;coles, de centres de sant&eacute; ou de centres polyvalents au profit d&apos;une collectivit&eacute;;</P>
+<H6 CLASS="Modification">
+Ord. n&deg;- 2009-382 du 26 novembre 2009Art.1-1</H6>
+<P CLASS="Liste2-Enumeree">  
+
+-à l&apos;Etat ou aux organismes publics oeuvrant dans le domaine de la salubrit&eacute; urbaine et de l&apos;assainissement, par les entreprises publiques ou priv&eacute;es.
+</P>
+<H6 CLASS="Modification">
+Loi. n&deg;- 2016-1116 du 08 d&eacute;cembre 2016Art.13</H6>
+<P CLASS="Liste2-Enumeree">
+<FONT COLOR='#000000'>
+- aux organismes de recherche scientifique, aux entreprises priv&eacute;es engag&eacute;es dans la recherche, le d&eacute;veloppement et l&apos;innovation, aux inventeurs et innovateurs nationaux. </FONT></P>
+<H6 CLASS="Modification">
+Loi n&deg; 2019-1080 du 18 d&eacute;cembre 2019, an. fiscale,Art. 5-1er</H6>
+
+<P CLASS="ParaText">
+La valeur des dons et lib&eacute;ralit&eacute;s consentis est d&eacute;ductible dans la double limite de 2,5 % du chiffre d&apos;affaires et de 200 millions de francs par an.</P>
+
+
+<H6 CLASS="Modification">
+Loi n&deg;- 2003-206 du 7 juillet 2003, an. fiscale,Art. 39-1.</H6>
+<P CLASS="ParaText">
+En ce qui concerne les bourses d&apos;&eacute;tudes annuelles, elles ne doivent exc&eacute;der la double limite particuli&egrave;re de 600 000 francs pour chaque &eacute;tudiant b&eacute;n&eacute;ficiaire et 12 000 000 de francs par entreprise donatrice. Les sommes ne doivent &ecirc;tre vers&eacute;es ni aux conjoints, ni aux ascendants et descendants des membres de la direction et des cadres de l&apos;entreprise. Ce seuil de 600 000 francs est port&eacute; &agrave; 1 000 000 de francs pour les &eacute;tudiants en cycle de recherche.</P>
+
+
+<H6 CLASS="Modification">
+Ord. n&deg;- 2009-382 du 26 novembre 2009Art.1-1</H6>
+<P CLASS="ParaText">
+Le co&ucirc;t de r&eacute;alisation des routes, pistes rurales, h&ocirc;pitaux, dispensaires, &eacute;coles et ch&acirc;teaux d&apos;eau r&eacute;alis&eacute;s par les entreprises priv&eacute;es au profit des collectivit&eacute;s territoriales ou des populations est &eacute;galement d&eacute;ductible des r&eacute;sultats de ces entreprises, dans la double limite de 3 % du chiffre d&apos;affaires et de 500 000 000 de francs par an.</P>
+
+
+<H6 CLASS="Modification">
+Loi n&deg;-2004-271 du 15 avril 2004, an. fiscale,Art. 16-1.</H6>
+<P CLASS="ParaText">
+Le b&eacute;n&eacute;fice des dispositions pr&eacute;c&eacute;dentes est subordonn&eacute; &agrave; la condition que soient jointes &agrave; la d&eacute;claration des r&eacute;sultats, les pi&egrave;ces justificatives attestant du montant et de la date de chaque versement, ainsi que de l&apos;identit&eacute; du b&eacute;n&eacute;ficiaire. A d&eacute;faut, les sommes d&eacute;duites sont r&eacute;int&eacute;gr&eacute;es d&apos;office au r&eacute;sultat imposable.</P>
+
+
+<H6 CLASS="Modification">
+Ord. n&deg;- 2000-252 du 28 mars 2000Art. 6-1&deg;.</H6>
+<P CLASS="ParaText">
+S&apos;agissant des dons d&apos;ouvrages d&apos;utilit&eacute; publique, il devra &eacute;galement &ecirc;tre joint &agrave; la d&eacute;claration de r&eacute;sultats une preuve de leur r&eacute;ception par l&apos;Etat ou une collectivit&eacute; territoriale.</P>
+
+
+<H6 CLASS="Modification">
+Loi n&deg;-2004-271 du 15 avril 2004, an. fiscale,Art. 16-2.</H6>
+<P CLASS="ParaText">
+Les r&eacute;alisations sociales effectu&eacute;es par la LONACI, &agrave; la demande de l&apos;Etat et approuv&eacute;es par son Conseil d&apos;Administration sont d&eacute;ductibles en totalit&eacute; des r&eacute;sultats de ladite soci&eacute;t&eacute;.</P>
+
+
+<H6 CLASS="Modification">
+Ord. n&deg;- 2007-675 du 28 d&eacute;cembre 2007Art. 31-2.</H6>
+
+
+
+ 
+
+
+ 
+<DIV>
+    
+<span id="#A0018b"></span>
+<H6 class="NoArticle">
+Art. 18 bis</H6>
+<P CLASS="ParaText">
+    Ne donnent pas droit &agrave; d&eacute;duction, les paiements en esp&egrave;ces d&apos;un montant sup&eacute;rieur &agrave; 250 000 francs et se rapportant aux charges suivantes :
+</P>
+        <P CLASS="Liste2-Enumeree">
+    -	frais g&eacute;n&eacute;raux, &agrave; l&apos;exclusion des r&eacute;mun&eacute;rations &agrave; titre de d&eacute;penses de personnel et de main-d&apos;&#339;uvre ;
+</P>
+        <P CLASS="Liste2-Enumeree">
+    -	indemnit&eacute;s de fonction ;
+</P>
+        <P CLASS="Liste2-Enumeree">
+    -	int&eacute;r&ecirc;ts de toute nature ;
+</P>
+        <P CLASS="Liste2-Enumeree">
+    -	primes d&apos;assurances ;
+</P>
+        <P CLASS="Liste2-Enumeree">
+    -	acquisitions de biens et services.
+</P>
+    
+<H6 CLASS="Modification">
+loi n&deg; 2015-840 du 18 d&eacute;cembre 2015, an. fiscale,Art. 3-1</H6>
+
+<P CLASS="ParaText"><font color='#d00000'>Ne  sont pas vis&eacute;es par cette mesure, les transactions dont le r&egrave;glement est  effectu&eacute; par mobile money quels que soient leurs montants.&nbsp;</font></p>
+<H6 CLASS="Modification">
+Loi n&deg; 2025-987 du 19 d&eacute;cembre 2025, an. fiscale,Art. 7-1</H6>
+
+</DIV>
+
+<span id="#A0019"></span>
+<H6 CLASS="NoArticle">
+Art. 19</H6>
+<P CLASS="ParaText">
+Les montants des transactions, amendes, confiscations, p&eacute;nalit&eacute;s et sanctions de toute nature mises &agrave; la charge des contrevenants &agrave; la l&eacute;gislation fiscale, douani&egrave;re et sociale, &agrave; la r&eacute;glementation des prix, et d&apos;une mani&egrave;re g&eacute;n&eacute;rale aux lois et r&egrave;glements de l&apos;Etat, ne sont pas admis en d&eacute;duction des b&eacute;n&eacute;fices soumis &agrave; l&apos;imp&ocirc;t.</P>
+<P CLASS="ParaText"><font color='#d00000'>Ne sont pas vis&eacute;es par cette mesure, les transactions dont le r&egrave;glement est effectu&eacute; par mobile money quels que soient leurs montants.</font></P>
+
+<H6 CLASS="Modification">
+Loi n&deg;- 2005-161 du 27 avril 2005, an. fiscale,Art. 7; loi n&#176; 2025-987 du 19  d&eacute;cembre 2025, art. 7-1.</H6>
+
+
+<span id="#A0020"></span>
+<H6 CLASS="NoArticle">
+Art. 20</H6>
+<P CLASS="ParaText">
+Les d&eacute;penses d&apos;&eacute;tudes et de prospection expos&eacute;es en vue de l&apos;installation &agrave; l&apos;&eacute;tranger d&apos;un &eacute;tablissement de vente, d&apos;un bureau d&apos;&eacute;tudes ou d&apos;un bureau de renseignements ainsi que les charges vis&eacute;es &agrave; l&apos;article <a class='ui-button' href='' onClick="loadArticle('003','0018');return false;">18</a> ci-dessus, support&eacute;es pour le fonctionnement dudit &eacute;tablissement ou bureau pendant les trois premiers exercices, peuvent &ecirc;tre admises en d&eacute;duction pour la d&eacute;termination du b&eacute;n&eacute;fice net imposable aff&eacute;rent &agrave; ces trois exercices.</P>
+<P CLASS="ParaText">
+Les sommes d&eacute;duites des b&eacute;n&eacute;fices par application de l&apos;alin&eacute;a pr&eacute;c&eacute;dent, devront faire l&apos;objet d&apos;un relev&eacute; sp&eacute;cial d&eacute;taill&eacute; annex&eacute; &agrave; la d&eacute;claration annuelle dont la production est pr&eacute;vue par l&apos;article <a class='ui-button' href='' onClick="loadArticle('003','0035');return false;">35</a> du pr&eacute;sent Code.</P>
+<P CLASS="ParaText">
+Elles seront rapport&eacute;es par fractions &eacute;gales aux b&eacute;n&eacute;fices imposables des cinq exercices cons&eacute;cutifs &agrave; partir du quatri&egrave;me suivant celui de la cr&eacute;ation de l&apos;&eacute;tablissement ou du bureau.</P>
+
+<span id="#A0021"></span>
+<H6 CLASS="NoArticle">
+Art. 21 </H6>
+
+<P CLASS="ParaText">
+Le b&eacute;n&eacute;fice imposable est obtenu en d&eacute;duisant du b&eacute;n&eacute;fice net total d&eacute;termin&eacute; conform&eacute;ment aux dispositions du pr&eacute;sent Code, dans la proportion de 50 %, le revenu net des valeurs et capitaux mobiliers figurant &agrave; l&apos;actif des entreprises redevables de l&apos;imp&ocirc;t sur les b&eacute;n&eacute;fices industriels et commerciaux.</P>
+
+<H6 CLASS="Modification">
+Loi n&deg;- 83-1421 du 30 d&eacute;c. 1983, an. fiscale,Art. 15-2&deg;.</H6>
+<P CLASS="ParaText">
+Sont toutefois exclus de la d&eacute;duction pr&eacute;vue ci-dessus, les produits des pr&ecirc;ts non repr&eacute;sent&eacute;s par des titres n&eacute;gociables ainsi que les produits des d&eacute;p&ocirc;ts et comptes courants, lorsqu&apos;ils sont encaiss&eacute;s par et pour le compte des banquiers ou d&apos;&eacute;tablissements de banque, des entreprises de placement ou de gestion de valeurs mobili&egrave;res, ainsi que des soci&eacute;t&eacute;s ou compagnies autoris&eacute;es par le Gouvernement &agrave; faire des op&eacute;rations de cr&eacute;dit foncier.</P>
+<P CLASS="ParaText">
+La proportion de 50 % vis&eacute;e ci-dessus est port&eacute;e &agrave; 90 % en ce qui concerne :</P>
+<P CLASS="Liste2-Enumeree">
+1-Les dividendes r&eacute;guli&egrave;rement mis en paiement par les soci&eacute;t&eacute;s cot&eacute;es &agrave; la Bourse R&eacute;gionale des Valeurs Mobili&egrave;res.</P>
+<P CLASS="Liste2-Enumeree">
+2-Les int&eacute;r&ecirc;ts et tous autres produits des emprunts obligataires &eacute;mis par l&apos;Etat ivoirien, les d&eacute;partements et les communes, les &eacute;tablissements publics ivoiriens et les soci&eacute;t&eacute;s cot&eacute;es &agrave; la Bourse R&eacute;gionale des Valeurs Mobili&egrave;res.</P>
+
+
+<H6 CLASS="Modification">
+Loi n&deg;- 97-08 du 6 janv. 1997, an. fiscale, art 14-3&deg;.</H6>
+<P CLASS="Liste2-Enumeree">
+3-Les int&eacute;r&ecirc;ts et tous produits des autres effets publics ivoiriens.</P>
+<P CLASS="Liste2-Enumeree">
+4-Les int&eacute;r&ecirc;ts des emprunts &eacute;mis par le Fonds National d&apos;Investissement.</P>
+<P CLASS="Liste2-Enumeree">
+5-Les produits, lots et primes de remboursement des obligations &eacute;mises en C&ocirc;te d&apos;Ivoire et remboursables en cinq ans au moins.</P>
+
+
+<H6 CLASS="Modification">
+Loi n&deg;- 95-05 du 11 janv. 1995, an. fiscale,Art. 25.</H6>
+<P CLASS="ParaText">
+La proportion de 50 % vis&eacute;e ci-dessus est port&eacute;e &agrave; 95 % en ce qui concerne les soci&eacute;t&eacute;s b&eacute;n&eacute;ficiant du r&eacute;gime fiscal des soci&eacute;t&eacute;s m&egrave;res d&eacute;fini par l&apos;article 22 ci-apr&egrave;s.</P>
+<P CLASS="ParaText">
+La proportion de 50 % est port&eacute;e &agrave; 100 % en ce qui concerne les int&eacute;r&ecirc;ts et produits des titres d&apos;Etat &eacute;mis par les Etats membres de l&apos;UEMOA.</P>
+
+
+<H6 CLASS="Modification">
+Ord. n&deg;- 2008-381 du 18 d&eacute;cembre 2008,Art. 11-2/.</H6>
+
+<span id="#A0021b"></span>
+<H6 CLASS="NoArticle">
+Art. 21 bis</H6>
+<P CLASS="ParaText">
+Le b&eacute;n&eacute;fice imposable des entreprises de production, de conservation, de conditionnement ou de transformation des productions agricoles alimentaires dont la liste est &eacute;tablie par arr&ecirc;t&eacute; conjoint du Ministre en charge de l&apos;Agriculture et du Ministre charg&eacute; du Budget , est obtenu apr&egrave;s un abattement de 50 % sur le b&eacute;n&eacute;fice net total d&eacute;termin&eacute; &agrave; partir de la sixi&egrave;me ann&eacute;e suivant la date du b&eacute;n&eacute;fice de l&apos;exon&eacute;ration vis&eacute; &agrave; l&apos;article <a class='ui-button' href='' onClick="loadArticle('003','0012');return false;">12 </a>bis du pr&eacute;sent Code.</P>
+
+<H6 CLASS="Modification">
+Ord. n&deg;- 2009-382 du 26 novembre 2009Art. 27-2.</H6>
+
+<H6 CLASS="NoArticle">
+<A NAME="pgfId-1151013"></A>Art. 21 ter </H6>
+<P CLASS="ParaText"><font color='#d00000'>
+<A NAME="pgfId-1151006"></A>Le b&eacute;n&eacute;fice imposable des plateformes &eacute;trang&egrave;res de services en ligne vis&eacute;es &agrave; l&#8217;alin&eacute;a 11 de l&#8217;article 3 du pr&eacute;sent Code, est obtenu par application au chiffre d&#8217;affaires annuel toutes taxes comprises issu des transactions r&eacute;alis&eacute;es au profit des consommateurs &eacute;tablis sur le territoire ivoirien, d&#8217;un abattement forfaitaire de 90 %.</font></P>
+<H6 CLASS="Modification">
+<A NAME="pgfId-1151069"></A>Loi n&#176; 2025-987 du 19  d&eacute;cembre 2025, art. 33-3</H6>
+
+<span id="#A0022"></span>
+<H6 CLASS="NoArticle">
+Art. 22</H6>
+<P CLASS="ParaText">
+Le r&eacute;gime fiscal des soci&eacute;t&eacute;s m&egrave;res est applicable aux soci&eacute;t&eacute;s ivoiriennes par actions ou &agrave; responsabilit&eacute; limit&eacute;e qui d&eacute;tiennent, dans le capital d&apos;autres soci&eacute;t&eacute;s rev&ecirc;tant l&apos;une de ces formes, des participations satisfaisant aux conditions ci-apr&egrave;s :</P>
+<P CLASS="Liste2-Enumeree">
+1-Les titres de participations doivent rev&ecirc;tir la forme nominative ou &ecirc;tre d&eacute;pos&eacute;s dans un &eacute;tablissement d&eacute;sign&eacute; par l&apos;Administration.</P>
+<P CLASS="Liste2-Enumeree">
+2-Ils doivent repr&eacute;senter au moins 10 % du capital de la soci&eacute;t&eacute; &eacute;mettrice.</P>
+<P CLASS="Liste2-Enumeree">
+Ce pourcentage s&apos;appr&eacute;cie &agrave; la date de la mise en paiement des produits de la participation.</P>
+<P CLASS="Liste2-Enumeree">
+Toutefois, aucun pourcentage minimal n&apos;est exig&eacute; pour les titres re&ccedil;us en r&eacute;mun&eacute;ration d&apos;apports partiels admis au r&eacute;gime fiscal des fusions non plus que pour les participations dont le prix de revient exc&egrave;de 1 milliard de francs.</P>
+<P CLASS="Liste2-Enumeree">
+3-Les titres de participations doivent avoir &eacute;t&eacute; souscrits &agrave; l&apos;&eacute;mission. A d&eacute;faut, la personne morale participante doit avoir pris l&apos;engagement de les conserver pendant un d&eacute;lai de deux ans.</P>
+<P CLASS="Liste2-Enumeree">
+En cas d&apos;absorption par une tierce soci&eacute;t&eacute; d&apos;une soci&eacute;t&eacute; d&eacute;tenant une participation satisfaisant aux conditions exig&eacute;es par le pr&eacute;sent article, le b&eacute;n&eacute;fice du r&eacute;gime fiscal des soci&eacute;t&eacute;s m&egrave;res est transport&eacute; de plein droit de la soci&eacute;t&eacute; absorb&eacute;e &agrave; la soci&eacute;t&eacute; absorbante ou nouvelle. De m&ecirc;me, une soci&eacute;t&eacute; participante demeure fond&eacute;e &agrave; se pr&eacute;valoir du r&eacute;gime de faveur lorsque la soci&eacute;t&eacute; dont elle d&eacute;tient les actions ou parts absorbe une tierce soci&eacute;t&eacute; ou est absorb&eacute;e par celle-ci, sous r&eacute;serve que la fusion ne soit pas r&eacute;alis&eacute;e pour faire &eacute;chec aux conditions susvis&eacute;es et sans que la participation puisse b&eacute;n&eacute;ficier d&apos;un traitement plus favorable que si l&apos;op&eacute;ration n&apos;avait pas eu lieu.</P>
+
+<H6 CLASS="Modification">
+Loi n&deg;- 77-1003 du 30 d&eacute;c. 1977. an. fiscale,Art. 7.</H6>
+
+
+<span id="#A0023"></span>
+<H6 CLASS="NoArticle">
+Art. 23</H6>
+<P CLASS="ParaText">
+Le r&eacute;gime fiscal d&eacute;fini aux articles <a class='ui-button' href='' onClick="loadArticle('003','0029');return false;">29</a> et <a class='ui-button' href='' onClick="loadArticle('003','0193');return false;">193</a> du Code g&eacute;n&eacute;ral des Imp&ocirc;ts s&apos;applique de plein droit aux soci&eacute;t&eacute;s holdings de droit ivoirien constitu&eacute;es sous la forme d&apos;une soci&eacute;t&eacute; anonyme ou d&apos;une soci&eacute;t&eacute; &agrave; responsabilit&eacute; limit&eacute;e dont les 2/3 au moins de l&apos;actif immobilis&eacute; sont compos&eacute;s de participations qui r&eacute;pondent aux conditions fix&eacute;es par l&apos;article <a class='ui-button' href='' onClick="loadArticle('003','0022');return false;">22</a>.</P>
+<P CLASS="ParaText">
+Ces soci&eacute;t&eacute;s peuvent en dehors de la gestion de participations exercer, &agrave; l&apos;exclusion de toute activit&eacute; commerciale, industrielle, agricole ou non commerciale, les activit&eacute;s suivantes :</P>
+<P CLASS="Liste2-Enumeree">
+-effectuer des prestations de services correspondant &agrave; des fonctions de direction, de gestion, de coordination et de contr&ocirc;le de soci&eacute;t&eacute;s du groupe;</P>
+<P CLASS="Liste2-Enumeree">
+-se livrer &agrave; des activit&eacute;s de recherche et de d&eacute;veloppement au seul profit du groupe;</P>
+<P CLASS="Liste2-Enumeree">
+-assurer la gestion de la tr&eacute;sorerie du groupe.</P>
+
+<P CLASS="ParaText">
+<FONT COLOR='#000000'>
+Le r&eacute;gime fiscal ci-dessus s&apos;applique dans les m&ecirc;mes conditions, &agrave; une soci&eacute;t&eacute; par actions simplifi&eacute;e.</FONT></P>
+<H6 CLASS="Modification">
+Ord. n&deg; 2000-252 du 28 mars 2000, an. fiscale,Art. 21-3&deg;; loi n&deg; 2017-870 du 27 d&eacute;cembre 2017, an. fiscaleArt. 15.</H6>
+
+<span id="#A0024"></span>
+<H6 CLASS="NoArticle">
+Art. 24</H6>
+<P CLASS="ParaText">
+En ce qui concerne les soci&eacute;t&eacute;s, les r&eacute;mun&eacute;rations allou&eacute;es &agrave; l&apos;actionnaire unique, &agrave; l&apos;associ&eacute; unique ou au g&eacute;rant majoritaire personne physique et port&eacute;es dans les frais et charges seront admises en d&eacute;duction du b&eacute;n&eacute;fice de la soci&eacute;t&eacute; pour l&apos;&eacute;tablissement de l&apos;imp&ocirc;t, &agrave; condition que ces r&eacute;mun&eacute;rations correspondent &agrave; un travail effectif et soient soumises au nom de ces derniers, &agrave; l&apos;imp&ocirc;t sur les traitements, salaires, pensions et rentes viag&egrave;res.</P>
+
+<H6 CLASS="Modification">
+Ord. n&deg;- 2000-252 du 28 mars 2000Art. 15-2&deg;; loi n&deg;- 2001-338 du 14 juin 2001, an. fiscale,Art.17-2&deg;.</H6>
+
+
+<span id="#A0025"></span>
+<H6 CLASS="NoArticle">
+Art. 25</H6>
+<P CLASS="ParaText">
+Sont admis en d&eacute;duction :</P>
+<P CLASS="Liste2-Enumeree">
+1-En ce qui concerne les soci&eacute;t&eacute;s coop&eacute;ratives de consommation, les bonis provenant des op&eacute;rations faites avec les associ&eacute;s et distribu&eacute;s &agrave; ces derniers au prorata de la commande de chacun d&apos;eux.</P>
+<P CLASS="Liste2-Enumeree">
+2-En ce qui concerne les soci&eacute;t&eacute;s coop&eacute;ratives ouvri&egrave;res de production, la part des b&eacute;n&eacute;fices nets qui est distribu&eacute;e aux travailleurs.</P>
+
+<span id="#A0026"></span>
+<H6 CLASS="NoArticle">
+Art. 26</H6>
+<P CLASS="ParaText">
+En cas de d&eacute;ficit subi pendant un exercice, ce d&eacute;ficit est consid&eacute;r&eacute; comme une charge de l&apos;exercice suivant et d&eacute;duit du b&eacute;n&eacute;fice r&eacute;alis&eacute; pendant ledit exercice. Si ce b&eacute;n&eacute;fice n&apos;est pas suffisant pour que la d&eacute;duction puisse &ecirc;tre int&eacute;gralement op&eacute;r&eacute;e, l&apos;exc&eacute;dent du d&eacute;ficit est report&eacute; successivement sur les exercices suivants jusqu&apos;au cinqui&egrave;me exercice qui suit l&apos;exercice d&eacute;ficitaire.</P>
+
+<H6 CLASS="Modification">
+Loi n&deg;- 95-05 du 11 janv. 1995, an. fiscale,Art. 11.</H6>
+
+
+<span id="#A0027"></span>
+<H6 CLASS="NoArticle">
+Art. 27</H6>
+<P CLASS="ParaText">
+En cas de fusion-absorption de soci&eacute;t&eacute;s de droit ivoirien, les d&eacute;ficits fiscaux reportables non prescrits ainsi que les amortissements r&eacute;put&eacute;s diff&eacute;r&eacute;s non encore d&eacute;duits de la soci&eacute;t&eacute; absorb&eacute;e, sont admis en d&eacute;duction partielle ou totale des r&eacute;sultats de la soci&eacute;t&eacute; absorbante.</P>
+<P CLASS="ParaText">
+Les entreprises absorbantes peuvent &eacute;galement b&eacute;n&eacute;ficier, partiellement ou totalement, des cr&eacute;dits d&apos;imp&ocirc;ts ou taxes ainsi que des avantages fiscaux non prescrits de la soci&eacute;t&eacute; absorb&eacute;e.</P>
+<P CLASS="ParaText">
+Le b&eacute;n&eacute;fice des mesures susmentionn&eacute;es est subordonn&eacute; &agrave; l&apos;agr&eacute;ment pr&eacute;alable du Directeur g&eacute;n&eacute;ral des Imp&ocirc;ts sur pr&eacute;sentation du dossier de fusion-absorption.</P>
+
+<H6 CLASS="Modification">
+Ord. n&deg;- 94-487 du 1er  sept. 1994; loi n&deg;- 2003-206 du 7 juillet 2003, an. fiscale,Art. 38-1.</H6>
+<P CLASS="ParaText">
+L&apos;agr&eacute;ment ainsi accord&eacute; peut pr&eacute;voir un &eacute;talement des d&eacute;ductions sur une p&eacute;riode qui ne peut exc&eacute;der 5 ans.</P>
+
+
+<H6 CLASS="Modification">
+Ord. n&deg;- 2011-121 du 22 juin 2011Art. 18.1.</H6>
+
+
+<span id="#A0027b"></span>
+<H6 CLASS="NoArticle">
+Art. 27 bis</H6>
+<P CLASS="ParaText">
+Lorsque la dissolution d&apos;une soci&eacute;t&eacute; dans laquelle tous les titres sont d&eacute;tenus par un seul associ&eacute; entra&icirc;ne la transmission universelle du patrimoine de la soci&eacute;t&eacute; &agrave; cet associ&eacute;, sans qu&apos;il y ait lieu &agrave; liquidation conform&eacute;ment aux dispositions de l&apos;article 201 de l&apos;Acte uniforme relatif au droit des soci&eacute;t&eacute;s commerciales et du groupement d&apos;int&eacute;r&ecirc;t &eacute;conomique, le r&eacute;gime fiscal suivant s&apos;applique :</P>
+<P CLASS="Liste2-Enumeree">
+-transfert des d&eacute;ficits fiscaux et des amortissements r&eacute;put&eacute;s diff&eacute;r&eacute;s de la filiale &agrave; la soci&eacute;t&eacute; m&egrave;re ; </P>
+<P CLASS="Liste2-Enumeree">
+-transfert des avantages fiscaux et cr&eacute;dits d&apos;imp&ocirc;ts de la filiale &agrave; la soci&eacute;t&eacute; m&egrave;re ;</P>
+<P CLASS="Liste2-Enumeree">
+-exon&eacute;ration de l&apos;imp&ocirc;t sur le revenu des valeurs mobili&egrave;res sur le boni de dissolution  &eacute;ventuel.</P>
+<P CLASS="ParaText">
+Le b&eacute;n&eacute;fice de ce r&eacute;gime est subordonn&eacute; &agrave; l&apos;autorisation du Directeur g&eacute;n&eacute;ral des Imp&ocirc;ts apr&egrave;s contr&ocirc;le de la sinc&eacute;rit&eacute; des d&eacute;ficits provenant de l&apos;entreprise dissoute. </P>
+
+<H6 CLASS="Modification">
+Ord. n&deg;- 2007-488 du 31 mai 2007Art. 6.</H6>
+<P CLASS="ParaText">
+L&apos;autorisation ainsi accord&eacute;e peut pr&eacute;voir un &eacute;talement des d&eacute;ductions sur une p&eacute;riode qui ne peut exc&eacute;der 5 ans.</P>
+
+
+<H6 CLASS="Modification">
+Ord. n&deg;- 2011-121 du 22 juin 2011Art. 18.2.</H6>
+
+
+
+
+</div></div> 
+ </div><p>&nbsp;</p><p>&nbsp;</p><span class="historique" ID="h2018">
+<div class="histText">
+
+18<br />
+  Le b&eacute;n&eacute;fice net est &eacute;tabli sous    d&eacute;duction de toutes charges, celles-ci comprenant notamment :<br />
+  A)<br />
+  1&deg;	 Les frais g&eacute;n&eacute;raux de toute nature, le loyer des immeubles dont l&rsquo;entreprise est locataire, les r&eacute;mun&eacute;rations &agrave; titre de      d&eacute;penses de personnel et de main-d&rsquo;&oelig;uvre. Toutefois, ces r&eacute;mun&eacute;rations ne sont       admises en d&eacute;duction que dans la mesure o&ugrave; elles correspondent &agrave; un travail effectif et ne sont pas excessives eu &eacute;gard &agrave; l&rsquo;importance du service rendu. Cette disposition s&rsquo;applique &agrave; toutes les r&eacute;mun&eacute;rations directes ou indirectes, y compris les         indemnit&eacute;s, allocations, avantages en      nature et remboursement de frais.<br />
+  2&deg;	Les appointements que les exploitants   individuels pr&eacute;l&egrave;vent sur leurs recettes  professionnelles &agrave; titre de r&eacute;mun&eacute;ration de leur travail personnel sont exclus des charges d&eacute;ductibles. Il en est de m&ecirc;me des d&eacute;penses expos&eacute;es dans l&rsquo;int&eacute;r&ecirc;t personnel de l&rsquo;exploitant.<br />
+  3&deg;	Le salaire du conjoint de l&rsquo;exploitant individuel peut, &agrave; la demande du contribuable, &ecirc;tre d&eacute;duit du b&eacute;n&eacute;fice imposable, dans la mesure o&ugrave; il correspond &agrave; un travail effectif, et n&rsquo;est pas excessif eu &eacute;gard &agrave; l&rsquo;importance du service rendu, &agrave; la condition qu&rsquo;il soit justifi&eacute; que ce salaire a donn&eacute; lieu aux pr&eacute;l&egrave;vements sociaux et fiscaux en vigueur.<br />
+  Loi n&deg; 84-1367 du 26 d&eacute;c. 1984, an. fiscale, art. 4.<br />
+  4&deg;	Les indemnit&eacute;s de fonction allou&eacute;es aux administrateurs des soci&eacute;t&eacute;s anonymes, dont le montant est fix&eacute; par l&rsquo;assembl&eacute;e g&eacute;n&eacute;rale ordinaire desdites soci&eacute;t&eacute;s, sont d&eacute;ductibles dans la limite de 3 000 000 de francs par an et par b&eacute;n&eacute;ficiaire.<br />
+  Ord. n&deg; 2011-480 du 28 d&eacute;cembre 2011, an. fiscale, art. 11.<br />
+  Ces limites ne sont pas applicables, selon le cas, aux r&eacute;mun&eacute;rations permanentes et     indemnit&eacute;s de fonctions allou&eacute;es au       pr&eacute;sident directeur g&eacute;n&eacute;ral et au directeur g&eacute;n&eacute;ral adjoint, ou au pr&eacute;sident du conseil d&rsquo;administration et au directeur g&eacute;n&eacute;ral, ou &agrave; l&rsquo;administrateur g&eacute;n&eacute;ral adjoint, ainsi qu&rsquo;aux r&eacute;mun&eacute;rations exceptionnelles     allou&eacute;es par le conseil d&rsquo;Administration &agrave; ses membres pour des missions et mandats qui leur sont confi&eacute;s, et aux remboursements de frais et d&eacute;penses engag&eacute;s dans l&rsquo;int&eacute;r&ecirc;t de la soci&eacute;t&eacute; et autoris&eacute;s par le conseil d&rsquo;administration .<br />
+  Ord. n&deg; 2000-252 du 28 mars 2000, an. fiscale, art. 15-1&deg;.<br />
+  5&deg;	Les int&eacute;r&ecirc;ts, arr&eacute;rages et autres produits des obligations, cr&eacute;ances, d&eacute;p&ocirc;ts et cautionnements, les redevances de cession ou concession de licence d&rsquo;exploitation, de brevets d&rsquo;invention, de marques de fabrique, proc&eacute;d&eacute;s ou formules de fabrication et autres droits analogues ou les r&eacute;mun&eacute;rations de services de toute nature pay&eacute;s ou dus entre entreprises ivoiriennes appartenant au m&ecirc;me groupe.<br />
+  Loi n&deg; 2020-972 du 23 d&eacute;c. 2020, an. fiscale, art. 1-1.<br />
+  Les sommes vers&eacute;es ne sont admises comme charges d&eacute;ductibles pour l&rsquo;&eacute;tablissement de l&rsquo;imp&ocirc;t que si le d&eacute;biteur apporte la preuve que ces d&eacute;penses correspondent &agrave; des op&eacute;rations r&eacute;elles et qu&rsquo;elles ne pr&eacute;sentent pas un caract&egrave;re anormal ou exag&eacute;r&eacute;.<br />
+  La d&eacute;duction est plafonn&eacute;e &agrave; 5 % du chiffre d&rsquo;affaires dans la limite de 20 % des frais g&eacute;n&eacute;raux de l&rsquo;entreprise d&eacute;bitrice.<br />
+  Loi n&deg;2004-271 du 15 avril 2004, an. fiscale, art. 18.<br />
+  6&deg;	Les int&eacute;r&ecirc;ts servis aux personnes physiques ou morales directement ou indirectement li&eacute;es &agrave; la soci&eacute;t&eacute;, en r&eacute;mun&eacute;ration des sommes qu&rsquo;elles laissent ou mettent &agrave; la disposition de la soci&eacute;t&eacute; en sus de leur part de capital, quelle que soit la forme de celle-ci, dans les limites suivantes :<br />
+  &ndash;   le montant total des sommes laiss&eacute;es &agrave; la disposition de la soci&eacute;t&eacute; par l&rsquo;ensemble de ces personnes ne peut exc&eacute;der le montant du capital social de celle-ci;<br />
+  Loi n&deg; 2018 - 984 du 28 d&eacute;cembre 2018, an. fiscale art. 20-1<br />
+  &ndash;   le montant total des int&eacute;r&ecirc;ts servis au titre des sommes susvis&eacute;es ne peut exc&eacute;der 30 % du r&eacute;sultat de l'entreprise avant imp&ocirc;t, int&eacute;r&ecirc;ts, dotations aux amortissements sur immobilisations et provisions ;<br />
+  &ndash;   le taux des int&eacute;r&ecirc;ts servis ne peut exc&eacute;der le taux moyen des avances de la BCEAO pratiqu&eacute; au titre de l&rsquo;ann&eacute;e en cours, major&eacute; de deux points ;<br />
+  &ndash;  le remboursement des sommes doit intervenir dans les 5 ann&eacute;es suivant leur mise &agrave; disposition et la soci&eacute;t&eacute; ne doit pas faire l&rsquo;objet d&rsquo;une liquidation pendant cette p&eacute;riode. Dans le cas contraire, les int&eacute;r&ecirc;ts d&eacute;duits au titre de ces sommes sont rapport&eacute;s au r&eacute;sultat de la sixi&egrave;me ann&eacute;e ou de l&rsquo;ann&eacute;e de liquidation ;<br />
+  &ndash; les int&eacute;r&ecirc;ts servis &agrave; ces personnes ne sont d&eacute;ductibles, quel que soit leur montant, qu&rsquo;&agrave; condition que le capital social de la soci&eacute;t&eacute; emprunteuse ait &eacute;t&eacute; enti&egrave;rement lib&eacute;r&eacute;.<br />
+  Loi n&deg; 84-1367 du 26 d&eacute;c. 1984, an. fiscale, art. 4;                 ord. n&deg; 2000-252 du 28 mars 2000, an. fiscale, art. 21-1&deg;;     ord. n&deg; 2006-234 du 02 ao&ucirc;t 2006, an. fiscale, art. 1er-9;       loi n&deg; 2017-870 du 27 d&eacute;cembre 2017, an. fiscale art. 14-3.<br />
+  7&deg;	[Obsol&egrave;te].<br />
+  Loi n&deg; 2004-271 du 15 avril 2004, an. fiscale, art.5-1.<br />
+  8&deg;	Les primes d&rsquo;assurances vers&eacute;es par l&rsquo;entreprise &agrave; une compagnie d&rsquo;assurances ivoirienne dans le cadre de contrats relatifs aux indemnit&eacute;s de fin de carri&egrave;re.<br />
+  La d&eacute;duction de ces cotisations n&rsquo;est admise qu&rsquo;&agrave; la condition que le contrat d&rsquo;assurances pr&eacute;sente un caract&egrave;re g&eacute;n&eacute;ral c&rsquo;est-&agrave;-dire concerne l&rsquo;ensemble du personnel ou une ou plusieurs cat&eacute;gories d&eacute;termin&eacute;es de celui-ci.<br />
+  Loi n&deg; 2005-161 du 27 avril 2005, an. fiscale, art. 8.<br />
+  9&deg; La valeur des biens normalement amortissables, &agrave; condition que leur prix unitaire n&rsquo;exc&egrave;de pas 300 000 francs et que ceux-ci soient inscrits en frais g&eacute;n&eacute;raux.<br />
+  Ord. n&deg; 2006-234 du 02 ao&ucirc;t 2006, an. fiscale, art. 1er-14; ord. n&deg; 2007-675 du 28 d&eacute;cembre 2007, an. fiscale, art. 9.<br />
+  10&deg; 	[Obsol&egrave;te].<br />
+  Ord. n&deg; 2008-381 du 18 d&eacute;cembre 2008, an. fiscale, art. 28.<br />
+  B)<br />
+  1&deg;  Les amortissements r&eacute;ellement effectu&eacute;s par l&rsquo;entreprise, dans la limite de ceux qui sont g&eacute;n&eacute;ralement admis d&rsquo;apr&egrave;s les usages de chaque nature d&rsquo;industrie, de commerce ou d&rsquo;exploitation, y compris ceux qui ont &eacute;t&eacute; r&eacute;guli&egrave;rement comptabilis&eacute;s en application des dispositions de l&rsquo;alin&eacute;a ci-apr&egrave;s, mais r&eacute;put&eacute;s diff&eacute;r&eacute;s en p&eacute;riode d&eacute;ficitaire; ces derniers amortissements doivent obligatoirement &ecirc;tre inscrits &agrave; un compte sp&eacute;cial &laquo; amortissements diff&eacute;r&eacute;s&raquo; puis pr&eacute;lev&eacute;s sur les r&eacute;sultats des premiers exercices suivants, laissant appara&icirc;tre un b&eacute;n&eacute;fice suffisant en plus de l&rsquo;annuit&eacute; aff&eacute;rente &agrave; ces b&eacute;n&eacute;fices et du report &eacute;ventuel des d&eacute;ficits ant&eacute;rieurs dans la limite pr&eacute;vue par l&rsquo;article 26 ci-apr&egrave;s.<br />
+  A la cl&ocirc;ture de chaque exercice, la somme des amortissements effectivement pratiqu&eacute;s depuis l&rsquo;acquisition ou la cr&eacute;ation d&rsquo;un &eacute;l&eacute;ment donn&eacute; doit &ecirc;tre &eacute;gale au montant cumul&eacute; des amortissements calcul&eacute;s suivant le mode lin&eacute;aire et r&eacute;partis sur la dur&eacute;e normale d&rsquo;utilisation.<br />
+  A d&eacute;faut de se conformer aux obligations figurant dans les deux pr&eacute;c&eacute;dents alin&eacute;as, l&rsquo;entreprise perd d&eacute;finitivement le droit de d&eacute;duire la fraction d&rsquo;amortissements qui n&rsquo;a pas &eacute;t&eacute; r&eacute;guli&egrave;rement comptabilis&eacute;e ou pr&eacute;lev&eacute;e.<br />
+  Ord. n&deg; 76-722 du 15 d&eacute;c. 1976, art. 1.<br />
+  Le taux d&rsquo;amortissement annuel est fix&eacute; &agrave; 50 % en ce qui concerne :<br />
+  &ndash;	 le mat&eacute;riel informatique et les logiciels;<br />
+  Ord n&deg; 2007-675 du 28 d&eacute;cembre 2007, an. fiscale, art. 8-1.<br />
+  &ndash; 	[Obsol&egrave;te].<br />
+  Loi n&deg; 2002-156 du 15 mars 2002, an. fiscale, art. 12-1&deg;;       loi n&deg; 2004-271 du 15 avril 2004, an. fiscale, art. 2-1.<br />
+  S&rsquo;agissant des biens vis&eacute;s au premier tiret   ci-dessus, les entreprises peuvent opter pour l&rsquo;application du taux pratiqu&eacute; d&rsquo;apr&egrave;s les usages du secteur d&rsquo;activit&eacute;. <br />
+  Toutefois, cette p&eacute;riode ne peut exc&eacute;der cinq ans.<br />
+  Ord.n&deg; 2007-675 du 28 d&eacute;cembre 2007, an. fiscale, art. 8-2.<br />
+  2&deg;	Les biens donn&eacute;s en location dans le cadre d&rsquo;une op&eacute;ration de cr&eacute;dit-bail sont amortissables sur la dur&eacute;e du contrat chez le cr&eacute;dit-bailleur et le cr&eacute;dit-preneur. <br />
+  Loi n&deg; 2016-1116 du 08 d&eacute;cembre 2016, an. fiscale, art. 11.<br />
+  En cas de non lev&eacute;e de l&rsquo;option d&rsquo;achat par le preneur, la reprise du bien, objet de l&rsquo;op&eacute;ration de cr&eacute;dit-bail par le cr&eacute;dit-bailleur est assimil&eacute;e &agrave; une op&eacute;ration de cession.<br />
+  Loi n&deg; 97-06 du 6 janv. 1997, an. fiscale, art. 1-4&deg;;                ord. n&deg; 2000-252 du 28 mars 2000, an. fiscale, art. 16-9&deg;.<br />
+  3&deg;	Les licences d&rsquo;exploitation des entreprises de t&eacute;l&eacute;phonie cellulaire d&eacute;livr&eacute;es par l&rsquo;Etat de C&ocirc;te d&rsquo;Ivoire sont amortissables sur leur dur&eacute;e d&rsquo;utilisation totale.<br />
+  En cas de paiement fractionn&eacute;, le droit &agrave; amortissement na&icirc;t &agrave; la date de paiement de l&rsquo;acompte ou de l&rsquo;avance. La dur&eacute;e d&rsquo;amortissement de la licence demeure toutefois &eacute;gale &agrave; la dur&eacute;e d&rsquo;utilisation.<br />
+  Pour les entreprises ayant acquis la licence d&rsquo;exploitation post&eacute;rieurement &agrave; leur d&eacute;but d&rsquo;activit&eacute;, la dur&eacute;e d&rsquo;amortissement de la licence est &eacute;gale &agrave; la dur&eacute;e d&rsquo;utilisation restant &agrave; courir &agrave; sa date d&rsquo;acquisition.<br />
+  Loi n&deg; 2002-156 du 15 mars 2002, an. fiscale, art. 15.<br />
+  C) <br />
+  1&deg;	 Pourront toutefois faire l&rsquo;objet d&rsquo;un amortissement acc&eacute;l&eacute;r&eacute; :<br />
+  &ndash; 	Les mat&eacute;riels et outillages neufs remplissant &agrave; la fois la double condition :<br />
+  a)	 d&rsquo;&ecirc;tre utilis&eacute;s exclusivement pour les op&eacute;rations industrielles de fabrication, de manutention, de transport ou d&rsquo;exploitation agricole ;<br />
+  b)	 d&rsquo;&ecirc;tre normalement utilisables pendant plus de cinq ans.<br />
+  &ndash;	 Les mat&eacute;riels sp&eacute;cifiques &agrave; la t&eacute;l&eacute;phonie acquis par les entreprises concessionnaires de service public de t&eacute;l&eacute;phonie ou titulaires d&rsquo;une licence d&rsquo;exploitation. <br />
+  Ord. n&deg; 2007-488 du 31 mai 2007, an. fiscale, art. 5.<br />
+  Pour ces mat&eacute;riels et outillages, le montant de la premi&egrave;re annuit&eacute; d&rsquo;amortissement, calcul&eacute; d&rsquo;apr&egrave;s leur dur&eacute;e d&rsquo;utilisation normale, pourra &ecirc;tre double, cette dur&eacute;e &eacute;tant alors r&eacute;duite d&rsquo;une ann&eacute;e.<br />
+  Ord. n&deg; 2006-234 du 02 ao&ucirc;t 2006, an. fiscale, art. 3-2.<br />
+  2&deg;	Sous r&eacute;serve de l&rsquo;agr&eacute;ment d&rsquo;une demande d&eacute;pos&eacute;e &agrave; la Direction g&eacute;n&eacute;rale des Imp&ocirc;ts dans les m&ecirc;mes formes que celles d&eacute;finies &agrave; l&rsquo;article 110-5&deg; du pr&eacute;sent Code, les entreprises peuvent opter pour l&rsquo;application &agrave; leurs mat&eacute;riels et outillages neufs d&rsquo;un amortissement d&eacute;gressif.<br />
+  Cette d&eacute;gressivit&eacute; est obtenue par l&rsquo;affectation au taux d&rsquo;amortissement lin&eacute;aire de coefficients de majoration fix&eacute;s par arr&ecirc;t&eacute; du Minist&egrave;re en charge de l&rsquo;Economie et des Finances.<br />
+  Loi n&deg; 84-1232 du 8 nov. 1984, art. 4. Voir arr&ecirc;t&eacute; n&deg; 102/MEF/DGI/ CT du 4 f&eacute;vr. 1985, divers textes fiscaux : texte n&deg;8 partie r&eacute;glementaire.<br />
+  3&deg;	Un amortissement acc&eacute;l&eacute;r&eacute; de 40 % du prix de revient des immeubles affect&eacute;s au logement du personnel des entreprises industrielles et commerciales pourra &ecirc;tre pratiqu&eacute; &agrave; la cl&ocirc;ture du premier exercice suivant la date d&rsquo;ach&egrave;vement de ceux de ces immeubles construits en dur, comportant les conditions de salubrit&eacute; et de confort fix&eacute;es par les r&egrave;glements d&rsquo;hygi&egrave;ne et dont la valeur d&rsquo;immobilisation correspondant &agrave; un logement de trois pi&egrave;ces habitables avec cuisine, douchi&egrave;re, water-closets et, dans les localit&eacute;s o&ugrave; elles existent, installations d&rsquo;eau et d&rsquo;&eacute;clairage &eacute;lectrique, ne d&eacute;passera pas vingt millions de francs hors taxes.<br />
+  Loi n&deg; 81-150 du 27 f&eacute;vr. 1981. an. fiscale, art. 14;                   loi n&deg; 2013-908 du 26 d&eacute;cembre  2013. an. fiscale, art.4.<br />
+  L&rsquo;amortissement de la valeur r&eacute;siduelle des immeubles en cause sera effectu&eacute; dans les conditions ordinaires et bas&eacute; sur leur dur&eacute;e normale d&rsquo;utilisation.<br />
+  Les immeubles ou portions d&rsquo;immeubles qui, au cours de cette dur&eacute;e normale d&rsquo;amortissement, seraient affect&eacute;s &agrave; un usage autre que le logement du personnel de l&rsquo;entreprise, cesseront d&rsquo;avoir droit au b&eacute;n&eacute;fice des dispositions ci-dessus et la Direction g&eacute;n&eacute;rale des Imp&ocirc;ts sera fond&eacute;e &agrave; proc&eacute;der au r&eacute;ajustement des amortissements dont ils auront &eacute;t&eacute; l&rsquo;objet, en vue de r&eacute;int&eacute;grer dans les b&eacute;n&eacute;fices imposables les amortissements exc&eacute;dentaires.<br />
+  D)	Les imp&ocirc;ts &agrave; la charge de l&rsquo;entreprise mis en recouvrement au cours de l&rsquo;exercice, &agrave; l&rsquo;exception de l&rsquo;imp&ocirc;t c&eacute;dulaire sur les b&eacute;n&eacute;fices et de tous imp&ocirc;ts et taxes          incombant &agrave; des tiers et dont elle est le    redevable l&eacute;gal. Si des d&eacute;gr&egrave;vements sont ult&eacute;rieurement accord&eacute;s sur les imp&ocirc;ts d&eacute;ductibles, leur montant entre dans les recettes de l&rsquo;exercice au cours duquel l&rsquo;exploitant est avis&eacute; de ces d&eacute;gr&egrave;vements.<br />
+  Loi n&deg;2004-271 du 15 avril 2004, an. fiscale art. 15.<br />
+  E) <br />
+  1&deg;  	Les provisions constitu&eacute;es en vue de faire face &agrave; des pertes ou charges nettement pr&eacute;cis&eacute;es et que les &eacute;v&eacute;nements en cours rendent probables, &agrave; condition qu&rsquo;elles aient &eacute;t&eacute; effectivement constat&eacute;es dans les &eacute;critures de l&rsquo;exercice et figurent au relev&eacute; des provisions pr&eacute;vu &agrave; l&rsquo;article 36 ci-apr&egrave;s.<br />
+  L&rsquo;indemnit&eacute; pour cong&eacute;s pay&eacute;s rev&ecirc;t du point de vue fiscal le caract&egrave;re d&rsquo;un salaire de substitution qui constitue une charge normale de l&rsquo;exercice au cours duquel le salari&eacute; prend le cong&eacute; correspondant et ne peut donc faire l&rsquo;objet d&rsquo;une provision fiscalement d&eacute;ductible du b&eacute;n&eacute;fice imposable.<br />
+  Loi n&deg; 84-1367 du 26 d&eacute;c. 1984, an. fiscale, art. 4.<br />
+  Les pertes de change ne peuvent donner lieu &agrave; constitution de provisions d&eacute;ductibles.<br />
+  Loi n&deg; 95-05 du 11 janv. 1995, an. fiscale, art. 16.<br />
+  2&deg;	&ndash; Les provisions constitu&eacute;es par les &eacute;tablissements de banque ou de cr&eacute;dit destin&eacute;es &agrave; faire face aux risques particuliers  aff&eacute;rents aux pr&ecirc;ts ou op&eacute;rations &agrave; moyen et long terme pourront toutefois &ecirc;tre constitu&eacute;es en franchise d&rsquo;imp&ocirc;t par ces &eacute;tablissements ainsi que celles constitu&eacute;es par les soci&eacute;t&eacute;s se livrant &agrave; des op&eacute;rations de cr&eacute;dit foncier.<br />
+  La dotation annuelle de la provision pr&eacute;vue ci-dessus peut atteindre 5 % du b&eacute;n&eacute;fice comptable de chaque exercice, sans que le montant de ladite provision puisse exc&eacute;der 5 % du total des cr&eacute;dits &agrave; moyen et &agrave; long terme effectivement utilis&eacute;s.<br />
+  &ndash;	les provisions pour d&eacute;pr&eacute;ciation de cr&eacute;ances constitu&eacute;es par les banques et &eacute;tablissements financiers en application des normes de prudence &eacute;dict&eacute;es par la Banque Centrale des Etats de l&rsquo;Afrique de l&rsquo;Ouest (BCEAO).<br />
+  Toutefois, la constitution de ces derni&egrave;res provisions n&rsquo;est pas cumulable avec celle de toute autre provision d&eacute;termin&eacute;e de fa&ccedil;on forfaitaire, notamment celle pr&eacute;vue au premier tiret pr&eacute;c&eacute;dent.<br />
+  Ord. n&deg; 2008-381 du 18 d&eacute;cembre 2008, an. fiscale, art. 8.<br />
+  3&deg;	Les provisions destin&eacute;es &agrave; faire face aux risques particuliers qui pourraient r&eacute;sulter des op&eacute;rations de r&eacute;escompte d&rsquo;effets souscrits par les &eacute;tablissements de banque ou de cr&eacute;dit aupr&egrave;s des caisses de cr&eacute;dit agricole.<br />
+  Le montant annuel de cette provision ne pourra d&eacute;passer 10 % des utilisations de la fiche de r&eacute;escompte dont le plafond est limit&eacute; &agrave; 250 millions de francs.<br />
+  La constitution de cette provision cessera lorsque le montant cumul&eacute; des provisions constitu&eacute;es annuellement aura atteint 50 % de la limite susvis&eacute;e, soit 125 millions de francs.<br />
+  Les pertes qui pourraient provenir de l&rsquo;irr&eacute;couvrabilit&eacute; &eacute;ventuelle des effets r&eacute;escompt&eacute;s seront imput&eacute;es sur le montant de la provision ainsi constitu&eacute;e.<br />
+  Lorsqu&rsquo;il sera mis fin aux op&eacute;rations de r&eacute;escompte vis&eacute;es ci-dessus, le reliquat de la provision sera rapport&eacute; au b&eacute;n&eacute;fice imposable de l&rsquo;exercice au cours duquel elle sera devenue sans objet.<br />
+  4&deg;	Une provision &eacute;gale &agrave; 5 % du montant de leur encours par exercice social pourra &ecirc;tre constitu&eacute;e en franchise d&rsquo;imp&ocirc;t par les &eacute;tablissements de banques agr&eacute;&eacute;s comme banque de d&eacute;veloppement. Le montant cumul&eacute; des provisions ainsi constitu&eacute;es ne pourra d&eacute;passer 10 % du montant total de l&rsquo;encours.<br />
+  Loi n&deg; 71 -683 du 28 d&eacute;c. 1971, an. fiscale, art. 18.<br />
+  5&deg; Les provisions statistiques pour cr&eacute;ances douteuses ou litigieuses constitu&eacute;es par les entreprises concessionnaires de service public et les entreprises de t&eacute;l&eacute;phonie titulaires d&rsquo;une licence d&rsquo;exploitation.<br />
+  Ord. n&deg; 2006-234 du 02 ao&ucirc;t 2006, an. fiscale, art. 3-3;        ord. n&deg; 2007-675 du 28 d&eacute;cembre 2007, an. fiscale, art. 6-1.<br />
+  6&deg; Les provisions pour remise en &eacute;tat du patrimoine conc&eacute;d&eacute;, constitu&eacute;es par les entreprises concessionnaires de service public.<br />
+  Les conditions de constitution des provisions vis&eacute;es aux 5&deg; et 6&deg; pr&eacute;c&eacute;dents sont fix&eacute;es chaque ann&eacute;e apr&egrave;s accord de l&rsquo;Administration fiscale.<br />
+  Ord. n&deg; 2006-234 du 02 ao&ucirc;t 2006, an. fiscale, art. 3-3.<br />
+  7&deg; Les provisions constitu&eacute;es par les compagnies d&rsquo;assurances destin&eacute;es &agrave; faire face aux sinistres tardifs et aux annulations de primes, &agrave; condition que ces provisions soient d&eacute;termin&eacute;es conform&eacute;ment &agrave; la m&eacute;thode de la cadence pr&eacute;vue par les r&egrave;gles prudentielles de la Conf&eacute;rence Interafricaine des March&eacute;s d&rsquo;Assurances (CIMA).<br />
+  Ord. n&deg; 2007-488 du 31 mai 2007, an. fiscale, art. 4.<br />
+  8&deg; Les pertes des banques et &eacute;tablissements financiers se rapportant aux cr&eacute;ances accord&eacute;es dans le respect des normes de prudence &eacute;dict&eacute;es par la Banque Centrale des Etats de l&rsquo;Afrique de l&rsquo;Ouest, class&eacute;es douteuses ou litigieuses, ayant pr&eacute;alablement fait l&rsquo;objet de provisions et non recouvr&eacute;es au terme du cinqui&egrave;me exercice comptable, &agrave; compter de leur transfert en cr&eacute;ances douteuses ou litigieuses. La non-production de l&rsquo;&eacute;tat des cr&eacute;ances douteuses pr&eacute;vues &agrave; l&rsquo;article 36 du pr&eacute;sent Code entra&icirc;ne le rejet de la charge ant&eacute;rieurement d&eacute;duite.<br />
+  Loi n&deg; 2020-972 du 23 d&eacute;c. 2020, an. fiscale, art. 5-1.<br />
+  F)	Les provisions vis&eacute;es au E ci-dessus qui, en tout ou en partie, re&ccedil;oivent un emploi non conforme &agrave; leur destination ou deviennent sans objet au cours d&rsquo;un exercice ult&eacute;rieur, sont rapport&eacute;es aux recettes dudit exercice, sauf disposition r&eacute;glementaire contraire. Lorsque le rapport n&rsquo;a pas &eacute;t&eacute; effectu&eacute; par l&rsquo;entreprise elle-m&ecirc;me, l&rsquo;Administration peut proc&eacute;der aux redressements n&eacute;cessaires d&egrave;s qu&rsquo;elle constate que les provisions sont devenues sans objet. Dans ce cas, ces provisions sont, s&rsquo;il y a lieu, rapport&eacute;es aux recettes du plus ancien des exercices soumis &agrave; v&eacute;rification.</p>
+<p>G)	Les dons et lib&eacute;ralit&eacute;s consentis :<br />
+  &ndash;	 aux associations sportives reconnues par le Ministre en charge des Sports et d&eacute;sign&eacute;es par arr&ecirc;t&eacute; conjoint du Ministre charg&eacute; du Budget et du Ministre en charge des Sports;<br />
+  &ndash;	 aux organismes de recherche scientifique d&eacute;sign&eacute;s par arr&ecirc;t&eacute; conjoint du Ministre charg&eacute; du Budget et du Ministre de la Recherche scientifique;<br />
+  &ndash;	 aux associations et organismes &oelig;uvrant dans les domaines de la Sant&eacute; publique et de l&rsquo;Action sociale, d&eacute;sign&eacute;s par arr&ecirc;t&eacute; conjoint du Ministre charg&eacute; du Budget et du Ministre de la Sant&eacute; et de la Protection sociale;<br />
+  &ndash;	 &agrave; l&rsquo;Etat et &agrave; ses d&eacute;membrements dans le cadre de leurs actions en mati&egrave;re de sant&eacute; et d&rsquo;hygi&egrave;ne publiques ainsi que dans le domaine des actions sociales ;<br />
+  Loi n&deg; 2023-1000 du 18 d&eacute;c. 2023, an. fiscale, art. 23<br />
+  &ndash;	 aux associations &oelig;uvrant dans le domaine de la culture et de l&rsquo;enseignement reconnues par le Ministre de la Culture ou de l&rsquo;Enseignement et d&eacute;sign&eacute;es par arr&ecirc;t&eacute; conjoint du Ministre charg&eacute; du Budget et du Ministre de tutelle concern&eacute;;<br />
+  &ndash;	 &agrave; l&rsquo;Etat ou &agrave; ses d&eacute;membrements dans les domaines de l&rsquo;&eacute;ducation, de la sant&eacute; ou des infrastructures collectives dans les zones ex-assi&eacute;g&eacute;es.<br />
+  Ord. n&deg; 2006-234 du 02 ao&ucirc;t 2006, an. fiscale, art. 1er-12;  ord. n&deg; 2007-675 du 28 d&eacute;cembre 2007, an. fiscale, art. 5; ord. n&deg; 2009-382 du 26 novembre 2009, an. fiscale, art. 1-1.<br />
+  &ndash;	 aux associations religieuses reconnues par le Minist&egrave;re en charge des Cultes sur la base d&rsquo;un programme ou d&rsquo;un bilan d&rsquo;actions sociales prouv&eacute;es;<br />
+  &ndash; 	 aux malades d&eacute;munis pr&eacute;sent&eacute;s par les services sanitaires ou sociaux ou par les centres de sant&eacute; publics;<br />
+  &ndash;  	aux &eacute;l&egrave;ves et &eacute;tudiants ivoiriens non boursiers de l&rsquo;Etat sous la forme de bourses d&rsquo;&eacute;tudes annuelles;<br />
+  &ndash;  	aux personnes handicap&eacute;es, par les entreprises qui engagent des d&eacute;penses pour la fourniture d&rsquo;installations de r&eacute;&eacute;ducation, de mat&eacute;riels orthop&eacute;diques et autres mat&eacute;riels sp&eacute;cifiques;<br />
+  &ndash;  	aux associations de jeunes et de femmes pour les aider &agrave; initier ou &agrave; d&eacute;velopper une activit&eacute; lucrative;<br />
+  &ndash;	  aux associations qui &oelig;uvrent &agrave; la r&eacute;adaptation des toxicomanes et des alcooliques;<br />
+  &ndash;  	aux organismes priv&eacute;s &agrave; but non lucratif qui &oelig;uvrent &agrave; la conservation de l&rsquo;environnement;<br />
+  &ndash;	 aux mutuelles pour leurs op&eacute;rations de financement, de construction, de r&eacute;habilitation ou d&rsquo;&eacute;quipement d&rsquo;&eacute;coles, de centres de sant&eacute; ou de centres polyvalents au profit d&rsquo;une collectivit&eacute;.<br />
+  Ord. n&deg; 2009-382 du 26 novembre 2009, an. fiscale, art.1-1<br />
+  &ndash; &agrave; l&rsquo;Etat ou aux organismes publics &oelig;uvrant dans le domaine de la salubrit&eacute; urbaine et de l&rsquo;assainissement, par les entreprises publiques ou priv&eacute;es.<br />
+  Loi n&deg; 2016-1116 du 08 d&eacute;cembre 2016, an. fiscale, art. 13.<br />
+  &ndash; aux organismes de recherche scientifique, aux entreprises priv&eacute;es engag&eacute;es dans la recherche, le d&eacute;veloppement et l&rsquo;innovation, aux inventeurs et innovateurs nationaux. <br />
+  Loi n&deg; 2019-1080 du 18 d&eacute;cembre 2019, an. fiscale, art. 5-1er<br />
+  La valeur des dons et lib&eacute;ralit&eacute;s consentis est d&eacute;ductible dans la double limite de 2,5 % du chiffre d&rsquo;affaires et de 200 millions de francs par an.<br />
+  Loi n&deg; 2003-206 du 7 juillet 2003, an. fiscale, art. 39-1.<br />
+  En ce qui concerne les bourses d&rsquo;&eacute;tudes annuelles, elles ne doivent exc&eacute;der la double limite particuli&egrave;re de 600 000 francs pour chaque &eacute;tudiant b&eacute;n&eacute;ficiaire et 12 000 000 de francs par entreprise donatrice. Les sommes ne doivent &ecirc;tre vers&eacute;es ni aux conjoints, ni aux ascendants et descendants des membres de la direction et des cadres de l&rsquo;entreprise. Ce seuil de 600 000 francs est port&eacute; &agrave; 1 000 000 de francs pour les &eacute;tudiants en cycle de recherche.<br />
+  Ord. n&deg; 2009-382 du 26 novembre 2009, an. fiscale, art.1-1<br />
+  Le co&ucirc;t de r&eacute;alisation des routes, pistes rurales, h&ocirc;pitaux, dispensaires, &eacute;coles et ch&acirc;teaux d&rsquo;eau r&eacute;alis&eacute;s par les entreprises priv&eacute;es au profit des collectivit&eacute;s territoriales ou des      populations est &eacute;galement d&eacute;ductible des r&eacute;sultats de ces entreprises, dans la double limite de 3 % du chiffre d&rsquo;affaires et de 500 000 000 de francs par an.<br />
+  Loi n&deg;2004-271 du 15 avril 2004, an. fiscale, art. 16-1.<br />
+  Le b&eacute;n&eacute;fice des dispositions pr&eacute;c&eacute;dentes est subordonn&eacute; &agrave; la condition que soient jointes &agrave; la d&eacute;claration des r&eacute;sultats, les pi&egrave;ces justificatives attestant du montant et de la date de chaque versement, ainsi que de l&rsquo;identit&eacute; du b&eacute;n&eacute;ficiaire. A d&eacute;faut, les sommes d&eacute;duites sont r&eacute;int&eacute;gr&eacute;es d&rsquo;office au r&eacute;sultat imposable.<br />
+  Ord. n&deg; 2000-252 du 28 mars 2000, an. fiscale, art. 6-1&deg;.<br />
+  S&rsquo;agissant des dons d&rsquo;ouvrages d&rsquo;utilit&eacute;     publique, il devra &eacute;galement &ecirc;tre joint &agrave; la d&eacute;claration de r&eacute;sultats une preuve de leur  r&eacute;ception par l&rsquo;Etat ou une collectivit&eacute; territoriale.<br />
+  Loi n&deg;2004-271 du 15 avril 2004, an. fiscale, art. 16-2.<br />
+  Les r&eacute;alisations sociales effectu&eacute;es par la LONACI, &agrave; la demande de l&rsquo;Etat et approuv&eacute;es par son Conseil d&rsquo;Administration sont d&eacute;ductibles en totalit&eacute; des r&eacute;sultats de ladite soci&eacute;t&eacute;.<br />
+  Ord. n&deg; 2007-675 du 28 d&eacute;cembre 2007, an. fiscale, art. 31-2.<br /> 
+<BR><BR><BR></div></span><finh2018>
+<span class="historique" ID="h2318">
+<div class="histText">
+Art. 18 
+<p>Le b&eacute;n&eacute;fice net est &eacute;tabli sous d&eacute;duction de toutes charges, celles-ci comprenant notamment :</p>
+<p>A)</p>
+<p>1&deg;	Les frais g&eacute;n&eacute;raux de toute nature, le loyer des immeubles dont l&rsquo;entreprise est locataire, les r&eacute;mun&eacute;rations &agrave; titre de d&eacute;penses de personnel et de main-d&rsquo;&oelig;uvre. Toutefois, ces r&eacute;mun&eacute;rations ne sont admises en d&eacute;duction que dans la mesure o&ugrave; elles correspondent &agrave; un travail effectif et ne sont pas excessives eu &eacute;gard &agrave; l&rsquo;importance du service rendu. Cette disposition s&rsquo;applique &agrave; toutes les r&eacute;mun&eacute;rations directes ou indirectes, y compris les indemnit&eacute;s, allocations, avantages en nature et remboursement de frais.</p>
+<p>2&deg;	Les appointements que les exploitants individuels pr&eacute;l&egrave;vent sur leurs recettes professionnelles &agrave; titre de r&eacute;mun&eacute;ration de leur travail personnel sont exclus des charges d&eacute;ductibles. Il en est de m&ecirc;me des d&eacute;penses expos&eacute;es dans l&rsquo;int&eacute;r&ecirc;t personnel de l&rsquo;exploitant.</p>
+<p>3&deg;	Le salaire du conjoint de l&rsquo;exploitant individuel peut, &agrave; la demande du contribuable, &ecirc;tre d&eacute;duit du b&eacute;n&eacute;fice imposable, dans la mesure o&ugrave; il correspond &agrave; un travail effectif, et n&rsquo;est pas excessif eu &eacute;gard &agrave; l&rsquo;importance du service rendu, &agrave; la condition qu&rsquo;il soit justifi&eacute; que ce salaire a donn&eacute; lieu aux pr&eacute;l&egrave;vements sociaux et fiscaux en vigueur.</p>
+<p>Loi n&deg; 84-1367 du 26 d&eacute;c. 1984, an. fiscale, art. 4.</p>
+<p>4&deg;	Les indemnit&eacute;s de fonction allou&eacute;es aux administrateurs des soci&eacute;t&eacute;s anonymes, dont le montant est fix&eacute; par l&rsquo;assembl&eacute;e g&eacute;n&eacute;rale ordinaire desdites soci&eacute;t&eacute;s, sont d&eacute;ductibles dans la limite de 3 000 000 de francs par an et par b&eacute;n&eacute;ficiaire.</p>
+<p>Ord. n&deg; 2011-480 du 28 d&eacute;cembre 2011, an. fiscale, art. 11.</p>
+<p>Ces limites ne sont pas applicables, selon le cas, aux r&eacute;mun&eacute;rations permanentes et indemnit&eacute;s de fonctions allou&eacute;es au pr&eacute;sident directeur g&eacute;n&eacute;ral et au directeur g&eacute;n&eacute;ral adjoint, ou au pr&eacute;sident du conseil d&rsquo;administration et au directeur g&eacute;n&eacute;ral, ou &agrave; l&rsquo;administrateur g&eacute;n&eacute;ral adjoint, ainsi qu&rsquo;aux r&eacute;mun&eacute;rations exceptionnelles allou&eacute;es par le conseil d&rsquo;Administration &agrave; ses membres pour des missions et mandats qui leur sont confi&eacute;s, et aux remboursements de frais et d&eacute;penses engag&eacute;s dans l&rsquo;int&eacute;r&ecirc;t de la soci&eacute;t&eacute; et autoris&eacute;s par le conseil d&rsquo;administration .</p>
+<p>Ord. n&deg; 2000-252 du 28 mars 2000, an. fiscale, art. 15-1&deg;.</p>
+<p>5&deg;	Les int&eacute;r&ecirc;ts, arr&eacute;rages et autres produits des obligations, cr&eacute;ances, d&eacute;p&ocirc;ts et cautionnements, les redevances de cession ou concession de licence d&rsquo;exploitation, de brevets d&rsquo;invention, de marques de fabrique, proc&eacute;d&eacute;s ou formules de fabrication et autres droits analogues ou les r&eacute;mun&eacute;rations de services de toute nature pay&eacute;s ou dus entre entreprises ivoiriennes appartenant au m&ecirc;me groupe.</p>
+<p>Loi n&deg; 2020-972 du 23 d&eacute;c. 2020, an. fiscale, art. 1-1.</p>
+<p>Les sommes vers&eacute;es ne sont admises comme charges d&eacute;ductibles pour l&rsquo;&eacute;tablissement de l&rsquo;imp&ocirc;t que si le d&eacute;biteur apporte la preuve que ces d&eacute;penses correspondent &agrave; des op&eacute;rations r&eacute;elles et qu&rsquo;elles ne pr&eacute;sentent pas un caract&egrave;re anormal ou exag&eacute;r&eacute;.</p>
+<p>La d&eacute;duction est plafonn&eacute;e &agrave; 5 % du chiffre d&rsquo;affaires dans la limite de 20 % des frais g&eacute;n&eacute;raux de l&rsquo;entreprise d&eacute;bitrice.</p>
+<p>Loi n&deg;2004-271 du 15 avril 2004, an. fiscale, art. 18.</p>
+<p>6&deg;	Les int&eacute;r&ecirc;ts servis aux personnes physiques ou morales directement ou indirectement li&eacute;es &agrave; la soci&eacute;t&eacute;, en r&eacute;mun&eacute;ration des sommes qu&rsquo;elles laissent ou mettent &agrave; la disposition de la soci&eacute;t&eacute; en sus de leur part de capital, quelle que soit la forme de celle-ci, dans les limites suivantes :</p>
+<p>- le montant total des sommes laiss&eacute;es &agrave; la disposition de la soci&eacute;t&eacute; par l&rsquo;ensemble de ces personnes ne peut exc&eacute;der le montant du capital social de celle-ci;</p>
+<p>Loi n&deg; 2018 - 984 du 28 d&eacute;cembre 2018, an. fiscale art. 20-1</p>
+<p>- le montant total des int&eacute;r&ecirc;ts servis au titre des sommes susvis&eacute;es ne peut exc&eacute;der 30 % du r&eacute;sultat de l'entreprise avant imp&ocirc;t, int&eacute;r&ecirc;ts, dotations aux amortissements sur immobilisations et provisions ;</p>
+<p>- le taux des int&eacute;r&ecirc;ts servis ne peut exc&eacute;der le taux moyen des avances de la BCEAO pratiqu&eacute; au titre de l&rsquo;ann&eacute;e en cours, major&eacute; de deux points ;</p>
+<p>- le remboursement des sommes doit intervenir dans les 5 ann&eacute;es suivant leur mise &agrave; disposition et la soci&eacute;t&eacute; ne doit pas faire l&rsquo;objet d&rsquo;une liquidation pendant cette p&eacute;riode. Dans le cas contraire, les int&eacute;r&ecirc;ts d&eacute;duits au titre de ces sommes sont rapport&eacute;s au r&eacute;sultat de la sixi&egrave;me ann&eacute;e ou de l&rsquo;ann&eacute;e de liquidation ;</p>
+<p>- les int&eacute;r&ecirc;ts servis &agrave; ces personnes ne sont d&eacute;ductibles, quel que soit leur montant, qu&rsquo;&agrave; condition que le capital social de la soci&eacute;t&eacute; emprunteuse ait &eacute;t&eacute; enti&egrave;rement lib&eacute;r&eacute;.</p>
+<p>Loi n&deg; 84-1367 du 26 d&eacute;c. 1984, an. fiscale, art. 4; ord. n&deg; 2000-252 du 28 mars 2000, an. fiscale, art. 21-1&deg;; ord. n&deg; 2006-234 du 02 ao&ucirc;t 2006, an. fiscale, art. 1er -9; loi n&deg; 2017-870 du 27 d&eacute;cembre 2017, an. fiscale art. 14-3.</p>
+<p>7&deg;	[Obsol&egrave;te].</p>
+<p>Loi n&deg; 2004-271 du 15 avril 2004, an. fiscale, art.5-1.</p>
+<p>8&deg;	Les primes d&rsquo;assurances vers&eacute;es par l&rsquo;entreprise &agrave; une compagnie d&rsquo;assurances ivoirienne dans le cadre de contrats relatifs aux indemnit&eacute;s de fin de carri&egrave;re.</p>
+<p>La d&eacute;duction de ces cotisations n&rsquo;est admise qu&rsquo;&agrave; la condition que le contrat d&rsquo;assurances pr&eacute;sente un caract&egrave;re g&eacute;n&eacute;ral c&rsquo;est-&agrave;-dire concerne l&rsquo;ensemble du personnel ou une ou plusieurs cat&eacute;gories d&eacute;termin&eacute;es de celui-ci.</p>
+<p>Loi n&deg; 2005-161 du 27 avril 2005, an. fiscale, art. 8.</p>
+<p>9&deg; La valeur des biens normalement amortissables, &agrave; condition que leur prix unitaire n&rsquo;exc&egrave;de pas 300 000 francs et que ceux-ci soient inscrits en frais g&eacute;n&eacute;raux.</p>
+<p>Ord. n&deg; 2006-234 du 02 ao&ucirc;t 2006, an. fiscale, art. 1er-14; ord. n&deg; 2007-675 du 28 d&eacute;cembre 2007, an. fiscale, art. 9 .</p>
+<p>10&deg; [Obsol&egrave;te].</p>
+<p>Ord. n&deg; 2008-381 du 18 d&eacute;cembre 2008, an. fiscale, art. 28.</p>
+<p>&nbsp;</p>
+<p>B)</p>
+<p>1&deg; Les amortissements r&eacute;ellement effectu&eacute;s par l&rsquo;entreprise, dans la limite de ceux qui sont g&eacute;n&eacute;ralement admis d&rsquo;apr&egrave;s les usages de chaque nature d&rsquo;industrie, de commerce ou d&rsquo;exploitation, y compris ceux qui ont &eacute;t&eacute; r&eacute;guli&egrave;rement comptabilis&eacute;s en application des dispositions de l&rsquo;alin&eacute;a ci-apr&egrave;s, mais r&eacute;put&eacute;s diff&eacute;r&eacute;s en p&eacute;riode d&eacute;ficitaire; ces derniers amortissements doivent obligatoirement &ecirc;tre inscrits &agrave; un compte sp&eacute;cial &laquo; amortissements diff&eacute;r&eacute;s&raquo; puis pr&eacute;lev&eacute;s sur les r&eacute;sultats des premiers exercices suivants, laissant appara&icirc;tre un b&eacute;n&eacute;fice suffisant en plus de l&rsquo;annuit&eacute; aff&eacute;rente &agrave; ces b&eacute;n&eacute;fices et du report &eacute;ventuel des d&eacute;ficits ant&eacute;rieurs dans la limite pr&eacute;vue par l&rsquo;article 26 ci-apr&egrave;s.</p>
+<p>A la cl&ocirc;ture de chaque exercice, la somme des amortissements effectivement pratiqu&eacute;s depuis l&rsquo;acquisition ou la cr&eacute;ation d&rsquo;un &eacute;l&eacute;ment donn&eacute; doit &ecirc;tre &eacute;gale au montant cumul&eacute; des amortissements calcul&eacute;s suivant le mode lin&eacute;aire et r&eacute;partis sur la dur&eacute;e normale d&rsquo;utilisation.</p>
+<p>A d&eacute;faut de se conformer aux obligations figurant dans les deux pr&eacute;c&eacute;dents alin&eacute;as, l&rsquo;entreprise perd d&eacute;finitivement le droit de d&eacute;duire la fraction d&rsquo;amortissements qui n&rsquo;a pas &eacute;t&eacute; r&eacute;guli&egrave;rement comptabilis&eacute;e ou pr&eacute;lev&eacute;e.</p>
+<p>Ord. n&deg; 76-722 du 15 d&eacute;c. 1976, art. 1.</p>
+<p>Le taux d&rsquo;amortissement annuel est fix&eacute; &agrave; 50 % en ce qui concerne :</p>
+<p>&ndash;	le mat&eacute;riel informatique et les logiciels;</p>
+<p>Ord n&deg; 2007-675 du 28 d&eacute;cembre 2007, an. fiscale, art. 8-1. </p>
+<p>&ndash; [Obsol&egrave;te].</p>
+<p>Loi n&deg; 2002-156 du 15 mars 2002, an. fiscale, art. 12-1&deg;; loi n&deg; 2004-271 du 15 avril 2004, an. fiscale, art. 2-1.</p>
+<p>S&rsquo;agissant des biens vis&eacute;s au premier tiret ci-dessus, les entreprises peuvent opter pour l&rsquo;application du taux pratiqu&eacute; d&rsquo;apr&egrave;s les usages du secteur d&rsquo;activit&eacute;. </p>
+<p>Toutefois, cette p&eacute;riode ne peut exc&eacute;der cinq ans.</p>
+<p>Ord.n&deg; 2007-675 du 28 d&eacute;cembre 2007, an. fiscale, art. 8-2 .</p>
+<p>2&deg;	Les biens donn&eacute;s en location dans le cadre d&rsquo;une op&eacute;ration de cr&eacute;dit-bail sont amortissables sur la dur&eacute;e du contrat chez le cr&eacute;dit-bailleur et le cr&eacute;dit-preneur. </p>
+<p>Loi n&deg; 2016-1116 du 08 d&eacute;cembre 2016, an. fiscale, art. 11.</p>
+<p>En cas de non lev&eacute;e de l&rsquo;option d&rsquo;achat par le preneur, la reprise du bien, objet de l&rsquo;op&eacute;ration de cr&eacute;dit-bail par le cr&eacute;dit-bailleur est assimil&eacute;e &agrave; une op&eacute;ration de cession.</p>
+<p>Loi n&deg; 97-06 du 6 janv. 1997, an. fiscale, art. 1-4&deg;; ord. n&deg; 2000-252 du 28 mars 2000, an. fiscale, art. 16-9&deg;.</p>
+<p>3&deg;	Les licences d&rsquo;exploitation des entreprises de t&eacute;l&eacute;phonie cellulaire d&eacute;livr&eacute;es par l&rsquo;Etat de C&ocirc;te d&rsquo;Ivoire sont amortissables sur leur dur&eacute;e d&rsquo;utilisation totale.</p>
+<p>En cas de paiement fractionn&eacute;, le droit &agrave; amortissement na&icirc;t &agrave; la date de paiement de l&rsquo;acompte ou de l&rsquo;avance. La dur&eacute;e d&rsquo;amortissement de la licence demeure toutefois &eacute;gale &agrave; la dur&eacute;e d&rsquo;utilisation.</p>
+<p>Pour les entreprises ayant acquis la licence d&rsquo;exploitation post&eacute;rieurement &agrave; leur d&eacute;but d&rsquo;activit&eacute;, la dur&eacute;e d&rsquo;amortissement de la licence est &eacute;gale &agrave; la dur&eacute;e d&rsquo;utilisation restant &agrave; courir &agrave; sa date d&rsquo;acquisition.</p>
+<p>Loi n&deg; 2002-156 du 15 mars 2002, an. fiscale, art. 15.</p>
+<p>&nbsp;</p>
+<p>C) </p>
+<p>1&deg;	Pourront toutefois faire l&rsquo;objet d&rsquo;un amortissement acc&eacute;l&eacute;r&eacute; :</p>
+<p>&ndash; Les mat&eacute;riels et outillages neufs remplissant &agrave; la fois la double condition :</p>
+<p>a)	d&rsquo;&ecirc;tre utilis&eacute;s exclusivement pour les op&eacute;rations industrielles de fabrication, de manutention, de transport ou d&rsquo;exploitation agricole ;</p>
+<p>b)	d&rsquo;&ecirc;tre normalement utilisables pendant plus de cinq ans.</p>
+<p>&ndash;	Les mat&eacute;riels sp&eacute;cifiques &agrave; la t&eacute;l&eacute;phonie acquis par les entreprises concessionnaires de service public de t&eacute;l&eacute;phonie ou titulaires d&rsquo;une licence d&rsquo;exploitation. </p>
+<p>Ord. n&deg; 2007-488 du 31 mai 2007, an. fiscale, art. 5.</p>
+<p>Pour ces mat&eacute;riels et outillages, le montant de la premi&egrave;re annuit&eacute; d&rsquo;amortissement, calcul&eacute; d&rsquo;apr&egrave;s leur dur&eacute;e d&rsquo;utilisation normale, pourra &ecirc;tre double, cette dur&eacute;e &eacute;tant alors r&eacute;duite d&rsquo;une ann&eacute;e.</p>
+<p>Ord. n&deg; 2006-234 du 02 ao&ucirc;t 2006, an. fiscale, art. 3-2.</p>
+<p>2&deg;	Sous r&eacute;serve de l&rsquo;agr&eacute;ment d&rsquo;une demande d&eacute;pos&eacute;e &agrave; la Direction g&eacute;n&eacute;rale des Imp&ocirc;ts dans les m&ecirc;mes formes que celles d&eacute;finies &agrave; l&rsquo;article 110-5&deg; du pr&eacute;sent Code, les entreprises peuvent opter pour l&rsquo;application &agrave; leurs mat&eacute;riels et outillages neufs d&rsquo;un amortissement d&eacute;gressif.</p>
+<p>Cette d&eacute;gressivit&eacute; est obtenue par l&rsquo;affectation au taux d&rsquo;amortissement lin&eacute;aire de coefficients de majoration fix&eacute;s par arr&ecirc;t&eacute; du Minist&egrave;re en charge de l&rsquo;Economie et des Finances.</p>
+<p>Loi n&deg; 84-1232 du 8 nov. 1984, art. 4. Voir arr&ecirc;t&eacute; n&deg; 102/MEF/DGI/ CT du 4 f&eacute;vr. 1985, divers textes fiscaux : texte n&deg;8 partie r&eacute;glementaire.</p>
+<p>3&deg;	Un amortissement acc&eacute;l&eacute;r&eacute; de 40 % du prix de revient des immeubles affect&eacute;s au logement du personnel des entreprises industrielles et commerciales pourra &ecirc;tre pratiqu&eacute; &agrave; la cl&ocirc;ture du premier exercice suivant la date d&rsquo;ach&egrave;vement de ceux de ces immeubles construits en dur, comportant les conditions de salubrit&eacute; et de confort fix&eacute;es par les r&egrave;glements d&rsquo;hygi&egrave;ne et dont la valeur d&rsquo;immobilisation correspondant &agrave; un logement de trois pi&egrave;ces habitables avec cuisine, douchi&egrave;re, water-closets et, dans les localit&eacute;s o&ugrave; elles existent, installations d&rsquo;eau et d&rsquo;&eacute;clairage &eacute;lectrique, ne d&eacute;passera pas vingt millions de francs hors taxes.</p>
+<p>Loi n&deg; 81-150 du 27 f&eacute;vr. 1981. an. fiscale, art. 14; loi n&deg; 2013-908 du 26 d&eacute;cembre 2013. an. fiscale, art.4.</p>
+<p>L&rsquo;amortissement de la valeur r&eacute;siduelle des immeubles en cause sera effectu&eacute; dans les conditions ordinaires et bas&eacute; sur leur dur&eacute;e normale d&rsquo;utilisation.</p>
+<p>Les immeubles ou portions d&rsquo;immeubles qui, au cours de cette dur&eacute;e normale d&rsquo;amortissement, seraient affect&eacute;s &agrave; un usage autre que le logement du personnel de l&rsquo;entreprise, cesseront d&rsquo;avoir droit au b&eacute;n&eacute;fice des dispositions ci-dessus et la Direction g&eacute;n&eacute;rale des Imp&ocirc;ts sera fond&eacute;e &agrave; proc&eacute;der au r&eacute;ajustement des amortissements dont ils auront &eacute;t&eacute; l&rsquo;objet, en vue de r&eacute;int&eacute;grer dans les b&eacute;n&eacute;fices imposables les amortissements exc&eacute;dentaires.</p>
+<p>D)	Les imp&ocirc;ts &agrave; la charge de l&rsquo;entreprise mis en recouvrement au cours de l&rsquo;exercice, &agrave; l&rsquo;exception de l&rsquo;imp&ocirc;t c&eacute;dulaire sur les b&eacute;n&eacute;fices et de tous imp&ocirc;ts et taxes incombant &agrave; des tiers et dont elle est le redevable l&eacute;gal. Si des d&eacute;gr&egrave;vements sont ult&eacute;rieurement accord&eacute;s sur les imp&ocirc;ts d&eacute;ductibles, leur montant entre dans les recettes de l&rsquo;exercice au cours duquel l&rsquo;exploitant est avis&eacute; de ces d&eacute;gr&egrave;vements.</p>
+<p>Loi n&deg;2004-271 du 15 avril 2004, an. fiscale art. 15.</p>
+<p>&nbsp;</p>
+<p>E) </p>
+<p>1&deg; Les provisions constitu&eacute;es en vue de faire face &agrave; des pertes ou charges nettement pr&eacute;cis&eacute;es et que les &eacute;v&eacute;nements en cours rendent probables, &agrave; condition qu&rsquo;elles aient &eacute;t&eacute; effectivement constat&eacute;es dans les &eacute;critures de l&rsquo;exercice et figurent au relev&eacute; des provisions pr&eacute;vu &agrave; l&rsquo;article 36 ci-apr&egrave;s.</p>
+<p>L&rsquo;indemnit&eacute; pour cong&eacute;s pay&eacute;s rev&ecirc;t du point de vue fiscal le caract&egrave;re d&rsquo;un salaire de substitution qui constitue une charge normale de l&rsquo;exercice au cours duquel le salari&eacute; prend le cong&eacute; correspondant et ne peut donc faire l&rsquo;objet d&rsquo;une provision fiscalement d&eacute;ductible du b&eacute;n&eacute;fice imposable.</p>
+<p>Loi n&deg; 84-1367 du 26 d&eacute;c. 1984, an. fiscale, art. 4.</p>
+<p>Les pertes de change ne peuvent donner lieu &agrave; constitution de provisions d&eacute;ductibles.</p>
+<p>Loi n&deg; 95-05 du 11 janv. 1995, an. fiscale, art. 16.</p>
+<p>2&deg;	&ndash; Les provisions constitu&eacute;es par les &eacute;tablissements de banque ou de cr&eacute;dit destin&eacute;es &agrave; faire face aux risques particuliers aff&eacute;rents aux pr&ecirc;ts ou op&eacute;rations &agrave; moyen et long terme pourront toutefois &ecirc;tre constitu&eacute;es en franchise d&rsquo;imp&ocirc;t par ces &eacute;tablissements ainsi que celles constitu&eacute;es par les soci&eacute;t&eacute;s se livrant &agrave; des op&eacute;rations de cr&eacute;dit foncier.</p>
+<p>La dotation annuelle de la provision pr&eacute;vue ci-dessus peut atteindre 5 % du b&eacute;n&eacute;fice comptable de chaque exercice, sans que le montant de ladite provision puisse exc&eacute;der 5 % du total des cr&eacute;dits &agrave; moyen et &agrave; long terme effectivement utilis&eacute;s.</p>
+<p>&ndash;	les provisions pour d&eacute;pr&eacute;ciation de cr&eacute;ances constitu&eacute;es par les banques et &eacute;tablissements financiers en application des normes de prudence &eacute;dict&eacute;es par la Banque Centrale des Etats de l&rsquo;Afrique de l&rsquo;Ouest (BCEAO).</p>
+<p>Toutefois, la constitution de ces derni&egrave;res provisions n&rsquo;est pas cumulable avec celle de toute autre provision d&eacute;termin&eacute;e de fa&ccedil;on forfaitaire, notamment celle pr&eacute;vue au premier tiret pr&eacute;c&eacute;dent.</p>
+<p>Ord. n&deg; 2008-381 du 18 d&eacute;cembre 2008, an. fiscale, art. 8.</p>
+<p>3&deg;	Les provisions destin&eacute;es &agrave; faire face aux risques particuliers qui pourraient r&eacute;sulter des op&eacute;rations de r&eacute;escompte d&rsquo;effets souscrits par les &eacute;tablissements de banque ou de cr&eacute;dit aupr&egrave;s des caisses de cr&eacute;dit agricole.</p>
+<p>Le montant annuel de cette provision ne pourra d&eacute;passer 10 % des utilisations de la fiche de r&eacute;escompte dont le plafond est limit&eacute; &agrave; 250 millions de francs.</p>
+<p>La constitution de cette provision cessera lorsque le montant cumul&eacute; des provisions constitu&eacute;es annuellement aura atteint 50 % de la limite susvis&eacute;e, soit 125 millions de francs.</p>
+<p>Les pertes qui pourraient provenir de l&rsquo;irr&eacute;couvrabilit&eacute; &eacute;ventuelle des effets r&eacute;escompt&eacute;s seront imput&eacute;es sur le montant de la provision ainsi constitu&eacute;e.</p>
+<p>Lorsqu&rsquo;il sera mis fin aux op&eacute;rations de r&eacute;escompte vis&eacute;es ci-dessus, le reliquat de la provision sera rapport&eacute; au b&eacute;n&eacute;fice imposable de l&rsquo;exercice au cours duquel elle sera devenue sans objet.</p>
+<p>4&deg;	Une provision &eacute;gale &agrave; 5 % du montant de leur encours par exercice social pourra &ecirc;tre constitu&eacute;e en franchise d&rsquo;imp&ocirc;t par les &eacute;tablissements de banques agr&eacute;&eacute;s comme banque de d&eacute;veloppement. Le montant cumul&eacute; des provisions ainsi constitu&eacute;es ne pourra d&eacute;passer 10 % du montant total de l&rsquo;encours.</p>
+<p>Loi n&deg; 71 -683 du 28 d&eacute;c. 1971, an. fiscale, art. 18.</p>
+<p>5&deg; Les provisions statistiques pour cr&eacute;ances douteuses ou litigieuses constitu&eacute;es par les entreprises concessionnaires de service public et les entreprises de t&eacute;l&eacute;phonie titulaires d&rsquo;une licence d&rsquo;exploitation.</p>
+<p>Ord. n&deg; 2006-234 du 02 ao&ucirc;t 2006, an. fiscale, art. 3-3; ord. n&deg; 2007-675 du 28 d&eacute;cembre 2007, an. fiscale, art. 6-1 .</p>
+<p>6&deg; Les provisions pour remise en &eacute;tat du patrimoine conc&eacute;d&eacute;, constitu&eacute;es par les entreprises concessionnaires de service public.</p>
+<p>Les conditions de constitution des provisions vis&eacute;es aux 5&deg; et 6&deg; pr&eacute;c&eacute;dents sont fix&eacute;es chaque ann&eacute;e apr&egrave;s accord de l&rsquo;Administration fiscale.</p>
+<p>Ord. n&deg; 2006-234 du 02 ao&ucirc;t 2006, an. fiscale, art. 3-3.</p>
+<p>7&deg; Les provisions constitu&eacute;es par les compagnies d&rsquo;assurances destin&eacute;es &agrave; faire face aux sinistres tardifs et aux annulations de primes, &agrave; condition que ces provisions soient d&eacute;termin&eacute;es conform&eacute;ment &agrave; la m&eacute;thode de la cadence pr&eacute;vue par les r&egrave;gles prudentielles de la Conf&eacute;rence Interafricaine des March&eacute;s d&rsquo;Assurances (CIMA).</p>
+<p>Ord. n&deg; 2007-488 du 31 mai 2007, an. fiscale, art. 4.</p>
+<p>8&deg; Les pertes des banques et &eacute;tablissements financiers se rapportant aux cr&eacute;ances accord&eacute;es dans le respect des normes de prudence &eacute;dict&eacute;es par la Banque Centrale des Etats de l&rsquo;Afrique de l&rsquo;Ouest, class&eacute;es douteuses ou litigieuses, ayant pr&eacute;alablement fait l&rsquo;objet de provisions et non recouvr&eacute;es au terme du cinqui&egrave;me exercice comptable, &agrave; compter de leur transfert en cr&eacute;ances douteuses ou litigieuses. La non-production de l&rsquo;&eacute;tat des cr&eacute;ances douteuses pr&eacute;vues &agrave; l&rsquo;article 36 du pr&eacute;sent Code entra&icirc;ne le rejet de la charge ant&eacute;rieurement d&eacute;duite.</p>
+<p>Loi n&deg; 2020-972 du 23 d&eacute;c. 2020, an. fiscale, art. 5-1.</p>
+<p>F)	Les provisions vis&eacute;es au E ci-dessus qui, en tout ou en partie, re&ccedil;oivent un emploi non conforme &agrave; leur destination ou deviennent sans objet au cours d&rsquo;un exercice ult&eacute;rieur, sont rapport&eacute;es aux recettes dudit exercice, sauf disposition r&eacute;glementaire contraire. Lorsque le rapport n&rsquo;a pas &eacute;t&eacute; effectu&eacute; par l&rsquo;entreprise elle-m&ecirc;me, l&rsquo;Administration peut proc&eacute;der aux redressements n&eacute;cessaires d&egrave;s qu&rsquo;elle constate que les provisions sont devenues sans objet. Dans ce cas, ces provisions sont, s&rsquo;il y a lieu, rapport&eacute;es aux recettes du plus ancien des exercices soumis &agrave; v&eacute;rification.</p>
+<p>G)	Les dons et lib&eacute;ralit&eacute;s consentis :</p>
+<p>&ndash;	aux associations sportives reconnues par le Ministre en charge des Sports et d&eacute;sign&eacute;es par arr&ecirc;t&eacute; conjoint du Ministre charg&eacute; du Budget et du Ministre en charge des Sports;</p>
+<p>&ndash;	aux organismes de recherche scientifique d&eacute;sign&eacute;s par arr&ecirc;t&eacute; conjoint du Ministre charg&eacute; du Budget et du Ministre de la Recherche scientifique;</p>
+<p>&ndash;	aux associations et organismes &oelig;uvrant dans les domaines de la Sant&eacute; publique et de l&rsquo;Action sociale, d&eacute;sign&eacute;s par arr&ecirc;t&eacute; conjoint du Ministre charg&eacute; du Budget et du Ministre de la Sant&eacute; et de la Protection sociale;</p>
+<p>&ndash;	aux associations &oelig;uvrant dans le domaine de la culture et de l&rsquo;enseignement reconnues par le Ministre de la Culture ou de l&rsquo;Enseignement et d&eacute;sign&eacute;es par arr&ecirc;t&eacute; conjoint du Ministre charg&eacute; du Budget et du Ministre de tutelle concern&eacute;;</p>
+<p>&ndash;	&agrave; l&rsquo;Etat ou &agrave; ses d&eacute;membrements dans les domaines de l&rsquo;&eacute;ducation, de la sant&eacute; ou des infrastructures collectives dans les zones ex-assi&eacute;g&eacute;es.</p>
+<p>Ord. n&deg; 2006-234 du 02 ao&ucirc;t 2006, an. fiscale, art. 1er-12; ord. n&deg; 2007-675 du 28 d&eacute;cembre 2007, an. fiscale, art. 5 ; ord. n&deg; 2009-382 du 26 novembre 2009, an. fiscale, art. 1-1</p>
+<p>&ndash;	aux associations religieuses reconnues par le Minist&egrave;re en charge des Cultes sur la base d&rsquo;un programme ou d&rsquo;un bilan d&rsquo;actions sociales prouv&eacute;es;</p>
+<p>&ndash; aux malades d&eacute;munis pr&eacute;sent&eacute;s par les services sanitaires ou sociaux ou par les centres de sant&eacute; publics;</p>
+<p>&ndash; aux &eacute;l&egrave;ves et &eacute;tudiants ivoiriens non boursiers de l&rsquo;Etat sous la forme de bourses d&rsquo;&eacute;tudes annuelles;</p>
+<p>&ndash; aux personnes handicap&eacute;es, par les entreprises qui engagent des d&eacute;penses pour la fourniture d&rsquo;installations de r&eacute;&eacute;ducation, de mat&eacute;riels orthop&eacute;diques et autres mat&eacute;riels sp&eacute;cifiques;</p>
+<p>&ndash; aux associations de jeunes et de femmes pour les aider &agrave; initier ou &agrave; d&eacute;velopper une activit&eacute; lucrative;</p>
+<p>&ndash;	aux associations qui &oelig;uvrent &agrave; la r&eacute;adaptation des toxicomanes et des alcooliques;</p>
+<p>&ndash; aux organismes priv&eacute;s &agrave; but non lucratif qui &oelig;uvrent &agrave; la conservation de l&rsquo;environnement;</p>
+<p>&ndash;	aux mutuelles pour leurs op&eacute;rations de financement, de construction, de r&eacute;habilitation ou d&rsquo;&eacute;quipement d&rsquo;&eacute;coles, de centres de sant&eacute; ou de centres polyvalents au profit d&rsquo;une collectivit&eacute;.</p>
+<p>Ord. n&deg; 2009-382 du 26 novembre 2009, an. fiscale, art.1-1</p>
+<p>&ndash; &agrave; l&rsquo;Etat ou aux organismes publics &oelig;uvrant dans le domaine de la salubrit&eacute; urbaine et de l&rsquo;assainissement, par les entreprises publiques ou priv&eacute;es.</p>
+<p>Loi n&deg; 2016-1116 du 08 d&eacute;cembre 2016, an. fiscale, art. 13.</p>
+<p>- aux organismes de recherche scientifique, aux entreprises priv&eacute;es engag&eacute;es dans la recherche, le d&eacute;veloppement et l&rsquo;innovation, aux inventeurs et innovateurs nationaux. </p>
+<p>Loi n&deg; 2019-1080 du 18 d&eacute;cembre 2019, an. fiscale, art. 5-1er</p>
+<p>La valeur des dons et lib&eacute;ralit&eacute;s consentis est d&eacute;ductible dans la double limite de 2,5 % du chiffre d&rsquo;affaires et de 200 millions de francs par an.</p>
+<p>Loi n&deg; 2003-206 du 7 juillet 2003, an. fiscale, art. 39-1.</p>
+<p>En ce qui concerne les bourses d&rsquo;&eacute;tudes annuelles, elles ne doivent exc&eacute;der la double limite particuli&egrave;re de 600 000 francs pour chaque &eacute;tudiant b&eacute;n&eacute;ficiaire et 12 000 000 de francs par entreprise donatrice. Les sommes ne doivent &ecirc;tre vers&eacute;es ni aux conjoints, ni aux ascendants et descendants des membres de la direction et des cadres de l&rsquo;entreprise. Ce seuil de 600 000 francs est port&eacute; &agrave; 1 000 000 de francs pour les &eacute;tudiants en cycle de recherche.</p>
+<p>Ord. n&deg; 2009-382 du 26 novembre 2009, an. fiscale, art.1-1</p>
+<p>Le co&ucirc;t de r&eacute;alisation des routes, pistes rurales, h&ocirc;pitaux, dispensaires, &eacute;coles et ch&acirc;teaux d&rsquo;eau r&eacute;alis&eacute;s par les entreprises priv&eacute;es au profit des collectivit&eacute;s territoriales ou des populations est &eacute;galement d&eacute;ductible des r&eacute;sultats de ces entreprises, dans la double limite de 3 % du chiffre d&rsquo;affaires et de 500 000 000 de francs par an.</p>
+<p>Loi n&deg;2004-271 du 15 avril 2004, an. fiscale, art. 16-1.</p>
+<p>Le b&eacute;n&eacute;fice des dispositions pr&eacute;c&eacute;dentes est subordonn&eacute; &agrave; la condition que soient jointes &agrave; la d&eacute;claration des r&eacute;sultats, les pi&egrave;ces justificatives attestant du montant et de la date de chaque versement, ainsi que de l&rsquo;identit&eacute; du b&eacute;n&eacute;ficiaire. A d&eacute;faut, les sommes d&eacute;duites sont r&eacute;int&eacute;gr&eacute;es d&rsquo;office au r&eacute;sultat imposable.</p>
+<p>Ord. n&deg; 2000-252 du 28 mars 2000, an. fiscale, art. 6-1&deg;.</p>
+<p>S&rsquo;agissant des dons d&rsquo;ouvrages d&rsquo;utilit&eacute; publique, il devra &eacute;galement &ecirc;tre joint &agrave; la d&eacute;claration de r&eacute;sultats une preuve de leur r&eacute;ception par l&rsquo;Etat ou une collectivit&eacute; territoriale.</p>
+<p>Loi n&deg;2004-271 du 15 avril 2004, an. fiscale, art. 16-2.</p>
+<p>Les r&eacute;alisations sociales effectu&eacute;es par la LONACI, &agrave; la demande de l&rsquo;Etat et approuv&eacute;es par son Conseil d&rsquo;Administration sont d&eacute;ductibles en totalit&eacute; des r&eacute;sultats de ladite soci&eacute;t&eacute;.</p>
+<p>Ord. n&deg; 2007-675 du 28 d&eacute;cembre 2007, an. fiscale, art. 31-2 .</p>
+<BR><BR><BR>
+</div></span><finh2318>
+
+<span class="historique" ID="h2518">
+<div class="histText">
+Art. 18 
+<p>Le b&eacute;n&eacute;fice net est &eacute;tabli sous d&eacute;duction de toutes charges, celles-ci comprenant notamment :</p>
+<p>A)</p>
+<p>1&deg;- Les frais g&eacute;n&eacute;raux de toute nature, le loyer des immeubles dont l'entreprise est locataire, les r&eacute;mun&eacute;rations &agrave; titre de d&eacute;penses de personnel et de main-d'&oelig;uvre. Toutefois, ces r&eacute;mun&eacute;rations ne sont admises en d&eacute;duction que dans la mesure o&ugrave; elles correspondent &agrave; un travail effectif et ne sont pas excessives eu &eacute;gard &agrave; l'importance du service rendu. Cette disposition s'applique &agrave; toutes les r&eacute;mun&eacute;rations directes ou indirectes, y compris les indemnit&eacute;s, allocations, avantages en nature et remboursement de frais.</p>
+<p>2&deg;- Les appointements que les exploitants individuels pr&eacute;l&egrave;vent sur leurs recettes professionnelles &agrave; titre de r&eacute;mun&eacute;ration de leur travail personnel sont exclus des charges d&eacute;ductibles. Il en est de m&ecirc;me des d&eacute;penses expos&eacute;es dans l'int&eacute;r&ecirc;t personnel de l'exploitant.</p>
+<p>3&deg;- Le salaire du conjoint de l'exploitant individuel peut, &agrave; la demande du contribuable, &ecirc;tre d&eacute;duit du b&eacute;n&eacute;fice imposable, dans la mesure o&ugrave; il correspond &agrave; un travail effectif, et n'est pas excessif eu &eacute;gard &agrave; l'importance du service rendu, &agrave; la condition qu'il soit justifi&eacute; que ce salaire a donn&eacute; lieu aux pr&eacute;l&egrave;vements sociaux et fiscaux en vigueur.</p>
+<p>Loi n&deg;- 84-1367 du 26 d&eacute;c. 1984, an. fiscale,Art. 4.</p>
+<p>4&deg;- Les indemnit&eacute;s de fonction allou&eacute;es aux administrateurs des soci&eacute;t&eacute;s anonymes, dont le montant est fix&eacute; par l'assembl&eacute;e g&eacute;n&eacute;rale ordinaire desdites soci&eacute;t&eacute;s, sont d&eacute;ductibles dans la limite de 3 000 000 de francs par an et par b&eacute;n&eacute;ficiaire.</p>
+<p>Ord. n&deg;- 2011-480 du 28 d&eacute;cembre 2011Art. 11.</p>
+<p>Ces limites ne sont pas applicables, selon le cas, aux r&eacute;mun&eacute;rations permanentes et indemnit&eacute;s de fonctions allou&eacute;es au pr&eacute;sident directeur g&eacute;n&eacute;ral et au directeur g&eacute;n&eacute;ral adjoint, ou au pr&eacute;sident du conseil d'administration et au directeur g&eacute;n&eacute;ral, ou &agrave; l'administrateur g&eacute;n&eacute;ral adjoint, ainsi qu'aux r&eacute;mun&eacute;rations exceptionnelles allou&eacute;es par le conseil d'Administration &agrave; ses membres pour des missions et mandats qui leur sont confi&eacute;s, et aux remboursements de frais et d&eacute;penses engag&eacute;s dans l'int&eacute;r&ecirc;t de la soci&eacute;t&eacute; et autoris&eacute;s par le conseil d'administration .</p>
+<p>Ord. n&deg;- 2000-252 du 28 mars 2000, Art. 15-1&deg;-.</p>
+<p>5&deg;- Les int&eacute;r&ecirc;ts, arr&eacute;rages et autres produits des obligations, cr&eacute;ances, d&eacute;p&ocirc;ts et cautionnements , les redevances de cession ou concession de licence d'exploitation, de brevets d'invention, de marques de fabrique, proc&eacute;d&eacute;s ou formules de fabrication et autres droits analogues ou les r&eacute;mun&eacute;rations de services de toute nature pay&eacute;s ou dus entre entreprises ivoiriennes appartenant au m&ecirc;me groupe.</p>
+<p>Loi n&deg; 2020-972 du 23 d&eacute;c. 2020, an. fiscale,Art. 1-1.</p>
+<p>Les sommes vers&eacute;es ne sont admises comme charges d&eacute;ductibles pour l'&eacute;tablissement de l'imp&ocirc;t que si le d&eacute;biteur apporte la preuve que ces d&eacute;penses correspondent &agrave; des op&eacute;rations r&eacute;elles et qu'elles ne pr&eacute;sentent pas un caract&egrave;re anormal ou exag&eacute;r&eacute;.</p>
+<p>La d&eacute;duction est plafonn&eacute;e &agrave; 5 % du chiffre d'affaires dans la limite de 20 % des frais g&eacute;n&eacute;raux de l'entreprise d&eacute;bitrice.</p>
+<p>Loi n&deg;-2004-271 du 15 avril 2004, an. fiscale,Art. 18.</p>
+<p>6&deg;- Les int&eacute;r&ecirc;ts servis aux personnes physiques ou morales directement ou indirectement li&eacute;es &agrave; la soci&eacute;t&eacute;, en r&eacute;mun&eacute;ration des sommes qu'elles laissent ou mettent &agrave; la disposition de la soci&eacute;t&eacute; en sus de leur part de capital, quelle que soit la forme de celle-ci, dans les limites suivantes :</p>
+<p>- le montant total des sommes laiss&eacute;es &agrave; la disposition de la soci&eacute;t&eacute; par l'ensemble de ces personnes ne peut exc&eacute;der le montant du capital social de celle-ci ;</p>
+<p>- le montant total des int&eacute;r&ecirc;ts servis au titre des sommes susvis&eacute;es ne peut exc&eacute;der 30 % du r&eacute;sultat de l'entreprise avant imp&ocirc;t, int&eacute;r&ecirc;ts, dotations aux amortissements sur immobilisations et provisions ;</p>
+<p>- le taux des int&eacute;r&ecirc;ts servis ne peut exc&eacute;der le taux moyen des avances de la BCEAO pratiqu&eacute; au titre de l'ann&eacute;e en cours, major&eacute; de deux points ;</p>
+<p>- le remboursement des sommes doit intervenir dans les 5 ann&eacute;es suivant leur mise &agrave; disposition et la soci&eacute;t&eacute; ne doit pas faire l'objet d'une liquidation pendant cette p&eacute;riode. Dans le cas contraire, les int&eacute;r&ecirc;ts d&eacute;duits au titre de ces sommes sont rapport&eacute;s au r&eacute;sultat de la sixi&egrave;me ann&eacute;e ou de l'ann&eacute;e de liquidation ;</p>
+<p>- les int&eacute;r&ecirc;ts servis &agrave; ces personnes ne sont d&eacute;ductibles, quel que soit leur montant, qu'&agrave; condition que le capital social de la soci&eacute;t&eacute; emprunteuse ait &eacute;t&eacute; enti&egrave;rement lib&eacute;r&eacute;.</p>
+<p>Loi n&deg; 84-1367 du 26 d&eacute;c. 1984, an. fiscale,Art. 4;ord. n&deg; 2000-252 du 28 mars 2000, an. fiscale,Art. 21-1&deg;. ord. n&deg; 2006-234 du 02 ao&ucirc;t 2006, an. fiscale,Art. 1er -9; loi n&deg; 2017-870 du 27 d&eacute;cembre 2017, an. fiscaleArt. 14-3; loi n&deg; 2018-984 du 28 d&eacute;cembre 2018, an. fiscaleArt. 20-1.</p>
+<p>7&deg;-	[Obsol&egrave;te].</p>
+<p>Loi n&deg;- 2004-271 du 15 avril 2004, an. fiscale,Art.5-1.</p>
+<p>8&deg;- Les primes d'assurances vers&eacute;es par l'entreprise &agrave; une compagnie d'assurances ivoirienne dans le cadre de contrats relatifs aux indemnit&eacute;s de fin de carri&egrave;re.</p>
+<p>La d&eacute;duction de ces cotisations n'est admise qu'&agrave; la condition que le contrat d'assurances pr&eacute;sente un caract&egrave;re g&eacute;n&eacute;ral c'est-&agrave;-dire concerne l'ensemble du personnel ou une ou plusieurs cat&eacute;gories d&eacute;termin&eacute;es de celui-ci.</p>
+<p>Loi n&deg;- 2005-161 du 27 avril 2005, an. fiscale,Art. 8.</p>
+<p>9&deg;- La valeur des biens normalement amortissables, &agrave; condition que leur prix unitaire n'exc&egrave;de pas 300 000 francs et que ceux-ci soient inscrits en frais g&eacute;n&eacute;raux.</p>
+<p>Ord. n&deg;- 2006-234 du 02 ao&ucirc;t 2006Art. 1er-14; Ord. n&deg;- 2007-675 du 28 d&eacute;cembre 2007Art. 9 .</p>
+<p>10&deg;- [Obsol&egrave;te].</p>
+<p>Ord. n&deg;- 2008-381 du 18 d&eacute;cembre 2008,Art. 28.</p>
+<p>B)</p>
+<p>1&deg;- Les amortissements r&eacute;ellement effectu&eacute;s par l'entreprise, dans la limite de ceux qui sont g&eacute;n&eacute;ralement admis d'apr&egrave;s les usages de chaque nature d'industrie, de commerce ou d'exploitation, y compris ceux qui ont &eacute;t&eacute; r&eacute;guli&egrave;rement comptabilis&eacute;s en application des dispositions de l'alin&eacute;a ci-apr&egrave;s, mais r&eacute;put&eacute;s diff&eacute;r&eacute;s en p&eacute;riode d&eacute;ficitaire; ces derniers amortissements doivent obligatoirement &ecirc;tre inscrits &agrave; un compte sp&eacute;cial &laquo; amortissements diff&eacute;r&eacute;s&raquo; puis pr&eacute;lev&eacute;s sur les r&eacute;sultats des premiers exercices suivants, laissant appara&icirc;tre un b&eacute;n&eacute;fice suffisant en plus de l'annuit&eacute; aff&eacute;rente &agrave; ces b&eacute;n&eacute;fices et du report &eacute;ventuel des d&eacute;ficits ant&eacute;rieurs dans la limite pr&eacute;vue par l'article 26 ci-apr&egrave;s.</p>
+<p>A la cl&ocirc;ture de chaque exercice, la somme des amortissements effectivement pratiqu&eacute;s depuis l'acquisition ou la cr&eacute;ation d'un &eacute;l&eacute;ment donn&eacute; doit &ecirc;tre &eacute;gale au montant cumul&eacute; des amortissements calcul&eacute;s suivant le mode lin&eacute;aire et r&eacute;partis sur la dur&eacute;e normale d'utilisation.</p>
+<p>A d&eacute;faut de se conformer aux obligations figurant dans les deux pr&eacute;c&eacute;dents alin&eacute;as, l'entreprise perd d&eacute;finitivement le droit de d&eacute;duire la fraction d'amortissements qui n'a pas &eacute;t&eacute; r&eacute;guli&egrave;rement comptabilis&eacute;e ou pr&eacute;lev&eacute;e.</p>
+<p>Ord. n&deg;- 76-722 du 15 d&eacute;c. 1976,Art. 1.</p>
+<p>Le taux d'amortissement annuel est fix&eacute; &agrave; 50 % en ce qui concerne :</p>
+<p>- le mat&eacute;riel informatique et les logiciels;</p>
+<p>Ord. n&deg;- 2007-675 du 28 d&eacute;cembre 2007Art. 8-1. </p>
+<p>- [Obsol&egrave;te].</p>
+<p>Loi n&deg;- 2002-156 du 15 mars 2002, an.f icale,Art. 12-1&deg;; loi n&deg;- 2004-271 du 15 avril 2004, an. fiscale,Art.2-1.</p>
+<p>S'agissant des biens vis&eacute;s au premier tiret ci-dessus, les entreprises peuvent opter pour l'application du taux pratiqu&eacute; d'apr&egrave;s les usages du secteur d'activit&eacute;. </p>
+<p>Toutefois, cette p&eacute;riode ne peut exc&eacute;der cinq ans.</p>
+<p>Ord. n&deg;- 2007-675 du 28 d&eacute;cembre 2007Art. 8-2 .</p>
+<p>2&deg;- Les biens donn&eacute;s en location dans le cadre d'une op&eacute;ration de cr&eacute;dit-bail sont amortissables sur la dur&eacute;e du contrat chez le cr&eacute;dit-bailleur et le cr&eacute;dit-preneur.</p>
+<p>Loi n&deg;- 2016-1116 du 08 d&eacute;cembre 2016, an. fiscale,Art. 11.</p>
+<p>En cas de non lev&eacute;e de l'option d'achat par le preneur, la reprise du bien, objet de l'op&eacute;ration de cr&eacute;dit-bail par le cr&eacute;dit-bailleur est assimil&eacute;e &agrave; une op&eacute;ration de cession.</p>
+<p>Loi n&deg;- 97-06 du 6 janv. 1997, an. fiscale,Art. 1-4&deg;; Ord. n&deg;- 2000-252 du 28 mars 2000Art. 16-9&deg;-.</p>
+<p>3&deg;- Les licences d'exploitation des entreprises de t&eacute;l&eacute;phonie cellulaire d&eacute;livr&eacute;es par l'Etat de C&ocirc;te d'Ivoire sont amortissables sur leur dur&eacute;e d'utilisation totale.</p>
+<p>En cas de paiement fractionn&eacute;, le droit &agrave; amortissement na&icirc;t &agrave; la date de paiement de l'acompte ou de l'avance. La dur&eacute;e d'amortissement de la licence demeure toutefois &eacute;gale &agrave; la dur&eacute;e d'utilisation.</p>
+<p>Pour les entreprises ayant acquis la licence d'exploitation post&eacute;rieurement &agrave; leur d&eacute;but d'activit&eacute;, la dur&eacute;e d'amortissement de la licence est &eacute;gale &agrave; la dur&eacute;e d'utilisation restant &agrave; courir &agrave; sa date d'acquisition.</p>
+<p>Loi n&deg;- 2002-156 du 15 mars 2002,Art. 15.</p>
+<p>C)</p>
+<p>1&deg;- Pourront toutefois faire l'objet d'un amortissement acc&eacute;l&eacute;r&eacute; :</p>
+<p>- Les mat&eacute;riels et outillages neufs remplissant &agrave; la fois la double condition :</p>
+<p>a)d'&ecirc;tre utilis&eacute;s exclusivement pour les op&eacute;rations industrielles de fabrication, de manutention, de transport ou d'exploitation agricole ;</p>
+<p>b)d'&ecirc;tre normalement utilisables pendant plus de cinq ans.</p>
+<p>-Les mat&eacute;riels sp&eacute;cifiques &agrave; la t&eacute;l&eacute;phonie acquis par les entreprises concessionnaires de service public de t&eacute;l&eacute;phonie ou titulaires d'une licence d'exploitation. </p>
+<p>Ord. n&deg;- 2007-488 du 31 mai 2007Art. 5.</p>
+<p>Pour ces mat&eacute;riels et outillages, le montant de la premi&egrave;re annuit&eacute; d'amortissement, calcul&eacute; d'apr&egrave;s leur dur&eacute;e d'utilisation normale, pourra &ecirc;tre double, cette dur&eacute;e &eacute;tant alors r&eacute;duite d'une ann&eacute;e.</p>
+<p>Ord. n&deg;- 2006-234 du 02 ao&ucirc;t 2006Art. 3-2.</p>
+<p>2&deg;- Sous r&eacute;serve de l'agr&eacute;ment d'une demande d&eacute;pos&eacute;e &agrave; la Direction g&eacute;n&eacute;rale des Imp&ocirc;ts dans les m&ecirc;mes formes que celles d&eacute;finies &agrave; l'article 110-5&deg;- du pr&eacute;sent Code, les entreprises peuvent opter pour l'application &agrave; leurs mat&eacute;riels et outillages neufs d'un amortissement d&eacute;gressif.</p>
+<p>Cette d&eacute;gressivit&eacute; est obtenue par l'affectation au taux d'amortissement lin&eacute;aire de coefficients de majoration fix&eacute;s par arr&ecirc;t&eacute; du Minist&egrave;re en charge de l'Economie et des Finances.</p>
+<p>Loi n&deg;- 84-1232 du 8 nov. 1984,Art. 4. Voir arr&ecirc;t&eacute; n&deg;- 102/MEF/DGI/ CT du 4 f&eacute;vr. 1985, divers textes fiscaux : texte n&deg;-8 partie r&eacute;glementaire.</p>
+<p>3&deg;- Un amortissement acc&eacute;l&eacute;r&eacute; de 40 % du prix de revient des immeubles affect&eacute;s au logement du personnel des entreprises industrielles et commerciales pourra &ecirc;tre pratiqu&eacute; &agrave; la cl&ocirc;ture du premier exercice suivant la date d'ach&egrave;vement de ceux de ces immeubles construits en dur, comportant les conditions de salubrit&eacute; et de confort fix&eacute;es par les r&egrave;glements d'hygi&egrave;ne et dont la valeur d'immobilisation correspondant &agrave; un logement de trois pi&egrave;ces habitables avec cuisine, douchi&egrave;re, water-closets et, dans les localit&eacute;s o&ugrave; elles existent, installations d'eau et d'&eacute;clairage &eacute;lectrique, ne d&eacute;passera pas vingt millions de francs hors taxes. </p>
+<p>Loi n&deg;- 81-150 du 27 f&eacute;vr. 1981. an. fiscale,Art. 14; loi n&deg;- 2013 - 908 du 26 d&eacute;cembre 2013. an. fiscale,Art.4.</p>
+<p>L'amortissement de la valeur r&eacute;siduelle des immeubles en cause sera effectu&eacute; dans les conditions ordinaires et bas&eacute; sur leur dur&eacute;e normale d'utilisation.</p>
+<p>Les immeubles ou portions d'immeubles qui, au cours de cette dur&eacute;e normale d'amortissement, seraient affect&eacute;s &agrave; un usage autre que le logement du personnel de l'entreprise, cesseront d'avoir droit au b&eacute;n&eacute;fice des dispositions ci-dessus et la Direction g&eacute;n&eacute;rale des Imp&ocirc;ts sera fond&eacute;e &agrave; proc&eacute;der au r&eacute;ajustement des amortissements dont ils auront &eacute;t&eacute; l'objet, en vue de r&eacute;int&eacute;grer dans les b&eacute;n&eacute;fices imposables les amortissements exc&eacute;dentaires.</p>
+<p>D) </p>
+<p>Les imp&ocirc;ts &agrave; la charge de l'entreprise mis en recouvrement au cours de l'exercice, &agrave; l'exception de l'imp&ocirc;t c&eacute;dulaire sur les b&eacute;n&eacute;fices et de tous imp&ocirc;ts et taxes incombant &agrave; des tiers et dont elle est le redevable l&eacute;gal. Si des d&eacute;gr&egrave;vements sont ult&eacute;rieurement accord&eacute;s sur les imp&ocirc;ts d&eacute;ductibles, leur montant entre dans les recettes de l'exercice au cours duquel l'exploitant est avis&eacute; de ces d&eacute;gr&egrave;vements.</p>
+<p>Loi n&deg;-2004-271 du 15 avril 2004, an. fiscaleArt. 15.</p>
+<p>E)</p>
+<p>1&deg;- Les provisions constitu&eacute;es en vue de faire face &agrave; des pertes ou charges nettement pr&eacute;cis&eacute;es et que les &eacute;v&eacute;nements en cours rendent probables, &agrave; condition qu'elles aient &eacute;t&eacute; effectivement constat&eacute;es dans les &eacute;critures de l'exercice et figurent au relev&eacute; des provisions pr&eacute;vu &agrave; l'article 36 ci-apr&egrave;s.</p>
+<p>L'indemnit&eacute; pour cong&eacute;s pay&eacute;s rev&ecirc;t du point de vue fiscal le caract&egrave;re d'un salaire de substitution qui constitue une charge normale de l'exercice au cours duquel le salari&eacute; prend le cong&eacute; correspondant et ne peut donc faire l'objet d'une provision fiscalement d&eacute;ductible du b&eacute;n&eacute;fice imposable.</p>
+<p>Loi n&deg;- 84-1367 du 26 d&eacute;c. 1984, an. fiscale,Art. 4.</p>
+<p>Les pertes de change ne peuvent donner lieu &agrave; constitution de provisions d&eacute;ductibles.</p>
+<p>Loi n&deg;- 95-05 du 11 janv. 1995, an. fiscale,Art. 16.</p>
+<p>2&deg;- Les provisions constitu&eacute;es par les &eacute;tablissements de banque ou de cr&eacute;dit destin&eacute;es &agrave; faire face aux risques particuliers aff&eacute;rents aux pr&ecirc;ts ou op&eacute;rations &agrave; moyen et long terme pourront toutefois &ecirc;tre constitu&eacute;es en franchise d'imp&ocirc;t par ces &eacute;tablissements ainsi que celles constitu&eacute;es par les soci&eacute;t&eacute;s se livrant &agrave; des op&eacute;rations de cr&eacute;dit foncier.</p>
+<p>La dotation annuelle de la provision pr&eacute;vue ci-dessus peut atteindre 5% du b&eacute;n&eacute;fice comptable de chaque exercice, sans que le montant de ladite provision puisse exc&eacute;der 5% du total des cr&eacute;dits &agrave; moyen et &agrave; long terme effectivement utilis&eacute;s.</p>
+<p>- les provisions pour d&eacute;pr&eacute;ciation de cr&eacute;ances constitu&eacute;es par les banques et &eacute;tablissements financiers en application des normes de prudence &eacute;dict&eacute;es par la Banque Centrale des Etats de l'Afrique de l'Ouest (BCEAO).</p>
+<p>Toutefois, la constitution de ces derni&egrave;res provisions n'est pas cumulable avec celle de toute autre provision d&eacute;termin&eacute;e de fa&ccedil;on forfaitaire, notamment celle pr&eacute;vue au premier tiret pr&eacute;c&eacute;dent.</p>
+<p>Ord. n&deg;- 2008-381 du 18 d&eacute;cembre 2008,Art. 8.</p>
+<p>3&deg;- Les provisions destin&eacute;es &agrave; faire face aux risques particuliers qui pourraient r&eacute;sulter des op&eacute;rations de r&eacute;escompte d'effets souscrits par les &eacute;tablissements de banque ou de cr&eacute;dit aupr&egrave;s des caisses de cr&eacute;dit agricole.</p>
+<p>Le montant annuel de cette provision ne pourra d&eacute;passer 10 % des utilisations de la fiche de r&eacute;escompte dont le plafond est limit&eacute; &agrave; 250 millions de francs.</p>
+<p>La constitution de cette provision cessera lorsque le montant cumul&eacute; des provisions constitu&eacute;es annuellement aura atteint 50 % de la limite susvis&eacute;e, soit 125 millions de francs.</p>
+<p>Les pertes qui pourraient provenir de l'irr&eacute;couvrabilit&eacute; &eacute;ventuelle des effets r&eacute;escompt&eacute;s seront imput&eacute;es sur le montant de la provision ainsi constitu&eacute;e.</p>
+<p>Lorsqu'il sera mis fin aux op&eacute;rations de r&eacute;escompte vis&eacute;es ci-dessus, le reliquat de la provision sera rapport&eacute; au b&eacute;n&eacute;fice imposable de l'exercice au cours duquel elle sera devenue sans objet.</p>
+<p>4&deg;- Une provision &eacute;gale &agrave; 5 % du montant de leur encours par exercice social pourra &ecirc;tre constitu&eacute;e en franchise d'imp&ocirc;t par les &eacute;tablissements de banques agr&eacute;&eacute;s comme banque de d&eacute;veloppement. Le montant cumul&eacute; des provisions ainsi constitu&eacute;es ne pourra d&eacute;passer 10 % du montant total de l'encours.</p>
+<p>Loi n&deg;- 71 -683 du 28 d&eacute;c. 1971, an. fiscale,Art. 18.</p>
+<p>5&deg;- Les provisions statistiques pour cr&eacute;ances douteuses ou litigieuses constitu&eacute;es par les entreprises concessionnaires de service public et les entreprises de t&eacute;l&eacute;phonie titulaires d'une licence d'exploitation.</p>
+<p>Ord. n&deg;- 2006-234 du 02 ao&ucirc;t 2006Art. 3-3; Ord. n&deg;- 2007-675 du 28 d&eacute;cembre 2007Art. 6-1 .</p>
+<p>6&deg;- Les provisions pour remise en &eacute;tat du patrimoine conc&eacute;d&eacute;, constitu&eacute;es par les entreprises concessionnaires de service public.</p>
+<p>Les conditions de constitution des provisions vis&eacute;es aux 5&deg;- et 6&deg;- pr&eacute;c&eacute;dents sont fix&eacute;es chaque ann&eacute;e apr&egrave;s accord de l'Administration fiscale.</p>
+<p>Ord. n&deg;- 2006-234 du 02 ao&ucirc;t 2006Art. 3-3.</p>
+<p>7&deg;- Les provisions constitu&eacute;es par les compagnies d'assurances destin&eacute;es &agrave; faire face aux sinistres tardifs et aux annulations de primes, &agrave; condition que ces provisions soient d&eacute;termin&eacute;es conform&eacute;ment &agrave; la m&eacute;thode de la cadence pr&eacute;vue par les r&egrave;gles prudentielles de la Conf&eacute;rence Interafricaine des March&eacute;s d'Assurances (CIMA).</p>
+<p>Ord. n&deg;- 2007-488 du 31 mai 2007Art. 4.</p>
+<p>8&deg; Les pertes des banques et &eacute;tablissements financiers se rapportant aux cr&eacute;ances accord&eacute;es dans le respect des normes de prudence &eacute;dict&eacute;es par la Banque Centrale des Etats de l'Afrique de l'Ouest, class&eacute;es douteuses ou litigieuses, ayant pr&eacute;alablement fait l'objet de provisions et non recouvr&eacute;es au terme du cinqui&egrave;me exercice comptable, &agrave; compter de leur transfert en cr&eacute;ances douteuses ou litigieuses. La non-production de l'&eacute;tat des cr&eacute;ances douteuses pr&eacute;vues &agrave; l'article 36 du pr&eacute;sent Code entra&icirc;ne le rejet de la charge ant&eacute;rieurement d&eacute;duite.</p>
+<p>Loi n&deg; 2020-972 du 23 d&eacute;c. 2020, an. fiscale,Art. 5-1.</p>
+<p>F)</p>
+<p>Les provisions vis&eacute;es au E ci-dessus qui, en tout ou en partie, re&ccedil;oivent un emploi non conforme &agrave; leur destination ou deviennent sans objet au cours d'un exercice ult&eacute;rieur, sont rapport&eacute;es aux recettes dudit exercice, sauf disposition r&eacute;glementaire contraire. Lorsque le rapport n'a pas &eacute;t&eacute; effectu&eacute; par l'entreprise elle-m&ecirc;me, l'Administration peut proc&eacute;der aux redressements n&eacute;cessaires d&egrave;s qu'elle constate que les provisions sont devenues sans objet. Dans ce cas, ces provisions sont, s'il y a lieu, rapport&eacute;es aux recettes du plus ancien des exercices soumis &agrave; v&eacute;rification.</p>
+<p>G)</p>
+<p>Les dons et lib&eacute;ralit&eacute;s consentis :</p>
+<p>- aux associations sportives reconnues par le Ministre en charge des Sports et d&eacute;sign&eacute;es par arr&ecirc;t&eacute; conjoint du Ministre charg&eacute; du Budget et du Ministre en charge des Sports;</p>
+<p>- aux organismes de recherche scientifique d&eacute;sign&eacute;s par arr&ecirc;t&eacute; conjoint du Ministre charg&eacute; du Budget et du Ministre de la Recherche scientifique;</p>
+<p>- aux associations et organismes &oelig;uvrant dans les domaines de la Sant&eacute; publique et de l'Action sociale, d&eacute;sign&eacute;s par arr&ecirc;t&eacute; conjoint du Ministre charg&eacute; du Budget et du Ministre de la Sant&eacute; et de la Protection sociale;</p>
+<p>-	&agrave; l&rsquo;Etat et &agrave; ses d&eacute;membrements dans le cadre de leurs actions en mati&egrave;re de sant&eacute; et d&rsquo;hygi&egrave;ne publiques ainsi que dans le domaine des actions sociales&nbsp;;&nbsp;</p>
+<p>Loi n&deg; 2023-1000 du 18 d&eacute;c. 2023, an. fiscale, art. 23 </p>
+<p>- aux associations &oelig;uvrant dans le domaine de la culture et de l'enseignement reconnues par le Ministre de la Culture ou de l'Enseignement et d&eacute;sign&eacute;es par arr&ecirc;t&eacute; conjoint du Ministre charg&eacute; du Budget et du Ministre de tutelle concern&eacute;;</p>
+<p>-&agrave; l'Etat ou &agrave; ses d&eacute;membrements dans les domaines de l'&eacute;ducation, de la sant&eacute; ou des infrastructures collectives dans les zones ex-assi&eacute;g&eacute;es.</p>
+<p>Ord. n&deg;- 2006-234 du 02 ao&ucirc;t 2006Art. 1er-12; ord. n&deg;- 2007-675 du 28 d&eacute;cembre 2007Art. 5 ; Ord. n&deg;- 2009-382 du 26 novembre 2009Art. 1-1/</p>
+<p>-aux associations religieuses reconnues par le Minist&egrave;re en charge des Cultes sur la base d'un programme ou d'un bilan d'actions sociales prouv&eacute;es;</p>
+<p>-aux malades d&eacute;munis pr&eacute;sent&eacute;s par les services sanitaires ou sociaux ou par les centres de sant&eacute; publics;</p>
+<p>-aux &eacute;l&egrave;ves et &eacute;tudiants ivoiriens non boursiers de l'Etat sous la forme de bourses d'&eacute;tudes annuelles;</p>
+<p>-aux personnes handicap&eacute;es, par les entreprises qui engagent des d&eacute;penses pour la fourniture d'installations de r&eacute;&eacute;ducation, de mat&eacute;riels orthop&eacute;diques et autres mat&eacute;riels sp&eacute;cifiques;</p>
+<p>-aux associations de jeunes et de femmes pour les aider &agrave; initier ou &agrave; d&eacute;velopper une activit&eacute; lucrative;</p>
+<p>-aux associations qui &oelig;uvrent &agrave; la r&eacute;adaptation des toxicomanes et des alcooliques;</p>
+<p>-aux organismes priv&eacute;s &agrave; but non lucratif qui &oelig;uvrent &agrave; la conservation de l'environnement;</p>
+<p>-aux mutuelles pour leurs op&eacute;rations de financement, de construction, de r&eacute;habilitation ou d'&eacute;quipement d'&eacute;coles, de centres de sant&eacute; ou de centres polyvalents au profit d'une collectivit&eacute;;</p>
+<p>Ord. n&deg;- 2009-382 du 26 novembre 2009Art.1-1</p>
+<p>-&agrave; l'Etat ou aux organismes publics oeuvrant dans le domaine de la salubrit&eacute; urbaine et de l'assainissement, par les entreprises publiques ou priv&eacute;es. </p>
+<p>Loi. n&deg;- 2016-1116 du 08 d&eacute;cembre 2016Art.13</p>
+<p>- aux organismes de recherche scientifique, aux entreprises priv&eacute;es engag&eacute;es dans la recherche, le d&eacute;veloppement et l'innovation, aux inventeurs et innovateurs nationaux. </p>
+<p>Loi n&deg; 2019-1080 du 18 d&eacute;cembre 2019, an. fiscale,Art. 5-1er</p>
+<p>La valeur des dons et lib&eacute;ralit&eacute;s consentis est d&eacute;ductible dans la double limite de 2,5 % du chiffre d'affaires et de 200 millions de francs par an.</p>
+<p>Loi n&deg;- 2003-206 du 7 juillet 2003, an. fiscale,Art. 39-1.</p>
+<p>En ce qui concerne les bourses d'&eacute;tudes annuelles, elles ne doivent exc&eacute;der la double limite particuli&egrave;re de 600 000 francs pour chaque &eacute;tudiant b&eacute;n&eacute;ficiaire et 12 000 000 de francs par entreprise donatrice. Les sommes ne doivent &ecirc;tre vers&eacute;es ni aux conjoints, ni aux ascendants et descendants des membres de la direction et des cadres de l'entreprise. Ce seuil de 600 000 francs est port&eacute; &agrave; 1 000 000 de francs pour les &eacute;tudiants en cycle de recherche.</p>
+<p>Ord. n&deg;- 2009-382 du 26 novembre 2009Art.1-1</p>
+<p>Le co&ucirc;t de r&eacute;alisation des routes, pistes rurales, h&ocirc;pitaux, dispensaires, &eacute;coles et ch&acirc;teaux d'eau r&eacute;alis&eacute;s par les entreprises priv&eacute;es au profit des collectivit&eacute;s territoriales ou des populations est &eacute;galement d&eacute;ductible des r&eacute;sultats de ces entreprises, dans la double limite de 3 % du chiffre d'affaires et de 500 000 000 de francs par an.</p>
+<p>Loi n&deg;-2004-271 du 15 avril 2004, an. fiscale,Art. 16-1.</p>
+<p>Le b&eacute;n&eacute;fice des dispositions pr&eacute;c&eacute;dentes est subordonn&eacute; &agrave; la condition que soient jointes &agrave; la d&eacute;claration des r&eacute;sultats, les pi&egrave;ces justificatives attestant du montant et de la date de chaque versement, ainsi que de l'identit&eacute; du b&eacute;n&eacute;ficiaire. A d&eacute;faut, les sommes d&eacute;duites sont r&eacute;int&eacute;gr&eacute;es d'office au r&eacute;sultat imposable.</p>
+<p>Ord. n&deg;- 2000-252 du 28 mars 2000Art. 6-1&deg;.</p>
+<p>S'agissant des dons d'ouvrages d'utilit&eacute; publique, il devra &eacute;galement &ecirc;tre joint &agrave; la d&eacute;claration de r&eacute;sultats une preuve de leur r&eacute;ception par l'Etat ou une collectivit&eacute; territoriale.</p>
+<p>Loi n&deg;-2004-271 du 15 avril 2004, an. fiscale,Art. 16-2.</p>
+<p>Les r&eacute;alisations sociales effectu&eacute;es par la LONACI, &agrave; la demande de l'Etat et approuv&eacute;es par son Conseil d'Administration sont d&eacute;ductibles en totalit&eacute; des r&eacute;sultats de ladite soci&eacute;t&eacute;.</p>
+<p>Ord. n&deg;- 2007-675 du 28 d&eacute;cembre 2007Art. 31-2.</p>
+</div></span><finh2518>
+</div></div> <!-- wrapper -->
+	  <div id="articleList"><div id="contenu" style='height:auto; background-color:#FFFFCC'>&nbsp;</div>
+      </div><p>&nbsp;</p><p>&nbsp;</p><p>&nbsp;</p><p>&nbsp;</p><p>&nbsp;</p><p>&nbsp;</p><p>&nbsp;</p><p>&nbsp;</p><p>&nbsp;</p><p>&nbsp;</p>
+	  <p>&nbsp;</p><p>&nbsp;</p><p>&nbsp;</p><p>&nbsp;</p><p>&nbsp;</p><p>&nbsp;</p></BODY></HTML>
+	  

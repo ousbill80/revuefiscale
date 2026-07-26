@@ -1,0 +1,230 @@
+<!DOCTYPE HTML><HTML><HEAD><META HTTP-EQUIV="Content-Type" CONTENT="text/html; charset=UTF-8">
+<TITLE>Code des impots -19</TITLE><LINK REL="STYLESHEET" HREF="/cicgi.css" CHARSET="ISO-8859-1" TYPE="text/css">
+<style type="text/css">
+body {margin-left: 5px;	margin-top: 0px; margin-right: .5em;margin-bottom: 0px;background-color:#fafafa ;}
+.Liste-Numerote {font-size: 12pt;font-weight: regular;font-style: italic;color: #000000;text-transform: none;margin-left:8px ;margin-bottom:8px ;margin-top:4px ;margin-right:10px ;font-family:Georgia, "Times New Roman", Times, serif}
+li {list-style-type: none; margin-left:0px ; padding-left:0em ; }
+.Paratext {font-size: 12pt;font-weight: regular;font-style: italic;color: #000000;text-decoration: none;vertical-align: baseline;text-transform: none;margin-left:0px ;font-family:Georgia, "Times New Roman", Times, serif}
+.Normal {font-size: 12pt;font-weight: regular;font-style: italic;color: #000000;text-decoration: none;vertical-align: baseline;text-transform: none;margin-left:0px ;font-family:Georgia, "Times New Roman", Times, serif}
+ul {list-style-type: none; margin-left:0px ; padding-left:0em ;  }
+.Liste2-Enumeree {font-size: 12pt;font-weight: regular;font-style: italic;color: #000000;text-decoration: none;vertical-align: baseline;text-transform: none;list-style-type:none ;margin-left:16px ;margin-bottom:8px;margin-right:10px;font-family:Georgia, "Times New Roman", Times, serif}
+P.Liste2-Enumeree {font-size: 12pt;font-weight: regular;font-style: italic;color: #000000;text-decoration: none;vertical-align: baseline;text-transform: none;list-style-type:none ;margin-left:16px ;margin-bottom:8px;margin-right:10px;font-family:Georgia, "Times New Roman", Times, serif}
+.Entete {font-size: 13pt;font-weight: regular;font-style: italic;color:#000000 ;text-decoration: none;vertical-align: baseline;text-transform: none;margin-left:8px ;font-family:Georgia, "Times New Roman", Times, serif}
+table, TABLE {border-width:1px; width:99% ;border-collapse:collapse;border-color: #9ecaed;box-shadow: 0 0 10px #9ecaed;}
+tr,td {text-align:left;vertical-align:bottom;border:1px solid #9ecaed;padding:.2em;marging-left:.2em}
+th, TH{text-align:center;vertical-align:middle;padding:.2em;}
+P.TableauEntete {font-size: 13pt;font-weight: regular;font-style: italic;color: #000000;font-family:Georgia, "Times New Roman"}
+P.TableauCelluleLeft, P.TableauCellule {text-align:right;margin-right:1em;font-size: 13pt;font-weight: regular;font-style: italic;color: #000000;font-family:Georgia, "Times New Roman"}
+P.TableauCelluleRight {text-align:left;margin-left:1em;font-size: 13pt;font-weight: regular;font-style: italic;color: #000000;font-family:Georgia, "Times New Roman"}
+.ui-buttonh {padding: .1em .1em ; border: 1px solid #dadada;border-radius: 4px; box-shadow: 0 0 4px #9ecaed;color:#FF3300 ;margin-left:8px ;margin-right:8px ;margin-bottom:2px ;margin-top:2px ;text-decoration:none ;font-size:12pt ;font-family:"Times New Roman"}   
+.ui-button {padding: .1em .1em ; border: 1px solid #dadada;border-radius: 4px; box-shadow: 0 0 4px #9ecaed;color:#FF3300 ;margin-left:8px ;margin-right:8px ;margin-bottom:2px ;margin-top:2px ;text-decoration:none ;font-size:12pt ;font-family:"Times New Roman"}   
+H3 {display: block;text-align: center;text-indent: 0pt;margin-top: 10pt;margin-bottom: 10pt;margin-right: 10pt;margin-left: 10pt;font-size: 12pt;font-weight: Bold;font-style: Regular;color: #00A000;text-decoration: none;vertical-align: baseline;text-transform: none;font-family: "Times New Roman";}
+H4 {display: block;text-align: left;text-indent: 0pt;margin-top: 10pt;margin-bottom: 6pt;margin-right: 10pt;margin-left: 10pt;font-size: 12pt;font-weight: Bold;font-style: Regular;color: #000000;text-decoration: none;vertical-align: baseline;text-transform: none;font-family: "Times New Roman";}
+H5 {display: block;text-align: left;text-indent: 0pt;margin-top: 10pt;margin-bottom: 6pt;margin-right: 10pt;margin-left: 10pt;font-size: 11pt;font-weight: Bold;font-style: Regular;color: #000000;text-decoration: none;vertical-align: baseline;text-transform: none;font-family: "Times New Roman";}
+H6.NoArticle {display: block;text-align: left;text-indent: 0pt;margin-top: 14pt;margin-bottom: 0pt;margin-right: 0pt;margin-left: 0pt;font-size: 14pt;font-weight: regular;font-style: Regular;color: #00a000;text-decoration: none;vertical-align: baseline;text-transform: none;font-family: "Times New Roman";}
+H2 {text-align:center;font-size:16pt;font-family:Georgia, "Times New Roman", Times, serif}
+P.ParaText {font-size: 12pt;font-weight: regular;font-style: italic;color: #000000;	text-decoration: none;vertical-align: baseline;text-transform: none;font-family:Georgia, "Times New Roman", Times, serif;}
+H2.Section,P.Section {font-size:12pt;font-weight:bold;font-style:Regular;color:#008000;font-family:Georgia,"Times New Roman"}
+P.Paragraphe, p.Paragraphe {Text-Align:center;Text-decoration:none;font-size:12pt;font-weight:bold;font-style:Normal;color:#00A000;font-family:Georgia,"Times New Roman"}
+H2.Livre,P.Livre {text-align:center;font-size:16pt;font-weight:bold;font-style:Regular;color:#008000;font-family:Georgia,"Times New Roman"}
+P.Partie,H2.Partie,P.TitreSub {text-align:center;font-size:14pt;font-weight:bold;font-style:Regular;color:#008000;font-family:Georgia,"Times New Roman"}
+H2.ChapitreNo,H2.TitreNo {text-align:center;font-size:14pt;font-weight:bold;font-style:Regular;color:#008000;font-family:Georgia,"Times New Roman"}
+H2.Chapitre, h2.Chapitre {text-align:center;font-size:14pt;font-weight:bold;font-style:Regular;color:#008000;font-family:Georgia,"Times New Roman"}
+H2.TitreNo {text-align:center;font-size:14pt;font-weight:bold;font-style:Regular;color:#008000;font-family:Georgia,"Times New Roman"}
+h3.Sous-Section, H3.Sous-Section, h3.Sous-section, h2.Section {font-size:12pt;font-weight:bold;font-style:Italic;color:#008000;font-family:Georgia,"Times New Roman"}
+hr,HR { display: block; width:90%;  margin-top: 0.5em; margin-bottom: 0.5em; margin-left: auto;  margin-right: auto;  border-style: inset; border-width: 1px;}
+P.TitreSub {text-align:center;font-size:14pt;font-weight:bold;font-style:Regular;color:#008000;font-family:Georgia,"Times New Roman"}
+.Reference {display: block;text-align: left;text-indent: 0pt;margin-top: 10pt;margin-bottom: 6pt;margin-right: 10pt;margin-left: 10pt;font-size: 14pt;font-weight: Bold;font-style: Regular;color: #7F5434;text-decoration: none;vertical-align: baseline;text-transform: none;font-family: "Times New Roman";}
+.ludwig,blockquote {padding-left:1em;background-color:#fafafa;font-size:12pt;font-weight:100;font-style:italic;}
+#articleList {position:absolute ;	z-index: 1 ;left: 10px ;top: 80px ;height:340px;width: 620px;border: 2px solid #cacaca ;border-radius: 5px ;background-color:#fafafa ;    box-shadow: 0 0 12px #333333;	margin-left:0px ;	padding: .3em .3em ;		overflow:hidden ;	visibility:hidden ;  }			
+#articleList h3 { text-align: center; margin: 0; }		
+
+.historique {
+  display:none ;
+  padding: .1em .3em ;
+  border: solid 2px #dadada;
+  border-radius: 7px;
+  box-shadow: 0 0 5px #9ecaed;  
+  
+}
+.histText {
+    display: block;
+    font-family: ;"Times New Roman"
+	padding: .1em .3em ;
+    margin: 1em 0px;
+	font-style:italic;
+	color:#000000;
+	overflow:auto;
+}
+.highlight {
+  font-weight:bold ;
+  color:#000000 ;
+  background-color:#FFFFCC ;
+  }
+.articleList-scroll {
+	overflow-x:hidden ;
+	overflow-y:scroll ;
+	scrollbar-width:thin ;
+	scrollbar-color:blue orange ;
+}
+
+#contenu {
+	overflow-x:hidden ;
+    overflow-y:scroll ;
+	scrollbar-width:thin ;
+	scrollbar-color:blue orange ;
+}		
+
+table, TABLE {
+ text-align:center; 
+    margin-left:.5em; 
+    margin-right:.5em; 
+    border:1px solid #000000;	
+	border-collapse:collapse ;
+    border-color: #9ecaed;
+    box-shadow: 0 0 10px #9ecaed;
+	
+   }
+  tr,td {text-align:left;}
+  
+
+
+ </style>
+ 
+<script src="/js/iscroll.js"></script>
+<script src="/js/jquery.js"></script>   
+<script src="/js/jquery-ui-1.10.3.custom.js"></script>    	    
+<script src="/js/jquery.ui.draggable.js" type="text/javascript"></script>			
+<script src="/js/jquery.ui.core.js"></script> 			
+<script src="/js/jquery.ui.widget.js"></script>			
+<script src="/js/jquery.ui.position.js"></script>			
+<script src="/js/jquery.ui.menu.js"></script>    		
+<script type="text/javascript" src="./xpages.js"></script>
+/* VERSION POUR PAGE HTML SUR SITE DGI.CGICI.COM */
+<script language="javascript">
+ function showButton(id) {
+    var x = document.getElementById(id) ;
+	if(x.style.display === "none") {
+	   x.style.display = "block" ;
+	  } else {
+	   x.style.display = "none" ;
+	   }
+	 }   
+	 var pagenumber="019";
+function loadpage(page, art) {
+      showHideHistoric(art);
+	  return false;
+	  } 
+function loadArticle(page, art) { var artno = art ;var pgno=page;scrolltoelementTag(pgno,artno) ;return false ;} 
+
+</script>
+</HEAD>
+<BODY><div ID="wrapper"><div ID="scroller">
+
+
+<H2 CLASS="Section">
+Section VII - Paiement de l&apos;imp&ocirc;t</H2>
+
+<H3 CLASS="Sous-section">
+I - Imp&ocirc;t minimum forfaitaire</H3>
+
+<H6 CLASS="Modification">
+Loi n<b>&deg;-</b>2004-271 du 15 avril 2004, an. fiscale,Art. 20-6.</H6>
+
+<DIV>
+    <span id="#A0102"></span>
+<H6 CLASS="NoArticle">
+
+Art. 102 </H6>
+<P CLASS="Liste2-Enumeree">
+1&deg; Un imp&ocirc;t minimum forfaitaire frappe les contribuables relevant de l&apos;imp&ocirc;t sur les b&eacute;n&eacute;fices non commerciaux.</P>
+<P CLASS="Liste2-Enumeree">
+Il est exigible au titre d&apos;un exercice lorsque le montant de l&apos;imp&ocirc;t sur les b&eacute;n&eacute;fices dudit exercice lui est inf&eacute;rieur.</P>
+<H6 CLASS="Modification">
+Loi n&deg; 2005-161 du 27 avril 2005, an. fiscale,Art. 9-1.</H6>
+<P CLASS="Liste2-Enumeree">
+2&deg;	La cotisation due au titre d&apos;un exercice comptable donn&eacute; est &eacute;gale &agrave; <FONT COLOR='#000000'> 5 % </FONT>des recettes brutes toutes taxes comprises de cet exercice.</P>
+
+<P CLASS="Liste2-Enumeree">
+Cette cotisation ne peut &ecirc;tre inf&eacute;rieure &agrave; un montant de 400 000 francs qui constitue un minimum de perception.</P>
+<P CLASS="Liste2-Enumeree">
+Ce minimum de perception s&apos;applique pour la premi&egrave;re fois au r&eacute;sultat de l&apos;exercice clos au 31 d&eacute;cembre 2014.</P>
+
+<H6 CLASS="Modification">
+Loi n&deg;96-218 du 13 mars 1996, an. fiscale,Art.31-art. 2; loi n&deg; 2005-161 du 27 avril 2005, an. fiscale,Art. 9-7; loi n&deg; 2014-861 du 22 d&eacute;cembre 2014, an. fiscale,Art.6-2; loi n&deg; 2017-870 du 27 d&eacute;cembre 2017, an. fiscaleArt. 12-4; ord. n&deg; 2018-145 du 14 f&eacute;vrier 2018,Art. 1. </H6>
+<P CLASS="Liste2-Enumeree">
+3&deg;	La cotisation exigible doit &ecirc;tre acquitt&eacute;e dans les m&ecirc;mes conditions et sous les m&ecirc;mes sanctions que l&apos;imp&ocirc;t sur les b&eacute;n&eacute;fices non commerciaux.</P>
+<H6 CLASS="Modification">
+Loi n&deg; 2004-271 du 15 avril 2004, an. fiscale,Art. 20-8.</H6>
+<P CLASS="Liste2-Enumeree">
+4&deg;	 [Obsol&egrave;te].</P>
+<H6 CLASS="Modification">
+Loi n&deg; 2003-206 du 7 juillet 2003, an. fiscale,Art. 11- 3; loi n&deg; 2005-161 du 27 avril 2005, an. fiscale,Art.9-9.</H6>
+<P CLASS="ParaText">
+Les entreprises demeur&eacute;es en activit&eacute; en zones Centre, Nord et Ouest sont &eacute;galement exon&eacute;r&eacute;es de l&apos;imp&ocirc;t minimum forfaitaire au titre des exercices clos aux 31 d&eacute;cembre 2011, 2012, 2013 et 2014, lorsqu&apos;elles sont d&eacute;ficitaires.</P>
+<H6 CLASS="Modification">
+Ord. n&deg; 2011-121 du 22 juin 2011, an. fiscale,Art.2-4.</H6>
+<P CLASS="Liste2-Enumeree">
+5&deg;	Les entreprises nouvelles relevant de l&apos;imp&ocirc;t sur les b&eacute;n&eacute;fices non commerciaux pr&eacute;vu &agrave; l&apos;article 85, sont exon&eacute;r&eacute;es de l&apos;imp&ocirc;t minimum forfaitaire au titre de leur premier exercice comptable.</P>
+<H6 CLASS="Modification">
+Ord. n&deg; 2006-234 du 02 ao&ucirc;t 2006, an. fiscale,Art. 16.</H6>
+<P CLASS="ParaText">
+<FONT COLOR='#000000'>
+A titre transitoire, et jusqu&apos;au 31 d&eacute;cembre 2020, le paiement de l&apos;imp&ocirc;t pr&eacute;vu au pr&eacute;sent article est suspendu. </FONT></P>
+<H6 CLASS="Modification">
+Loi n&deg; 2019-1080 du 18 d&eacute;cembre 2019, an. fiscale,Art. 7</H6>
+
+</DIV>
+
+
+
+
+<H3 CLASS="Sous-section">
+II - Imp&ocirc;t sur les b&eacute;n&eacute;fices non commerciaux</H3>
+
+<DIV>
+<span id="#A0103"></span>
+<H6 CLASS="NoArticle">
+    Art. 103 </H6>
+<P CLASS="ParaText">
+A compter des exercices ouverts apr&egrave;s le 31 d&eacute;cembre 2003, l&apos;imp&ocirc;t sur les b&eacute;n&eacute;fices non commerciaux d&ucirc; au titre d&apos;un exercice est payable spontan&eacute;ment en trois fractions &eacute;gales au plus tard le 15 avril, le 15 juin et le 15 septembre de chaque ann&eacute;e.</P>
+<H6 CLASS="Modification">
+Ord. n&deg; 2015-797 du 18 d&eacute;cembre 2015, an. fiscale,Art. 14.</H6>
+<P CLASS="ParaText">
+    <a name="pgfId-1037693"></a>En ce qui concerne les entreprises relevant de la Direction des grandes Entreprises ou de la Direction  des moyennes Entreprises, ces dates sont fix&eacute;es au :
+</P>
+<P CLASS="Liste2-Enumeree">
+    <a name="pgfId-1037694"></a>-	10 avril, pour les entreprises industrielles et les entreprises p&eacute;troli&egrave;res et mini&egrave;res ;
+</P>
+<P CLASS="Liste2-Enumeree">
+    <a name="pgfId-1037695"></a>-	10 juin, pour les entreprises commerciales;
+</P>
+<P CLASS="Liste2-Enumeree">
+    <a name="pgfId-1037696"></a>-	10 septembre, pour les entreprises de prestations de services.
+</P>
+<H6 CLASS="Modification">
+Ord. n&deg; 2015-797 du 18 d&eacute;cembre 2015, an. fiscale,Art. 15.</H6>
+<P CLASS="ParaText">
+ [Obsol&egrave;te].</P>
+<P CLASS="ParaText">
+Le paiement est effectu&eacute; aupr&egrave;s de la recette des Imp&ocirc;ts du lieu d&apos;exercice de l&apos;activit&eacute; au vu d&apos;un bordereau avis de versement &eacute;tabli en triple exemplaire.</P>
+<H6 CLASS="Modification">
+Loi n&deg;2004-271 du 15 avril 2004, an. fiscale,Art. 20-10; loi n&deg; 2014-861 du 22 d&eacute;cembre 2014, an. fiscale,Art.14-1.</H6>
+
+</DIV>
+
+
+
+
+
+
+
+</div></div> <p>&nbsp;</p><p>&nbsp;</p><span class="historique" ID="h19102">
+<div class="histText">
+<BR> Art. 102<BR> <BR>1° Un imp&ocirc;t minimum forfaitaire frappe les contribuables relevant de l'imp&ocirc;t sur les b&eacute;n&eacute;fices non commerciaux. <BR> <BR>Il est exigible au titre d'un exercice lorsque le montant de l'imp&ocirc;t sur les b&eacute;n&eacute;fices dudit exercice lui est inf&eacute;rieur. <BR> <BR>Loi n° 2005-161 du 27 avril 2005, an. fiscale,Art. 9-1. <BR> <BR>2°La cotisation due au titre d'un exercice comptable donn&eacute; est &eacute;gale &agrave; 5 %des recettes brutes toutes taxes comprises de cet exercice.  <BR>Cette cotisation ne peut &ecirc;tre inf&eacute;rieure &agrave; un montant de 400 000 francs qui constitue un minimum de perception. <BR> <BR>Ce minimum de perception s'applique pour la premi&egrave;re fois au r&eacute;sultat de l'exercice clos au 31 d&eacute;cembre 2014.  <BR>Loi n°96-218 du 13 mars 1996, an. fiscale,Art.31-art. 2; loi n° 2005-161 du 27 avril 2005, an. fiscale,Art. 9-7; loi n° 2014-861 du 22 d&eacute;cembre 2014, an. fiscale,Art.6-2; loi n° 2017-870 du 27 d&eacute;cembre 2017, an. fiscaleArt. 12-4; ord. n° 2018-145 du 14 f&eacute;vrier 2018,Art. 1.<BR> <BR>3°La cotisation exigible doit &ecirc;tre acquitt&eacute;e dans les m&ecirc;mes conditions et sous les m&ecirc;mes sanctions que l'imp&ocirc;t sur les b&eacute;n&eacute;fices non commerciaux. <BR> <BR>Loi n° 2004-271 du 15 avril 2004, an. fiscale,Art. 20-8. <BR> <BR>4°Les entreprises relevant du r&eacute;gime vis&eacute; &agrave; l'article 85, en p&eacute;riode d&eacute;ficitaire et situ&eacute;es en zone de guerre sont exon&eacute;r&eacute;es de l'imp&ocirc;t minimum forfaitaire au titre des exercices comptables clos les 31 d&eacute;cembre 2002, 2003, 2004 et 2005. Pour les entreprises concern&eacute;es, l'imp&ocirc;t minimum forfaitaire d&eacute;j&agrave; acquitt&eacute; constitue un cr&eacute;dit d'imp&ocirc;t imputable sur l'imp&ocirc;t sur les b&eacute;n&eacute;fices non commerciaux de l'exercice suivant. <BR> <BR>Loi n° 2003-206 du 7 juillet 2003, an. fiscale,Art. 11- 3; loi n° 2005-161 du 27 avril 2005, an. fiscale,Art.9-9. <BR> <BR>Les entreprises demeur&eacute;es en activit&eacute; en zones Centre, Nord et Ouest sont &eacute;galement exon&eacute;r&eacute;es de l'imp&ocirc;t minimum forfaitaire au titre des exercices clos aux 31 d&eacute;cembre 2011, 2012, 2013 et 2014, lorsqu'elles sont d&eacute;ficitaires. <BR> <BR>Ord. n° 2011-121 du 22 juin 2011, an. fiscale,Art.2-4. <BR> <BR>5°Les entreprises nouvelles relevant de l'imp&ocirc;t sur les b&eacute;n&eacute;fices non commerciaux pr&eacute;vu &agrave; l'article 85, sont exon&eacute;r&eacute;es de l'imp&ocirc;t minimum forfaitaire au titre de leur premier exercice comptable. <BR> <BR>Ord. n° 2006-234 du 02 ao&ucirc;t 2006, an. fiscale,Art. 16.  
+<BR><BR><BR></div></span><finh19102>
+</div></div> <!-- wrapper -->
+	  <div id="articleList"><div id="contenu" style='height:auto; background-color:#FFFFCC'>&nbsp;</div>
+      </div><p>&nbsp;</p><p>&nbsp;</p><p>&nbsp;</p><p>&nbsp;</p><p>&nbsp;</p><p>&nbsp;</p><p>&nbsp;</p><p>&nbsp;</p><p>&nbsp;</p><p>&nbsp;</p>
+	  <p>&nbsp;</p><p>&nbsp;</p><p>&nbsp;</p><p>&nbsp;</p><p>&nbsp;</p><p>&nbsp;</p></BODY></HTML>
+	  

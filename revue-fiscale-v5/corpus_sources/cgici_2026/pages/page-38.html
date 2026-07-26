@@ -1,0 +1,192 @@
+<!DOCTYPE HTML><HTML><HEAD><META HTTP-EQUIV="Content-Type" CONTENT="text/html; charset=UTF-8">
+<TITLE>Code des impots -42</TITLE><LINK REL="STYLESHEET" HREF="/cicgi.css" CHARSET="ISO-8859-1" TYPE="text/css">
+<style type="text/css">
+body {margin-left: 5px;	margin-top: 0px; margin-right: .5em;margin-bottom: 0px;background-color:#fafafa ;}
+.Liste-Numerote {font-size: 12pt;font-weight: regular;font-style: italic;color: #000000;text-transform: none;margin-left:8px ;margin-bottom:8px ;margin-top:4px ;margin-right:10px ;font-family:Georgia, "Times New Roman", Times, serif}
+li {list-style-type: none; margin-left:0px ; padding-left:0em ; }
+.Paratext {font-size: 12pt;font-weight: regular;font-style: italic;color: #000000;text-decoration: none;vertical-align: baseline;text-transform: none;margin-left:0px ;font-family:Georgia, "Times New Roman", Times, serif}
+.Normal {font-size: 12pt;font-weight: regular;font-style: italic;color: #000000;text-decoration: none;vertical-align: baseline;text-transform: none;margin-left:0px ;font-family:Georgia, "Times New Roman", Times, serif}
+ul {list-style-type: none; margin-left:0px ; padding-left:0em ;  }
+.Liste2-Enumeree {font-size: 12pt;font-weight: regular;font-style: italic;color: #000000;text-decoration: none;vertical-align: baseline;text-transform: none;list-style-type:none ;margin-left:16px ;margin-bottom:8px;margin-right:10px;font-family:Georgia, "Times New Roman", Times, serif}
+P.Liste2-Enumeree {font-size: 12pt;font-weight: regular;font-style: italic;color: #000000;text-decoration: none;vertical-align: baseline;text-transform: none;list-style-type:none ;margin-left:16px ;margin-bottom:8px;margin-right:10px;font-family:Georgia, "Times New Roman", Times, serif}
+.Entete {font-size: 13pt;font-weight: regular;font-style: italic;color:#000000 ;text-decoration: none;vertical-align: baseline;text-transform: none;margin-left:8px ;font-family:Georgia, "Times New Roman", Times, serif}
+table, TABLE {border-width:1px; width:99% ;border-collapse:collapse;border-color: #9ecaed;box-shadow: 0 0 10px #9ecaed;}
+tr,td {text-align:left;vertical-align:bottom;border:1px solid #9ecaed;padding:.2em;marging-left:.2em}
+th, TH{text-align:center;vertical-align:middle;padding:.2em;}
+P.TableauEntete {font-size: 13pt;font-weight: regular;font-style: italic;color: #000000;font-family:Georgia, "Times New Roman"}
+P.TableauCelluleLeft, P.TableauCellule {text-align:right;margin-right:1em;font-size: 13pt;font-weight: regular;font-style: italic;color: #000000;font-family:Georgia, "Times New Roman"}
+P.TableauCelluleRight {text-align:left;margin-left:1em;font-size: 13pt;font-weight: regular;font-style: italic;color: #000000;font-family:Georgia, "Times New Roman"}
+.ui-buttonh {padding: .1em .1em ; border: 1px solid #dadada;border-radius: 4px; box-shadow: 0 0 4px #9ecaed;color:#FF3300 ;margin-left:8px ;margin-right:8px ;margin-bottom:2px ;margin-top:2px ;text-decoration:none ;font-size:12pt ;font-family:"Times New Roman"}   
+.ui-button {padding: .1em .1em ; border: 1px solid #dadada;border-radius: 4px; box-shadow: 0 0 4px #9ecaed;color:#FF3300 ;margin-left:8px ;margin-right:8px ;margin-bottom:2px ;margin-top:2px ;text-decoration:none ;font-size:12pt ;font-family:"Times New Roman"}   
+H3 {display: block;text-align: center;text-indent: 0pt;margin-top: 10pt;margin-bottom: 10pt;margin-right: 10pt;margin-left: 10pt;font-size: 12pt;font-weight: Bold;font-style: Regular;color: #00A000;text-decoration: none;vertical-align: baseline;text-transform: none;font-family: "Times New Roman";}
+H4 {display: block;text-align: left;text-indent: 0pt;margin-top: 10pt;margin-bottom: 6pt;margin-right: 10pt;margin-left: 10pt;font-size: 12pt;font-weight: Bold;font-style: Regular;color: #000000;text-decoration: none;vertical-align: baseline;text-transform: none;font-family: "Times New Roman";}
+H5 {display: block;text-align: left;text-indent: 0pt;margin-top: 10pt;margin-bottom: 6pt;margin-right: 10pt;margin-left: 10pt;font-size: 11pt;font-weight: Bold;font-style: Regular;color: #000000;text-decoration: none;vertical-align: baseline;text-transform: none;font-family: "Times New Roman";}
+H6.NoArticle {display: block;text-align: left;text-indent: 0pt;margin-top: 14pt;margin-bottom: 0pt;margin-right: 0pt;margin-left: 0pt;font-size: 14pt;font-weight: regular;font-style: Regular;color: #00a000;text-decoration: none;vertical-align: baseline;text-transform: none;font-family: "Times New Roman";}
+H2 {text-align:center;font-size:16pt;font-family:Georgia, "Times New Roman", Times, serif}
+P.ParaText {font-size: 12pt;font-weight: regular;font-style: italic;color: #000000;	text-decoration: none;vertical-align: baseline;text-transform: none;font-family:Georgia, "Times New Roman", Times, serif;}
+H2.Section,P.Section {font-size:12pt;font-weight:bold;font-style:Regular;color:#008000;font-family:Georgia,"Times New Roman"}
+P.Paragraphe, p.Paragraphe {Text-Align:center;Text-decoration:none;font-size:12pt;font-weight:bold;font-style:Normal;color:#00A000;font-family:Georgia,"Times New Roman"}
+H2.Livre,P.Livre {text-align:center;font-size:16pt;font-weight:bold;font-style:Regular;color:#008000;font-family:Georgia,"Times New Roman"}
+P.Partie,H2.Partie,P.TitreSub {text-align:center;font-size:14pt;font-weight:bold;font-style:Regular;color:#008000;font-family:Georgia,"Times New Roman"}
+H2.ChapitreNo,H2.TitreNo {text-align:center;font-size:14pt;font-weight:bold;font-style:Regular;color:#008000;font-family:Georgia,"Times New Roman"}
+H2.Chapitre, h2.Chapitre {text-align:center;font-size:14pt;font-weight:bold;font-style:Regular;color:#008000;font-family:Georgia,"Times New Roman"}
+H2.TitreNo {text-align:center;font-size:14pt;font-weight:bold;font-style:Regular;color:#008000;font-family:Georgia,"Times New Roman"}
+h3.Sous-Section, H3.Sous-Section, h3.Sous-section, h2.Section {font-size:12pt;font-weight:bold;font-style:Italic;color:#008000;font-family:Georgia,"Times New Roman"}
+hr,HR { display: block; width:90%;  margin-top: 0.5em; margin-bottom: 0.5em; margin-left: auto;  margin-right: auto;  border-style: inset; border-width: 1px;}
+P.TitreSub {text-align:center;font-size:14pt;font-weight:bold;font-style:Regular;color:#008000;font-family:Georgia,"Times New Roman"}
+.Reference {display: block;text-align: left;text-indent: 0pt;margin-top: 10pt;margin-bottom: 6pt;margin-right: 10pt;margin-left: 10pt;font-size: 14pt;font-weight: Bold;font-style: Regular;color: #7F5434;text-decoration: none;vertical-align: baseline;text-transform: none;font-family: "Times New Roman";}
+.ludwig,blockquote {padding-left:1em;background-color:#fafafa;font-size:12pt;font-weight:100;font-style:italic;}
+#articleList {position:absolute ;	z-index: 1 ;left: 10px ;top: 80px ;height:340px;width: 620px;border: 2px solid #cacaca ;border-radius: 5px ;background-color:#fafafa ;    box-shadow: 0 0 12px #333333;	margin-left:0px ;	padding: .3em .3em ;		overflow:hidden ;	visibility:hidden ;  }			
+#articleList h3 { text-align: center; margin: 0; }		
+
+.historique {
+  display:none ;
+  padding: .1em .3em ;
+  border: solid 2px #dadada;
+  border-radius: 7px;
+  box-shadow: 0 0 5px #9ecaed;  
+  
+}
+.histText {
+    display: block;
+    font-family: ;"Times New Roman"
+	padding: .1em .3em ;
+    margin: 1em 0px;
+	font-style:italic;
+	color:#000000;
+	overflow:auto;
+}
+.highlight {
+  font-weight:bold ;
+  color:#000000 ;
+  background-color:#FFFFCC ;
+  }
+.articleList-scroll {
+	overflow-x:hidden ;
+	overflow-y:scroll ;
+	scrollbar-width:thin ;
+	scrollbar-color:blue orange ;
+}
+
+#contenu {
+	overflow-x:hidden ;
+    overflow-y:scroll ;
+	scrollbar-width:thin ;
+	scrollbar-color:blue orange ;
+}		
+
+table, TABLE {
+ text-align:center; 
+    margin-left:.5em; 
+    margin-right:.5em; 
+    border:1px solid #000000;	
+	border-collapse:collapse ;
+    border-color: #9ecaed;
+    box-shadow: 0 0 10px #9ecaed;
+	
+   }
+  tr,td {text-align:left;}
+  
+
+
+ </style>
+ 
+<script src="/js/iscroll.js"></script>
+<script src="/js/jquery.js"></script>   
+<script src="/js/jquery-ui-1.10.3.custom.js"></script>    	    
+<script src="/js/jquery.ui.draggable.js" type="text/javascript"></script>			
+<script src="/js/jquery.ui.core.js"></script> 			
+<script src="/js/jquery.ui.widget.js"></script>			
+<script src="/js/jquery.ui.position.js"></script>			
+<script src="/js/jquery.ui.menu.js"></script>    		
+<script type="text/javascript" src="./xpages.js"></script>
+/* VERSION POUR PAGE HTML SUR SITE DGI.CGICI.COM */
+<script language="javascript">
+ function showButton(id) {
+    var x = document.getElementById(id) ;
+	if(x.style.display === "none") {
+	   x.style.display = "block" ;
+	  } else {
+	   x.style.display = "none" ;
+	   }
+	 }   
+	 var pagenumber="042";
+function loadpage(page, art) {
+      showHideHistoric(art);
+	  return false;
+	  } 
+function loadArticle(page, art) { var artno = art ;var pgno=page;scrolltoelementTag(pgno,artno) ;return false ;} 
+
+</script>
+</HEAD>
+<BODY><div ID="wrapper"><div ID="scroller">
+
+
+
+<H2 CLASS="Section">
+Section IV - Valeur locative</H2>
+<span id="#A0153"></span>
+<H6 CLASS="NoArticle">
+Art. 153 &nbsp;&nbsp;&nbsp;&nbsp; <a href="#" onClick="loadpage('038','h23153');return false;" class="ui-button"  title="Consultez l'historique">2023...</a>
+&nbsp;&nbsp;&nbsp;&nbsp; <a href="#" onClick="loadpage('038','h24153');return false;" class="ui-button"  title="Consultez l'historique">2024...</a>
+&nbsp;&nbsp;&nbsp;&nbsp; <a href="#" onClick="loadpage('038','h25153');return false;" class="ui-button"  title="Consultez l'historique">2025...</a></H6>
+
+<P CLASS="ParaText">
+<A NAME="50618371_pgfId-1024863"></A>La valeur locative est le prix que le propriétaire retire de ses immeubles lorsqu'il les donne à bail.</P>
+<H6 CLASS="Modification">
+Loi n&#176; 2025-987 du 19  d&eacute;cembre 2025, art. 18.</H6>
+<P CLASS="ParaText">
+<A NAME="50434094_pgfId-1124347"></A>La valeur locative est déterminée au moyen de baux authentiques ou de locations verbales passées dans des conditions normales. <FONT COLOR='#000000'>En l’absence d’actes de l’espèce, l’évaluation est établie par comparaison avec des locaux dont le loyer aura été régulièrement constaté ou sera notoirement connu.</FONT></P>
+<H6 CLASS="Modification">
+<A NAME="50434094_pgfId-1124374"></A>Loi n° 2023-1000 du 18 déc. 2023, an. fiscale, art. 7-4/a; loi n° 2024-1109 du 18 déc. 2024, an. fiscale, art. 28-1</H6>
+
+<P CLASS="ParaText">
+<A NAME="50618371_pgfId-1024865"></A>Si aucun de ces procédés n'est applicable, la valeur locative est déterminée par voie d'appréciation directe : évaluation de la valeur <FONT COLOR='#000000'>marchande</FONT>, détermination du taux moyen d'intérêt des placements immobiliers dans la région considérée pour chaque nature de propriété, application du taux d'intérêt à la valeur <FONT COLOR='#000000'>marchande</FONT>.</P>
+<H6 CLASS="Modification">
+<A NAME="50618371_pgfId-1124439"></A>Loi n° 2023-1000 du 18 déc. 2023, an. fiscale, art. 7-4/b</H6>
+<P CLASS="ParaText">
+<A NAME="50618371_pgfId-1024866"></A>La valeur <FONT COLOR='#000000'>marchande</FONT> des biens imposables peut être déterminée par les services compétents de la Direction générale des Impôts, par tous moyens, notamment le recours à des experts immobiliers privés.</P>
+<H6 CLASS="Modification">
+<A NAME="50618371_pgfId-1024867"></A>Ord. n° 2011-121 du 22 juin 2011, an. fiscale, art. 21; loi n° 2023-1000 du 18 déc. 2023, an. fiscale, art. 7-4/b.</H6>
+<P CLASS="ParaText">
+<A NAME="50618371_pgfId-1024868"></A>La valeur locative des terrains à usage industriel, commercial est déterminée à raison de l'usage auquel ils sont affectés y compris la valeur locative du sol.</P>
+
+<span class="historique" ID="h23153">
+<div class="histText">
+
+<BR> 
+<BR>Art. 153 
+<BR> 
+La valeur locative est le prix que le propri&eacute;taire retire de ses immeubles lorsqu'il les donne &agrave; bail, ou, s'il les occupe lui-m&ecirc;me, celui qu'il pourrait en tirer en cas de location.<br />
+  La valeur locative est d&eacute;termin&eacute;e au moyen de baux authentiques ou de locations verbales pass&eacute;es dans des conditions normales. En l'absence d'actes de l'esp&egrave;ce, l'&eacute;valuation est &eacute;tablie par comparaison avec des locaux dont le loyer aura &eacute;t&eacute; r&eacute;guli&egrave;rement constat&eacute; ou sera notoirement connu.<br />
+  Si aucun de ces proc&eacute;d&eacute;s n'est applicable, la valeur locative est d&eacute;termin&eacute;e par voie d'appr&eacute;ciation directe : &eacute;valuation de la valeur v&eacute;nale, d&eacute;termination du taux moyen d'int&eacute;r&ecirc;t des placements immobiliers dans la r&eacute;gion consid&eacute;r&eacute;e pour chaque nature de propri&eacute;t&eacute;, application du taux d'int&eacute;r&ecirc;t &agrave; la valeur v&eacute;nale.<br />
+  La valeur v&eacute;nale des biens imposables peut &ecirc;tre d&eacute;termin&eacute;e par les services comp&eacute;tents de la Direction g&eacute;n&eacute;rale des Imp&ocirc;ts, par tous moyens, notamment le recours &agrave; des experts immobiliers priv&eacute;s.<br />
+  Ord. n&deg;- 2011-121 du 22 juin 2011Art. 21.<br />
+La valeur locative des terrains &agrave; usage industriel, commercial est d&eacute;termin&eacute;e &agrave; raison de l'usage auquel ils sont affect&eacute;s y compris la valeur locative du sol.</p>
+<BR> 
+<BR><BR><BR></div></span><finh23153>
+
+<span class="historique" ID="h24153">
+<div class="histText">
+<p>Art. 153 </p>
+<p>La valeur locative est le prix que le propri&eacute;taire retire de ses immeubles lorsqu'il les donne &agrave; bail, ou, s&rsquo;il les occupe lui-m&ecirc;me, celui qu'il pourrait en tirer en cas de location.</p>
+<p>La valeur locative est d&eacute;termin&eacute;e au moyen de baux authentiques ou de locations verbales pass&eacute;es dans des conditions normales. Cette valeur ne peut &ecirc;tre inf&eacute;rieure &agrave; celle fix&eacute;e par la Commission pr&eacute;vue &agrave; l&rsquo;article 161 bis du pr&eacute;sent Code pour la zone de situation de l&rsquo;immeuble concern&eacute;. </p>
+<p>En l&rsquo;absence d&rsquo;actes de l&rsquo;esp&egrave;ce, la valeur locative &agrave; retenir est celle d&eacute;termin&eacute;e par la Commission pr&eacute;cit&eacute;e pour la zone de situation de l&rsquo;immeuble concern&eacute;. Cette valeur est &eacute;galement &agrave; retenir lorsque celle figurant dans les baux lui est inf&eacute;rieur. </p>
+<p>Loi n&deg; 2023-1000 du 18 d&eacute;c. 2023, an. fiscale, art. 7-4/a</p>
+<p>Si aucun de ces proc&eacute;d&eacute;s n'est applicable, la valeur locative est d&eacute;termin&eacute;e par voie d'appr&eacute;ciation directe : &eacute;valuation de la valeur marchande, d&eacute;termination du taux moyen d'int&eacute;r&ecirc;t des placements immobiliers dans la r&eacute;gion consid&eacute;r&eacute;e pour chaque nature de propri&eacute;t&eacute;, application du taux d'int&eacute;r&ecirc;t &agrave; la valeur marchande.</p>
+<p>Loi n&deg; 2023-1000 du 18 d&eacute;c. 2023, an. fiscale, art. 7-4/b</p>
+<p>La valeur marchande des biens imposables peut &ecirc;tre d&eacute;termin&eacute;e par les services comp&eacute;tents de la Direction g&eacute;n&eacute;rale des Imp&ocirc;ts, par tous moyens, notamment le recours &agrave; des experts immobiliers priv&eacute;s.</p>
+<p>Ord. n&deg; 2011-121 du 22 juin 2011, an. fiscale, art. 21; loi n&deg; 2023-1000 du 18 d&eacute;c. 2023, an. fiscale, art. 7-4/b.</p>
+<p>La valeur locative des terrains &agrave; usage industriel, commercial est d&eacute;termin&eacute;e &agrave; raison de l'usage auquel ils sont affect&eacute;s y compris la valeur locative du sol.</p>
+<p>&nbsp;</p>
+<p>&nbsp;</p>
+
+</div></span><finh24153>
+
+<!-- Old wrapper body -->
+</div></div> 
+<!-- wrapper -->
+	  <div id="articleList"><div id="contenu" style='height:auto; background-color:#FFFFCC'>&nbsp;</div>
+      </div><p>&nbsp;</p><p>&nbsp;</p><p>&nbsp;</p><p>&nbsp;</p><p>&nbsp;</p><p>&nbsp;</p><p>&nbsp;</p><p>&nbsp;</p><p>&nbsp;</p><p>&nbsp;</p>
+	  <p>&nbsp;</p><p>&nbsp;</p><p>&nbsp;</p><p>&nbsp;</p><p>&nbsp;</p><p>&nbsp;</p></BODY></HTML>
+	  

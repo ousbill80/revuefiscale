@@ -1,0 +1,2 @@
+# Domaines email jetables additionnels (un par ligne).
+# Complète la liste intégrée dans emails_jetables.py

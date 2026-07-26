@@ -1,0 +1,43 @@
+reference_source: CGI 2026 — docs client 6/9/10 (propositions metier)
+date_effet: '2026-01-01'
+effets_croises: []
+a_confirmer:
+- date d effet 01/01/2026
+- valeurs issues docs client 6/9/10 — a valider metier
+formule_plafonnement: sans objet
+questions_generees:
+- id: q_parties_liees_etranger
+  texte: Parties liees a l etranger ?
+  type: booleen
+- id: q_etii_manquant
+  texte: ETII manquant ou incomplet ?
+  type: booleen
+- id: q_montant
+  texte: Enjeu estime ?
+  type: montant
+profils_applicables:
+- Entreprises au regime reel
+nature: sans_objet
+identifiant: OBL-36-ETII
+impot: OBL
+reference_legale: CGI 2026, art. 36 — etat des transactions internationales
+comptes_declencheurs:
+- '601'
+- '701'
+- '622'
+condition_declenchement: reponse(q_parties_liees_etranger) = vrai
+conditions_fond: Liens avec entreprise hors CI et transactions de l exercice ?
+resultat: reponse(q_montant)
+niveau_risque: eleve
+cas_test:
+  soldes:
+    '601': '1'
+    '701': '1'
+    '622': '1'
+  agregats: {}
+  reponses:
+    q_parties_liees_etranger: true
+    q_etii_manquant: true
+    q_montant: '1000000'
+  declenche_attendu: true
+  montant_attendu: '1000000'

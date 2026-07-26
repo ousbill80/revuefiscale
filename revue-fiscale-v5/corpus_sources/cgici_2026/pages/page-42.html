@@ -1,0 +1,661 @@
+<!DOCTYPE HTML><HTML><HEAD><META HTTP-EQUIV="Content-Type" CONTENT="text/html; charset=UTF-8">
+<TITLE>Code des impots -46</TITLE><LINK REL="STYLESHEET" HREF="/cicgi.css" CHARSET="ISO-8859-1" TYPE="text/css">
+<style type="text/css">
+body {margin-left: 5px;	margin-top: 0px; margin-right: .5em;margin-bottom: 0px;background-color:#fafafa ;}
+.Liste-Numerote {font-size: 12pt;font-weight: regular;font-style: italic;color: #000000;text-transform: none;margin-left:8px ;margin-bottom:8px ;margin-top:4px ;margin-right:10px ;font-family:Georgia, "Times New Roman", Times, serif}
+li {list-style-type: none; margin-left:0px ; padding-left:0em ; }
+.Paratext {font-size: 12pt;font-weight: regular;font-style: italic;color: #000000;text-decoration: none;vertical-align: baseline;text-transform: none;margin-left:0px ;font-family:Georgia, "Times New Roman", Times, serif}
+.Normal {font-size: 12pt;font-weight: regular;font-style: italic;color: #000000;text-decoration: none;vertical-align: baseline;text-transform: none;margin-left:0px ;font-family:Georgia, "Times New Roman", Times, serif}
+ul {list-style-type: none; margin-left:0px ; padding-left:0em ;  }
+.Liste2-Enumeree {font-size: 12pt;font-weight: regular;font-style: italic;color: #000000;text-decoration: none;vertical-align: baseline;text-transform: none;list-style-type:none ;margin-left:16px ;margin-bottom:8px;margin-right:10px;font-family:Georgia, "Times New Roman", Times, serif}
+P.Liste2-Enumeree {font-size: 12pt;font-weight: regular;font-style: italic;color: #000000;text-decoration: none;vertical-align: baseline;text-transform: none;list-style-type:none ;margin-left:16px ;margin-bottom:8px;margin-right:10px;font-family:Georgia, "Times New Roman", Times, serif}
+.Entete {font-size: 13pt;font-weight: regular;font-style: italic;color:#000000 ;text-decoration: none;vertical-align: baseline;text-transform: none;margin-left:8px ;font-family:Georgia, "Times New Roman", Times, serif}
+table, TABLE {border-width:1px; width:99% ;border-collapse:collapse;border-color: #9ecaed;box-shadow: 0 0 10px #9ecaed;}
+tr,td {text-align:left;vertical-align:bottom;border:1px solid #9ecaed;padding:.2em;marging-left:.2em}
+th, TH{text-align:center;vertical-align:middle;padding:.2em;}
+P.TableauEntete {font-size: 13pt;font-weight: regular;font-style: italic;color: #000000;font-family:Georgia, "Times New Roman"}
+P.TableauCelluleLeft, P.TableauCellule {text-align:right;margin-right:1em;font-size: 13pt;font-weight: regular;font-style: italic;color: #000000;font-family:Georgia, "Times New Roman"}
+P.TableauCelluleRight {text-align:left;margin-left:1em;font-size: 13pt;font-weight: regular;font-style: italic;color: #000000;font-family:Georgia, "Times New Roman"}
+.ui-buttonh {padding: .1em .1em ; border: 1px solid #dadada;border-radius: 4px; box-shadow: 0 0 4px #9ecaed;color:#FF3300 ;margin-left:8px ;margin-right:8px ;margin-bottom:2px ;margin-top:2px ;text-decoration:none ;font-size:12pt ;font-family:"Times New Roman"}   
+.ui-button {padding: .1em .1em ; border: 1px solid #dadada;border-radius: 4px; box-shadow: 0 0 4px #9ecaed;color:#FF3300 ;margin-left:8px ;margin-right:8px ;margin-bottom:2px ;margin-top:2px ;text-decoration:none ;font-size:12pt ;font-family:"Times New Roman"}   
+H3 {display: block;text-align: center;text-indent: 0pt;margin-top: 10pt;margin-bottom: 10pt;margin-right: 10pt;margin-left: 10pt;font-size: 12pt;font-weight: Bold;font-style: Regular;color: #00A000;text-decoration: none;vertical-align: baseline;text-transform: none;font-family: "Times New Roman";}
+H4 {display: block;text-align: left;text-indent: 0pt;margin-top: 10pt;margin-bottom: 6pt;margin-right: 10pt;margin-left: 10pt;font-size: 12pt;font-weight: Bold;font-style: Regular;color: #000000;text-decoration: none;vertical-align: baseline;text-transform: none;font-family: "Times New Roman";}
+H5 {display: block;text-align: left;text-indent: 0pt;margin-top: 10pt;margin-bottom: 6pt;margin-right: 10pt;margin-left: 10pt;font-size: 11pt;font-weight: Bold;font-style: Regular;color: #000000;text-decoration: none;vertical-align: baseline;text-transform: none;font-family: "Times New Roman";}
+H6.NoArticle {display: block;text-align: left;text-indent: 0pt;margin-top: 14pt;margin-bottom: 0pt;margin-right: 0pt;margin-left: 0pt;font-size: 14pt;font-weight: regular;font-style: Regular;color: #00a000;text-decoration: none;vertical-align: baseline;text-transform: none;font-family: "Times New Roman";}
+H2 {text-align:center;font-size:16pt;font-family:Georgia, "Times New Roman", Times, serif}
+P.ParaText {font-size: 12pt;font-weight: regular;font-style: italic;color: #000000;	text-decoration: none;vertical-align: baseline;text-transform: none;font-family:Georgia, "Times New Roman", Times, serif;}
+H2.Section,P.Section {font-size:12pt;font-weight:bold;font-style:Regular;color:#008000;font-family:Georgia,"Times New Roman"}
+P.Paragraphe, p.Paragraphe {Text-Align:center;Text-decoration:none;font-size:12pt;font-weight:bold;font-style:Normal;color:#00A000;font-family:Georgia,"Times New Roman"}
+H2.Livre,P.Livre {text-align:center;font-size:16pt;font-weight:bold;font-style:Regular;color:#008000;font-family:Georgia,"Times New Roman"}
+P.Partie,H2.Partie,P.TitreSub {text-align:center;font-size:14pt;font-weight:bold;font-style:Regular;color:#008000;font-family:Georgia,"Times New Roman"}
+H2.ChapitreNo,H2.TitreNo {text-align:center;font-size:14pt;font-weight:bold;font-style:Regular;color:#008000;font-family:Georgia,"Times New Roman"}
+H2.Chapitre, h2.Chapitre {text-align:center;font-size:14pt;font-weight:bold;font-style:Regular;color:#008000;font-family:Georgia,"Times New Roman"}
+H2.TitreNo {text-align:center;font-size:14pt;font-weight:bold;font-style:Regular;color:#008000;font-family:Georgia,"Times New Roman"}
+h3.Sous-Section, H3.Sous-Section, h3.Sous-section, h2.Section {font-size:12pt;font-weight:bold;font-style:Italic;color:#008000;font-family:Georgia,"Times New Roman"}
+hr,HR { display: block; width:90%;  margin-top: 0.5em; margin-bottom: 0.5em; margin-left: auto;  margin-right: auto;  border-style: inset; border-width: 1px;}
+P.TitreSub {text-align:center;font-size:14pt;font-weight:bold;font-style:Regular;color:#008000;font-family:Georgia,"Times New Roman"}
+.Reference {display: block;text-align: left;text-indent: 0pt;margin-top: 10pt;margin-bottom: 6pt;margin-right: 10pt;margin-left: 10pt;font-size: 14pt;font-weight: Bold;font-style: Regular;color: #7F5434;text-decoration: none;vertical-align: baseline;text-transform: none;font-family: "Times New Roman";}
+.ludwig,blockquote {padding-left:1em;background-color:#fafafa;font-size:12pt;font-weight:100;font-style:italic;}
+#articleList {position:absolute ;	z-index: 1 ;left: 10px ;top: 80px ;height:340px;width: 620px;border: 2px solid #cacaca ;border-radius: 5px ;background-color:#fafafa ;    box-shadow: 0 0 12px #333333;	margin-left:0px ;	padding: .3em .3em ;		overflow:hidden ;	visibility:hidden ;  }			
+#articleList h3 { text-align: center; margin: 0; }		
+
+.historique {
+  display:none ;
+  padding: .1em .3em ;
+  border: solid 2px #dadada;
+  border-radius: 7px;
+  box-shadow: 0 0 5px #9ecaed;  
+  
+}
+.histText {
+    display: block;
+    font-family: ;"Times New Roman"
+	padding: .1em .3em ;
+    margin: 1em 0px;
+	font-style:italic;
+	color:#000000;
+	overflow:auto;
+}
+.highlight {
+  font-weight:bold ;
+  color:#000000 ;
+  background-color:#FFFFCC ;
+  }
+.articleList-scroll {
+	overflow-x:hidden ;
+	overflow-y:scroll ;
+	scrollbar-width:thin ;
+	scrollbar-color:blue orange ;
+}
+
+#contenu {
+	overflow-x:hidden ;
+    overflow-y:scroll ;
+	scrollbar-width:thin ;
+	scrollbar-color:blue orange ;
+}		
+
+table, TABLE {
+ text-align:center; 
+    margin-left:.5em; 
+    margin-right:.5em; 
+    border:1px solid #000000;	
+	border-collapse:collapse ;
+    border-color: #9ecaed;
+    box-shadow: 0 0 10px #9ecaed;
+	
+   }
+  tr,td {text-align:left;}
+  
+
+
+ </style>
+ 
+<script src="/js/iscroll.js"></script>
+<script src="/js/jquery.js"></script>   
+<script src="/js/jquery-ui-1.10.3.custom.js"></script>    	    
+<script src="/js/jquery.ui.draggable.js" type="text/javascript"></script>			
+<script src="/js/jquery.ui.core.js"></script> 			
+<script src="/js/jquery.ui.widget.js"></script>			
+<script src="/js/jquery.ui.position.js"></script>			
+<script src="/js/jquery.ui.menu.js"></script>    		
+<script type="text/javascript" src="./xpages.js"></script>
+/* VERSION POUR PAGE HTML SUR SITE DGI.CGICI.COM */
+<script language="javascript">
+ function showButton(id) {
+    var x = document.getElementById(id) ;
+	if(x.style.display === "none") {
+	   x.style.display = "block" ;
+	  } else {
+	   x.style.display = "none" ;
+	   }
+	 }   
+	 var pagenumber="046";
+function loadpage(page, art) {
+      showHideHistoric(art);
+	  return false;
+	  } 
+function loadArticle(page, art) { var artno = art ;var pgno=page;scrolltoelementTag(pgno,artno) ;return false ;} 
+
+</script>
+</HEAD>
+<BODY><div ID="wrapper"><div ID="scroller">
+
+
+
+<H2 CLASS="Section">
+Section II - Imp&ocirc;t sur le patrimoine foncier des propri&eacute;t&eacute;s non b&acirc;ties</H2>
+<P CLASS="Paragraphe">
+I- Propri&eacute;t&eacute;s imposables</P>
+<span id="#A0159"></span>
+<H6 CLASS="NoArticle">
+Art. 159</H6>
+<P CLASS="ParaText">
+II est &eacute;tabli un imp&ocirc;t annuel sur le patrimoine foncier des propri&eacute;t&eacute;s non b&acirc;ties.</P>
+
+<span id="#A0160"></span>
+<H6 CLASS="NoArticle">
+Art. 160</H6>
+<P CLASS="Liste2-Enumeree">
+1&deg; Sont imposables &agrave; l&apos;imp&ocirc;t annuel sur le patrimoine foncier des propri&eacute;t&eacute;s non b&acirc;ties, les immeubles urbains. </P>
+<P CLASS="ParaText">
+Sont consid&eacute;r&eacute;s comme immeubles urbains :</P>
+<P CLASS="Liste2-Enumeree">
+a)	 Les terrains situ&eacute;s dans l'&eacute;tendue d'une agglom&eacute;ration d&eacute;j&agrave; existante ou en voie de formation et compris dans les limites des plans de lotissement r&eacute;guli&egrave;rement approuv&eacute;s.</P>
+<P CLASS="Liste2-Enumeree">
+b) Ceux qui, se trouvant en dehors du p&eacute;rim&egrave;tre des agglom&eacute;rations vis&eacute;es au paragraphe pr&eacute;c&eacute;dent, sont destin&eacute;s &agrave; l'&eacute;tablissement de maisons d'habitation, factoreries, comptoirs avec leurs aisances et d&eacute;pendances, lorsque lesdites constructions ne se rattachent pas &agrave; une exploitation agricole.</P>
+<P CLASS="Liste2-Enumeree">
+2&deg; Sont &eacute;galement imposables :</P>
+<P CLASS="Liste2-Enumeree">
+<FONT COLOR='#000000'>
+a) les exploitations d&apos;h&eacute;v&eacute;a, de palmier &agrave; huile, de coco, de caf&eacute;, de cacao, d&apos;anacarde, de banane, d&apos;ananas, de mangue, de canne &agrave; sucre, de citron, de papaye ou de fleurs, appartenant ou exploit&eacute;es par les personnes morales ou les entreprises agro-industrielles ;</FONT></P>
+<P CLASS="Liste2-Enumeree">
+<FONT COLOR='#000000'>
+b) les exploitations d&apos;h&eacute;v&eacute;a, de palmier &agrave; huile, de coco, de caf&eacute;, de cacao, d&apos;anacarde, de banane, d&apos;ananas, de mangue, de canne &agrave; sucre, de citron, de papaye ou de fleurs d&apos;une superficie d&apos;au moins 100 hectares appartenant ou exploit&eacute;es par des personnes physiques</FONT></P>
+<H6 CLASS="Modification">
+Ord. n&deg; 2011-480 du 28 d&eacute;cembre 2011, an. fiscale,Art. 15-1; loi n&deg; 2012-1179 du 27 d&eacute;cembre 2012, an. fiscale,Art. 11-1; loi n&deg; 2017-870 du 27 d&eacute;cembre 2017, an. fiscaleArt. 20-1.</H6>
+
+<P CLASS="Paragraphe">
+II- Base d'imposition</P>
+
+<span id="#A0161"></span>
+<H6 CLASS="NoArticle">
+Art. 161 &nbsp;&nbsp;&nbsp;&nbsp; <a href="#" class="ui-buttonh" onClick="loadpage('042','h23161');return false;" title="Consultez l'historique">2023...</a>
+&nbsp;&nbsp;&nbsp;&nbsp; <a href="#" class="ui-buttonh" onClick="loadpage('042','h24161');return false;" title="Consultez l'historique">2024...</a></H6>
+
+<P CLASS="ParaText"><FONT COLOR='#000000'>
+<A NAME="50618371_pgfId-1124535"></A>Les immeubles urbains sont imposables à raison de leur valeur marchande au 1er janvier de l’ann&eacute;e d’imposition.</FONT></P>
+<P CLASS="Paratext"><FONT COLOR='#000000'>
+<A NAME="50618371_pgfId-1124537"></A>La valeur marchande est d&eacute;termin&eacute;e : </FONT></P>
+<P CLASS="Paratext">
+<A NAME="50618371_pgfId-1124539"></A>–	en ce qui concerne les terrains urbains vis&eacute;s à l’article 160-1&deg; a) ci-dessus, par la Commission pr&eacute;vue à l’article 161 bis du pr&eacute;sent Code ;</P>
+<P CLASS="ParaText">
+<A NAME="50434094_pgfId-1147763"></A> 	A titre transitoire et ce, jusqu’à l’opérationnalisation de la Commission, les bases d’imposition des terrains urbains visé par l’article 160-1° a) suscité, sont déterminées par les services compétents de la Direction générale des Impôts, par tous moyens, notamment le recours à des experts immobiliers privés conformément à l’article 153 du présent Code.</P>
+<P CLASS="ParaText">
+<A NAME="50434094_pgfId-1141893"></A><FONT COLOR='#000000'>    En tout état de cause, les propriétaires de terrains urbains nus et d’immeubles bâtis non productifs de revenus sont invités à procéder jusqu’au 30 avril 2025, à la régularisation de leur déclaration foncière souscrite au titre de l’année 2025, sur la base de la valeur marchande du bien immeuble concerné ; </FONT></P>
+<H6 CLASS="Modification">
+<A NAME="50434094_pgfId-1124539"></A>Loi n° 2024-1109 du 18 déc. 2024, an. fiscale, art. 28-5</H6>
+<P CLASS="Paratext"><FONT COLOR='#000000'>
+<A NAME="50618371_pgfId-1124541"></A>–	en ce qui concerne les autres terrains imposables, au moyen des actes translatifs de propri&eacute;t&eacute; concernant les terrains imposables ou les terrains voisins, ou à d&eacute;faut d’actes translatifs, par voie d’estimation directe. La valeur marchande ainsi d&eacute;termin&eacute;e ne peut être inf&eacute;rieure à celle fix&eacute;e par la Commission pr&eacute;vue à l’article 161 bis du pr&eacute;sent Code. </FONT></P>
+<H6 CLASS="Modification">
+<A NAME="50618371_pgfId-1027994"></A>Loi n&deg; 2013-908 du 26 d&eacute;cembre  2013, an. fiscale, art. 13;   loi n&deg; 2023-1000 du 18 d&eacute;c. 2023, an. fiscale, art. 7-6</H6>
+
+<span id="#A0161b"></span>
+<H6 CLASS="NoArticle">
+Art. 161 bis &nbsp;&nbsp;&nbsp;&nbsp; <a href="#" class="ui-buttonh" onClick="loadpage('042','h23161b');return false;" title="Consultez l'historique">2023...</a>
+&nbsp;&nbsp;&nbsp;&nbsp; <a href="#" class="ui-buttonh" onClick="loadpage('042','h24161b');return false;" title="Consultez l'historique">2024...</a></H6>
+
+<P CLASS="ParaText"><FONT COLOR='#000000'>
+<A NAME="50618371_pgfId-1124634"></A>Il est institu&eacute; une commission d&eacute;nomm&eacute;e Commission de Fixation des Valeurs marchandes des biens immobiliers.</FONT></P>
+<P CLASS="ParaText">
+<A NAME="50618371_pgfId-1124636"></A>Cette commission a pour mission de fixer les valeurs marchandes de r&eacute;f&eacute;rence des terrains urbains et des immeubles bâtis .</P>
+<H6 CLASS="Modification"><FONT COLOR='#000000'>
+<A NAME="50434094_pgfId-1141937"></A>Loi n° 2024-1109 du 18 déc. 2024, an. fiscale, art. 28-6.</FONT></H6>
+<P CLASS="ParaText">
+<A NAME="50618371_pgfId-1124638"></A>Ces valeurs sont fix&eacute;es pour une p&eacute;riode <FONT COLOR='#000000'>de trois ans. </FONT> </P>
+<P CLASS="ParaText">
+<A NAME="50434094_pgfId-1147763"></A><FONT COLOR='#000000'> 	A titre transitoire et ce, jusqu’à l’opérationnalisation de la Commission, les bases d’imposition des terrains urbains visé par l’article 160-1° a) suscité, sont déterminées par les services compétents de la Direction générale des Impôts, par tous moyens, notamment le recours à des experts immobiliers privés conformément à l’article 153 du présent Code.</FONT>
+<P CLASS="ParaText"><FONT COLOR='#000000'>
+<A NAME="50434094_pgfId-1142038"></A>En tout état de cause, les propriétaires de terrains urbains nus et d’immeubles bâtis non productifs de revenus sont invités à procéder jusqu’au 30 avril 2025, à la régularisation de leur déclaration foncière souscrite au titre de l’année 2025, sur la base de la valeur marchande du bien immeuble concerné.</FONT> </P>
+<H6 CLASS="Modification">
+<A NAME="50434094_pgfId-1142006"></A>Loi n° 2024-1109 du 18 déc. 2024, an. fiscale, art. 28-6.</H6>
+<P CLASS="ParaText"><FONT COLOR='#000000'>
+<A NAME="50618371_pgfId-1124640"></A>La composition et les modalit&eacute;s de fonctionnement de la Commission sont d&eacute;termin&eacute;es par arrêt&eacute; du Ministre en charge du Budget, du Ministre en charge de la Construction et du Ministre en charge de l’Equipement et de l’Entretien routier. </FONT></P>
+<H6 CLASS="Modification">
+<A NAME="50618371_pgfId-1117466"></A>Loi n&deg; 2021-899 du 21 d&eacute;c. 2021, an. fiscale, art. 16-2;           loi n&deg; 2023-1000 du 18 d&eacute;c. 2023, an. fiscale, art. 7-7.</H6>
+
+<P CLASS="Paragraphe">
+III - Exemptions</P>
+
+<DIV>
+<H6 CLASS="NoArticle">
+
+Art. 162 &nbsp;&nbsp;&nbsp;&nbsp; <a href="#" class="ui-buttonh" onClick="loadpage('042','h23162');return false;" title="Consultez l'historique">2023...</a>
+&nbsp;&nbsp;&nbsp;&nbsp; <a href="#" class="ui-buttonh" onClick="loadpage('042','h24162');return false;" title="Consultez l'historique">2024...</a></H6>
+<P CLASS="ParaText">
+Sont exempts de l&apos;imp&ocirc;t sur le patrimoine foncier des propri&eacute;t&eacute;s non b&acirc;ties :</P>
+<P CLASS="Liste2-Enumeree">
+a)	Les terrains faisant l'objet d'une interdiction g&eacute;n&eacute;rale absolue de construire r&eacute;sultant par application de textes r&eacute;glementaires de leur situation topographique et ceux qui font l'objet d'une interdiction temporaire ou conditionnelle r&eacute;sultant d'une d&eacute;cision particuli&egrave;re des autorit&eacute;s locales ne provenant pas du fait du propri&eacute;taire.</P>
+<P CLASS="Liste2-Enumeree">
+b)	Les terrains dont le propri&eacute;taire se trouve priv&eacute; temporairement de la jouissance par suite d'une situation de fait ind&eacute;pendante de sa volont&eacute;.</P>
+<P CLASS="Liste2-Enumeree">
+c)	Les terrains appartenant &agrave; l'Etat, aux collectivit&eacute;s territoriales, affect&eacute;s ou non &agrave; un usage public, mais improductifs de revenus. </P>
+<P CLASS="Liste2-Enumeree">
+d)	Les p&eacute;pini&egrave;res et jardins d'essai cr&eacute;&eacute;s par l'Administration ou par les soci&eacute;t&eacute;s d'int&eacute;r&ecirc;t collectif agricole et les centres de coop&eacute;ration et coordination agricoles dans un but de s&eacute;lection et d'am&eacute;lioration des plants.</P>
+<P CLASS="Liste2-Enumeree">
+e)	Les terrains &agrave; usage scolaire, &agrave; usage du culte ou utilis&eacute;s par des &eacute;tablissements d'assistance m&eacute;dicale ou sociale ou par des soci&eacute;t&eacute;s reconnues d'utilit&eacute; publique et agr&eacute;&eacute;es comme soci&eacute;t&eacute;s d'&eacute;ducation physique ou de pr&eacute;paration militaire.</P>
+<P CLASS="Liste2-Enumeree">
+f)	Les terrains remis en &eacute;change de terrains ou immeubles r&eacute;quisitionn&eacute;s, durant les cinq ann&eacute;es suivant celle de leur attribution.</P>
+<P CLASS="Liste2-Enumeree">
+<FONT COLOR='#000000'>g)</FONT></P>
+<H6 CLASS="Modification">
+<A NAME="50618371_pgfId-1024936"></A>Loi n&deg; 2023-1000 du 18 d&eacute;c. 2023, an. fiscale, art. 20</H6>
+<P CLASS="Liste2-Enumeree">
+h)	Les terrains et installations de sport appartenant ou mis gratuitement de fa&ccedil;on exclusive &agrave; la disposition des associations sportives reconnues par le Minist&egrave;re en charge du Sport et non productifs de revenus.</P>
+<P CLASS="Liste2-Enumeree">
+i)	Les sols et d&eacute;pendances imm&eacute;diats des propri&eacute;t&eacute;s b&acirc;ties ainsi que les terrains affect&eacute;s &agrave; un usage commercial et industriel dont la valeur locative entre dans l'&eacute;valuation servant de base &agrave; l&apos;imp&ocirc;t sur le revenu foncier et de l&apos;imp&ocirc;t sur le patrimoine foncier des propri&eacute;t&eacute;s b&acirc;ties.</P>
+<P CLASS="Liste2-Enumeree">
+Les terrains urbains &agrave; consid&eacute;rer comme d&eacute;pendances imm&eacute;diates des constructions sont exclusivement les emplacements attenants et servant d'acc&egrave;s ou de d&eacute;gagement auxdites constructions et d'une &eacute;tendue au plus &eacute;gale au lot y relatif du plan de lotissement urbain ou &agrave; douze fois celle recouverte par l'&eacute;l&eacute;vation si ledit lot atteint une &eacute;tendue sup&eacute;rieure.</P>
+<P CLASS="Liste2-Enumeree">
+Les lotisseurs sont affranchis de l&apos;imp&ocirc;t sur le patrimoine foncier des propri&eacute;t&eacute;s non b&acirc;ties pendant une dur&eacute;e de trois ans &agrave; partir de l'ann&eacute;e suivant l'expiration du d&eacute;lai pr&eacute;vu par l'arr&ecirc;t&eacute; d'autorisation de lotir vis&eacute; &agrave; l'article 17 du d&eacute;cret n&deg; 67-18 du 11 janvier 1967.</P>
+<P CLASS="Liste2-Enumeree">
+j) Les terrains appartenant au Centre national de Recherche agronomique et affect&eacute;s &agrave; ses activit&eacute;s de recherche ou utilis&eacute;es &agrave; titre de plantations exp&eacute;rimentales.</P>
+<P CLASS="Liste2-Enumeree">
+
+k) Les terrains attribu&eacute;s pour la construction d&apos;immeubles d&apos;habitation &agrave; des entreprises de promotion immobili&egrave;re et r&eacute;serv&eacute;s &agrave; la voirie et aux &eacute;quipements sociaux &agrave; hauteur de 25 % de la superficie totale.</P>
+
+<H6 CLASS="Modification">
+Loi n&deg; 2014-861 du 22 d&eacute;cembre 2014, an. fiscale,Art.18.</H6>
+<P CLASS="Liste1-Numerotee"><FONT COLOR='#000000'>
+<A NAME="50434094_pgfId-1142099"></A>l)  Les terrains urbains nus acquis à partir de la date d’entrée en vigueur de l’annexe fiscale 2025 sur une période de deux ans à compter de l’année d’acquisition.</FONT></H6>
+<H6 CLASS="Modification">
+<A NAME="50434094_pgfId-1142121"></A>Loi n° 2024-1109 du 18 déc. 2024, an. fiscale, art. 28-7.</H6>
+</DIV>
+
+
+
+<span id="#A0163"></span>
+<H6 CLASS="NoArticle">
+Art. 163 &nbsp;&nbsp;&nbsp;&nbsp; <a href="#" class="ui-buttonh" onClick="loadpage('042','h23163');return false;" title="Consultez l'historique">2023...</a></H6>
+<P CLASS="ParaText">
+Abrog&eacute;.</P>
+<H6 CLASS="Modification">
+Loi n&deg; 2023-1000 du 18 d&eacute;c. 2023, an. fiscale, art. 7-3</H6>
+
+<span id="#A0163b"></span>
+<H6 CLASS="NoArticle">
+Art. 163 bis</H6>
+<P CLASS="ParaText">
+Sont exempt&eacute;es de l&apos;imp&ocirc;t sur le patrimoine foncier des propri&eacute;t&eacute;s non b&acirc;ties:</P>
+<P CLASS="Liste2-Enumeree">
+-les entreprises nouvelles, r&eacute;implant&eacute;es ou rouvertes avant le 31 d&eacute;cembre 2012 en zones Centre, Nord et Ouest au titre des ann&eacute;es 2010, 2011, 2012, 2013, 2014 et 2015. Cette exon&eacute;ration est ramen&eacute;e &agrave; 75% au titre des ann&eacute;es 2016 et 2017;</P>
+
+<H6 CLASS="Modification">
+Ord. n<b>&deg;-</b> 2011-121 du 22 juin 2011Art.2-8.</H6>
+<P CLASS="Liste2-Enumeree">
+- les entreprises agro-industrielles intervenant dans les secteurs du coton, de l&apos;anacarde et du karit&eacute;, cr&eacute;&eacute;es, r&eacute;implant&eacute;es ou rouvertes avant le 31 d&eacute;cembre 2012 dans les zones Centre, Nord et Ouest au titre des ann&eacute;es 2010 &agrave; 2015. Cette exon&eacute;ration est ramen&eacute;e &agrave; 75% les ann&eacute;es 2016 et 2017; </P>
+
+
+<H6 CLASS="Modification">
+Ord. n<b>&deg;-</b> 2009-382 du 26 novembre 2009Art.2-8; Ord. n<b>&deg;-</b> 2011-121 du 22 juin 2011Art.2 -8.</H6>
+<P CLASS="Liste2-Enumeree">
+-les entreprises cr&eacute;&eacute;es entre le 1er janvier 2010 et le 31 d&eacute;cembre 2012 pour la production, la conservation, le conditionnement ou la transformation des productions agricoles alimentaires, pendant une p&eacute;riode de 10 ans.</P>
+<P CLASS="Liste2-Enumeree">
+La liste des produits agricoles alimentaires est &eacute;tablie par arr&ecirc;t&eacute; conjoint du Ministre en charge de l&apos;Agriculture et du Ministre charg&eacute; du Budget .</P>
+
+
+<H6 CLASS="Modification">
+Ord. n<b>&deg;-</b> 2009-382 du 26 novembre 2009Art. 27-5.</H6>
+<P CLASS="Paragraphe">
+IV - Personnes imposables</P>
+
+
+<span id="#A0164"></span>
+<H6 CLASS="NoArticle">
+Art. 164 &nbsp;&nbsp;&nbsp;&nbsp; <a href="#" onClick="loadpage('046','h25164');return false;" class="ui-button"  title="Consultez l'historique">2025...</a></H6>
+<P CLASS="ParaText"><FONT COLOR='#d00000'>
+<A NAME="pgfId-1148857"></A>L&#8217;imp&ocirc;t sur le patrimoine foncier des propri&eacute;t&eacute;s non b&acirc;ties est d&ucirc; pour l&#8217;ann&eacute;e enti&egrave;re par le propri&eacute;taire, par le concessionnaire ou par le d&eacute;tenteur du droit de superficie au 1er janvier de l&#8217;ann&eacute;e d&#8217;imposition.</FONT></P>
+<P CLASS="ParaText"><FONT COLOR='#d00000'>
+<A NAME="pgfId-1148858"></A>En cas de bail emphyt&eacute;otique, l&#8217;imp&ocirc;t est d&ucirc; par le bailleur en raison du loyer per&ccedil;u et par le preneur ou l&#8217;emphyt&eacute;ote pour la d&eacute;tention du droit de superficie. L&#8217;imp&ocirc;t est d&eacute;termin&eacute; sur la base de la valeur marchande au taux de 0,2 %. </FONT></P>
+<P CLASS="ParaText"><FONT COLOR='#d00000'>
+<A NAME="pgfId-1148859"></A>En cas d&#8217;usufruit, l&#8217;imp&ocirc;t est d&ucirc; par l&#8217;usufruitier et d&eacute;termin&eacute; dans les conditions pr&eacute;vues &agrave; l&#8217;article 165 du pr&eacute;sent Code.</FONT></P>
+<H6 CLASS="Modification">
+<A NAME="pgfId-1148860"></A>Loi n&#176; 2020-972 du 23 d&eacute;c. 2020, an. fiscale, art. 15;               loi n&#176; 2025-987 du 19  d&eacute;cembre 2025, art. 34-2.</H6>
+
+
+
+<P CLASS="Paragraphe">
+V - Taux et tarifs de l'imp&ocirc;t</P>
+
+
+
+<span id="#A0165"></span>
+<H6 CLASS="NoArticle">
+Art. 165 &nbsp;&nbsp;&nbsp;&nbsp; <a href="#" class="ui-buttonh" onClick="loadpage('046','h23165');return false;" title="Consultez l'historique">2023..</a>
+&nbsp;&nbsp;&nbsp;&nbsp; <a href="#" class="ui-buttonh" onClick="loadpage('046','h24165');return false;" title="Consultez l'historique">2024...</a>
+&nbsp;&nbsp;&nbsp;&nbsp; <a href="#" class="ui-buttonh" onClick="loadpage('046','h25165');return false;" title="Consultez l'historique">2025...</a></H6>
+
+<P CLASS="ParaText">
+1&deg; Le taux de l&apos;imp&ocirc;t sur le patrimoine foncier des propri&eacute;t&eacute;s non b&acirc;ties est fix&eacute; &agrave; 1 % de la valeur marchande d&eacute;termin&eacute;e conform&eacute;ment aux dispositions de l'article <a class='ui-buttonh' href='' onClick="scrolltoelementTag('165');return false;">161</a> du pr&eacute;sent Code. <FONT COLOR='#d00000'>Le montant de l&#8217;imp&ocirc;t &agrave; acquitter est plafonn&eacute; &agrave; 10 % minimum et &agrave; 25 % maximum par rapport au montant de l&#8217;imp&ocirc;t &eacute;mis au titre de l&#8217;ann&eacute;e 2024.</FONT></P>
+<H6 CLASS="Modification">
+<A NAME="pgfId-1148875"></A>Loi n&#176; 2023-1000 du 18 d&eacute;c. 2023, an. fiscale, art. 7-8;            loi n&#176; 2024-1109 du 18 d&eacute;c. 2024, an. fiscale, art. 28-8; loi n&#176; 2025-987 du 19  d&eacute;cembre 2025, art. 34-3.</H6>
+<P CLASS="ParaText">
+Le taux de l&apos;imp&ocirc;t sur le patrimoine foncier des immeubles non b&acirc;tis et non productifs de revenus, appartenant au Port autonome de San Pedro, est fix&eacute; &agrave;  <FONT COLOR='#d00000'>0,40 %.</FONT> </P>
+<H6 CLASS="Modification">
+<A NAME="pgfId-1152541"></A>Loi n&#176; 2025-987 du 19  d&eacute;cembre 2025, art. 34-3.</H6>
+<P CLASS="ParaText"><FONT COLOR='#d00000'>
+<A NAME="pgfId-1152563"></A>Pour le r&egrave;glement de l&#8217;imp&ocirc;t sur le patrimoine foncier des propri&eacute;t&eacute;s non b&acirc;ties non productives de revenus fonciers d&eacute;j&agrave; notifi&eacute; au titre de l&#8217;ann&eacute;e 2025, les exc&eacute;dents qui repr&eacute;sentent plus de 100 % de l&#8217;imp&ocirc;t de 2024 constituent pour les contribuables ayant acquitt&eacute; la totalit&eacute; du montant de leur imp&ocirc;t foncier au titre de l&#8217;ann&eacute;e 2025, un cr&eacute;dit d&#8217;imp&ocirc;t &agrave; imputer sur les impositions des ann&eacute;es 2026 et 2027.</FONT></P>
+<P CLASS="ParaText"><FONT COLOR='#d00000'>
+<A NAME="pgfId-1152565"></A>En ce qui concerne les contribuables ayant acquitt&eacute; partiellement le montant de l&#8217;imp&ocirc;t &eacute;mis au titre de l&#8217;ann&eacute;e 2025, les sommes correspondant &agrave; l&#8217;exc&eacute;dent repr&eacute;sentant plus de 100 % de l&#8217;imp&ocirc;t de 2024, est d&eacute;grev&eacute; dans les conditions suivantes :</FONT></P>
+<P CLASS="Liste1-Numerotee"><FONT COLOR='#d00000'>
+<A NAME="pgfId-1152567"></A>-	avoir acquitt&eacute; la totalit&eacute; des impositions de l&#8217;ann&eacute;e 2024 ;</FONT></P>
+<P CLASS="Liste1-Numerotee"><FONT COLOR='#d00000'>
+<A NAME="pgfId-1152569"></A>-	avoir acquitt&eacute; au titre de l&#8217;imp&ocirc;t foncier de l&#8217;ann&eacute;e 2025, le montant correspondant &agrave; 100 % de l&#8217;imp&ocirc;t de 2024.</FONT></P>
+<H6 CLASS="Modification">
+<A NAME="pgfId-1148878"></A>Loi n&#176; 2024-1109 du 18 d&eacute;c. 2024, an. fiscale, art. 28-8;         loi n&#176; 2025-987 du 19  d&eacute;cembre 2025, art. 34-3.</H6>
+<a name="50499599_pgfId-1117490"></a>2&deg; Ces taux s&rsquo;appliquent &agrave; partir de la fin de la deuxi&egrave;me ann&eacute;e suivant l&rsquo;ann&eacute;e d&rsquo;acquisition du terrain, m&ecirc;me en cas de cession &agrave; un nouvel acqu&eacute;reur.</P>
+<H6 CLASS="Modification">
+<a name="50499599_pgfId-1117508"></a>Loi n&deg; 2021-899 du 21 d&eacute;c. 2021, an. fiscale,Art. 16-3.</H6>
+<P CLASS="ParaText">
+3&deg;  Le tarif de l&apos;imp&ocirc;t pour les exploitations agricoles vis&eacute;es &agrave; l&apos;article 160 - 2&deg; ci-dessus est fix&eacute; comme suit : </P>
+<TABLE BORDER="1">
+<TR><TH>
+<P CLASS="TableauCelluleLet">
+Exploitations agricoles	Tarifs</P></TH><TH><P class="tableauCelluleRight">(en franc/ha plant&eacute;)</P></TH></TR>
+<TR><TD>
+<P CLASS="TableauCelluleLeft">
+H&eacute;v&eacute;a	</P></TD><TD><P class="tableauClelluleRight">	7 500</P></TD></TR>
+<TR><TD>
+<P CLASS="TableauCelluleLeft">
+Cacao</P></TD><TD><P Class="tableauCelluleRight">	5 000</P></TD></TR>
+<TR><TD>
+<P CLASS="TableauCelluleLeft">
+Caf&eacute;	</P></TD><TD><P class="tableauCelluleRight">	5 000</P></TD></TR>
+<TR><TD>
+<P CLASS="TableauCelluleLeft">
+Banane </P></TD><TD><P class="tableauCelluleRight">		5 000</P></TD></TR>
+<TR><TD>
+<P CLASS="TableauCelluleLeft">
+Ananas	</P></TD><TD><P CLASS="TableauCelluleRight">	5 000</P></TD></TR>
+<TR><TD>
+<P CLASS="TableauCelluleLeft">
+Coco	</P></TD><TD><P CLASS="TableauCelluleRight">	5 000 </P></TD></TR>
+<TR><TD>
+<P CLASS="TableauCelluleLeft">
+Palmier &agrave; huile	</P></TD><TD><P CLASS="TableauCelluleRight">	5 000</P></TD></TR>
+<TR><TD>
+<P CLASS="TableauCelluleLeft">
+Fleurs	</P></TD><TD><P CLASS="TableauCelluleRight">	5 000</P></TD></TR>
+<TR><TD>
+<P CLASS="TableauCelluleLeft">
+Canne &agrave; sucre	</P></TD><TD><P CLASS="TableauCelluleRight">	2 500</P></TD></TR>
+<TR><TD>
+<P CLASS="TableauCelluleLeft">
+Mangue	</P></TD><TD><P CLASS="TableauCelluleRight"> 		2 500</P></TD></TR>
+<TR><TD>
+<P CLASS="TableauCelluleLeft">
+Anacarde	</P></TD><TD><P CLASS="TableauCelluleRight"> 	2 500</P></TD></TR>
+<TR><TD>
+<P CLASS="TableauCelluleLeft">
+Citron 	</P></TD><TD><P CLASS="TableauCelluleRight">		2 500</P></TD></TR>
+<TR><TD>
+<P CLASS="TableauCelluleLeft">
+Papaye 	</P></TD><TD><P CLASS="TableauCelluleRight">		 2 500</P></TD></TR>
+</TABLE>
+<H6 CLASS="Modification">
+Loi n&deg; 2012-1179 du 27 d&eacute;cembre 2012, an. fiscale,Art. 11-2; Loi n&deg; 2017-870 du 27 d&eacute;cembre 2017, an. fiscaleArt. 20-2.</H6>
+<P CLASS="Paratext">
+4&deg; Le produit de l&apos;imp&ocirc;t sur les exploitations agricoles vis&eacute;es au paragraphe 2&deg; du pr&eacute;sent article, est r&eacute;parti comme suit:</P>
+<P CLASS="Paratext">
+- Commune :		30 %</P>
+<P CLASS="Paratext">
+- R&eacute;gion  :		60 %</P>
+<P CLASS="Paratext">
+- Etat    :		10 %.</P>
+<H6 CLASS="Modification">
+
+Ord. n&deg; 2007-675 du 28 d&eacute;cembre 2007, an. fiscale,Art. 17</H6>
+
+
+</div></div> 
+<p>&nbsp;</p><p>&nbsp;</p>
+
+<span class="historique" ID="h23161">
+<div class="histText">
+
+<BR> 
+<BR>Art. 161
+<BR> 
+Les immeubles urbains sont imposables en raison de leur valeur v&eacute;nale au 1er janvier de l'ann&eacute;e d'imposition.<br />
+  La valeur v&eacute;nale est d&eacute;termin&eacute;e:<br />
+  - en ce qui concerne les terrains urbains vis&eacute;s &agrave; l'article 160 - 1&deg;- a) ci-dessus, par des commissions communales nomm&eacute;es par arr&ecirc;t&eacute; du Ministre en charge des Finances, compos&eacute;es et statuant dans des conditions qui sont fix&eacute;es par d&eacute;cret pris en Conseil des Ministres. Cette valeur v&eacute;nale est fix&eacute;e pour une p&eacute;riode d'imposition de trois ans, au cours du deuxi&egrave;me trimestre de l'ann&eacute;e pr&eacute;c&eacute;dant ladite p&eacute;riode; <br />
+  Loi n&deg;- 2013-908 du 26 d&eacute;cembre 2013, an. fiscale,Art. 13.<br />
+  -en ce qui concerne les autres terrains imposables, au moyen des actes translatifs de propri&eacute;t&eacute; concernant les terrains imposables ou les terrains voisins, ou &agrave; d&eacute;faut d'actes translatifs, par voie d'estimation directe.
+<BR>
+<BR><BR><BR></div></span><finh23161>
+
+<span class="historique" ID="h24161">
+<div class="histText">
+
+<BR> 
+<BR>Art. 161
+<BR> 
+Les immeubles urbains sont imposables à raison de leur valeur marchande au 1er janvier de l’année d’imposition.
+La valeur marchande est déterminée : 
+–	en ce qui concerne les terrains urbains visés à l’article 160-1° a) ci-dessus, par la Commission prévue à l’article 161 bis du présent Code ;
+–	en ce qui concerne les autres terrains imposables, au moyen des actes translatifs de propriété concernant les terrains imposables ou les terrains voisins, ou à défaut d’actes translatifs, par voie d’estimation directe. La valeur marchande ainsi déterminée ne peut être inférieure à celle fixée par la Commission prévue à l’article 161 bis du présent Code. 
+<p>Loi n&deg; 2013-908 du 26 d&eacute;cembre 2013, an. fiscale, art. 13; loi n&deg; 2023-1000 du 18 d&eacute;c. 2023, an. fiscale, art. 7-6</p>
+<BR>
+<BR><BR><BR></div></span><finh23161>
+
+
+<span class="historique" ID="h23161b">
+<div class="histText">
+
+<BR> 
+<BR>Art. 161 bis
+<BR> 
+Il est institu&eacute; une commission d&eacute;nomm&eacute;e &laquo; Commission de fixation des valeurs marchandes des terrains urbains &raquo;. <br />
+  Cette commission a pour missions de fixer les valeurs marchandes de r&eacute;f&eacute;rence des terrains urbains et des immeubles b&amp;acirctis.<br />
+  Ces valeurs marchandes sont fix&eacute;es pour une p&eacute;riode d'un an, au cours du deuxi&agrave;me trimestre de l'ann&eacute;e pr&eacute;c&eacute;dant ladite p&eacute;riode.<br />
+  La composition et les modalit&eacute;s de fonctionnement de la pr&eacute;sente commission sont d&eacute;termin&eacute;es par arr&ecirc;t&eacute; du Ministre en charge du Budget, du Ministre en charge de la Construction et du Minist&agrave;re en charge de l'Equipement et de l'Entretien routier. <br />
+  Loi n&deg; 2021-899 du 21 d&eacute;c. 2021, an. fiscale,Art. 16-2.
+<BR>
+<BR><BR><BR></div></span><finh23161b>
+
+<span class="historique" ID="h24161b">
+<div class="histText">
+
+<BR> 
+<BR>Art. 161 bis
+<BR> 
+Il est institu&eacute; une commission d&eacute;nomm&eacute;e Commission de Fixation des Valeurs marchandes des biens immobiliers.</p>
+<p>Cette commission a pour mission de fixer les valeurs marchandes de r&eacute;f&eacute;rence des terrains urbains et des immeubles b&acirc;tis ainsi que les valeurs locatives par pi&egrave;ce des immeubles b&acirc;tis.</p>
+<p>Ces valeurs sont fix&eacute;es pour une p&eacute;riode d&rsquo;un an. </p>
+<p>La composition et les modalit&eacute;s de fonctionnement de la Commission sont d&eacute;termin&eacute;es par arr&ecirc;t&eacute; du Ministre en charge du Budget, du Ministre en charge de la Construction et du Ministre en charge de l&rsquo;Equipement et de l&rsquo;Entretien routier. </p>
+<p>Loi n&deg; 2021-899 du 21 d&eacute;c. 2021, an. fiscale, art. 16-2; loi n&deg; 2023-1000 du 18 d&eacute;c. 2023, an. fiscale, art. 7-7.</p>
+<BR>
+<BR><BR><BR></div></span><finh24161b>
+
+<span class="historique" ID="h24162">
+<div class="histText">
+
+<BR> 
+<BR>Art. 162
+<BR> 
+<p>Sont exempts de l'imp&ocirc;t sur le patrimoine foncier des propri&eacute;t&eacute;s non b&acirc;ties :</p>
+<p>a)	Les terrains faisant l'objet d'une interdiction g&eacute;n&eacute;rale absolue de construire r&eacute;sultant par application de textes r&eacute;glementaires de leur situation topographique et ceux qui font l'objet d'une interdiction temporaire ou conditionnelle r&eacute;sultant d'une d&eacute;cision particuli&egrave;re des autorit&eacute;s locales ne provenant pas du fait du propri&eacute;taire.</p>
+<p>b)	Les terrains dont le propri&eacute;taire se trouve priv&eacute; temporairement de la jouissance par suite d'une situation de fait ind&eacute;pendante de sa volont&eacute;.</p>
+<p>c)	Les terrains appartenant &agrave; l'Etat, aux collectivit&eacute;s territoriales, affect&eacute;s ou non &agrave; un usage public, mais improductifs de revenus. </p>
+<p>d)	Les p&eacute;pini&egrave;res et jardins d'essai cr&eacute;&eacute;s par l'Administration ou par les soci&eacute;t&eacute;s d'int&eacute;r&ecirc;t collectif agricole et les centres de coop&eacute;ration et coordination agricoles dans un but de s&eacute;lection et d'am&eacute;lioration des plants.</p>
+<p>e)	Les terrains &agrave; usage scolaire, &agrave; usage du culte ou utilis&eacute;s par des &eacute;tablissements d'assistance m&eacute;dicale ou sociale ou par des soci&eacute;t&eacute;s reconnues d'utilit&eacute; publique et agr&eacute;&eacute;es comme soci&eacute;t&eacute;s d'&eacute;ducation physique ou de pr&eacute;paration militaire.</p>
+<p>f)	Les terrains remis en &eacute;change de terrains ou immeubles r&eacute;quisitionn&eacute;s, durant les cinq ann&eacute;es suivant celle de leur attribution.</p>
+<p>g)</p>
+<p>Loi n&deg; 2023-1000 du 18 d&eacute;c. 2023, an. fiscale, art. 20</p>
+<p>h)	Les terrains et installations de sport appartenant ou mis gratuitement de fa&ccedil;on exclusive &agrave; la disposition des associations sportives reconnues par le Minist&egrave;re en charge du Sport et non productifs de revenus.</p>
+<p>i)	Les sols et d&eacute;pendances imm&eacute;diats des propri&eacute;t&eacute;s b&acirc;ties ainsi que les terrains affect&eacute;s &agrave; un usage commercial et industriel dont la valeur locative entre dans l'&eacute;valuation servant de base &agrave; l'imp&ocirc;t sur le revenu foncier et de l'imp&ocirc;t sur le patrimoine foncier des propri&eacute;t&eacute;s b&acirc;ties.</p>
+<p>Les terrains urbains &agrave; consid&eacute;rer comme d&eacute;pendances imm&eacute;diates des constructions sont exclusivement les emplacements attenants et servant d'acc&egrave;s ou de d&eacute;gagement auxdites constructions et d'une &eacute;tendue au plus &eacute;gale au lot y relatif du plan de lotissement urbain ou &agrave; douze fois celle recouverte par l'&eacute;l&eacute;vation si ledit lot atteint une &eacute;tendue sup&eacute;rieure.</p>
+<p>Les lotisseurs sont affranchis de l'imp&ocirc;t sur le patrimoine foncier des propri&eacute;t&eacute;s non b&acirc;ties pendant une dur&eacute;e de trois ans &agrave; partir de l'ann&eacute;e suivant l'expiration du d&eacute;lai pr&eacute;vu par l'arr&ecirc;t&eacute; d'autorisation de lotir vis&eacute; &agrave; l'article 17 du d&eacute;cret n&deg; 67-18 du 11 janvier 1967.</p>
+<p>j) Les terrains appartenant au Centre national de Recherche agronomique et affect&eacute;s &agrave; ses activit&eacute;s de recherche ou utilis&eacute;es &agrave; titre de plantations exp&eacute;rimentales.</p>
+<p>k) Les terrains attribu&eacute;s pour la construction d'immeubles d'habitation &agrave; des entreprises de promotion immobili&egrave;re et r&eacute;serv&eacute;s &agrave; la voirie et aux &eacute;quipements sociaux &agrave; hauteur de 25 % de la superficie totale.</p>
+<p>Loi n&deg; 2014-861 du 22 d&eacute;cembre 2014, an. fiscale,Art.18.</p>
+<BR>
+<BR><BR><BR></div></span><finh24162>
+
+<span class="historique" ID="h20163">
+<div class="histText">
+
+<BR> 
+<BR>Art. 163 
+<BR> 
+ <p>Sont exon&eacute;r&eacute;es de l'imp&ocirc;t sur le patrimoine foncier des propri&eacute;t&eacute;s non b&acirc;ties, les entreprises agr&eacute;&eacute;es au r&eacute;gime fiscal en faveur des grands investissements dans l'habitat, pour la construction d'unit&eacute;s industrielles de fabrication des mat&eacute;riaux et autres intrants servant &agrave; la r&eacute;alisation du volet construction des logements.<br />
+  Cette exon&eacute;ration s'&eacute;tend sur la dur&eacute;e du projet y compris la p&eacute;riode de r&eacute;alisation des investissements.<br />
+  Le b&eacute;n&eacute;fice de cet avantage est subordonn&eacute; aux conditions vis&eacute;es &agrave; l'article 7 du pr&eacute;sent Code.</p>
+<BR>
+<BR><BR><BR></div></span><finh20163>
+
+<span class="historique" ID="h20164">
+<div class="histText">
+
+<BR> 
+<BR>Art. 164 
+<BR> 
+<BR>L'imp&ocirc;t sur le patrimoine foncier des propri&eacute;t&eacute;s non b&acitc;ties est d&ucirc; pour l'ann&eacute;e enti&egrave;re par le propri&eacute;taire, par le concessionnaire ou par le d&eacute;tenteur du droit de superficie au 1er janvier de l'ann&eacute;e de l'imposition. Dans le cas d'usufruit ou de bail emphyt&eacute;otique, les impositions sont &eacute;tablies ainsi qu'en mati&egrave;re de propri&eacute;t&eacute;s b&acitc;ties. 
+<BR>
+<BR><BR><BR></div></span><finh20164>
+
+<span class="historique" ID="h23165">
+<div class="histText">
+<P CLASS="ParaText">
+1&deg; Le taux de l&apos;imp&ocirc;t sur le patrimoine foncier des propri&eacute;t&eacute;s non b&acirc;ties est fix&eacute; &agrave; 1,5 % de la valeur v&eacute;nale d&eacute;termin&eacute;e conform&eacute;ment aux dispositions de l'article 161 du pr&eacute;sent Code.</P>
+<P CLASS="ParaText">
+Le taux de l&apos;imp&ocirc;t sur le patrimoine foncier des immeubles non b&acirc;tis et non productifs de revenus, appartenant au Port autonome de San Pedro, est fix&eacute; &agrave; 0,75 %.</P>
+<P CLASS="ParaText"><FONT COLOR='#000000'>
+<a name="50499599_pgfId-1117490"></a>2&deg; Ces taux s&rsquo;appliquent &agrave; partir de la fin de la deuxi&egrave;me ann&eacute;e suivant l&rsquo;ann&eacute;e d&rsquo;acquisition du terrain, m&ecirc;me en cas de cession &agrave; un nouvel acqu&eacute;reur.</FONT></P>
+<H6 CLASS="Modification">
+<a name="50499599_pgfId-1117508"></a>Loi n&deg; 2021-899 du 21 d&eacute;c. 2021, an. fiscale,Art. 16-3.</H6>
+<P CLASS="ParaText">
+3&deg;  Le tarif de l&apos;imp&ocirc;t pour les exploitations agricoles vis&eacute;es &agrave; l&apos;article 160 - 2&deg; ci-dessus est fix&eacute; comme suit : </P>
+<TABLE BORDER="1">
+<TR><TH>
+<P CLASS="TableauCelluleLet">
+Exploitations agricoles	Tarifs</P></TH><TH><P class="tableauCelluleRight">(en franc/ha plant&eacute;)</P></TH></TR>
+<TR><TD>
+<P CLASS="TableauCelluleLeft">
+H&eacute;v&eacute;a	</P></TD><TD><P class="tableauClelluleRight">	7 500</P></TD></TR>
+<TR><TD>
+<P CLASS="TableauCelluleLeft">
+Cacao</P></TD><TD><P Class="tableauCelluleRight">	5 000</P></TD></TR>
+<TR><TD>
+<P CLASS="TableauCelluleLeft">
+Caf&eacute;	</P></TD><TD><P class="tableauCelluleRight">	5 000</P></TD></TR>
+<TR><TD>
+<P CLASS="TableauCelluleLeft">
+Banane </P></TD><TD><P class="tableauCelluleRight">		5 000</P></TD></TR>
+<TR><TD>
+<P CLASS="TableauCelluleLeft">
+Ananas	</P></TD><TD><P CLASS="TableauCelluleRight">	5 000</P></TD></TR>
+<TR><TD>
+<P CLASS="TableauCelluleLeft">
+Coco	</P></TD><TD><P CLASS="TableauCelluleRight">	5 000 </P></TD></TR>
+<TR><TD>
+<P CLASS="TableauCelluleLeft">
+Palmier &agrave; huile	</P></TD><TD><P CLASS="TableauCelluleRight">	5 000</P></TD></TR>
+<TR><TD>
+<P CLASS="TableauCelluleLeft">
+Fleurs	</P></TD><TD><P CLASS="TableauCelluleRight">	5 000</P></TD></TR>
+<TR><TD>
+<P CLASS="TableauCelluleLeft">
+Canne &agrave; sucre	</P></TD><TD><P CLASS="TableauCelluleRight">	2 500</P></TD></TR>
+<TR><TD>
+<P CLASS="TableauCelluleLeft">
+Mangue	</P></TD><TD><P CLASS="TableauCelluleRight"> 		2 500</P></TD></TR>
+<TR><TD>
+<P CLASS="TableauCelluleLeft">
+Anacarde	</P></TD><TD><P CLASS="TableauCelluleRight"> 	2 500</P></TD></TR>
+<TR><TD>
+<P CLASS="TableauCelluleLeft">
+Citron 	</P></TD><TD><P CLASS="TableauCelluleRight">		2 500</P></TD></TR>
+<TR><TD>
+<P CLASS="TableauCelluleLeft">
+Papaye 	</P></TD><TD><P CLASS="TableauCelluleRight">		 2 500</P></TD></TR>
+</TABLE>
+<H6 CLASS="Modification">
+Loi n&deg; 2012-1179 du 27 d&eacute;cembre 2012, an. fiscale,Art. 11-2; Loi n&deg; 2017-870 du 27 d&eacute;cembre 2017, an. fiscaleArt. 20-2.</H6>
+<P CLASS="Paratext">
+4&deg; Le produit de l&apos;imp&ocirc;t sur les exploitations agricoles vis&eacute;es au paragraphe 2&deg; du pr&eacute;sent article, est r&eacute;parti comme suit:</P>
+<P CLASS="Paratext">
+- Commune :		30 %</P>
+<P CLASS="Paratext">
+- R&eacute;gion  :		60 %</P>
+<P CLASS="Paratext">
+- Etat    :		10 %.</P>
+<H6 CLASS="Modification">
+
+Ord. n&deg; 2007-675 du 28 d&eacute;cembre 2007, an. fiscale,Art. 17</H6>
+<BR>
+<BR><BR><BR></div></span><finh23165>
+
+<span class="historique" ID="h24165">
+<div class="histText">
+
+<BR> 
+<BR>Art. 165
+ <P CLASS="ParaText">
+1&deg; Le taux de l&apos;imp&ocirc;t sur le patrimoine foncier des propri&eacute;t&eacute;s non b&acirc;ties est fix&eacute; &agrave; 1,5 % de la valeur <FONT COLOR='#000000'>marchande</FONT> d&eacute;termin&eacute;e conform&eacute;ment aux dispositions de l'article <a class='ui-buttonh' href='' onClick="scrolltoelementTag('165');return false;">161</a> du pr&eacute;sent Code.</P>
+<H6 CLASS="Modification">
+<A NAME="50618371_pgfId-1124769"></A>Loi n&deg; 2023-1000 du 18 d&eacute;c. 2023, an. fiscale, art. 7-8</H6>
+<P CLASS="ParaText">
+Le taux de l&apos;imp&ocirc;t sur le patrimoine foncier des immeubles non b&acirc;tis et non productifs de revenus, appartenant au Port autonome de San Pedro, est fix&eacute; &agrave; 0,75 %.</P>
+<P CLASS="ParaText"><FONT COLOR='#000000'>
+<a name="50499599_pgfId-1117490"></a>2&deg; Ces taux s&rsquo;appliquent &agrave; partir de la fin de la deuxi&egrave;me ann&eacute;e suivant l&rsquo;ann&eacute;e d&rsquo;acquisition du terrain, m&ecirc;me en cas de cession &agrave; un nouvel acqu&eacute;reur.</FONT></P>
+<H6 CLASS="Modification">
+<a name="50499599_pgfId-1117508"></a>Loi n&deg; 2021-899 du 21 d&eacute;c. 2021, an. fiscale,Art. 16-3.</H6>
+<P CLASS="ParaText">
+3&deg;  Le tarif de l&apos;imp&ocirc;t pour les exploitations agricoles vis&eacute;es &agrave; l&apos;article 160 - 2&deg; ci-dessus est fix&eacute; comme suit : </P>
+<TABLE BORDER="1">
+<TR><TH>
+<P CLASS="TableauCelluleLet">
+Exploitations agricoles	Tarifs</P></TH><TH><P class="tableauCelluleRight">(en franc/ha plant&eacute;)</P></TH></TR>
+<TR><TD>
+<P CLASS="TableauCelluleLeft">
+H&eacute;v&eacute;a	</P></TD><TD><P class="tableauClelluleRight">	7 500</P></TD></TR>
+<TR><TD>
+<P CLASS="TableauCelluleLeft">
+Cacao</P></TD><TD><P Class="tableauCelluleRight">	5 000</P></TD></TR>
+<TR><TD>
+<P CLASS="TableauCelluleLeft">
+Caf&eacute;	</P></TD><TD><P class="tableauCelluleRight">	5 000</P></TD></TR>
+<TR><TD>
+<P CLASS="TableauCelluleLeft">
+Banane </P></TD><TD><P class="tableauCelluleRight">		5 000</P></TD></TR>
+<TR><TD>
+<P CLASS="TableauCelluleLeft">
+Ananas	</P></TD><TD><P CLASS="TableauCelluleRight">	5 000</P></TD></TR>
+<TR><TD>
+<P CLASS="TableauCelluleLeft">
+Coco	</P></TD><TD><P CLASS="TableauCelluleRight">	5 000 </P></TD></TR>
+<TR><TD>
+<P CLASS="TableauCelluleLeft">
+Palmier &agrave; huile	</P></TD><TD><P CLASS="TableauCelluleRight">	5 000</P></TD></TR>
+<TR><TD>
+<P CLASS="TableauCelluleLeft">
+Fleurs	</P></TD><TD><P CLASS="TableauCelluleRight">	5 000</P></TD></TR>
+<TR><TD>
+<P CLASS="TableauCelluleLeft">
+Canne &agrave; sucre	</P></TD><TD><P CLASS="TableauCelluleRight">	2 500</P></TD></TR>
+<TR><TD>
+<P CLASS="TableauCelluleLeft">
+Mangue	</P></TD><TD><P CLASS="TableauCelluleRight"> 		2 500</P></TD></TR>
+<TR><TD>
+<P CLASS="TableauCelluleLeft">
+Anacarde	</P></TD><TD><P CLASS="TableauCelluleRight"> 	2 500</P></TD></TR>
+<TR><TD>
+<P CLASS="TableauCelluleLeft">
+Citron 	</P></TD><TD><P CLASS="TableauCelluleRight">		2 500</P></TD></TR>
+<TR><TD>
+<P CLASS="TableauCelluleLeft">
+Papaye 	</P></TD><TD><P CLASS="TableauCelluleRight">		 2 500</P></TD></TR>
+</TABLE>
+<H6 CLASS="Modification">
+Loi n&deg; 2012-1179 du 27 d&eacute;cembre 2012, an. fiscale,Art. 11-2; Loi n&deg; 2017-870 du 27 d&eacute;cembre 2017, an. fiscaleArt. 20-2.</H6>
+<P CLASS="Paratext">
+4&deg; Le produit de l&apos;imp&ocirc;t sur les exploitations agricoles vis&eacute;es au paragraphe 2&deg; du pr&eacute;sent article, est r&eacute;parti comme suit:</P>
+<P CLASS="Paratext">
+- Commune :		30 %</P>
+<P CLASS="Paratext">
+- R&eacute;gion  :		60 %</P>
+<P CLASS="Paratext">
+- Etat    :		10 %.</P>
+<H6 CLASS="Modification">
+
+Ord. n&deg; 2007-675 du 28 d&eacute;cembre 2007, an. fiscale,Art. 17</H6>
+<BR>
+<BR><BR><BR></div></span><finh20165>
+
+
+</div></div> <!-- wrapper -->
+	  <div id="articleList"><div id="contenu" style='height:auto; background-color:#FFFFCC'>&nbsp;</div>
+      </div><p>&nbsp;</p><p>&nbsp;</p><p>&nbsp;</p><p>&nbsp;</p><p>&nbsp;</p><p>&nbsp;</p><p>&nbsp;</p><p>&nbsp;</p><p>&nbsp;</p><p>&nbsp;</p>
+	  <p>&nbsp;</p><p>&nbsp;</p><p>&nbsp;</p><p>&nbsp;</p><p>&nbsp;</p><p>&nbsp;</p></BODY></HTML>
+	  

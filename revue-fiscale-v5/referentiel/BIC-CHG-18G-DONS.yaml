@@ -1,0 +1,42 @@
+identifiant: BIC-CHG-18G-DONS
+impot: BIC
+reference_legale: "CGI 2026, art. 18 G"
+reference_source: "CGI 2026"
+date_effet: "2026-01-01"
+profils_applicables:
+  - "Entreprises au regime reel (BIC)"
+comptes_declencheurs:
+  - "6582"
+nature: permanente
+condition_declenchement: "solde(6582) > 0"
+conditions_fond: >
+  Beneficiaire eligible art. 18 G ?
+  Pieces justificatives (montant, date, identite) jointes ?
+formule_plafonnement: "min(0.025 * agregat(CA) ; 200000000)"
+questions_generees:
+  - id: q_eligible
+    texte: "Le beneficiaire appartient-il a une categorie eligible de l'art. 18 G ?"
+    type: booleen
+  - id: q_justificatifs
+    texte: "Les justificatifs sont-ils disponibles ?"
+    type: booleen
+    conditionnee_par: "reponse(q_eligible) = vrai"
+  - id: q_montant_non_justifie
+    texte: "Montant total des dons non justifies ?"
+    type: montant
+    conditionnee_par: "reponse(q_justificatifs) = faux"
+resultat: "solde(6582) - min(0.025 * agregat(CA) ; 200000000)"
+niveau_risque: moyen
+effets_croises: []
+a_confirmer:
+  - "taux 2,5 % — verifier art. 18 G / annexe fiscale"
+  - "plafond 200 000 000 FCFA — verifier art. 18 G"
+  - "date d effet 01/01/2026"
+cas_test:
+  soldes: {"6582": "5000000", "701": "100000000"}
+  agregats: {"CA": "100000000"}
+  reponses: {}
+  declenche_attendu: true
+  # 5M - min(2.5%*100M, 200M) = 5M - 2.5M — régression d'expression uniquement ;
+  # valeurs déjà marquées a_confirmer ci-dessus, pas du droit positif certifié.
+  montant_attendu: "2500000"

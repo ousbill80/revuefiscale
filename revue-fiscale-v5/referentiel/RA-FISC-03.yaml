@@ -1,0 +1,29 @@
+reference_source: CGI 2026 — docs client 6/9/10 (propositions metier)
+date_effet: '2026-01-01'
+effets_croises: []
+a_confirmer:
+- date d effet 01/01/2026
+- valeurs issues docs client 6/9/10 — a valider metier
+formule_plafonnement: sans objet
+questions_generees: []
+profils_applicables:
+- Entreprises au regime reel
+nature: sans_objet
+identifiant: RA-FISC-03
+impot: RA
+reference_legale: Revue analytique — Differences temporaires reintegrations (doc client 6)
+comptes_declencheurs:
+- '691'
+- '151'
+condition_declenchement: solde(691) > 0 ou solde(151) > 0
+conditions_fond: Differences temporaires reintegrations
+resultat: solde(691) + solde(151)
+niveau_risque: moyen
+cas_test:
+  soldes:
+    '691': '4000000'
+    '151': '0'
+  agregats: {}
+  reponses: {}
+  declenche_attendu: true
+  montant_attendu: '4000000'

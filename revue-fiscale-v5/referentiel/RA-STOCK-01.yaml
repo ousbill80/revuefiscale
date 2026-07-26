@@ -1,0 +1,37 @@
+reference_source: CGI 2026 — docs client 6/9/10 (propositions metier)
+date_effet: '2026-01-01'
+effets_croises: []
+a_confirmer:
+- date d effet 01/01/2026
+- valeurs issues docs client 6/9/10 — a valider metier
+formule_plafonnement: sans objet
+questions_generees:
+- id: q_montant
+  texte: Ecart stock bilan / P&L ?
+  type: montant
+profils_applicables:
+- Entreprises au regime reel
+nature: sans_objet
+identifiant: RA-STOCK-01
+impot: RA
+reference_legale: Revue analytique — Reconciliation variations de stocks (doc client 6)
+comptes_declencheurs:
+- '31'
+- '32'
+- '33'
+- '603'
+condition_declenchement: solde(31) > 0 ou solde(32) > 0 ou solde(33) > 0 ou solde(603) <> 0
+conditions_fond: Reconciliation variations de stocks
+resultat: reponse(q_montant)
+niveau_risque: moyen
+cas_test:
+  soldes:
+    '31': '10000000'
+    '32': '0'
+    '33': '0'
+    '603': '2000000'
+  agregats: {}
+  reponses:
+    q_montant: '750000'
+  declenche_attendu: true
+  montant_attendu: '750000'

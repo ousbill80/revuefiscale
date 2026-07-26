@@ -1,0 +1,33 @@
+reference_source: CGI 2026 — docs client 6/9/10 (propositions metier)
+date_effet: '2026-01-01'
+effets_croises: []
+a_confirmer:
+- date d effet 01/01/2026
+- valeurs issues docs client 6/9/10 — a valider metier
+formule_plafonnement: sans objet
+questions_generees:
+- id: q_timbre_manquant
+  texte: Timbre manquant sur documents ?
+  type: booleen
+- id: q_montant
+  texte: Droits de timbre estimes ?
+  type: montant
+profils_applicables:
+- Entreprises au regime reel
+nature: sans_objet
+identifiant: TIMBRE-805-DOCS
+impot: TIMBRE
+reference_legale: CGI 2026, art. 805 et s. — droit de timbre
+comptes_declencheurs: []
+condition_declenchement: reponse(q_timbre_manquant) = vrai
+conditions_fond: Documents soumis au timbre sans droit appose ?
+resultat: reponse(q_montant)
+niveau_risque: faible
+cas_test:
+  soldes: {}
+  agregats: {}
+  reponses:
+    q_timbre_manquant: true
+    q_montant: '200000'
+  declenche_attendu: true
+  montant_attendu: '200000'

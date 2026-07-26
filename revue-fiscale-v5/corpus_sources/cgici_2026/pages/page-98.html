@@ -1,0 +1,1618 @@
+<!DOCTYPE HTML><HTML><HEAD><META HTTP-EQUIV="Content-Type" CONTENT="text/html; charset=UTF-8">
+<TITLE>Code des impots -103</TITLE><LINK REL="STYLESHEET" HREF="/cicgi.css" CHARSET="ISO-8859-1" TYPE="text/css">
+<style type="text/css">
+body {margin-left: 5px;	margin-top: 0px; margin-right: .5em;margin-bottom: 0px;background-color:#fafafa ;}
+.Liste-Numerote {font-size: 12pt;font-weight: regular;font-style: italic;color: #000000;text-transform: none;margin-left:8px ;margin-bottom:8px ;margin-top:4px ;margin-right:10px ;font-family:Georgia, "Times New Roman", Times, serif}
+li {list-style-type: none; margin-left:0px ; padding-left:0em ; }
+.Paratext {font-size: 12pt;font-weight: regular;font-style: italic;color: #000000;text-decoration: none;vertical-align: baseline;text-transform: none;margin-left:0px ;font-family:Georgia, "Times New Roman", Times, serif}
+.Normal {font-size: 12pt;font-weight: regular;font-style: italic;color: #000000;text-decoration: none;vertical-align: baseline;text-transform: none;margin-left:0px ;font-family:Georgia, "Times New Roman", Times, serif}
+ul {list-style-type: none; margin-left:0px ; padding-left:0em ;  }
+.Liste2-Enumeree {font-size: 12pt;font-weight: regular;font-style: italic;color: #000000;text-decoration: none;vertical-align: baseline;text-transform: none;list-style-type:none ;margin-left:16px ;margin-bottom:8px;margin-right:10px;font-family:Georgia, "Times New Roman", Times, serif}
+P.Liste2-Enumeree {font-size: 12pt;font-weight: regular;font-style: italic;color: #000000;text-decoration: none;vertical-align: baseline;text-transform: none;list-style-type:none ;margin-left:16px ;margin-bottom:8px;margin-right:10px;font-family:Georgia, "Times New Roman", Times, serif}
+.Entete {font-size: 13pt;font-weight: regular;font-style: italic;color:#000000 ;text-decoration: none;vertical-align: baseline;text-transform: none;margin-left:8px ;font-family:Georgia, "Times New Roman", Times, serif}
+table, TABLE {border-width:1px; width:99% ;border-collapse:collapse;border-color: #9ecaed;box-shadow: 0 0 10px #9ecaed;}
+tr,td {text-align:left;vertical-align:bottom;border:1px solid #9ecaed;padding:.2em;marging-left:.2em}
+th, TH{text-align:center;vertical-align:middle;padding:.2em;}
+P.TableauEntete {font-size: 13pt;font-weight: regular;font-style: italic;color: #000000;font-family:Georgia, "Times New Roman"}
+P.TableauCelluleLeft, P.TableauCellule {text-align:right;margin-right:1em;font-size: 13pt;font-weight: regular;font-style: italic;color: #000000;font-family:Georgia, "Times New Roman"}
+P.TableauCelluleRight {text-align:left;margin-left:1em;font-size: 13pt;font-weight: regular;font-style: italic;color: #000000;font-family:Georgia, "Times New Roman"}
+.ui-buttonh {padding: .1em .1em ; border: 1px solid #dadada;border-radius: 4px; box-shadow: 0 0 4px #9ecaed;color:#FF3300 ;margin-left:8px ;margin-right:8px ;margin-bottom:2px ;margin-top:2px ;text-decoration:none ;font-size:12pt ;font-family:"Times New Roman"}   
+.ui-button {padding: .1em .1em ; border: 1px solid #dadada;border-radius: 4px; box-shadow: 0 0 4px #9ecaed;color:#FF3300 ;margin-left:8px ;margin-right:8px ;margin-bottom:2px ;margin-top:2px ;text-decoration:none ;font-size:12pt ;font-family:"Times New Roman"}   
+H3 {display: block;text-align: center;text-indent: 0pt;margin-top: 10pt;margin-bottom: 10pt;margin-right: 10pt;margin-left: 10pt;font-size: 12pt;font-weight: Bold;font-style: Regular;color: #00A000;text-decoration: none;vertical-align: baseline;text-transform: none;font-family: "Times New Roman";}
+H4 {display: block;text-align: left;text-indent: 0pt;margin-top: 10pt;margin-bottom: 6pt;margin-right: 10pt;margin-left: 10pt;font-size: 12pt;font-weight: Bold;font-style: Regular;color: #000000;text-decoration: none;vertical-align: baseline;text-transform: none;font-family: "Times New Roman";}
+H5 {display: block;text-align: left;text-indent: 0pt;margin-top: 10pt;margin-bottom: 6pt;margin-right: 10pt;margin-left: 10pt;font-size: 11pt;font-weight: Bold;font-style: Regular;color: #000000;text-decoration: none;vertical-align: baseline;text-transform: none;font-family: "Times New Roman";}
+H6.NoArticle {display: block;text-align: left;text-indent: 0pt;margin-top: 14pt;margin-bottom: 0pt;margin-right: 0pt;margin-left: 0pt;font-size: 14pt;font-weight: regular;font-style: Regular;color: #00a000;text-decoration: none;vertical-align: baseline;text-transform: none;font-family: "Times New Roman";}
+H2 {text-align:center;font-size:16pt;font-family:Georgia, "Times New Roman", Times, serif}
+P.ParaText {font-size: 12pt;font-weight: regular;font-style: italic;color: #000000;	text-decoration: none;vertical-align: baseline;text-transform: none;font-family:Georgia, "Times New Roman", Times, serif;}
+H2.Section,P.Section {font-size:12pt;font-weight:bold;font-style:Regular;color:#008000;font-family:Georgia,"Times New Roman"}
+P.Paragraphe, p.Paragraphe {Text-Align:center;Text-decoration:none;font-size:12pt;font-weight:bold;font-style:Normal;color:#00A000;font-family:Georgia,"Times New Roman"}
+H2.Livre,P.Livre {text-align:center;font-size:16pt;font-weight:bold;font-style:Regular;color:#008000;font-family:Georgia,"Times New Roman"}
+P.Partie,H2.Partie,P.TitreSub {text-align:center;font-size:14pt;font-weight:bold;font-style:Regular;color:#008000;font-family:Georgia,"Times New Roman"}
+H2.ChapitreNo,H2.TitreNo {text-align:center;font-size:14pt;font-weight:bold;font-style:Regular;color:#008000;font-family:Georgia,"Times New Roman"}
+H2.Chapitre, h2.Chapitre {text-align:center;font-size:14pt;font-weight:bold;font-style:Regular;color:#008000;font-family:Georgia,"Times New Roman"}
+H2.TitreNo {text-align:center;font-size:14pt;font-weight:bold;font-style:Regular;color:#008000;font-family:Georgia,"Times New Roman"}
+h3.Sous-Section, H3.Sous-Section, h3.Sous-section, h2.Section {font-size:12pt;font-weight:bold;font-style:Italic;color:#008000;font-family:Georgia,"Times New Roman"}
+hr,HR { display: block; width:90%;  margin-top: 0.5em; margin-bottom: 0.5em; margin-left: auto;  margin-right: auto;  border-style: inset; border-width: 1px;}
+P.TitreSub {text-align:center;font-size:14pt;font-weight:bold;font-style:Regular;color:#008000;font-family:Georgia,"Times New Roman"}
+.Reference {display: block;text-align: left;text-indent: 0pt;margin-top: 10pt;margin-bottom: 6pt;margin-right: 10pt;margin-left: 10pt;font-size: 14pt;font-weight: Bold;font-style: Regular;color: #7F5434;text-decoration: none;vertical-align: baseline;text-transform: none;font-family: "Times New Roman";}
+.ludwig,blockquote {padding-left:1em;background-color:#fafafa;font-size:12pt;font-weight:100;font-style:italic;}
+#articleList {position:absolute ;	z-index: 1 ;left: 10px ;top: 80px ;height:340px;width: 620px;border: 2px solid #cacaca ;border-radius: 5px ;background-color:#fafafa ;    box-shadow: 0 0 12px #333333;	margin-left:0px ;	padding: .3em .3em ;		overflow:hidden ;	visibility:hidden ;  }			
+#articleList h3 { text-align: center; margin: 0; }		
+
+.historique {
+  display:none ;
+  padding: .1em .3em ;
+  border: solid 2px #dadada;
+  border-radius: 7px;
+  box-shadow: 0 0 5px #9ecaed;  
+  
+}
+.histText {
+    display: block;
+    font-family: ;"Times New Roman"
+	padding: .1em .3em ;
+    margin: 1em 0px;
+	font-style:italic;
+	color:#000000;
+	overflow:auto;
+}
+.highlight {
+  font-weight:bold ;
+  color:#000000 ;
+  background-color:#FFFFCC ;
+  }
+.articleList-scroll {
+	overflow-x:hidden ;
+	overflow-y:scroll ;
+	scrollbar-width:thin ;
+	scrollbar-color:blue orange ;
+}
+
+#contenu {
+	overflow-x:hidden ;
+    overflow-y:scroll ;
+	scrollbar-width:thin ;
+	scrollbar-color:blue orange ;
+}		
+
+table, TABLE {
+ text-align:center; 
+    margin-left:.5em; 
+    margin-right:.5em; 
+    border:1px solid #000000;	
+	border-collapse:collapse ;
+    border-color: #9ecaed;
+    box-shadow: 0 0 10px #9ecaed;
+	
+   }
+  tr,td {text-align:left;}
+  
+
+
+ </style>
+ 
+<script src="/js/iscroll.js"></script>
+<script src="/js/jquery.js"></script>   
+<script src="/js/jquery-ui-1.10.3.custom.js"></script>    	    
+<script src="/js/jquery.ui.draggable.js" type="text/javascript"></script>			
+<script src="/js/jquery.ui.core.js"></script> 			
+<script src="/js/jquery.ui.widget.js"></script>			
+<script src="/js/jquery.ui.position.js"></script>			
+<script src="/js/jquery.ui.menu.js"></script>    		
+<script type="text/javascript" src="./xpages.js"></script>
+/* VERSION POUR PAGE HTML SUR SITE DGI.CGICI.COM */
+<script language="javascript">
+ function showButton(id) {
+    var x = document.getElementById(id) ;
+	if(x.style.display === "none") {
+	   x.style.display = "block" ;
+	  } else {
+	   x.style.display = "none" ;
+	   }
+	 }   
+	 var pagenumber="103";
+function loadpage(page, art) {
+      showHideHistoric(art);
+	  return false;
+	  } 
+function loadArticle(page, art) { var artno = art ;var pgno=page;scrolltoelementTag(pgno,artno) ;return false ;} 
+
+</script>
+</HEAD>
+<BODY><div ID="wrapper"><div ID="scroller">
+
+
+<H2 CLASS="Section">
+Section IV - Exon&eacute;rations</H2>
+
+<H3 CLASS="Sous-section">
+I - Principes g&eacute;n&eacute;raux</H3>
+<span id="#A0354"></span>
+<H6 CLASS="NoArticle">
+Art. 354</H6>
+<P CLASS="ParaText">
+L&apos;&eacute;tendue et les limites d&apos;application de l&apos;exon&eacute;ration pr&eacute;vue &agrave; l&apos;article 355 du pr&eacute;sent Code sont les suivantes :</P>
+<P CLASS="Liste2-Enumeree">
+1-Les personnes qui effectuent des op&eacute;rations exon&eacute;r&eacute;es de la taxe sur la valeur ajout&eacute;e ne sont pas assujetties &agrave; cette taxe &agrave; raison desdites op&eacute;rations qu&apos;elles r&eacute;alisent. A ce titre, elles ne facturent pas la taxe &agrave; leurs clients.</P>
+<P CLASS="Liste2-Enumeree">
+2-L&apos;exon&eacute;ration s&apos;exerce en aval, c&apos;est-&agrave;-dire au stade des op&eacute;rations effectu&eacute;es avec la client&egrave;le. Elle ne concerne pas la taxe sur la valeur ajout&eacute;e que ces entreprises acquittent en amont, sur achats et sur frais de tous ordres, aupr&egrave;s des fournisseurs et de toutes les autres personnes avec lesquelles elles sont en relations d&apos;affaires. Cette taxe, qui ouvre normalement droit &agrave; d&eacute;duction n&apos;est pas r&eacute;cup&eacute;rable faute d&apos;imputation possible. Elle ne fait par ailleurs, l&apos;objet d&apos;aucun remboursement de la part de l&apos;Etat.</P>
+<P CLASS="Liste2-Enumeree">
+3-S&apos;il s&apos;agit d&apos;un produit exon&eacute;r&eacute; sur le march&eacute; int&eacute;rieur, son exportation ne conf&egrave;re pas &agrave; l&apos;entreprise le b&eacute;n&eacute;fice du remboursement par l&apos;Etat de la taxe acquitt&eacute;e en amont. Il n&apos;est pas fait ici application de la d&eacute;rogation pr&eacute;vue par l&apos;article <a class='ui-button' href='' onClick="loadArticle('103','0382');return false;">382</a> du pr&eacute;sent Code.</P>
+<P CLASS="Liste2-Enumeree">
+4-Pour les redevables qui traitent &agrave; la fois des march&eacute;s taxables et des march&eacute;s exon&eacute;r&eacute;s, il est fait application des dispositions de l&apos;article <a class='ui-button' href='' onClick="loadArticle('103','0378');return false;">378</a>du pr&eacute;sent Code aux termes desquelles les d&eacute;ductions sont alors r&eacute;duites au prorata de la valeur des produits passibles de la taxe sur la valeur ajout&eacute;e.</P>
+<P CLASS="Liste2-Enumeree">
+5-Les biens et services n&apos;ouvrant pas droit &agrave; d&eacute;duction en application des dispositions pr&eacute;vues par les articles <a class='ui-button' href='' onClick="loadArticle('103','0339');return false;">339</a> et suivants du Code g&eacute;n&eacute;ral des Imp&ocirc;ts sont exclus du b&eacute;n&eacute;fice de l&apos;exon&eacute;ration.</P>
+
+
+
+<H3 CLASS="Sous-section">
+II - Op&eacute;rations exon&eacute;r&eacute;es</H3>
+
+
+<span id="#A0355"></span>
+<H6 CLASS="NoArticle">
+    Art. 355 	&nbsp;&nbsp;<a href="#" onClick="loadpage('103','h31355');return false;" class="ui-button"  title="Consultez l'historique">2023...</a>
+&nbsp;&nbsp;<a href="#" onClick="loadpage('103','h24355');return false;" class="ui-button"  title="Consultez l'historique">2024...</a>
+&nbsp;&nbsp;<a href="#" onClick="loadpage('103','h25355');return false;" class="ui-button"  title="Consultez l'historique">2025...</a></H6>
+<P CLASS="ParaText">
+Sont exon&eacute;r&eacute;s de la taxe sur la valeur ajout&eacute;e :</P>
+<P CLASS="Liste2-Enumeree">
+1-	Les ventes de timbres ou de papiers timbr&eacute;s.</P>
+<P CLASS="Liste2-Enumeree"><FONT COLOR='#000000'>
+2-	Abrog&eacute;;</FONT></P>
+<H6 CLASS="Modification"><FONT COLOR='#000000'>
+Loi n&deg; 2020-972 du 23 d&eacute;c. 2020, an. fiscale,Art. 2-5.</FONT></H6>
+<P CLASS="Liste2-Enumeree">
+3-	Les op&eacute;rations effectu&eacute;es par les soci&eacute;t&eacute;s ou compagnies d&apos;assurances et tous autres assureurs, quelle que soit la nature des risques assur&eacute;s, et qui sont soumises &agrave; la taxe pr&eacute;vue au titre troisi&egrave;me de la deuxi&egrave;me partie du pr&eacute;sent Livre ainsi que les commissions des interm&eacute;diaires d&apos;assurances.</P>
+<P CLASS="Liste2-Enumeree">
+4-	Les op&eacute;rations ayant pour objet la transmission de propri&eacute;t&eacute; ou d&apos;usufruit de biens immeubles, de fonds de commerce ou de client&egrave;le etc, vis&eacute;es aux articles 550 et 556 du pr&eacute;sent Code, &agrave; l&apos;exclusion des op&eacute;rations de m&ecirc;me nature vis&eacute;es &agrave; l&apos;article 553 du m&ecirc;me Code.</P>
+<P CLASS="Liste2-Enumeree">
+5-	Les recettes provenant de la composition, de l&apos;impression ou de la vente des journaux et p&eacute;riodiques, &agrave; l&apos;exception des recettes aff&eacute;rentes &agrave; la publicit&eacute;.</P>
+<P CLASS="Liste2-Enumeree">
+6-	Les ventes de livres, ainsi que les travaux de composition, d&apos;impression et toutes op&eacute;rations de fa&ccedil;on n&eacute;cessaires &agrave; la fabrication des livres.</P>
+<P CLASS="Liste2-Enumeree"><FONT COLOR='#000000'>
+7-	Abrog&eacute;;</FONT></P>
+<H6 CLASS="Modification"><FONT COLOR='#000000'>
+Loi n&deg; 2020-972 du 23 d&eacute;c. 2020, an. fiscale,Art. 2-5.</FONT></H6>
+<P CLASS="Liste2-Enumeree"><FONT COLOR='#000000'>
+<A NAME="50618378_pgfId-1027447"></A>8–	Abrogé.</FONT></P>
+<H6 CLASS="Modification">
+<A NAME="50618378_pgfId-1065043"></A>Loi n° 2023-1000 du 18  déc. 2023, an. fiscale, art. 3-2.</H6>
+<P CLASS="Liste2-Enumeree"><FONT COLOR='#000000'>
+<A NAME="50618378_pgfId-1064851"></A>9–	Les ventes ou fournitures de produits alimentaires non transformés et de première nécessité ci-après :</FONT></P>
+<P CLASS="Liste2-Enumeree"><FONT COLOR='#000000'>
+<A NAME="50618378_pgfId-1064852"></A>–	 le maïs, le mil, le millet, le sorgho, le fonio, le blé, le riz à l’exception du riz de luxe et autres céréales ;</FONT></P>
+<P CLASS="Liste2-Enumeree"><FONT COLOR='#000000'>
+<A NAME="50618378_pgfId-1064853"></A>– 	le manioc, la patate, l’igname, la pomme de terre, le tarot et autres tubercules et racines ;</FONT></P>
+<P CLASS="Liste2-Enumeree"><FONT COLOR='#000000'>
+<A NAME="50618378_pgfId-1064854"></A>– le haricot, le soja, le sésame, l’arachide, le petit pois et autres légumineuses ;</FONT></P>
+<P CLASS="Liste2-Enumeree"><FONT COLOR='#000000'>
+<A NAME="50618378_pgfId-1064855"></A>– 	l’oignon, la tomate, l’aubergine, le gombo, le piment et autres légumes et produits maraîchers ;</FONT></P>
+<P CLASS="Liste2-Enumeree"><FONT COLOR='#000000'>
+<A NAME="50618378_pgfId-1064856"></A>– 	les œufs en coquille ;</FONT></P>
+<P CLASS="Liste2-Enumeree"><FONT COLOR='#000000'>
+<A NAME="50434096_pgfId-1064857"></A>– la viande et les abats non transformés à l’exception de la viande de luxe ;</FONT></P>
+<H6 CLASS="Modification">
+<A NAME="50434096_pgfId-1067052"></A>Loi n° 2024-1109 du 18 déc. 2024, an. fiscale, art. 1er-1.</H6>
+<P CLASS="Liste2-Enumeree"><FONT COLOR='#000000'>
+<A NAME="50618378_pgfId-1064858"></A>– 	le poisson non transformé (frais, fumé, salé ou congelé), à l’exclusion du poisson de luxe ; et</FONT></P>
+<P CLASS="Liste2-Enumeree"><FONT COLOR='#000000'> 
+<A NAME="50618378_pgfId-1064859"></A>– 	le lait non transformé. </FONT></P>
+<P CLASS="Liste2-Enumeree">
+- la banane, l&#8217;orange et autres fruits alimentaires naturels produits localement ,<FONT COLOR='#d00000'> &agrave; l&#8217;exclusion de la banane dessert ;</FONT></P>
+<H6 CLASS="Modification">
+<A NAME="pgfId-1149125"></A>Loi n&#176; 2024-1109 du 18 d&eacute;c. 2024, an. fiscale, art. 1er-1;         loi n&#176; 2025-987 du 19  d&eacute;cembre 2025, art. 18.</H6>
+<P CLASS="Liste2-Enumeree"><FONT COLOR='#000000'>
+<A NAME="50434096_pgfId-1067091"></A>- le sel alimentaire. </FONT></P>
+<H6 CLASS="Modification">
+<A NAME="50434096_pgfId-1067129"></A>Loi n° 2024-1109 du 18 déc. 2024, an. fiscale, art. 1er-1.</H6>
+<P CLASS="Liste1-Numerotee"><FONT COLOR='#000000'>
+<A NAME="50434096_pgfId-1064860"></A>    La liste des produits de luxe exclus de l’exonération est déterminée par arrêté conjoint du Ministre en charge du Budget, du Ministre en charge de l’Agriculture, du Ministre en charge des Ressources animales et halieutiques et du Ministre en charge du Commerce. </FONT></P>
+<H6 CLASS="Modification">
+<A NAME="50434096_pgfId-1067315"></A>Loi n° 2020-972 du 23 déc. 2020, an. fiscale, art. 6-1;              loi n° 2023-1000 du 18  déc. 2023, an. fiscale, art. 1;                loi n° 2024-1109 du 18 déc. 2024, an. fiscale, art. 1er-1.</H6>
+<P CLASS="Liste1-Numerotee"><FONT COLOR='#000000'>
+<A NAME="50434096_pgfId-1027449"></A>10– les opérations de vente, commission, courtage et façon portant sur les farines de céréales quelconques, les céréales destinées à la fabrication de ces farines, le pain ainsi que la levure vivante servant à sa fabrication;</FONT></P>
+<H6 CLASS="Modification">
+<A NAME="50434096_pgfId-1067378"></A>Loi n° 2024-1109 du 18 déc. 2024, an. fiscale, art. 1er-2.</H6>
+
+<P CLASS="Liste2-Enumeree">
+11-	Les op&eacute;rations de vente, commission et courtage r&eacute;alis&eacute;es en vue de l&apos;&eacute;coulement du produit de leur p&ecirc;che, par les p&ecirc;cheurs et armateurs &agrave; la p&ecirc;che ainsi que les soci&eacute;t&eacute;s ou associations groupant exclusivement des p&ecirc;cheurs et armateurs &agrave; la p&egrave;che.</P>
+<P CLASS="Liste2-Enumeree">
+12-	Les ventes effectu&eacute;es par les aviculteurs, les horticulteurs, et les pisciculteurs des produits de leur exploitation &agrave; l&apos;exception des entreprises d&apos;&eacute;levage industriel de crustac&eacute;s.</P>
+<P CLASS="Liste2-Enumeree">
+13-	Abrog&eacute;.</P>
+<H6 CLASS="Modification">
+Loi n&deg; 2017-870 du 27 d&eacute;cembre 2017, an. fiscaleArt. 1.</H6>
+<P CLASS="Liste2-Enumeree">
+14-	Les op&eacute;rations de cong&eacute;lation portant sur le poisson.</P>
+<H6 CLASS="Modification">
+Loi n&deg; 2017-870 du 27 d&eacute;cembre 2017, an. fiscaleArt. 1; ord. n&deg; 2018-145 du 14 f&eacute;vrier 2018,Art. 2.</H6>
+<P CLASS="Liste2-Enumeree">
+15- </P>
+<P CLASS="Liste2-Enumeree">
+1) Les honoraires des membres du corps m&eacute;dical ainsi que les soins pr&eacute;sentant un caract&egrave;re m&eacute;dical.</P>
+<P CLASS="Liste2-Enumeree">
+ Sont consid&eacute;r&eacute;es comme membres du corps m&eacute;dical, les personnes physiques exer&ccedil;ant une ou plusieurs des professions m&eacute;dicales ou param&eacute;dicales reconnues comme telles par le Minist&egrave;re en charge de la Sant&eacute;.</P>
+<H6 CLASS="Modification">
+Ord. n&deg; 2011-121 du 22 juin 2011, an. fiscale,Art. 7.</H6>
+<P CLASS="Liste2-Enumeree">
+Par soins pr&eacute;sentant un caract&egrave;re m&eacute;dical, il faut entendre ceux qui sont susceptibles de faire l&apos;objet de prescriptions par les personnes vis&eacute;es &agrave; l&apos;alin&eacute;a pr&eacute;c&eacute;dent.</P>
+<P CLASS="Liste2-Enumeree">
+Les soins d&apos;esth&eacute;tique et de beaut&eacute; ainsi que les sp&eacute;cialit&eacute;s non reconnues par le Minist&egrave;re de la Sant&eacute; sont en tout &eacute;tat de cause exclus du b&eacute;n&eacute;fice de l&apos;exon&eacute;ration.</P>
+<H6 CLASS="Modification">
+Ord. n&deg; 2008-381 du 18 d&eacute;cembre 2008, an. fiscale,Art. 1er.</H6>
+<P CLASS="Liste2-Enumeree">
+2)	Les appareils de correction auditive (appareils &eacute;lectro-acoustiques, proth&egrave;ses ossiculaires, implants) constituant le prolongement direct de soins dispens&eacute;s par un membre du corps m&eacute;dical et fournis par son interm&eacute;diaire.</P>
+<P CLASS="Liste2-Enumeree">
+3) Les prestations d&apos;hospitalisation et de restauration ainsi que le transport des bless&eacute;s et malades effectu&eacute;s par les structures hospitali&egrave;res agr&eacute;&eacute;es par le Minist&egrave;re en charge de la Sant&eacute;.</P>
+<H6 CLASS="Modification">
+Ord. n&deg; 2011-480 du 28 d&eacute;cembre 2011, an. fiscale,Art.1er.</H6>
+<P CLASS="Liste2-Enumeree">
+16-	L&apos;activit&eacute; d&apos;enseignement &agrave; l&apos;exclusion des op&eacute;rations accessoires teIles que les ventes de biens, fournitures de logement et nourriture dans les internats.</P>
+<P CLASS="Liste2-Enumeree"><FONT COLOR='#d00000'>
+17- Abrog&eacute;. </FONT></P>
+<H6 CLASS="Modification"> loi n&#176; 2025-987 du 19  d&eacute;cembre 2025, art. 6</H6>
+<P CLASS="Liste2-Enumeree">
+18-	Les bois en grumes.</P>
+<P CLASS="Liste2-Enumeree">
+19-	Le latex naturel.</P>
+<P CLASS="Liste2-Enumeree">
+20-	Les op&eacute;rations portant sur les viandes fra&icirc;ches et congel&eacute;es.</P>
+<P CLASS="Liste2-Enumeree">
+21-	Les livraisons de m&eacute;dicaments et produits pharmaceutiques ainsi que les mat&eacute;riels et produits sp&eacute;cialis&eacute;s pour les activit&eacute;s m&eacute;dicales vis&eacute;s par l&apos;annexe de la Directive n&deg; 06/2002/CM/UEMOA du 19 septembre 2002 portant d&eacute;termination de la liste commune des m&eacute;dicaments, produits pharmaceutiques, mat&eacute;riels et produits sp&eacute;cialis&eacute;s pour les activit&eacute;s m&eacute;dicales.</P>
+<H6 CLASS="Modification">
+Ord. n&deg; 2006-234 du 02 ao&ucirc;t 2006, an. fiscale,Art. 12.</H6>
+<P CLASS="Liste2-Enumeree"><FONT COLOR='#000000'>
+Il en est de m&ecirc;me des &eacute;quipements, mat&eacute;riels et outillages avec leurs pi&egrave;ces d&eacute;tach&eacute;es, et des intrants n&eacute;cessaires &agrave; la fabrication de m&eacute;dicaments ainsi que des emballages servant au conditionnement des m&eacute;dicaments fabriqu&eacute;s.  </FONT></P>
+<P CLASS="Liste2-Enumeree"><FONT COLOR='#000000'>
+Le b&eacute;n&eacute;fice de la mesure pr&eacute;vue au paragraphe pr&eacute;c&eacute;dent n&apos;exclut pas l&apos;application des dispositions plus favorables du Code des Investissements. </FONT></P>
+<H6 CLASS="Modification">
+Loi n&deg; 2019-1080 du 18 d&eacute;cembre 2019, an. fiscale,Art. 4-1er</H6>
+<P CLASS="Liste2-Enumeree"><FONT COLOR='#000000'>
+Les exon&eacute;rations concernant les biens vis&eacute;s au 1/, sont &eacute;tendues aux droits de douane.</FONT></P>
+<H6 CLASS="Modification">
+Loi n&deg; 2019-1080 du 18 d&eacute;cembre 2019, an. fiscale,Art. 4-2</H6>
+<P CLASS="Liste2-Enumeree">
+22-	Les bacs de fermentation et les b&acirc;ches de s&eacute;chage, fabriqu&eacute;s en poly&eacute;thyl&egrave;ne, destin&eacute;s au traitement du cacao, exclusivement vendus &agrave; des agriculteurs.</P>
+<P CLASS="Liste2-Enumeree"><FONT COLOR='#000000'>
+<a name="50499597_pgfId-1034533"></a>23&ndash; Abrog&eacute;.</FONT></P>
+<H6 CLASS="Modification">
+<a name="50499597_pgfId-1045735"></a>Loi n&deg; 2015-840 du 18 d&eacute;cembre 2015, an. fiscale,Art. 7-1;  loi n&deg; 2017-870 du 27 d&eacute;cembre 2017, an. fiscaleArt. 7;           loi n&deg; 2018 - 984 du 28  d&eacute;cembre 2018, an. fiscaleArt. 7;       loi n&deg; 2021-899 du 21 d&eacute;c. 2021, an. fiscale,Art. 4-7</H6>
+<P CLASS="Liste2-Enumeree">
+24-	Sur autorisation expresse du Ministre de l&apos;Economie et des Finances, les dons destin&eacute;s aux &#339;uvres de solidarit&eacute; nationales ou internationales ou &agrave; l&apos;Etat.</P>
+<P CLASS="Liste2-Enumeree"><FONT COLOR='#000000'>
+25-	Abrog&eacute;. </FONT></P>
+<H6 CLASS="Modification"><FONT COLOR='#000000'>
+Loi n&deg; 2020-972 du 23 d&eacute;c. 2020, an. fiscale,Art. 2-5.</FONT></H6>
+<P CLASS="Liste2-Enumeree">
+26-	Les produits p&eacute;troliers d&eacute;nomm&eacute;s Heavy Vacuum Oil (HVO), le fuel-oil 380 et le gaz naturel destin&eacute;s aux centrales thermiques.</P>
+<P CLASS="Liste2-Enumeree"><FONT COLOR='#d00000'>
+27- Abrog&eacute;. </FONT></P>
+<H6 CLASS="Modification"> Ordonnance n&deg; 2000-759 du 11 octobre 2000,Art. 2.; loi n&#176; 2025-987 du 19  d&eacute;cembre 2025, art. 6</H6
+><P CLASS="Liste2-Enumeree"><FONT COLOR='#d00000'>
+28- Abrog&eacute;. </FONT></P>
+<H6 CLASS="Modification">Loi n&deg; 2003-206 du7 juillet 2003, an. fiscale,Art. 5; loi n&#176; 2025-987 du 19  d&eacute;cembre 2025, art. 6</H6>
+<P CLASS="Liste2-Enumeree">
+29-	Les engrais.</P>
+<H6 CLASS="Modification">
+Ordonnance n&deg; 2000-758 du11 octobre 2000,Art. 2.</H6>
+<P CLASS="Liste2-Enumeree"><FONT COLOR='#d00000'>
+30- Abrog&eacute;. </FONT></P>
+<H6 CLASS="Modification">Ordonnance n&deg; 2000-758 du11 octobre 2000,Art. 2; loi n&#176; 2025-987 du 19  d&eacute;cembre 2025, art. 6</H6>
+<P CLASS="Liste2-Enumeree">
+31-	Les insecticides, fongicides, antirongeurs, herbicides inhibiteurs de germination, les r&eacute;gulateurs de croissance pour plantes.</P>
+<H6 CLASS="Modification">
+Ordonnance n&deg; 2000-758 du11 octobre 2000,Art. 2.</H6>
+<P CLASS="Liste2-Enumeree">
+32-	Les intrants concourant &agrave; la fabrication en C&ocirc;te d&apos;Ivoire et les emballages servant au conditionnement des insecticides.</P>
+<H6 CLASS="Modification">
+</a>Ordonnance n&deg; 2000-758 du11 octobre 2000,Art. 2.</H6>
+<P CLASS="Liste2-Enumeree">
+33- Les semences et les graines</P>
+<H6 CLASS="Modification">
+</a>Loi n&deg; 2001-338 du 14 juin 2001, an. fiscale,Art. 6-3&deg;; loi n&deg; 2017-870 du 27 d&eacute;cembre 2017, an. fiscaleArt. 1; ord. n&deg; 2018-145 du 14 f&eacute;vrier 2018,Art. 2-1.</H6>
+<P CLASS="Liste2-Enumeree">
+34-	La tranche sociale de consommation des livraisons d&apos;eau et d&apos;&eacute;lectricit&eacute; factur&eacute;es aux m&eacute;nages.</P>
+<H6 CLASS="Modification">
+Loi n&deg; 2001-338 du 14 juin 2001, an. fiscale,Art. 6-3&deg;. Ord. n&deg; 2006-234 du 02 ao&ucirc;t 2006, an. fiscale,Art. 3-4.</H6>
+<P CLASS="Liste2-Enumeree"><FONT COLOR='#000000'>
+35–	La vente et le transport du gaz butane ;</FONT></P>
+<H6 CLASS="Modification">
+<A NAME="50434096_pgfId-1027505"></A>Loi n° 2001-338 du 14 juin 2001, an. fiscale, art. 6-3°;            loi n° 2024-1109 du 18 déc. 2024, an. fiscale, art. 2.</H6>
+<P CLASS="Liste2-Enumeree">
+36-	Les ventes par leur auteur, d&apos;&#339;uvres d&apos;art originales.</P>
+<H6 CLASS="Modification">
+Loi n&deg; 2003-206 du7 juillet 2003, an. fiscale,Art. 1er 1.</H6>
+<P CLASS="Liste2-Enumeree">
+37-	Abrog&eacute;</P>
+<H6 CLASS="Modification">
+Loi n&deg; 2003-206 du7 juillet 2003, an. fiscale,Art. 39-4; loi n&deg; 2017-870 du 27 d&eacute;cembre 2017, an. fiscaleArt. 1.</H6>
+<P CLASS="Liste2-Enumeree">
+38-	1&deg;  [Obsol&egrave;te].</P>
+<H6 CLASS="Modification">
+Ord. n&deg; 2007-488 du 31 mai 2007, an. fiscale,Art. 28-5; Ord. n&deg; 2008-381 du 18 d&eacute;cembre 2008, an. fiscale,Art. 27-8; Ord. n&deg; 2011-480 du 28 d&eacute;cembre 2011, an. fiscale,Art. 7.</H6>
+<P CLASS="Liste2-Enumeree">
+2) [Obsol&egrave;te].</P>
+<H6 CLASS="Modification">
+Ord. n&deg; 2011-480 du 28 d&eacute;cembre 2011, an. fiscale,Art. 7.</H6>
+<P CLASS="Liste2-Enumeree">
+L&apos;exon&eacute;ration est accord&eacute;e sur autorisation du Directeur g&eacute;n&eacute;ral des Imp&ocirc;ts.</P>
+<H6 CLASS="Modification">
+Loi n&deg;2004 -271 du 15 avril 2004,.an. fiscale,Art. 2. Ord. n&deg; 2006-234 du 02 ao&ucirc;t 2006, an. fiscale,Art. 6-2.</H6>
+<P CLASS="Liste2-Enumeree">
+39-	Les mat&eacute;riels agricoles et leurs pi&egrave;ces d&eacute;tach&eacute;es dont la liste est fix&eacute;e par arr&ecirc;t&eacute; conjoint du Ministre du Budget et du Ministre de l&apos;Agriculture, quel que soit leur mode d&apos;acquisition, d&egrave;s lors que le b&eacute;n&eacute;ficiaire de ces mat&eacute;riels est un professionnel agr&eacute;&eacute; par le Minist&egrave;re de l&apos;Agriculture.</P>
+
+
+
+<P CLASS="Liste2-Enumeree">
+L&apos;exon&eacute;ration concerne &eacute;galement les mat&eacute;riels et &eacute;quipements des autres secteurs d&apos;activit&eacute; acquis par cr&eacute;dit-bail, lorsque la mise en &#339;uvre de cette exon&eacute;ration se fait par voie d&apos;attestation. </P>
+<P CLASS="Liste2-Enumeree">
+L&apos;exon&eacute;ration peut &ecirc;tre transf&eacute;r&eacute;e &agrave; l&apos;&eacute;tablissement de cr&eacute;dit-bail pour l&apos;acquisition du bien, et mention en est faite sur l&apos;attestation d&eacute;livr&eacute;e au cr&eacute;dit-preneur.</P>
+<H6 CLASS="Modification">
+Loi n&deg;2004-271 du 15 avril 2004, an. fiscale,Art.3; Ord. n&deg; 2011-121 du 22 juin 2011, an. fiscale,Art. 11;loi n&deg; 2014-861 du 22 d&eacute;cembre 2014, an. fiscale,Art.3.</H6>
+<P CLASS="Liste2-Enumeree">
+40- Abrog&eacute;.</P>
+<H6 CLASS="Modification">
+Loi n&deg; 2004-271 du 15 avril 2004, an. fiscale,Art. 39-1;loi n&deg; 2013-908 du 26 d&eacute;cembre 2013, an. fiscale,Art. 1er .</H6>
+<P CLASS="ParaText">
+41-	Les biens suivants acquis par la Soci&eacute;t&eacute; des Transports abidjanais (SOTRA) et ses filiales d&eacute;tenues &agrave; 100%, jusqu&apos;au 31 d&eacute;cembre 2015 :</P>
+<H6 CLASS="Modification">
+Ord. n&deg; 2011-480 du 28 d&eacute;cembre 2011, an. fiscale,Art. 36.</H6>
+<P CLASS="Liste2-Enumeree">
+-	les biens destin&eacute;s aux infrastructures de base d&apos;exploitation;</P>
+<P CLASS="Liste2-Enumeree">
+-	les biens destin&eacute;s aux ateliers concourant au montage et &agrave; la maintenance des v&eacute;hicules et autres mat&eacute;riels roulants d&apos;exploitation;</P>
+<P CLASS="Liste2-Enumeree">
+-	les syst&egrave;mes et mat&eacute;riels de radio t&eacute;l&eacute;informatiques et &eacute;lectroniques concourant &agrave; la gestion du r&eacute;seau d&apos;exploitation;</P>
+<H6 CLASS="Modification">
+Ord. n&deg; 2011-480 du 28 d&eacute;cembre 2011, an. fiscale,Art. 36.</H6>
+<P CLASS="Liste2-Enumeree">
+-	les v&eacute;hicules d&apos;exploitation, leurs pi&egrave;ces de rechange et pneumatiques.</P>
+<button onClick="showButton('n01')">INFOS</button>
+<blockquote ID="n01" class="ludwig" style="display:block;">Les exemptions accord&eacute;es &agrave; la SOTRA et &agrave; ses filiales d&eacute;tenues &agrave; 100% et vis&eacute;es &agrave; l&#8216;article 355-41 du Code g&eacute;n&eacute;ral des Imp&ocirc;ts sont &eacute;tendues aux droits de douane.</span></blockquote>
+<H6 CLASS="Modification">
+Loi n&deg; 2005-161 du 27 avril 2005, an. fiscale,Art. 5-1; 
+Ord. n&deg; 2007-675 du 28 d&eacute;cembre 2007, an. fiscale,Art. 2-1
+.</H6>
+<P CLASS="Liste2-Enumeree"><FONT COLOR='#000000'>
+<A NAME="50618378_pgfId-1064651"></A>42–	 Les matériaux, matériels, études et       travaux de construction de logements ainsi que les travaux d’assainissement, de voirie et de réseaux divers de programmes immobiliers, dont au moins 60 % des investissements sont affectés à la construction de    logements à caractère économique et       social, de leurs voiries et réseaux divers, et d’équipements socio-collectifs mis à la charge du promoteur par le cahier des charges du programme.</FONT></P>
+<P CLASS="Paratext"><FONT COLOR='#000000'>
+<A NAME="50618378_pgfId-1064653"></A>    L’éligibilité du programme immobilier à l’exonération est subordonnée aux conditions      suivantes :</FONT></P>
+<P CLASS="Liste1-Numerotee"><FONT COLOR='#000000'>
+<A NAME="50618378_pgfId-1064655"></A>– l’agrément par le Ministre en charge de la Construction ;</FONT></P>
+<P CLASS="Liste1-Numerotee">
+<A NAME="50434096_pgfId-1064657"></A>– l’application d’un prix de cession unitaire des logements à caractère économique et social n’excédant pas les seuils fixés par<FONT COLOR='#000000'> décret</FONT> ;</P>
+<H6 CLASS="Modification">
+<A NAME="50434096_pgfId-1067438"></A>Loi n° 2024-1109 du 18 déc. 2024, an. fiscale, art. 1er-3.</H6>
+<P CLASS="Liste1-Numerotee"><FONT COLOR='#000000'>
+<A NAME="50618378_pgfId-1027541"></A>– la conformité au cahier des charges défini par le Ministre chargé de la Construction. </FONT></P>
+<H6 CLASS="Modification">
+<A NAME="50618378_pgfId-1027547"></A>Loi n°71-683 du 28 décembre 1971, an. fiscale, article 17;    loi n°86-88 du 31 janvier 1986, article 15 an. fiscale;              loi n°2002-156 du 15 mars 2002, an. fiscale, article 4-1°;    ord. n° 2006-234 du 02 août 2006, an. fiscale, art. 4-1;              ord.n° 2017-279 du 10 mai 2017, art. 3;                                      loi n° 2023-1000 du 18  déc. 2023, an. fiscale, art. 7-12.</H6>
+<P CLASS="Paratext"><FONT COLOR='#d00000'>
+Cette exon&eacute;ration est &eacute;tendue aux droits de douane. </FONT></P>
+<H6 CLASS="Modification"> loi n&#176; 2025-987 du 19  d&eacute;cembre 2025, art. 18-5</H6>
+
+<P CLASS="Liste2-Enumeree">
+<A NAME="50618378_pgfId-1027548"></A>43–	</H6>
+<P CLASS="Liste2-Numerotee"><FONT COLOR='#000000'>
+<A NAME="50618378_pgfId-1064783"></A> 1) Les équipements, matériels et pièces de rechange nécessaires à la construction et à la production d’unités industrielles de fabrication de matériaux et autres intrants servant exclusivement à la réalisation de programmes immobiliers dont au moins 60 % des investissements sont affectés à la construction de logements à caractère économique et social, de leurs voiries et réseaux divers et d’équipements socio-collectifs mis à la charge du promoteur par le cahier des charges du programme.</FONT></P>
+<P CLASS="Liste2-Numerotee"><FONT COLOR='#000000'>
+<A NAME="50618378_pgfId-1064785"></A>2) Les honoraires facturés aux primo-accédants par les notaires sur les ventes de logements à caractère économique et social de programmes immobiliers.</FONT></P>
+<P CLASS="Liste2-Numerotee"><FONT COLOR='#000000'>
+<A NAME="50618378_pgfId-1028857"></A>   L’éligibilité à l’exonération est subordonnée aux conditions prévues à l’alinéa 42 ci-dessus.</FONT></P>
+<H6 CLASS="Modification">
+<A NAME="50618378_pgfId-1027549"></A>Loi n° 2004-271 du 15 avril 2004, an. fiscale,art. 1er ; loi n° 2012-1179 du 27 décembre 2012, an. fiscale, art. 34-3; loi n° 2023-1000 du 18  déc. 2023, an. fiscale, art. 7-13.</H6>
+<P CLASS="Liste2-Enumeree"><FONT COLOR='#000000'>
+<P CLASS="Paratext"><FONT COLOR='#d00000'>
+Cette exon&eacute;ration est &eacute;tendue aux droits de douane. </FONT></P>
+<H6 CLASS="Modification"> loi n&#176; 2025-987 du 19  d&eacute;cembre 2025, art. 18-5</H6>
+44–	 Abrogé.</FONT></P>
+<H6 CLASS="Modification">
+Loi n° 96-218 du 13 mars 1996, an. fiscale, art. 24;                  loi n° 2024-1109 du 18 déc. 2024, an. fiscale, art. 42-4.</H6>
+<P CLASS="Liste2-Enumeree"><FONT COLOR='#000000'>
+45-	Abrog&eacute;.</FONT></P>
+<H6 CLASS="Modification">
+Loi n&deg; 98-742 du 23 d&eacute;c. 1998, an. fiscale,Art. 12;<FONT COLOR='#000000'> loi n&deg; 2020-972 du 23 d&eacute;c. 2020, an. fiscale,Art. 2-5.</FONT></H6>
+<P CLASS="Liste2-Enumeree">
+46 -	 [Obsol&egrave;te].</P>
+<H6 CLASS="Modification">
+Ord. n&deg; 2006-234 du 02 ao&ucirc;t 2006, an. fiscale,Art. 3-1; Ord. n&deg; 2008-381 du 18 d&eacute;cembre 2008, an. fiscale,Art. 27-9/.</H6>
+<P CLASS="Liste2-Enumeree">
+47-	Abrog&eacute;.</P>
+<H6 CLASS="Modification">
+Ord. n&deg; 2006-234 du 02 ao&ucirc;t 2006, an. fiscale,Art. 44-2;  loi n&deg; 2013-908 du 26 d&eacute;cembre 2013, an. fiscale,Art. 1er .</H6>
+<P CLASS="Liste2-Enumeree"><FONT COLOR='#000000'>
+48-Abrog&eacute;.</FONT></P>
+<H6 CLASS="Modification"><FONT COLOR='#000000'>
+Ord. n&deg; 2008-381 du 18 d&eacute;cembre 2008, an. fiscale,Art. 4; ord. n&deg; 2009-382 du 26 novembre 2009, an. fiscale,Art.6 ; loi n&deg; 2012-1179 du 27 d&eacute;cembre 2012, an. fiscale,Art. 3-1; loi n&deg; 2020-972 du 23 d&eacute;c. 2020, an. fiscale,Art. 2-5.</FONT></H6>
+.</H6>
+<P CLASS="Liste2-Enumeree"><FONT COLOR='#000000'>
+49– Les acquisitions de matériels, de biens d’équipement et les pièces de rechange, tant à l’importation qu’en régime intérieur ainsi que les travaux de construction, d’aménagement, la réparation et l’entretien de l’outil de production, effectués au profit de la Société Ivoirienne de Raffinage, directement liés aux opérations de raffinage et de fabrication à titre principal ou accessoire des produits du pétrole ou des produits assimilés, jusqu’au 25 décembre 2025.</FONT></P>
+<P CLASS="Liste1-Numerotee"><FONT COLOR='#000000'>
+<A NAME="50434096_pgfId-1027576"></A>  Cette exonération est mise en œuvre par voie d’attestation. </FONT></P>
+<H6 CLASS="Modification">
+<A NAME="50434096_pgfId-1067637"></A>Loi n° 2024-1109 du 18 déc. 2024, an. fiscale, art. 4-1.</H6>
+<P CLASS="Liste2-Enumeree">
+<FONT COLOR='#000000'>La Soci&eacute;t&eacute; Ivoirienne de Raffinage doit</FONT>, chaque trimestre, communiquer &agrave; l&apos;Administration, les &eacute;tats nominatifs des fournisseurs de ces biens et services. Ces &eacute;tats doivent comporter obligatoirement les indications suivantes:</P>
+<P CLASS="Liste2-Enumeree">
+-	nom et pr&eacute;noms ou raison sociale;</P>
+<P CLASS="Liste2-Enumeree">
+-	num&eacute;ro de compte contribuable;</P>
+<P CLASS="Liste2-Enumeree">
+-	r&eacute;gime d&apos;imposition;</P>
+<P CLASS="Liste2-Enumeree">
+-	profession ou activit&eacute;;</P>
+<P CLASS="Liste2-Enumeree">
+-	adresse g&eacute;ographique, postale et t&eacute;l&eacute;phonique;</P>
+<P CLASS="Liste2-Enumeree">
+-	nature des biens et services fournis;</P>
+<P CLASS="Liste2-Enumeree">
+-	montant de la facture;</P>
+<P CLASS="Liste2-Enumeree">
+-	date de la facture ou du paiement;</P>
+<P CLASS="Liste2-Enumeree">
+-	Centre des Imp&ocirc;ts de rattachement.</P>
+<P CLASS="Liste2-Enumeree">
+Les omissions ou insuffisances constat&eacute;es, ainsi que le refus ou le d&eacute;faut de production des &eacute;tats nominatifs pr&eacute;vus, sont sanctionn&eacute;s par une amende de 200.000 francs. </P>
+<P CLASS="Liste2-Enumeree">
+L&apos;amende est per&ccedil;ue autant de fois qu&apos;il y a d&apos;&eacute;tats non produits.</P>
+<P CLASS="Liste2-Enumeree">
+Le refus ou le d&eacute;faut de production des &eacute;tats nominatifs, entra&icirc;ne une solidarit&eacute; de paiement de la taxe non per&ccedil;ue entre l&apos;entreprise b&eacute;n&eacute;ficiaire et son fournisseur.</P>
+<H6 CLASS="Modification">
+Ord. n&deg; 2008-381 du 18 d&eacute;cembre 2008, an. fiscale,Art. 5-1; Ord. n&deg; 2009-382 du 26 novembre 2009, an. fiscale,Art.7-1.</H6>
+<P CLASS="Liste2-Enumeree">
+50-Les dons faits par les organismes de bienfaisance:</P>
+<P CLASS="Liste2-Enumeree">
+-	aux associations religieuses reconnues par le Minist&egrave;re en charge des Cultes;</P>
+<P CLASS="Liste2-Enumeree">
+-	aux personnes handicap&eacute;es, par les entreprises qui engagent des d&eacute;penses pour la fourniture d&apos;installations de r&eacute;&eacute;ducation, de mat&eacute;riels orthop&eacute;diques et autres mat&eacute;riels sp&eacute;cifiques;</P>
+<P CLASS="Liste2-Enumeree">
+-	aux malades d&eacute;munis pr&eacute;sent&eacute;s par les services sanitaires ou sociaux ou par les centres de sant&eacute; publics;</P>
+<P CLASS="Liste2-Enumeree">
+-	aux &eacute;l&egrave;ves et &eacute;tudiants r&eacute;guli&egrave;rement inscrits dans un &eacute;tablissement agr&eacute;&eacute; ou reconnu par le Minist&egrave;re de l&apos;&eacute;ducation nationale ou le Minist&egrave;re de l&apos;enseignement sup&eacute;rieur et/ou technique, sous forme de bourses d&apos;&eacute;tudes annuelles;</P>
+<P CLASS="Liste2-Enumeree">
+-	aux associations de jeunes et de femmes pour les aider &agrave; initier ou &agrave; d&eacute;velopper une activit&eacute; lucrative;</P>
+<P CLASS="Liste2-Enumeree">
+-	aux associations qui &#339;uvrent &agrave; la r&eacute;adaptation des toxicomanes et des alcooliques;</P>
+<P CLASS="Liste2-Enumeree">
+-	aux organismes priv&eacute;s sans but lucratif qui &#339;uvrent &agrave; titre b&eacute;n&eacute;vole &agrave; la conservation de l&apos;environnement;</P>
+<P CLASS="Liste2-Enumeree">
+-	aux mutuelles pour leurs op&eacute;rations de financement, de construction, de r&eacute;habilitation ou d&apos;&eacute;quipement d&apos;&eacute;coles, de centres de sant&eacute; ou de centres polyvalents au profit d&apos;une collectivit&eacute;.</P>
+<H6 CLASS="Modification">
+Ord. n&deg; 2009-382 du 26 novembre 2009, an. fiscale,Art.1-3</H6>
+<P CLASS="Liste2-Enumeree">
+51- [Obsol&egrave;te].</P>
+<H6 CLASS="Modification">
+Ord. n&deg; 2009-382 du 26 novembre 2009, an. fiscale,Art.2-1; Ord. n&deg; 2011-121 du 22 juin 2011, an. fiscale,Art. 2 -11.</H6>
+<P CLASS="Liste2-Enumeree">
+52-Les biens acquis par les entreprises agro-industrielles intervenant dans les secteurs du coton, de l&apos;anacarde et du karit&eacute; cr&eacute;&eacute;es, r&eacute;implant&eacute;es ou rouvertes en zones Centre, Nord et Ouest avant le 31 d&eacute;cembre 2012. Il s&apos;agit:</P>
+<H6 CLASS="Modification">
+Ord. n&deg; 2011-121 du 22 juin 2011, an. fiscale,Art. 2 -11.</H6>
+<P CLASS="Liste2-Enumeree">
+-	des &eacute;quipements et du mat&eacute;riel n&eacute;cessaires &agrave; la r&eacute;alisation des investissements;</P>
+<P CLASS="Liste2-Enumeree">
+-	du premier lot de pi&egrave;ces de rechange.</P>
+<P CLASS="Liste2-Enumeree">
+Cette exon&eacute;ration est mise en &#339;uvre par voie d&apos;attestation.</P>
+<P CLASS="Liste2-Enumeree">
+Pour les entreprises de production effectuant des op&eacute;rations d&apos;achat de produits, l&apos;exon&eacute;ration n&apos;est acquise que si la valeur des achats n&apos;exc&egrave;de pas 15% de la valeur de la production totale.</P>
+<H6 CLASS="Modification">
+Ord. n&deg; 2009-382 du 26 novembre 2009, an. fiscale,Art.2-10.</H6>
+<P CLASS="Liste2-Enumeree">
+53- [Obsol&egrave;te].</P>
+<P CLASS="Liste2-Enumeree">
+L&apos;exon&eacute;ration, mise en &#339;uvre par voie d&apos;attestation, est subordonn&eacute;e &agrave; l&apos;agr&eacute;ment pr&eacute;alable conjoint du Minist&egrave;re technique concern&eacute; par l&apos;infrastructure et du Minist&egrave;re de l&apos;Economie et des Finances.</P>
+<H6 CLASS="Modification">
+Ord. n&deg; 2009-382 du 26 novembre 2009, an. fiscale,Art.2-10</H6>
+<P CLASS="Liste2-Enumeree">
+54- Abrog&eacute;.</P>
+<H6 CLASS="Modification">
+Ord. n&deg; 2009-382 du 26 novembre 2009, an. fiscale,Art.4; Ord. n&deg; 2011-121 du 22 juin 2011, an. fiscale,Art. 10;  loi n&deg; 2013-908 du 26 d&eacute;cembre 2013, an. fiscale,Art. 1er .</H6>
+<P CLASS="Liste2-Enumeree">
+55-Les mat&eacute;riels et &eacute;quipements de recherche acquis par le Centre national de Recherche agronomique, dont la liste est fix&eacute;e par arr&ecirc;t&eacute; conjoint du Ministre en charge de la Recherche scientifique et du Ministre de l&apos;Economie et des Finances.</P>
+<P CLASS="Liste2-Enumeree">
+Cette exon&eacute;ration est mise en &#339;uvre par voie d&apos;attestation.</P>
+<H6 CLASS="Modification">
+Ord. n&deg; 2009-382 du 26 novembre 2009, an. fiscale,Art.8</H6>
+<P CLASS="Liste2-Enumeree"><FONT COLOR='#000000'>
+<A NAME="50434096_pgfId-1027619"></A>56- Abrogé.</FONT></P>
+<H6 CLASS="Modification">
+Ord. n° 2009-382 du 26 novembre 2009, an. fiscale, art. 26-2;  loi n° 2016-1116 du 08 décembre 2016, an. fiscale, art. 26-4; loi n° 2024-1109 du 18 déc. 2024, an. fiscale, art. 42-4.</H6>
+<P CLASS="Liste2-Enumeree">
+57-Abrog&eacute;.</P>
+<H6 CLASS="Modification">
+Ord. n&deg; 2009-382 du 26 novembre 2009, an. fiscale,Art. 27-7; loi n&deg; 2017-870 du 27 d&eacute;cembre 2017, an. fiscaleArt. 1.</H6>
+<P CLASS="Liste2-Enumeree">
+58- [Obsol&egrave;te].</P>
+<P CLASS="Liste2-Enumeree">
+Ces investissements doivent avoir &eacute;t&eacute; effectu&eacute;s avant le 31 d&eacute;cembre 2011.</P>
+<P CLASS="Liste2-Enumeree">
+La liste des mat&eacute;riaux et prestations exon&eacute;r&eacute;s sera d&eacute;termin&eacute;e par arr&ecirc;t&eacute; du Ministre de la Construction, de l&apos;Urbanisme et de l&apos;Habitat.</P>
+<P CLASS="Liste2-Enumeree">
+Cette exon&eacute;ration est mise en &#339;uvre par voie d&apos;attestation.</P>
+<H6 CLASS="Modification">
+Ord. n&deg; 2009-382 du 26 novembre 2009, an. fiscale,Art. 30.</H6>
+<P CLASS="Liste2-Enumeree">
+59- [Obsol&egrave;te].</P>
+<P CLASS="Liste2-Enumeree">
+Cette exon&eacute;ration est mise en &#339;uvre par voie d&apos;attestation.</P>
+<H6 CLASS="Modification">
+Ord. n&deg; 2009-382 du 26 novembre 2009, an. fiscale,Art.2-10; Ord. n&deg; 2011-121 du 22 juin 2011, an. fiscale,Art. 2 -11.</H6>
+<P CLASS="Liste2-Enumeree"><FONT COLOR='#000000'>
+60- Les frais généraux exposés par la Société Ivoirienne de Raffinage, directement liés aux opérations de raffinage et de fabrication à titre principal ou accessoire des produits du pétrole ou des produits assimilés, jusqu’au 25 décembre 2025.</FONT></P>
+<H6 CLASS="Modification">
+<A NAME="50434096_pgfId-1027633"></A>Ord. n° 2009-382 du 26 novembre 2009, an. fiscale, art.7-2.; loi n° 2024-1109 du 18 déc. 2024, an. fiscale, art. 4-2.</H6>
+<P CLASS="Liste2-Enumeree">
+61-Abrog&eacute;.</P>
+<H6 CLASS="Modification">
+Ord. n&deg; 2009-382 du 26 novembre 2009, an. fiscale,Art.6 ;     loi n&deg; 2012-1179 du 27 d&eacute;cembre 2012, an. fiscale,Art. 3-1; <FONT COLOR='#000000'>loi n&deg; 2020-972 du 23 d&eacute;c. 2020, an. fiscale,Art. 2-5.</FONT> </H6>
+
+<P CLASS="Liste2-Enumeree">
+62 - Les jeux de machines &agrave; sous.</P>
+<H6 CLASS="Modification">
+Loi n&deg; 2016-1116 du 08 d&eacute;cembre 2016, an. fiscale,Art. 14-1.</H6>
+<P CLASS="Liste2-Enumeree">
+63 - Les op&eacute;rations de ventes, de commission et courtage portant sur les billets de loterie nationale et de tous les autres jeux de hasard organis&eacute;s par la LONACI, ainsi que tout profit tir&eacute; de ces op&eacute;rations.  </P>
+<H6 CLASS="Modification">
+Loi n&deg; 2016-1116 du 08 d&eacute;cembre 2016, an. fiscale,Art. 14-1</H6>
+<P CLASS="Liste2-Enumeree">
+64 - Les mat&eacute;riels import&eacute;s par l&apos;Etat, dans le cadre de la lutte contre le terrorisme et la cybercriminalit&eacute;, dont la liste est &eacute;tablie par arr&ecirc;t&eacute; conjoint du Ministre de la D&eacute;fense ou celui en charge de la S&eacute;curit&eacute; int&eacute;rieure et du Ministre du Budget et du Portefeuille de l&apos;Etat.</P>
+<button onClick="showButton('n02')">INFOS</button>
+<blockquote ID="n02" class="ludwig" style="display:block;">Les exon&eacute;rations pr&eacute;vues &agrave; l&#8216;article 355-64 du Code g&eacute;n&eacute;ral des Imp&ocirc;ts sont &eacute;tendues aux droits de douanes.</span></blockquote>
+
+<H6 CLASS="Modification">
+Loi n&deg; 2017-870 du 27 d&eacute;cembre 2017, an. fiscaleArt. 6.</H6>
+
+<P CLASS="Liste2-Enumeree"><FONT COLOR='#000000'>
+65 - Les commissions per&ccedil;ues par les grossistes et les pharmacies dans le cadre de la distribution des m&eacute;dicaments de la Nouvelle Pharmacie de la Sant&eacute; publique aux b&eacute;n&eacute;ficiaires de la Couverture Maladie universelle (CMU).</FONT></P>
+<H6 CLASS="Modification"><FONT COLOR='#000000'>
+Loi n&deg; 2020-972 du 23 d&eacute;c. 2020, an. fiscale,Art. 7-2.</FONT></H6>
+
+<P CLASS="Liste2-Enumeree"><FONT COLOR='#000000'>
+<A NAME="50618378_pgfId-1065117"></A>66 - L’acquisition d’équipements et matériels nécessaires à la production et à la distribution d’énergies renouvelables.</FONT></P>
+<P CLASS="Liste2-Enumeree"><FONT COLOR='#000000'>
+<A NAME="50618378_pgfId-1065119"></A>   Cette exonération est étendue aux droits de douane, à l’exception des prélèvements communautaires. La liste des équipements et matériels concernés est établie par arrêté conjoint du Ministre en charge du Budget, du Ministre en charge de l’Environnement et du Ministre en charge de l’Energie. </FONT></P>
+<H6 CLASS="Modification">
+<A NAME="50618378_pgfId-1065078"></A>Loi n° 2023-1000 du 18  déc. 2023, an. fiscale, art. 18-1.</H6>
+<P CLASS="Liste2-Enumeree"><FONT COLOR='#000000'>
+<A NAME="50618378_pgfId-1065146"></A>67- Les entreprises titulaires de permis de recherche de substances minérales classées en régime minier en phase d’exploration, dans le cadre strict de leurs opérations de prospection et de recherche.</FONT></P>
+<H6 CLASS="Modification">
+<A NAME="50618378_pgfId-1065096"></A>Loi n° 2023-1000 du 18  déc. 2023, an. fiscale, art. 21-1.</H6>
+ 
+<H3 CLASS="Sous-section">
+III - Exportations et op&eacute;rations assimil&eacute;es</H3>
+<span id="#A0356"></span>
+<H6 CLASS="NoArticle">
+Art. 356</H6>
+<P CLASS="ParaText">
+Sont exempt&eacute;s de la taxe sur la valeur ajout&eacute;e, les exportations de biens et les services assimil&eacute;s &agrave; des exportations.</P>
+
+<H6 CLASS="Modification">
+Ord. n<b>&deg;-</b> 2011-121 du 22 juin 2011Art. 5-1</H6>
+
+
+<span id="#A0357"></span>
+<H6 CLASS="NoArticle">
+Art. 357 &nbsp;&nbsp;&nbsp;&nbsp; <a href="#" onClick="loadpage('103','h21357');return false;" class="ui-button"  title="Consultez l'historique">2021...</a>
+&nbsp;&nbsp;&nbsp;&nbsp; <a href="#" onClick="loadpage('103','h22357');return false;" class="ui-button"  title="Consultez l'historique">2022...</a>
+&nbsp;&nbsp;&nbsp;&nbsp; <a href="#" onClick="loadpage('98','h23357');return false;" class="ui-button"  title="Consultez l'historique">2023...</a></H6>
+<P CLASS="ParaText">
+Sont assimil&eacute;s &agrave; des exportations :</P>
+<P CLASS="Liste2-Enumeree">
+1-Les op&eacute;rations de construction, de transformation, de r&eacute;paration, d&apos;entretien, d&apos;affr&egrave;tement et de location portant sur les b&acirc;timents de mer ivoiriens et &eacute;trangers de la marine marchande, les bateaux affect&eacute;s &agrave; la p&ecirc;che professionnelle maritime, les bateaux de sauvetage et d&apos;assistance, ainsi que la fourniture de tous articles et produits destin&eacute;s &agrave; &ecirc;tre incorpor&eacute;s dans ces m&ecirc;mes b&acirc;timents et bateaux ou utilis&eacute;s pour leur exploitation.</P>
+<P CLASS="Liste2-Enumeree">
+2-Les op&eacute;rations consistant dans la vente d&apos;engins et filets de p&ecirc;che ainsi que la fourniture de tous les articles et produits destin&eacute;s aux bateaux pratiquant la p&ecirc;che professionnelle maritime.</P>
+<P CLASS="Liste2-Enumeree">
+3-Les prestations de services suivantes :</P>
+<P CLASS="Liste2-Enumeree">
+a)Les op&eacute;rations effectu&eacute;es par les commissionnaires agr&eacute;&eacute;s en douane et inh&eacute;rentes &agrave; l&apos;exportation, au transit ou transbordement de marchandises ainsi que les commissions de transit portant sur des marchandises en transit ou transbordement.</P>
+<P CLASS="Liste2-Enumeree">
+b)La manutention terre portant sur les marchandises export&eacute;es ou en transit, ainsi que :</P>
+<P CLASS="Liste2-Enumeree">
+-le d&eacute;chargement du v&eacute;hicule apportant la marchandise au port d&apos;embarquement;</P>
+<P CLASS="Liste2-Enumeree">
+-le transport des marchandises pour leur transfert depuis les magasins ou les aires de stationnement jusqu&apos;au quai d&apos;embarquement.</P>
+<P CLASS="Liste2-Enumeree">
+
+c)Abrog&eacute;.</P>
+<H6 CLASS="Modification">
+Loi n&deg; 2016-1116 du 08 d&eacute;cembre 2016, an. fiscale,Art. 16.</H6>
+<P CLASS="Liste2-Enumeree">
+
+d)Abrog&eacute;.</P>
+
+<H6 CLASS="Modification">
+Ord. n<b>&deg;-</b> 2011-121 du 22 juin 2011Art. 5-2; loi n&deg; 2016-1116 du 08 d&eacute;cembre 2016, an. fiscale,Art. 16.</H6>
+<P CLASS="Liste2-Enumeree">
+
+e)Abrog&eacute;.</P>
+<H6 CLASS="Modification">
+Loi n&deg; 2016-1116 du 08 d&eacute;cembre 2016, an. fiscale,Art. 16.</H6>
+<P CLASS="Liste2-Enumeree">
+4-Les prestations de services effectu&eacute;es pour les besoins directs des navires de commerce maritime, des bateaux utilis&eacute;s pour l&apos;exercice d&apos;une activit&eacute; industrielle en haute mer, des bateaux de sauvetage et d&apos;assistance en mer.</P>
+<P CLASS="Liste2-Enumeree">
+La liste de ces prestations est fix&eacute;e comme suit :</P>
+<P CLASS="Liste2-Enumeree">
+a)Pilotage.</P>
+<P CLASS="Liste2-Enumeree">
+b)Amarrage.</P>
+<P CLASS="Liste2-Enumeree">
+c)Remorquage.</P>
+<P CLASS="Liste2-Enumeree">
+d)Location de portiques.</P>
+<P CLASS="Liste2-Enumeree">
+e)S&eacute;jour des bateaux.</P>
+<P CLASS="Liste2-Enumeree">
+f)Utilisation des installations portuaires.</P>
+<P CLASS="Liste2-Enumeree">
+g)Assistance et sauvetage de navires et de bateaux.</P>
+<P CLASS="Liste2-Enumeree">
+h)Entretien du navire et du mat&eacute;riel de bord.</P>
+<P CLASS="Liste2-Enumeree">
+i)Gardiennage et services de pr&eacute;vention et de lutte contre l&apos;incendie.</P>
+<P CLASS="Liste2-Enumeree">
+j)Usage des installations am&eacute;nag&eacute;es pour la r&eacute;ception des passagers et des marchandises.</P>
+<P CLASS="Liste2-Enumeree">
+k)Usage des installations destin&eacute;es &agrave; l&apos;avitaillement des navires.</P>
+<P CLASS="Liste2-Enumeree">
+l)Visites de s&eacute;curit&eacute;, examen des car&egrave;nes, expertises techniques.</P>
+<P CLASS="Liste2-Enumeree">
+m)Expertises ayant trait &agrave; l&apos;&eacute;valuation des dommages subis par des navires.</P>
+<P CLASS="Liste2-Enumeree">
+Toutes les autres prestations non vis&eacute;es par le pr&eacute;sent paragraphe restent soumises &agrave; la taxe sur la valeur ajout&eacute;e, conform&eacute;ment aux dispositions des articles <a class='ui-button' href='' onClick="loadArticle('103','0339');return false;">339</a> et suivants du pr&eacute;sent Code.</P>
+<P CLASS="Liste2-Enumeree">
+5-Les prestations de services effectu&eacute;es pour les besoins directs de la cargaison des bateaux d&eacute;sign&eacute;s au paragraphe 1 du pr&eacute;sent article et dont la liste est fix&eacute;e comme suit :</P>
+<P CLASS="Liste2-Enumeree">
+a)Les op&eacute;rations de manutention bord, ces op&eacute;rations comprenant :</P>
+<P CLASS="Liste2-Enumeree">
+-les op&eacute;rations de chargement et de d&eacute;chargement des bateaux;</P>
+<P CLASS="Liste2-Enumeree">
+-les op&eacute;rations de manutention &agrave; bord accessoires au chargement, d&eacute;chargement, transbordement, y compris les manipulations &agrave; bord du bateau.</P>
+<P CLASS="Liste2-Enumeree">
+b)La location de mat&eacute;riel pour le chargement ou le d&eacute;chargement des bateaux.</P>
+<P CLASS="Liste2-Enumeree">
+c)Le gardiennage de la marchandise &agrave; bord des bateaux.</P>
+<P CLASS="Liste2-Enumeree">
+d) Les op&eacute;rations des consignataires maritimes et agents maritimes.</P>
+<H6 CLASS="Modification">
+Loi n&deg; 2021-899 du 21 d&eacute;c. 2021, an. fiscale,Art. 8-1.</H6>
+<P CLASS="Liste2-Enumeree"><FONT COLOR='#000000'>
+e) Les opérations portant sur la vérification et la certification du poids des conteneurs destinés à l’exportation. </FONT></P>
+<H6 CLASS="Modification">
+Loi n° 2022-974 du 20 déc. 2022, an. fiscale, art. 14</H6>
+<P CLASS="Liste1-Numerotee">
+<P CLASS="Liste2-Enumeree">
+6-Les op&eacute;rations de construction, de transformation, de r&eacute;paration, d&apos;entretien, d&apos;affr&egrave;tement et de location portant sur des a&eacute;ronefs utilis&eacute;s par des compagnies de navigation a&eacute;rienne dont les services &agrave; destination ou en provenance de l&apos;&eacute;tranger repr&eacute;sentent au moins 80 % de leur chiffre d&apos;affaires, ainsi que la fourniture de tous articles et produits destin&eacute;s &agrave; &ecirc;tre incorpor&eacute;s dans ces a&eacute;ronefs.</P>
+<P CLASS="Liste2-Enumeree">
+7-Les prestations de services effectu&eacute;es pour les besoins directs des a&eacute;ronefs d&eacute;sign&eacute;s &agrave; l&apos;alin&eacute;a 6 du pr&eacute;sent article, et de leur cargaison, dont la liste est fix&eacute;e comme suit :</P>
+<P CLASS="Liste2-Enumeree">
+a)Atterrissage.</P>
+<P CLASS="Liste2-Enumeree">
+b)Usage des dispositifs d&apos;&eacute;clairage.</P>
+<P CLASS="Liste2-Enumeree">
+c)Stationnement, amarrage et abri des a&eacute;ronefs.</P>
+<P CLASS="Liste2-Enumeree">
+d)Usage des installations am&eacute;nag&eacute;es pour la r&eacute;ception des passagers et des marchandises.</P>
+<P CLASS="Liste2-Enumeree">
+e)Usage des installations destin&eacute;es &agrave; l&apos;avitaillement des a&eacute;ronefs.</P>
+<P CLASS="Liste2-Enumeree">
+f)Op&eacute;rations techniques aff&eacute;rentes &agrave; l&apos;arriv&eacute;e, au stationnement et au d&eacute;part des a&eacute;ronefs.</P>
+<P CLASS="Liste2-Enumeree">
+g)Op&eacute;rations de nettoyage, d&apos;entretien et de r&eacute;paration des a&eacute;ronefs et des mat&eacute;riels et &eacute;quipements de bord.</P>
+<P CLASS="Liste2-Enumeree">
+h)Gardiennage et services de pr&eacute;vention et de lutte contre l&apos;incendie.</P>
+<P CLASS="Liste2-Enumeree">
+i)Visites de s&eacute;curit&eacute;, expertises techniques.</P>
+<P CLASS="Liste2-Enumeree">
+j)Relevage et sauvetage des a&eacute;ronefs.</P>
+<P CLASS="Liste2-Enumeree">
+k)Op&eacute;rations des consignataires d&apos;a&eacute;ronefs et agents a&eacute;riens.</P>
+<P CLASS="Liste2-Enumeree">
+l)Expertises ayant trait &agrave; l&apos;&eacute;valuation des dommages subis par des a&eacute;ronefs.</P>
+<P CLASS="Liste2-Enumeree">
+8-Les prestations effectu&eacute;es pour les besoins directs de la cargaison des a&eacute;ronefs d&eacute;sign&eacute;s au paragraphe 6 ci-dessus dont la liste est fix&eacute;e comme suit :</P>
+<P CLASS="Liste2-Enumeree">
+a)Embarquement et d&eacute;barquement des passagers et de leurs bagages.</P>
+<P CLASS="Liste2-Enumeree">
+b)Chargement et d&eacute;chargement des a&eacute;ronefs.</P>
+<P CLASS="Liste2-Enumeree">
+c)Manutention des marchandises accessoires au chargement et d&eacute;chargement des a&eacute;ronefs.</P>
+<P CLASS="Liste2-Enumeree">
+d)Op&eacute;rations d&apos;assistance aux passagers, op&eacute;rations relatives &agrave; l&apos;enregistrement des passagers et &agrave; celui de leurs bagages.</P>
+<P CLASS="Liste2-Enumeree">
+e)Emission et r&eacute;ception des messages de trafic.</P>
+<P CLASS="Liste2-Enumeree">
+f)Op&eacute;rations de trafic et de transit-correspondance.</P>
+<P CLASS="Liste2-Enumeree">
+g)Locations de mat&eacute;riels et &eacute;quipements n&eacute;cessaires au trafic a&eacute;rien et utilis&eacute;s sur l&apos;aire des a&eacute;roports.</P>
+<P CLASS="Liste2-Enumeree">
+h)Locations de contenants et de mat&eacute;riels de protection de marchandises.</P>
+<P CLASS="Liste2-Enumeree">
+i)Gardiennage des marchandises.</P>
+<P CLASS="Liste2-Enumeree">
+j)Magasinage des marchandises n&eacute;cessaires au transport par voie a&eacute;rienne.</P>
+<P CLASS="Liste2-Enumeree">
+k)Expertise ayant trait &agrave; l&apos;&eacute;valuation des dommages subis par les passagers et les marchandises.</P>
+<P CLASS="Liste2-Enumeree">
+9-Les livraisons de biens destin&eacute;s &agrave; l&apos;avitaillement des bateaux et des a&eacute;ronefs d&eacute;sign&eacute;s aux paragraphes 1 et 6 ci-dessus.</P>
+
+
+<H6 CLASS="Modification">
+Loi n<b>&deg;-</b> 2001-338 du 14 juin 2001, an. fiscale,Art. 7.</H6>
+<P CLASS="Liste2-Enumeree">
+10-Abrog&eacute; </P>
+
+<H6 CLASS="Modification">
+Ord. n<b>&deg;-</b> 2009-382 du 26 novembre 2009Art.5-1; loi n&deg; 2016-1116 du 08 d&eacute;cembre 2016, an. fiscale,Art. 16.</H6>
+
+<P CLASS="Liste2-Enumeree">
+11-Abrog&eacute;</P>
+
+
+<H6 CLASS="Modification">
+Ord. n<b>&deg;-</b> 2009-382 du 26 novembre 2009Art.5-2; loi n&deg; 2016-1116 du 08 d&eacute;cembre 2016, an. fiscale,Art. 16.</H6>
+
+<P CLASS="Liste2-Enumeree">
+Le b&eacute;n&eacute;fice des dispositions du paragraphe 10 et de l&apos;alin&eacute;a premier du pr&eacute;sent paragraphe est subordonn&eacute; &agrave; la tenue d&apos;un registre d&eacute;taill&eacute; nominatif des ventes effectu&eacute;es au profit des personnes ayant justifi&eacute; de leur qualit&eacute; d&apos;exportateur.</P>
+<P CLASS="Liste2-Enumeree">
+12-	Les ventes de biens r&eacute;alis&eacute;es par les magasins de vente hors taxes y compris celles effectu&eacute;es par les magasins sous-douane situ&eacute;s dans le hall &#171; Arriv&eacute;e &#187; des a&eacute;roports internationaux.</P>
+
+<H6 CLASS="Modification">
+Loi n<b>&deg;-</b> 2005-161 du 27 avril 2005, an. fiscale,Art. 4; loi n&deg; 2017-870 du 27 d&eacute;cembre 2017, an. fiscaleArt. 3.</H6>
+<P CLASS="Liste2-Enumeree">
+13–	Les prestations de services visées à l’article 352, non utilisées en Côte d’Ivoire effectuées pour le compte d’entreprises n’ayant pas d’installation professionnelle en Côte d’Ivoire lorsqu’elles ne sont pas imposables en Côte d’Ivoire,<FONT COLOR='#000000'> à l’exclusion des opérations citées aux points 6 et 7 dudit article.</FONT></P>
+<H6 CLASS="Modification">
+<A NAME="50618378_pgfId-1027721"></A>Ord. n° 2009-382 du 26 novembre 2009, an. fiscale, art.10;   loi n° 2023-1000 du 18  déc. 2023, an. fiscale, art. 24</H6>
+<P CLASS="Liste2-Enumeree">
+14-Abrog&eacute;.</P>
+<H6 CLASS="Modification">
+Loi n<b>&deg;-</b> 2012-1179 du 27 d&eacute;cembre 2012, an. fiscale,Art. 1er.</H6>
+
+<P CLASS="Liste2-Enumeree">
+15- Les ventes de sacs de jute et de sisal aux exportateurs et aux soci&eacute;t&eacute;s op&eacute;rant dans la fili&egrave;re du caf&eacute; et du cacao qui sont exclusivement destin&eacute;s au conditionnement desdits produits.</P>
+<P CLASS="Liste2-Enumeree">
+16- Les ventes d&apos;emballages aux exportateurs de produits agricoles, ainsi qu&apos;aux exportateurs de produits agricoles transform&eacute;s y compris les produits de la p&ecirc;che, qui sont exclusivement destin&eacute;s au conditionnement des produits effectivement export&eacute;s ou aux soci&eacute;t&eacute;s op&eacute;rant dans la fili&egrave;re du caf&eacute; et du cacao.</P>
+<H6 CLASS="Modification">
+Loi n&deg; 2017-870 du 27 d&eacute;cembre 2017, an. fiscaleArt. 1.</H6>
+
+
+
+
+</div></div> 
+<p>&nbsp;</p><p>&nbsp;</p><span class="historique" ID="h24355">
+<div class="histText">
+
+<BR> 
+<BR>Art. 355
+<BR> 
+<p class="ParaText">Sont exon&eacute;r&eacute;s de la taxe sur la valeur ajout&eacute;e :</p>
+<p class="Liste2-Enumeree"> 1-	Les ventes de timbres ou de papiers timbr&eacute;s.</p>
+<p class="Liste2-Enumeree"><font color='#000000'> 2-	Abrog&eacute;;</font></p>
+<h6 class="Modification"><font color='#000000'> Loi n&deg; 2020-972 du 23 d&eacute;c. 2020, an. fiscale,Art. 2-5.</font></h6>
+<p class="Liste2-Enumeree"> 3-	Les op&eacute;rations effectu&eacute;es par les soci&eacute;t&eacute;s ou compagnies d&apos;assurances et tous autres assureurs, quelle que soit la nature des risques assur&eacute;s, et qui sont soumises &agrave; la taxe pr&eacute;vue au titre troisi&egrave;me de la deuxi&egrave;me partie du pr&eacute;sent Livre ainsi que les commissions des interm&eacute;diaires d&apos;assurances.</p>
+<p class="Liste2-Enumeree"> 4-	Les op&eacute;rations ayant pour objet la transmission de propri&eacute;t&eacute; ou d&apos;usufruit de biens immeubles, de fonds de commerce ou de client&egrave;le etc, vis&eacute;es aux articles 550 et 556 du pr&eacute;sent Code, &agrave; l&apos;exclusion des op&eacute;rations de m&ecirc;me nature vis&eacute;es &agrave; l&apos;article 553 du m&ecirc;me Code.</p>
+<p class="Liste2-Enumeree"> 5-	Les recettes provenant de la composition, de l&apos;impression ou de la vente des journaux et p&eacute;riodiques, &agrave; l&apos;exception des recettes aff&eacute;rentes &agrave; la publicit&eacute;.</p>
+<p class="Liste2-Enumeree"> 6-	Les ventes de livres, ainsi que les travaux de composition, d&apos;impression et toutes op&eacute;rations de fa&ccedil;on n&eacute;cessaires &agrave; la fabrication des livres.</p>
+<p class="Liste2-Enumeree"><font color='#000000'> 7-	Abrog&eacute;;</font></p>
+<h6 class="Modification"><font color='#000000'> Loi n&deg; 2020-972 du 23 d&eacute;c. 2020, an. fiscale,Art. 2-5.</font></h6>
+<p class="Liste2-Enumeree"><font color='#000000'> <a name="50618378_pgfId-1027447" id="50618378_pgfId-1027447"></a>8&ndash;	Abrog&eacute;.</font></p>
+<h6 class="Modification"> <a name="50618378_pgfId-1065043" id="50618378_pgfId-1065043"></a>Loi n&deg; 2023-1000 du 18  d&eacute;c. 2023, an. fiscale, art. 3-2.</h6>
+<p class="Liste2-Enumeree"><font color='#000000'> <a name="50618378_pgfId-1064851" id="50618378_pgfId-1064851"></a>9&ndash;	Les ventes ou fournitures de produits alimentaires non transform&eacute;s et de premi&egrave;re n&eacute;cessit&eacute; ci-apr&egrave;s :</font></p>
+<p class="Liste2-Enumeree"><font color='#000000'> <a name="50618378_pgfId-1064852" id="50618378_pgfId-1064852"></a>&ndash;	 le ma&iuml;s, le mil, le millet, le sorgho, le fonio, le bl&eacute;, le riz &agrave; l&rsquo;exception du riz de luxe et autres c&eacute;r&eacute;ales ;</font></p>
+<p class="Liste2-Enumeree"><font color='#000000'> <a name="50618378_pgfId-1064853" id="50618378_pgfId-1064853"></a>&ndash; 	le manioc, la patate, l&rsquo;igname, la pomme de terre, le tarot et autres tubercules et racines ;</font></p>
+<p class="Liste2-Enumeree"><font color='#000000'> <a name="50618378_pgfId-1064854" id="50618378_pgfId-1064854"></a>&ndash; le haricot, le soja, le s&eacute;same, l&rsquo;arachide, le petit pois et autres l&eacute;gumineuses ;</font></p>
+<p class="Liste2-Enumeree"><font color='#000000'> <a name="50618378_pgfId-1064855" id="50618378_pgfId-1064855"></a>&ndash; 	l&rsquo;oignon, la tomate, l&rsquo;aubergine, le gombo, le piment et autres l&eacute;gumes et produits mara&icirc;chers ;</font></p>
+<p class="Liste2-Enumeree"><font color='#000000'> <a name="50618378_pgfId-1064856" id="50618378_pgfId-1064856"></a>&ndash; 	les &oelig;ufs en coquille ;</font></p>
+<p class="Liste2-Enumeree"><font color='#000000'> <a name="50618378_pgfId-1064857" id="50618378_pgfId-1064857"></a>&ndash; 	la viande et les abats &agrave; l&rsquo;&eacute;tat frais, &agrave;  l&rsquo;exception de la viande de luxe ;</font></p>
+<p class="Liste2-Enumeree"><font color='#000000'> <a name="50618378_pgfId-1064858" id="50618378_pgfId-1064858"></a>&ndash; 	le poisson non transform&eacute; (frais, fum&eacute;, sal&eacute; ou congel&eacute;), &agrave; l&rsquo;exclusion du poisson de luxe ; et</font></p>
+<p class="Liste2-Enumeree"><font color='#000000'> <a name="50618378_pgfId-1064859" id="50618378_pgfId-1064859"></a>&ndash; 	le lait non transform&eacute;. </font></p>
+<p class="Liste1-Numerotee"><font color='#000000'> <a name="50618378_pgfId-1064860" id="50618378_pgfId-1064860"></a> La liste des produits de luxe exclus de l&rsquo;exon&eacute;ration est d&eacute;termin&eacute;e par arr&ecirc;t&eacute; conjoint du Ministre en charge du Budget et du Ministre en charge des Ressources animales et halieutiques.</font> </p>
+<h6 class="Modification"> <a name="50618378_pgfId-1064825" id="50618378_pgfId-1064825"></a>Loi n&deg; 2023-1000 du 18  d&eacute;c. 2023, an. fiscale, art. 1.</h6>
+<p class="Liste2-Enumeree"><font color='#000000'> Les caract&eacute;ristiques du riz de luxe sont d&eacute;termin&eacute;es par arr&ecirc;t&eacute; interminist&eacute;riel du Ministre du Commerce, du Ministre en charge du Budget et du Ministre en charge du riz.</font></p>
+<h6 class="Modification"><font color='#000000'> Loi n&deg; 2020-972 du 23 d&eacute;c. 2020, an. fiscale,Art. 6-1.</font></h6>
+<p class="Liste2-Enumeree"> 10-	Les op&eacute;rations de vente, commission, courtage et fa&ccedil;on portant sur le pain, les farines de c&eacute;r&eacute;ales quelconques et les c&eacute;r&eacute;ales destin&eacute;es &agrave; la fabrication de ces farines.</p>
+<p class="Liste2-Enumeree"> 11-	Les op&eacute;rations de vente, commission et courtage r&eacute;alis&eacute;es en vue de l&apos;&eacute;coulement du produit de leur p&ecirc;che, par les p&ecirc;cheurs et armateurs &agrave; la p&ecirc;che ainsi que les soci&eacute;t&eacute;s ou associations groupant exclusivement des p&ecirc;cheurs et armateurs &agrave; la p&egrave;che.</p>
+<p class="Liste2-Enumeree"> 12-	Les ventes effectu&eacute;es par les aviculteurs, les horticulteurs, et les pisciculteurs des produits de leur exploitation &agrave; l&apos;exception des entreprises d&apos;&eacute;levage industriel de crustac&eacute;s.</p>
+<p class="Liste2-Enumeree"> 13-	Abrog&eacute;.</p>
+<h6 class="Modification"> Loi n&deg; 2017-870 du 27 d&eacute;cembre 2017, an. fiscaleArt. 1.</h6>
+<p class="Liste2-Enumeree"> 14-	Les op&eacute;rations de cong&eacute;lation portant sur le poisson.</p>
+<h6 class="Modification"> Loi n&deg; 2017-870 du 27 d&eacute;cembre 2017, an. fiscaleArt. 1; ord. n&deg; 2018-145 du 14 f&eacute;vrier 2018,Art. 2.</h6>
+<p class="Liste2-Enumeree"> 15- </p>
+<p class="Liste2-Enumeree"> 1) Les honoraires des membres du corps m&eacute;dical ainsi que les soins pr&eacute;sentant un caract&egrave;re m&eacute;dical.</p>
+<p class="Liste2-Enumeree"> Sont consid&eacute;r&eacute;es comme membres du corps m&eacute;dical, les personnes physiques exer&ccedil;ant une ou plusieurs des professions m&eacute;dicales ou param&eacute;dicales reconnues comme telles par le Minist&egrave;re en charge de la Sant&eacute;.</p>
+<h6 class="Modification"> Ord. n&deg; 2011-121 du 22 juin 2011, an. fiscale,Art. 7.</h6>
+<p class="Liste2-Enumeree"> Par soins pr&eacute;sentant un caract&egrave;re m&eacute;dical, il faut entendre ceux qui sont susceptibles de faire l&apos;objet de prescriptions par les personnes vis&eacute;es &agrave; l&apos;alin&eacute;a pr&eacute;c&eacute;dent.</p>
+<p class="Liste2-Enumeree"> Les soins d&apos;esth&eacute;tique et de beaut&eacute; ainsi que les sp&eacute;cialit&eacute;s non reconnues par le Minist&egrave;re de la Sant&eacute; sont en tout &eacute;tat de cause exclus du b&eacute;n&eacute;fice de l&apos;exon&eacute;ration.</p>
+<h6 class="Modification"> Ord. n&deg; 2008-381 du 18 d&eacute;cembre 2008, an. fiscale,Art. 1er.</h6>
+<p class="Liste2-Enumeree"> 2)	Les appareils de correction auditive (appareils &eacute;lectro-acoustiques, proth&egrave;ses ossiculaires, implants) constituant le prolongement direct de soins dispens&eacute;s par un membre du corps m&eacute;dical et fournis par son interm&eacute;diaire.</p>
+<p class="Liste2-Enumeree"> 3) Les prestations d&apos;hospitalisation et de restauration ainsi que le transport des bless&eacute;s et malades effectu&eacute;s par les structures hospitali&egrave;res agr&eacute;&eacute;es par le Minist&egrave;re en charge de la Sant&eacute;.</p>
+<h6 class="Modification"> Ord. n&deg; 2011-480 du 28 d&eacute;cembre 2011, an. fiscale,Art.1er.</h6>
+<p class="Liste2-Enumeree"> 16-	L&apos;activit&eacute; d&apos;enseignement &agrave; l&apos;exclusion des op&eacute;rations accessoires teIles que les ventes de biens, fournitures de logement et nourriture dans les internats.</p>
+<p class="Liste2-Enumeree"> 17-	Les op&eacute;rations portant sur les fibres de jute et de sisal.</p>
+<p class="Liste2-Enumeree"> 18-	Les bois en grumes.</p>
+<p class="Liste2-Enumeree"> 19-	Le latex naturel.</p>
+<p class="Liste2-Enumeree"> 20-	Les op&eacute;rations portant sur les viandes fra&icirc;ches et congel&eacute;es.</p>
+<p class="Liste2-Enumeree"> 21-	Les livraisons de m&eacute;dicaments et produits pharmaceutiques ainsi que les mat&eacute;riels et produits sp&eacute;cialis&eacute;s pour les activit&eacute;s m&eacute;dicales vis&eacute;s par l&apos;annexe de la Directive n&deg; 06/2002/CM/UEMOA du 19 septembre 2002 portant d&eacute;termination de la liste commune des m&eacute;dicaments, produits pharmaceutiques, mat&eacute;riels et produits sp&eacute;cialis&eacute;s pour les activit&eacute;s m&eacute;dicales.</p>
+<h6 class="Modification"> Ord. n&deg; 2006-234 du 02 ao&ucirc;t 2006, an. fiscale,Art. 12.</h6>
+<p class="Liste2-Enumeree"><font color='#000000'> Il en est de m&ecirc;me des &eacute;quipements, mat&eacute;riels et outillages avec leurs pi&egrave;ces d&eacute;tach&eacute;es, et des intrants n&eacute;cessaires &agrave; la fabrication de m&eacute;dicaments ainsi que des emballages servant au conditionnement des m&eacute;dicaments fabriqu&eacute;s. </font></p>
+<p class="Liste2-Enumeree"><font color='#000000'> Le b&eacute;n&eacute;fice de la mesure pr&eacute;vue au paragraphe pr&eacute;c&eacute;dent n&apos;exclut pas l&apos;application des dispositions plus favorables du Code des Investissements. </font></p>
+<h6 class="Modification"> Loi n&deg; 2019-1080 du 18 d&eacute;cembre 2019, an. fiscale,Art. 4-1er</h6>
+<p class="Liste2-Enumeree"><font color='#000000'> Les exon&eacute;rations concernant les biens vis&eacute;s au 1/, sont &eacute;tendues aux droits de douane.</font></p>
+<h6 class="Modification"> Loi n&deg; 2019-1080 du 18 d&eacute;cembre 2019, an. fiscale,Art. 4-2</h6>
+<p class="Liste2-Enumeree"> 22-	Les bacs de fermentation et les b&acirc;ches de s&eacute;chage, fabriqu&eacute;s en poly&eacute;thyl&egrave;ne, destin&eacute;s au traitement du cacao, exclusivement vendus &agrave; des agriculteurs.</p>
+<p class="Liste2-Enumeree"><font color='#000000'> <a name="50499597_pgfId-1034533" id="50499597_pgfId-1034533"></a>23&ndash; Abrog&eacute;.</font></p>
+<h6 class="Modification"> <a name="50499597_pgfId-1045735" id="50499597_pgfId-1045735"></a>Loi n&deg; 2015-840 du 18 d&eacute;cembre 2015, an. fiscale,Art. 7-1;  loi n&deg; 2017-870 du 27 d&eacute;cembre 2017, an. fiscaleArt. 7;           loi n&deg; 2018 - 984 du 28  d&eacute;cembre 2018, an. fiscaleArt. 7;       loi n&deg; 2021-899 du 21 d&eacute;c. 2021, an. fiscale,Art. 4-7</h6>
+<p class="Liste2-Enumeree"> 24-	Sur autorisation expresse du Ministre de l&apos;Economie et des Finances, les dons destin&eacute;s aux &#339;uvres de solidarit&eacute; nationales ou internationales ou &agrave; l&apos;Etat.</p>
+<p class="Liste2-Enumeree"><font color='#000000'> 25-	Abrog&eacute;. </font></p>
+<h6 class="Modification"><font color='#000000'> Loi n&deg; 2020-972 du 23 d&eacute;c. 2020, an. fiscale,Art. 2-5.</font></h6>
+<p class="Liste2-Enumeree"> 26-	Les produits p&eacute;troliers d&eacute;nomm&eacute;s Heavy Vacuum Oil (HVO), le fuel-oil 380 et le gaz naturel destin&eacute;s aux centrales thermiques.</p>
+<p class="Liste2-Enumeree"> 27-	Les aliments pour b&eacute;tail et animaux de basse-cour.</p>
+<h6 class="Modification"> Ordonnance n&deg; 2000-759 du 11 octobre 2000,Art. 2.</h6>
+<p class="Liste2-Enumeree"> 28-	Les intrants concourant &agrave; la fabrication des aliments pour b&eacute;tail et animaux de basse-cour et les emballages servant &agrave; leur conditionnement.</p>
+<h6 class="Modification"> Loi n&deg; 2003-206 du7 juillet 2003, an. fiscale,Art. 5.</h6>
+<p class="Liste2-Enumeree"> 29-	Les engrais.</p>
+<h6 class="Modification"> Ordonnance n&deg; 2000-758 du11 octobre 2000,Art. 2.</h6>
+<p class="Liste2-Enumeree"> 30-	Les intrants concourant &agrave; la fabrication des engrais et les emballages servant &agrave; leur conditionnement.</p>
+<h6 class="Modification"> Ordonnance n&deg; 2000-758 du11 octobre 2000,Art. 2.</h6>
+<p class="Liste2-Enumeree"> 31-	Les insecticides, fongicides, antirongeurs, herbicides inhibiteurs de germination, les r&eacute;gulateurs de croissance pour plantes.</p>
+<h6 class="Modification"> Ordonnance n&deg; 2000-758 du11 octobre 2000,Art. 2.</h6>
+<p class="Liste2-Enumeree"> 32-	Les intrants concourant &agrave; la fabrication en C&ocirc;te d&apos;Ivoire et les emballages servant au conditionnement des insecticides.</p>
+<h6 class="Modification"> </a>Ordonnance n&deg; 2000-758 du11 octobre 2000,Art. 2.</h6>
+<p class="Liste2-Enumeree"> 33- Les semences et les graines</p>
+<h6 class="Modification"> </a>Loi n&deg; 2001-338 du 14 juin 2001, an. fiscale,Art. 6-3&deg;; loi n&deg; 2017-870 du 27 d&eacute;cembre 2017, an. fiscaleArt. 1; ord. n&deg; 2018-145 du 14 f&eacute;vrier 2018,Art. 2-1.</h6>
+<p class="Liste2-Enumeree"> 34-	La tranche sociale de consommation des livraisons d&apos;eau et d&apos;&eacute;lectricit&eacute; factur&eacute;es aux m&eacute;nages.</p>
+<h6 class="Modification"> Loi n&deg; 2001-338 du 14 juin 2001, an. fiscale,Art. 6-3&deg;. Ord. n&deg; 2006-234 du 02 ao&ucirc;t 2006, an. fiscale,Art. 3-4.</h6>
+<p class="Liste2-Enumeree"> 35-	Le gaz butane;</p>
+<h6 class="Modification"> Loi n&deg; 2001-338 du 14 juin 2001, an. fiscale,Art. 6-3&deg;.</h6>
+<p class="Liste2-Enumeree"> 36-	Les ventes par leur auteur, d&apos;&#339;uvres d&apos;art originales.</p>
+<h6 class="Modification"> Loi n&deg; 2003-206 du7 juillet 2003, an. fiscale,Art. 1er 1.</h6>
+<p class="Liste2-Enumeree"> 37-	Abrog&eacute;</p>
+<h6 class="Modification"> Loi n&deg; 2003-206 du7 juillet 2003, an. fiscale,Art. 39-4; loi n&deg; 2017-870 du 27 d&eacute;cembre 2017, an. fiscaleArt. 1.</h6>
+<p class="Liste2-Enumeree"> 38-	1&deg;  [Obsol&egrave;te].</p>
+<h6 class="Modification"> Ord. n&deg; 2007-488 du 31 mai 2007, an. fiscale,Art. 28-5; Ord. n&deg; 2008-381 du 18 d&eacute;cembre 2008, an. fiscale,Art. 27-8; Ord. n&deg; 2011-480 du 28 d&eacute;cembre 2011, an. fiscale,Art. 7.</h6>
+<p class="Liste2-Enumeree"> 2) [Obsol&egrave;te].</p>
+<h6 class="Modification"> Ord. n&deg; 2011-480 du 28 d&eacute;cembre 2011, an. fiscale,Art. 7.</h6>
+<p class="Liste2-Enumeree"> L&apos;exon&eacute;ration est accord&eacute;e sur autorisation du Directeur g&eacute;n&eacute;ral des Imp&ocirc;ts.</p>
+<h6 class="Modification"> Loi n&deg;2004 -271 du 15 avril 2004,.an. fiscale,Art. 2. Ord. n&deg; 2006-234 du 02 ao&ucirc;t 2006, an. fiscale,Art. 6-2.</h6>
+<p class="Liste2-Enumeree"> 39-	Les mat&eacute;riels agricoles et leurs pi&egrave;ces d&eacute;tach&eacute;es dont la liste est fix&eacute;e par arr&ecirc;t&eacute; conjoint du Ministre du Budget et du Ministre de l&apos;Agriculture, quel que soit leur mode d&apos;acquisition, d&egrave;s lors que le b&eacute;n&eacute;ficiaire de ces mat&eacute;riels est un professionnel agr&eacute;&eacute; par le Minist&egrave;re de l&apos;Agriculture.</p>
+<p class="Liste2-Enumeree"> L&apos;exon&eacute;ration concerne &eacute;galement les mat&eacute;riels et &eacute;quipements des autres secteurs d&apos;activit&eacute; acquis par cr&eacute;dit-bail, lorsque la mise en &#339;uvre de cette exon&eacute;ration se fait par voie d&apos;attestation. </p>
+<p class="Liste2-Enumeree"> L&apos;exon&eacute;ration peut &ecirc;tre transf&eacute;r&eacute;e &agrave; l&apos;&eacute;tablissement de cr&eacute;dit-bail pour l&apos;acquisition du bien, et mention en est faite sur l&apos;attestation d&eacute;livr&eacute;e au cr&eacute;dit-preneur.</p>
+<h6 class="Modification"> Loi n&deg;2004-271 du 15 avril 2004, an. fiscale,Art.3; Ord. n&deg; 2011-121 du 22 juin 2011, an. fiscale,Art. 11;loi n&deg; 2014-861 du 22 d&eacute;cembre 2014, an. fiscale,Art.3.</h6>
+<p class="Liste2-Enumeree"> 40- Abrog&eacute;.</p>
+<h6 class="Modification"> Loi n&deg; 2004-271 du 15 avril 2004, an. fiscale,Art. 39-1;loi n&deg; 2013-908 du 26 d&eacute;cembre 2013, an. fiscale,Art. 1er .</h6>
+<p class="ParaText"> 41-	Les biens suivants acquis par la Soci&eacute;t&eacute; des Transports abidjanais (SOTRA) et ses filiales d&eacute;tenues &agrave; 100%, jusqu&apos;au 31 d&eacute;cembre 2015 :</p>
+<h6 class="Modification"> Ord. n&deg; 2011-480 du 28 d&eacute;cembre 2011, an. fiscale,Art. 36.</h6>
+<p class="Liste2-Enumeree"> -	les biens destin&eacute;s aux infrastructures de base d&apos;exploitation;</p>
+<p class="Liste2-Enumeree"> -	les biens destin&eacute;s aux ateliers concourant au montage et &agrave; la maintenance des v&eacute;hicules et autres mat&eacute;riels roulants d&apos;exploitation;</p>
+<p class="Liste2-Enumeree"> -	les syst&egrave;mes et mat&eacute;riels de radio t&eacute;l&eacute;informatiques et &eacute;lectroniques concourant &agrave; la gestion du r&eacute;seau d&apos;exploitation;</p>
+<h6 class="Modification"> Ord. n&deg; 2011-480 du 28 d&eacute;cembre 2011, an. fiscale,Art. 36.</h6>
+<p class="Liste2-Enumeree"> -	les v&eacute;hicules d&apos;exploitation, leurs pi&egrave;ces de rechange et pneumatiques.</p>
+<button onClick="showButton('n01')">INFOS</button>
+<blockquote id="n01" class="ludwig" style="display:block;">Les exemptions accord&eacute;es &agrave; la SOTRA et &agrave; ses filiales d&eacute;tenues &agrave; 100% et vis&eacute;es &agrave; l&#8216;article 355-41 du Code g&eacute;n&eacute;ral des Imp&ocirc;ts sont &eacute;tendues aux droits de douane.</span></blockquote>
+<h6 class="Modification"> Loi n&deg; 2005-161 du 27 avril 2005, an. fiscale,Art. 5-1; 
+  Ord. n&deg; 2007-675 du 28 d&eacute;cembre 2007, an. fiscale,Art. 2-1
+  .</h6>
+<p class="Liste2-Enumeree"><font color='#000000'> <a name="50618378_pgfId-1064651" id="50618378_pgfId-1064651"></a>42&ndash;	 Les mat&eacute;riaux, mat&eacute;riels, &eacute;tudes et       travaux de construction de logements ainsi que les travaux d&rsquo;assainissement, de voirie et de r&eacute;seaux divers de programmes immobiliers, dont au moins 60 % des investissements sont affect&eacute;s &agrave; la construction de    logements &agrave; caract&egrave;re &eacute;conomique et       social, de leurs voiries et r&eacute;seaux divers, et d&rsquo;&eacute;quipements socio-collectifs mis &agrave; la charge du promoteur par le cahier des charges du programme.</font></p>
+<p class="Liste1-Numerotee"><font color='#000000'> <a name="50618378_pgfId-1064653" id="50618378_pgfId-1064653"></a> L&rsquo;&eacute;ligibilit&eacute; du programme immobilier &agrave; l&rsquo;exon&eacute;ration est subordonn&eacute;e aux conditions      suivantes :</font></p>
+<p class="Liste1-Numerotee"><font color='#000000'> <a name="50618378_pgfId-1064655" id="50618378_pgfId-1064655"></a>&ndash; l&rsquo;agr&eacute;ment par le Ministre en charge de la Construction ;</font></p>
+<p class="Liste1-Numerotee"><font color='#000000'> <a name="50618378_pgfId-1064657" id="50618378_pgfId-1064657"></a>&ndash; l&rsquo;application d&rsquo;un prix de cession unitaire des logements &agrave; caract&egrave;re &eacute;conomique et social n&rsquo;exc&eacute;dant pas les seuils fix&eacute;s par arr&ecirc;t&eacute; conjoint du Ministre charg&eacute; du Budget et du Ministre charg&eacute; de la Construction ;</font></p>
+<p class="Liste1-Numerotee"><font color='#000000'> <a name="50618378_pgfId-1027541" id="50618378_pgfId-1027541"></a>&ndash; la conformit&eacute; au cahier des charges d&eacute;fini par le Ministre charg&eacute; de la Construction. </font></p>
+<h6 class="Modification"> <a name="50618378_pgfId-1027547" id="50618378_pgfId-1027547"></a>Loi n&deg;71-683 du 28 d&eacute;cembre 1971, an. fiscale, article 17;    loi n&deg;86-88 du 31 janvier 1986, article 15 an. fiscale;              loi n&deg;2002-156 du 15 mars 2002, an. fiscale, article 4-1&deg;;    ord. n&deg; 2006-234 du 02 ao&ucirc;t 2006, an. fiscale, art. 4-1;              ord.n&deg; 2017-279 du 10 mai 2017, art. 3;                                      loi n&deg; 2023-1000 du 18  d&eacute;c. 2023, an. fiscale, art. 7-12.</h6>
+<p class="Liste2-Enumeree"> <a name="50618378_pgfId-1027548" id="50618378_pgfId-1027548"></a>43&ndash;
+    </H6>
+</p>
+<p class="Liste2-Numerotee"><font color='#000000'> <a name="50618378_pgfId-1064783" id="50618378_pgfId-1064783"></a> 1) Les &eacute;quipements, mat&eacute;riels et pi&egrave;ces de rechange n&eacute;cessaires a&#768; la construction et a&#768; la production d&rsquo;unit&eacute;s industrielles de fabrication de mat&eacute;riaux et autres intrants servant exclusivement a&#768; la r&eacute;alisation de programmes immobiliers dont au moins 60 % des investissements sont affect&eacute;s &agrave; la construction de logements &agrave; caract&egrave;re &eacute;conomique et social, de leurs voiries et r&eacute;seaux divers et d&rsquo;&eacute;quipements socio-collectifs mis &agrave; la charge du promoteur par le cahier des charges du programme.</font></p>
+<p class="Liste2-Numerotee"><font color='#000000'> <a name="50618378_pgfId-1064785" id="50618378_pgfId-1064785"></a>2) Les honoraires factur&eacute;s aux primo-acc&eacute;dants par les notaires sur les ventes de logements &agrave; caract&egrave;re &eacute;conomique et social de programmes immobiliers.</font></p>
+<p class="Liste2-Numerotee"><font color='#000000'> <a name="50618378_pgfId-1028857" id="50618378_pgfId-1028857"></a> L&rsquo;&eacute;ligibilit&eacute; &agrave; l&rsquo;exon&eacute;ration est subordonn&eacute;e aux conditions pr&eacute;vues &agrave; l&rsquo;alin&eacute;a 42 ci-dessus.</font></p>
+<h6 class="Modification"> <a name="50618378_pgfId-1027549" id="50618378_pgfId-1027549"></a>Loi n&deg; 2004-271 du 15 avril 2004, an. fiscale,art. 1er ; loi n&deg; 2012-1179 du 27 d&eacute;cembre 2012, an. fiscale, art. 34-3; loi n&deg; 2023-1000 du 18  d&eacute;c. 2023, an. fiscale, art. 7-13.</h6>
+<p class="Liste2-Enumeree"> 44-	Les achats locaux directs de biens sp&eacute;cifiques aux op&eacute;rations de recherche et d&apos;exploitation p&eacute;troli&egrave;res en eaux profondes des compagnies p&eacute;troli&egrave;res sous r&eacute;serve de l&apos;agr&eacute;ment du Ministre en charge des Finances, pris sur avis de la Commission d&apos;exon&eacute;ration d&apos;imp&ocirc;ts indirects et assimil&eacute;s.</p>
+<p class="Liste2-Enumeree"> La commission est compos&eacute;e comme suit :</p>
+<p class="Liste2-Enumeree"> -	le repr&eacute;sentant du Ministre en charge des Finances, pr&eacute;sident;</p>
+<p class="Liste2-Enumeree"> -	le repr&eacute;sentant du Ministre en charge des Mines et de l&apos;Energie;</p>
+<p class="Liste2-Enumeree"> -	le Directeur g&eacute;n&eacute;ral des Imp&ocirc;ts ou son repr&eacute;sentant;</p>
+<p class="Liste2-Enumeree"> -	le Directeur g&eacute;n&eacute;ral des Douanes ou son repr&eacute;sentant.</p>
+<p class="Liste2-Enumeree"> Les modalit&eacute;s de fonctionnement de la pr&eacute;sente commission seront d&eacute;termin&eacute;es par arr&ecirc;t&eacute; du Ministre en charge des Finances.</p>
+<h6 class="Modification"> Loi n&deg; 96-218 du 13 mars 1996, an. fiscale,Art. 24.</h6>
+<p class="Liste2-Enumeree"><font color='#000000'> 45-	Abrog&eacute;.</font></p>
+<h6 class="Modification"> Loi n&deg; 98-742 du 23 d&eacute;c. 1998, an. fiscale,Art. 12;<font color='#000000'> loi n&deg; 2020-972 du 23 d&eacute;c. 2020, an. fiscale,Art. 2-5.</font></h6>
+<p class="Liste2-Enumeree"> 46 -	 [Obsol&egrave;te].</p>
+<h6 class="Modification"> Ord. n&deg; 2006-234 du 02 ao&ucirc;t 2006, an. fiscale,Art. 3-1; Ord. n&deg; 2008-381 du 18 d&eacute;cembre 2008, an. fiscale,Art. 27-9/.</h6>
+<p class="Liste2-Enumeree"> 47-	Abrog&eacute;.</p>
+<h6 class="Modification"> Ord. n&deg; 2006-234 du 02 ao&ucirc;t 2006, an. fiscale,Art. 44-2;  loi n&deg; 2013-908 du 26 d&eacute;cembre 2013, an. fiscale,Art. 1er .</h6>
+<p class="Liste2-Enumeree"><font color='#000000'> 48-Abrog&eacute;.</font></p>
+<h6 class="Modification"><font color='#000000'> Ord. n&deg; 2008-381 du 18 d&eacute;cembre 2008, an. fiscale,Art. 4; ord. n&deg; 2009-382 du 26 novembre 2009, an. fiscale,Art.6 ; loi n&deg; 2012-1179 du 27 d&eacute;cembre 2012, an. fiscale,Art. 3-1; loi n&deg; 2020-972 du 23 d&eacute;c. 2020, an. fiscale,Art. 2-5.</font></h6>
+
+<p class="Liste2-Enumeree"> 49-	Les acquisitions de mat&eacute;riels, de biens d&apos;&eacute;quipement et les pi&egrave;ces de rechange, tant &agrave; l&apos;importation qu&apos;en r&eacute;gime int&eacute;rieur ainsi que les travaux de construction, d&apos;am&eacute;nagement, la r&eacute;paration et l&apos;entretien de l&apos;outil de production, effectu&eacute;s au profit de la Soci&eacute;t&eacute; Ivoirienne de Raffinage et de la Soci&eacute;t&eacute; Multinationale de Bitumes, directement li&eacute;s aux op&eacute;rations de raffinage et de fabrication &agrave; titre principal ou accessoire des produits du p&eacute;trole ou des produits assimil&eacute;s, jusqu&apos;en 2020. </p>
+<p class="Liste2-Enumeree"> La Soci&eacute;t&eacute; Ivoirienne de Raffinage et la Soci&eacute;t&eacute; Multinationale de Bitumes doivent chaque trimestre, communiquer &agrave; l&apos;Administration, les &eacute;tats nominatifs des fournisseurs de ces biens et services. Ces &eacute;tats doivent comporter obligatoirement les indications suivantes:</p>
+<p class="Liste2-Enumeree"> -	nom et pr&eacute;noms ou raison sociale;</p>
+<p class="Liste2-Enumeree"> -	num&eacute;ro de compte contribuable;</p>
+<p class="Liste2-Enumeree"> -	r&eacute;gime d&apos;imposition;</p>
+<p class="Liste2-Enumeree"> -	profession ou activit&eacute;;</p>
+<p class="Liste2-Enumeree"> -	adresse g&eacute;ographique, postale et t&eacute;l&eacute;phonique;</p>
+<p class="Liste2-Enumeree"> -	nature des biens et services fournis;</p>
+<p class="Liste2-Enumeree"> -	montant de la facture;</p>
+<p class="Liste2-Enumeree"> -	date de la facture ou du paiement;</p>
+<p class="Liste2-Enumeree"> -	Centre des Imp&ocirc;ts de rattachement.</p>
+<p class="Liste2-Enumeree"> Les omissions ou insuffisances constat&eacute;es, ainsi que le refus ou le d&eacute;faut de production des &eacute;tats nominatifs pr&eacute;vus, sont sanctionn&eacute;s par une amende de 200.000 francs. </p>
+<p class="Liste2-Enumeree"> L&apos;amende est per&ccedil;ue autant de fois qu&apos;il y a d&apos;&eacute;tats non produits.</p>
+<p class="Liste2-Enumeree"> Le refus ou le d&eacute;faut de production des &eacute;tats nominatifs, entra&icirc;ne une solidarit&eacute; de paiement de la taxe non per&ccedil;ue entre l&apos;entreprise b&eacute;n&eacute;ficiaire et son fournisseur.</p>
+<h6 class="Modification"> Ord. n&deg; 2008-381 du 18 d&eacute;cembre 2008, an. fiscale,Art. 5-1; Ord. n&deg; 2009-382 du 26 novembre 2009, an. fiscale,Art.7-1.</h6>
+<p class="Liste2-Enumeree"> 50-Les dons faits par les organismes de bienfaisance:</p>
+<p class="Liste2-Enumeree"> -	aux associations religieuses reconnues par le Minist&egrave;re en charge des Cultes;</p>
+<p class="Liste2-Enumeree"> -	aux personnes handicap&eacute;es, par les entreprises qui engagent des d&eacute;penses pour la fourniture d&apos;installations de r&eacute;&eacute;ducation, de mat&eacute;riels orthop&eacute;diques et autres mat&eacute;riels sp&eacute;cifiques;</p>
+<p class="Liste2-Enumeree"> -	aux malades d&eacute;munis pr&eacute;sent&eacute;s par les services sanitaires ou sociaux ou par les centres de sant&eacute; publics;</p>
+<p class="Liste2-Enumeree"> -	aux &eacute;l&egrave;ves et &eacute;tudiants r&eacute;guli&egrave;rement inscrits dans un &eacute;tablissement agr&eacute;&eacute; ou reconnu par le Minist&egrave;re de l&apos;&eacute;ducation nationale ou le Minist&egrave;re de l&apos;enseignement sup&eacute;rieur et/ou technique, sous forme de bourses d&apos;&eacute;tudes annuelles;</p>
+<p class="Liste2-Enumeree"> -	aux associations de jeunes et de femmes pour les aider &agrave; initier ou &agrave; d&eacute;velopper une activit&eacute; lucrative;</p>
+<p class="Liste2-Enumeree"> -	aux associations qui &#339;uvrent &agrave; la r&eacute;adaptation des toxicomanes et des alcooliques;</p>
+<p class="Liste2-Enumeree"> -	aux organismes priv&eacute;s sans but lucratif qui &#339;uvrent &agrave; titre b&eacute;n&eacute;vole &agrave; la conservation de l&apos;environnement;</p>
+<p class="Liste2-Enumeree"> -	aux mutuelles pour leurs op&eacute;rations de financement, de construction, de r&eacute;habilitation ou d&apos;&eacute;quipement d&apos;&eacute;coles, de centres de sant&eacute; ou de centres polyvalents au profit d&apos;une collectivit&eacute;.</p>
+<h6 class="Modification"> Ord. n&deg; 2009-382 du 26 novembre 2009, an. fiscale,Art.1-3</h6>
+<p class="Liste2-Enumeree"> 51- [Obsol&egrave;te].</p>
+<h6 class="Modification"> Ord. n&deg; 2009-382 du 26 novembre 2009, an. fiscale,Art.2-1; Ord. n&deg; 2011-121 du 22 juin 2011, an. fiscale,Art. 2 -11.</h6>
+<p class="Liste2-Enumeree"> 52-Les biens acquis par les entreprises agro-industrielles intervenant dans les secteurs du coton, de l&apos;anacarde et du karit&eacute; cr&eacute;&eacute;es, r&eacute;implant&eacute;es ou rouvertes en zones Centre, Nord et Ouest avant le 31 d&eacute;cembre 2012. Il s&apos;agit:</p>
+<h6 class="Modification"> Ord. n&deg; 2011-121 du 22 juin 2011, an. fiscale,Art. 2 -11.</h6>
+<p class="Liste2-Enumeree"> -	des &eacute;quipements et du mat&eacute;riel n&eacute;cessaires &agrave; la r&eacute;alisation des investissements;</p>
+<p class="Liste2-Enumeree"> -	du premier lot de pi&egrave;ces de rechange.</p>
+<p class="Liste2-Enumeree"> Cette exon&eacute;ration est mise en &#339;uvre par voie d&apos;attestation.</p>
+<p class="Liste2-Enumeree"> Pour les entreprises de production effectuant des op&eacute;rations d&apos;achat de produits, l&apos;exon&eacute;ration n&apos;est acquise que si la valeur des achats n&apos;exc&egrave;de pas 15% de la valeur de la production totale.</p>
+<h6 class="Modification"> Ord. n&deg; 2009-382 du 26 novembre 2009, an. fiscale,Art.2-10.</h6>
+<p class="Liste2-Enumeree"> 53- [Obsol&egrave;te].</p>
+<p class="Liste2-Enumeree"> L&apos;exon&eacute;ration, mise en &#339;uvre par voie d&apos;attestation, est subordonn&eacute;e &agrave; l&apos;agr&eacute;ment pr&eacute;alable conjoint du Minist&egrave;re technique concern&eacute; par l&apos;infrastructure et du Minist&egrave;re de l&apos;Economie et des Finances.</p>
+<h6 class="Modification"> Ord. n&deg; 2009-382 du 26 novembre 2009, an. fiscale,Art.2-10</h6>
+<p class="Liste2-Enumeree"> 54- Abrog&eacute;.</p>
+<h6 class="Modification"> Ord. n&deg; 2009-382 du 26 novembre 2009, an. fiscale,Art.4; Ord. n&deg; 2011-121 du 22 juin 2011, an. fiscale,Art. 10;  loi n&deg; 2013-908 du 26 d&eacute;cembre 2013, an. fiscale,Art. 1er .</h6>
+<p class="Liste2-Enumeree"> 55-Les mat&eacute;riels et &eacute;quipements de recherche acquis par le Centre national de Recherche agronomique, dont la liste est fix&eacute;e par arr&ecirc;t&eacute; conjoint du Ministre en charge de la Recherche scientifique et du Ministre de l&apos;Economie et des Finances.</p>
+<p class="Liste2-Enumeree"> Cette exon&eacute;ration est mise en &#339;uvre par voie d&apos;attestation.</p>
+<h6 class="Modification"> Ord. n&deg; 2009-382 du 26 novembre 2009, an. fiscale,Art.8</h6>
+<p class="Liste2-Enumeree"> 56-Les cotisations des adh&eacute;rents des centres de gestion agr&eacute;&eacute;s.</p>
+<p class="Liste2-Enumeree"> Le b&eacute;n&eacute;fice de cet avantage est subordonn&eacute;, pour les entreprises immatricul&eacute;es au fichier de la Direction g&eacute;n&eacute;rale des Imp&ocirc;ts, &agrave; l&apos;adh&eacute;sion &agrave; un centre de gestion agr&eacute;&eacute; au plus tard le 31 janvier de l&apos;ann&eacute;e en cours.</p>
+<p class="Liste2-Enumeree"> Pour les nouvelles immatriculations, le b&eacute;n&eacute;fice de cet avantage est subordonn&eacute; &agrave; l&apos;adh&eacute;sion &agrave; un centre de gestion agr&eacute;&eacute; dans un d&eacute;lai de trente (30) jours &agrave; compter de la date de r&eacute;ception de la d&eacute;claration fiscale d&apos;existence. </p>
+<h6 class="Modification"> Ord. n&deg; 2009-382 du 26 novembre 2009, an. fiscale,Art. 26-2;  loi n&deg; 2016-1116 du 08 d&eacute;cembre 2016, an. fiscale,Art. 26-4.</h6>
+<p class="Liste2-Enumeree"> 57-Abrog&eacute;.</p>
+<h6 class="Modification"> Ord. n&deg; 2009-382 du 26 novembre 2009, an. fiscale,Art. 27-7; loi n&deg; 2017-870 du 27 d&eacute;cembre 2017, an. fiscaleArt. 1.</h6>
+<p class="Liste2-Enumeree"> 58- [Obsol&egrave;te].</p>
+<p class="Liste2-Enumeree"> Ces investissements doivent avoir &eacute;t&eacute; effectu&eacute;s avant le 31 d&eacute;cembre 2011.</p>
+<p class="Liste2-Enumeree"> La liste des mat&eacute;riaux et prestations exon&eacute;r&eacute;s sera d&eacute;termin&eacute;e par arr&ecirc;t&eacute; du Ministre de la Construction, de l&apos;Urbanisme et de l&apos;Habitat.</p>
+<p class="Liste2-Enumeree"> Cette exon&eacute;ration est mise en &#339;uvre par voie d&apos;attestation.</p>
+<h6 class="Modification"> Ord. n&deg; 2009-382 du 26 novembre 2009, an. fiscale,Art. 30.</h6>
+<p class="Liste2-Enumeree"> 59- [Obsol&egrave;te].</p>
+<p class="Liste2-Enumeree"> Cette exon&eacute;ration est mise en &#339;uvre par voie d&apos;attestation.</p>
+<h6 class="Modification"> Ord. n&deg; 2009-382 du 26 novembre 2009, an. fiscale,Art.2-10; Ord. n&deg; 2011-121 du 22 juin 2011, an. fiscale,Art. 2 -11.</h6>
+<p class="Liste2-Enumeree"> 60-Les frais g&eacute;n&eacute;raux expos&eacute;s par la Soci&eacute;t&eacute; Ivoirienne de Raffinage et par la Soci&eacute;t&eacute; Multinationale de Bitumes, directement li&eacute;s aux op&eacute;rations de raffinage et de fabrication &agrave; titre principal ou accessoire des produits du p&eacute;trole ou des produits assimil&eacute;s, jusqu&apos;en 2020.</p>
+<h6 class="Modification"> Ord. n&deg; 2009-382 du 26 novembre 2009, an. fiscale,Art.7-2.</h6>
+<p class="Liste2-Enumeree"> 61-Abrog&eacute;.</p>
+<h6 class="Modification"> Ord. n&deg; 2009-382 du 26 novembre 2009, an. fiscale,Art.6 ;     loi n&deg; 2012-1179 du 27 d&eacute;cembre 2012, an. fiscale,Art. 3-1; <font color='#000000'>loi n&deg; 2020-972 du 23 d&eacute;c. 2020, an. fiscale,Art. 2-5.</font> </h6>
+<p class="Liste2-Enumeree"> 62 - Les jeux de machines &agrave; sous.</p>
+<h6 class="Modification"> Loi n&deg; 2016-1116 du 08 d&eacute;cembre 2016, an. fiscale,Art. 14-1.</h6>
+<p class="Liste2-Enumeree"> 63 - Les op&eacute;rations de ventes, de commission et courtage portant sur les billets de loterie nationale et de tous les autres jeux de hasard organis&eacute;s par la LONACI, ainsi que tout profit tir&eacute; de ces op&eacute;rations. </p>
+<h6 class="Modification"> Loi n&deg; 2016-1116 du 08 d&eacute;cembre 2016, an. fiscale,Art. 14-1</h6>
+<p class="Liste2-Enumeree"> 64 - Les mat&eacute;riels import&eacute;s par l&apos;Etat, dans le cadre de la lutte contre le terrorisme et la cybercriminalit&eacute;, dont la liste est &eacute;tablie par arr&ecirc;t&eacute; conjoint du Ministre de la D&eacute;fense ou celui en charge de la S&eacute;curit&eacute; int&eacute;rieure et du Ministre du Budget et du Portefeuille de l&apos;Etat.</p>
+<button onClick="showButton('n02')">INFOS</button>
+<blockquote id="n02" class="ludwig" style="display:block;">Les exon&eacute;rations pr&eacute;vues &agrave; l&#8216;article 355-64 du Code g&eacute;n&eacute;ral des Imp&ocirc;ts sont &eacute;tendues aux droits de douanes.</span></blockquote>
+<h6 class="Modification"> Loi n&deg; 2017-870 du 27 d&eacute;cembre 2017, an. fiscaleArt. 6.</h6>
+<p class="Liste2-Enumeree"><font color='#000000'> 65 - Les commissions per&ccedil;ues par les grossistes et les pharmacies dans le cadre de la distribution des m&eacute;dicaments de la Nouvelle Pharmacie de la Sant&eacute; publique aux b&eacute;n&eacute;ficiaires de la Couverture Maladie universelle (CMU).</font></p>
+<h6 class="Modification"><font color='#000000'> Loi n&deg; 2020-972 du 23 d&eacute;c. 2020, an. fiscale,Art. 7-2.</font></h6>
+<p class="Liste2-Enumeree"><font color='#000000'> <a name="50618378_pgfId-1065117" id="50618378_pgfId-1065117"></a>66 - L&rsquo;acquisition d&rsquo;&eacute;quipements et mat&eacute;riels n&eacute;cessaires &agrave; la production et &agrave; la distribution d&rsquo;&eacute;nergies renouvelables.</font></p>
+<p class="Liste2-Enumeree"><font color='#000000'> <a name="50618378_pgfId-1065119" id="50618378_pgfId-1065119"></a> Cette exon&eacute;ration est &eacute;tendue aux droits de douane, &agrave; l&rsquo;exception des pr&eacute;l&egrave;vements communautaires. La liste des &eacute;quipements et mat&eacute;riels concern&eacute;s est &eacute;tablie par arr&ecirc;t&eacute; conjoint du Ministre en charge du Budget, du Ministre en charge de l&rsquo;Environnement et du Ministre en charge de l&rsquo;Energie. </font></p>
+<h6 class="Modification"> <a name="50618378_pgfId-1065078" id="50618378_pgfId-1065078"></a>Loi n&deg; 2023-1000 du 18  d&eacute;c. 2023, an. fiscale, art. 18-1.</h6>
+<p class="Liste2-Enumeree"><font color='#000000'> <a name="50618378_pgfId-1065146" id="50618378_pgfId-1065146"></a>67- Les entreprises titulaires de permis de recherche de substances min&eacute;rales class&eacute;es en r&eacute;gime minier en phase d&rsquo;exploration, dans le cadre strict de leurs op&eacute;rations de prospection et de recherche.</font></p>
+<h6 class="Modification"> <a name="50618378_pgfId-1065096" id="50618378_pgfId-1065096"></a>Loi n&deg; 2023-1000 du 18  d&eacute;c. 2023, an. fiscale, art. 21-1.</h6>
+<BR>
+<BR><BR><BR></div></span><finh24355>
+<span class="historique" ID="h23355">
+<div class="histText">
+
+<BR> 
+<BR>Art. 355 
+<p>Sont exon&eacute;r&eacute;s de la taxe sur la valeur ajout&eacute;e :</p>
+<p>1-	Les ventes de timbres ou de papiers timbr&eacute;s.</p>
+<p>2-	Abrog&eacute;;</p>
+<p>Loi n&deg; 2020-972 du 23 d&eacute;c. 2020, an. fiscale,Art. 2-5.</p>
+<p>3-	Les op&eacute;rations effectu&eacute;es par les soci&eacute;t&eacute;s ou compagnies d'assurances et tous autres assureurs, quelle que soit la nature des risques assur&eacute;s, et qui sont soumises &agrave; la taxe pr&eacute;vue au titre troisi&egrave;me de la deuxi&egrave;me partie du pr&eacute;sent Livre ainsi que les commissions des interm&eacute;diaires d'assurances.</p>
+<p>4-	Les op&eacute;rations ayant pour objet la transmission de propri&eacute;t&eacute; ou d'usufruit de biens immeubles, de fonds de commerce ou de client&egrave;le etc, vis&eacute;es aux articles 550 et 556 du pr&eacute;sent Code, &agrave; l'exclusion des op&eacute;rations de m&ecirc;me nature vis&eacute;es &agrave; l'article 553 du m&ecirc;me Code.</p>
+<p>5-	Les recettes provenant de la composition, de l'impression ou de la vente des journaux et p&eacute;riodiques, &agrave; l'exception des recettes aff&eacute;rentes &agrave; la publicit&eacute;.</p>
+<p>6-	Les ventes de livres, ainsi que les travaux de composition, d'impression et toutes op&eacute;rations de fa&ccedil;on n&eacute;cessaires &agrave; la fabrication des livres.</p>
+<p>7-	Abrog&eacute;;</p>
+<p>Loi n&deg; 2020-972 du 23 d&eacute;c. 2020, an. fiscale,Art. 2-5.</p>
+<p>8-	Les transports routiers, ferroviaires, fluviaux, maritimes, a&eacute;riens et lagunaires de voyageurs et de marchandises &agrave; l'exception des transports vis&eacute;s &agrave; l'article 344.</p>
+<p>9-	Les ventes ou fournitures de produits alimentaires naturels destin&eacute;s &agrave; la consommation en C&ocirc;te d'Ivoire y compris le poisson simplement congel&eacute; &agrave; l'exception du riz de luxe et de la viande import&eacute;e en dehors de la zone CEDEAO.</p>
+<p>Les caract&eacute;ristiques du riz de luxe sont d&eacute;termin&eacute;es par arr&ecirc;t&eacute; interminist&eacute;riel du Ministre du Commerce, du Ministre en charge du Budget et du Ministre en charge du riz.</p>
+<p>Loi n&deg; 2020-972 du 23 d&eacute;c. 2020, an. fiscale,Art. 6-1.</p>
+<p>10-	Les op&eacute;rations de vente, commission, courtage et fa&ccedil;on portant sur le pain, les farines de c&eacute;r&eacute;ales quelconques et les c&eacute;r&eacute;ales destin&eacute;es &agrave; la fabrication de ces farines.</p>
+<p>11-	Les op&eacute;rations de vente, commission et courtage r&eacute;alis&eacute;es en vue de l'&eacute;coulement du produit de leur p&ecirc;che, par les p&ecirc;cheurs et armateurs &agrave; la p&ecirc;che ainsi que les soci&eacute;t&eacute;s ou associations groupant exclusivement des p&ecirc;cheurs et armateurs &agrave; la p&egrave;che.</p>
+<p>12-	Les ventes effectu&eacute;es par les aviculteurs, les horticulteurs, et les pisciculteurs des produits de leur exploitation &agrave; l'exception des entreprises d'&eacute;levage industriel de crustac&eacute;s.</p>
+<p>13-	Abrog&eacute;.</p>
+<p>Loi n&deg; 2017-870 du 27 d&eacute;cembre 2017, an. fiscaleArt. 1.</p>
+<p>14-	Les op&eacute;rations de cong&eacute;lation portant sur le poisson.</p>
+<p>Loi n&deg; 2017-870 du 27 d&eacute;cembre 2017, an. fiscaleArt. 1; ord. n&deg; 2018-145 du 14 f&eacute;vrier 2018,Art. 2.</p>
+<p>15- </p>
+<p>1) Les honoraires des membres du corps m&eacute;dical ainsi que les soins pr&eacute;sentant un caract&egrave;re m&eacute;dical.</p>
+<p>Sont consid&eacute;r&eacute;es comme membres du corps m&eacute;dical, les personnes physiques exer&ccedil;ant une ou plusieurs des professions m&eacute;dicales ou param&eacute;dicales reconnues comme telles par le Minist&egrave;re en charge de la Sant&eacute;.</p>
+<p>Ord. n&deg; 2011-121 du 22 juin 2011, an. fiscale,Art. 7.</p>
+<p>Par soins pr&eacute;sentant un caract&egrave;re m&eacute;dical, il faut entendre ceux qui sont susceptibles de faire l'objet de prescriptions par les personnes vis&eacute;es &agrave; l'alin&eacute;a pr&eacute;c&eacute;dent.</p>
+<p>Les soins d'esth&eacute;tique et de beaut&eacute; ainsi que les sp&eacute;cialit&eacute;s non reconnues par le Minist&egrave;re de la Sant&eacute; sont en tout &eacute;tat de cause exclus du b&eacute;n&eacute;fice de l'exon&eacute;ration.</p>
+<p>Ord. n&deg; 2008-381 du 18 d&eacute;cembre 2008, an. fiscale,Art. 1er.</p>
+<p>2)	Les appareils de correction auditive (appareils &eacute;lectro-acoustiques, proth&egrave;ses ossiculaires, implants) constituant le prolongement direct de soins dispens&eacute;s par un membre du corps m&eacute;dical et fournis par son interm&eacute;diaire.</p>
+<p>3) Les prestations d'hospitalisation et de restauration ainsi que le transport des bless&eacute;s et malades effectu&eacute;s par les structures hospitali&egrave;res agr&eacute;&eacute;es par le Minist&egrave;re en charge de la Sant&eacute;.</p>
+<p>Ord. n&deg; 2011-480 du 28 d&eacute;cembre 2011, an. fiscale,Art.1er.</p>
+<p>16-	L'activit&eacute; d'enseignement &agrave; l'exclusion des op&eacute;rations accessoires teIles que les ventes de biens, fournitures de logement et nourriture dans les internats.</p>
+<p>17-	Les op&eacute;rations portant sur les fibres de jute et de sisal.</p>
+<p>18-	Les bois en grumes.</p>
+<p>19-	Le latex naturel.</p>
+<p>20-	Les op&eacute;rations portant sur les viandes fra&icirc;ches et congel&eacute;es.</p>
+<p>21-	Les livraisons de m&eacute;dicaments et produits pharmaceutiques ainsi que les mat&eacute;riels et produits sp&eacute;cialis&eacute;s pour les activit&eacute;s m&eacute;dicales vis&eacute;s par l'annexe de la Directive n&deg; 06/2002/CM/UEMOA du 19 septembre 2002 portant d&eacute;termination de la liste commune des m&eacute;dicaments, produits pharmaceutiques, mat&eacute;riels et produits sp&eacute;cialis&eacute;s pour les activit&eacute;s m&eacute;dicales.</p>
+<p>Ord. n&deg; 2006-234 du 02 ao&ucirc;t 2006, an. fiscale,Art. 12.</p>
+<p>Il en est de m&ecirc;me des &eacute;quipements, mat&eacute;riels et outillages avec leurs pi&egrave;ces d&eacute;tach&eacute;es, et des intrants n&eacute;cessaires &agrave; la fabrication de m&eacute;dicaments ainsi que des emballages servant au conditionnement des m&eacute;dicaments fabriqu&eacute;s. </p>
+<p>Le b&eacute;n&eacute;fice de la mesure pr&eacute;vue au paragraphe pr&eacute;c&eacute;dent n'exclut pas l'application des dispositions plus favorables du Code des Investissements. </p>
+<p>Loi n&deg; 2019-1080 du 18 d&eacute;cembre 2019, an. fiscale,Art. 4-1er</p>
+<p>Les exon&eacute;rations concernant les biens vis&eacute;s au 1/, sont &eacute;tendues aux droits de douane.</p>
+<p>Loi n&deg; 2019-1080 du 18 d&eacute;cembre 2019, an. fiscale,Art. 4-2</p>
+<p>22-	Les bacs de fermentation et les b&acirc;ches de s&eacute;chage, fabriqu&eacute;s en poly&eacute;thyl&egrave;ne, destin&eacute;s au traitement du cacao, exclusivement vendus &agrave; des agriculteurs.</p>
+<p>23&ndash; Abrog&eacute;.</p>
+<p>Loi n&deg; 2015-840 du 18 d&eacute;cembre 2015, an. fiscale,Art. 7-1; loi n&deg; 2017-870 du 27 d&eacute;cembre 2017, an. fiscaleArt. 7; loi n&deg; 2018 - 984 du 28 d&eacute;cembre 2018, an. fiscaleArt. 7; loi n&deg; 2021-899 du 21 d&eacute;c. 2021, an. fiscale,Art. 4-7</p>
+<p>24-	Sur autorisation expresse du Ministre de l'Economie et des Finances, les dons destin&eacute;s aux &oelig;uvres de solidarit&eacute; nationales ou internationales ou &agrave; l'Etat.</p>
+<p>25-	Abrog&eacute;. </p>
+<p>Loi n&deg; 2020-972 du 23 d&eacute;c. 2020, an. fiscale,Art. 2-5.</p>
+<p>26-	Les produits p&eacute;troliers d&eacute;nomm&eacute;s Heavy Vacuum Oil (HVO), le fuel-oil 380 et le gaz naturel destin&eacute;s aux centrales thermiques.</p>
+<p>27-	Les aliments pour b&eacute;tail et animaux de basse-cour.</p>
+<p>Ordonnance n&deg; 2000-759 du 11 octobre 2000,Art. 2.</p>
+<p>28-	Les intrants concourant &agrave; la fabrication des aliments pour b&eacute;tail et animaux de basse-cour et les emballages servant &agrave; leur conditionnement.</p>
+<p>Loi n&deg; 2003-206 du7 juillet 2003, an. fiscale,Art. 5.</p>
+<p>29-	Les engrais.</p>
+<p>Ordonnance n&deg; 2000-758 du11 octobre 2000,Art. 2.</p>
+<p>30-	Les intrants concourant &agrave; la fabrication des engrais et les emballages servant &agrave; leur conditionnement.</p>
+<p>Ordonnance n&deg; 2000-758 du11 octobre 2000,Art. 2.</p>
+<p>31-	Les insecticides, fongicides, antirongeurs, herbicides inhibiteurs de germination, les r&eacute;gulateurs de croissance pour plantes.</p>
+<p>Ordonnance n&deg; 2000-758 du11 octobre 2000,Art. 2.</p>
+<p>32-	Les intrants concourant &agrave; la fabrication en C&ocirc;te d'Ivoire et les emballages servant au conditionnement des insecticides.</p>
+<p>Ordonnance n&deg; 2000-758 du11 octobre 2000,Art. 2.</p>
+<p>33- Les semences et les graines</p>
+<p>Loi n&deg; 2001-338 du 14 juin 2001, an. fiscale,Art. 6-3&deg;; loi n&deg; 2017-870 du 27 d&eacute;cembre 2017, an. fiscaleArt. 1; ord. n&deg; 2018-145 du 14 f&eacute;vrier 2018,Art. 2-1.</p>
+<p>34-	La tranche sociale de consommation des livraisons d'eau et d'&eacute;lectricit&eacute; factur&eacute;es aux m&eacute;nages.</p>
+<p>Loi n&deg; 2001-338 du 14 juin 2001, an. fiscale,Art. 6-3&deg;. Ord. n&deg; 2006-234 du 02 ao&ucirc;t 2006, an. fiscale,Art. 3-4.</p>
+<p>35-	Le gaz butane;</p>
+<p>Loi n&deg; 2001-338 du 14 juin 2001, an. fiscale,Art. 6-3&deg;.</p>
+<p>36-	Les ventes par leur auteur, d'&oelig;uvres d'art originales.</p>
+<p>Loi n&deg; 2003-206 du7 juillet 2003, an. fiscale,Art. 1er 1.</p>
+<p>37-	Abrog&eacute;</p>
+<p>Loi n&deg; 2003-206 du7 juillet 2003, an. fiscale,Art. 39-4; loi n&deg; 2017-870 du 27 d&eacute;cembre 2017, an. fiscaleArt. 1.</p>
+<p>38-	1&deg; [Obsol&egrave;te].</p>
+<p>Ord. n&deg; 2007-488 du 31 mai 2007, an. fiscale,Art. 28-5; Ord. n&deg; 2008-381 du 18 d&eacute;cembre 2008, an. fiscale,Art. 27-8; Ord. n&deg; 2011-480 du 28 d&eacute;cembre 2011, an. fiscale,Art. 7.</p>
+<p>2) [Obsol&egrave;te].</p>
+<p>Ord. n&deg; 2011-480 du 28 d&eacute;cembre 2011, an. fiscale,Art. 7.</p>
+<p>L'exon&eacute;ration est accord&eacute;e sur autorisation du Directeur g&eacute;n&eacute;ral des Imp&ocirc;ts.</p>
+<p>Loi n&deg;2004 -271 du 15 avril 2004,.an. fiscale,Art. 2. Ord. n&deg; 2006-234 du 02 ao&ucirc;t 2006, an. fiscale,Art. 6-2.</p>
+<p>39-	Les mat&eacute;riels agricoles et leurs pi&egrave;ces d&eacute;tach&eacute;es dont la liste est fix&eacute;e par arr&ecirc;t&eacute; conjoint du Ministre du Budget et du Ministre de l'Agriculture, quel que soit leur mode d'acquisition, d&egrave;s lors que le b&eacute;n&eacute;ficiaire de ces mat&eacute;riels est un professionnel agr&eacute;&eacute; par le Minist&egrave;re de l'Agriculture.</p>
+<p>L'exon&eacute;ration concerne &eacute;galement les mat&eacute;riels et &eacute;quipements des autres secteurs d'activit&eacute; acquis par cr&eacute;dit-bail, lorsque la mise en &oelig;uvre de cette exon&eacute;ration se fait par voie d'attestation. </p>
+<p>L'exon&eacute;ration peut &ecirc;tre transf&eacute;r&eacute;e &agrave; l'&eacute;tablissement de cr&eacute;dit-bail pour l'acquisition du bien, et mention en est faite sur l'attestation d&eacute;livr&eacute;e au cr&eacute;dit-preneur.</p>
+<p>Loi n&deg;2004-271 du 15 avril 2004, an. fiscale,Art.3; Ord. n&deg; 2011-121 du 22 juin 2011, an. fiscale,Art. 11;loi n&deg; 2014-861 du 22 d&eacute;cembre 2014, an. fiscale,Art.3.</p>
+<p>40- Abrog&eacute;.</p>
+<p>Loi n&deg; 2004-271 du 15 avril 2004, an. fiscale,Art. 39-1;loi n&deg; 2013-908 du 26 d&eacute;cembre 2013, an. fiscale,Art. 1er .</p>
+<p>41-	Les biens suivants acquis par la Soci&eacute;t&eacute; des Transports abidjanais (SOTRA) et ses filiales d&eacute;tenues &agrave; 100%, jusqu'au 31 d&eacute;cembre 2015 :</p>
+<p>Ord. n&deg; 2011-480 du 28 d&eacute;cembre 2011, an. fiscale,Art. 36.</p>
+<p>-	les biens destin&eacute;s aux infrastructures de base d'exploitation;</p>
+<p>-	les biens destin&eacute;s aux ateliers concourant au montage et &agrave; la maintenance des v&eacute;hicules et autres mat&eacute;riels roulants d'exploitation;</p>
+<p>-	les syst&egrave;mes et mat&eacute;riels de radio t&eacute;l&eacute;informatiques et &eacute;lectroniques concourant &agrave; la gestion du r&eacute;seau d'exploitation;</p>
+<p>Ord. n&deg; 2011-480 du 28 d&eacute;cembre 2011, an. fiscale,Art. 36.</p>
+<p>-	les v&eacute;hicules d'exploitation, leurs pi&egrave;ces de rechange et pneumatiques.</p>
+<p>INFOS</p>
+<p>Les exemptions accord&eacute;es &agrave; la SOTRA et &agrave; ses filiales d&eacute;tenues &agrave; 100% et vis&eacute;es &agrave; l&lsquo;article 355-41 du Code g&eacute;n&eacute;ral des Imp&ocirc;ts sont &eacute;tendues aux droits de douane.</p>
+<p>Loi n&deg; 2005-161 du 27 avril 2005, an. fiscale,Art. 5-1; Ord. n&deg; 2007-675 du 28 d&eacute;cembre 2007, an. fiscale,Art. 2-1 .</p>
+<p>42-	Les travaux de construction de logements par les entreprises constitu&eacute;es pour ex&eacute;cuter un programme de construction de logements &agrave; caract&egrave;re &eacute;conomique et social, les mat&eacute;riaux et fournitures y int&eacute;gr&eacute;s, les travaux d'assainissement de voirie et r&eacute;seau divers, ainsi que les honoraires factur&eacute;s par les notaires &agrave; l'occasion des actes de ventes desdits logements.</p>
+<p>Loi n&deg; 86-88 du 31 janv. 1986,Art. 15, an. fiscale; loi n&deg; 2002-156 du 15 mars 2002, an. fiscale,Art. 4-1&deg;. Ord. n&deg; 2006-234 du 02 ao&ucirc;t 2006, an. fiscale,Art. 4-1.</p>
+<p>L'octroi de l'avantage susvis&eacute; aux entreprises constitu&eacute;es pour ex&eacute;cuter un tel programme est subordonn&eacute; &agrave; l'agr&eacute;ment pr&eacute;alable du programme prononc&eacute; par arr&ecirc;t&eacute; du Ministre des Finances, apr&egrave;s avis d'une commission dont la composition et les attributions sont fix&eacute;es par d&eacute;cret en Conseil des Ministres.</p>
+<p>Loi n&deg;71-683 du 28 d&eacute;cembre 1971, an. fiscale, article 17; loi n&deg;86-88 du 31 janvier 1986, article 15 an. fiscale; loi n&deg;2002-156 du 15 mars 2002, an. fiscale, article 4-1&deg;.</p>
+<p>43- <br />
+  -1) Les mat&eacute;riaux de construction, &eacute;tudes topographiques, &eacute;tudes et travaux de voiries et r&eacute;seaux divers (VRD), &eacute;tudes d'urbanisme, d'architecture et &eacute;tudes et travaux relatifs aux &eacute;quipements socio-collectifs (&eacute;coles, centres de sant&eacute;, etc.) mis &agrave; la charge du promoteur par la r&eacute;glementation en vigueur, acquis ou r&eacute;alis&eacute;s dans le cadre de la construction de logements par les entreprises agr&eacute;&eacute;es au r&eacute;gime fiscal en faveur des grands investissements dans l'habitat.</p>
+<p>2) Les &eacute;quipements, les mat&eacute;riels et les pi&egrave;ces de rechange n&eacute;cessaires &agrave; la construction et &agrave; la production des unit&eacute;s industrielles de fabrication des mat&eacute;riaux et autres intrants servant &agrave; la r&eacute;alisation des logements.</p>
+<p>3) Les honoraires factur&eacute;s par les notaires sur les ventes de logements construits sur la base de programmes agr&eacute;&eacute;s.</p>
+<p>Les exon&eacute;rations vis&eacute;es ci-dessus s'&eacute;tendent sur la dur&eacute;e du projet y compris la p&eacute;riode de r&eacute;alisation des investissements.</p>
+<p>Le b&eacute;n&eacute;fice de cet avantage est subordonn&eacute; aux conditions vis&eacute;es &agrave; l'article 7 du pr&eacute;sent Code. </p>
+<p>Loi n&deg; 2004-271 du 15 avril 2004, an. fiscale,art. 1er ; Loi n&deg; 2012-1179 du 27 d&eacute;cembre 2012, an. fiscale,Art. 34-3.</p>
+<p>44-	Les achats locaux directs de biens sp&eacute;cifiques aux op&eacute;rations de recherche et d'exploitation p&eacute;troli&egrave;res en eaux profondes des compagnies p&eacute;troli&egrave;res sous r&eacute;serve de l'agr&eacute;ment du Ministre en charge des Finances, pris sur avis de la Commission d'exon&eacute;ration d'imp&ocirc;ts indirects et assimil&eacute;s.</p>
+<p>La commission est compos&eacute;e comme suit :</p>
+<p>-	le repr&eacute;sentant du Ministre en charge des Finances, pr&eacute;sident;</p>
+<p>-	le repr&eacute;sentant du Ministre en charge des Mines et de l'Energie;</p>
+<p>-	le Directeur g&eacute;n&eacute;ral des Imp&ocirc;ts ou son repr&eacute;sentant;</p>
+<p>-	le Directeur g&eacute;n&eacute;ral des Douanes ou son repr&eacute;sentant.</p>
+<p>Les modalit&eacute;s de fonctionnement de la pr&eacute;sente commission seront d&eacute;termin&eacute;es par arr&ecirc;t&eacute; du Ministre en charge des Finances.</p>
+<p>Loi n&deg; 96-218 du 13 mars 1996, an. fiscale,Art. 24.</p>
+<p>45-	Abrog&eacute;.</p>
+<p>Loi n&deg; 98-742 du 23 d&eacute;c. 1998, an. fiscale,Art. 12; loi n&deg; 2020-972 du 23 d&eacute;c. 2020, an. fiscale,Art. 2-5.</p>
+<p>46 -	[Obsol&egrave;te].</p>
+<p>Ord. n&deg; 2006-234 du 02 ao&ucirc;t 2006, an. fiscale,Art. 3-1; Ord. n&deg; 2008-381 du 18 d&eacute;cembre 2008, an. fiscale,Art. 27-9/.</p>
+<p>47-	Abrog&eacute;.</p>
+<p>Ord. n&deg; 2006-234 du 02 ao&ucirc;t 2006, an. fiscale,Art. 44-2; loi n&deg; 2013-908 du 26 d&eacute;cembre 2013, an. fiscale,Art. 1er .</p>
+<p>48-Abrog&eacute;.</p>
+<p>Ord. n&deg; 2008-381 du 18 d&eacute;cembre 2008, an. fiscale,Art. 4; ord. n&deg; 2009-382 du 26 novembre 2009, an. fiscale,Art.6 ; loi n&deg; 2012-1179 du 27 d&eacute;cembre 2012, an. fiscale,Art. 3-1; loi n&deg; 2020-972 du 23 d&eacute;c. 2020, an. fiscale,Art. 2-5.</p>
+<p>. 49-	Les acquisitions de mat&eacute;riels, de biens d'&eacute;quipement et les pi&egrave;ces de rechange, tant &agrave; l'importation qu'en r&eacute;gime int&eacute;rieur ainsi que les travaux de construction, d'am&eacute;nagement, la r&eacute;paration et l'entretien de l'outil de production, effectu&eacute;s au profit de la Soci&eacute;t&eacute; Ivoirienne de Raffinage et de la Soci&eacute;t&eacute; Multinationale de Bitumes, directement li&eacute;s aux op&eacute;rations de raffinage et de fabrication &agrave; titre principal ou accessoire des produits du p&eacute;trole ou des produits assimil&eacute;s, jusqu'en 2020. </p>
+<p>La Soci&eacute;t&eacute; Ivoirienne de Raffinage et la Soci&eacute;t&eacute; Multinationale de Bitumes doivent chaque trimestre, communiquer &agrave; l'Administration, les &eacute;tats nominatifs des fournisseurs de ces biens et services. Ces &eacute;tats doivent comporter obligatoirement les indications suivantes:</p>
+<p>-	nom et pr&eacute;noms ou raison sociale;</p>
+<p>-	num&eacute;ro de compte contribuable;</p>
+<p>-	r&eacute;gime d'imposition;</p>
+<p>-	profession ou activit&eacute;;</p>
+<p>-	adresse g&eacute;ographique, postale et t&eacute;l&eacute;phonique;</p>
+<p>-	nature des biens et services fournis;</p>
+<p>-	montant de la facture;</p>
+<p>-	date de la facture ou du paiement;</p>
+<p>-	Centre des Imp&ocirc;ts de rattachement.</p>
+<p>Les omissions ou insuffisances constat&eacute;es, ainsi que le refus ou le d&eacute;faut de production des &eacute;tats nominatifs pr&eacute;vus, sont sanctionn&eacute;s par une amende de 200.000 francs. </p>
+<p>L'amende est per&ccedil;ue autant de fois qu'il y a d'&eacute;tats non produits.</p>
+<p>Le refus ou le d&eacute;faut de production des &eacute;tats nominatifs, entra&icirc;ne une solidarit&eacute; de paiement de la taxe non per&ccedil;ue entre l'entreprise b&eacute;n&eacute;ficiaire et son fournisseur.</p>
+<p>Ord. n&deg; 2008-381 du 18 d&eacute;cembre 2008, an. fiscale,Art. 5-1; Ord. n&deg; 2009-382 du 26 novembre 2009, an. fiscale,Art.7-1.</p>
+<p>50-Les dons faits par les organismes de bienfaisance:</p>
+<p>-	aux associations religieuses reconnues par le Minist&egrave;re en charge des Cultes;</p>
+<p>-	aux personnes handicap&eacute;es, par les entreprises qui engagent des d&eacute;penses pour la fourniture d'installations de r&eacute;&eacute;ducation, de mat&eacute;riels orthop&eacute;diques et autres mat&eacute;riels sp&eacute;cifiques;</p>
+<p>-	aux malades d&eacute;munis pr&eacute;sent&eacute;s par les services sanitaires ou sociaux ou par les centres de sant&eacute; publics;</p>
+<p>-	aux &eacute;l&egrave;ves et &eacute;tudiants r&eacute;guli&egrave;rement inscrits dans un &eacute;tablissement agr&eacute;&eacute; ou reconnu par le Minist&egrave;re de l'&eacute;ducation nationale ou le Minist&egrave;re de l'enseignement sup&eacute;rieur et/ou technique, sous forme de bourses d'&eacute;tudes annuelles;</p>
+<p>-	aux associations de jeunes et de femmes pour les aider &agrave; initier ou &agrave; d&eacute;velopper une activit&eacute; lucrative;</p>
+<p>-	aux associations qui &oelig;uvrent &agrave; la r&eacute;adaptation des toxicomanes et des alcooliques;</p>
+<p>-	aux organismes priv&eacute;s sans but lucratif qui &oelig;uvrent &agrave; titre b&eacute;n&eacute;vole &agrave; la conservation de l'environnement;</p>
+<p>-	aux mutuelles pour leurs op&eacute;rations de financement, de construction, de r&eacute;habilitation ou d'&eacute;quipement d'&eacute;coles, de centres de sant&eacute; ou de centres polyvalents au profit d'une collectivit&eacute;.</p>
+<p>Ord. n&deg; 2009-382 du 26 novembre 2009, an. fiscale,Art.1-3</p>
+<p>51- [Obsol&egrave;te].</p>
+<p>Ord. n&deg; 2009-382 du 26 novembre 2009, an. fiscale,Art.2-1; Ord. n&deg; 2011-121 du 22 juin 2011, an. fiscale,Art. 2 -11.</p>
+<p>52-Les biens acquis par les entreprises agro-industrielles intervenant dans les secteurs du coton, de l'anacarde et du karit&eacute; cr&eacute;&eacute;es, r&eacute;implant&eacute;es ou rouvertes en zones Centre, Nord et Ouest avant le 31 d&eacute;cembre 2012. Il s'agit:</p>
+<p>Ord. n&deg; 2011-121 du 22 juin 2011, an. fiscale,Art. 2 -11.</p>
+<p>-	des &eacute;quipements et du mat&eacute;riel n&eacute;cessaires &agrave; la r&eacute;alisation des investissements;</p>
+<p>-	du premier lot de pi&egrave;ces de rechange.</p>
+<p>Cette exon&eacute;ration est mise en &oelig;uvre par voie d'attestation.</p>
+<p>Pour les entreprises de production effectuant des op&eacute;rations d'achat de produits, l'exon&eacute;ration n'est acquise que si la valeur des achats n'exc&egrave;de pas 15% de la valeur de la production totale.</p>
+<p>Ord. n&deg; 2009-382 du 26 novembre 2009, an. fiscale,Art.2-10.</p>
+<p>53- [Obsol&egrave;te].</p>
+<p>L'exon&eacute;ration, mise en &oelig;uvre par voie d'attestation, est subordonn&eacute;e &agrave; l'agr&eacute;ment pr&eacute;alable conjoint du Minist&egrave;re technique concern&eacute; par l'infrastructure et du Minist&egrave;re de l'Economie et des Finances.</p>
+<p>Ord. n&deg; 2009-382 du 26 novembre 2009, an. fiscale,Art.2-10</p>
+<p>54- Abrog&eacute;.</p>
+<p>Ord. n&deg; 2009-382 du 26 novembre 2009, an. fiscale,Art.4; Ord. n&deg; 2011-121 du 22 juin 2011, an. fiscale,Art. 10; loi n&deg; 2013-908 du 26 d&eacute;cembre 2013, an. fiscale,Art. 1er .</p>
+<p>55-Les mat&eacute;riels et &eacute;quipements de recherche acquis par le Centre national de Recherche agronomique, dont la liste est fix&eacute;e par arr&ecirc;t&eacute; conjoint du Ministre en charge de la Recherche scientifique et du Ministre de l'Economie et des Finances.</p>
+<p>Cette exon&eacute;ration est mise en &oelig;uvre par voie d'attestation.</p>
+<p>Ord. n&deg; 2009-382 du 26 novembre 2009, an. fiscale,Art.8</p>
+<p>56-Les cotisations des adh&eacute;rents des centres de gestion agr&eacute;&eacute;s.</p>
+<p>Le b&eacute;n&eacute;fice de cet avantage est subordonn&eacute;, pour les entreprises immatricul&eacute;es au fichier de la Direction g&eacute;n&eacute;rale des Imp&ocirc;ts, &agrave; l'adh&eacute;sion &agrave; un centre de gestion agr&eacute;&eacute; au plus tard le 31 janvier de l'ann&eacute;e en cours.</p>
+<p>Pour les nouvelles immatriculations, le b&eacute;n&eacute;fice de cet avantage est subordonn&eacute; &agrave; l'adh&eacute;sion &agrave; un centre de gestion agr&eacute;&eacute; dans un d&eacute;lai de trente (30) jours &agrave; compter de la date de r&eacute;ception de la d&eacute;claration fiscale d'existence. </p>
+<p>Ord. n&deg; 2009-382 du 26 novembre 2009, an. fiscale,Art. 26-2; loi n&deg; 2016-1116 du 08 d&eacute;cembre 2016, an. fiscale,Art. 26-4.</p>
+<p>57-Abrog&eacute;.</p>
+<p>Ord. n&deg; 2009-382 du 26 novembre 2009, an. fiscale,Art. 27-7; loi n&deg; 2017-870 du 27 d&eacute;cembre 2017, an. fiscaleArt. 1.</p>
+<p>58- [Obsol&egrave;te].</p>
+<p>Ces investissements doivent avoir &eacute;t&eacute; effectu&eacute;s avant le 31 d&eacute;cembre 2011.</p>
+<p>La liste des mat&eacute;riaux et prestations exon&eacute;r&eacute;s sera d&eacute;termin&eacute;e par arr&ecirc;t&eacute; du Ministre de la Construction, de l'Urbanisme et de l'Habitat.</p>
+<p>Cette exon&eacute;ration est mise en &oelig;uvre par voie d'attestation.</p>
+<p>Ord. n&deg; 2009-382 du 26 novembre 2009, an. fiscale,Art. 30.</p>
+<p>59- [Obsol&egrave;te].</p>
+<p>Cette exon&eacute;ration est mise en &oelig;uvre par voie d'attestation.</p>
+<p>Ord. n&deg; 2009-382 du 26 novembre 2009, an. fiscale,Art.2-10; Ord. n&deg; 2011-121 du 22 juin 2011, an. fiscale,Art. 2 -11.</p>
+<p>60-Les frais g&eacute;n&eacute;raux expos&eacute;s par la Soci&eacute;t&eacute; Ivoirienne de Raffinage et par la Soci&eacute;t&eacute; Multinationale de Bitumes, directement li&eacute;s aux op&eacute;rations de raffinage et de fabrication &agrave; titre principal ou accessoire des produits du p&eacute;trole ou des produits assimil&eacute;s, jusqu'en 2020.</p>
+<p>Ord. n&deg; 2009-382 du 26 novembre 2009, an. fiscale,Art.7-2.</p>
+<p>61-Abrog&eacute;.</p>
+<p>Ord. n&deg; 2009-382 du 26 novembre 2009, an. fiscale,Art.6 ; loi n&deg; 2012-1179 du 27 d&eacute;cembre 2012, an. fiscale,Art. 3-1; loi n&deg; 2020-972 du 23 d&eacute;c. 2020, an. fiscale,Art. 2-5. </p>
+<p>62 - Les jeux de machines &agrave; sous.</p>
+<p>Loi n&deg; 2016-1116 du 08 d&eacute;cembre 2016, an. fiscale,Art. 14-1.</p>
+<p>63 - Les op&eacute;rations de ventes, de commission et courtage portant sur les billets de loterie nationale et de tous les autres jeux de hasard organis&eacute;s par la LONACI, ainsi que tout profit tir&eacute; de ces op&eacute;rations. </p>
+<p>Loi n&deg; 2016-1116 du 08 d&eacute;cembre 2016, an. fiscale,Art. 14-1</p>
+<p>64 - Les mat&eacute;riels import&eacute;s par l'Etat, dans le cadre de la lutte contre le terrorisme et la cybercriminalit&eacute;, dont la liste est &eacute;tablie par arr&ecirc;t&eacute; conjoint du Ministre de la D&eacute;fense ou celui en charge de la S&eacute;curit&eacute; int&eacute;rieure et du Ministre du Budget et du Portefeuille de l'Etat.</p>
+<p>INFOS</p>
+<p>Les exon&eacute;rations pr&eacute;vues &agrave; l&lsquo;article 355-64 du Code g&eacute;n&eacute;ral des Imp&ocirc;ts sont &eacute;tendues aux droits de douanes.</p>
+<p>Loi n&deg; 2017-870 du 27 d&eacute;cembre 2017, an. fiscaleArt. 6.</p>
+<p>65 - Les commissions per&ccedil;ues par les grossistes et les pharmacies dans le cadre de la distribution des m&eacute;dicaments de la Nouvelle Pharmacie de la Sant&eacute; publique aux b&eacute;n&eacute;ficiaires de la Couverture Maladie universelle (CMU).</p>
+<p>Loi n&deg; 2020-972 du 23 d&eacute;c. 2020, an. fiscale,Art. 7-2.</p>
+<p>&nbsp;</p>
+<BR>
+<BR><BR><BR></div></span><finh23355>
+
+<span class="historique" ID="h21357">
+<div class="histText">
+
+<BR> 
+<BR>Art. 357
+<BR> 
+<BR>Sont assimil&eacute;s &agrave; des exportations : 
+<BR> 
+<BR>1-Les op&eacute;rations de construction, de transformation, de r&eacute;paration, d'entretien, d'affr&egrave;tement et de location portant sur les b&acitc;timents de mer ivoiriens et &eacute;trangers de la marine marchande, les bateaux affect&eacute;s &agrave; la p&ecirc;che professionnelle maritime, les bateaux de sauvetage et d'assistance, ainsi que la fourniture de tous articles et produits destin&eacute;s &agrave; &ecirc;tre incorpor&eacute;s dans ces m&ecirc;mes b&acitc;timents et bateaux ou utilis&eacute;s pour leur exploitation. 
+<BR> 
+<BR>2-Les op&eacute;rations consistant dans la vente d'engins et filets de p&ecirc;che ainsi que la fourniture de tous les articles et produits destin&eacute;s aux bateaux pratiquant la p&ecirc;che professionnelle maritime. 
+<BR> 
+<BR>3-Les prestations de services suivantes : 
+<BR> 
+<BR>a)Les op&eacute;rations effectu&eacute;es par les commissionnaires agr&eacute;&eacute;s en douane et inh&eacute;rentes &agrave; l'exportation, au transit ou transbordement de marchandises ainsi que les commissions de transit portant sur des marchandises en transit ou transbordement. 
+<BR> 
+<BR>b)La manutention terre portant sur les marchandises export&eacute;es ou en transit, ainsi que : 
+<BR> 
+<BR>-le d&eacute;chargement du v&eacute;hicule apportant la marchandise au port d'embarquement; 
+<BR> 
+<BR>-le transport des marchandises pour leur transfert depuis les magasins ou les aires de stationnement jusqu'au quai d'embarquement. 
+<BR> c)Abrog&eacute;. 
+<BR> 
+<BR>Loi n° 2016-1116 du 08 d&eacute;cembre 2016, an. fiscale,Art. 16. 
+<BR> d)Abrog&eacute;.  
+<BR>Ord. n °-2011-121 du 22 juin 2011Art. 5-2; loi n° 2016-1116 du 08 d&eacute;cembre 2016, an. fiscale,Art. 16. 
+<BR> e)Abrog&eacute;. 
+<BR> 
+<BR>Loi n° 2016-1116 du 08 d&eacute;cembre 2016, an. fiscale,Art. 16. 
+<BR> 
+<BR>4-Les prestations de services effectu&eacute;es pour les besoins directs des navires de commerce maritime, des bateaux utilis&eacute;s pour l'exercice d'une activit&eacute; industrielle en haute mer, des bateaux de sauvetage et d'assistance en mer. 
+<BR> 
+<BR>La liste de ces prestations est fix&eacute;e comme suit : 
+<BR> 
+<BR>a)Pilotage. 
+<BR> 
+<BR>b)Amarrage. 
+<BR> 
+<BR>c)Remorquage. 
+<BR> 
+<BR>d)Location de portiques. 
+<BR> 
+<BR>e)S&eacute;jour des bateaux. 
+<BR> 
+<BR>f)Utilisation des installations portuaires. 
+<BR> 
+<BR>g)Assistance et sauvetage de navires et de bateaux. 
+<BR> 
+<BR>h)Entretien du navire et du mat&eacute;riel de bord. 
+<BR> 
+<BR>i)Gardiennage et services de pr&eacute;vention et de lutte contre l'incendie. 
+<BR> 
+<BR>j)Usage des installations am&eacute;nag&eacute;es pour la r&eacute;ception des passagers et des marchandises. 
+<BR> 
+<BR>k)Usage des installations destin&eacute;es &agrave; l'avitaillement des navires. 
+<BR> 
+<BR>l)Visites de s&eacute;curit&eacute;, examen des car&egrave;nes, expertises techniques. 
+<BR> 
+<BR>m)Expertises ayant trait &agrave; l'&eacute;valuation des dommages subis par des navires. 
+<BR> 
+<BR>Toutes les autres prestations non vis&eacute;es par le pr&eacute;sent paragraphe restent soumises &agrave; la taxe sur la valeur ajout&eacute;e, conform&eacute;ment aux dispositions des articles339et suivants du pr&eacute;sent Code. 
+<BR> 
+<BR>5-Les prestations de services effectu&eacute;es pour les besoins directs de la cargaison des bateaux d&eacute;sign&eacute;s au paragraphe 1 du pr&eacute;sent article et dont la liste est fix&eacute;e comme suit : 
+<BR> 
+<BR>a)Les op&eacute;rations de manutention bord, ces op&eacute;rations comprenant : 
+<BR> 
+<BR>-les op&eacute;rations de chargement et de d&eacute;chargement des bateaux; 
+<BR> 
+<BR>-les op&eacute;rations de manutention &agrave; bord accessoires au chargement, d&eacute;chargement, transbordement, y compris les manipulations &agrave; bord du bateau. 
+<BR> 
+<BR>b)La location de mat&eacute;riel pour le chargement ou le d&eacute;chargement des bateaux. 
+<BR> 
+<BR>c)Le gardiennage de la marchandise &agrave; bord des bateaux. 
+<BR> 
+<BR>6-Les op&eacute;rations de construction, de transformation, de r&eacute;paration, d'entretien, d'affr&egrave;tement et de location portant sur des a&eacute;ronefs utilis&eacute;s par des compagnies de navigation a&eacute;rienne dont les services &agrave; destination ou en provenance de l'&eacute;tranger repr&eacute;sentent au moins 80 % de leur chiffre d'affaires, ainsi que la fourniture de tous articles et produits destin&eacute;s &agrave; &ecirc;tre incorpor&eacute;s dans ces a&eacute;ronefs. 
+<BR> 
+<BR>7-Les prestations de services effectu&eacute;es pour les besoins directs des a&eacute;ronefs d&eacute;sign&eacute;s &agrave; l'alin&eacute;a 6 du pr&eacute;sent article, et de leur cargaison, dont la liste est fix&eacute;e comme suit : 
+<BR> 
+<BR>a)Atterrissage. 
+<BR> 
+<BR>b)Usage des dispositifs d'&eacute;clairage. 
+<BR> 
+<BR>c)Stationnement, amarrage et abri des a&eacute;ronefs. 
+<BR> 
+<BR>d)Usage des installations am&eacute;nag&eacute;es pour la r&eacute;ception des passagers et des marchandises. 
+<BR> 
+<BR>e)Usage des installations destin&eacute;es &agrave; l'avitaillement des a&eacute;ronefs. 
+<BR> 
+<BR>f)Op&eacute;rations techniques aff&eacute;rentes &agrave; l'arriv&eacute;e, au stationnement et au d&eacute;part des a&eacute;ronefs. 
+<BR> 
+<BR>g)Op&eacute;rations de nettoyage, d'entretien et de r&eacute;paration des a&eacute;ronefs et des mat&eacute;riels et &eacute;quipements de bord. 
+<BR> 
+<BR>h)Gardiennage et services de pr&eacute;vention et de lutte contre l'incendie. 
+<BR> 
+<BR>i)Visites de s&eacute;curit&eacute;, expertises techniques. 
+<BR> 
+<BR>j)Relevage et sauvetage des a&eacute;ronefs. 
+<BR> 
+<BR>k)Op&eacute;rations des consignataires d'a&eacute;ronefs et agents a&eacute;riens. 
+<BR> 
+<BR>l)Expertises ayant trait &agrave; l'&eacute;valuation des dommages subis par des a&eacute;ronefs. 
+<BR> 
+<BR>8-Les prestations effectu&eacute;es pour les besoins directs de la cargaison des a&eacute;ronefs d&eacute;sign&eacute;s au paragraphe 6 ci-dessus dont la liste est fix&eacute;e comme suit : 
+<BR> 
+<BR>a)Embarquement et d&eacute;barquement des passagers et de leurs bagages. 
+<BR> 
+<BR>b)Chargement et d&eacute;chargement des a&eacute;ronefs. 
+<BR> 
+<BR>c)Manutention des marchandises accessoires au chargement et d&eacute;chargement des a&eacute;ronefs. 
+<BR> 
+<BR>d)Op&eacute;rations d'assistance aux passagers, op&eacute;rations relatives &agrave; l'enregistrement des passagers et &agrave; celui de leurs bagages. 
+<BR> 
+<BR>e)Emission et r&eacute;ception des messages de trafic. 
+<BR> 
+<BR>f)Op&eacute;rations de trafic et de transit-correspondance. 
+<BR> 
+<BR>g)Locations de mat&eacute;riels et &eacute;quipements n&eacute;cessaires au trafic a&eacute;rien et utilis&eacute;s sur l'aire des a&eacute;roports. 
+<BR> 
+<BR>h)Locations de contenants et de mat&eacute;riels de protection de marchandises. 
+<BR> 
+<BR>i)Gardiennage des marchandises. 
+<BR> 
+<BR>j)Magasinage des marchandises n&eacute;cessaires au transport par voie a&eacute;rienne. 
+<BR> 
+<BR>k)Expertise ayant trait &agrave; l'&eacute;valuation des dommages subis par les passagers et les marchandises. 
+<BR> 
+<BR>9-Les livraisons de biens destin&eacute;s &agrave; l'avitaillement des bateaux et des a&eacute;ronefs d&eacute;sign&eacute;s aux paragraphes 1 et 6 ci-dessus.  
+<BR>Loi n °-2001-338 du 14 juin 2001, an. fiscale,Art. 7. 
+<BR> 
+<BR>10-Abrog&eacute; 
+<BR>Ord. n °-2009-382 du 26 novembre 2009Art.5-1; loi n° 2016-1116 du 08 d&eacute;cembre 2016, an. fiscale,Art. 16.  
+<BR>11-Abrog&eacute;  
+<BR>Ord. n °-2009-382 du 26 novembre 2009Art.5-2; loi n° 2016-1116 du 08 d&eacute;cembre 2016, an. fiscale,Art. 16.  
+<BR>Le b&eacute;n&eacute;fice des dispositions du paragraphe 10 et de l'alin&eacute;a premier du pr&eacute;sent paragraphe est subordonn&eacute; &agrave; la tenue d'un registre d&eacute;taill&eacute; nominatif des ventes effectu&eacute;es au profit des personnes ayant justifi&eacute; de leur qualit&eacute; d'exportateur. 
+<BR> 
+<BR>12-Les ventes de biens r&eacute;alis&eacute;es par les magasins de vente hors taxes y compris celles effectu&eacute;es par les magasins sous-douane situ&eacute;s dans le hall  Arriv&eacute;e  des a&eacute;roports internationaux.  
+<BR>Loi n °-2005-161 du 27 avril 2005, an. fiscale,Art. 4; loi n° 2017-870 du 27 d&eacute;cembre 2017, an. fiscaleArt. 3. 
+<BR> 
+<BR>13-Les prestations de services vis&eacute;es &agrave; l'article352 , non utilis&eacute;es en C&ocirc;te d'Ivoire effectu&eacute;es pour le compte d'entreprises n'ayant pas d'installation professionnelle en C&ocirc;te d'Ivoire lorsqu'elles ne sont pas imposables en C&ocirc;te d'Ivoire.  
+<BR>Ord. n °-2009-382 du 26 novembre 2009Art.10 
+<BR> 
+<BR>14-Abrog&eacute;.  
+<BR>Loi n °-2012-1179 du 27 d&eacute;cembre 2012, an. fiscale,Art. 1er.  
+<BR>15- Les ventes de sacs de jute et de sisal aux exportateurs et aux soci&eacute;t&eacute;s op&eacute;rant dans la fili&egrave;re du caf&eacute; et du cacao qui sont exclusivement destin&eacute;s au conditionnement desdits produits. 
+<BR> 
+<BR>16- Les ventes d'emballages aux exportateurs de produits agricoles, ainsi qu'aux exportateurs de produits agricoles transform&eacute;s y compris les produits de la p&ecirc;che, qui sont exclusivement destin&eacute;s au conditionnement des produits effectivement export&eacute;s ou aux soci&eacute;t&eacute;s op&eacute;rant dans la fili&egrave;re du caf&eacute; et du cacao. 
+<BR> 
+<BR>Loi n° 2017-870 du 27 d&eacute;cembre 2017, an. fiscaleArt. 1. 
+<BR> 
+<BR><BR><BR></div></span><finh21357>
+
+<span class="historique" id="h22357">
+   <div class="histText"> Art. 357 <br>
+	
+<br>	Sont assimilés à des exportations :	
+<br>		
+<br>	1–	Les opérations de construction, de transformation, de réparation, d’entretien, d’affrètement et de location portant sur les bâtiments de mer ivoiriens et étrangers de la marine marchande, les bateaux affectés à la pêche professionnelle maritime, les bateaux de sauvetage et d’assistance, ainsi que la fourniture de tous articles et produits destinés à être incorporés dans ces mêmes bâtiments et bateaux ou utilisés pour leur exploitation.
+<br>		
+<br>	2–	Les opérations consistant dans la vente d’engins et filets de pêche ainsi que la fourniture de tous les articles et produits destinés aux bateaux pratiquant la pêche professionnelle maritime.
+<br>		
+<br>	3–	Les prestations de services suivantes :
+<br>		
+<br>	a)	Les opérations effectuées par les commissionnaires agréés en douane et inhérentes à l’exportation, au transit ou transbordement de marchandises ainsi que les commissions de transit portant sur des marchandises en transit ou transbordement.
+<br>		
+<br>	b) La manutention terre portant sur les marchandises exportées ou en transit, ainsi que :	
+<br>		
+<br>	– le déchargement du véhicule apportant la marchandise au port d’embarquement;	
+<br>		
+<br>	– le transport des marchandises pour leur transfert depuis les magasins ou les aires de stationnement jusqu’au quai d’embarquement.	
+<br>		
+<br>	c) Abrogé	
+<br>		
+<br>	Loi n° 2016-1116 du 08 décembre 2016, an. fiscale, art. 16.	
+<br>		
+<br>	d) Abrogé	
+<br>		
+<br>	Ord. n° 2011-121 du 22 juin 2011, an. fiscale, art. 5-2; loi n° 2016-1116 du 08 décembre 2016, an. fiscale, art. 16.	
+<br>		
+<br>	e) Abrogé	
+<br>		
+<br>	Loi n° 2016-1116 du 08 décembre 2016, an. fiscale, art. 16.	
+<br>		
+<br>	4–	Les prestations de services effectuées pour les besoins directs des navires de commerce maritime, des bateaux utilisés pour l’exercice d’une activité industrielle en haute mer, des bateaux de sauvetage et d’assistance en mer.
+<br>		
+<br>	La liste de ces prestations est fixée comme suit :	
+<br>		
+<br>	a)	Pilotage.
+<br>		
+<br>	b)	Amarrage.
+<br>		
+<br>	c)	Remorquage.
+<br>		
+<br>	d) Location de portiques.	
+<br>		
+<br>	e) Séjour des bateaux.	
+<br>		
+<br>	f)	Utilisation des installations portuaires.
+<br>		
+<br>	g)	Assistance et sauvetage de navires et de bateaux.
+<br>		
+<br>	h)	Entretien du navire et du matériel de bord.
+<br>		
+<br>	i)	Gardiennage et services de prévention et de lutte contre l’incendie.
+<br>		
+<br>	j)	Usage des installations aménagées pour la réception des passagers et des marchandises.
+<br>		
+<br>	k)	Usage des installations destinées à l’avitaillement des navires.
+<br>		
+<br>	l)	Visites de sécurité, examen des carènes, expertises techniques.
+<br>		
+<br>	m)	Expertises ayant trait à l’évaluation des dommages subis par des navires.
+<br>		
+<br>	Toutes les autres prestations non visées par le présent paragraphe restent soumises à la taxe sur la valeur ajoutée, conformément aux dispositions des articles 339 et suivants du présent Code.	
+<br>		
+<br>	5–	Les prestations de services effectuées pour les besoins directs de la cargaison des bateaux désignés au paragraphe 1 du présent article et dont la liste est fixée comme suit :
+<br>		
+<br>	a)	Les opérations de manutention bord, ces opérations comprenant :
+<br>		
+<br>	–	les opérations de chargement et de déchargement des bateaux;
+<br>		
+<br>	–	les opérations de manutention à bord accessoires au chargement, déchargement, transbordement, y compris les manipulations à bord du bateau.
+<br>		
+<br>	b)	La location de matériel pour le chargement ou le déchargement des bateaux.
+<br>		
+<br>	c)	Le gardiennage de la marchandise à bord des bateaux.
+<br>		
+<br>	d) Les opérations des consignataires maritimes et agents maritimes.	
+<br>		
+<br>	Loi n° 2021-899 du 21 déc. 2021, an. fiscale, art. 8-1.	
+<br>		
+<br>	6–	Les opérations de construction, de transformation, de réparation, d’entretien, d’affrètement et de location portant sur des aéronefs utilisés par des compagnies de navigation aérienne dont les services à destination ou en provenance de l’étranger représentent au moins 80 % de leur chiffre d’affaires, ainsi que la fourniture de tous articles et produits destinés à être incorporés dans ces aéronefs.
+<br>		
+<br>	7–	Les prestations de services effectuées pour les besoins directs des aéronefs désignés à l’alinéa 6 du présent article, et de leur cargaison, dont la liste est fixée comme suit :
+<br>		
+<br>	a) Atterrissage.	
+<br>		
+<br>	b) Usage des dispositifs d’éclairage.	
+<br>		
+<br>	c)	Stationnement, amarrage et abri des aéronefs.
+<br>		
+<br>	d) Usage des installations aménagées pour la réception des passagers et des marchandises.	
+<br>		
+<br>	e)	Usage des installations destinées à l’avitaillement des aéronefs.
+<br>		
+<br>	f)	Opérations techniques afférentes à l’arrivée, au stationnement et au départ des aéronefs.
+<br>		
+<br>	g)	Opérations de nettoyage, d’entretien et de réparation des aéronefs et des matériels et équipements de bord.
+<br>		
+<br>	h)	Gardiennage et services de prévention et de lutte contre l’incendie.
+<br>		
+<br>	i)	Visites de sécurité, expertises techniques.
+<br>		
+<br>	j)	Relevage et sauvetage des aéronefs.
+<br>		
+<br>	k)	Opérations des consignataires d’aéronefs et agents aériens.
+<br>		
+<br>	l)	Expertises ayant trait à l’évaluation des dommages subis par des aéronefs.
+<br>		
+<br>	8–	Les prestations effectuées pour les besoins directs de la cargaison des aéronefs désignés au paragraphe 6 ci-dessus dont la liste est fixée comme suit :
+<br>		
+<br>	a) Embarquement et débarquement des passagers et de leurs bagages.	
+<br>		
+<br>	b)	Chargement et déchargement des aéronefs.
+<br>		
+<br>	c) Manutention des marchandises accessoires au chargement et déchargement des aéronefs.	
+<br>		
+<br>	d)	Opérations d’assistance aux passagers, opérations relatives à l’enregistrement des passagers et à celui de leurs bagages.
+<br>		
+<br>	e)	Emission et réception des messages de trafic.
+<br>		
+<br>	f)	Opérations de trafic et de transit-correspondance.
+<br>		
+<br>	g)	Locations de matériels et équipements nécessaires au trafic aérien et utilisés sur l’aire des aéroports.
+<br>		
+<br>	h)	Locations de contenants et de matériels de protection de marchandises.
+<br>		
+<br>	i)	Gardiennage des marchandises.
+<br>		
+<br>	j) Magasinage des marchandises nécessaires au transport par voie aérienne.	
+<br>		
+<br>	k)	Expertise ayant trait à l’évaluation des dommages subis par les passagers et les marchandises.
+<br>		
+<br>	9–	Les livraisons de biens destinés à l’avitaillement des bateaux et des aéronefs désignés aux paragraphes 1 et 6 ci-dessus.
+<br>		
+<br>	Loi n° 2001-338 du 14 juin 2001, an. fiscale, art. 7.	
+<br>		
+<br>	10– Abrogé.	
+<br>		
+<br>	Ord. n° 2009-382 du 26 novembre 2009, an. fiscale, art.5-1; loi n° 2016-1116 du 08 décembre 2016, an. fiscale, art. 16.	
+<br>		
+<br>	11–	Abrogé
+<br>		
+<br>	Ord. n° 2009-382 du 26 novembre 2009, an. fiscale, art.5-2;	
+<br>		
+<br>	loi n° 2016-1116 du 08 décembre 2016, an. fiscale, art. 16.	
+<br>		
+<br>	12–	Les ventes de biens réalisées par les magasins de vente hors taxes y compris celles effectuées par les magasins sous-douane situés dans le hall « Arrivée » des aéroports internationaux.
+<br>		
+<br>	Loi n° 2005-161 du 27 avril 2005, an. fiscale, art. 4; loi n° 2017-870 du 27 décembre 2017, an. fiscale art. 3.	
+<br>		
+<br>	13–	Les prestations de services visées à l’article 352, non utilisées en Côte d’Ivoire effectuées pour le compte d’entreprises n’ayant pas d’installation professionnelle en Côte d’Ivoire lorsqu’elles ne sont pas imposables en Côte d’Ivoire.
+<br>		
+<br>	Ord. n° 2009-382 du 26 novembre 2009, an. fiscale, art.10	
+<br>		
+<br>	14-Abrogé.	
+<br>		
+<br>	Loi n° 2012-1179 du 27 décembre 2012, an. fiscale, art. 1er.	
+<br>		
+<br>	15- Les ventes de sacs de jute et de sisal aux exportateurs et aux sociétés opérant dans la filière du café et du cacao qui sont exclusivement destinés au conditionnement desdits produits.	
+<br>		
+<br>	Loi n° 2017-870 du 27 décembre 2017, an. fiscale art. 1.	
+<br>		
+<br>	16- Les ventes d’emballages aux exportateurs de produits agricoles, ainsi qu’aux exportateurs de produits agricoles transformés y compris les produits de la pêche, qui sont exclusivement destinés au conditionnement des produits effectivement exportés ou aux sociétés opérant dans la filière du café et du cacao.	
+<br>		
+<br>	Loi n° 2017-870 du 27 décembre 2017, an. fiscale art. 1.	
+
+   </div>
+ </span>
+ <finh22357>
+
+<span class="historique" id="h23357">
+   <div class="histText"> Art. 357 <br>
+	
+<br>		
+<p>Sont assimil&eacute;s &agrave; des exportations :</p>
+<p>1-Les op&eacute;rations de construction, de transformation, de r&eacute;paration, d'entretien, d'affr&egrave;tement et de location portant sur les b&acirc;timents de mer ivoiriens et &eacute;trangers de la marine marchande, les bateaux affect&eacute;s &agrave; la p&ecirc;che professionnelle maritime, les bateaux de sauvetage et d'assistance, ainsi que la fourniture de tous articles et produits destin&eacute;s &agrave; &ecirc;tre incorpor&eacute;s dans ces m&ecirc;mes b&acirc;timents et bateaux ou utilis&eacute;s pour leur exploitation.</p>
+<p>2-Les op&eacute;rations consistant dans la vente d'engins et filets de p&ecirc;che ainsi que la fourniture de tous les articles et produits destin&eacute;s aux bateaux pratiquant la p&ecirc;che professionnelle maritime.</p>
+<p>3-Les prestations de services suivantes :</p>
+<p>a)Les op&eacute;rations effectu&eacute;es par les commissionnaires agr&eacute;&eacute;s en douane et inh&eacute;rentes &agrave; l'exportation, au transit ou transbordement de marchandises ainsi que les commissions de transit portant sur des marchandises en transit ou transbordement.</p>
+<p>b)La manutention terre portant sur les marchandises export&eacute;es ou en transit, ainsi que :</p>
+<p>-le d&eacute;chargement du v&eacute;hicule apportant la marchandise au port d'embarquement;</p>
+<p>-le transport des marchandises pour leur transfert depuis les magasins ou les aires de stationnement jusqu'au quai d'embarquement.</p>
+<p>c)Abrog&eacute;.</p>
+<p>Loi n&deg; 2016-1116 du 08 d&eacute;cembre 2016, an. fiscale,Art. 16.</p>
+<p>d)Abrog&eacute;.</p>
+<p>Ord. n&deg;- 2011-121 du 22 juin 2011Art. 5-2; loi n&deg; 2016-1116 du 08 d&eacute;cembre 2016, an. fiscale,Art. 16.</p>
+<p>e)Abrog&eacute;.</p>
+<p>Loi n&deg; 2016-1116 du 08 d&eacute;cembre 2016, an. fiscale,Art. 16.</p>
+<p>4-Les prestations de services effectu&eacute;es pour les besoins directs des navires de commerce maritime, des bateaux utilis&eacute;s pour l'exercice d'une activit&eacute; industrielle en haute mer, des bateaux de sauvetage et d'assistance en mer.</p>
+<p>La liste de ces prestations est fix&eacute;e comme suit :</p>
+<p>a)Pilotage.</p>
+<p>b)Amarrage.</p>
+<p>c)Remorquage.</p>
+<p>d)Location de portiques.</p>
+<p>e)S&eacute;jour des bateaux.</p>
+<p>f)Utilisation des installations portuaires.</p>
+<p>g)Assistance et sauvetage de navires et de bateaux.</p>
+<p>h)Entretien du navire et du mat&eacute;riel de bord.</p>
+<p>i)Gardiennage et services de pr&eacute;vention et de lutte contre l'incendie.</p>
+<p>j)Usage des installations am&eacute;nag&eacute;es pour la r&eacute;ception des passagers et des marchandises.</p>
+<p>k)Usage des installations destin&eacute;es &agrave; l'avitaillement des navires.</p>
+<p>l)Visites de s&eacute;curit&eacute;, examen des car&egrave;nes, expertises techniques.</p>
+<p>m)Expertises ayant trait &agrave; l'&eacute;valuation des dommages subis par des navires.</p>
+<p>Toutes les autres prestations non vis&eacute;es par le pr&eacute;sent paragraphe restent soumises &agrave; la taxe sur la valeur ajout&eacute;e, conform&eacute;ment aux dispositions des articles 339 et suivants du pr&eacute;sent Code.</p>
+<p>5-Les prestations de services effectu&eacute;es pour les besoins directs de la cargaison des bateaux d&eacute;sign&eacute;s au paragraphe 1 du pr&eacute;sent article et dont la liste est fix&eacute;e comme suit :</p>
+<p>a)Les op&eacute;rations de manutention bord, ces op&eacute;rations comprenant :</p>
+<p>-les op&eacute;rations de chargement et de d&eacute;chargement des bateaux;</p>
+<p>-les op&eacute;rations de manutention &agrave; bord accessoires au chargement, d&eacute;chargement, transbordement, y compris les manipulations &agrave; bord du bateau.</p>
+<p>b)La location de mat&eacute;riel pour le chargement ou le d&eacute;chargement des bateaux.</p>
+<p>c)Le gardiennage de la marchandise &agrave; bord des bateaux.</p>
+<p>d) Les op&eacute;rations des consignataires maritimes et agents maritimes.</p>
+<p>Loi n&deg; 2021-899 du 21 d&eacute;c. 2021, an. fiscale,Art. 8-1.</p>
+<p>e) Les op&eacute;rations portant sur la v&eacute;rification et la certification du poids des conteneurs destin&eacute;s &agrave; l&rsquo;exportation. </p>
+<p>Loi n&deg; 2022-974 du 20 d&eacute;c. 2022, an. fiscale, art. 14</p>
+<p>&nbsp;</p>
+<p>6-Les op&eacute;rations de construction, de transformation, de r&eacute;paration, d'entretien, d'affr&egrave;tement et de location portant sur des a&eacute;ronefs utilis&eacute;s par des compagnies de navigation a&eacute;rienne dont les services &agrave; destination ou en provenance de l'&eacute;tranger repr&eacute;sentent au moins 80 % de leur chiffre d'affaires, ainsi que la fourniture de tous articles et produits destin&eacute;s &agrave; &ecirc;tre incorpor&eacute;s dans ces a&eacute;ronefs.</p>
+<p>7-Les prestations de services effectu&eacute;es pour les besoins directs des a&eacute;ronefs d&eacute;sign&eacute;s &agrave; l'alin&eacute;a 6 du pr&eacute;sent article, et de leur cargaison, dont la liste est fix&eacute;e comme suit :</p>
+<p>a)Atterrissage.</p>
+<p>b)Usage des dispositifs d'&eacute;clairage.</p>
+<p>c)Stationnement, amarrage et abri des a&eacute;ronefs.</p>
+<p>d)Usage des installations am&eacute;nag&eacute;es pour la r&eacute;ception des passagers et des marchandises.</p>
+<p>e)Usage des installations destin&eacute;es &agrave; l'avitaillement des a&eacute;ronefs.</p>
+<p>f)Op&eacute;rations techniques aff&eacute;rentes &agrave; l'arriv&eacute;e, au stationnement et au d&eacute;part des a&eacute;ronefs.</p>
+<p>g)Op&eacute;rations de nettoyage, d'entretien et de r&eacute;paration des a&eacute;ronefs et des mat&eacute;riels et &eacute;quipements de bord.</p>
+<p>h)Gardiennage et services de pr&eacute;vention et de lutte contre l'incendie.</p>
+<p>i)Visites de s&eacute;curit&eacute;, expertises techniques.</p>
+<p>j)Relevage et sauvetage des a&eacute;ronefs.</p>
+<p>k)Op&eacute;rations des consignataires d'a&eacute;ronefs et agents a&eacute;riens.</p>
+<p>l)Expertises ayant trait &agrave; l'&eacute;valuation des dommages subis par des a&eacute;ronefs.</p>
+<p>8-Les prestations effectu&eacute;es pour les besoins directs de la cargaison des a&eacute;ronefs d&eacute;sign&eacute;s au paragraphe 6 ci-dessus dont la liste est fix&eacute;e comme suit :</p>
+<p>a)Embarquement et d&eacute;barquement des passagers et de leurs bagages.</p>
+<p>b)Chargement et d&eacute;chargement des a&eacute;ronefs.</p>
+<p>c)Manutention des marchandises accessoires au chargement et d&eacute;chargement des a&eacute;ronefs.</p>
+<p>d)Op&eacute;rations d'assistance aux passagers, op&eacute;rations relatives &agrave; l'enregistrement des passagers et &agrave; celui de leurs bagages.</p>
+<p>e)Emission et r&eacute;ception des messages de trafic.</p>
+<p>f)Op&eacute;rations de trafic et de transit-correspondance.</p>
+<p>g)Locations de mat&eacute;riels et &eacute;quipements n&eacute;cessaires au trafic a&eacute;rien et utilis&eacute;s sur l'aire des a&eacute;roports.</p>
+<p>h)Locations de contenants et de mat&eacute;riels de protection de marchandises.</p>
+<p>i)Gardiennage des marchandises.</p>
+<p>j)Magasinage des marchandises n&eacute;cessaires au transport par voie a&eacute;rienne.</p>
+<p>k)Expertise ayant trait &agrave; l'&eacute;valuation des dommages subis par les passagers et les marchandises.</p>
+<p>9-Les livraisons de biens destin&eacute;s &agrave; l'avitaillement des bateaux et des a&eacute;ronefs d&eacute;sign&eacute;s aux paragraphes 1 et 6 ci-dessus.</p>
+<p>Loi n&deg;- 2001-338 du 14 juin 2001, an. fiscale,Art. 7.</p>
+<p>10-Abrog&eacute; </p>
+<p>Ord. n&deg;- 2009-382 du 26 novembre 2009Art.5-1; loi n&deg; 2016-1116 du 08 d&eacute;cembre 2016, an. fiscale,Art. 16.</p>
+<p>11-Abrog&eacute;</p>
+<p>Ord. n&deg;- 2009-382 du 26 novembre 2009Art.5-2; loi n&deg; 2016-1116 du 08 d&eacute;cembre 2016, an. fiscale,Art. 16.</p>
+<p>Le b&eacute;n&eacute;fice des dispositions du paragraphe 10 et de l'alin&eacute;a premier du pr&eacute;sent paragraphe est subordonn&eacute; &agrave; la tenue d'un registre d&eacute;taill&eacute; nominatif des ventes effectu&eacute;es au profit des personnes ayant justifi&eacute; de leur qualit&eacute; d'exportateur.</p>
+<p>12-	Les ventes de biens r&eacute;alis&eacute;es par les magasins de vente hors taxes y compris celles effectu&eacute;es par les magasins sous-douane situ&eacute;s dans le hall &laquo; Arriv&eacute;e &raquo; des a&eacute;roports internationaux.</p>
+<p>Loi n&deg;- 2005-161 du 27 avril 2005, an. fiscale,Art. 4; loi n&deg; 2017-870 du 27 d&eacute;cembre 2017, an. fiscaleArt. 3.</p>
+<p>13-Les prestations de services vis&eacute;es &agrave; l'article 352, non utilis&eacute;es en C&ocirc;te d'Ivoire effectu&eacute;es pour le compte d'entreprises n'ayant pas d'installation professionnelle en C&ocirc;te d'Ivoire lorsqu'elles ne sont pas imposables en C&ocirc;te d'Ivoire.</p>
+<p>Ord. n&deg;- 2009-382 du 26 novembre 2009Art.10</p>
+<p>14-Abrog&eacute;.</p>
+<p>Loi n&deg;- 2012-1179 du 27 d&eacute;cembre 2012, an. fiscale,Art. 1er.</p>
+<p>15- Les ventes de sacs de jute et de sisal aux exportateurs et aux soci&eacute;t&eacute;s op&eacute;rant dans la fili&egrave;re du caf&eacute; et du cacao qui sont exclusivement destin&eacute;s au conditionnement desdits produits.</p>
+<p>16- Les ventes d'emballages aux exportateurs de produits agricoles, ainsi qu'aux exportateurs de produits agricoles transform&eacute;s y compris les produits de la p&ecirc;che, qui sont exclusivement destin&eacute;s au conditionnement des produits effectivement export&eacute;s ou aux soci&eacute;t&eacute;s op&eacute;rant dans la fili&egrave;re du caf&eacute; et du cacao.</p>
+<p>Loi n&deg; 2017-870 du 27 d&eacute;cembre 2017, an. fiscaleArt. 1.</p>
+ </div>
+ </span>
+ <finh23357>
+
+
+</div></div> <!-- wrapper -->
+	  <div id="articleList"><div id="contenu" style='height:auto; background-color:#FFFFCC'>&nbsp;</div>
+      </div><p>&nbsp;</p><p>&nbsp;</p><p>&nbsp;</p><p>&nbsp;</p><p>&nbsp;</p><p>&nbsp;</p><p>&nbsp;</p><p>&nbsp;</p><p>&nbsp;</p><p>&nbsp;</p>
+	  <p>&nbsp;</p><p>&nbsp;</p><p>&nbsp;</p><p>&nbsp;</p><p>&nbsp;</p><p>&nbsp;</p></BODY></HTML>
+	  

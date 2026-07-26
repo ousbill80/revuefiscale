@@ -1,0 +1,562 @@
+<!DOCTYPE HTML><HTML><HEAD><META HTTP-EQUIV="Content-Type" CONTENT="text/html; charset=UTF-8">
+<TITLE>Code des impots -236</TITLE><LINK REL="STYLESHEET" HREF="/cicgi.css" CHARSET="ISO-8859-1" TYPE="text/css">
+<style type="text/css">
+body {margin-left: 5px;	margin-top: 0px; margin-right: .5em;margin-bottom: 0px;background-color:#fafafa ;}
+.Liste-Numerote {font-size: 12pt;font-weight: regular;font-style: italic;color: #000000;text-transform: none;margin-left:8px ;margin-bottom:8px ;margin-top:4px ;margin-right:10px ;font-family:Georgia, "Times New Roman", Times, serif}
+li {list-style-type: none; margin-left:0px ; padding-left:0em ; }
+.Paratext {font-size: 12pt;font-weight: regular;font-style: italic;color: #000000;text-decoration: none;vertical-align: baseline;text-transform: none;margin-left:0px ;font-family:Georgia, "Times New Roman", Times, serif}
+.Normal {font-size: 12pt;font-weight: regular;font-style: italic;color: #000000;text-decoration: none;vertical-align: baseline;text-transform: none;margin-left:0px ;font-family:Georgia, "Times New Roman", Times, serif}
+ul {list-style-type: none; margin-left:0px ; padding-left:0em ;  }
+.Liste2-Enumeree {font-size: 12pt;font-weight: regular;font-style: italic;color: #000000;text-decoration: none;vertical-align: baseline;text-transform: none;list-style-type:none ;margin-left:16px ;margin-bottom:8px;margin-right:10px;font-family:Georgia, "Times New Roman", Times, serif}
+P.Liste2-Enumeree {font-size: 12pt;font-weight: regular;font-style: italic;color: #000000;text-decoration: none;vertical-align: baseline;text-transform: none;list-style-type:none ;margin-left:16px ;margin-bottom:8px;margin-right:10px;font-family:Georgia, "Times New Roman", Times, serif}
+.Entete {font-size: 13pt;font-weight: regular;font-style: italic;color:#000000 ;text-decoration: none;vertical-align: baseline;text-transform: none;margin-left:8px ;font-family:Georgia, "Times New Roman", Times, serif}
+table, TABLE {border-width:1px; width:99% ;border-collapse:collapse;border-color: #9ecaed;box-shadow: 0 0 10px #9ecaed;}
+tr,td {text-align:left;vertical-align:bottom;border:1px solid #9ecaed;padding:.2em;marging-left:.2em}
+th, TH{text-align:center;vertical-align:middle;padding:.2em;}
+P.TableauEntete {font-size: 13pt;font-weight: regular;font-style: italic;color: #000000;font-family:Georgia, "Times New Roman"}
+P.TableauCelluleLeft, P.TableauCellule {text-align:right;margin-right:1em;font-size: 13pt;font-weight: regular;font-style: italic;color: #000000;font-family:Georgia, "Times New Roman"}
+P.TableauCelluleRight {text-align:left;margin-left:1em;font-size: 13pt;font-weight: regular;font-style: italic;color: #000000;font-family:Georgia, "Times New Roman"}
+.ui-buttonh {padding: .1em .1em ; border: 1px solid #dadada;border-radius: 4px; box-shadow: 0 0 4px #9ecaed;color:#FF3300 ;margin-left:8px ;margin-right:8px ;margin-bottom:2px ;margin-top:2px ;text-decoration:none ;font-size:12pt ;font-family:"Times New Roman"}   
+.ui-button {padding: .1em .1em ; border: 1px solid #dadada;border-radius: 4px; box-shadow: 0 0 4px #9ecaed;color:#FF3300 ;margin-left:8px ;margin-right:8px ;margin-bottom:2px ;margin-top:2px ;text-decoration:none ;font-size:12pt ;font-family:"Times New Roman"}   
+H3 {display: block;text-align: center;text-indent: 0pt;margin-top: 10pt;margin-bottom: 10pt;margin-right: 10pt;margin-left: 10pt;font-size: 12pt;font-weight: Bold;font-style: Regular;color: #00A000;text-decoration: none;vertical-align: baseline;text-transform: none;font-family: "Times New Roman";}
+H4 {display: block;text-align: left;text-indent: 0pt;margin-top: 10pt;margin-bottom: 6pt;margin-right: 10pt;margin-left: 10pt;font-size: 12pt;font-weight: Bold;font-style: Regular;color: #000000;text-decoration: none;vertical-align: baseline;text-transform: none;font-family: "Times New Roman";}
+H5 {display: block;text-align: left;text-indent: 0pt;margin-top: 10pt;margin-bottom: 6pt;margin-right: 10pt;margin-left: 10pt;font-size: 11pt;font-weight: Bold;font-style: Regular;color: #000000;text-decoration: none;vertical-align: baseline;text-transform: none;font-family: "Times New Roman";}
+H6.NoArticle {display: block;text-align: left;text-indent: 0pt;margin-top: 14pt;margin-bottom: 0pt;margin-right: 0pt;margin-left: 0pt;font-size: 14pt;font-weight: regular;font-style: Regular;color: #00a000;text-decoration: none;vertical-align: baseline;text-transform: none;font-family: "Times New Roman";}
+H2 {text-align:center;font-size:16pt;font-family:Georgia, "Times New Roman", Times, serif}
+P.ParaText {font-size: 12pt;font-weight: regular;font-style: italic;color: #000000;	text-decoration: none;vertical-align: baseline;text-transform: none;font-family:Georgia, "Times New Roman", Times, serif;}
+H2.Section,P.Section {font-size:12pt;font-weight:bold;font-style:Regular;color:#008000;font-family:Georgia,"Times New Roman"}
+P.Paragraphe, p.Paragraphe {Text-Align:center;Text-decoration:none;font-size:12pt;font-weight:bold;font-style:Normal;color:#00A000;font-family:Georgia,"Times New Roman"}
+H2.Livre,P.Livre {text-align:center;font-size:16pt;font-weight:bold;font-style:Regular;color:#008000;font-family:Georgia,"Times New Roman"}
+P.Partie,H2.Partie,P.TitreSub {text-align:center;font-size:14pt;font-weight:bold;font-style:Regular;color:#008000;font-family:Georgia,"Times New Roman"}
+H2.ChapitreNo,H2.TitreNo {text-align:center;font-size:14pt;font-weight:bold;font-style:Regular;color:#008000;font-family:Georgia,"Times New Roman"}
+H2.Chapitre, h2.Chapitre {text-align:center;font-size:14pt;font-weight:bold;font-style:Regular;color:#008000;font-family:Georgia,"Times New Roman"}
+H2.TitreNo {text-align:center;font-size:14pt;font-weight:bold;font-style:Regular;color:#008000;font-family:Georgia,"Times New Roman"}
+h3.Sous-Section, H3.Sous-Section, h3.Sous-section, h2.Section {font-size:12pt;font-weight:bold;font-style:Italic;color:#008000;font-family:Georgia,"Times New Roman"}
+hr,HR { display: block; width:90%;  margin-top: 0.5em; margin-bottom: 0.5em; margin-left: auto;  margin-right: auto;  border-style: inset; border-width: 1px;}
+P.TitreSub {text-align:center;font-size:14pt;font-weight:bold;font-style:Regular;color:#008000;font-family:Georgia,"Times New Roman"}
+.Reference {display: block;text-align: left;text-indent: 0pt;margin-top: 10pt;margin-bottom: 6pt;margin-right: 10pt;margin-left: 10pt;font-size: 14pt;font-weight: Bold;font-style: Regular;color: #7F5434;text-decoration: none;vertical-align: baseline;text-transform: none;font-family: "Times New Roman";}
+.ludwig,blockquote {padding-left:1em;background-color:#fafafa;font-size:12pt;font-weight:100;font-style:italic;}
+#articleList {position:absolute ;	z-index: 1 ;left: 10px ;top: 80px ;height:340px;width: 620px;border: 2px solid #cacaca ;border-radius: 5px ;background-color:#fafafa ;    box-shadow: 0 0 12px #333333;	margin-left:0px ;	padding: .3em .3em ;		overflow:hidden ;	visibility:hidden ;  }			
+#articleList h3 { text-align: center; margin: 0; }		
+
+.historique {
+  display:none ;
+  padding: .1em .3em ;
+  border: solid 2px #dadada;
+  border-radius: 7px;
+  box-shadow: 0 0 5px #9ecaed;  
+  
+}
+.histText {
+    display: block;
+    font-family: ;"Times New Roman"
+	padding: .1em .3em ;
+    margin: 1em 0px;
+	font-style:italic;
+	color:#000000;
+	overflow:auto;
+}
+.highlight {
+  font-weight:bold ;
+  color:#000000 ;
+  background-color:#FFFFCC ;
+  }
+.articleList-scroll {
+	overflow-x:hidden ;
+	overflow-y:scroll ;
+	scrollbar-width:thin ;
+	scrollbar-color:blue orange ;
+}
+
+#contenu {
+	overflow-x:hidden ;
+    overflow-y:scroll ;
+	scrollbar-width:thin ;
+	scrollbar-color:blue orange ;
+}		
+
+table, TABLE {
+ text-align:center; 
+    margin-left:.5em; 
+    margin-right:.5em; 
+    border:1px solid #000000;	
+	border-collapse:collapse ;
+    border-color: #9ecaed;
+    box-shadow: 0 0 10px #9ecaed;
+	
+   }
+  tr,td {text-align:left;}
+  
+
+
+ </style>
+ 
+<script src="/js/iscroll.js"></script>
+<script src="/js/jquery.js"></script>   
+<script src="/js/jquery-ui-1.10.3.custom.js"></script>    	    
+<script src="/js/jquery.ui.draggable.js" type="text/javascript"></script>			
+<script src="/js/jquery.ui.core.js"></script> 			
+<script src="/js/jquery.ui.widget.js"></script>			
+<script src="/js/jquery.ui.position.js"></script>			
+<script src="/js/jquery.ui.menu.js"></script>    		
+<script type="text/javascript" src="./xpages.js"></script>
+/* VERSION POUR PAGE HTML SUR SITE DGI.CGICI.COM */
+<script language="javascript">
+ function showButton(id) {
+    var x = document.getElementById(id) ;
+	if(x.style.display === "none") {
+	   x.style.display = "block" ;
+	  } else {
+	   x.style.display = "none" ;
+	   }
+	 }   
+	 var pagenumber="236";
+function loadpage(page, art) {
+      showHideHistoric(art);
+	  return false;
+	  } 
+function loadArticle(page, art) { var artno = art ;var pgno=page;scrolltoelementTag(pgno,artno) ;return false ;} 
+
+</script>
+</HEAD>
+<BODY><div ID="wrapper"><div ID="scroller">
+
+
+
+<H2 CLASS="ChapitreNo">
+
+<HR>
+
+Chapitre II</H2>
+
+
+<H2 CLASS="Chapitre">
+Exemption des actes des autorit&eacute;s publiques et assimil&eacute;es et des actes effectu&eacute;s avec leur concours
+<HR>
+
+</H2>
+<P CLASS="Paragraphe">
+Actes des comptables publics</P>
+<span id="#A0963"></span>
+<H6 CLASS="NoArticle">
+Art. 963</H6>
+<P CLASS="ParaText">
+Sont dispens&eacute;es du droit de timbre &eacute;dict&eacute; par l&apos;article <a class='ui-button' href='' onclick="scrolltoelementTag('873');return false;">873</a>, les quittances de toute nature donn&eacute;es ou re&ccedil;ues par les comptables publics.</P>
+<P CLASS="ParaText">
+La d&eacute;livrance des quittances dans les cas vis&eacute;s &agrave; l&apos;alin&eacute;a pr&eacute;c&eacute;dent n&apos;en demeure pas moins obligatoire.</P>
+<P CLASS="Paragraphe">
+Actes des collectivit&eacute;s publiques</P>
+
+<span id="#A0964"></span>
+<H6 CLASS="NoArticle">
+Art. 964</H6>
+<P CLASS="ParaText">
+Les acquisitions et &eacute;changes faits par les collectivit&eacute;s publiques, les partages de biens entre ces collectivit&eacute;s et les particuliers et en g&eacute;n&eacute;ral tous autres actes dont les droits seraient support&eacute;s par ces collectivit&eacute;s sont exempts de timbre.</P>
+
+<H6 CLASS="Modification">
+Loi n<b>&deg;-</b> 86-1383 du 19 d&eacute;c. 1986, an. fiscale,Art. 10.</H6>
+
+
+<span id="#A0965"></span>
+<H6 CLASS="NoArticle">
+Art. 965</H6>
+<P CLASS="ParaText">
+Tous les actes, arr&ecirc;t&eacute;s et d&eacute;cisions des autorit&eacute;s administratives, non d&eacute;nomm&eacute;s dans l&apos;article <a class='ui-button' href='' onclick="scrolltoelementTag('827');return false;">827</a> et dans l&apos;article <a class='ui-button' href='' onclick="scrolltoelementTag('829');return false;">829</a> sont exempts de timbre.</P>
+<P CLASS="ParaText">
+Sont &eacute;galement exon&eacute;r&eacute;s les registres de toutes les Administrations publiques.</P>
+
+<span id="#A0966"></span>
+<H6 CLASS="NoArticle">
+Art. 966</H6>
+<P CLASS="ParaText">
+L&apos;attestation administrative d&apos;id-entit&eacute; institu&eacute;e par le d&eacute;cret n<b>&deg;-</b> 94-348 du 22 juin 1994 est exon&eacute;r&eacute;e de timbre fiscal.</P>
+
+<H6 CLASS="Modification">
+Ord. n<b>&deg;-</b> 95-106 du 10 f&eacute;vrier 1995, art 1er.</H6>
+
+
+<span id="#A0967"></span>
+<H6 CLASS="NoArticle">
+Art. 967</H6>
+<P CLASS="ParaText">
+Sont exempt&eacute;s de la formalit&eacute; du timbre les actes de proc&eacute;dure &agrave; la requ&ecirc;te du Minist&egrave;re public, ayant pour objet :</P>
+<P CLASS="Liste2-Enumeree">
+1-De r&eacute;parer les omissions et faire les rectifications sur les registres de l&apos;&eacute;tat civil d&apos;actes qui int&eacute;ressent les individus notoirement indigents.</P>
+<P CLASS="Liste2-Enumeree">
+2-De remplacer les registres de l&apos;&eacute;tat civil perdus ou incendi&eacute;s et de suppl&eacute;er aux registres qui n&apos;auraient pas &eacute;t&eacute; tenus.</P>
+<P CLASS="Liste2-Enumeree">
+Sont vis&eacute;s pour timbre gratis les jugements &agrave; la requ&ecirc;te du minist&egrave;re public ayant le m&ecirc;me objet.</P>
+
+<span id="#A0968"></span>
+<H6 CLASS="NoArticle">
+Art. 968</H6>
+<P CLASS="ParaText">
+Sont exempt&eacute;s du timbre tous les actes relatifs aux proc&eacute;dures introduites &agrave; la requ&ecirc;te du Minist&egrave;re public et ayant pour objet de reconstituer les registres de l&apos;&eacute;tat civil d&eacute;truits, perdus ou disparus par suite de sinistres.</P>
+<P CLASS="ParaText">
+Les jugements sur ces proc&eacute;dures sont vis&eacute;s pour timbre gratis.</P>
+
+<span id="#A0969"></span>
+<H6 CLASS="NoArticle">
+Art. 969</H6>
+<P CLASS="ParaText">
+Sont affranchis des droits de timbre les avis de parents de mineurs dont l&apos;indigence est constat&eacute;e conform&eacute;ment &agrave; l&apos;article <a class='ui-button' href='' onclick="scrolltoelementTag('1043');return false;">1043</a> du Code g&eacute;n&eacute;ral des Imp&ocirc;ts. Les actes n&eacute;cessaires pour la convocation et la constitution des conseils de famille et l&apos;homologation des d&eacute;lib&eacute;rations prises dans ces conseils dans le cas d&apos;indigence des mineurs en sont &eacute;galement affranchis.</P>
+<P CLASS="ParaText">
+Les personnes dont l&apos;interdiction est demand&eacute;e et les interdits sont, dans le m&ecirc;me cas, assimil&eacute;s aux mineurs.</P>
+<P CLASS="ParaText">
+Ces dispenses sont applicables aux actes et jugements n&eacute;cessaires pour l&apos;organisation et la surveillance de la tutelle des enfants naturels.</P>
+
+<span id="#A0970"></span>
+<H6 CLASS="NoArticle">
+Art. 970</H6>
+<P CLASS="ParaText">
+Les quittances des secours pay&eacute;s aux indigents, les certificats d&apos;indigence sont exempt&eacute;s du droit et de la formalit&eacute; du timbre.</P>
+<P CLASS="ParaText">
+Les passeports ainsi que les visas de passeports &agrave; d&eacute;livrer aux personnes v&eacute;ritablement indigentes et reconnues hors d&apos;&eacute;tat d&apos;en acquitter le montant, sont d&eacute;livr&eacute;s gratuitement.</P>
+
+<span id="#A0971"></span>
+<H6 CLASS="NoArticle">
+Art. 971</H6>
+<P CLASS="ParaText">
+Sont dispens&eacute;s de timbre les adjudications au rabais et march&eacute;s pour constructions, r&eacute;parations, entretien, approvisionnements et fournitures dont le prix doit &ecirc;tre pay&eacute; par les collectivit&eacute;s publiques.</P>
+<span id="#A0972"></span>
+<H6 CLASS="NoArticle">
+Art. 972</H6>
+<P CLASS="ParaText">
+Sont dispens&eacute;s de timbre, les actes de confirmation de vente de caf&eacute;, de cacao, de coton, d&apos;anacarde, de karit&eacute; et de cola &agrave; l&apos;exportation, ainsi que les formules d&eacute;livr&eacute;es par les structures de r&eacute;gulation comp&eacute;tentes de ces produits lorsqu&apos;elles existent, pour l&apos;apurement desdites confirmations de vente.</P>
+
+
+<H6 CLASS="Modification">
+Loi n<b>&deg;-</b> 98-742 du 23 d&eacute;cembre 1998, an. fiscale, art 17- 2<b>&deg;-</b>; loi n<b>&deg;-</b> 2003-206 du 7 juillet 2003, an. fiscale,Art. 30-4; Ord. n<b>&deg;-</b> 2009-382 du 26 novembre 2009Art.22-6.</H6>
+
+
+<span id="#A0973"></span>
+<H6 CLASS="NoArticle">
+Art. 973</H6>
+<P CLASS="ParaText">
+Sont exempts de timbre :</P>
+<P CLASS="Liste2-Enumeree">
+1-Tous les comptes rendus par les comptables publics, les doubles, autres que celui du comptable, de chaque compte de recette ou gestion particuli&egrave;re et priv&eacute;e.</P>
+<P CLASS="Liste2-Enumeree">
+2-Les registres des receveurs des contributions publiques et autres pr&eacute;pos&eacute;s.</P>
+<P CLASS="Paragraphe">
+D&eacute;cision de justice et recours devant les tribunaux portant condamnation</P>
+
+<span id="#A0974"></span>
+<H6 CLASS="NoArticle">
+Art. 974</H6>
+<P CLASS="ParaText">
+Sont affranchies du droit de timbre les d&eacute;cisions de justice portant recouvrement de cr&eacute;ances.</P>
+
+<H6 CLASS="Modification">
+Loi n<b>&deg;-</b> 91-997 du 2 d&eacute;c. 1991, an. fiscale,Art. 10.</H6>
+
+
+<span id="#A0975"></span>
+<H6 CLASS="NoArticle">
+Art. 975</H6>
+<P CLASS="ParaText">
+Les copies, certifi&eacute;es conformes par le requ&eacute;rant, qui accompagnent les requ&ecirc;tes pr&eacute;sent&eacute;es soit par des particuliers, soit par l&apos;Administration, au cours des proc&egrave;s qui les opposent, et qui sont destin&eacute;es &agrave; &ecirc;tre notifi&eacute;es aux parties en cause, ne sont pas assujetties au timbre.</P>
+
+<span id="#A0976"></span>
+<H6 CLASS="NoArticle">
+Art. 976</H6>
+<P CLASS="ParaText">
+Les recours devant la chambre comp&eacute;tente de la Cour Supr&ecirc;me ont lieu sans frais et sans l&apos;intervention d&apos;un avocat en mati&egrave;re :</P>
+<P CLASS="Liste2-Enumeree">
+1-D&apos;&eacute;lections.</P>
+<P CLASS="Liste2-Enumeree">
+2-De contraventions aux lois et r&egrave;glements sur la grande voirie et autres contraventions dont la r&eacute;pression appartient aux tribunaux administratifs.</P>
+<P CLASS="Paragraphe">
+Tribunaux du travail</P>
+
+<span id="#A0977"></span>
+<H6 CLASS="NoArticle">
+Art. 977</H6>
+<P CLASS="ParaText">
+Sont dispens&eacute;s du timbre :</P>
+<P CLASS="ParaText">
+1 -Les actes de proc&eacute;dure, les jugements et tous actes n&eacute;cessaires &agrave; leur ex&eacute;cution dans les proc&eacute;dures devant les tribunaux du travail ou les juridictions en tenant lieu en C&ocirc;te d&apos;Ivoire.</P>
+<P CLASS="ParaText">
+Cette disposition est applicable aux causes port&eacute;es en appel ou devant la Cour Supr&ecirc;me, jusque et y compris les significations des arr&ecirc;ts d&eacute;finitifs, ainsi qu&apos;&agrave; toutes les causes qui sont de la comp&eacute;tence des tribunaux du travail et dont les juges sont saisis dans les lieux o&ugrave; ces conseils ne sont pas &eacute;tablis.</P>
+<P CLASS="ParaText">
+2 -Les pouvoirs pour se faire repr&eacute;senter devant les tribunaux du travail.</P>
+<P CLASS="ParaText">
+Ces pouvoirs peuvent &ecirc;tre donn&eacute;s en bas de l&apos;original ou de la copie de l&apos;assignation.</P>
+<P CLASS="Paragraphe">
+Imp&ocirc;ts et taxes</P>
+
+<span id="#A0978"></span>
+<H6 CLASS="NoArticle">
+Art. 978</H6>
+<P CLASS="ParaText">
+Sont exempts de la formalit&eacute; du timbre :</P>
+<P CLASS="Liste2-Enumeree">
+1-Les actes et pi&egrave;ces relatifs aux commandements, saisies et ventes, ayant pour objet le recouvrement des imp&ocirc;ts et des taxes assimil&eacute;es.</P>
+<P CLASS="Liste2-Enumeree">
+2-Les quittances ou r&eacute;c&eacute;piss&eacute;s d&eacute;livr&eacute;s aux collecteurs et receveurs de deniers publics; celles que les collecteurs des imp&ocirc;ts et taxes peuvent d&eacute;livrer aux contribuables et celles des imp&ocirc;ts et taxes qui s&apos;exp&eacute;dient sur les actes.</P>
+<P CLASS="Liste2-Enumeree">
+3-Les r&eacute;clamations de toute nature pr&eacute;sent&eacute;es par les contribuables en mati&egrave;re  d&apos;imp&ocirc;ts directs et de taxes assimil&eacute;es.</P>
+
+<span id="#A0979"></span>
+<H6 CLASS="NoArticle">
+Art. 979</H6>
+<P CLASS="ParaText">
+Sont exempt&eacute;s du droit de timbre :</P>
+<P CLASS="Liste2-Enumeree">
+1-Les inscriptions sur le Grand Livre de la Dette nationale et les effets publics.</P>
+<P CLASS="Liste2-Enumeree">
+2-Les actes sous seing priv&eacute; tendant uniquement &agrave; la liquidation de la dette publique et en tant qu&apos;ils servent aux op&eacute;rations de liquidation, ainsi que les actes des Administrations et commissaires liquidateurs relatifs auxdites liquidations.</P>
+<P CLASS="Paragraphe">
+D&eacute;claration d&apos;appel</P>
+
+<span id="#A0980"></span>
+<H6 CLASS="NoArticle">
+Art. 980</H6>
+<P CLASS="ParaText">
+L&apos;exploit d&apos;huissier relatif &agrave; l&apos;appel, vis&eacute; &agrave; l&apos;article 164 de la loi n<b>&deg;-</b> 72-853 du 21 d&eacute;cembre 1972 portant Code de proc&eacute;dure civile, commerciale et administrative telle que modifi&eacute;e par les lois n<b>&deg;-</b> 78-663 du 5 ao&ucirc;t 1978 et n<b>&deg;-</b> 93-670 du 9 ao&ucirc;t 1993 est d&eacute;livr&eacute; sans frais.</P>
+<P CLASS="Paragraphe">
+Dommages &agrave; la propri&eacute;t&eacute; priv&eacute;e</P>
+
+<span id="#A0981"></span>
+<H6 CLASS="NoArticle">
+Art. 981</H6>
+<P CLASS="ParaText">
+Les plans, proc&egrave;s-verbaux, significations, certificats, jugements, contrats, quittances et autres actes faits en vertu de la r&eacute;glementation sur les dommages caus&eacute;s &agrave; la propri&eacute;t&eacute; priv&eacute;e par l&apos;ex&eacute;cution des travaux publics sont exempt&eacute;s du timbre.</P>
+<P CLASS="Paragraphe">
+Douanes</P>
+
+<span id="#A0982"></span>
+<H6 CLASS="NoArticle">
+Art. 982</H6>
+<P CLASS="ParaText">
+Sont dispens&eacute;s du timbre les proc&egrave;s-verbaux rapport&eacute;s &agrave; la requ&ecirc;te de l&apos;Administration des Douanes et les soumissions en tenant lieu.</P>
+<P CLASS="Paragraphe">
+Elections</P>
+
+<span id="#A0983"></span>
+<H6 CLASS="NoArticle">
+Art. 983</H6>
+<P CLASS="ParaText">
+Tous les actes judiciaires en mati&egrave;re &eacute;lectorale sont dispens&eacute;s de timbre.</P>
+<P CLASS="ParaText">
+Les extraits des actes de naissance n&eacute;cessaires pour &eacute;tablir l&apos;&acirc;ge des &eacute;lecteurs sont d&eacute;livr&eacute;s gratuitement, sur papier libre, &agrave; tout r&eacute;clamant. Ils portent, en t&ecirc;te de leur texte, l&apos;&eacute;nonciation de leur destination sp&eacute;ciale et ne sont admis pour aucune autre.</P>
+<P CLASS="ParaText">
+Est jug&eacute; sans frais et dispens&eacute; du timbre le recours exerc&eacute; contre la d&eacute;cision ayant statu&eacute; sur une r&eacute;clamation formul&eacute;e contre les op&eacute;rations &eacute;lectorales locales.</P>
+<P CLASS="Paragraphe">
+Propri&eacute;t&eacute;s fonci&egrave;res et hypoth&egrave;ques</P>
+
+<span id="#A0984"></span>
+<H6 CLASS="NoArticle">
+Art. 984</H6>
+<P CLASS="ParaText">
+Sont affranchis du timbre :</P>
+<P CLASS="Liste2-Enumeree">
+1-Les registres de toute nature, tenus par la Conservation de la propri&eacute;t&eacute; fonci&egrave;re et des hypoth&egrave;ques.</P>
+<P CLASS="Liste2-Enumeree">
+2-Les bordereaux et certificats d&apos;inscriptions.</P>
+<P CLASS="Liste2-Enumeree">
+3-Les pi&egrave;ces produites par les requ&eacute;rants pour obtenir l&apos;accomplissement des formalit&eacute;s hypoth&eacute;caires et qui restent d&eacute;pos&eacute;es &agrave; la Conservation de la propri&eacute;t&eacute; fonci&egrave;re et des hypoth&egrave;ques.</P>
+<P CLASS="Liste2-Enumeree">
+4-Les reconnaissances de d&eacute;p&ocirc;ts remises aux requ&eacute;rants et les &eacute;tats, certificats, extraits et copies dress&eacute;s par les conservateurs.</P>
+<P CLASS="Liste2-Enumeree">
+5-Les copies des actes, destin&eacute;es &agrave; &ecirc;tre d&eacute;pos&eacute;es &agrave; la Conservation de la propri&eacute;t&eacute; fonci&egrave;re et des hypoth&egrave;ques.</P>
+<P CLASS="Liste2-Enumeree">
+Les pi&egrave;ces vis&eacute;es aux num&eacute;ros 3 et 5 ci-dessus mentionnent express&eacute;ment qu&apos;elles sont destin&eacute;es &agrave; &ecirc;tre d&eacute;pos&eacute;es &agrave; la conservation de la propri&eacute;t&eacute; fonci&egrave;re et des hypoth&egrave;ques pour obtenir l&apos;accomplissement d&apos;une formalit&eacute; qui doit &ecirc;tre sp&eacute;cifi&eacute;e.</P>
+<P CLASS="Liste2-Enumeree">
+Elles ne peuvent servir &agrave; aucune autre fin, sous peine de 2 000 francs d&apos;amende, outre le paiement des droits, contre ceux qui en font usage.</P>
+<P CLASS="Paragraphe">
+Banque Centrale des Etats de l&apos;Afrique de l&apos;Ouest</P>
+
+<span id="#A0985"></span>
+<H6 CLASS="NoArticle">
+Art. 985</H6>
+<P CLASS="ParaText">
+Sont dispens&eacute;s du timbre :</P>
+<P CLASS="Liste2-Enumeree">
+-les actes, pi&egrave;ces ou &eacute;crits concernant la Banque Centrale des Etats de l&apos;Afrique de l&apos;Ouest, exempt&eacute;s du droit d&apos;enregistrement par l&apos;article <a class='ui-button' href='' onclick="scrolltoelementTag('617');return false;">617</a>;</P>
+<P CLASS="Liste2-Enumeree">
+-les produits, les plus-values et les transactions se rapportant aux titres d&apos;Etat &eacute;mis par les Etats membres de l&apos;Union Mon&eacute;taire Ouest Africaine en repr&eacute;sentation des concours consolid&eacute;s de la Banque Centrale des Etats de l&apos;Afrique de l&apos;Ouest.</P>
+
+<H6 CLASS="Modification">
+Loi n<b>&deg;-</b>97-710 du 20 d&eacute;cembre 1997, an fiscale,Art. 13.</H6>
+<P CLASS="Paragraphe">
+Justice militaire</P>
+
+
+<span id="#A0986"></span>
+<H6 CLASS="NoArticle">
+Art. 986</H6>
+<P CLASS="ParaText">
+Toutes assignations, citations et notifications aux t&eacute;moins, inculp&eacute;s ou accus&eacute;s, vis&eacute;es par le Code de Justice militaire, sont faites sans frais par la Gendarmerie ou par tous autres agents de la force publique.</P>
+<P CLASS="Paragraphe">
+Livre de commerce</P>
+
+<span id="#A0987"></span>
+<H6 CLASS="NoArticle">
+Art. 987</H6>
+<P CLASS="ParaText">
+Les livres de commerce sont affranchis du timbre.</P>
+<P CLASS="Paragraphe">
+Manifestes des navires</P>
+
+<span id="#A0988"></span>
+<H6 CLASS="NoArticle">
+Art. 988</H6>
+<P CLASS="ParaText">
+Les manifestes des navires et les d&eacute;clarations des marchandises qui doivent &ecirc;tre fournis aux douanes sont dispens&eacute;s du timbre.</P>
+<P CLASS="Paragraphe">
+Actes divers des greffiers - ventes et nantissement de fonds de commerce</P>
+
+<span id="#A0989"></span>
+<H6 CLASS="NoArticle">
+Art. 989</H6>
+<P CLASS="ParaText">
+Sont affranchis du timbre le registre des inscriptions tenu par le greffier en ex&eacute;cution de la loi relative &agrave; la vente et au nantissement des fonds de commerce, les bordereaux d&apos;inscription, les reconnaissances de d&eacute;p&ocirc;t, les &eacute;tats, les certificats, extraits et copies dress&eacute;s en ex&eacute;cution de ladite loi, ainsi que les pi&egrave;ces produites pour obtenir l&apos;accomplissement d&apos;une formalit&eacute; et qui restent d&eacute;pos&eacute;s au greffe et les copies qui en sont d&eacute;livr&eacute;es &agrave; la condition que ces pi&egrave;ces mentionnent express&eacute;ment leur destination.</P>
+<P CLASS="Paragraphe">
+D&eacute;veloppement de l&apos;habitat</P>
+
+<span id="#A0990"></span>
+<H6 CLASS="NoArticle">
+Art. 990</H6>
+<P CLASS="ParaText">
+Sont dispens&eacute;s du timbre et sous les m&ecirc;mes conditions, les actes d&eacute;j&agrave; dispens&eacute;s du droit d&apos;enregistrement par l&apos;article <a class='ui-button' href='' onclick="scrolltoelementTag('635');return false;">635</a>, pass&eacute;s avec les offices, soci&eacute;t&eacute;s ou particuliers qui se consacrent, avec l&apos;agr&eacute;ment et sous le contr&ocirc;le de l&apos;Administration , au d&eacute;veloppement de l&apos;habitat.</P>
+<P CLASS="Paragraphe">
+Permis d&apos;exploitation foresti&egrave;re</P>
+
+<span id="#A0991"></span>
+<H6 CLASS="NoArticle">
+Art. 991</H6>
+<P CLASS="ParaText">
+Sont exempts de timbre, les permis d&apos;exploitation et de circulation en mati&egrave;re foresti&egrave;re, lorsque les droits &agrave; percevoir sont inf&eacute;rieurs &agrave; 2 000 francs.</P>
+<P CLASS="ParaText">
+Le bulletin de liquidation pour le recouvrement de la redevance, quelle que soit la somme, est &eacute;galement exempt de timbre.</P>
+<P CLASS="Paragraphe">
+Prestation de serment</P>
+
+<span id="#A0992"></span>
+<H6 CLASS="NoArticle">
+Art. 992</H6>
+<P CLASS="ParaText">
+Les actes de prestation de serment des agents salari&eacute;s des collectivit&eacute;s publiques sont dispens&eacute;s de timbre.</P>
+<P CLASS="Paragraphe">
+Pupilles de la Nation</P>
+
+<span id="#A0993"></span>
+<H6 CLASS="NoArticle">
+Art. 993</H6>
+<P CLASS="ParaText">
+Tous les actes ou pi&egrave;ces ayant exclusivement pour objet la protection des pupilles de la Nation sont dispens&eacute;s de la formalit&eacute; du timbre.</P>
+<P CLASS="Paragraphe">
+Registre du commerce</P>
+
+<span id="#A0994"></span>
+<H6 CLASS="NoArticle">
+Art. 994</H6>
+<P CLASS="ParaText">
+Les d&eacute;clarations effectu&eacute;es en vertu de l&apos;article 22 de l&apos;Acte uniforme portant sur le droit commercial g&eacute;n&eacute;ral relatives &agrave; certaines mentions du registre de commerce sont dispens&eacute;es du timbre.</P>
+<P CLASS="Paragraphe">
+Registre de l&apos;&eacute;tat civil</P>
+
+<span id="#A0995"></span>
+<H6 CLASS="NoArticle">
+Art. 995</H6>
+<P CLASS="ParaText">
+Les registres de l&apos;&eacute;tat civil, les tables annuelles et d&eacute;cennales de ces registres sont dispens&eacute;s du timbre ainsi que les copies et extraits des actes de l&apos;&eacute;tat civil de toute nature d&eacute;livr&eacute;s aux particuliers dans les communes. Les copies et extraits des m&ecirc;mes actes d&eacute;livr&eacute;s par les sous-pr&eacute;fectures non &eacute;rig&eacute;es en communes seront assujettis au droit de timbre de dimension pr&eacute;vu par les articles <a class='ui-button' href='' onclick="scrolltoelementTag('827');return false;">827</a> et <a class='ui-button' href='' onclick="scrolltoelementTag('835');return false;">835</a>.</P>
+<P CLASS="ParaText">
+En dehors des communes, les duplicata de livret de famille d&eacute;livr&eacute;s aux particuliers sont assujettis &agrave; une taxe &eacute;gale au droit de timbre de dimension papier registre pr&eacute;vu &agrave; l&apos;article <a class='ui-button' href='' onclick="scrolltoelementTag('835');return false;">835</a>. Son paiement est constat&eacute; par l&apos;apposition d&apos;un timbre fiscal.</P>
+<P CLASS="ParaText">
+Les copies et extraits des actes de l&apos;&eacute;tat civil de toute nature d&eacute;livr&eacute;s aux particuliers dans les communes sont assujettis &agrave; une taxe fix&eacute;e par d&eacute;lib&eacute;ration des conseils municipaux et dont le taux uniforme ne peut d&eacute;passer la valeur du timbre de dimension fix&eacute;e par l&apos;article <a class='ui-button' href='' onclick="scrolltoelementTag('835');return false;">835</a> du pr&eacute;sent Code.</P>
+<P CLASS="ParaText">
+Le paiement de la taxe est constat&eacute; par l&apos;apposition de timbres mobiles portant le nom de la commune. Dans tous les cas, les vignettes sont oblit&eacute;r&eacute;es au moment de leur utilisation du sceau de la mairie.</P>
+<P CLASS="ParaText">
+Dans les communes, les duplicata de livret de famille d&eacute;livr&eacute;s aux particuliers sont soumis &agrave; une taxe fix&eacute;e par d&eacute;lib&eacute;ration des conseils municipaux et dont le taux maximum est &eacute;gal au droit de timbre de dimension papier registre pr&eacute;vu &agrave; l&apos;article <a class='ui-button' href='' onclick="scrolltoelementTag('835');return false;">835</a> du pr&eacute;sent Code.</P>
+<P CLASS="Paragraphe">
+R&eacute;habilitation des faillis</P>
+
+<span id="#A0996"></span>
+<H6 CLASS="NoArticle">
+Art. 996</H6>
+<P CLASS="ParaText">
+La proc&eacute;dure de r&eacute;habilitation des faillis pr&eacute;vue par les articles 208 &agrave; 214 de l&apos;Acte uniforme portant organisation des proc&eacute;dures collectives d&apos;apurement du passif, est dispens&eacute;e de timbre.</P>
+<P CLASS="Paragraphe">
+R&eacute;pertoire</P>
+
+<span id="#A0997"></span>
+<H6 CLASS="NoArticle">
+Art. 997</H6>
+<P CLASS="ParaText">
+Sont &eacute;tablis sur papier non timbr&eacute; :</P>
+<P CLASS="ParaText">
+1 -Les r&eacute;pertoires que les huissiers et les greffiers tiennent en ex&eacute;cution des droits d&apos;enregistrement et sur lesquels ils inscrivent tous les actes, exploits, jugements et arr&ecirc;ts qui sont dispens&eacute;s des formalit&eacute;s du timbre et de l&apos;enregistrement ainsi que les bulletins n<b>&deg;-</b> 3 du casier judiciaire par eux d&eacute;livr&eacute;s.</P>
+<P CLASS="ParaText">
+2 -Les r&eacute;pertoires que les personnes ou soci&eacute;t&eacute;s se livrant &agrave; des op&eacute;rations d&apos;interm&eacute;diaire pour l&apos;achat ou la vente d&apos;immeubles ou de fonds de commerce ou qui, habituellement, ach&egrave;tent en leur nom les m&ecirc;mes biens dont elles deviennent propri&eacute;taires en vue de les revendre, tiennent en ex&eacute;cution du Livre troisi&egrave;me du pr&eacute;sent Code.</P>
+<P CLASS="Paragraphe">
+R&eacute;quisitions</P>
+
+<span id="#A0998"></span>
+<H6 CLASS="NoArticle">
+Art. 998</H6>
+<P CLASS="ParaText">
+Les proc&egrave;s-verbaux, certificats, significations, jugements, contrats, quittances et autres actes faits en vertu des textes r&eacute;gissant les r&eacute;quisitions militaires et exclusivement relatifs au r&egrave;glement de l&apos;indemnit&eacute; sont dispens&eacute;s du timbre.</P>
+<P CLASS="ParaText">
+Tous actes et proc&egrave;s-verbaux dress&eacute;s en vertu du d&eacute;cret n<b>&deg;-</b> 67-332 du 1er ao&ucirc;t 1967 relatif &agrave; la participation des Forces Arm&eacute;es au maintien de l&apos;ordre, sont &eacute;galement exempt&eacute;s de la formalit&eacute; du timbre.</P>
+<P CLASS="Paragraphe">
+Saisie-arr&ecirc;t de salaires</P>
+
+<span id="#A0999"></span>
+<H6 CLASS="NoArticle">
+Art. 999</H6>
+<P CLASS="ParaText">
+Le registre tenu au greffe de chaque juridiction civile de premi&egrave;re instance, sur lequel sont mentionn&eacute;s tous les actes d&apos;une nature quelconque, d&eacute;cisions et formalit&eacute;s auxquels donne lieu l&apos;ex&eacute;cution des dispositions du Code du Travail et de la Pr&eacute;voyance sociale, relatives &agrave; la saisie-arr&ecirc;t et &agrave; la cession des salaires et appointements, est &eacute;tabli sur papier non timbr&eacute;.</P>
+<P CLASS="ParaText">
+Tous les actes, d&eacute;cisions et formalit&eacute;s vis&eacute;s dans ce Code sont r&eacute;dig&eacute;s sur papier non timbr&eacute;, ainsi que leurs copies.</P>
+<P CLASS="ParaText">
+Les lettres recommand&eacute;es, les procurations du saisi et du tiers-saisi et les quittances donn&eacute;es au cours de la proc&eacute;dure sont exempt&eacute;es du timbre.</P>
+
+<span id="#A1000"></span>
+<H6 CLASS="NoArticle">
+Art. 1000</H6>
+<P CLASS="ParaText">
+Les dispositions de l&apos;article pr&eacute;c&eacute;dent sont applicables en mati&egrave;re de saisie-arr&ecirc;t et de cession :</P>
+<P CLASS="Liste2-Enumeree">
+1-Des salaires, appointements et traitements des fonctionnaires civils.</P>
+<P CLASS="Liste2-Enumeree">
+2-Des soldes nettes des officiers et assimil&eacute;s et des militaires &agrave; la solde mensuelle des arm&eacute;es de terre et de mer, en activit&eacute;, en disponibilit&eacute;, en non activit&eacute;, en r&eacute;forme et des officiers g&eacute;n&eacute;raux du cadre de r&eacute;serve.</P>
+<P CLASS="Liste2-Enumeree">
+3-Des soldes nettes des officiers mariniers et assimil&eacute;s en fonction au-del&agrave; de la dur&eacute;e l&eacute;gale du service, lorsque ces salaires, appointements, traitements et soldes rentrent dans les pr&eacute;visions de la loi de 1921.</P>
+<P CLASS="Paragraphe">
+Soci&eacute;t&eacute;s d&apos;Etat ou d&apos;&eacute;conomie mixte de cr&eacute;dit</P>
+
+<span id="#A1001"></span>
+<H6 CLASS="NoArticle">
+Art. 1001</H6>
+<P CLASS="ParaText">
+Sont exempts de tous droits de timbre autre que celui des quittances, les actes, pi&egrave;ces et &eacute;crits de toute nature, concernant les soci&eacute;t&eacute;s d&apos;Etat ou d&apos;&eacute;conomie mixte cr&eacute;es en vertu de la loi n<b>&deg;-</b> 97-519 du 4 septembre 1997 portant d&eacute;finition et organisation des soci&eacute;t&eacute;s d&apos;Etat et de la loi n<b>&deg;-</b> 97-520 du 4 septembre 1997 relative aux soci&eacute;t&eacute;s &agrave; participation financi&egrave;re publique et qui ont pour objet le cr&eacute;dit aux petites entreprises de toute nature, aux soci&eacute;t&eacute;s coop&eacute;ratives et associations de pr&eacute;voyance et &agrave; l&apos;habitat.</P>
+
+<span id="#A1002"></span>
+<H6 CLASS="NoArticle">
+Art. 1002</H6>
+<P CLASS="ParaText">
+Sont exempt&eacute;s de droits de timbre :</P>
+<P CLASS="Liste2-Enumeree">
+-les ventes de logements de l&apos;ex-EECI &agrave; ses anciens employ&eacute;s dans le cadre de la liquidation de cette soci&eacute;t&eacute;;</P>
+<P CLASS="Liste2-Enumeree">
+-les apports de la PETROCI &agrave; la GESTOCI pour le compte de l&apos;Etat, des installations et d&eacute;p&ocirc;ts relatifs aux stocks de s&eacute;curit&eacute; de produits p&eacute;troliers.</P>
+
+<H6 CLASS="Modification">
+Loi n<b>&deg;-</b> 2003-206 du 7 juillet 2003, an. fiscale,Art. 32-2.</H6>
+<P CLASS="Liste2-Enumeree">
+-les billets de loterie nationale et de tous les autres jeux de hasard organis&eacute;s par la LONACI, ainsi que les affiches ayant exclusivement pour objet de faire appel au public pour l&apos;achat de ces billets.</P>
+
+
+<H6 CLASS="Modification">
+Ord. n<b>&deg;-</b> 2006-234 du 02 ao&ucirc;t 2006Art. 44-1.</H6>
+
+
+
+<!-- Old wrapper body -->
+</div></div> <!-- wrapper -->
+	  <div id="articleList"><div id="contenu" style='height:auto; background-color:#FFFFCC'>&nbsp;</div>
+      </div><p>&nbsp;</p><p>&nbsp;</p><p>&nbsp;</p><p>&nbsp;</p><p>&nbsp;</p><p>&nbsp;</p><p>&nbsp;</p><p>&nbsp;</p><p>&nbsp;</p><p>&nbsp;</p>
+	  <p>&nbsp;</p><p>&nbsp;</p><p>&nbsp;</p><p>&nbsp;</p><p>&nbsp;</p><p>&nbsp;</p></BODY></HTML>
+	  

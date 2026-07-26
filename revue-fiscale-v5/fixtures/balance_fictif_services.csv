@@ -1,0 +1,11 @@
+compte,libelle,debit,credit
+101,[FICTIF] Capital social,0,200000000
+218,[FICTIF] Autres immobilisations,35000000,0
+4111,[FICTIF] Clients,45000000,0
+521,[FICTIF] Banque locale,80000000,0
+4011,[FICTIF] Fournisseurs,0,25000000
+7061,[FICTIF] Prestations de services,0,320000000
+622,[FICTIF] Honoraires et commissions,90000000,0
+641,[FICTIF] Remunerations du personnel,180000000,0
+6582,[FICTIF] Dons et liberalites,25000000,0
+661,[FICTIF] Interets bancaires,90000000,0

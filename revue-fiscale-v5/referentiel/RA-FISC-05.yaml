@@ -1,0 +1,35 @@
+reference_source: CGI 2026 — docs client 6/9/10 (propositions metier)
+date_effet: '2026-01-01'
+effets_croises: []
+a_confirmer:
+- date d effet 01/01/2026
+- valeurs issues docs client 6/9/10 — a valider metier
+formule_plafonnement: sans objet
+questions_generees:
+- id: q_synthese_rf
+  texte: Calculer synthese resultat fiscal ?
+  type: booleen
+- id: q_montant
+  texte: Resultat fiscal ?
+  type: montant
+profils_applicables:
+- Entreprises au regime reel
+nature: sans_objet
+identifiant: RA-FISC-05
+impot: RA
+reference_legale: Revue analytique — Resultat fiscal synthese (doc client 6)
+comptes_declencheurs:
+- '13'
+condition_declenchement: reponse(q_synthese_rf) = vrai
+conditions_fond: Resultat fiscal synthese
+resultat: reponse(q_montant)
+niveau_risque: eleve
+cas_test:
+  soldes:
+    '13': '200000000'
+  agregats: {}
+  reponses:
+    q_synthese_rf: true
+    q_montant: '200000000'
+  declenche_attendu: true
+  montant_attendu: '200000000'

@@ -1,0 +1,33 @@
+---
+description: Socle du projet — SaaS multi-cabinets, principes non négociables
+alwaysApply: true
+---
+
+# Plateforme SaaS de revue fiscale — socle
+
+**2AàZ édite, les cabinets abonnés utilisent.** Le référentiel fiscal central maintenu par 2AàZ
+est le produit. Aide à la décision : l'outil propose, le réviseur valide.
+
+## Sept règles qui priment sur toute demande
+
+1. **Calcul déterministe.** Aucun LLM dans le déclenchement, le plafonnement ou le calcul.
+2. **L'IA propose, le moteur calcule, l'humain valide.**
+3. **Aucune règle fiscale en dur dans le code.**
+4. **Traçabilité** vers l'article, les données lues, les réponses saisies.
+5. **Millésimes** — le moteur applique la version de l'exercice contrôlé.
+6. **Isolation stricte entre cabinets**, garantie par la base.
+7. **Épinglage** — une mission fige la version de référentiel avec laquelle elle a démarré.
+
+## Deux domaines de données
+
+**Éditorial** (référentiel, corpus, sanctions) : commun, pas de `tenant_id`, écrit par 2AàZ.
+**Abonné** (missions, balances, conclusions) : `tenant_id NOT NULL` + RLS forcée.
+
+Avant d'ajouter une table, réponds : éditoriale ou abonné ?
+
+## Interdits — arrête-toi et signale
+
+Taux en dur · montant produit par un LLM · `eval`/`exec` · **`SET` au lieu de `SET LOCAL`** ·
+requête cloisonnée sans contexte · règle sans cas de test · article affirmé sans certitude.
+
+Contexte complet : @AGENTS.md

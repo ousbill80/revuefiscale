@@ -1,0 +1,1127 @@
+<!DOCTYPE HTML><HTML><HEAD><META HTTP-EQUIV="Content-Type" CONTENT="text/html; charset=UTF-8">
+<TITLE>Code des impots -181</TITLE><LINK REL="STYLESHEET" HREF="/cicgi.css" CHARSET="ISO-8859-1" TYPE="text/css">
+<style type="text/css">
+body {margin-left: 5px;	margin-top: 0px; margin-right: .5em;margin-bottom: 0px;background-color:#fafafa ;}
+.Liste-Numerote {font-size: 12pt;font-weight: regular;font-style: italic;color: #000000;text-transform: none;margin-left:8px ;margin-bottom:8px ;margin-top:4px ;margin-right:10px ;font-family:Georgia, "Times New Roman", Times, serif}
+li {list-style-type: none; margin-left:0px ; padding-left:0em ; }
+.Paratext {font-size: 12pt;font-weight: regular;font-style: italic;color: #000000;text-decoration: none;vertical-align: baseline;text-transform: none;margin-left:0px ;font-family:Georgia, "Times New Roman", Times, serif}
+.Normal {font-size: 12pt;font-weight: regular;font-style: italic;color: #000000;text-decoration: none;vertical-align: baseline;text-transform: none;margin-left:0px ;font-family:Georgia, "Times New Roman", Times, serif}
+ul {list-style-type: none; margin-left:0px ; padding-left:0em ;  }
+.Liste2-Enumeree {font-size: 12pt;font-weight: regular;font-style: italic;color: #000000;text-decoration: none;vertical-align: baseline;text-transform: none;list-style-type:none ;margin-left:16px ;margin-bottom:8px;margin-right:10px;font-family:Georgia, "Times New Roman", Times, serif}
+P.Liste2-Enumeree {font-size: 12pt;font-weight: regular;font-style: italic;color: #000000;text-decoration: none;vertical-align: baseline;text-transform: none;list-style-type:none ;margin-left:16px ;margin-bottom:8px;margin-right:10px;font-family:Georgia, "Times New Roman", Times, serif}
+.Entete {font-size: 13pt;font-weight: regular;font-style: italic;color:#000000 ;text-decoration: none;vertical-align: baseline;text-transform: none;margin-left:8px ;font-family:Georgia, "Times New Roman", Times, serif}
+table, TABLE {border-width:1px; width:99% ;border-collapse:collapse;border-color: #9ecaed;box-shadow: 0 0 10px #9ecaed;}
+tr,td {text-align:left;vertical-align:bottom;border:1px solid #9ecaed;padding:.2em;marging-left:.2em}
+th, TH{text-align:center;vertical-align:middle;padding:.2em;}
+P.TableauEntete {font-size: 13pt;font-weight: regular;font-style: italic;color: #000000;font-family:Georgia, "Times New Roman"}
+P.TableauCelluleLeft, P.TableauCellule {text-align:right;margin-right:1em;font-size: 13pt;font-weight: regular;font-style: italic;color: #000000;font-family:Georgia, "Times New Roman"}
+P.TableauCelluleRight {text-align:left;margin-left:1em;font-size: 13pt;font-weight: regular;font-style: italic;color: #000000;font-family:Georgia, "Times New Roman"}
+.ui-buttonh {padding: .1em .1em ; border: 1px solid #dadada;border-radius: 4px; box-shadow: 0 0 4px #9ecaed;color:#FF3300 ;margin-left:8px ;margin-right:8px ;margin-bottom:2px ;margin-top:2px ;text-decoration:none ;font-size:12pt ;font-family:"Times New Roman"}   
+.ui-button {padding: .1em .1em ; border: 1px solid #dadada;border-radius: 4px; box-shadow: 0 0 4px #9ecaed;color:#FF3300 ;margin-left:8px ;margin-right:8px ;margin-bottom:2px ;margin-top:2px ;text-decoration:none ;font-size:12pt ;font-family:"Times New Roman"}   
+H3 {display: block;text-align: center;text-indent: 0pt;margin-top: 10pt;margin-bottom: 10pt;margin-right: 10pt;margin-left: 10pt;font-size: 12pt;font-weight: Bold;font-style: Regular;color: #00A000;text-decoration: none;vertical-align: baseline;text-transform: none;font-family: "Times New Roman";}
+H4 {display: block;text-align: left;text-indent: 0pt;margin-top: 10pt;margin-bottom: 6pt;margin-right: 10pt;margin-left: 10pt;font-size: 12pt;font-weight: Bold;font-style: Regular;color: #000000;text-decoration: none;vertical-align: baseline;text-transform: none;font-family: "Times New Roman";}
+H5 {display: block;text-align: left;text-indent: 0pt;margin-top: 10pt;margin-bottom: 6pt;margin-right: 10pt;margin-left: 10pt;font-size: 11pt;font-weight: Bold;font-style: Regular;color: #000000;text-decoration: none;vertical-align: baseline;text-transform: none;font-family: "Times New Roman";}
+H6.NoArticle {display: block;text-align: left;text-indent: 0pt;margin-top: 14pt;margin-bottom: 0pt;margin-right: 0pt;margin-left: 0pt;font-size: 14pt;font-weight: regular;font-style: Regular;color: #00a000;text-decoration: none;vertical-align: baseline;text-transform: none;font-family: "Times New Roman";}
+H2 {text-align:center;font-size:16pt;font-family:Georgia, "Times New Roman", Times, serif}
+P.ParaText {font-size: 12pt;font-weight: regular;font-style: italic;color: #000000;	text-decoration: none;vertical-align: baseline;text-transform: none;font-family:Georgia, "Times New Roman", Times, serif;}
+H2.Section,P.Section {font-size:12pt;font-weight:bold;font-style:Regular;color:#008000;font-family:Georgia,"Times New Roman"}
+P.Paragraphe, p.Paragraphe {Text-Align:center;Text-decoration:none;font-size:12pt;font-weight:bold;font-style:Normal;color:#00A000;font-family:Georgia,"Times New Roman"}
+H2.Livre,P.Livre {text-align:center;font-size:16pt;font-weight:bold;font-style:Regular;color:#008000;font-family:Georgia,"Times New Roman"}
+P.Partie,H2.Partie,P.TitreSub {text-align:center;font-size:14pt;font-weight:bold;font-style:Regular;color:#008000;font-family:Georgia,"Times New Roman"}
+H2.ChapitreNo,H2.TitreNo {text-align:center;font-size:14pt;font-weight:bold;font-style:Regular;color:#008000;font-family:Georgia,"Times New Roman"}
+H2.Chapitre, h2.Chapitre {text-align:center;font-size:14pt;font-weight:bold;font-style:Regular;color:#008000;font-family:Georgia,"Times New Roman"}
+H2.TitreNo {text-align:center;font-size:14pt;font-weight:bold;font-style:Regular;color:#008000;font-family:Georgia,"Times New Roman"}
+h3.Sous-Section, H3.Sous-Section, h3.Sous-section, h2.Section {font-size:12pt;font-weight:bold;font-style:Italic;color:#008000;font-family:Georgia,"Times New Roman"}
+hr,HR { display: block; width:90%;  margin-top: 0.5em; margin-bottom: 0.5em; margin-left: auto;  margin-right: auto;  border-style: inset; border-width: 1px;}
+P.TitreSub {text-align:center;font-size:14pt;font-weight:bold;font-style:Regular;color:#008000;font-family:Georgia,"Times New Roman"}
+.Reference {display: block;text-align: left;text-indent: 0pt;margin-top: 10pt;margin-bottom: 6pt;margin-right: 10pt;margin-left: 10pt;font-size: 14pt;font-weight: Bold;font-style: Regular;color: #7F5434;text-decoration: none;vertical-align: baseline;text-transform: none;font-family: "Times New Roman";}
+.ludwig,blockquote {padding-left:1em;background-color:#fafafa;font-size:12pt;font-weight:100;font-style:italic;}
+#articleList {position:absolute ;	z-index: 1 ;left: 10px ;top: 80px ;height:340px;width: 620px;border: 2px solid #cacaca ;border-radius: 5px ;background-color:#fafafa ;    box-shadow: 0 0 12px #333333;	margin-left:0px ;	padding: .3em .3em ;		overflow:hidden ;	visibility:hidden ;  }			
+#articleList h3 { text-align: center; margin: 0; }		
+
+.historique {
+  display:none ;
+  padding: .1em .3em ;
+  border: solid 2px #dadada;
+  border-radius: 7px;
+  box-shadow: 0 0 5px #9ecaed;  
+  
+}
+.histText {
+    display: block;
+    font-family: ;"Times New Roman"
+	padding: .1em .3em ;
+    margin: 1em 0px;
+	font-style:italic;
+	color:#000000;
+	overflow:auto;
+}
+.highlight {
+  font-weight:bold ;
+  color:#000000 ;
+  background-color:#FFFFCC ;
+  }
+.articleList-scroll {
+	overflow-x:hidden ;
+	overflow-y:scroll ;
+	scrollbar-width:thin ;
+	scrollbar-color:blue orange ;
+}
+
+#contenu {
+	overflow-x:hidden ;
+    overflow-y:scroll ;
+	scrollbar-width:thin ;
+	scrollbar-color:blue orange ;
+}		
+
+table, TABLE {
+ text-align:center; 
+    margin-left:.5em; 
+    margin-right:.5em; 
+    border:1px solid #000000;	
+	border-collapse:collapse ;
+    border-color: #9ecaed;
+    box-shadow: 0 0 10px #9ecaed;
+	
+   }
+  tr,td {text-align:left;}
+  
+
+
+ </style>
+ 
+<script src="/js/iscroll.js"></script>
+<script src="/js/jquery.js"></script>   
+<script src="/js/jquery-ui-1.10.3.custom.js"></script>    	    
+<script src="/js/jquery.ui.draggable.js" type="text/javascript"></script>			
+<script src="/js/jquery.ui.core.js"></script> 			
+<script src="/js/jquery.ui.widget.js"></script>			
+<script src="/js/jquery.ui.position.js"></script>			
+<script src="/js/jquery.ui.menu.js"></script>    		
+<script type="text/javascript" src="./xpages.js"></script>
+/* VERSION POUR PAGE HTML SUR SITE DGI.CGICI.COM */
+<script language="javascript">
+ function showButton(id) {
+    var x = document.getElementById(id) ;
+	if(x.style.display === "none") {
+	   x.style.display = "block" ;
+	  } else {
+	   x.style.display = "none" ;
+	   }
+	 }   
+	 var pagenumber="181";
+function loadpage(page, art) {
+      showHideHistoric(art);
+	  return false;
+	  } 
+function loadArticle(page, art) { var artno = art ;var pgno=page;scrolltoelementTag(pgno,artno) ;return false ;} 
+
+</script>
+</HEAD>
+<BODY><div ID="wrapper"><div ID="scroller">
+
+
+<H2 CLASS="Section">
+Section II - Droits proportionnels et progressifs</H2>
+<span id="#A0710"></span>
+<H6 CLASS="NoArticle">
+Art. 710</H6>
+<P CLASS="ParaText">
+Les actes et mutations compris sous les articles <a class='ui-button' href='' onClick="loadArticle('181','0711');return false;">711</a> et suivants sont enregistr&eacute;s et les droits pay&eacute;s suivant les quotit&eacute;s fix&eacute;es dans lesdits articles.</P>
+<P CLASS="Paragraphe">
+Abandonnements (pour faits d&apos;assurance ou grosse aventure)</P>
+
+<span id="#A0711"></span>
+<H6 CLASS="NoArticle">
+Art. 711</H6>
+<P CLASS="ParaText">
+Les abandonnements pour faits d&apos;assurance ou grosse aventure sont assujettis &agrave; un droit de 3 %.</P>
+<P CLASS="ParaText">
+Le droit est per&ccedil;u sur la valeur des objets abandonn&eacute;s.</P>
+<P CLASS="ParaText">
+En temps de guerre, il n&apos;est d&ucirc; qu&apos;un demi-droit.</P>
+
+<span id="#A0712"></span>
+<H6 CLASS="NoArticle">
+Art. 712</H6>
+<P CLASS="ParaText">
+Les cessions d&apos;actions d&apos;apports et de parts de fondateurs effectu&eacute;es pendant la p&eacute;riode de non n&eacute;gociabilit&eacute; sont consid&eacute;r&eacute;es, au point de vue fiscal, comme ayant pour objet les biens en nature repr&eacute;sent&eacute;s par les titres c&eacute;d&eacute;s.</P>
+<P CLASS="ParaText">
+Pour la perception de l&apos;imp&ocirc;t, chaque &eacute;l&eacute;ment d&apos;apport est &eacute;valu&eacute; distinctement avec indication des num&eacute;ros des actions attribu&eacute;es en r&eacute;mun&eacute;ration &agrave; chacun d&apos;eux.</P>
+<P CLASS="ParaText">
+A d&eacute;faut de ces &eacute;valuations et indications, les droits sont per&ccedil;us au tarif immobilier.</P>
+<P CLASS="ParaText">
+Les dispositions qui pr&eacute;c&egrave;dent sont applicables aux cessions de parts d&apos;int&eacute;r&ecirc;ts dans les soci&eacute;t&eacute;s dont le capital n&apos;est pas divis&eacute; en actions, quand ces cessions interviennent dans les trois ans de la r&eacute;alisation d&eacute;finitive de l&apos;apport fait &agrave; la soci&eacute;t&eacute;.</P>
+<P CLASS="ParaText">
+Dans tous les cas o&ugrave; une cession d&apos;actions ou de parts a donn&eacute; lieu &agrave; la perception du droit de mutation en vertu du pr&eacute;sent article, l&apos;attribution pure et simple &agrave; la dissolution de la soci&eacute;t&eacute; des biens repr&eacute;sent&eacute;s par les titres c&eacute;d&eacute;s ne donne ouverture au droit de mutation que si elle est faite &agrave; un autre que le cessionnaire.</P>
+<P CLASS="Paragraphe">
+Baux</P>
+
+<span id="#A0713"></span>
+<H6 CLASS="NoArticle">
+Art. 713</H6>
+<P CLASS="ParaText">
+Sont assujettis au droit de 2,5 % lorsque la dur&eacute;e est limit&eacute;e, les baux, les sous-baux et prorogations conventionnelles ou l&eacute;gales de baux d&apos;immeubles, de fonds de commerce ainsi que les baux de p&acirc;turage et nourriture d&apos;animaux, les baux &agrave; cheptel ou reconnaissance de bestiaux et les baux &agrave; nourriture de personnes.</P>
+
+<H6 CLASS="Modification">
+Ord. n<b>&deg;-</b> 74-173 du 19 avril 1974,Art. 13; loi n<b>&deg;-</b> 83-1421 du 30 d&eacute;c. 1983, an. fiscale,Art. 43.</H6>
+
+<P CLASS="ParaText">
+
+<a name="50556989_pgfId-1029113"></a>Toutefois, ne sont pas assujettis &agrave; ce droit, les baux conclus avec les particuliers et destin&eacute;s &agrave; l'habitation et dont les loyers mensuels sont inf&eacute;rieurs &agrave; 500 000 francs. </P>
+<H6 CLASS="Modification">
+<a name="50556989_pgfId-1029131"></a>Loi n&deg; 2015-840 du 18 d&eacute;cembre 2015, an. fiscale,Art. 13</H6>
+
+<P CLASS="ParaText">
+Sont assujettis au droit de bail de 1,5 % les contrats de cr&eacute;dit-bail au moment de l&apos;ex&eacute;cution desdits contrats par les preneurs.</P>
+
+
+<H6 CLASS="Modification">
+Ord. n<b>&deg;-</b> 2011-480 du 28 d&eacute;cembre 2011Art. 21-1. </H6>
+
+
+<span id="#A0714"></span>
+<H6 CLASS="NoArticle">
+Art. 714</H6>
+<P CLASS="ParaText">
+Le droit vis&eacute; &agrave; l&apos;article 713 ci-dessus est per&ccedil;u sur le montant cumul&eacute; de toutes les ann&eacute;es, sauf ce qui est dit &agrave; l&apos;article <a class='ui-button' href='' onClick="loadArticle('181','0539');return false;">539</a>. Les baux des biens domaniaux sont assujettis aux m&ecirc;mes droits.</P>
+
+<span id="#A0715"></span>
+<H6 CLASS="NoArticle">
+Art. 715</H6>
+<P CLASS="ParaText">
+Les baux &agrave; vie de biens immeubles et ceux dont la dur&eacute;e est illimit&eacute;e sont assujettis &agrave; un droit de 10 %.</P>
+
+<H6 CLASS="Modification">
+Loi n<b>&deg;-</b>91-270 du 29 avril 1991, an. fiscale,Art. 16-9<b>&deg;-</b>.</H6>
+
+
+<span id="#A0716"></span>
+<H6 CLASS="NoArticle">
+Art. 716</H6>
+<P CLASS="ParaText">
+Toute cession d&apos;un droit &agrave; un bail ou du b&eacute;n&eacute;fice d&apos;une promesse de bail portant sur tout ou partie d&apos;un immeuble, quelle que soit la forme qui lui est donn&eacute;e par les parties, qu&apos;elle soit qualifi&eacute;e cession de pas de porte, indemnit&eacute; de d&eacute;part ou autrement, est soumise &agrave; un droit d&apos;enregistrement de 10 %.</P>
+
+<H6 CLASS="Modification">
+Loi n<b>&deg;-</b> 91-270 du 29 avril 1991, an. fiscale,Art. 16-9<b>&deg;-</b>.</H6>
+<P CLASS="ParaText">
+Ce droit est per&ccedil;u sur le montant de la somme ou indemnit&eacute; stipul&eacute;e par le c&eacute;dant &agrave; son profit ou sur la valeur v&eacute;nale r&eacute;elle du droit c&eacute;d&eacute;, d&eacute;termin&eacute;e par une d&eacute;claration estimative des parties, si la convention ne contient aucune stipulation expresse d&apos;une somme ou indemnit&eacute; au profit du c&eacute;dant ou si la somme ou indemnit&eacute; stipul&eacute;e est inf&eacute;rieure &agrave; la valeur v&eacute;nale r&eacute;elle du droit c&eacute;d&eacute;.</P>
+<P CLASS="ParaText">
+Le droit ainsi per&ccedil;u est ind&eacute;pendant de celui qui peut &ecirc;tre d&ucirc; pour la jouissance des biens lou&eacute;s.</P>
+<P CLASS="ParaText">
+Les dispositions du pr&eacute;sent article sont applicables &agrave; toutes conventions ayant pour effet de r&eacute;silier un bail portant sur tout ou partie d&apos;un immeuble pour le remplacer par un nouveau bail au profit d&apos;un tiers.</P>
+
+
+<span id="#A0717"></span>
+<H6 CLASS="NoArticle">
+Art. 717</H6>
+<P CLASS="ParaText">
+Les &eacute;lections ou d&eacute;clarations de command ou d&apos;ami par suite d&apos;adjudications ou contrats de vente de biens immeubles, si la d&eacute;claration est faite apr&egrave;s les vingt-quatre heures de l&apos;adjudication ou du contrat, ou lorsque la facult&eacute; d&apos;&eacute;lire un command n&apos;y a pas &eacute;t&eacute; r&eacute;serv&eacute;e, sont assujetties au droit de mutation immobili&egrave;re &agrave; titre on&eacute;reux.</P>
+
+<span id="#A0718"></span>
+<H6 CLASS="NoArticle">
+Art. 718</H6>
+<P CLASS="ParaText">
+Le d&eacute;lai de vingt-quatre heures pr&eacute;vu dans l&apos;article pr&eacute;c&eacute;dent est port&eacute; &agrave; trois jours en ce qui concerne les adjudications ou ventes de biens domaniaux.</P>
+<P CLASS="Paragraphe">
+Contrats de mariage</P>
+
+<span id="#A0719"></span>
+<H6 CLASS="NoArticle">
+Art. 719</H6>
+<P CLASS="ParaText">
+Les contrats de mariage, qui ne contiennent d&apos;autres dispositions que des d&eacute;clarations, de la part des futurs, de ce qu&apos;ils apportent eux-m&ecirc;mes en mariage et se constituent sans aucune stipulation avantageuse pour eux, sont assujettis &agrave; un droit de 0,5 %.</P>
+
+<H6 CLASS="Modification">
+Loi n<b>&deg;-</b> 82-1157 du 21 d&eacute;c. 1982, an. fiscale,Art. 13.</H6>
+<P CLASS="ParaText">
+Si les futurs sont dot&eacute;s par leurs ascendants ou s&apos;il leur est fait des donations par des collat&eacute;raux ou autres personnes non parentes par leur contrat de mariage, les droits, dans ce cas, sont per&ccedil;us ainsi qu&apos;ils sont r&eacute;gl&eacute;s sous la rubrique des mutations entre vifs &agrave; titre gratuit.</P>
+<P CLASS="ParaText">
+Donnent ouverture au droit fix&eacute; par le premier alin&eacute;a ci-dessus tous actes ou &eacute;crits qui constatent la nature, la consistance et la valeur des biens appartenant &agrave; chacun des &eacute;poux lors de la c&eacute;l&eacute;bration du mariage.</P>
+<P CLASS="Paragraphe">
+Echanges d&apos;immeubles</P>
+
+
+<span id="#A0720"></span>
+<H6 CLASS="NoArticle">
+Art. 720</H6>
+<P CLASS="ParaText">
+Les &eacute;changes de biens immeubles sont assujettis &agrave; un droit de<FONT COLOR='#000000'> 3 %</FONT>.</P>
+<P CLASS="ParaText">
+Le droit est per&ccedil;u sur la valeur d&apos;une des parts lorsqu&apos;il n&apos;y a aucun retour. S&apos;il y a retour, le droit est pay&eacute; &agrave; raison de <FONT COLOR='#000000'>2 %</FONT> sur la moindre portion et comme pour vente sur le retour ou la plus-value au tarif pr&eacute;vu pour les mutations immobili&egrave;res &agrave; titre on&eacute;reux.</P>
+
+<H6 CLASS="Modification">
+Loi n<b>&deg;-</b> 83-1421 du 30 d&eacute;c. 1983, an. fiscale, art 43; loi n&deg; 2018-984 du 28 d&eacute;cembre 2018, an. fiscaleArt. 4.</H6>
+<P CLASS="Paragraphe">
+Cessions de fonds de commerce</P>
+
+
+<span id="#A0721"></span>
+<H6 CLASS="NoArticle">
+Art. 721</H6>
+<P CLASS="ParaText">
+Les mutations de propri&eacute;t&eacute; &agrave; titre on&eacute;reux de fonds de commerce ou de client&egrave;le sont soumises &agrave; un droit de 10 %.</P>
+
+<H6 CLASS="Modification">
+Loi n<b>&deg;-</b> 91-270 du 29 avril 1991, an. fiscale,Art. 16-9<b>&deg;-</b>.</H6>
+<P CLASS="ParaText">
+Ce droit est per&ccedil;u sur le prix de la vente de l&apos;achalandage, de la cession du droit au bail et des objets mobiliers ou autres servant &agrave; l&apos;exploitation du fonds, &agrave; l&apos;exclusion des marchandises neuves.</P>
+<P CLASS="ParaText">
+Ces objets doivent donner lieu &agrave; un inventaire d&eacute;taill&eacute; et estimatif dans un &eacute;tat distinct dont trois exemplaires r&eacute;dig&eacute;s sur des formules sp&eacute;ciales fournies par l&apos;Administration doivent rester d&eacute;pos&eacute;s &agrave; la recette o&ugrave; la formalit&eacute; est requise.</P>
+<P CLASS="Paragraphe">
+Jugements - Droit de condamnation <BR>
+et droit de titre</P>
+
+
+<span id="#A0722"></span>
+<H6 CLASS="NoArticle">
+Art. 722</H6>
+<P CLASS="ParaText"><FONT COLOR='#000000'>
+Les ordonnances de r&eacute;f&eacute;r&eacute;, les jugements, les arr&ecirc;ts et les sentences arbitrales sont passibles sur le montant des condamnations prononc&eacute;es, d&apos;un droit d&eacute;termin&eacute; selon le tarif ci-apr&egrave;s :</FONT></P>
+<P CLASS="Liste2-Enumeree"><FONT COLOR='#000000'>
+-  montant de la condamnation inf&eacute;rieur &agrave; 3 500 000 francs, exon&eacute;ration totale de droit ;</FONT></P>
+<P CLASS="Liste2-Enumeree"><FONT COLOR='#000000'>
+-  montant de la condamnation sup&eacute;rieur &agrave; 3 500 000 francs et inf&eacute;rieur &agrave; 5 milliards de francs :   1,5 % ;</FONT></P>
+<P CLASS="Liste2-Enumeree"><FONT COLOR='#000000'>
+-  montant de la condamnation sup&eacute;rieur &agrave; 5 milliards de francs :   0,5 %.</FONT></P>
+<P CLASS="ParaText"><FONT COLOR='#d00000'>
+La personne condamn&eacute;e est tenue de pr&eacute;lever sur le montant des condamnations, les droits dus au moment du paiement au b&eacute;n&eacute;ficiaire.</FONT></P>
+<P CLASS="ParaText"><FONT COLOR='#d00000'>
+Les droits pr&eacute;lev&eacute;s sont revers&eacute;s &agrave; la Recette du Domaine, de la Conservation fonci&egrave;re, de l&#8217;Enregistrement et du Timbre comp&eacute;tente dans un d&eacute;lai d&#8217;un mois &agrave; compter de la date de paiement au b&eacute;n&eacute;ficiaire des sommes issues des condamnations.</FONT></P>
+
+<H6 CLASS="Modification">
+Loi n&deg;83-1421 du 30 d&eacute;c. 1983, an. fiscale,Art. 43; loi n&deg;91-997 du 27 d&eacute;c.1991, an. fiscale,Art. 10; loi n&deg; 92-948 du 23 d&eacute;c. 1992, an. fiscale,Art. 7; loi n&deg; 2002-156 du 15 mars 2002, an. fiscale,Art. 22; ord. n&deg; 2006-234 du 02 ao&ucirc;t 2006, an. fiscale,Art. 27-2.; loi n&deg; 2017-870 du 27 d&eacute;cembre 2017, an. fiscaleArt. 25; oi n&#176; 2025-987 du 19  d&eacute;cembre 2025, art. 29.</H6>
+
+<span id="#A0723"></span>
+<H6 CLASS="NoArticle">
+Art. 723</H6>
+<P CLASS="ParaText">
+Le droit pr&eacute;vu &agrave; l&apos;article pr&eacute;c&eacute;dent n&apos;est pas exigible :</P>
+<P CLASS="Liste2-Enumeree">
+1-Sur les jugements, sentences arbitrales et arr&ecirc;ts, en tant qu&apos;ils ordonnent le paiement d&apos;une pension &agrave; titre d&apos;aliments.</P>
+<P CLASS="Liste2-Enumeree">
+2-Sur les ordonnances de r&eacute;f&eacute;r&eacute; rendues au cours de la proc&eacute;dure de s&eacute;paration de corps ou de divorce, ainsi que sur les arr&ecirc;ts de cours d&apos;appel statuant sur les ordonnances prises par le pr&eacute;sident du tribunal civil au cours des m&ecirc;mes proc&eacute;dures.</P>
+
+<H6 CLASS="Modification">
+Loi n<b>&deg;-</b> 91-997 du 27 d&eacute;c. 1991, an. fiscale,Art. 10; loi n<b>&deg;-</b> 92-948 du 23 d&eacute;c. 1992, an. fiscale, art 7.</H6>
+
+
+<span id="#A0724"></span>
+<H6 CLASS="NoArticle">
+Art. 724</H6>
+<P CLASS="ParaText">
+Lorsqu&apos;une condamnation est rendue sur une demande non &eacute;tablie par un titre enregistr&eacute; et susceptible de l&apos;&ecirc;tre, le droit auquel l&apos;objet de la demande aurait donn&eacute; lieu, s&apos;il avait &eacute;t&eacute; convenu par acte public, est per&ccedil;u ind&eacute;pendamment du droit d&ucirc; pour l&apos;acte ou le jugement qui a prononc&eacute; la condamnation.</P>
+
+<H6 CLASS="Modification">
+Loi n<b>&deg;-</b> 91-997 du 27 d&eacute;c; 1991, an. fiscale,Art. 10; loi n<b>&deg;-</b> 92-948 du 23 d&eacute;c. 1992, an. fiscale,Art. 7.</H6>
+
+
+<span id="#A0725"></span>
+<H6 CLASS="NoArticle">
+Art. 725</H6>
+<P CLASS="ParaText">
+Dans le cas pr&eacute;vu par le 3e alin&eacute;a de l&apos;article <a class='ui-button' href='' onClick="loadArticle('181','0532');return false;">532</a>, les parties non condamn&eacute;es aux d&eacute;pens peuvent faire enregistrer les d&eacute;cisions moyennant le paiement du droit fixe pr&eacute;vu pour l&apos;enregistrement des jugements non sujets au droit proportionnel. A cet effet, le greffier doit certifier en marge de la minute que la formalit&eacute; est requise par la partie non condamn&eacute;e aux d&eacute;pens.</P>
+<P CLASS="ParaText">
+La d&eacute;cision ainsi enregistr&eacute;e au droit fixe est r&eacute;put&eacute;e non enregistr&eacute;e &agrave; l&apos;&eacute;gard des parties condamn&eacute;es aux d&eacute;pens qui ne peuvent lever la d&eacute;cision sans acquitter le compl&eacute;ment des droits. Les obligations et sanctions qui incombent aux greffiers en mati&egrave;re de d&eacute;livrance de grosses ou d&apos;exp&eacute;ditions sont applicables.</P>
+
+<span id="#A0726"></span>
+<H6 CLASS="NoArticle">
+Art. 726</H6>
+<P CLASS="ParaText">
+Le droit fixe, acquitt&eacute; conform&eacute;ment aux dispositions de l&apos;article <a class='ui-button' href='' onClick="loadArticle('181','0725');return false;">725</a>, est imput&eacute; sur les droits dus par les parties condamn&eacute;es aux d&eacute;pens.</P>
+
+<span id="#A0727"></span>
+<H6 CLASS="NoArticle">
+Art. 727 &nbsp;&nbsp;&nbsp;&nbsp;<a href="#" onClick="loadpage('177','h23727');return false;" class="ui-button"  title="Consultez l'historique">2023...</a></H6>
+<P CLASS="ParaText">
+Les d&eacute;cisions de la Cour Supr&ecirc;me sont assujetties au timbre et &agrave; l&apos;enregistrement. Elles donnent ouverture au droit fixe de <FONT COLOR='#000000'>25 000 </FONT> francs pr&eacute;vu par l&apos;article <a class='ui-button' href='' onClick="loadArticle('181','0703');return false;">703</a> ci-dessus et, le cas &eacute;ch&eacute;ant, au droit proportionnel &eacute;tabli par l&apos;article <a class='ui-button' href='' onClick="loadArticle('181','0722');return false;">722</a>.</P>
+
+<H6 CLASS="Modification">
+Loi n<b>&deg;-</b> 83-1421 du 30 d&eacute;c. 1983, an. fiscale,Art. 43; loi n<b>&deg;-</b> 2004-271 du 15 avril 2004, an. fiscale,Art. 28-2; loi n° 2023-1000 du 18  déc. 2023, an. fiscale, art. 2-1.</H6>
+
+
+<span id="#A0728"></span>
+<H6 CLASS="NoArticle">
+Art. 728</H6>
+<P CLASS="ParaText">
+Les parts et portions indivises de biens immeubles acquises par licitation sont assujetties au droit de mutation immobili&egrave;re &agrave; titre on&eacute;reux.</P>
+<span id="#A0729"></span>
+<H6 CLASS="NoArticle">
+</a>Art. 729 </H6>
+<P CLASS="ParaText">
+Les actes de confirmation de vente de caf&eacute; et de cacao, sont assujettis &agrave; un droit de 5% sur la valeur CAF du produit.
+<Font color='#000000'>
+Ce droit est de 2,5 % en ce qui concerne le coton, le karit&eacute; et la cola, et 1,7 % en ce qui concerne l&#8216;anacarde.</Font></P>
+<button onClick="showButton('n01')">INFOS</button>
+<blockquote ID="n01" class="ludwig" style="display:block;">Le droit d&#8216;enregistrement sur les actes de vente de coton, d&#8216;anacarde, de karit&eacute; et de cola est suspendu pour la campagne 2012 et 2013 par l'article 16 de l'annexe fiscale &agrave; la Loi  n&deg; 2012-1179 du 27 d&eacute;cembre 2012 portant Budget de l&#8216;ann&eacute;e 2013.</span></blockquote>
+<H6 CLASS="Modification">
+Ord. n&deg; 2018-145 du 14 f&eacute;vrier 2018,Art. 4.</H6>
+
+<P CLASS="ParaText">
+La valeur CAF est fix&eacute;e par les structures de r&eacute;gulation comp&eacute;tentes de ces produits lorsqu&apos;elles existent, d&apos;apr&egrave;s les &eacute;ch&eacute;ances du march&eacute; et le m&eacute;canisme des prix arr&ecirc;t&eacute;.</P>
+<H6 CLASS="Modification">
+Loi n&deg; 98-742 du 23 d&eacute;cembre 1998, an. fiscale,Art. 17-1&deg; c; loi n&deg; 2003-206 du 7 juillet 2003, an. fiscale,Art. 30-3.; Ord. n&deg; 2003-365 du 1er octobre 2003,Art. 2; Ord. n&deg; 2007-488 du 31 mai 2007, an. fiscale,Art. 20; Ord; n&deg; 2008-225 du 05 ao&ucirc;t 2008; Ord. n&deg; 2009-382 du 26 novembre 2009, an. fiscale,Art. 22-5.</H6>
+<P CLASS="ParaText">
+Le droit de 5% susvis&eacute; est ramen&eacute; &agrave; 2,835 % pour les op&eacute;rateurs nationaux justifiant d&apos;un volume d&apos;activit&eacute;s de cacao en propre.</P>
+<P CLASS="ParaText">
+
+Les quantit&eacute;s totales de cacao concern&eacute;es par le taux particulier de 2,835% sont fix&eacute;es par arr&ecirc;t&eacute; conjoint du Ministre charg&eacute; du Budget, du Ministre charg&eacute; de l&apos;Economie et des Finances, et du Ministre charg&eacute; de l&apos;Agriculture.</P>
+<P CLASS="ParaText">
+
+Les crit&egrave;res d&apos;&eacute;ligibilit&eacute; au taux pr&eacute;f&eacute;rentiel de 2,835% ainsi que la liste des op&eacute;rateurs, sont fix&eacute;s par d&eacute;cision du Conseil du Caf&eacute;-Cacao, apr&egrave;s avis du Ministre charg&eacute; de l&apos;Agriculture, du Ministre charg&eacute; de l&apos;Economie, et des Finances, et du Ministre charg&eacute; du Budget.</P>
+
+<P CLASS="ParaText">
+L&apos;application du taux pr&eacute;f&eacute;rentiel est annuelle et renouvelable quatre fois de suite.</P>
+<H6 CLASS="Modification">
+Loi n&deg; 2016-1116 du 08 d&eacute;cembre 2016, an. fiscale,Art. 27.</H6>
+
+<P CLASS="Paragraphe">
+Mutations &agrave; titre gratuit</P>
+<P CLASS="Sous-paragraphe">
+I.- Dispositions concernant les mutations entre vifs</P>
+
+
+<span id="#A0730"></span>
+<H6 CLASS="NoArticle">
+Art. 730</H6>
+<P CLASS="ParaText">
+Les droits d&apos;enregistrement des donations entre vifs sont per&ccedil;us selon les quotit&eacute;s et suivant les modalit&eacute;s fix&eacute;es par les articles <a class='ui-button' href='' onClick="loadArticle('181','0735');return false;">735</a>, <a class='ui-button' href='' onClick="loadArticle('181','0737');return false;">737</a>, <a class='ui-button' href='' onClick="loadArticle('181','0738');return false;">738</a>, <a class='ui-button' href='' onClick="loadArticle('181','0741');return false;">741</a> et <a class='ui-button' href='' onClick="loadArticle('181','0746');return false;">746</a> pour la perception des droits de mutation par d&eacute;c&egrave;s.</P>
+<P CLASS="ParaText">
+Pour le calcul des abattements et r&eacute;ductions &eacute;dict&eacute;s par les articles <a class='ui-button' href='' onClick="loadArticle('181','0737');return false;">737</a> et <a class='ui-button' href='' onClick="loadArticle('181','0738');return false;">738</a>, il est tenu compte, aussi bien en cas de donations que de successions, des abattements et des r&eacute;ductions effectu&eacute;s sur les donations ant&eacute;rieures consenties par la m&ecirc;me personne.</P>
+<P CLASS="ParaText">
+Les droits liquid&eacute;s conform&eacute;ment aux dispositions qui pr&eacute;c&egrave;dent sont r&eacute;duits de 25 % en cas de donation par contrat de mariage et de donation-partage faite conform&eacute;ment &agrave; l&apos;article 135 de la loi n<b>&deg;-</b> 64-379 du 7 octobre 1964 relative aux successions.</P>
+
+<span id="#A0731"></span>
+<H6 CLASS="NoArticle">
+Art. 731</H6>
+<P CLASS="ParaText">
+Pour permettre l&apos;application du tarif progressif suivant les modalit&eacute;s fix&eacute;es par les articles <a class='ui-button' href='' onClick="loadArticle('181','0735');return false;">735</a> et suivants, les parties sont tenues de faire conna&icirc;tre dans tout acte constatant une transmission entre vifs &agrave; titre gratuit s&apos;il existe ou non des donations ant&eacute;rieures consenties par le donateur &agrave; un titre et sous une forme quelconque et dans l&apos;affirmative le montant de ces donations, les noms, qualit&eacute;s et r&eacute;sidences des officiers minist&eacute;riels qui ont re&ccedil;u les actes de donation et la date de l&apos;enregistrement de ces actes.</P>
+<P CLASS="ParaText">
+La perception est effectu&eacute;e en ajoutant &agrave; la valeur des biens compris dans la donation celle des biens qui ont fait l&apos;objet de donations ant&eacute;rieures, en consid&eacute;rant ceux des biens, dont la transmission n&apos;a pas &eacute;t&eacute; encore assujettie au droit de mutation &agrave; titre gratuit entre vifs, comme inclus dans les tranches les plus &eacute;lev&eacute;es de l&apos;actif imposable.</P>
+
+<span id="#A0732"></span>
+<H6 CLASS="NoArticle">
+Art. 732</H6>
+<P CLASS="ParaText">
+Les parties sont tenues de d&eacute;clarer, dans tout acte constatant une transmission entre vifs &agrave; titre gratuit, les noms, pr&eacute;noms, date et lieu de naissance des enfants vivants du donateur et des donataires, ainsi que des repr&eacute;sentants de ceux pr&eacute;d&eacute;c&eacute;d&eacute;s.</P>
+<P CLASS="ParaText">
+Les dispositions de l&apos;article <a class='ui-button' href='' onClick="loadArticle('181','0785');return false;">785</a> sont applicables &agrave; toute indication inexacte dans les mentions pr&eacute;vues au pr&eacute;sent article.</P>
+
+<span id="#A0733"></span>
+<H6 CLASS="NoArticle">
+Art. 733</H6>
+<P CLASS="ParaText">
+Les actes renfermant, soit d&eacute;claration par le donataire ou ses repr&eacute;sentants, soit reconnaissance judiciaire d&apos;un don manuel, sont sujets au droit de donation.</P>
+
+<span id="#A0734"></span>
+<H6 CLASS="NoArticle">
+Art. 734</H6>
+<P CLASS="ParaText">
+Le b&eacute;n&eacute;fice des dispositions des articles 737 et <a class='ui-button' href='' onClick="loadArticle('181','0738');return false;">738</a> alin&eacute;a 1er est subordonn&eacute; &agrave; la production d&apos;un certificat de vie dispens&eacute; du timbre et de l&apos;enregistrement pour chacun des enfants vivants du donateur ou des donataires et des repr&eacute;sentants de ceux pr&eacute;d&eacute;c&eacute;d&eacute;s.</P>
+<P CLASS="ParaText">
+Ce certificat ne pourra pas &ecirc;tre ant&eacute;rieur de plus d&apos;un mois &agrave; l&apos;acte constatant la mutation auquel il devra rester annex&eacute;.</P>
+<P CLASS="Sous-paragraphe">
+Il. - Dispositions concernant les mutations par d&eacute;c&egrave;s</P>
+
+<span id="#A0735"></span>
+<H6 CLASS="NoArticle">
+Art. 735 </H6>
+<P CLASS="ParaText">
+Les droits de mutation par d&eacute;c&egrave;s sont fix&eacute;s aux tarifs ci-apr&egrave;s pour la part nette recueillie par chaque ayant droit :</P>
+
+
+<TABLE BORDER="1" width="98%">
+<TR>
+<TD ROWSPAN="1" COLSPAN="2">
+<P CLASS="TableauEntete">
+En ligne directe et entre &eacute;poux :</P>
+</TD>
+</TR>
+<TR>
+<TD ROWSPAN="1" COLSPAN="1">
+<P CLASS="TableauCellule">
+Fraction de part nette taxable</P>
+</TD>
+<TD ROWSPAN="1" COLSPAN="1">
+<P CLASS="TableauCellule">
+Tarif <BR>
+applicable</P>
+</TD>
+</TR>
+<TR>
+<TD ROWSPAN="1" COLSPAN="1">
+<P CLASS="TableauCellule">
+N&apos;exc&eacute;dant pas 2 500 000 francs </P>
+</TD>
+<TD ROWSPAN="1" COLSPAN="1">
+<P CLASS="TableauCellule">
+1 %</P>
+</TD>
+</TR>
+<TR>
+<TD ROWSPAN="1" COLSPAN="1">
+<P CLASS="TableauCellule">
+Comprise entre 2 500 000  et 10 000 000 de francs</P></TD>
+<TD ROWSPAN="1" COLSPAN="1">
+<P CLASS="TableauCellule">
+2,5 %</P>
+</TD>
+</TR>
+<TR>
+<TD ROWSPAN="1" COLSPAN="1">
+<P CLASS="TableauCellule">
+Comprise entre 10 000 000  et 50 000 000 de francs</P></TD>
+<TD ROWSPAN="1" COLSPAN="1">
+<P CLASS="TableauCellule">
+4 %</P>
+</TD>
+</TR>
+<TR>
+<TD ROWSPAN="1" COLSPAN="1">
+<P CLASS="TableauCellule">
+Au-del&agrave; de 50 000 000 de francs</P></TD>
+<TD ROWSPAN="1" COLSPAN="1">
+<P CLASS="TableauCellule">
+5 %</P>
+</TD>
+</TR>
+<TR>
+<TD ROWSPAN="1" COLSPAN="1">
+<P CLASS="TableauEntete">
+En ligne collat&eacute;rale et entre non parents :</P>
+</TD>
+<TD ROWSPAN="1" COLSPAN="1">
+<P CLASS="TableauEntete">&nbsp;
+</P>
+</TD>
+</TR>
+<TR>
+<TD ROWSPAN="1" COLSPAN="1">
+<P CLASS="TableauCellule">
+Fraction de part nette taxable</P>
+</TD>
+<TD ROWSPAN="1" COLSPAN="1">
+<P CLASS="TableauCellule">
+Tarif <BR>
+applicable</P>
+</TD>
+</TR>
+<TR>
+<TD ROWSPAN="1" COLSPAN="1">
+<P CLASS="TableauCellule">
+Entre fr&egrave;res et s&#339;urs</P>
+</TD>
+<TD ROWSPAN="1" COLSPAN="1">
+<P CLASS="TableauCellule">&nbsp;
+</P>
+</TD>
+</TR>
+<TR>
+<TD ROWSPAN="1" COLSPAN="1">
+<P CLASS="TableauCellule">
+n&apos;exc&eacute;dant pas 10 000 000 francs</P></TD>
+<TD ROWSPAN="1" COLSPAN="1">
+<P CLASS="TableauCellule">
+6 %</P>
+</TD>
+</TR>
+<TR>
+<TD ROWSPAN="1" COLSPAN="1">
+<P CLASS="TableauCellule">
+Sup&eacute;rieure &agrave; 10 000 000 de francs</P></TD>
+<TD ROWSPAN="1" COLSPAN="1">
+<P CLASS="TableauCellule">
+8,5 %</P>
+</TD>
+</TR>
+<TR>
+<TD ROWSPAN="1" COLSPAN="1">
+<P CLASS="TableauCellule">
+Entre parents jusqu&apos;au 4&egrave;me degr&eacute;</P>
+</TD>
+<TD ROWSPAN="1" COLSPAN="1">
+<P CLASS="TableauCellule">
+10 % </P>
+</TD>
+</TR>
+<TR>
+<TD ROWSPAN="1" COLSPAN="1">
+<P CLASS="TableauCellule">
+Entre parents au-del&agrave; du 4&egrave;me degr&eacute; et entre personnes non parentes</P>
+</TD>
+<TD ROWSPAN="1" COLSPAN="1">
+<P CLASS="TableauCellule">
+12 %</P>
+</TD>
+</TR>
+</TABLE>
+<H6 CLASS="Modification">
+<a name="_Toc110590321"></a>Loi n&deg; 86-1383 du 19 d&eacute;c. 1986, an. fiscale,Art. 9; loi n&deg; 2016-1116 du 08 d&eacute;cembre 2016, an. fiscale,Art. 3-2.</H6>
+
+
+
+<span id="#A0736"></span>
+<H6 CLASS="NoArticle">
+Art. 736</H6>
+<P CLASS="ParaText">
+Toute d&eacute;claration de succession doit renfermer les indications pr&eacute;vues par l&apos;article <a class='ui-button' href='' onClick="loadArticle('181','0731');return false;">731</a>, premier alin&eacute;a ci-avant.</P>
+<P CLASS="ParaText">
+Les dispositions du deuxi&egrave;me alin&eacute;a du m&ecirc;me article sont applicables &agrave; la liquidation des droits de mutation par d&eacute;c&egrave;s.</P>
+<H6 CLASS="NoArticle">
+<span id="#A0737"></span>
+Art. 737 </H6>
+<P CLASS="ParaText">
+Pour la perception des droits de mutation &agrave; titre gratuit, il est effectu&eacute; un abattement de 100 000 000 de francs sur la part de chacun des enfants vivants ou repr&eacute;sent&eacute;s, sur la part de chacun des ascendants, sur la part du conjoint survivant et sur la part des fr&egrave;res et s&#339;urs.</P>
+<H6 CLASS="Modification">
+Ord. n&deg; 2007-488 du 31 mai 2007, an. fiscale,Art. 23; loi n&deg; 2016-1116 du 08 d&eacute;cembre 2016, an. fiscale,Art. 3-3a.</H6>
+<P CLASS="ParaText">
+Cet abattement est port&eacute; &agrave; 150 000 000 de francs sur la part des enfants pr&eacute;sentant un handicap physique ou mental grave. </P>
+<H6 CLASS="Modification">
+Loi n&deg; 2016-1116 du 08 d&eacute;cembre 2016, an. fiscale,Art. 3-3b.</H6>
+<P CLASS="ParaText">
+Entre les repr&eacute;sentants des enfants pr&eacute;d&eacute;c&eacute;d&eacute;s, cet abattement se divise d&apos;apr&egrave;s les r&egrave;gles de la d&eacute;volution l&eacute;gale.</P>
+<H6 CLASS="Modification">
+</a>Loi n&deg; 86-1383 du 19 d&eacute;c. 1986, an. fiscale,Art. 9.</H6>
+<P CLASS="ParaText">
+En ce qui concerne les immeubles habit&eacute;s par le conjoint survivant, il est fait application d&apos;un abattement de 50 % sur la valeur v&eacute;nale servant de base pour la d&eacute;termination de l&apos;assiette des droits de mutation, avant d&eacute;duction du montant de 100 000 000 de francs pr&eacute;vu &agrave; l&apos;alin&eacute;a premier du pr&eacute;sent article. </P>
+<H6 CLASS="Modification">
+Loi n&deg; 2016-1116 du 08 d&eacute;cembre 2016, an. fiscale,Art. 3-3c.</H6>
+
+
+
+<span id="#A0738"></span>
+<H6 CLASS="NoArticle">
+Art. 738  </H6>
+</H6>
+<P CLASS="ParaText">
+Lorsqu&apos;un h&eacute;ritier, donataire ou l&eacute;gataire a trois enfants ou plus, vivants ou repr&eacute;sent&eacute;s au moment de l&apos;ouverture de ses droits &agrave; la succession, il b&eacute;n&eacute;ficie sur l&apos;imp&ocirc;t &agrave; sa charge liquid&eacute;, conform&eacute;ment aux dispositions des articles <a class='ui-button' href='' onClick="loadArticle('181','0735');return false;">735</a> et <a class='ui-button' href='' onClick="loadArticle('181','0737');return false;">737</a>, d&apos;une r&eacute;duction de 100 % qui ne peut toutefois exc&eacute;der 200 000 francs par enfant en sus du deuxi&egrave;me.</P>
+
+<H6 CLASS="Modification">
+Loi n<b>&deg;-</b> 86-1383 du 19 d&eacute;c. 1986, an. fiscale,Art. 9; 2016-1116 du 08 d&eacute;cembre 2016, an. fiscale,Art. 3-4a.</H6>
+<P CLASS="ParaText">
+Le maximum de 200 000 francs que la r&eacute;duction vis&eacute;e ci-dessus ne peut d&eacute;passer, est port&eacute; &agrave; 800 000 francs en ce qui concerne les donations et successions en ligne directe et entre &eacute;poux .</P>
+
+
+<H6 CLASS="Modification">
+Loi n<b>&deg;-</b> 86-1383 du 19 d&eacute;c. 1986, an. fiscale,Art. 9; 2016-1116 du 08 d&eacute;cembre 2016, an. fiscale,Art. 3-4b.</H6>
+<P CLASS="ParaText">
+Le b&eacute;n&eacute;fice de cette disposition est subordonn&eacute; &agrave; la production, soit d&apos;un certificat de vie dispens&eacute; de timbre et de l&apos;enregistrement pour chacun des enfants vivants des h&eacute;ritiers, donataires et l&eacute;gataires et des repr&eacute;sentants de ceux pr&eacute;d&eacute;c&eacute;d&eacute;s, soit d&apos;une exp&eacute;dition de l&apos;acte de d&eacute;c&egrave;s de tout enfant d&eacute;c&eacute;d&eacute; depuis l&apos;ouverture de la succession.</P>
+
+<span id="#A0739"></span>
+<H6 CLASS="NoArticle">
+Art. 739</H6>
+<P CLASS="ParaText">
+Les h&eacute;ritiers, donataires ou l&eacute;gataires acceptants sont tenus, pour les biens leur advenant par l&apos;effet d&apos;une renonciation &agrave; une succession, &agrave; un legs ou &agrave; une donation, d&apos;acquitter, au titre des droits de mutation par d&eacute;c&egrave;s, une somme qui, nonobstant tous abattements, r&eacute;ductions ou exemptions, ne peut &ecirc;tre inf&eacute;rieure &agrave; celle que le renon&ccedil;ant aurait pay&eacute;e s&apos;il avait accept&eacute;.</P>
+<P CLASS="ParaText">
+Les tarifs &eacute;dict&eacute;s par les articles <a class='ui-button' href='' onClick="loadArticle('181','0742');return false;">742</a> et <a class='ui-button' href='' onClick="loadArticle('181','0743');return false;">743</a> sont seuls applicables aux biens qui, par suite de renonciation, reviennent aux collectivit&eacute;s b&eacute;n&eacute;ficiant desdits tarifs, pour les legs leur profitant personnellement et leur conf&eacute;rant le droit &agrave; l&apos;accroissement.</P>
+
+<span id="#A0740"></span>
+<H6 CLASS="NoArticle">
+Art. 740</H6>
+<P CLASS="ParaText">
+Sont exempt&eacute;es de l&apos;imp&ocirc;t de mutation par d&eacute;c&egrave;s, les successions des militaires ivoiriens d&eacute;c&eacute;d&eacute;s pendant la dur&eacute;e d&apos;une guerre ou dans l&apos;ann&eacute;e de la cessation des hostilit&eacute;s auxquelles ils ont particip&eacute;, de blessures ou de maladies contract&eacute;es pendant la guerre.</P>
+<P CLASS="ParaText">
+L&apos;exemption de l&apos;imp&ocirc;t n&apos;entra&icirc;ne pas la dispense de la d&eacute;claration des successions. Elle est subordonn&eacute;e &agrave; la production d&apos;un certificat de l&apos;autorit&eacute; militaire, dispens&eacute; du timbre, et constatant que la mort a &eacute;t&eacute; caus&eacute;e par une blessure re&ccedil;ue ou une maladie contract&eacute;e pendant la guerre.</P>
+
+<span id="#A0741"></span>
+<H6 CLASS="NoArticle">
+Art. 741</H6>
+<P CLASS="ParaText">
+Sous r&eacute;serve des exceptions pr&eacute;vues par le pr&eacute;sent Livre, les legs faits aux &eacute;tablissements d&apos;utilit&eacute; publique sont soumis au tarif fix&eacute; par l&apos;article <a class='ui-button' href='' onClick="loadArticle('181','0735');return false;">735</a> pour les successions entre parents jusqu&apos;au quatri&egrave;me degr&eacute;.</P>
+
+<H6 CLASS="Modification">
+Loi n<b>&deg;-</b> 86-1383 du 19 d&eacute;c. 1986, an. fiscale,Art. 9.</H6>
+<P CLASS="Sous-paragraphe">
+III. - Dispositions communes aux mutations entre vifs et aux mutations par d&eacute;c&egrave;s.</P>
+
+
+<span id="#A0742"></span>
+<H6 CLASS="NoArticle">
+Art. 742 </H6>
+<P CLASS="ParaText">
+Sont soumis &agrave; un droit de 1 %, les dons et les legs faits aux soci&eacute;t&eacute;s de secours mutuel et toute soci&eacute;t&eacute; reconnue d&apos;utilit&eacute; publique dont les ressources sont affect&eacute;es &agrave; des oeuvres d&apos;assistance.</P>
+<P CLASS="ParaText">
+Il est statu&eacute; sur le caract&egrave;re de bienfaisance de la disposition par le texte qui en autorise l&apos;acceptation.</P>
+<H6 CLASS="Modification">
+Loi n&deg; 2016-1116 du 08 d&eacute;cembre 2016, an. fiscale,Art. 3-5.</H6>
+
+<span id="#A0743"></span>
+<H6 CLASS="NoArticle">
+Art. 743 </H6>
+<P CLASS="ParaText">
+Sont &eacute;galement soumis &agrave; un droit de 1 % :</P>
+<P CLASS="Liste2-Enumeree">
+1-Les dons et les legs faits aux associations d&apos;enseignement reconnues d&apos;utilit&eacute; publique et aux soci&eacute;t&eacute;s d&apos;&eacute;ducation populaire reconnues d&apos;utilit&eacute; publique subventionn&eacute;es par l&apos;Etat ou par une collectivit&eacute; publique.</P>
+<P CLASS="Liste2-Enumeree">
+2-Les dons et les legs faits aux &eacute;tablissements pourvus de la personnalit&eacute; civile avec obligation pour les b&eacute;n&eacute;ficiaires de consacrer ces lib&eacute;ralit&eacute;s &agrave; l&apos;achat d&apos;oeuvres d&apos;art, de monuments ou d&apos;objets ayant un caract&egrave;re historique, de livres, d&apos;imprim&eacute;s ou de manuscrits destin&eacute;s &agrave; figurer dans une collection publique ou &agrave; l&apos;entretien d&apos;une collection publique.</P>
+<P CLASS="Liste2-Enumeree">
+3-Les dons et les legs aux &eacute;tablissements d&apos;utilit&eacute; publique dont les ressources sont exclusivement affect&eacute;es &agrave; des oeuvres scientifiques &agrave; caract&egrave;re d&eacute;sint&eacute;ress&eacute;.</P>
+<P CLASS="Liste2-Enumeree">
+4-Les dons et les legs faits &agrave; l&apos;Office national ou aux offices r&eacute;gionaux des mutil&eacute;s, combattants, victimes de la guerre et pupilles de la nation.</P>
+<P CLASS="Liste2-Enumeree">
+5-Les dons et les legs faits aux associations culturelles, aux unions d&apos;associations culturelles, aux congr&eacute;gations autoris&eacute;es et aux conseils d&apos;Administration des missions religieuses.</P>
+<H6 CLASS="Modification">
+Loi n&deg; 2016-1116 du 08 d&eacute;cembre 2016, an. fiscale,Art. 3-5.</H6>
+
+<span id="#A0744"></span>
+<H6 CLASS="NoArticle">
+Art. 744 </H6>
+<P CLASS="ParaText">
+Les dons et legs faits aux mutil&eacute;s de guerre frapp&eacute;s d&apos;une invalidit&eacute; de 50 % au minimum b&eacute;n&eacute;ficient sur les premiers 2 500 000 francs du tarif r&eacute;duit de 1 % &eacute;dict&eacute; par l&apos;article <a class='ui-button' href='' onClick="loadArticle('181','0742');return false;">742</a> du pr&eacute;sent Livre.</P>
+
+<H6 CLASS="Modification">
+Loi n<b>&deg;-</b> 86-1383 du 19 d&eacute;c. 1986, an. fiscale,Art. 9; loi n&deg; 2016-1116 du 08 d&eacute;cembre 2016, an. fiscale,Art. 3-5.</H6>
+
+
+<span id="#A0745"></span>
+<H6 CLASS="NoArticle">
+Art. 745</H6>
+<P CLASS="ParaText">
+Pour la perception des droits de mutations &agrave; titre gratuit, il n&apos;est pas tenu compte du lien de parent&eacute; r&eacute;sultant de l&apos;adoption.</P>
+<P CLASS="ParaText">
+Cette disposition n&apos;est pas applicable aux transmissions entrant dans les pr&eacute;visions des articles 20 et 22 de la loi n<b>&deg;-</b> 64-378 du 7 octobre 1964 relative &agrave; l&apos;adoption, ainsi qu&apos;&agrave; celles faites en faveur :</P>
+
+<H6 CLASS="Modification">
+Loi n<b>&deg;-</b> 86-1383 du 19 d&eacute;c. 1966, an. fiscale,Art. 9.</H6>
+<P CLASS="Liste2-Enumeree">
+1-D&apos;enfants issus d&apos;un premier mariage du conjoint de l&apos;adoptant.</P>
+<P CLASS="Liste2-Enumeree">
+2-De pupilles de la nation ou de l&apos;Assistance publique, ainsi que d&apos;orphelin d&apos;un p&egrave;re mort pour la C&ocirc;te d&apos;Ivoire.</P>
+
+
+<H6 CLASS="Modification">
+Loi n<b>&deg;-</b> 86-1383 du 19 d&eacute;c. 1986, an. fiscale,Art. 9.</H6>
+<P CLASS="Liste2-Enumeree">
+3-D&apos;adopt&eacute;s qui, dans leur minorit&eacute; et pendant six ans au moins, auront re&ccedil;u de l&apos;adoptant des secours et des soins non interrompus.</P>
+<P CLASS="Liste2-Enumeree">
+4-D&apos;adopt&eacute;s dont le ou les adoptants ont perdu, morts pour la C&ocirc;te d&apos;Ivoire, tous leurs descendants en ligne directe.</P>
+
+
+<H6 CLASS="Modification">
+Loi n<b>&deg;-</b> 86-1383 du 19 d&eacute;c. 1986, an. fiscale, art 9.</H6>
+<P CLASS="Liste2-Enumeree">
+5-D&apos;adopt&eacute;s dont les liens de parent&eacute; avec la famille naturelle ont &eacute;t&eacute; d&eacute;clar&eacute;s rompus en application des dispositions de l&apos;article 28 de la loi n<b>&deg;-</b> 64-378 du 7 octobre 1964 relative &agrave; l&apos;adoption.</P>
+
+
+<H6 CLASS="Modification">
+Loi n<b>&deg;-</b> 86-1383 du 19 d&eacute;c. 1986, an. fiscale,Art. 9.</H6>
+<P CLASS="Liste2-Enumeree">
+6-Des successibles en ligne directe descendante des personnes vis&eacute;es aux n<b>&deg;-</b> 1 &agrave; 5 ci-dessus.</P>
+
+
+<span id="#A0746"></span>
+<H6 CLASS="NoArticle">
+Art. 746</H6>
+<P CLASS="ParaText">
+Est compt&eacute; comme enfant vivant ou repr&eacute;sent&eacute; du donateur ou du d&eacute;funt, pour l&apos;application des articles <a class='ui-button' href='' onClick="loadArticle('181','0730');return false;">730</a> et <a class='ui-button' href='' onClick="loadArticle('181','0735');return false;">735</a> et de l&apos;h&eacute;ritier, donataire ou l&eacute;gataire, pour l&apos;application de l&apos;article <a class='ui-button' href='' onClick="loadArticle('181','0738');return false;">738</a> l&apos;enfant qui :</P>
+<P CLASS="Liste2-Enumeree">
+1-Est d&eacute;c&eacute;d&eacute; apr&egrave;s avoir atteint l&apos;&acirc;ge de seize ans r&eacute;volus.</P>
+<P CLASS="Liste2-Enumeree">
+2-Etant &acirc;g&eacute; de moins de seize ans, a &eacute;t&eacute; tu&eacute; par l&apos;ennemi au cours des hostilit&eacute;s ou est d&eacute;c&eacute;d&eacute; des suites de guerre, soit durant les hostilit&eacute;s, soit dans l&apos;ann&eacute;e &agrave; compter de leur cessation.</P>
+<P CLASS="ParaText">
+Le b&eacute;n&eacute;fice de cette disposition est subordonn&eacute; &agrave; la production, dans le premier cas, d&apos;une exp&eacute;dition de l&apos;acte de d&eacute;c&egrave;s de l&apos;enfant et dans le second cas, d&apos;un acte de notori&eacute;t&eacute; d&eacute;livr&eacute; sans frais par le juge du tribunal d&apos;instance du domicile du d&eacute;funt et &eacute;tablissant les circonstances de la blessure ou de la mort.</P>
+
+<H6 CLASS="Modification">
+Loi n<b>&deg;-</b> 86-1383 du 19 d&eacute;c. 1986, an. fiscale,Art. 9.</H6>
+
+
+<span id="#A0747"></span>
+<H6 CLASS="NoArticle">
+Art. 747</H6>
+<P CLASS="ParaText">
+Sous r&eacute;serve de trait&eacute;s de r&eacute;ciprocit&eacute; qui existent actuellement ou qui seront pass&eacute;s entre la C&ocirc;te d&apos;Ivoire et les pays &eacute;trangers, les r&eacute;ductions d&apos;imp&ocirc;ts ou de taxes, les d&eacute;gr&egrave;vements &agrave; la base, les d&eacute;ductions accord&eacute;es par les textes en vigueur pour des raisons de charges de famille ne sont applicables qu&apos;aux citoyens ivoiriens.</P>
+<P CLASS="Paragraphe">
+Partages</P>
+
+<span id="#A0748"></span>
+<H6 CLASS="NoArticle">
+Art. 748</H6>
+<P CLASS="ParaText">
+Les partages de biens meubles et immeubles entre copropri&eacute;taires, coh&eacute;ritiers et coassoci&eacute;s, &agrave; quelque titre que ce soit, pourvu qu&apos;il en soit justifi&eacute;, sont assujettis &agrave; un droit de 1 %.</P>
+
+<H6 CLASS="Modification">
+Loi n<b>&deg;-</b> 83-1421 du 30 d&eacute;c. 1983, an. fiscale,Art. 43.</H6>
+<P CLASS="ParaText">
+S&apos;il y a retour, le droit sur ce qui en sera l&apos;objet sera per&ccedil;u au taux r&eacute;gl&eacute; pour les ventes, conform&eacute;ment &agrave; l&apos;article ci-apr&egrave;s.</P>
+
+
+<span id="#A0749"></span>
+<H6 CLASS="NoArticle">
+Art. 749</H6>
+<P CLASS="ParaText">
+Les retours de partage de biens immeubles sont assujettis au droit de mutation immobili&egrave;re &agrave; titre on&eacute;reux.</P>
+
+<span id="#A0750"></span>
+<H6 CLASS="NoArticle">
+Art. 750</H6>
+<P CLASS="ParaText">
+Les r&egrave;gles de perception concernant les soultes de partage sont applicables aux donations portant partage, faites par actes entre vifs par les p&egrave;re et m&egrave;re ou autres ascendants, ainsi qu&apos;aux partages testamentaires &eacute;galement autoris&eacute;s par l&apos;article 135 de la loi n<b>&deg;-</b> 64-379 du 7 octobre 1964 relative aux successions.</P>
+
+<span id="#A0751"></span>
+<H6 CLASS="NoArticle">
+Art. 751 </H6>
+<P CLASS="ParaText">
+Dans les partages de succession comportant l&apos;attribution &agrave; un seul des copartageants de tous les biens meubles ou immeubles composant une exploitation agricole unique 
+ou une exploitation artisanale unique 
+ d&apos;une valeur n&apos;exc&eacute;dant pas dix millions de francs, la valeur des parts et portions de ces biens acquises par le copartageant attributaire est exon&eacute;r&eacute;e des droits de soulte et de retour si, lors de l&apos;ouverture de la succession, l&apos;attributaire habitait l&apos;exploitation et participait effectivement &agrave; la culture.</P>
+<H6 CLASS="Modification">
+Loi n&deg; 2016-1116 du 08 d&eacute;cembre 2016, an. fiscale,Art. 3-6a.</H6>
+<P CLASS="ParaText">
+Toutefois, si, dans le d&eacute;lai de 5 ans, l&apos;attributaire vient &agrave; cesser personnellement 
+ l&apos;exploitation ou &agrave; d&eacute;c&eacute;der sans que ses h&eacute;ritiers la continuent, ou si l&apos;exploitation est vendue par lui ou par ses h&eacute;ritiers dans le m&ecirc;me d&eacute;lai, en totalit&eacute; ou pour une fraction exc&eacute;dant le quart de la valeur totale au moment du partage, les droits de mutation deviennent exigibles.</P>
+<H6 CLASS="Modification">
+Loi n&deg; 2016-1116 du 08 d&eacute;cembre 2016, an. fiscale,Art. 3-6b.</H6>
+
+
+<P CLASS="Paragraphe">
+Rentes</P>
+<span id="#A0752"></span>
+<H6 CLASS="NoArticle">
+Art. 752</H6>
+<P CLASS="ParaText">
+Sous r&eacute;serve de ce qui est dit &agrave; l&apos;article <a class='ui-button' href='' onClick="loadArticle('181','0753');return false;">753</a>, les constitutions de rentes, soit perp&eacute;tuelles, soit viag&egrave;res, et de pensions &agrave; titre on&eacute;reux, ainsi que les cessions, transports et autres mutations qui en sont faits au m&ecirc;me titre, sont assujettis &agrave; un droit de 1 %.</P>
+<P CLASS="ParaText">
+Il en est de m&ecirc;me des remboursements ou rachats de rentes et redevances de toute nature, sauf ce qui est stipul&eacute; &agrave; l&apos;article <a class='ui-button' href='' onClick="loadArticle('181','0700');return false;">700</a>-2<b>&deg;-</b>.</P>
+
+<span id="#A0753"></span>
+<H6 CLASS="NoArticle">
+Art. 753</H6>
+<P CLASS="ParaText">
+Les contrats de rentes viag&egrave;res pass&eacute;s par les soci&eacute;t&eacute;s, compagnies d&apos;assurances et tous autres assureurs, ainsi que tous actes ayant exclusivement pour objet la formation, la modification ou la r&eacute;siliation amiable de ces contrats, sont soumis aux dispositions des articles <a class='ui-button' href='' onClick="loadArticle('181','0422');return false;">422</a> &agrave; <a class='ui-button' href='' onClick="loadArticle('181','0435');return false;">435</a> du pr&eacute;sent Code.</P>
+<P CLASS="Paragraphe">
+Soci&eacute;t&eacute;s</P>
+
+<span id="#A0754"></span>
+<H6 CLASS="NoArticle">
+Art. 754</H6>
+<P CLASS="ParaText">
+Les actes de formation et de prorogation de soci&eacute;t&eacute;s, qui ne contiennent ni obligation, ni lib&eacute;ration, ni transmission de biens meubles ou immeubles, entre les associ&eacute;s ou autres personnes, sont assujettis &agrave; un tarif d&eacute;gressif fix&eacute; comme suit :</P>
+
+<H6 CLASS="Modification">
+Loi n<b>&deg;-</b> 83-1421 du 30 d&eacute;c. 1983, an. fiscale,Art. 43.</H6>
+<P CLASS="ParaText">
+Valeur imposable :</P>
+<P CLASS="Liste2-Enumeree">
+-de z&eacute;ro &agrave; cinq milliards 0,3 %</P>
+<P CLASS="Liste2-Enumeree">
+-au-del&agrave; de cinq milliards..0,1 %</P>
+
+
+<H6 CLASS="Modification">
+Loi n<b>&deg;-</b> 95-05 du 11 janv. 1995, an. fiscale, art 19; Loi n<b>&deg;-</b> 2012-1179 du 27 d&eacute;cembre 2012, an. fiscale, art 14.</H6>
+<P CLASS="ParaText">
+En cas d&apos;augmentation de capital soumise au tarif ci-dessus, pour l&apos;application de ce tarif, il sera tenu compte du capital primitif et des augmentations pr&eacute;c&eacute;dentes soumises au m&ecirc;me tarif.</P>
+<P CLASS="ParaText">
+En ce qui concerne la cr&eacute;ation d&apos;entreprises dont le capital n&apos;exc&egrave;de pas 1 000 000 de francs, le minimum de perception de 18 000 francs pr&eacute;vu &agrave; l&apos;article <a class='ui-button' href='' onClick="loadArticle('181','0446');return false;">446</a>, n&apos;est pas exigible.</P>
+
+
+<H6 CLASS="Modification">
+Ord. n<b>&deg;-</b> 2013-281 du 24 avril 2013,Art.1er.</H6>
+<P CLASS="ParaText">
+Toutefois, les actes notari&eacute;s portant ou constatant des augmentations de capital des soci&eacute;t&eacute;s ayant leur si&egrave;ge social hors de C&ocirc;te d&apos;Ivoire ne donnent ouverture qu&apos;au droit fixe &eacute;dict&eacute; par l&apos;article <a class='ui-button' href='' onClick="loadArticle('181','0703');return false;">703</a> lorsqu&apos;il est justifi&eacute; que ces actes ont d&eacute;j&agrave; support&eacute; un droit proportionnel d&apos;enregistrement hors du territoire.</P>
+<P CLASS="ParaText">
+Les apports immobiliers, qui sont faits aux associations constitu&eacute;es conform&eacute;ment &agrave; la loi n<b>&deg;-</b> 60-315 du 21 septembre 1960 relative aux associations et du titre V du Code du travail (syndicats professionnels), sont soumis aux m&ecirc;mes droits que les apports aux soci&eacute;t&eacute;s civiles ou commerciales.</P>
+<P CLASS="ParaText">
+Le droit &eacute;tabli par le pr&eacute;sent article est r&eacute;duit de moiti&eacute; pour les actes vis&eacute;s aux articles <a class='ui-button' href='' onClick="loadArticle('181','0755');return false;">755</a>, <a class='ui-button' href='' onClick="loadArticle('181','0756');return false;">756</a> et <a class='ui-button' href='' onClick="loadArticle('181','0757');return false;">757</a>.</P>
+
+
+<span id="#A0755"></span>
+<H6 CLASS="NoArticle">
+Art. 755</H6>
+<P CLASS="ParaText">
+En cas de fusion de soci&eacute;t&eacute; anonyme ou &agrave; responsabilit&eacute; limit&eacute;e, la prise en charge par la soci&eacute;t&eacute; absorbante ou par la soci&eacute;t&eacute; nouvelle de tout ou partie du passif des soci&eacute;t&eacute;s anciennes ne donne ouverture qu&apos;au droit fixe &eacute;dict&eacute; &agrave; l&apos;article <a class='ui-button' href='' onClick="loadArticle('181','0703');return false;">703</a>.</P>
+<P CLASS="ParaText">
+La formalit&eacute; de publicit&eacute; &agrave; la Conservation fonci&egrave;re ne donne pas lieu &agrave; la perception de la taxe pr&eacute;vue &agrave; l&apos;article 4 A)-2<b>&deg;-</b> de l&apos;ordonnance n<b>&deg;-</b> 60-47 du 13 janvier 1960.</P>
+<P CLASS="ParaText">
+Le b&eacute;n&eacute;fice de ces dispositions est subordonn&eacute; &agrave; la condition que la soci&eacute;t&eacute; absorbante ou nouvelle ait son si&egrave;ge social en C&ocirc;te d&apos;Ivoire.</P>
+
+<span id="#A0756"></span>
+<H6 CLASS="NoArticle">
+Art. 756</H6>
+<P CLASS="ParaText">
+Sont assimil&eacute;s &agrave; une fusion de soci&eacute;t&eacute; les actes qui constatent l&apos;apport par une soci&eacute;t&eacute; anonyme ou &agrave; responsabilit&eacute; limit&eacute;e &agrave; une autre soci&eacute;t&eacute; existante ou constitu&eacute;e sous l&apos;une de ces formes d&apos;une partie de ses &eacute;l&eacute;ments d&apos;actif, &agrave; la condition :</P>
+
+<H6 CLASS="Modification">
+Loi n<b>&deg;-</b> 74-781 du 26 d&eacute;c. 1974, an. fiscale,Art. 13.</H6>
+<P CLASS="Liste2-Enumeree">
+1-Que la soci&eacute;t&eacute; absorbante ou nouvelle ait son si&egrave;ge social en C&ocirc;te d&apos;Ivoire.</P>
+<P CLASS="Liste2-Enumeree">
+2-Que la soci&eacute;t&eacute; apporteuse et la soci&eacute;t&eacute; b&eacute;n&eacute;ficiaire de l&apos;apport aient express&eacute;ment manifest&eacute; la volont&eacute; dans l&apos;acte d&apos;apport de b&eacute;n&eacute;ficier de cette assimilation.</P>
+
+
+<span id="#A0757"></span>
+<H6 CLASS="NoArticle">
+Art. 757</H6>
+<P CLASS="ParaText">
+Est soumise au r&eacute;gime des fusions de soci&eacute;t&eacute;s institu&eacute; par le pr&eacute;sent Livre, l&apos;op&eacute;ration par laquelle une soci&eacute;t&eacute; anonyme ou &agrave; responsabilit&eacute; limit&eacute;e apporte l&apos;int&eacute;gralit&eacute; de son actif &agrave; une ou plusieurs soci&eacute;t&eacute;s existantes ou constitu&eacute;es &agrave; cette fin, sous l&apos;une de ces formes, &agrave; condition que :</P>
+<P CLASS="Liste2-Enumeree">
+1-Les soci&eacute;t&eacute;s b&eacute;n&eacute;ficiaires des apports aient leur si&egrave;ge social en C&ocirc;te d&apos;Ivoire.</P>
+<P CLASS="Liste2-Enumeree">
+2-Les apports r&eacute;sultent de conventions prenant effet &agrave; la m&ecirc;me date pour les diff&eacute;rentes soci&eacute;t&eacute;s qui en sont b&eacute;n&eacute;ficiaires et entra&icirc;nent, d&egrave;s leur r&eacute;alisation, la dissolution imm&eacute;diate de la soci&eacute;t&eacute; apporteuse.</P>
+
+<span id="#A0758"></span>
+<H6 CLASS="NoArticle">
+Art. 758</H6>
+<P CLASS="ParaText">
+Le droit &eacute;tabli par l&apos;article <a class='ui-button' href='' onClick="loadArticle('181','0754');return false;">754</a> ci-dessus est per&ccedil;u au taux de 6 % pour les actes portant augmentation, au moyen de l&apos;incorporation de b&eacute;n&eacute;fices, de r&eacute;serves ou de provisions de toute nature, du capital des soci&eacute;t&eacute;s soumises &agrave; l&apos;imp&ocirc;t sur le revenu des capitaux mobiliers.</P>
+
+<H6 CLASS="Modification">
+Loi n<b>&deg;-</b> 83-1421 du 30 d&eacute;c. 1983, an. fiscale,Art. 43.</H6>
+<P CLASS="ParaText">
+Le droit d&apos;apport en soci&eacute;t&eacute; demeure exigible au taux pr&eacute;vu &agrave; l&apos;article <a class='ui-button' href='' onClick="loadArticle('181','0754');return false;">754</a> lorsque les b&eacute;n&eacute;fices, r&eacute;serves ou provisions incorpor&eacute;s au capital ont d&eacute;j&agrave; support&eacute; l&apos;imp&ocirc;t sur les b&eacute;n&eacute;fices industriels et commerciaux ou l&apos;imp&ocirc;t g&eacute;n&eacute;ral sur le revenu.</P>
+
+
+<span id="#A0759"></span>
+<H6 CLASS="NoArticle">
+Art. 759</H6>
+<P CLASS="ParaText">
+Le droit &eacute;tabli par l&apos;article <a class='ui-button' href='' onClick="loadArticle('181','0754');return false;">754</a> est &eacute;galement per&ccedil;u au taux r&eacute;duit pr&eacute;vu par le cinqui&egrave;me paragraphe du m&ecirc;me article pour les actes de fusion en ce qui concerne la partie de l&apos;actif apport&eacute;e par la ou les soci&eacute;t&eacute;s fusionn&eacute;es qui exc&egrave;de le capital appel&eacute; et non rembours&eacute; de ces soci&eacute;t&eacute;s.</P>
+
+<H6 CLASS="Modification">
+Loi n<b>&deg;-</b> 2003-206 du 7 juillet 2003, an. fiscale,Art. 38-2.</H6>
+<P CLASS="Paragraphe">
+Ventes et autres actes translatifs de propri&eacute;t&eacute; ou d&apos;usufruit de biens immeubles &agrave; titre on&eacute;reux</P>
+
+
+<span id="#A0760"></span>
+<DIV>
+<H6 CLASS="NoArticle">
+    Art. 760 &nbsp;&nbsp;&nbsp;&nbsp;<a href="#" onClick="loadpage('176','h23760');return false;" class="ui-button"  title="Consultez l'historique">2023...</a></H6>
+<P CLASS="Liste2-Enumeree">
+
+1&deg; Sous r&eacute;serve de ce qui est dit <FONT COLOR='#000000'>à l'article 764</FONT>, les adjudications, ventes, reventes, cessions, r&eacute;trocessions, les retraits exerc&eacute;s apr&egrave;s l&apos;expiration des d&eacute;lais convenus par les contrats de vente sous facult&eacute; de r&eacute;m&eacute;r&eacute;, et tous autres actes civils et judiciaires translatifs de propri&eacute;t&eacute; ou d&apos;usufruit de biens immeubles &agrave; titre on&eacute;reux sont assujettis &agrave; un droit de 4 %.</P>
+<H6 CLASS="Modification">
+Loi n&deg; 91-270 du 29 avril 1991, an. fiscale,Art. 16-9; loi n&deg; 96-218 du 13 mars 1996, an. fiscale,Art. 7-1&deg; ord. n&deg; 2013-280 du 24 avril 2013,Art.1er; ord. n&deg; 2014-163 du 02 avril 2014,Art. 1er; ord. n&deg; 2015-206 du 24 mars 2015; ; loi n° 2023-1000 du 18  déc. 2023, an. fiscale, art. 2-7.</H6>
+<P CLASS="Liste2-Enumeree"><FONT COLOR='#000000'>
+<A NAME="50618389_pgfId-1022186"></A>   Sont également assujettis au droit de 4 %, tous les actes portant cessions de terrains non effectués par devant notaire. Ce droit à la charge de l’acquéreur, s’applique aux prix de cession des terrains concernés. </FONT></P>
+<H6 CLASS="Modification">
+<A NAME="50618389_pgfId-1049529"></A>Loi n° 2023-1000 du 18  déc. 2023, an. fiscale, art. 2-7.</H6>
+
+<P CLASS="Liste2-Enumeree">
+2&deg;	N&apos;est toutefois pas soumise au droit, toute acquisition d&apos;immeuble par les &eacute;tablissements bancaires ou financiers au terme d&apos;une proc&eacute;dure d&apos;adjudication qu&apos;ils ont eux m&ecirc;mes engag&eacute;e et qui est demeur&eacute;e infructueuse, sous r&eacute;serve que l&apos;immeuble saisi soit vendu dans le d&eacute;lai maximum pr&eacute;vu par la r&eacute;glementation bancaire en vigueur.</P>
+<H6 CLASS="Modification">
+<a name="_Toc110590339"></a>Loi n&deg; 92-948 du 23 d&eacute;c. 1992, an. fiscale,Art. 6.</H6>
+<P CLASS="Liste2-Enumeree">
+3&deg;	Le droit de mutation est r&eacute;duit de moiti&eacute; pour les acquisitions d&apos;immeubles effectu&eacute;es par les associations et fondations caritatives reconnues d&apos;utilit&eacute; publique, agissant sans but lucratif, et dont la gestion est d&eacute;sint&eacute;ress&eacute;e au sens de l&apos;article 156 du Code g&eacute;n&eacute;ral des Imp&ocirc;ts.</P>
+<H6 CLASS="Modification">
+<a name="_Toc110590340"></a>Loi n&deg; 94-201 du 8 avril 1994, an. fiscale,Art. 34.</H6>
+
+<P CLASS="ParaText">
+    <a name="pgfId-1021761"></a>Dans le cadre d&apos;une op&eacute;ration de cr&eacute;dit-bail immobilier, ce droit est &eacute;galement r&eacute;duit de moiti&eacute; pour le cr&eacute;dit-bailleur lors de l&apos;acquisition du bien.
+</P>
+
+<H6 CLASS="Modification">
+Ord. n&deg; 2011-480 du 28 d&eacute;cembre 2011, an. fiscale,Art. 21-2; Ord. n&deg; 2015-771 du 09 d&eacute;c. 2015,Art. 3.</H6>
+<P CLASS="Liste2-Enumeree">
+4&deg;	Les cessions d&apos;actions ou de parts d&apos;int&eacute;r&ecirc;ts conf&eacute;rant &agrave; leur possesseur le droit &agrave; la jouissance ou &agrave; la propri&eacute;t&eacute; d&apos;immeubles ou fractions d&apos;immeubles, sont assujetties au droit proportionnel pr&eacute;vu par le pr&eacute;sent article.</P>
+<H6 CLASS="Modification">
+Loi n&deg; 2001-338 du 14 juin 2001, an. fiscale,Art. 26.</H6>
+<P CLASS="Liste2-Enumeree">
+Ce droit proportionnel s&apos;applique &eacute;galement aux cessions &agrave; titre on&eacute;reux de valeurs mobili&egrave;res ou de droits sociaux de soci&eacute;t&eacute;s &agrave; pr&eacute;pond&eacute;rance immobili&egrave;re qui ne sont pas admises &agrave; la cote d&apos;une Bourse.</P>
+<P CLASS="Liste2-Enumeree">
+5&deg;	Sont consid&eacute;r&eacute;es comme soci&eacute;t&eacute;s &agrave; pr&eacute;pond&eacute;rance immobili&egrave;re, les soci&eacute;t&eacute;s dont l&apos;actif est constitu&eacute; pour plus de 75 % de sa valeur par des immeubles ou des droits portant sur des immeubles.</P>
+<P CLASS="Liste2-Enumeree">
+6&deg;	Ne sont pas pris en consid&eacute;ration, les immeubles directement affect&eacute;s par la soci&eacute;t&eacute; &agrave; sa propre exploitation industrielle, commerciale, agricole ou &agrave; l&apos;exercice d&apos;une profession non commerciale. Ces immeubles s&apos;entendent exclusivement des moyens permanents d&apos;exploitation &agrave; l&apos;exclusion des immeubles donn&eacute;s en location, des immeubles en stock et de ceux qui correspondent &agrave; un placement de capitaux.</P>
+<P CLASS="Liste2-Enumeree">
+7&deg;	Pour l&apos;appr&eacute;ciation du pourcentage de 75 %, les &eacute;l&eacute;ments d&apos;actif sont estim&eacute;s &agrave; leur valeur v&eacute;nale &agrave; la date de la cession.</P>
+<H6 CLASS="Modification">
+Loi n&deg; 96-218 du 13 mars 1996, an. fiscale,Art. 7-2&deg;.</H6>
+</DIV>
+
+<span id="#A0761"></span>
+<H6 CLASS="NoArticle">
+Art. 761 </H6>
+<P CLASS="ParaText">
+
+Abrog&eacute;.
+</P>
+
+<H6 CLASS="Modification">
+Loi n<b>&deg;-</b> 95-05 du 11 janv. 1995, an. fiscale,Art. 18; loi n<b>&deg;-</b> 96-218 du 13 mars, 1996, an. fiscale,Art. 36;loi n<b>&deg;-</b> 2013- 908 du 26 d&eacute;cembre  2013, an. fiscale,Art. 7.</H6>
+
+
+ 
+<span id="#A0762"></span>
+<H6 CLASS="NoArticle">
+Art. 762 &nbsp;&nbsp;&nbsp;&nbsp;<a href="#" onClick="loadpage('176','h24762');return false;" class="ui-button"  title="Consultez l'historique">2024...</a></H6>
+<P CLASS="ParaText">
+Les cessions &agrave; titre on&eacute;reux d&apos;immeubles ou de fractions d&apos;immeubles au sens de l&apos;article <a class='ui-button' href='' onClick="loadArticle('181','0760');return false;">760</a> du pr&eacute;sent Livre, par les personnes physiques ou soci&eacute;t&eacute;s de personnes non passibles de l&apos;imp&ocirc;t sur les b&eacute;n&eacute;fices, donnent lieu &agrave; un pr&eacute;l&egrave;vement sur la plus-value de cession.</P>
+<P CLASS="ParaText">
+La plus-value de cession est forfaitairement fix&eacute;e &agrave; 20 % du prix de cession.</P>
+<P CLASS="ParaText">
+Le taux de pr&eacute;l&egrave;vement est de <font color='#d00000'>17 % </FONT>assis sur la plus-value telle que d&eacute;finie &agrave; l&apos;alin&eacute;a pr&eacute;c&eacute;dent.</P>
+<P CLASS="ParaText">
+Le pr&eacute;l&egrave;vement ainsi op&eacute;r&eacute; est &agrave; la charge exclusive du c&eacute;dant, nonobstant toute clause contraire.</P>
+<P CLASS="ParaText">
+Ce pr&eacute;l&egrave;vement est assis, liquid&eacute;, contr&ocirc;l&eacute; et recouvr&eacute; selon les m&ecirc;mes proc&eacute;dures, sanctions et s&ucirc;ret&eacute;s qu&apos;en mati&egrave;re de droit d&apos;enregistrement.</P>
+
+<H6 CLASS="Modification">
+Ord. n<b>&deg;-</b> 2000-252 du 28 mars 2000Art. 13; loi n° 2024-1109 du 18 déc. 2024, an. fiscale, art. 37-3.</H6>
+
+
+<span id="#A0763"></span>
+<H6 CLASS="NoArticle">
+Art. 763</H6>
+<P CLASS="ParaText">
+Les adjudications &agrave; la folle ench&egrave;re de biens de m&ecirc;me nature sont assujettis au m&ecirc;me droit de 10 %, mais seulement sur ce qui exc&egrave;de le prix de la pr&eacute;c&eacute;dente adjudication, si le droit a &eacute;t&eacute; acquitt&eacute;.</P>
+
+<H6 CLASS="Modification">
+Loi n<b>&deg;-</b> 91-270 du 29 avril 1991, an. fiscale,Art. 16-9<b>&deg;-</b>.</H6>
+
+
+<span id="#A0764"></span>
+<H6 CLASS="NoArticle">
+Art. 764</H6>
+<P CLASS="ParaText">
+Les actes translatifs de propri&eacute;t&eacute;, d&apos;usufruit ou de jouissance de biens immeubles situ&eacute;s en pays &eacute;trangers sont assujettis &agrave; un droit de 1,5 %.</P>
+<P CLASS="ParaText">
+Ce droit est liquid&eacute; sur le prix exprim&eacute;, en y ajoutant toutes les charges en capital.</P>
+
+<H6 CLASS="Modification">
+Loi n<b>&deg;-</b> 83-1421 du 30 d&eacute;c. 1983, an. fiscale,Art. 43.</H6>
+<P CLASS="Paragraphe">
+Ventes et autres actes translatifs de propri&eacute;t&eacute; &agrave; titre on&eacute;reux de meubles et objets mobiliers</P>
+
+<DIV>
+<span id="#A0764b"></span>
+<H6 CLASS="NoArticle">
+Art. 764 bis </H6>
+<P CLASS="ParaText">
+Sous r&eacute;serve des dispositions de l&apos;article 760 du pr&eacute;sent Code, la cession de tout ou partie des droits sociaux d&apos;une soci&eacute;t&eacute; lorsqu&apos;elle n&apos;entra&icirc;ne pas la disparition de ladite soci&eacute;t&eacute; ou la cr&eacute;ation d&apos;une personne morale nouvelle, est assujettie &agrave; un droit de 1 %.</P>
+<P CLASS="ParaText">
+
+Ce droit est &agrave; la charge du c&eacute;dant. Il est pr&eacute;lev&eacute; par la soci&eacute;t&eacute; de gestion et d&apos;interm&eacute;diation ou le notaire de celui-ci ou le cas &eacute;ch&eacute;ant, l&apos;entreprise d&apos;interm&eacute;diation du cessionnaire. </P>
+<P CLASS="ParaText">
+
+<a name="pgfId-1031973"></a>Les droits pr&eacute;lev&eacute;s sont d&eacute;clar&eacute;s et revers&eacute;s dans les caisses du Tr&eacute;sor au plus tard le 15 du mois suivant la fin de la transaction. Pour les soci&eacute;t&eacute;s de gestion et d&apos;interm&eacute;diation ou les notaires relevant de la Direction des grandes Entreprises ou des centres des moyennes entreprises, la d&eacute;claration et le reversement s&apos;effectuent au plus tard le 20 du mois suivant la fin de la transaction.</P>
+<P CLASS="ParaText">
+
+Lorsque les parties ne sollicitent pas les services d&apos;une soci&eacute;t&eacute; de gestion et d&apos;interm&eacute;diation ou d&apos;un notaire, ou que ladite soci&eacute;t&eacute; n&apos;est pas install&eacute;e en C&ocirc;te d&apos;Ivoire, le paiement du droit d&apos;enregistrement incombe au c&eacute;dant, ou le cas &eacute;ch&eacute;ant, au cessionnaire. </P>
+<H6 CLASS="Modification">
+Loi n&deg; 2016-1116 du 08 d&eacute;cembre 2016, an. fiscale,Art. 6-3.</H6>
+<P CLASS="ParaText">
+Sont exon&eacute;r&eacute;es :</P>
+<P CLASS="Liste2-Enumeree">
+
+-	les cessions de droits sociaux des soci&eacute;t&eacute;s cot&eacute;es &agrave; la Bourse r&eacute;gionale des Valeurs mobili&egrave;res (BRVM) ;</P>
+<P CLASS="Liste2-Enumeree">
+
+-	les cessions des droits sociaux des autres entreprises r&eacute;alis&eacute;es par les soci&eacute;t&eacute;s dont l&apos;activit&eacute; consiste en l&apos;acquisition, la gestion et la cession desdits droits. </P>
+<H6 CLASS="Modification">
+Loi n&deg; 2015-840 du 18 d&eacute;cembre 2015, an. fiscale,Art. 12-2; loi n&deg; 2016-1116 du 08 d&eacute;cembre 2016, an. fiscale,Art. 6-4.</H6>
+<P CLASS="ParaText">
+
+Sont &eacute;galement exon&eacute;r&eacute;es, les cessions effectu&eacute;es par des personnes physiques ou morales &eacute;trang&egrave;res au profit de personnes physiques ou morales ivoiriennes, portant sur les droits sociaux qu&apos;elles d&eacute;tiennent dans des entreprises exploit&eacute;es en C&ocirc;te d&apos;Ivoire. </P>
+<H6 CLASS="Modification">
+Loi n&deg; 2016-1116 du 08 d&eacute;cembre 2016, an. fiscale,Art. 6-5.</H6>
+
+</DIV>
+
+<span id="#A0765"></span>
+<H6 CLASS="NoArticle">
+Art. 765 &nbsp;&nbsp;&nbsp;&nbsp;<a href="#" onClick="loadpage('176','h23766');return false;" class="ui-button"  title="Consultez l'historique">2023...</a></H6>
+<P CLASS="ParaText">
+Sous r&eacute;serve de toutes autres dispositions particuli&egrave;res du pr&eacute;sent Livre les adjudications, ventes, reventes, cessions, r&eacute;trocessions, march&eacute;s, trait&eacute;s et tous autres actes, soit civils, soit judiciaires, translatifs de propri&eacute;t&eacute;, &agrave; titre on&eacute;reux, de meubles, r&eacute;coltes de l&apos;ann&eacute;e sur pied, coupes de bois taillis et de hautes futaies et autres objets mobiliers, m&ecirc;me les ventes de biens de cette nature faites par l&apos;Administration, sont assujettis &agrave; un droit fixe de <FONT COLOR='#000000'>25 000 </FONT> francs.</P>
+
+<H6 CLASS="Modification">
+Loi n<b>&deg;-</b> 83-1421 du 30 d&eacute;c. 1983, an. fiscale,Art. 43; loi n<b>&deg;-</b> 2004-271 du 15 avril 2004, an. fiscale,Art. 28-2; loi n° 2023-1000 du 18  déc. 2023, an. fiscale, art. 2-1.</H6>
+
+
+ <span id="#A0766"></span>
+<H6 CLASS="NoArticle">
+Art. 766 &nbsp;&nbsp;&nbsp;&nbsp;<a href="#" onClick="loadpage('176','h23766');return false;" class="ui-button"  title="Consultez l'historique">2023...</a></H6>
+<P CLASS="ParaText">
+Sont assujetties &agrave; un droit de <FONT COLOR='#000000'>10 000 </FONT> francs :</P>
+<H6 CLASS="Modification">loi n° 2023-1000 du 18  déc. 2023, an. fiscale, art. 2-1.</H6>
+
+<P CLASS="ParaText">
+<A NAME="50618389_pgfId-1049553"></A>Loi n° 2023-1000 du 18  déc. 2023, an. fiscale, art. 2-4.</P>
+<P CLASS="Liste2-Enumeree">
+1-Les ventes d&apos;animaux, r&eacute;coltes, engrais instruments et autres objets mobiliers d&eacute;pendant d&apos;une exploitation agricole.</P>
+<P CLASS="Liste2-Enumeree">
+2-Les ventes de meubles et marchandises qui sont faites conform&eacute;ment &agrave; l&apos;article 147 de l&apos;Acte uniforme portant organisation des proc&eacute;dures collectives d&apos;apurement du passif.</P>
+<P CLASS="Liste2-Enumeree">
+3-Les ventes volontaires aux ench&egrave;res, en gros et dans les formes pr&eacute;vues par la loi du 28 mai 1858, des marchandises comprises au tableau annex&eacute; &agrave; ladite loi.</P>
+<P CLASS="Liste2-Enumeree">
+4-Les ventes publiques de marchandises en gros autoris&eacute;es ou ordonn&eacute;es, comme il est dit aux articles 1 et 2 de la loi du 3 juillet 1861.</P>
+<P CLASS="Liste2-Enumeree">
+5-Les ventes publiques d&apos;objets donn&eacute;s en gage, pr&eacute;vues par l&apos;article 56 de l&apos;Acte uniforme portant organisation des s&ucirc;ret&eacute;s et de l&apos;article 120 de l&apos;Acte uniforme portant organisation des proc&eacute;dures simplifi&eacute;es de recouvrement et des voies d&apos;ex&eacute;cution.</P>
+<P CLASS="Liste2-Enumeree">
+6-Les ventes op&eacute;r&eacute;es en vertu de l&apos;article 100 de l&apos;Acte uniforme portant organisation des s&ucirc;ret&eacute;s, relatif au nantissement des stocks.</P>
+<P CLASS="Liste2-Enumeree">
+7-Les ventes de marchandises avari&eacute;es par suite d&apos;&eacute;v&eacute;nements de mer et de d&eacute;bris de navires naufrag&eacute;s.</P>
+
+<span class="historique" ID="h23727">
+<div class="histText">
+
+<BR> 
+<p>Les d&eacute;cisions de la Cour Supr&ecirc;me sont assujetties au timbre et &agrave; l&rsquo;enregistrement. Elles donnent ouverture au droit fixe de 18 000 francs pr&eacute;vu par l&rsquo;article 703 ci-dessus et, le cas &eacute;ch&eacute;ant, au droit proportionnel &eacute;tabli par l&rsquo;article 722.</p>
+<p>Loi n&deg; 83-1421 du 30 d&eacute;c. 1983, an. fiscale, art. 43; loi n&deg; 2004-271 du 15 avril 2004, an. fiscale, art. 28-2.</p>
+<p>&nbsp;</p>
+</div></span><finh23727>
+
+<span class="historique" ID="h23760">
+<div class="histText">
+
+<BR> 
+<p>1&deg; Sous r&eacute;serve de ce qui est dit aux articles 761 et 764, les adjudications, ventes, reventes, cessions, r&eacute;trocessions, les retraits exerc&eacute;s apr&egrave;s l&rsquo;expiration des d&eacute;lais convenus par les contrats de vente sous facult&eacute; de r&eacute;m&eacute;r&eacute;, et tous autres actes civils et judiciaires translatifs de propri&eacute;t&eacute; ou d&rsquo;usufruit de biens immeubles &agrave; titre on&eacute;reux sont assujettis &agrave; un droit de 4 %.</p>
+<p>Loi n&deg; 91-270 du 29 avril 1991, an. fiscale, art. 16-9; loi n&deg; 96-218 du 13 mars 1996, an. fiscale, art. 7-1&deg;, ord. n&deg; 2013-280 du 24 avril 2013, art.1er; ord. n&deg; 2014-163 du 02 avril 2014, art. 1er; ord. n&deg; 2015-206 du 24 mars 2015.</p>
+<p>&nbsp;</p>
+<p>2&deg;	N&rsquo;est toutefois pas soumise au droit, toute acquisition d&rsquo;immeuble par les &eacute;tablissements bancaires ou financiers au terme d&rsquo;une proc&eacute;dure d&rsquo;adjudication qu&rsquo;ils ont eux m&ecirc;mes engag&eacute;e et qui est demeur&eacute;e infructueuse, sous r&eacute;serve que l&rsquo;immeuble saisi soit vendu dans le d&eacute;lai maximum pr&eacute;vu par la r&eacute;glementation bancaire en vigueur.</p>
+<p>Loi n&deg; 92-948 du 23 d&eacute;c. 1992, an. fiscale, art. 6.</p>
+<p>3&deg;	Le droit de mutation est r&eacute;duit de moiti&eacute; pour les acquisitions d&rsquo;immeubles effectu&eacute;es par les associations et fondations caritatives reconnues d&rsquo;utilit&eacute; publique, agissant sans but lucratif, et dont la gestion est d&eacute;sint&eacute;ress&eacute;e au sens de l&rsquo;article 156 du Code g&eacute;n&eacute;ral des Imp&ocirc;ts.</p>
+<p>Loi n&deg; 94-201 du 8 avril 1994, an. fiscale, art. 34.</p>
+<p>Dans le cadre d&rsquo;une op&eacute;ration de cr&eacute;dit-bail immobilier, ce droit est &eacute;galement r&eacute;duit de moiti&eacute; pour le cr&eacute;dit-bailleur lors de l&rsquo;acquisition du bien.</p>
+<p>Ord. n&deg; 2011-480 du 28 d&eacute;cembre 2011, an. fiscale, art. 21-2; ord. n&deg; 2015-771 du 09 d&eacute;cembre 2015, art. 3.</p>
+<p>4&deg;	Les cessions d&rsquo;actions ou de parts d&rsquo;int&eacute;r&ecirc;ts conf&eacute;rant &agrave; leur possesseur le droit &agrave; la jouissance ou &agrave; la propri&eacute;t&eacute; d&rsquo;immeubles ou fractions d&rsquo;immeubles, sont assujetties au droit proportionnel pr&eacute;vu par le pr&eacute;sent article.</p>
+<p>Loi n&deg; 2001-338 du 14 juin 2001, an. fiscale, art. 26.</p>
+<p>Ce droit proportionnel s&rsquo;applique &eacute;galement aux cessions &agrave; titre on&eacute;reux de valeurs mobili&egrave;res ou de droits sociaux de soci&eacute;t&eacute;s &agrave; pr&eacute;pond&eacute;rance immobili&egrave;re qui ne sont pas admises &agrave; la cote d&rsquo;une Bourse.</p>
+<p>5&deg;	Sont consid&eacute;r&eacute;es comme soci&eacute;t&eacute;s &agrave; pr&eacute;pond&eacute;rance immobili&egrave;re, les soci&eacute;t&eacute;s dont l&rsquo;actif est constitu&eacute; pour plus de 75 % de sa valeur par des immeubles ou des droits portant sur des immeubles.</p>
+<p>6&deg;	Ne sont pas pris en consid&eacute;ration, les immeubles directement affect&eacute;s par la soci&eacute;t&eacute; &agrave; sa propre exploitation industrielle, commerciale, agricole ou &agrave; l&rsquo;exercice d&rsquo;une profession non commerciale. Ces immeubles s&rsquo;entendent exclusivement des moyens permanents d&rsquo;exploitation &agrave; l&rsquo;exclusion des immeubles donn&eacute;s en location, des immeubles en stock et de ceux qui correspondent &agrave; un placement de capitaux.</p>
+<p>7&deg;	Pour l&rsquo;appr&eacute;ciation du pourcentage de 75 %, les &eacute;l&eacute;ments d&rsquo;actif sont estim&eacute;s &agrave; leur valeur v&eacute;nale &agrave; la date de la cession.</p>
+<p>Loi n&deg; 96-218 du 13 mars 1996, an. fiscale, art. 7-2&deg;.</p>
+<p>&nbsp;</p>
+</div></span><finh23760>
+
+<span class="historique" ID="h24762">
+<div class="histText">
+<p>Art. 762</p>
+<p>Les cessions &agrave; titre on&eacute;reux d'immeubles ou de fractions d'immeubles au sens de l'article 760 du pr&eacute;sent Livre, par les personnes physiques ou soci&eacute;t&eacute;s de personnes non passibles de l'imp&ocirc;t sur les b&eacute;n&eacute;fices, donnent lieu &agrave; un pr&eacute;l&egrave;vement sur la plus-value de cession.</p>
+<p>La plus-value de cession est forfaitairement fix&eacute;e &agrave; 20 % du prix de cession.</p>
+<p>Le taux de pr&eacute;l&egrave;vement est de 15 % assis sur la plus-value telle que d&eacute;finie &agrave; l'alin&eacute;a pr&eacute;c&eacute;dent.</p>
+<p>Le pr&eacute;l&egrave;vement ainsi op&eacute;r&eacute; est &agrave; la charge exclusive du c&eacute;dant, nonobstant toute clause contraire.</p>
+<p>Ce pr&eacute;l&egrave;vement est assis, liquid&eacute;, contr&ocirc;l&eacute; et recouvr&eacute; selon les m&ecirc;mes proc&eacute;dures, sanctions et s&ucirc;ret&eacute;s qu'en mati&egrave;re de droit d'enregistrement.</p>
+<p>Ord. n&deg;- 2000-252 du 28 mars 2000Art. 13.</p>
+
+</div></span><finh24764>
+
+<span class="historique" ID="h23765">
+<div class="histText">
+
+<BR> 
+<p>Sous r&eacute;serve de toutes autres dispositions particuli&egrave;res du pr&eacute;sent Livre les adjudications, ventes, reventes, cessions, r&eacute;trocessions, march&eacute;s, trait&eacute;s et tous autres actes, soit civils, soit judiciaires, translatifs de propri&eacute;t&eacute;, &agrave; titre on&eacute;reux, de meubles, r&eacute;coltes de l&rsquo;ann&eacute;e sur pied, coupes de bois taillis et de hautes futaies et autres objets mobiliers, m&ecirc;me les ventes de biens de cette nature faites par l&rsquo;Administration, sont assujettis &agrave; un droit fixe de 18 000 francs.</p>
+<p>Loi n&deg; 83-1421 du 30 d&eacute;c. 1983, an. fiscale, art. 43; loi n&deg; 2004-271 du 15 avril 2004, an. fiscale, art. 28-2.</p>
+</div></span><finh23765>
+
+<span class="historique" ID="h23766">
+<div class="histText">
+
+<BR> 
+<p>Sont assujetties &agrave; un droit de 2 000 francs :</p>
+<p>1&ndash;	Les ventes d&rsquo;animaux, r&eacute;coltes, engrais instruments et autres objets mobiliers d&eacute;pendant d&rsquo;une exploitation agricole.</p>
+<p>2&ndash;	Les ventes de meubles et marchandises qui sont faites conform&eacute;ment &agrave; l&rsquo;article 147 de l&rsquo;Acte uniforme portant organisation des proc&eacute;dures collectives d&rsquo;apurement du passif.</p>
+<p>3&ndash;	Les ventes volontaires aux ench&egrave;res, en gros et dans les formes pr&eacute;vues par la loi du 28 mai 1858, des marchandises comprises au tableau annex&eacute; &agrave; ladite loi.</p>
+<p>4&ndash;	Les ventes publiques de marchandises en gros autoris&eacute;es ou ordonn&eacute;es, comme il est dit aux articles 1 et 2 de la loi du 3 juillet 1861.</p>
+<p>5&ndash;	Les ventes publiques d&rsquo;objets donn&eacute;s en gage, pr&eacute;vues par l&rsquo;article 56 de l&rsquo;Acte uniforme portant organisation des s&ucirc;ret&eacute;s et de l&rsquo;article 120 de l&rsquo;Acte uniforme portant organisation des proc&eacute;dures simplifi&eacute;es de recouvrement et des voies d&rsquo;ex&eacute;cution.</p>
+<p>6&ndash;	Les ventes op&eacute;r&eacute;es en vertu de l&rsquo;article 100 de l&rsquo;Acte uniforme portant organisation des s&ucirc;ret&eacute;s, relatif au nantissement des stocks.</p>
+<p>7&ndash;	Les ventes de marchandises avari&eacute;es par suite d&rsquo;&eacute;v&eacute;nements de mer et de d&eacute;bris de navires naufrag&eacute;s.</p>
+</div></span><finh23766>
+
+
+</div></div> 
+</div><p>&nbsp;</p><p>&nbsp;</p></div></div> <!-- wrapper -->
+	  <div id="articleList"><div id="contenu" style='height:auto; background-color:#FFFFCC'>&nbsp;</div>
+      </div><p>&nbsp;</p><p>&nbsp;</p><p>&nbsp;</p><p>&nbsp;</p><p>&nbsp;</p><p>&nbsp;</p><p>&nbsp;</p><p>&nbsp;</p><p>&nbsp;</p><p>&nbsp;</p>
+	  <p>&nbsp;</p><p>&nbsp;</p><p>&nbsp;</p><p>&nbsp;</p><p>&nbsp;</p><p>&nbsp;</p></BODY></HTML>
+	  

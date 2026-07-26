@@ -1,0 +1,5 @@
+compte,date,piece,libelle,debit,credit
+411,2025-01-15,FAC-001,Facture client A,1000,0
+701,2025-01-15,FAC-001,Vente marchandises,0,1000
+601,2025-02-01,ACH-010,Achat fournisseur B,400,0
+401,2025-02-01,ACH-010,Fournisseur B,0,400

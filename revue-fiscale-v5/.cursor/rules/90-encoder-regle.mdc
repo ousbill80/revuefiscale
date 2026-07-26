@@ -1,0 +1,55 @@
+---
+description: Procédure d'encodage d'une règle fiscale au format pivot et de publication
+alwaysApply: false
+---
+
+# Encoder et publier une règle
+
+À utiliser quand je demande d'encoder, de convertir ou de mettre à jour une règle.
+
+**Rappel : une règle publiée s'applique à tous les abonnés.** L'erreur ne se rattrape pas dossier
+par dossier.
+
+## Procédure
+
+1. **Identifier la source** — article, annexe ou note, avec son millésime.
+2. **Vérifier la version applicable** à l'exercice concerné. Pas la dernière par défaut.
+3. **Remplir les quatorze champs.** Aucun vide : `Sans objet` ou `À CONFIRMER`.
+4. **Écrire le cas de test** — entrée, résultat attendu, cas limite.
+5. **Marquer les incertitudes** avec la source à consulter.
+6. **Déposer en proposition.** Jamais d'écriture directe dans le référentiel.
+7. **Circuit éditorial** : proposition → revue fiscaliste 2AàZ → validation → publication versionnée
+   → notification aux abonnés. Les missions en cours restent sur leur version épinglée.
+
+## Convention d'identifiant
+
+`IMPÔT-CATÉGORIE-ARTICLE-LIBELLÉCOURT` — `BIC-CHG-18G-DONS`, `TVA-DED-PRORATA`, `ITS-119-MASSESAL`
+
+Préfixes : `BIC TVA RAS ITS CE IRC IRVM PAT FONC ENR TIMBRE OBL OBNL RA`
+
+## Exemple de référence
+
+| Champ | Valeur |
+|---|---|
+| Identifiant | `BIC-CHG-18G-DONS` |
+| Impôt | BIC |
+| Référence légale | CGI 2026, art. 18 G — millésime À CONFIRMER |
+| Date d'effet | 01/01/2026 *(À CONFIRMER)* |
+| Profils applicables | Entreprises au réel. Exclut les entités non soumises au BIC. |
+| Comptes déclencheurs | 6582 et sous-comptes |
+| Nature | Différence permanente — fraction excédentaire |
+| Condition de déclenchement | `solde(6582) > 0` |
+| Conditions de fond | Bénéficiaire éligible ? Reçu disponible ? Contrepartie directe ? |
+| Formule de plafonnement | `min(0.025 * CA ; 200000000)` *(À CONFIRMER)* |
+| Questions générées | 1. Bénéficiaire éligible ? *(booleen)* — 2. Reçus ? *(booleen)* — 3. Montant non justifié ? *(montant)* |
+| Résultat | `reintegration = solde(6582) - plafond` |
+| Niveau de risque | Moyen · Élevé sans justificatifs |
+| Effets croisés | `→ TVA-DED-PRORATA` : un don en nature peut remettre en cause la TVA d'amont |
+
+**Cas de test.** Entrée : `CA = 4 000 000 000`, `solde(6582) = 150 000 000`, bénéficiaire éligible,
+reçus fournis. Plafond `min(100 000 000 ; 200 000 000) = 100 000 000`. Réintégration `50 000 000`.
+Cas limite : `CA = 8 000 000 000` → bascule sur la borne absolue.
+
+*Ces montants illustrent la structure, pas le droit en vigueur.*
+
+Spécification : @docs/02-format-pivot.md

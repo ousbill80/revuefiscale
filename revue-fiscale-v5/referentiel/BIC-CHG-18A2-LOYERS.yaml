@@ -1,0 +1,37 @@
+reference_source: CGI 2026 — doc client 2/5 format pivot (propositions metier)
+date_effet: '2026-01-01'
+effets_croises: []
+identifiant: BIC-CHG-18A2-LOYERS
+impot: BIC
+reference_legale: CGI 2026, art. 18 A 2°
+profils_applicables:
+- Entreprises au regime reel
+comptes_declencheurs:
+- '622'
+- '623'
+nature: permanente
+condition_declenchement: (solde(622) > 0 ou solde(623) > 0) et reponse(q_loyer_excessif) = vrai
+conditions_fond: CGI 2026, art. 18 A 2°
+formule_plafonnement: sans objet
+questions_generees:
+- id: q_loyer_excessif
+  texte: Loyer excessif ?
+  type: booleen
+- id: q_fraction
+  texte: Fraction a reintegrer ?
+  type: montant
+resultat: reponse(q_fraction)
+niveau_risque: moyen
+a_confirmer:
+- date d effet 01/01/2026
+- valeurs issues doc client 5 — a valider metier
+cas_test:
+  soldes:
+    '622': '30000000'
+    '623': '0'
+  reponses:
+    q_loyer_excessif: true
+    q_fraction: '5000000'
+  agregats: {}
+  declenche_attendu: true
+  montant_attendu: '5000000'

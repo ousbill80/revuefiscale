@@ -1,0 +1,497 @@
+<!DOCTYPE HTML><HTML><HEAD><META HTTP-EQUIV="Content-Type" CONTENT="text/html; charset=UTF-8">
+<TITLE>Code des impots -229</TITLE><LINK REL="STYLESHEET" HREF="/cicgi.css" CHARSET="ISO-8859-1" TYPE="text/css">
+<style type="text/css">
+body {margin-left: 5px;	margin-top: 0px; margin-right: .5em;margin-bottom: 0px;background-color:#fafafa ;}
+.Liste-Numerote {font-size: 12pt;font-weight: regular;font-style: italic;color: #000000;text-transform: none;margin-left:8px ;margin-bottom:8px ;margin-top:4px ;margin-right:10px ;font-family:Georgia, "Times New Roman", Times, serif}
+li {list-style-type: none; margin-left:0px ; padding-left:0em ; }
+.Paratext {font-size: 12pt;font-weight: regular;font-style: italic;color: #000000;text-decoration: none;vertical-align: baseline;text-transform: none;margin-left:0px ;font-family:Georgia, "Times New Roman", Times, serif}
+.Normal {font-size: 12pt;font-weight: regular;font-style: italic;color: #000000;text-decoration: none;vertical-align: baseline;text-transform: none;margin-left:0px ;font-family:Georgia, "Times New Roman", Times, serif}
+ul {list-style-type: none; margin-left:0px ; padding-left:0em ;  }
+.Liste2-Enumeree {font-size: 12pt;font-weight: regular;font-style: italic;color: #000000;text-decoration: none;vertical-align: baseline;text-transform: none;list-style-type:none ;margin-left:16px ;margin-bottom:8px;margin-right:10px;font-family:Georgia, "Times New Roman", Times, serif}
+P.Liste2-Enumeree {font-size: 12pt;font-weight: regular;font-style: italic;color: #000000;text-decoration: none;vertical-align: baseline;text-transform: none;list-style-type:none ;margin-left:16px ;margin-bottom:8px;margin-right:10px;font-family:Georgia, "Times New Roman", Times, serif}
+.Entete {font-size: 13pt;font-weight: regular;font-style: italic;color:#000000 ;text-decoration: none;vertical-align: baseline;text-transform: none;margin-left:8px ;font-family:Georgia, "Times New Roman", Times, serif}
+table, TABLE {border-width:1px; width:99% ;border-collapse:collapse;border-color: #9ecaed;box-shadow: 0 0 10px #9ecaed;}
+tr,td {text-align:left;vertical-align:bottom;border:1px solid #9ecaed;padding:.2em;marging-left:.2em}
+th, TH{text-align:center;vertical-align:middle;padding:.2em;}
+P.TableauEntete {font-size: 13pt;font-weight: regular;font-style: italic;color: #000000;font-family:Georgia, "Times New Roman"}
+P.TableauCelluleLeft, P.TableauCellule {text-align:right;margin-right:1em;font-size: 13pt;font-weight: regular;font-style: italic;color: #000000;font-family:Georgia, "Times New Roman"}
+P.TableauCelluleRight {text-align:left;margin-left:1em;font-size: 13pt;font-weight: regular;font-style: italic;color: #000000;font-family:Georgia, "Times New Roman"}
+.ui-buttonh {padding: .1em .1em ; border: 1px solid #dadada;border-radius: 4px; box-shadow: 0 0 4px #9ecaed;color:#FF3300 ;margin-left:8px ;margin-right:8px ;margin-bottom:2px ;margin-top:2px ;text-decoration:none ;font-size:12pt ;font-family:"Times New Roman"}   
+.ui-button {padding: .1em .1em ; border: 1px solid #dadada;border-radius: 4px; box-shadow: 0 0 4px #9ecaed;color:#FF3300 ;margin-left:8px ;margin-right:8px ;margin-bottom:2px ;margin-top:2px ;text-decoration:none ;font-size:12pt ;font-family:"Times New Roman"}   
+H3 {display: block;text-align: center;text-indent: 0pt;margin-top: 10pt;margin-bottom: 10pt;margin-right: 10pt;margin-left: 10pt;font-size: 12pt;font-weight: Bold;font-style: Regular;color: #00A000;text-decoration: none;vertical-align: baseline;text-transform: none;font-family: "Times New Roman";}
+H4 {display: block;text-align: left;text-indent: 0pt;margin-top: 10pt;margin-bottom: 6pt;margin-right: 10pt;margin-left: 10pt;font-size: 12pt;font-weight: Bold;font-style: Regular;color: #000000;text-decoration: none;vertical-align: baseline;text-transform: none;font-family: "Times New Roman";}
+H5 {display: block;text-align: left;text-indent: 0pt;margin-top: 10pt;margin-bottom: 6pt;margin-right: 10pt;margin-left: 10pt;font-size: 11pt;font-weight: Bold;font-style: Regular;color: #000000;text-decoration: none;vertical-align: baseline;text-transform: none;font-family: "Times New Roman";}
+H6.NoArticle {display: block;text-align: left;text-indent: 0pt;margin-top: 14pt;margin-bottom: 0pt;margin-right: 0pt;margin-left: 0pt;font-size: 14pt;font-weight: regular;font-style: Regular;color: #00a000;text-decoration: none;vertical-align: baseline;text-transform: none;font-family: "Times New Roman";}
+H2 {text-align:center;font-size:16pt;font-family:Georgia, "Times New Roman", Times, serif}
+P.ParaText {font-size: 12pt;font-weight: regular;font-style: italic;color: #000000;	text-decoration: none;vertical-align: baseline;text-transform: none;font-family:Georgia, "Times New Roman", Times, serif;}
+H2.Section,P.Section {font-size:12pt;font-weight:bold;font-style:Regular;color:#008000;font-family:Georgia,"Times New Roman"}
+P.Paragraphe, p.Paragraphe {Text-Align:center;Text-decoration:none;font-size:12pt;font-weight:bold;font-style:Normal;color:#00A000;font-family:Georgia,"Times New Roman"}
+H2.Livre,P.Livre {text-align:center;font-size:16pt;font-weight:bold;font-style:Regular;color:#008000;font-family:Georgia,"Times New Roman"}
+P.Partie,H2.Partie,P.TitreSub {text-align:center;font-size:14pt;font-weight:bold;font-style:Regular;color:#008000;font-family:Georgia,"Times New Roman"}
+H2.ChapitreNo,H2.TitreNo {text-align:center;font-size:14pt;font-weight:bold;font-style:Regular;color:#008000;font-family:Georgia,"Times New Roman"}
+H2.Chapitre, h2.Chapitre {text-align:center;font-size:14pt;font-weight:bold;font-style:Regular;color:#008000;font-family:Georgia,"Times New Roman"}
+H2.TitreNo {text-align:center;font-size:14pt;font-weight:bold;font-style:Regular;color:#008000;font-family:Georgia,"Times New Roman"}
+h3.Sous-Section, H3.Sous-Section, h3.Sous-section, h2.Section {font-size:12pt;font-weight:bold;font-style:Italic;color:#008000;font-family:Georgia,"Times New Roman"}
+hr,HR { display: block; width:90%;  margin-top: 0.5em; margin-bottom: 0.5em; margin-left: auto;  margin-right: auto;  border-style: inset; border-width: 1px;}
+P.TitreSub {text-align:center;font-size:14pt;font-weight:bold;font-style:Regular;color:#008000;font-family:Georgia,"Times New Roman"}
+.Reference {display: block;text-align: left;text-indent: 0pt;margin-top: 10pt;margin-bottom: 6pt;margin-right: 10pt;margin-left: 10pt;font-size: 14pt;font-weight: Bold;font-style: Regular;color: #7F5434;text-decoration: none;vertical-align: baseline;text-transform: none;font-family: "Times New Roman";}
+.ludwig,blockquote {padding-left:1em;background-color:#fafafa;font-size:12pt;font-weight:100;font-style:italic;}
+#articleList {position:absolute ;	z-index: 1 ;left: 10px ;top: 80px ;height:340px;width: 620px;border: 2px solid #cacaca ;border-radius: 5px ;background-color:#fafafa ;    box-shadow: 0 0 12px #333333;	margin-left:0px ;	padding: .3em .3em ;		overflow:hidden ;	visibility:hidden ;  }			
+#articleList h3 { text-align: center; margin: 0; }		
+
+.historique {
+  display:none ;
+  padding: .1em .3em ;
+  border: solid 2px #dadada;
+  border-radius: 7px;
+  box-shadow: 0 0 5px #9ecaed;  
+  
+}
+.histText {
+    display: block;
+    font-family: ;"Times New Roman"
+	padding: .1em .3em ;
+    margin: 1em 0px;
+	font-style:italic;
+	color:#000000;
+	overflow:auto;
+}
+.highlight {
+  font-weight:bold ;
+  color:#000000 ;
+  background-color:#FFFFCC ;
+  }
+.articleList-scroll {
+	overflow-x:hidden ;
+	overflow-y:scroll ;
+	scrollbar-width:thin ;
+	scrollbar-color:blue orange ;
+}
+
+#contenu {
+	overflow-x:hidden ;
+    overflow-y:scroll ;
+	scrollbar-width:thin ;
+	scrollbar-color:blue orange ;
+}		
+
+table, TABLE {
+ text-align:center; 
+    margin-left:.5em; 
+    margin-right:.5em; 
+    border:1px solid #000000;	
+	border-collapse:collapse ;
+    border-color: #9ecaed;
+    box-shadow: 0 0 10px #9ecaed;
+	
+   }
+  tr,td {text-align:left;}
+  
+
+
+ </style>
+ 
+<script src="/js/iscroll.js"></script>
+<script src="/js/jquery.js"></script>   
+<script src="/js/jquery-ui-1.10.3.custom.js"></script>    	    
+<script src="/js/jquery.ui.draggable.js" type="text/javascript"></script>			
+<script src="/js/jquery.ui.core.js"></script> 			
+<script src="/js/jquery.ui.widget.js"></script>			
+<script src="/js/jquery.ui.position.js"></script>			
+<script src="/js/jquery.ui.menu.js"></script>    		
+<script type="text/javascript" src="./xpages.js"></script>
+/* VERSION POUR PAGE HTML SUR SITE DGI.CGICI.COM */
+<script language="javascript">
+ function showButton(id) {
+    var x = document.getElementById(id) ;
+	if(x.style.display === "none") {
+	   x.style.display = "block" ;
+	  } else {
+	   x.style.display = "none" ;
+	   }
+	 }   
+	 var pagenumber="229";
+function loadpage(page, art) {
+      showHideHistoric(art);
+	  return false;
+	  } 
+function loadArticle(page, art) { var artno = art ;var pgno=page;scrolltoelementTag(pgno,artno) ;return false ;} 
+
+</script>
+</HEAD>
+<BODY><div ID="wrapper"><div ID="scroller">
+
+
+
+<H2 CLASS="Section">
+Section III - Tarifs</H2>
+<span id="#A0938"></span>
+<H6 CLASS="NoArticle">
+Art. 938 &nbsp;&nbsp;&nbsp;&nbsp; <a href="#" onClick="loadpage('226','h23938');return false;" class="ui-button"  title="Consultez l'historique">2023...</a></H6>
+<P CLASS="ParaText">
+Le tarif de la taxe est fix&eacute; comme suit :</P>
+<P CLASS="ParaText">&nbsp;
+</P>
+<P CLASS="ParaText"><FONT COLOR='#000000'>
+<A NAME="50618404_pgfId-1031461"></A>1° En ce qui concerne les bateaux de plaisance :</FONT></P>
+<TABLE BORDER="1">
+<TR>
+<TD ROWSPAN="1" COLSPAN="1">
+<P CLASS="TableauCellule">
+Jusqu&apos;&agrave; 30 chevaux</P>
+</TD>
+<TD ROWSPAN="1" COLSPAN="1">
+<P CLASS="TableauCellule">
+50 000 F</P>
+</TD>
+</TR>
+<TR>
+<TD ROWSPAN="1" COLSPAN="1">
+<P CLASS="TableauCellule">
+31 &agrave; 55 chevaux</P>
+</TD>
+<TD ROWSPAN="1" COLSPAN="1">
+<P CLASS="TableauCellule">
+75 000 F</P>
+</TD>
+</TR>
+<TR>
+<TD ROWSPAN="1" COLSPAN="1">
+<P CLASS="TableauCellule">
+56 &agrave; 75 chevaux </P>
+</TD>
+<TD ROWSPAN="1" COLSPAN="1">
+<P CLASS="TableauCellule">
+100 000 F</P>
+</TD>
+</TR>
+<TR>
+<TD ROWSPAN="1" COLSPAN="1">
+<P CLASS="TableauCellule">
+76 &agrave; 120 chevaux </P>
+</TD>
+<TD ROWSPAN="1" COLSPAN="1">
+<P CLASS="TableauCellule">
+150 000 F</P>
+</TD>
+</TR>
+<TR>
+<TD ROWSPAN="1" COLSPAN="1">
+<P CLASS="TableauCellule">
+121 &agrave; 240 chevaux </P>
+</TD>
+<TD ROWSPAN="1" COLSPAN="1">
+<P CLASS="TableauCellule">
+200 000 F</P>
+</TD>
+</TR>
+<TR>
+<TD ROWSPAN="1" COLSPAN="1">
+<P CLASS="TableauCellule">
+Au-del&agrave; de 240 chevaux</P>
+</TD>
+<TD ROWSPAN="1" COLSPAN="1">
+<P CLASS="TableauCellule">
+300 000 F</P>
+</TD>
+</TR>
+</TABLE>
+
+<P CLASS="ParaText"><FONT COLOR='#000000'>
+2° En ce qui concerne les autres types de véhicules nautiques à moteur de plaisance : </FONT></P>	
+<TABLE BORDER="1">
+<TR>
+<TD ROWSPAN="1" COLSPAN="1">
+<P CLASS="TableauCellule"><FONT COLOR='#000000'>
+<A NAME="50618404_pgfId-1031983"></A>Jusqu’à 100 chevaux</FONT></P>
+</TD>
+<TD ROWSPAN="1" COLSPAN="1">
+<P CLASS="TableauCellule"><FONT COLOR='#000000'>
+<A NAME="50618404_pgfId-1031985"></A>50 000 F</FONT></P>
+</TD>
+</TR>
+<TR>
+<TD ROWSPAN="1" COLSPAN="1">
+<P CLASS="TableauCellule"><FONT COLOR='#000000'>
+<A NAME="50618404_pgfId-1031987"></A>Au-delà de 100 chevaux</FONT></P>
+</TD>
+<TD ROWSPAN="1" COLSPAN="1">
+<P CLASS="TableauCellule"><FONT COLOR='#000000'>
+<A NAME="50618404_pgfId-1031989"></A>80 000 F</FONT></P>
+</TD>
+</TR>
+</TABLE>
+<H6 CLASS="Modification">
+<A NAME="50618404_pgfId-1031905"></A>Loi n° 2023-1000 du 18  déc. 2023, an. fiscale, art. 9-5.</H6>
+
+
+<span id="#A0939"></span>
+<H6 CLASS="NoArticle">
+Art. 939 </H6>
+<P CLASS="ParaText">
+Un abattement du quart est consenti lorsque la diff&eacute;rence entre le mill&eacute;sime de l&apos;ann&eacute;e d&apos;imposition et celle de la premi&egrave;re mise en service du moteur est sup&eacute;rieure &agrave; 6.</P>
+
+<span id="#A0940"></span>
+<H6 CLASS="NoArticle">
+Art. 940 &nbsp;&nbsp;&nbsp;&nbsp; <a href="#" onClick="loadpage('226','h23940');return false;" class="ui-button"  title="Consultez l'historique">2023...</a></H6>
+<P CLASS="ParaText">
+Lorsque la diff&eacute;rence pr&eacute;vue &agrave; l&apos;article <a class='ui-button' href='' onClick="scrolltoelementTag('939');return false;">939</a> pr&eacute;c&eacute;dent est sup&eacute;rieure &agrave; 10, le tarif de la taxe est fix&eacute; comme suit :</P>
+<P CLASS="ParaText"><FONT COLOR='#000000'>
+<A NAME="50618404_pgfId-1031394"></A>En ce qui concerne les bateaux de plaisance :</FONT></P>
+<H6 CLASS="Modification">&nbsp;
+</H6>
+<TABLE BORDER="1">
+<TR>
+<TD ROWSPAN="1" COLSPAN="1">
+<P CLASS="TableauCellule">
+Jusqu&apos;&agrave; 30 chevaux</P>
+</TD>
+<TD ROWSPAN="1" COLSPAN="1">
+<P CLASS="TableauCellule">
+30 000 F</P>
+</TD>
+</TR>
+<TR>
+<TD ROWSPAN="1" COLSPAN="1">
+<P CLASS="TableauCellule">
+31 &agrave; 55 chevaux</P>
+</TD>
+<TD ROWSPAN="1" COLSPAN="1">
+<P CLASS="TableauCellule">
+35 000 F</P>
+</TD>
+</TR>
+<TR>
+<TD ROWSPAN="1" COLSPAN="1">
+<P CLASS="TableauCellule">
+56 &agrave; 75 chevaux</P>
+</TD>
+<TD ROWSPAN="1" COLSPAN="1">
+<P CLASS="TableauCellule">
+50 000 F</P>
+</TD>
+</TR>
+<TR>
+<TD ROWSPAN="1" COLSPAN="1">
+<P CLASS="TableauCellule">
+76 &agrave; 120 chevaux</P>
+</TD>
+<TD ROWSPAN="1" COLSPAN="1">
+<P CLASS="TableauCellule">
+60 000 F</P>
+</TD>
+</TR>
+<TR>
+<TD ROWSPAN="1" COLSPAN="1">
+<P CLASS="TableauCellule">
+121 &agrave; 240 chevaux</P>
+</TD>
+<TD ROWSPAN="1" COLSPAN="1">
+<P CLASS="TableauCellule">
+70 000 F</P>
+</TD>
+</TR>
+<TR>
+<TD ROWSPAN="1" COLSPAN="1">
+<P CLASS="TableauCellule">
+au del&agrave; de 240 chevaux</P>
+</TD>
+<TD ROWSPAN="1" COLSPAN="1">
+<P CLASS="TableauCellule">
+100 000 F</P>
+</TD>
+</TR>
+</TABLE>
+
+<P CLASS="ParaText"><FONT COLOR='#000000'>
+<A NAME="50618404_pgfId-1031391"></A>En ce qui concerne les autres véhicules nautiques à moteur de plaisance :</FONT></P>
+<TABLE BORDER="1">
+<TR>
+<TD ROWSPAN="1" COLSPAN="1">
+<P CLASS="TableauCellule"><FONT COLOR='#000000'>
+<A NAME="50618404_pgfId-1032009"></A>Jusqu’à 100 chevaux</FONT></P>
+</TD>
+<TD ROWSPAN="1" COLSPAN="1">
+<P CLASS="TableauCellule"><FONT COLOR='#000000'>
+<A NAME="50618404_pgfId-1032011"></A>30 000 F</FONT></P>
+</TD>
+</TR>
+<TR>
+<TD ROWSPAN="1" COLSPAN="1">
+<P CLASS="TableauCellule"><FONT COLOR='#000000'>
+<A NAME="50618404_pgfId-1032013"></A>Au-delà de 100 chevaux</FONT></P>
+</TD>
+<TD ROWSPAN="1" COLSPAN="1">
+<P CLASS="TableauCellule"><FONT COLOR='#000000'>
+<A NAME="50618404_pgfId-1032015"></A>45 000 F</FONT></P>
+</TD>
+</TR>
+</TABLE>
+<H6 CLASS="Modification">
+<A NAME="50618404_pgfId-1032086"></A>Loi n° 2023-1000 du 18  déc. 2023, an. fiscale, art. 9-6</H6>
+<P CLASS="ParaText">
+<A NAME="50618404_pgfId-1000750"></A>Pour les <FONT COLOR='#000000'>véhicules nautiques à moteur</FONT> pourvus de plusieurs moteurs, la taxe est liquidée sur la totalité des chevaux mis en œuvre.</P>
+<H6 CLASS="Modification">
+<A NAME="50618404_pgfId-1031346"></A>Loi n° 2023-1000 du 18  déc. 2023, an. fiscale, art. 9-6</H6>
+<P CLASS="ParaText">
+<A NAME="50618404_pgfId-1000751"></A>Toutefois, les moteurs de secours non fixés et utilisés en cas de panne du moteur principal ne sont pas pris en considération pour le calcul de la taxe.</P>
+
+<span class="historique" ID="h23938">
+<div class="histText">
+
+<BR> 
+<P CLASS="ParaText">
+Le tarif de la taxe est fix&eacute; comme suit :</P>
+<P CLASS="ParaText">&nbsp;
+</P>
+<TABLE BORDER="1">
+<TR>
+<TD ROWSPAN="1" COLSPAN="1">
+<P CLASS="TableauCellule">
+Jusqu&apos;&agrave; 30 chevaux</P>
+</TD>
+<TD ROWSPAN="1" COLSPAN="1">
+<P CLASS="TableauCellule">
+50 000 F</P>
+</TD>
+</TR>
+<TR>
+<TD ROWSPAN="1" COLSPAN="1">
+<P CLASS="TableauCellule">
+31 &agrave; 55 chevaux</P>
+</TD>
+<TD ROWSPAN="1" COLSPAN="1">
+<P CLASS="TableauCellule">
+75 000 F</P>
+</TD>
+</TR>
+<TR>
+<TD ROWSPAN="1" COLSPAN="1">
+<P CLASS="TableauCellule">
+56 &agrave; 75 chevaux </P>
+</TD>
+<TD ROWSPAN="1" COLSPAN="1">
+<P CLASS="TableauCellule">
+100 000 F</P>
+</TD>
+</TR>
+<TR>
+<TD ROWSPAN="1" COLSPAN="1">
+<P CLASS="TableauCellule">
+76 &agrave; 120 chevaux </P>
+</TD>
+<TD ROWSPAN="1" COLSPAN="1">
+<P CLASS="TableauCellule">
+150 000 F</P>
+</TD>
+</TR>
+<TR>
+<TD ROWSPAN="1" COLSPAN="1">
+<P CLASS="TableauCellule">
+121 &agrave; 240 chevaux </P>
+</TD>
+<TD ROWSPAN="1" COLSPAN="1">
+<P CLASS="TableauCellule">
+200 000 F</P>
+</TD>
+</TR>
+<TR>
+<TD ROWSPAN="1" COLSPAN="1">
+<P CLASS="TableauCellule">
+Au-del&agrave; de 240 chevaux</P>
+</TD>
+<TD ROWSPAN="1" COLSPAN="1">
+<P CLASS="TableauCellule">
+300 000 F</P>
+</TD>
+</TR>
+</TABLE>
+</div></span><finh23938>
+
+<span class="historique" ID="h23940">
+<div class="histText">
+
+<BR> 
+<P CLASS="ParaText">
+Lorsque la diff&eacute;rence pr&eacute;vue &agrave; l&apos;article <a class='ui-button' href='' onClick="scrolltoelementTag('939');return false;">939</a> pr&eacute;c&eacute;dent est sup&eacute;rieure &agrave; 10, le tarif de la taxe est fix&eacute; comme suit :</P>
+
+<H6 CLASS="Modification">&nbsp;
+</H6>
+<TABLE BORDER="1">
+<TR>
+<TD ROWSPAN="1" COLSPAN="1">
+<P CLASS="TableauCellule">
+Jusqu&apos;&agrave; 30 chevaux</P>
+</TD>
+<TD ROWSPAN="1" COLSPAN="1">
+<P CLASS="TableauCellule">
+30 000 F</P>
+</TD>
+</TR>
+<TR>
+<TD ROWSPAN="1" COLSPAN="1">
+<P CLASS="TableauCellule">
+31 &agrave; 55 chevaux</P>
+</TD>
+<TD ROWSPAN="1" COLSPAN="1">
+<P CLASS="TableauCellule">
+35 000 F</P>
+</TD>
+</TR>
+<TR>
+<TD ROWSPAN="1" COLSPAN="1">
+<P CLASS="TableauCellule">
+56 &agrave; 75 chevaux</P>
+</TD>
+<TD ROWSPAN="1" COLSPAN="1">
+<P CLASS="TableauCellule">
+50 000 F</P>
+</TD>
+</TR>
+<TR>
+<TD ROWSPAN="1" COLSPAN="1">
+<P CLASS="TableauCellule">
+76 &agrave; 120 chevaux</P>
+</TD>
+<TD ROWSPAN="1" COLSPAN="1">
+<P CLASS="TableauCellule">
+60 000 F</P>
+</TD>
+</TR>
+<TR>
+<TD ROWSPAN="1" COLSPAN="1">
+<P CLASS="TableauCellule">
+121 &agrave; 240 chevaux</P>
+</TD>
+<TD ROWSPAN="1" COLSPAN="1">
+<P CLASS="TableauCellule">
+70 000 F</P>
+</TD>
+</TR>
+<TR>
+<TD ROWSPAN="1" COLSPAN="1">
+<P CLASS="TableauCellule">
+au del&agrave; de 240 chevaux</P>
+</TD>
+<TD ROWSPAN="1" COLSPAN="1">
+<P CLASS="TableauCellule">
+100 000 F</P>
+</TD>
+</TR>
+</TABLE>
+
+
+<H6 CLASS="Modification">
+Ord. n<b>&deg;-</b> 2002-77 du 1er f&eacute;vrier 2002,Art. 2.</H6>
+<P CLASS="ParaText">
+Pour les bateaux pourvus de plusieurs moteurs, la taxe est liquid&eacute;e sur la totalit&eacute; des chevaux mis en oeuvre.</P>
+<P CLASS="ParaText">
+Toutefois, les moteurs de secours non fix&eacute;s et utilis&eacute;s en cas de panne du moteur principal ne sont pas pris en consid&eacute;ration pour le calcul de la taxe.</P>
+</div></span><finh23940>
+
+<!-- Old wrapper body -->
+</div></div> <!-- wrapper -->
+	  <div id="articleList"><div id="contenu" style='height:auto; background-color:#FFFFCC'>&nbsp;</div>
+      </div><p>&nbsp;</p><p>&nbsp;</p><p>&nbsp;</p><p>&nbsp;</p><p>&nbsp;</p><p>&nbsp;</p><p>&nbsp;</p><p>&nbsp;</p><p>&nbsp;</p><p>&nbsp;</p>
+	  <p>&nbsp;</p><p>&nbsp;</p><p>&nbsp;</p><p>&nbsp;</p><p>&nbsp;</p><p>&nbsp;</p></BODY></HTML>
+	  

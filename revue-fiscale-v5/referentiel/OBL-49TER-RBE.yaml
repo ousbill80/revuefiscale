@@ -1,0 +1,33 @@
+reference_source: CGI 2026 — docs client 6/9/10 (propositions metier)
+date_effet: '2026-01-01'
+effets_croises: []
+a_confirmer:
+- date d effet 01/01/2026
+- valeurs issues docs client 6/9/10 — a valider metier
+formule_plafonnement: sans objet
+questions_generees:
+- id: q_rbe_manquant
+  texte: RBE manquant ou obsolete ?
+  type: booleen
+- id: q_montant
+  texte: Enjeu estime ?
+  type: montant
+profils_applicables:
+- Personnes morales
+nature: sans_objet
+identifiant: OBL-49TER-RBE
+impot: OBL
+reference_legale: CGI 2026, art. 49 ter — registre des beneficiaires effectifs
+comptes_declencheurs: []
+condition_declenchement: reponse(q_rbe_manquant) = vrai
+conditions_fond: RBE tenu et a jour ?
+resultat: reponse(q_montant)
+niveau_risque: eleve
+cas_test:
+  soldes: {}
+  agregats: {}
+  reponses:
+    q_rbe_manquant: true
+    q_montant: '1500000'
+  declenche_attendu: true
+  montant_attendu: '1500000'

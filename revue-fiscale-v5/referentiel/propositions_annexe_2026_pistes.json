@@ -1,0 +1,106 @@
+{
+  "lot": "annexe_2026_pistes_claires",
+  "source_document": "Annexe-1-Annexe-Fiscale-2026.pdf",
+  "texte_juridique": "LF n° 2025-987 du 19 décembre 2025 — Annexe 1",
+  "rapport": "docs/16-annexe-2026-vs-a-confirmer.md",
+  "checklist": "docs/18-lot-fiscaliste-annexe-8.md",
+  "avertissement": "Propositions sourcées Annexe — statut a_valider_humain. Aucune purge YAML. L'IA propose, le fiscaliste valide.",
+  "pistes": [
+    {
+      "piste_id": "A1-PAT-272-date",
+      "entree_id": "PAT-272-PATENTE#0",
+      "rule_id": "PAT-272-PATENTE",
+      "categorie_mention": "date",
+      "pages": [108, 109],
+      "extrait_annexe": "L'article 272 du Code général des Impôts est modifié comme suit : […] propriétaires de véhicules de transport […] plateformes de mise en relation en ligne […] preuve du paiement de la patente […] ; abrogation art. 1153 CGI",
+      "suggestion": "Noter l'amendement plateformes dans la description / questions de la fiche. Ne pas purger la date seed 01/01/2026 sans CGI intégral + visa fiscaliste.",
+      "suggestion_valeur": null,
+      "interdiction": "Ne pas retirer a_confirmer date sur la seule Annexe.",
+      "statut_editorial": "a_valider_humain"
+    },
+    {
+      "piste_id": "A1-PAT-272-autre",
+      "entree_id": "PAT-272-PATENTE#1",
+      "rule_id": "PAT-272-PATENTE",
+      "categorie_mention": "autre",
+      "pages": [108, 109],
+      "extrait_annexe": "L'article 272 du Code général des Impôts est modifié comme suit : […] plateformes de mise en relation en ligne […] preuve du paiement de la patente […]",
+      "suggestion": "Mettre à jour la description / questions pour refléter l'extension aux plateformes. Laisser la mention hors_perimetre jusqu'à validation métier.",
+      "suggestion_valeur": null,
+      "interdiction": "Ne pas inventer de montants patente.",
+      "statut_editorial": "a_valider_humain"
+    },
+    {
+      "piste_id": "A2-RAS-92-date",
+      "entree_id": "RAS-92-NONRESIDENT#0",
+      "rule_id": "RAS-92-NONRESIDENT",
+      "categorie_mention": "date",
+      "pages": [36, 129],
+      "extrait_annexe": "Les dispositions de l'article 92-1°-e) du Code général des Impôts soumettent […] primes d'assurance […] réassurances non domiciliées […] ; prorogation exonération CIMA jusqu'au 30 avril 2027",
+      "suggestion": "Si la fiche couvre les primes de réassurance : documenter l'exonération datée (CIMA → 30/04/2027). Sinon : hors champ — laisser a_confirmer.",
+      "suggestion_valeur": "2027-04-30 (exonération CIMA — pertinence partielle, à confirmer périmètre fiche)",
+      "interdiction": "Ne pas substituer automatiquement à la date seed 01/01/2026.",
+      "statut_editorial": "a_valider_humain"
+    },
+    {
+      "piste_id": "A2-RAS-92-autre",
+      "entree_id": "RAS-92-NONRESIDENT#1",
+      "rule_id": "RAS-92-NONRESIDENT",
+      "categorie_mention": "autre",
+      "pages": [36, 129],
+      "extrait_annexe": "article 92-1°-e) […] primes […] réassurances non domiciliées […] ; exonération CIMA jusqu'au 30 avril 2027",
+      "suggestion": "Croiser le périmètre fiche (réassurance ?) avec l'extrait Annexe. Pertinence partielle.",
+      "suggestion_valeur": null,
+      "interdiction": "Ne pas purger hors_perimetre sans analyse métier.",
+      "statut_editorial": "a_valider_humain"
+    },
+    {
+      "piste_id": "A3-OBL-36-date",
+      "entree_id": "OBL-36-ETII#0",
+      "rule_id": "OBL-36-ETII",
+      "categorie_mention": "date",
+      "pages": [86, 87, 96],
+      "extrait_annexe": "Transmission électronique des états financiers « à partir du 1er janvier 2027 » (microentreprises) ; « 1er janvier 2028 » (taxe d'État de l'entreprenant) ; touche art. 36, 49 bis, 82, 101 bis CGI",
+      "suggestion": "Piste de contraste : la date seed 01/01/2026 n'est pas confirmée par ces passages. Distinguer date d'effet règle vs échéances dématérialisation.",
+      "suggestion_valeur": null,
+      "interdiction": "Ne pas substituer 2027/2028 à 01/01/2026 sans analyse fiscaliste.",
+      "statut_editorial": "a_valider_humain"
+    },
+    {
+      "piste_id": "A3-OBL-36-autre",
+      "entree_id": "OBL-36-ETII#1",
+      "rule_id": "OBL-36-ETII",
+      "categorie_mention": "autre",
+      "pages": [86, 87, 96],
+      "extrait_annexe": "Transmission électronique […] art. 36, 49 bis […] à partir du 1er janvier 2027 / 1er janvier 2028",
+      "suggestion": "Noter le contraste démat. Annexe vs valeurs seed client — revue humaine, pas purge auto.",
+      "suggestion_valeur": null,
+      "interdiction": "Ne pas retirer a_confirmer sur la seule Annexe.",
+      "statut_editorial": "a_valider_humain"
+    },
+    {
+      "piste_id": "A3-OBL-49BIS-date",
+      "entree_id": "OBL-49BIS-REGISTRES#0",
+      "rule_id": "OBL-49BIS-REGISTRES",
+      "categorie_mention": "date",
+      "pages": [86, 87, 96],
+      "extrait_annexe": "Transmission électronique […] touche art. 36, 49 bis, 82, 101 bis CGI — échéances 1er janvier 2027 / 1er janvier 2028",
+      "suggestion": "Même contraste que OBL-36 : seed 01/01/2026 ≠ échéances démat. Annexe. À croiser, pas à remplacer.",
+      "suggestion_valeur": null,
+      "interdiction": "Ne pas substituer 2027/2028 à 01/01/2026 sans analyse fiscaliste.",
+      "statut_editorial": "a_valider_humain"
+    },
+    {
+      "piste_id": "A3-OBL-49BIS-autre",
+      "entree_id": "OBL-49BIS-REGISTRES#1",
+      "rule_id": "OBL-49BIS-REGISTRES",
+      "categorie_mention": "autre",
+      "pages": [86, 87, 96],
+      "extrait_annexe": "art. 49 bis CGI — dématérialisation / registres ; échéances 2027/2028 dans l'Annexe",
+      "suggestion": "Revue croisée description fiche vs dispositions démat. Annexe — sans purge auto.",
+      "suggestion_valeur": null,
+      "interdiction": "Ne pas retirer a_confirmer hors_perimetre sans visa.",
+      "statut_editorial": "a_valider_humain"
+    }
+  ]
+}

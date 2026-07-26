@@ -1,0 +1,63 @@
+[project]
+name = "revue-fiscale"
+version = "0.1.0"
+description = "Plateforme SaaS multi-cabinets de revue fiscale"
+requires-python = ">=3.12"
+dependencies = [
+    "fastapi>=0.115",
+    "uvicorn[standard]>=0.32",
+    "sqlalchemy>=2.0.36",
+    "psycopg[binary]>=3.2",
+    "pydantic>=2.9",
+    "pydantic-settings>=2.6",
+    "python-multipart>=0.0.12",
+    "pyyaml>=6.0",
+    "openpyxl>=3.1",
+    "python-docx>=1.1",
+    "reportlab>=4.0",
+    "httpx>=0.28",
+    "phonenumbers>=8.13",
+]
+
+[project.optional-dependencies]
+dev = [
+    "pytest>=8.3",
+    "pytest-cov>=6.0",
+    "ruff>=0.8",
+    "mypy>=1.13",
+    "httpx>=0.28",
+    "types-PyYAML>=6.0",
+]
+
+[tool.ruff]
+line-length = 100
+target-version = "py312"
+
+[tool.ruff.lint]
+select = ["E", "F", "I", "N", "UP", "B", "S", "C4", "SIM"]
+ignore = [
+    "S101",  # assert autorise dans les tests
+    "N818",  # exceptions nommees en francais : ErreurX, pas XError
+]
+
+[tool.ruff.lint.per-file-ignores]
+"tests/*" = ["S", "B017"]
+
+[tool.mypy]
+python_version = "3.12"
+strict = true
+warn_unreachable = true
+disallow_any_explicit = false
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+markers = ["db: necessite une base PostgreSQL"]
+
+[build-system]
+requires = ["setuptools>=75"]
+build-backend = "setuptools.build_meta"
+
+# Sans cela, setuptools voit aussi migrations/ et referentiel/ comme paquets
+# top-level et refuse le build editable (erreur "Multiple top-level packages").
+[tool.setuptools.packages.find]
+include = ["backend*"]

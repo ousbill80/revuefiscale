@@ -1,0 +1,611 @@
+<!DOCTYPE HTML><HTML><HEAD><META HTTP-EQUIV="Content-Type" CONTENT="text/html; charset=UTF-8">
+<TITLE>Code des impots -67</TITLE><LINK REL="STYLESHEET" HREF="/cicgi.css" CHARSET="ISO-8859-1" TYPE="text/css">
+<style type="text/css">
+body {margin-left: 5px;	margin-top: 0px; margin-right: .5em;margin-bottom: 0px;background-color:#fafafa ;}
+.Liste-Numerote {font-size: 12pt;font-weight: regular;font-style: italic;color: #000000;text-transform: none;margin-left:8px ;margin-bottom:8px ;margin-top:4px ;margin-right:10px ;font-family:Georgia, "Times New Roman", Times, serif}
+li {list-style-type: none; margin-left:0px ; padding-left:0em ; }
+.Paratext {font-size: 12pt;font-weight: regular;font-style: italic;color: #000000;text-decoration: none;vertical-align: baseline;text-transform: none;margin-left:0px ;font-family:Georgia, "Times New Roman", Times, serif}
+.Normal {font-size: 12pt;font-weight: regular;font-style: italic;color: #000000;text-decoration: none;vertical-align: baseline;text-transform: none;margin-left:0px ;font-family:Georgia, "Times New Roman", Times, serif}
+ul {list-style-type: none; margin-left:0px ; padding-left:0em ;  }
+.Liste2-Enumeree {font-size: 12pt;font-weight: regular;font-style: italic;color: #000000;text-decoration: none;vertical-align: baseline;text-transform: none;list-style-type:none ;margin-left:16px ;margin-bottom:8px;margin-right:10px;font-family:Georgia, "Times New Roman", Times, serif}
+P.Liste2-Enumeree {font-size: 12pt;font-weight: regular;font-style: italic;color: #000000;text-decoration: none;vertical-align: baseline;text-transform: none;list-style-type:none ;margin-left:16px ;margin-bottom:8px;margin-right:10px;font-family:Georgia, "Times New Roman", Times, serif}
+.Entete {font-size: 13pt;font-weight: regular;font-style: italic;color:#000000 ;text-decoration: none;vertical-align: baseline;text-transform: none;margin-left:8px ;font-family:Georgia, "Times New Roman", Times, serif}
+table, TABLE {border-width:1px; width:99% ;border-collapse:collapse;border-color: #9ecaed;box-shadow: 0 0 10px #9ecaed;}
+tr,td {text-align:left;vertical-align:bottom;border:1px solid #9ecaed;padding:.2em;marging-left:.2em}
+th, TH{text-align:center;vertical-align:middle;padding:.2em;}
+P.TableauEntete {font-size: 13pt;font-weight: regular;font-style: italic;color: #000000;font-family:Georgia, "Times New Roman"}
+P.TableauCelluleLeft, P.TableauCellule {text-align:right;margin-right:1em;font-size: 13pt;font-weight: regular;font-style: italic;color: #000000;font-family:Georgia, "Times New Roman"}
+P.TableauCelluleRight {text-align:left;margin-left:1em;font-size: 13pt;font-weight: regular;font-style: italic;color: #000000;font-family:Georgia, "Times New Roman"}
+.ui-buttonh {padding: .1em .1em ; border: 1px solid #dadada;border-radius: 4px; box-shadow: 0 0 4px #9ecaed;color:#FF3300 ;margin-left:8px ;margin-right:8px ;margin-bottom:2px ;margin-top:2px ;text-decoration:none ;font-size:12pt ;font-family:"Times New Roman"}   
+.ui-button {padding: .1em .1em ; border: 1px solid #dadada;border-radius: 4px; box-shadow: 0 0 4px #9ecaed;color:#FF3300 ;margin-left:8px ;margin-right:8px ;margin-bottom:2px ;margin-top:2px ;text-decoration:none ;font-size:12pt ;font-family:"Times New Roman"}   
+H3 {display: block;text-align: center;text-indent: 0pt;margin-top: 10pt;margin-bottom: 10pt;margin-right: 10pt;margin-left: 10pt;font-size: 12pt;font-weight: Bold;font-style: Regular;color: #00A000;text-decoration: none;vertical-align: baseline;text-transform: none;font-family: "Times New Roman";}
+H4 {display: block;text-align: left;text-indent: 0pt;margin-top: 10pt;margin-bottom: 6pt;margin-right: 10pt;margin-left: 10pt;font-size: 12pt;font-weight: Bold;font-style: Regular;color: #000000;text-decoration: none;vertical-align: baseline;text-transform: none;font-family: "Times New Roman";}
+H5 {display: block;text-align: left;text-indent: 0pt;margin-top: 10pt;margin-bottom: 6pt;margin-right: 10pt;margin-left: 10pt;font-size: 11pt;font-weight: Bold;font-style: Regular;color: #000000;text-decoration: none;vertical-align: baseline;text-transform: none;font-family: "Times New Roman";}
+H6.NoArticle {display: block;text-align: left;text-indent: 0pt;margin-top: 14pt;margin-bottom: 0pt;margin-right: 0pt;margin-left: 0pt;font-size: 14pt;font-weight: regular;font-style: Regular;color: #00a000;text-decoration: none;vertical-align: baseline;text-transform: none;font-family: "Times New Roman";}
+H2 {text-align:center;font-size:16pt;font-family:Georgia, "Times New Roman", Times, serif}
+P.ParaText {font-size: 12pt;font-weight: regular;font-style: italic;color: #000000;	text-decoration: none;vertical-align: baseline;text-transform: none;font-family:Georgia, "Times New Roman", Times, serif;}
+H2.Section,P.Section {font-size:12pt;font-weight:bold;font-style:Regular;color:#008000;font-family:Georgia,"Times New Roman"}
+P.Paragraphe, p.Paragraphe {Text-Align:center;Text-decoration:none;font-size:12pt;font-weight:bold;font-style:Normal;color:#00A000;font-family:Georgia,"Times New Roman"}
+H2.Livre,P.Livre {text-align:center;font-size:16pt;font-weight:bold;font-style:Regular;color:#008000;font-family:Georgia,"Times New Roman"}
+P.Partie,H2.Partie,P.TitreSub {text-align:center;font-size:14pt;font-weight:bold;font-style:Regular;color:#008000;font-family:Georgia,"Times New Roman"}
+H2.ChapitreNo,H2.TitreNo {text-align:center;font-size:14pt;font-weight:bold;font-style:Regular;color:#008000;font-family:Georgia,"Times New Roman"}
+H2.Chapitre, h2.Chapitre {text-align:center;font-size:14pt;font-weight:bold;font-style:Regular;color:#008000;font-family:Georgia,"Times New Roman"}
+H2.TitreNo {text-align:center;font-size:14pt;font-weight:bold;font-style:Regular;color:#008000;font-family:Georgia,"Times New Roman"}
+h3.Sous-Section, H3.Sous-Section, h3.Sous-section, h2.Section {font-size:12pt;font-weight:bold;font-style:Italic;color:#008000;font-family:Georgia,"Times New Roman"}
+hr,HR { display: block; width:90%;  margin-top: 0.5em; margin-bottom: 0.5em; margin-left: auto;  margin-right: auto;  border-style: inset; border-width: 1px;}
+P.TitreSub {text-align:center;font-size:14pt;font-weight:bold;font-style:Regular;color:#008000;font-family:Georgia,"Times New Roman"}
+.Reference {display: block;text-align: left;text-indent: 0pt;margin-top: 10pt;margin-bottom: 6pt;margin-right: 10pt;margin-left: 10pt;font-size: 14pt;font-weight: Bold;font-style: Regular;color: #7F5434;text-decoration: none;vertical-align: baseline;text-transform: none;font-family: "Times New Roman";}
+.ludwig,blockquote {padding-left:1em;background-color:#fafafa;font-size:12pt;font-weight:100;font-style:italic;}
+#articleList {position:absolute ;	z-index: 1 ;left: 10px ;top: 80px ;height:340px;width: 620px;border: 2px solid #cacaca ;border-radius: 5px ;background-color:#fafafa ;    box-shadow: 0 0 12px #333333;	margin-left:0px ;	padding: .3em .3em ;		overflow:hidden ;	visibility:hidden ;  }			
+#articleList h3 { text-align: center; margin: 0; }		
+
+.historique {
+  display:none ;
+  padding: .1em .3em ;
+  border: solid 2px #dadada;
+  border-radius: 7px;
+  box-shadow: 0 0 5px #9ecaed;  
+  
+}
+.histText {
+    display: block;
+    font-family: ;"Times New Roman"
+	padding: .1em .3em ;
+    margin: 1em 0px;
+	font-style:italic;
+	color:#000000;
+	overflow:auto;
+}
+.highlight {
+  font-weight:bold ;
+  color:#000000 ;
+  background-color:#FFFFCC ;
+  }
+.articleList-scroll {
+	overflow-x:hidden ;
+	overflow-y:scroll ;
+	scrollbar-width:thin ;
+	scrollbar-color:blue orange ;
+}
+
+#contenu {
+	overflow-x:hidden ;
+    overflow-y:scroll ;
+	scrollbar-width:thin ;
+	scrollbar-color:blue orange ;
+}		
+
+table, TABLE {
+ text-align:center; 
+    margin-left:.5em; 
+    margin-right:.5em; 
+    border:1px solid #000000;	
+	border-collapse:collapse ;
+    border-color: #9ecaed;
+    box-shadow: 0 0 10px #9ecaed;
+	
+   }
+  tr,td {text-align:left;}
+  
+
+
+ </style>
+ 
+<script src="/js/iscroll.js"></script>
+<script src="/js/jquery.js"></script>   
+<script src="/js/jquery-ui-1.10.3.custom.js"></script>    	    
+<script src="/js/jquery.ui.draggable.js" type="text/javascript"></script>			
+<script src="/js/jquery.ui.core.js"></script> 			
+<script src="/js/jquery.ui.widget.js"></script>			
+<script src="/js/jquery.ui.position.js"></script>			
+<script src="/js/jquery.ui.menu.js"></script>    		
+<script type="text/javascript" src="./xpages.js"></script>
+/* VERSION POUR PAGE HTML SUR SITE DGI.CGICI.COM */
+<script language="javascript">
+ function showButton(id) {
+    var x = document.getElementById(id) ;
+	if(x.style.display === "none") {
+	   x.style.display = "block" ;
+	  } else {
+	   x.style.display = "none" ;
+	   }
+	 }   
+	 var pagenumber="067";
+function loadpage(page, art) {
+      showHideHistoric(art);
+	  return false;
+	  } 
+function loadArticle(page, art) { var artno = art ;var pgno=page;scrolltoelementTag(pgno,artno) ;return false ;} 
+
+</script>
+</HEAD>
+<BODY><div ID="wrapper"><div ID="scroller">
+
+
+
+<H2 CLASS="Section">
+Section III - Exemptions</H2>
+
+<H3 CLASS="Sous-section">
+I - Amortissements de capital</H3>
+<span id="#A0211"></span>
+<H6 CLASS="NoArticle">
+Art. 211</H6>
+<P CLASS="ParaText">
+Les dispositions de l&apos;article <a class='ui-button' href='' onClick="loadArticle('067','0180');return false;">180</a>-3 ne sont pas applicables aux amortissements qui seraient faits par une r&eacute;alisation d&apos;actif et au moyen de pr&eacute;l&egrave;vements sur les &eacute;l&eacute;ments autres que le compte de r&eacute;sultat net, les r&eacute;serves ou provisions diverses du bilan et qui se traduiraient par une r&eacute;duction statutaire du capital social.</P>
+<P CLASS="ParaText">
+De m&ecirc;me elles ne s&apos;appliquent pas aux soci&eacute;t&eacute;s concessionnaires des collectivit&eacute;s publiques qui &eacute;tablissent que l&apos;amortissement par remboursement de tout ou partie de leur capital social, parts d&apos;int&eacute;r&ecirc;ts ou commandites, est justifi&eacute; par la caducit&eacute; de tout ou partie de leur actif social, notamment par d&eacute;p&eacute;rissement progressif ou par obligation de remise en fin de concession &agrave; l&apos;autorit&eacute; conc&eacute;dante.</P>
+
+<span id="#A0212"></span>
+<H6 CLASS="NoArticle">
+Art. 212</H6>
+<P CLASS="Liste2-Enumeree">
+1<b>&deg;-</b> Les soci&eacute;t&eacute;s qui entendent b&eacute;n&eacute;ficier des exemptions pr&eacute;vues &agrave; l&apos;article 211 doivent joindre &agrave; leur d&eacute;claration une demande sp&eacute;ciale accompagn&eacute;e d&apos;un &eacute;tat d&eacute;taill&eacute; et estimatif de tous les biens qui composent l&apos;actif social au jour de la demande, ainsi que tous &eacute;l&eacute;ments du passif.</P>
+<P CLASS="Liste2-Enumeree">
+L&apos;estimation de l&apos;action est faite d&apos;apr&egrave;s sa valeur r&eacute;elle, nonobstant toute &eacute;valuation des bilans et autres documents.</P>
+<P CLASS="Liste2-Enumeree">
+2<b>&deg;-</b>La demande d&apos;exemption est accompagn&eacute;e, selon les cas, des pi&egrave;ces suivantes :</P>
+<P CLASS="Liste2-Enumeree">
+a)un &eacute;tat certifi&eacute; indiquant sur quelle r&eacute;alisation d&apos;actif et gr&acirc;ce &agrave; quel pr&eacute;l&egrave;vement l&apos;op&eacute;ration doit &ecirc;tre r&eacute;alis&eacute;e, si l&apos;amortissement doit &ecirc;tre op&eacute;r&eacute; par une r&eacute;alisation d&apos;actif et au moyen de pr&eacute;l&egrave;vements sur les &eacute;l&eacute;ments autres que le compte de r&eacute;sultat net, les r&eacute;serves ou provisions diverses du bilan;</P>
+<P CLASS="Liste2-Enumeree">
+b)une d&eacute;claration d&eacute;taill&eacute;e et s&apos;il y a lieu, estimative d&apos;une part, de l&apos;actif social actuel et d&apos;autre part, des biens &agrave; remettre en fin de concession &agrave; l&apos;autorit&eacute; conc&eacute;dante, si la demande d&apos;exemption est fond&eacute;e sur I&apos;obligation de remettre en fin de concession &agrave; l&apos;autorit&eacute; conc&eacute;dante, tout ou partie de l&apos;actif.</P>
+<P CLASS="Liste2-Enumeree">
+3<b>&deg;-</b>En cas de contestation sur les d&eacute;clarations pr&eacute;vues aux alin&eacute;as pr&eacute;c&eacute;dents, il est proc&eacute;d&eacute; &agrave; la conciliation pr&eacute;vue par les articles <a class='ui-button' href='' onClick="loadArticle('067','0788');return false;">788</a> et suivants du Code g&eacute;n&eacute;ral des Imp&ocirc;ts.</P>
+<P CLASS="Liste2-Enumeree">
+Lorsque la demande d&apos;exemption est fond&eacute;e sur la disparition en fin de concession de tout ou partie de l&apos;actif social, soit par suite de d&eacute;p&eacute;rissement, soit par suite de remise &agrave; l&apos;autorit&eacute; conc&eacute;dante, l&apos;exemption est accord&eacute;e sous r&eacute;serve que le capital social ne se retrouve en franchise d&apos;imp&ocirc;t, compte tenu des amortissements ou remboursements effectu&eacute;s.</P>
+
+<span id="#A0213"></span>
+<H6 CLASS="NoArticle">
+Art. 213</H6>
+<P CLASS="ParaText">
+Lorsque les actions ont &eacute;t&eacute; rembours&eacute;es par un des moyens non express&eacute;ment exclus par le premier alin&eacute;a de l&apos;article 211, &agrave; la liquidation de la soci&eacute;t&eacute;, la r&eacute;partition de l&apos;actif entre les porteurs d&apos;actions de jouissance et jusqu&apos;&agrave; concurrence du pair des actions originaires, est consid&eacute;r&eacute;e comme un remboursement de capital non imposable &agrave; l&apos;imp&ocirc;t sur le revenu des valeurs mobili&egrave;res.</P>
+
+
+
+<H3 CLASS="Sous-section">
+II - Caisse d&apos;&eacute;pargne</H3>
+<span id="#A0214"></span>
+<H6 CLASS="NoArticle">
+Art. 214</H6>
+<P CLASS="ParaText">
+Sont exempt&eacute;s de l&apos;imp&ocirc;t :</P>
+<P CLASS="Liste2-Enumeree">
+1-Les int&eacute;r&ecirc;ts des sommes inscrites sur les livrets de caisse d&apos;&eacute;pargne.</P>
+<P CLASS="Liste2-Enumeree">
+2-Dans la limite d&apos;un livret par personne, les int&eacute;r&ecirc;ts des comptes d&apos;&eacute;pargne populaire ainsi que ceux des structures de microfinance quelle que soit leur forme.</P>
+
+<H6 CLASS="Modification">
+Loi n<b>&deg;-</b> 92-948 du 23 d&eacute;c. 1992, an. fiscale, art 5 b. Ord. n<b>&deg;-</b> 2011-480 du 28 d&eacute;cembre 2011Art. 29-2</H6>
+
+
+
+<H3 CLASS="Sous-section">
+III - Les structures exer&ccedil;ant dans le secteur de la microfinance</H3>
+<span id="#A0215"></span>
+<H6 CLASS="NoArticle">
+Art. 215</H6>
+<P CLASS="ParaText">
+Sont &eacute;galement exempt&eacute;es de l&apos;imp&ocirc;t, les structures exer&ccedil;ant dans le domaine de la microfinance quelle que soit leur forme, concernant leurs op&eacute;rations de collecte de l&apos;&eacute;pargne et de distribution du cr&eacute;dit, ainsi que les r&eacute;mun&eacute;rations des parts sociales de leurs membres ou clients, les revenus tir&eacute;s de leur &eacute;pargne et les paiements d&apos;int&eacute;r&ecirc;ts sur les cr&eacute;dits qu&apos;ils ont obtenus de ces structures.</P>
+
+<H6 CLASS="Modification">
+Loi n<b>&deg;-</b> 96-562 du 22 juillet 1996. Ord. n<b>&deg;-</b> 2011-480 du 28 d&eacute;cembre 2011Art. 29-3.</H6>
+
+
+
+
+
+<H3 CLASS="Sous-section">
+IV - Comptes courants</H3>
+<span id="#A0216"></span>
+<H6 CLASS="NoArticle">
+Art. 216</H6>
+<P CLASS="ParaText">
+Les dispositions des articles <a class='ui-button' href='' onClick="loadArticle('067','0192');return false;">192</a>-4 et <a class='ui-button' href='' onClick="loadArticle('067','0193');return false;">193</a> ne sont pas applicables aux int&eacute;r&ecirc;ts, arr&eacute;rages et tous autres produits des comptes courants figurant dans les recettes provenant de l&apos;exercice d&apos;une profession industrielle, commerciale ou agricole ou d&apos;une exploitation mini&egrave;re sous la double condition que :</P>
+<P CLASS="Liste2-Enumeree">
+1-Les contractants, li&eacute;s par la convention sp&eacute;ciale dite contrat de compte courant, aient l&apos;un et l&apos;autre les qualit&eacute;s d&apos;industriel, de commer&ccedil;ant ou d&apos;exploitant agricole ou minier.</P>
+<P CLASS="Liste2-Enumeree">
+2-Les op&eacute;rations inscrites au compte courant se rattachent exclusivement &agrave; l&apos;industrie, au commerce ou &agrave; l&apos;exploitation des deux parties.</P>
+<P CLASS="Liste2-Enumeree">
+Les dispositions qui pr&eacute;c&egrave;dent ne s&apos;appliquent qu&apos;aux contractants dont les produits des comptes courants sont imposables &agrave; l&apos;imp&ocirc;t sur les b&eacute;n&eacute;fices industriels et commerciaux en C&ocirc;te d&apos;Ivoire.</P>
+
+<H6 CLASS="Modification">
+Loi n<b>&deg;-</b> 95-05 du 11 janv. 1995, an. fiscale,Art. 24.</H6>
+
+<H3 CLASS="Sous-section">
+V - Coop&eacute;ratives</H3>
+<span id="#A0217"></span>
+<H6 CLASS="NoArticle">
+Art. 217 &nbsp;&nbsp;&nbsp;&nbsp; <a href="#" onClick="loadpage('067','h21217');return false;" class="ui-button"  title="Consultez l'historique">2021...</a></H6>
+<P CLASS="ParaText"><FONT COLOR='#000000'>
+<a name="50499599_pgfId-1025478"></a>Abrog&eacute;.</FONT></P>
+<H6 CLASS="Modification">
+<a name="50499599_pgfId-1117736"></a>Loi n&deg; 2021-899 du 21 d&eacute;c. 2021, an. fiscale,Art. 4-5.</H6>
+
+
+
+
+
+<H3 CLASS="Sous-section">
+VI - Int&eacute;r&ecirc;ts des emprunts &eacute;mis &agrave; l&apos;&eacute;tranger par l&apos;Etat et la Banque nationale d&apos;Investissement</H3>
+<span id="#A0218"></span>
+<H6 CLASS="NoArticle">
+Art. 218 </H6>
+<P CLASS="ParaText">
+Sont exon&eacute;r&eacute;s de l&apos;imp&ocirc;t sur le revenu des capitaux mobiliers, les int&eacute;r&ecirc;ts, arr&eacute;rages et tous autres produits des emprunts &eacute;mis &agrave; l&apos;&eacute;tranger par l&apos;Etat et la Banque nationale d&apos;Investissement1.</P>
+
+<H6 CLASS="Modification">
+Ord. n<b>&deg;-</b> 74-173 du 19 avril 1974,Art. 18.</H6>
+
+
+<H3 CLASS="Sous-section">
+VII - Emprunts des collectivit&eacute;s</H3>
+<span id="#A0219"></span>
+<H6 CLASS="NoArticle">
+Art. 219  &nbsp;&nbsp;&nbsp;&nbsp; <a href="#" onClick="loadpage('067','h24219');return false;" class="ui-button"  title="Consultez l'historique">2024...</a></H6>
+<P CLASS="ParaText"><FONT COLOR='#d00000'>
+<A NAME="50434094_pgfId-1121626"></A>Abrogé.</FONT></P>
+<H6 CLASS="Modification">
+<A NAME="50434094_pgfId-1142658"></A>Loi n° 2024-1109 du 18 déc. 2024, an. fiscale, art. 42-3.</H6>
+
+<H3 CLASS="Sous-section">
+VIII - Habitations &eacute;conomiques ou &agrave; bon march&eacute;</H3>
+<span id="#A0220"></span>
+<H6 CLASS="NoArticle">
+Art. 220</H6>
+<P CLASS="ParaText">
+Sont affranchis de l&apos;imp&ocirc;t sur le revenu des capitaux mobiliers, les int&eacute;r&ecirc;ts des obligations et emprunts &eacute;mis ou &agrave; &eacute;mettre par des organismes agr&eacute;&eacute;s par l&apos;Etat et constitu&eacute;s en vue du d&eacute;veloppement de l&apos;habitat, ainsi que les int&eacute;r&ecirc;ts des pr&ecirc;ts consentis par ces m&ecirc;mes organismes.</P>
+
+
+
+<H3 CLASS="Sous-section">
+IX - Pr&ecirc;ts de certaines soci&eacute;t&eacute;s ivoiriennes et des associations</H3>
+<span id="#A0221"></span>
+<H6 CLASS="NoArticle">
+Art. 221</H6>
+<P CLASS="ParaText">
+Sont exon&eacute;r&eacute;s de l&apos;imp&ocirc;t sur le revenu des capitaux mobiliers :</P>
+<P CLASS="Liste2-Enumeree">
+1-Les int&eacute;r&ecirc;ts, arr&eacute;rages et autres produits des pr&ecirc;ts consentis sous une forme quelconque par toutes soci&eacute;t&eacute;s ivoiriennes au moyen des fonds qu&apos;elles se procurent en contractant des emprunts soumis eux-m&ecirc;mes &agrave; l&apos;imp&ocirc;t sur le revenu des capitaux mobiliers.</P>
+<P CLASS="Liste2-Enumeree">
+2-Les int&eacute;r&ecirc;ts, arr&eacute;rages et autres produits des pr&ecirc;ts consentis sous une forme quelconque et des d&eacute;p&ocirc;ts effectu&eacute;s par les associations constitu&eacute;es en vue de mettre &agrave; la disposition de leurs membres ou des associations similaires auxquelles elles sont affili&eacute;es, les fonds qu&apos;elles se procurent en contractant des emprunts ou en recevant des d&eacute;p&ocirc;ts.</P>
+<P CLASS="Liste2-Enumeree">
+Le montant des pr&ecirc;ts exon&eacute;r&eacute;s ne peut exc&eacute;der celui des emprunts contract&eacute;s ou des d&eacute;p&ocirc;ts re&ccedil;us et il doit &ecirc;tre justifi&eacute; par la soci&eacute;t&eacute;, la personne ou l&apos;association.</P>
+
+
+
+<H3 CLASS="Sous-section">
+X - Pr&ecirc;ts non repr&eacute;sent&eacute;s par des titres n&eacute;gociables</H3>
+<span id="#A0222"></span>
+<H6 CLASS="NoArticle">
+Art. 222</H6>
+<P CLASS="ParaText">
+Sont exon&eacute;r&eacute;s de l&apos;imp&ocirc;t sur le revenu des capitaux mobiliers lorsqu&apos;ils sont encaiss&eacute;s par ou pour le compte de banquiers ou d&apos;&eacute;tablissements de banque, des entreprises de placement ou de gestion de valeurs mobili&egrave;res, ainsi que des soci&eacute;t&eacute;s autoris&eacute;es par le Gouvernement &agrave; faire des op&eacute;rations de cr&eacute;dit foncier, les produits des pr&ecirc;ts non repr&eacute;sent&eacute;s par des titres n&eacute;gociables, ainsi que les produits vis&eacute;s &agrave; l&apos;article <a class='ui-button' href='' onClick="loadArticle('067','0192');return false;">192</a> ci-avant.</P>
+<P CLASS="ParaText">
+Cette exon&eacute;ration est strictement subordonn&eacute;e &agrave; la condition que ces revenus et produits soient taxables en C&ocirc;te d&apos;Ivoire &agrave; l&apos;imp&ocirc;t sur les b&eacute;n&eacute;fices industriels et commerciaux.</P>
+
+<H6 CLASS="Modification">
+Loi n<b>&deg;-</b> 8 1 -1 127 du 30 d&eacute;c. 198 1, an. fiscale,Art. 22.</H6>
+
+
+
+
+<H3 CLASS="Sous-section">
+XI - Pr&ecirc;ts des banques et &eacute;tablissements financiers des Etats membres de l&apos;UEMOA-titres d&apos;Etat</H3>
+<span id="#A0223"></span>
+<H6 CLASS="NoArticle">
+Art. 223</H6>
+<P CLASS="ParaText">
+Sont exon&eacute;r&eacute;s de l&apos;imp&ocirc;t sur le revenu des capitaux mobiliers :</P>
+<P CLASS="Liste2-Enumeree">
+-les int&eacute;r&ecirc;ts, arr&eacute;rages et autres produits des pr&ecirc;ts consentis aux banques et &eacute;tablissements financiers ivoiriens par ceux des autres &eacute;tats membres de l&apos;Union Economique et Mon&eacute;taire Ouest Africaine (UEMOA);</P>
+
+<H6 CLASS="Modification">
+Loi n<b>&deg;-</b> 94-201 du 8 avril 1994, an. fiscale,Art. 14.</H6>
+<P CLASS="Liste2-Enumeree">
+-les produits, les plus-values et les transactions se rapportant aux titres d&apos;Etat &eacute;mis par les Etats membres de l&apos;Union Mon&eacute;taire Ouest Africaine en repr&eacute;sentation des concours consolid&eacute;s de la Banque centrale des Etats de l&apos;Afrique de l&apos;Ouest.</P>
+
+
+<H6 CLASS="Modification">
+Loi n<b>&deg;-</b> 97-710 du 20 d&eacute;c. 1997, an. fiscale,Art. 13.</H6>
+
+
+
+
+<H3 CLASS="Sous-section">
+XII - Pr&ecirc;ts consentis par la Caisse nationale de Pr&eacute;voyance sociale</H3>
+<span id="#A0224"></span>
+<H6 CLASS="NoArticle">
+Art. 224</H6>
+<P CLASS="ParaText">
+Sont exon&eacute;r&eacute;s de l&apos;imp&ocirc;t sur le revenu des cr&eacute;ances, les int&eacute;r&ecirc;ts des pr&ecirc;ts consentis &agrave; l&apos;Etat par la Caisse nationale de Pr&eacute;voyance sociale.</P>
+
+<H6 CLASS="Modification">
+Loi n<b>&deg;-</b> 2004-271 du 15 avril 2004, an. fiscale,Art. 39-2.</H6>
+
+
+
+
+<H3 CLASS="Sous-section">
+XIII - Int&eacute;r&ecirc;ts des bons de caisse</H3>
+<span id="#A0225"></span>
+<H6 CLASS="NoArticle">
+Art. 225</H6>
+<P CLASS="ParaText">
+Sont exon&eacute;r&eacute;s d&apos;imp&ocirc;t sur le revenu des capitaux mobiliers, les int&eacute;r&ecirc;ts des bons de caisse lorsqu&apos;ils ont effectivement fait l&apos;objet de la retenue au taux de 25 % vis&eacute; &agrave; l&apos;article <a class='ui-button' href='' onClick="loadArticle('067','0090');return false;">90</a> du pr&eacute;sent Code.</P>
+
+<H6 CLASS="Modification">
+Loi n<b>&deg;-</b> 70-209 du 20 mars 1970, an. fiscale,Art. 4.</H6>
+
+
+
+
+<H3 CLASS="Sous-section">
+XIV - R&eacute;serves - Distribution sous forme d&apos;augmentation de capital</H3>
+<span id="#A0226"></span>
+<H6 CLASS="NoArticle">
+Art. 226</H6>
+<P CLASS="ParaText">
+Les augmentations de capital effectu&eacute;es par incorporation de r&eacute;serves sont exon&eacute;r&eacute;es de l&apos;imp&ocirc;t sur le revenu des capitaux mobiliers.</P>
+<P CLASS="ParaText">
+Toutefois, lorsque ces distributions sont cons&eacute;cutives &agrave; une r&eacute;duction de capital non motiv&eacute;e par des pertes sociales ou &agrave; une op&eacute;ration quelconque impliquant le rembourse-ment direct ou indirect du capital en franchise de l&apos;imp&ocirc;t sur le revenu r&eacute;alis&eacute; depuis moins de dix ans, elles ne peuvent b&eacute;n&eacute;ficier de l&apos;exemption &eacute;dict&eacute;e par l&apos;alin&eacute;a pr&eacute;c&eacute;dent que si et dans la mesure o&ugrave; l&apos;augmentation de capital en r&eacute;sultant exc&egrave;de le capital rembours&eacute;.</P>
+<P CLASS="ParaText">
+Lorsque les distributions sont suivies dans le d&eacute;lai de dix ans d&apos;une r&eacute;duction de capital non motiv&eacute;e par des pertes sociales ou d&apos;une op&eacute;ration quelconque impliquant le remboursement direct ou indirect du capital en franchise d&apos;imp&ocirc;t, elles sont d&eacute;chues du b&eacute;n&eacute;fice de l&apos;exemption pour une somme &eacute;gale au montant du remboursement et les droits exigibles doivent &ecirc;tre acquitt&eacute;s dans les vingt premiers jours du trimestre suivant celui de l&apos;&eacute;v&eacute;nement qui a entra&icirc;n&eacute; la d&eacute;ch&eacute;ance sous les sanctions &eacute;dict&eacute;es par le Livre de Proc&eacute;dures fiscales.</P>
+
+
+
+<H3 CLASS="Sous-section">
+XV - Soci&eacute;t&eacute;s de constructions d&apos;immeubles</H3>
+<span id="#A0227"></span>
+<H6 CLASS="NoArticle">
+Art. 227</H6>
+<P CLASS="ParaText">
+Les plus-values r&eacute;sultant de l&apos;attribution exclusive en propri&eacute;t&eacute; aux membres des soci&eacute;t&eacute;s de constructions, vis&eacute;es &agrave; l&apos;article <a class='ui-button' href='' onClick="loadArticle('067','0703');return false;">703</a> du Code g&eacute;n&eacute;ral des Imp&ocirc;ts, par voie de partage en nature &agrave; titre pur et simple, de la fraction des immeubles construits par celle-ci et pour laquelle ils ont vocation, sont exon&eacute;r&eacute;es de l&apos;imp&ocirc;t sur le revenu des capitaux mobiliers.</P>
+<P CLASS="ParaText">
+Le b&eacute;n&eacute;fice de cette disposition est subordonn&eacute; &agrave; la condition que les soci&eacute;t&eacute;s dont il s&apos;agit fassent enregistrer le proc&egrave;s-verbal de la d&eacute;lib&eacute;ration de l&apos;assembl&eacute;e g&eacute;n&eacute;rale approuvant le projet de partage avant l&apos;expiration d&apos;un d&eacute;lai de sept ans, &agrave; compter de la date de leur constitution.</P>
+<P CLASS="ParaText">
+L&apos;acte de partage lui-m&ecirc;me doit &ecirc;tre enregistr&eacute; au plus tard un an apr&egrave;s l&apos;enregistrement du proc&egrave;s-verbal de la d&eacute;lib&eacute;ration de l&apos;assembl&eacute;e approuvant le projet de partage.</P>
+
+
+
+<H3 CLASS="Sous-section">
+XVI - Soci&eacute;t&eacute;s en commandite simple</H3>
+<span id="#A0228"></span>
+<H6 CLASS="NoArticle">
+Art. 228</H6>
+<P CLASS="ParaText">
+Les dispositions de l&apos;article <a class='ui-button' href='' onClick="loadArticle('067','0180');return false;">180</a> -1<b>&deg;-</b> b ne s&apos;appliquent dans les soci&eacute;t&eacute;s en commandite simple, dont le capital n&apos;est pas divis&eacute; en actions, qu&apos;au montant de la commandite &agrave; la double condition que :</P>
+<P CLASS="Liste2-Enumeree">
+1-Le ou les associ&eacute;s responsables soient des personnes physiques.</P>
+<P CLASS="Liste2-Enumeree">
+2-L&apos;ensemble de leurs parts n&apos;exc&egrave;de pas 25 % du capital social.</P>
+
+
+
+<H3 CLASS="Sous-section">
+XVII - Soci&eacute;t&eacute;s en nom collectif -soci&eacute;t&eacute;s civiles</H3>
+<span id="#A0229"></span>
+<H6 CLASS="NoArticle">
+Art. 229</H6>
+<P CLASS="ParaText">
+Les dispositions de l&apos;article <a class='ui-button' href='' onClick="loadArticle('067','0180');return false;">180</a>-1<b>&deg;-</b>-b) ne sont pas applicables :</P>
+<P CLASS="Liste2-Enumeree">
+1-aux parts d&apos;int&eacute;r&ecirc;ts dans les soci&eacute;t&eacute;s commerciales en nom collectif;</P>
+<P CLASS="Liste2-Enumeree">
+2-aux parts d&apos;int&eacute;r&ecirc;ts dans les soci&eacute;t&eacute;s civiles de personnes assujetties &agrave; l&apos;imp&ocirc;t sur les b&eacute;n&eacute;fices des professions non commerciales ou sur les traitements et salaires, dont l&apos;actif ne comprend que les biens mobiliers n&eacute;cessaires &agrave; l&apos;exercice de la profession des associ&eacute;s;</P>
+<P CLASS="Liste2-Enumeree">
+3-aux parts d&apos;int&eacute;r&ecirc;ts dans les soci&eacute;t&eacute;s civiles de personnes assujetties &agrave; l&apos;imp&ocirc;t sur les b&eacute;n&eacute;fices de l&apos;exploitation agricole, constitu&eacute;es exclusivement entre agriculteurs participant personnellement &agrave; l&apos;exploitation de l&apos;entreprise sociale et dont l&apos;actif ne comprend que les biens n&eacute;cessaires &agrave; l&apos;exercice de la profession des associ&eacute;s;</P>
+<P CLASS="Liste2-Enumeree">
+4-aux parts d&apos;int&eacute;r&ecirc;ts dans les soci&eacute;t&eacute;s civiles assujetties &agrave; l&apos;imp&ocirc;t foncier (ou exempt&eacute;es temporairement par la l&eacute;gislation) constitu&eacute;es entre copropri&eacute;taires et ayant uniquement pour objet la gestion de leurs immeubles, &agrave; l&apos;exclusion de toutes op&eacute;rations commerciales vis&eacute;es &agrave; l&apos;article <a class='ui-button' href='' onClick="loadArticle('067','0553');return false;">553</a> du Code g&eacute;n&eacute;ral des Imp&ocirc;ts, sous r&eacute;serve en ce qui concerne les soci&eacute;t&eacute;s n&apos;ayant pas leur si&egrave;ge social en C&ocirc;te d&apos;ivoire des dispositions de l&apos;article <a class='ui-button' href='' onClick="loadArticle('067','0191');return false;">191</a>.</P>
+
+
+
+<H3 CLASS="Sous-section">
+XVIII - Soci&eacute;t&eacute;s d&apos;Etat ou d&apos;&eacute;conomie mixte de cr&eacute;dit</H3>
+<span id="#A0230"></span>
+<H6 CLASS="NoArticle">
+Art. 230</H6>
+<P CLASS="ParaText">
+Les soci&eacute;t&eacute;s d&apos;Etat ou d&apos;&eacute;conomie mixte de cr&eacute;dit qui ont pour objet le cr&eacute;dit &agrave; la petite entreprise de toute nature, aux soci&eacute;t&eacute;s, coop&eacute;ratives et associations de pr&eacute;voyance et &agrave; l&apos;habitat, b&eacute;n&eacute;ficient de l&apos;exon&eacute;ration de l&apos;imp&ocirc;t sur les int&eacute;r&ecirc;ts :</P>
+<P CLASS="Liste2-Enumeree">
+1-des obligations ou emprunts &eacute;mis ou &agrave; &eacute;mettre dans le public ou contract&eacute;s aupr&egrave;s de tout autre organisme de cr&eacute;dit;</P>
+<P CLASS="Liste2-Enumeree">
+2-des d&eacute;p&ocirc;ts dans ces m&ecirc;mes &eacute;tablissements;</P>
+<P CLASS="Liste2-Enumeree">
+3-des d&eacute;p&ocirc;ts consentis conform&eacute;ment &agrave; leur objet.</P>
+
+<H3 CLASS="Sous-section">
+XIX - Soci&eacute;t&eacute;s par actions</H3>
+<span id="#A0231"></span>
+<H6 CLASS="NoArticle">
+Art. 231</H6>
+<P CLASS="ParaText">
+En cas de fusion de soci&eacute;t&eacute;s anonymes ou &agrave; responsabilit&eacute; limit&eacute;e, les attributions gratuites d&apos;actions ou de parts sociales (parts de capital) de la soci&eacute;t&eacute; absorbante ou nouvelle, aux membres de la soci&eacute;t&eacute; absorb&eacute;e, ne sont pas consid&eacute;r&eacute;es comme des attributions imposables au regard de l&apos;article <a class='ui-button' href='' onClick="loadArticle('067','0180');return false;">180</a> du pr&eacute;sent Code, m&ecirc;me lorsque ces attributions font appara&icirc;tre une plus-value.</P>
+<P CLASS="ParaText">
+Le r&eacute;gime est applicable lorsqu&apos;une soci&eacute;t&eacute; anonyme ou &agrave; responsabilit&eacute; limit&eacute;e apporte une partie de ses &eacute;l&eacute;ments d&apos;actif &agrave; une soci&eacute;t&eacute; constitu&eacute;e sous l&apos;une de ces formes, dans les conditions pr&eacute;vues aux articles <a class='ui-button' href='' onClick="loadArticle('067','0756');return false;">756</a> et <a class='ui-button' href='' onClick="loadArticle('067','0757');return false;">757</a> du Code g&eacute;n&eacute;ral des Imp&ocirc;ts.</P>
+<P CLASS="ParaText">
+Si dans les dix ans suivant la fusion ou l&apos;apport partiel d&apos;actif, il est proc&eacute;d&eacute; &agrave; une r&eacute;duction de capital non motiv&eacute;e par des pertes sociales ou &agrave; un remboursement total ou partiel des valeurs attribu&eacute;es gratuitement, la distribution est d&eacute;chue, &agrave; concurrence de la portion du capital rembours&eacute; aux actions, parts ou obligations attribu&eacute;es gratuitement, de l&apos;exemption dont elle avait b&eacute;n&eacute;fici&eacute;, et les droits exigibles doivent &ecirc;tre acquitt&eacute;s par la soci&eacute;t&eacute; absorbante ou nouvelle dans les vingt premiers jours du trimestre qui suit celui au cours duquel a &eacute;t&eacute; fait le remboursement, &agrave; peine des sanctions &eacute;dict&eacute;es par le Livre de Proc&eacute;dures fiscales.</P>
+
+<span id="#A0232"></span>
+<H6 CLASS="NoArticle">
+Art. 232</H6>
+<P CLASS="ParaText">
+Les dispositions de l&apos;article <a class='ui-button' href='' onClick="loadArticle('067','0180');return false;">180</a> ne s&apos;appliquent pas aux produits correspondant &agrave; des fonctions de direction revenant, en sus des sommes attribu&eacute;es aux membres du conseil d&apos;administration, au pr&eacute;sident directeur g&eacute;n&eacute;ral et au directeur g&eacute;n&eacute;ral adjoint, ou au pr&eacute;sident du conseil d&apos;administration et au directeur g&eacute;n&eacute;ral, ou &agrave; l&apos;administrateur g&eacute;n&eacute;ral et &agrave; l&apos;administrateur g&eacute;n&eacute;ral adjoint des soci&eacute;t&eacute;s anonymes ainsi qu&apos;aux r&eacute;mun&eacute;rations vers&eacute;es aux administrateurs titulaires d&apos;un contrat de travail dans la limite des sommes qui leurs sont attribu&eacute;es au titre de l&apos;ex&eacute;cution de leur contrat de travail.</P>
+<P CLASS="ParaText">
+Toute d&eacute;claration inexacte donne ouverture &agrave; une amende &eacute;gale au quintuple de l&apos;imp&ocirc;t &eacute;lud&eacute;.</P>
+
+<H6 CLASS="Modification">
+Ord. n<b>&deg;-</b> 2000-252 du 28 mars 2000Art. 15-5<b>&deg;-</b>.</H6>
+<P CLASS="Paragraphe">
+Soci&eacute;t&eacute;s m&egrave;res - Filiales</P>
+
+<span id="#A0233"></span>
+<H6 CLASS="NoArticle">
+Art. 233 </H6>
+<P CLASS="ParaText">
+Les dividendes distribu&eacute;s par les soci&eacute;t&eacute;s b&eacute;n&eacute;ficiant du r&eacute;gime fiscal des soci&eacute;t&eacute;s m&egrave;res d&eacute;fini par l&apos;article <a class='ui-button' href='' onClick="loadArticle('067','0022');return false;">22</a> du Code g&eacute;n&eacute;ral des Imp&ocirc;ts sont, pour chaque exercice, exon&eacute;r&eacute;s de l&apos;imp&ocirc;t sur le revenu des valeurs mobili&egrave;res dans la mesure du montant net, d&eacute;duction faite de l&apos;imp&ocirc;t sur le revenu des valeurs mobili&egrave;res, des produits des actions ou parts d&apos;int&eacute;r&ecirc;ts de leurs filiales touch&eacute;s par elles au cours de l&apos;exercice.</P>
+<P CLASS="ParaText">
+Lorsque la soci&eacute;t&eacute; m&egrave;re de nationalit&eacute; &eacute;trang&egrave;re c&egrave;de au moins 10 % des droits sociaux qu&apos;elle poss&egrave;de dans sa filiale exploit&eacute;e en C&ocirc;te d&apos;Ivoire, au profit de personnes physiques ou morales ivoiriennes, les dividendes qui lui sont distribu&eacute;s par sa filiale concernant la part de ses droits sociaux non c&eacute;d&eacute;s, sont exon&eacute;r&eacute;s &agrave; hauteur de 25 % de l&apos;imp&ocirc;t sur le revenu des valeurs mobili&egrave;res au titre de la premi&egrave;re ann&eacute;e de distribution qui suit la cession desdits droits.</P>
+<H6 CLASS="Modification">
+Loi n&deg; 2016-1116 du 08 d&eacute;cembre 2016, an. fiscale,Art. 6-1.</H6>
+
+<P CLASS="Paragraphe">
+Soci&eacute;t&eacute;s et organismes d&apos;investissement</P>
+<span id="#A0234"></span>
+<H6 class="NoArticle">
+Art. 234 &nbsp;&nbsp;&nbsp;&nbsp; <a href="#" onClick="loadpage('067','h22234');return false;" class="ui-button"  title="Consultez l'historique">2022...</a></H6>
+<P CLASS="ParaText"><FONT COLOR='#000000'>
+Les dividendes distribués par  les Organismes de Placement Collectif en Valeurs Mobilières (OPCVM) et les Fonds d’Investissement Alternatif (FIA) agréés par le Conseil Régional de l’Epargne Publique et des Marchés Financiers </font>sont pour chaque exercice, exonérés de l’impôt sur le revenu des capitaux mobiliers dans la mesure du montant net, déduction faite de l’impôt sur le revenu des valeurs mobilières, des produits encaissés au cours de l’exercice, des actions, parts de fondateurs, parts d’intérêts et titres d’emprunts qu’ils détiennent, à condition de justifier que ces produits ont supporté l’impôt sur le revenu des valeurs mobilières.</P>
+<H6 CLASS="Modification">
+Loi n° 2022-974 du 20 déc. 2022, an. fiscale, art. 10-2</H6>
+<P CLASS="ParaText"><FONT COLOR='#000000'>
+Les plus-values résultant d’opérations de placement visées dans le présent article, sont exonérées de l’impôt sur le revenu des valeurs mobilières.</font></P>
+<H6 CLASS="Modification">
+Loi n° 2022-974 du 20 déc. 2022, an. fiscale, art. 10-2</H6>
+
+
+<DIV>
+<H6 CLASS="NoArticle">
+Art. 234 bis</H6>
+<P CLASS="Liste2-Enumeree"><FONT COLOR='#000000'> 
+1- Les entreprises d'investissement &agrave; capital fixe sont exon&eacute;r&eacute;es de l&rsquo;imp&ocirc;t sur le revenu des valeurs mobili&egrave;res pour une dur&eacute;e de quinze (15) ans &agrave; partir de leur date de cr&eacute;ation. </FONT></P>
+<P CLASS="Liste2-Enumeree"><FONT COLOR='#000000'> 
+2- Les plus-values de cessions des titres d&eacute;tenus par les entreprises d'investissement &agrave; capital fixe sont exon&eacute;r&eacute;es lorsque les titres c&eacute;d&eacute;s ont &eacute;t&eacute; conserv&eacute;s dans leur portefeuille pendant une p&eacute;riode minimale de trois (3) ann&eacute;es &agrave; compter de leur date d'acquisition.</FONT></P>
+<P CLASS="Liste2-Enumeree"><FONT COLOR='#000000'> 
+3- Les plus-values de cession de titres r&eacute;investis dans d'autres titres, dans un d&eacute;lai de douze (12) mois &agrave; compter de l'exercice de cession, sont exon&eacute;r&eacute;es d'imp&ocirc;t, quelle que soit leur dur&eacute;e dans le portefeuille de l'entreprise.</FONT></P>
+<H6 CLASS="Modification">
+Loi n&deg; 2021-899 du 21 d&eacute;c. 2021, an. fiscale,Art. 23-2</H6>
+
+</DIV>
+
+<H3 CLASS="Sous-section">
+XX - Nantissements</H3>
+<button onClick="showButton('n01')">INFOS</button>
+<blockquote ID="n01" class="ludwig2" style="display:block;">Cette disposition visait les warrants.<BR>
+En droit ivoirien, les s&ucirc;ret&eacute;s &eacute;tant r&eacute;gies par l&#8216;Acte uniforme de l&#8216;OHADA portant organisation des s&ucirc;ret&eacute;s, l&#8216;institution qui s&#8216;apparente le plus aux warrants est le nantissement des stocks.</span></blockquote>
+
+<span id="#A0235"></span>
+<H6 CLASS="NoArticle">
+Art. 235</H6>
+<P CLASS="ParaText">
+L&apos;imp&ocirc;t sur le revenu des capitaux mobiliers n&apos;est pas applicable aux avances faites aux soci&eacute;t&eacute;s au moyen d&apos;endossement de nantissements.</P>
+
+
+
+<H3 CLASS="Sous-section">
+XXI - Produits, lots et primes de remboursement des obligations</H3>
+<span id="#A0236"></span>
+<H6 CLASS="NoArticle">
+Art. 236</H6>
+<P CLASS="ParaText">
+Les produits, lots et primes de remboursement des obligations vers&eacute;s &agrave; des personnes morales non &eacute;tablies dans l&apos;un des pays membres de l&apos;Union Economique et Mon&eacute;taire Ouest Africaine sont exon&eacute;r&eacute;s de l&apos;imp&ocirc;t sur le revenu des valeurs mobili&egrave;res. Cette exon&eacute;ration s&apos;applique &eacute;galement aux personnes physiques fiscalement domicili&eacute;es hors de l&apos;Union Economique et Mon&eacute;taire Ouest Africaine.</P>
+
+<H6 CLASS="Modification">
+Loi n<b>&deg;-</b> 95 -05 du 11 janv. 1995, an. fiscale,Art. 25; loi n<b>&deg;-</b> 97-08 du 6 janv. 1997, an. fiscale,Art. 14-1<b>&deg;-</b>.</H6>
+
+
+
+<H3 CLASS="Sous-section">
+XXII-Int&eacute;r&ecirc;ts des pr&ecirc;ts octroy&eacute;s aux entreprises nouvelles, r&eacute;implant&eacute;es ou rouvertes en zones Centre, Nord et Ouest</H3>
+<span id="#A0236b"></span>
+<H6 CLASS="NoArticle">
+Art. 236 bis</H6>
+<P CLASS="ParaText">
+ [Obsol&egrave;te].</P>
+
+
+<H6 CLASS="Modification">
+Ord. n<b>&deg;-</b> 2009-382 du 26 novembre 2009Art.2-3; Ord. n<b>&deg;-</b> 2011-121 du 22 juin 2011Art.2 -9.</H6>
+
+<H3 CLASS="Sous-section">
+<a name="50634779_pgfId-1083338"></a> XXIII- Bons et obligations du Tr&eacute;sor souscrits par les personnes physiques</H3>
+<DIV>
+<H6 CLASS="NoArticle">
+<a name="50634779_pgfId-1083334"></a>Art. 236 ter- </H6>
+<P CLASS="ParaText"><FONT COLOR='#000000'>
+<a name="50634779_pgfId-1083357"></a>Sont exon&eacute;r&eacute;s de l&#8216;imp?t sur le revenu des cr&eacute;ances, les int&eacute;r&ecirc;ts des bons et obligations du Tr&eacute;sor souscrits par les personnes physiques.</FONT></P>
+<H6 CLASS="Modification">
+<a name="50634779_pgfId-1083366"></a>Loi n&deg; 2018 - 984 du 28 d&eacute;cembre 2018, an. fiscaleArt. 12-2</H6>
+
+
+</DIV>
+<H3 CLASS="Sous-section">
+XXIV- Int&eacute;r&ecirc;ts des pr&ecirc;ts octroy&eacute;s aux entreprises priv&eacute;es et dividendes des personnes physiques r&eacute;alisant des investissements dans le domaine de la recherche, du d&eacute;veloppement et de l&apos;innovation</H3>
+<DIV>
+<span id="#A0236q"></span>
+<H6 CLASS="NoArticle">
+Art. 236 quater  </H6>
+<P CLASS="ParaText"><FONT COLOR='#000000'>
+Sont exon&eacute;r&eacute;s de l&apos;imp&ocirc;t sur le revenu des cr&eacute;ances sur une p&eacute;riode de trois ans suivant l&apos;ann&eacute;e du d&eacute;but des investissements, les int&eacute;r&ecirc;ts des pr&ecirc;ts octroy&eacute;s aux entreprises priv&eacute;es pour leurs activit&eacute;s de recherche, de d&eacute;veloppement et d&apos;innovation.</FONT> </P>
+<P CLASS="ParaText"><FONT COLOR='#000000'>
+Sont &eacute;galement exon&eacute;r&eacute;s de l&apos;imp&ocirc;t sur le revenu des valeurs mobili&egrave;res, les dividendes distribu&eacute;s par les entreprises priv&eacute;es aux personnes physiques ou morales qui investissent dans le capital de ces entreprises s&apos;engageant dans des activit&eacute;s de recherche, de d&eacute;veloppement et d&apos;innovation.</FONT></P>
+<H6 CLASS="Modification">
+Loi n&deg; 2019-1080 du 18 d&eacute;cembre 2019, an. fiscale,Art. 5-5</H6>
+</DIV>
+
+<H3 CLASS="Sous-section">
+XXV- Int&eacute;r&ecirc;ts vers&eacute;s aux souscripteurs des contrats d&apos;assurance-vie</H3>
+<H6 CLASS="Modification">
+Loi n&deg; 2020-972 du 23 d&eacute;c. 2020, an. fiscale,Art. 31.</H6>
+<span id="#A0236u"></span>
+<H6 CLASS="NoArticle">
+Art. 236 quinquies</H6>
+<P CLASS="ParaText">
+Sont exon&eacute;r&eacute;s de l&apos;imp&ocirc;t sur le revenu des cr&eacute;ances, les int&eacute;r&ecirc;ts vers&eacute;s aux souscripteurs des contrats d&apos;assurance-vie.</P>
+<H6 CLASS="Modification">
+Loi n&deg; 2020-972 du 23 d&eacute;c. 2020, an. fiscale,Art. 31.</H6>
+
+<H6 CLASS="NoArticle">
+Art. 236 sexies</H6>
+<P CLASS="ParaText"><FONT COLOR='#d00000'>
+<A NAME="pgfId-1155414"></A>Sont exon&eacute;r&eacute;s de l&#8217;imp&ocirc;t sur le revenu des cr&eacute;ances sur une p&eacute;riode de trois ans suivant l&#8217;ann&eacute;e de leur labellisation par le comit&eacute; de labellisation du Minist&egrave;re en charge de la Transition num&eacute;rique comprenant &eacute;galement un repr&eacute;sentant de la Direction g&eacute;n&eacute;rale des Imp&ocirc;ts et un repr&eacute;sentant de la Direction g&eacute;n&eacute;rale des Douanes, les int&eacute;r&ecirc;ts des pr&ecirc;ts octroy&eacute;s aux startups num&eacute;riques labellis&eacute;es exer&ccedil;ant en dehors de la zone franche de la biotechnologie, des technologies de l&#8217;information et de la communication.</FONT></P>
+<H6 CLASS="Modification">
+<A NAME="pgfId-1155479"></A>Loi n&#176; 2025-987 du 19  d&eacute;cembre 2025, art. 35-4.</H6>
+
+
+
+
+</div></div> 
+    </div><p>&nbsp;</p><p>&nbsp;</p>
+	
+<span class="historique" ID="h21217">
+<div class="histText">
+
+<BR> 
+<BR>Art. 217 
+<BR> 
+<BR>L'imp&ocirc;t sur le revenu des capitaux mobiliers n'est pas applicable aux emprunts ou obligations des soci&eacute;t&eacute;s de toute nature, dites de coop&eacute;ration, et par les associations de toute nature, quels qu'en soient l'objet et la d&eacute;nomination, constitu&eacute;es exclusivement par ces soci&eacute;t&eacute;s coop&eacute;ratives. 
+<BR>
+<BR><BR><BR></div></span><finh21217>
+
+<span class="historique" ID="h24219">
+<div class="histText">
+
+<BR> 
+<p>Art 219<br />
+  Sont affranchis de l'imp&ocirc;t sur le revenu des capitaux mobiliers, les int&eacute;r&ecirc;ts, arr&eacute;rages et tous autres produits des obligations et emprunts &eacute;mis par le Tr&eacute;sor public.</p>
+<p>Sont &eacute;galement affranchis dudit imp&ocirc;t, les int&eacute;r&ecirc;ts et autres produits vers&eacute;s &agrave; ces &eacute;tablissements publics.</p>
+<BR><BR><BR></div></span><finh24219>
+
+
+<span class="historique" id="h22234">
+   <div class="histText"> Art. 234 <br>
+	
+<br> Les dividendes distribués par :
+<br>
+<br> – les sociétés d’investissement, c’est-à-dire les sociétés ayant pour objet exclusif la gestion d’un portefeuille de valeurs mobilières, et dont les statuts et leurs modificatifs ultérieurs ont reçu l’agrément du Ministre des Finances ;
+<br>
+<br> – les sociétés d’investissement, les fonds communs de placement et les clubs d’investissement prévus par la loi n° 92-945 du 23 décembre 1992 relative à la création et à l’organisation des organismes de placements collectifs en valeurs mobilières ;
+sont pour chaque exercice, exonérés de l’impôt sur le revenu des capitaux mobiliers dans la mesure du montant net, déduction faite de l’impôt sur le revenu des valeurs mobilières, des produits encaissés au cours de l’exercice, des actions, parts de fondateurs, parts d’intérêts et titres d’emprunts qu’ils détiennent, à condition de justifier que ces produits ont supporté l’impôt sur le revenu des valeurs mobilières.
+<br>
+<br>Les plus-values résultant d’opérations de placement réalisées dans le cadre de la gestion du portefeuille de valeurs mobilières par les organismes de placements collectifs en valeurs mobilières visés sont exonérées de l’impôt sur le revenu des valeurs mobilières
+<br>
+<br>
+<br>
+   </div>
+ </span>
+ <finh22234>
+</div></div> <!-- wrapper -->
+	  <div id="articleList"><div id="contenu" style='height:auto; background-color:#FFFFCC'>&nbsp;</div>
+      </div><p>&nbsp;</p><p>&nbsp;</p><p>&nbsp;</p><p>&nbsp;</p><p>&nbsp;</p><p>&nbsp;</p><p>&nbsp;</p><p>&nbsp;</p><p>&nbsp;</p><p>&nbsp;</p>
+	  <p>&nbsp;</p><p>&nbsp;</p><p>&nbsp;</p><p>&nbsp;</p><p>&nbsp;</p><p>&nbsp;</p></BODY></HTML>
+	  

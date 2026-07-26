@@ -1,0 +1,41 @@
+reference_source: CGI 2026 — docs client 6/9/10 (propositions metier)
+date_effet: '2026-01-01'
+effets_croises: []
+a_confirmer:
+- date d effet 01/01/2026
+- valeurs issues docs client 6/9/10 — a valider metier
+formule_plafonnement: sans objet
+questions_generees:
+- id: q_reeval_non_declaree
+  texte: Reevaluation non declaree / incomplete ?
+  type: booleen
+- id: q_montant
+  texte: Montant a signaler ?
+  type: montant
+profils_applicables:
+- Entreprises au regime reel
+nature: sans_objet
+identifiant: OBL-338-REEVALUATION
+impot: OBL
+reference_legale: CGI 2026, art. 338 — reevaluation d actifs
+comptes_declencheurs:
+- '105'
+- '106'
+- '211'
+- '213'
+condition_declenchement: (solde(105) > 0 ou solde(106) > 0) et reponse(q_reeval_non_declaree) = vrai
+conditions_fond: Reevaluation d actifs correctement declaree ?
+resultat: reponse(q_montant)
+niveau_risque: moyen
+cas_test:
+  soldes:
+    '105': '10000000'
+    '106': '0'
+    '211': '1'
+    '213': '0'
+  agregats: {}
+  reponses:
+    q_reeval_non_declaree: true
+    q_montant: '10000000'
+  declenche_attendu: true
+  montant_attendu: '10000000'

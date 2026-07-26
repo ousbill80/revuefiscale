@@ -1,0 +1,597 @@
+<!DOCTYPE HTML><HTML><HEAD><META HTTP-EQUIV="Content-Type" CONTENT="text/html; charset=UTF-8">
+<TITLE>Code des impots -298</TITLE><LINK REL="STYLESHEET" HREF="/cicgi.css" CHARSET="ISO-8859-1" TYPE="text/css">
+<style type="text/css">
+body {margin-left: 5px;	margin-top: 0px; margin-right: .5em;margin-bottom: 0px;background-color:#fafafa ;}
+.Liste-Numerote {font-size: 12pt;font-weight: regular;font-style: italic;color: #000000;text-transform: none;margin-left:8px ;margin-bottom:8px ;margin-top:4px ;margin-right:10px ;font-family:Georgia, "Times New Roman", Times, serif}
+li {list-style-type: none; margin-left:0px ; padding-left:0em ; }
+.Paratext {font-size: 12pt;font-weight: regular;font-style: italic;color: #000000;text-decoration: none;vertical-align: baseline;text-transform: none;margin-left:0px ;font-family:Georgia, "Times New Roman", Times, serif}
+.Normal {font-size: 12pt;font-weight: regular;font-style: italic;color: #000000;text-decoration: none;vertical-align: baseline;text-transform: none;margin-left:0px ;font-family:Georgia, "Times New Roman", Times, serif}
+ul {list-style-type: none; margin-left:0px ; padding-left:0em ;  }
+.Liste2-Enumeree {font-size: 12pt;font-weight: regular;font-style: italic;color: #000000;text-decoration: none;vertical-align: baseline;text-transform: none;list-style-type:none ;margin-left:16px ;margin-bottom:8px;margin-right:10px;font-family:Georgia, "Times New Roman", Times, serif}
+P.Liste2-Enumeree {font-size: 12pt;font-weight: regular;font-style: italic;color: #000000;text-decoration: none;vertical-align: baseline;text-transform: none;list-style-type:none ;margin-left:16px ;margin-bottom:8px;margin-right:10px;font-family:Georgia, "Times New Roman", Times, serif}
+.Entete {font-size: 13pt;font-weight: regular;font-style: italic;color:#000000 ;text-decoration: none;vertical-align: baseline;text-transform: none;margin-left:8px ;font-family:Georgia, "Times New Roman", Times, serif}
+table, TABLE {border-width:1px; width:99% ;border-collapse:collapse;border-color: #9ecaed;box-shadow: 0 0 10px #9ecaed;}
+tr,td {text-align:left;vertical-align:bottom;border:1px solid #9ecaed;padding:.2em;marging-left:.2em}
+th, TH{text-align:center;vertical-align:middle;padding:.2em;}
+P.TableauEntete {font-size: 13pt;font-weight: regular;font-style: italic;color: #000000;font-family:Georgia, "Times New Roman"}
+P.TableauCelluleLeft, P.TableauCellule {text-align:right;margin-right:1em;font-size: 13pt;font-weight: regular;font-style: italic;color: #000000;font-family:Georgia, "Times New Roman"}
+P.TableauCelluleRight {text-align:left;margin-left:1em;font-size: 13pt;font-weight: regular;font-style: italic;color: #000000;font-family:Georgia, "Times New Roman"}
+.ui-buttonh {padding: .1em .1em ; border: 1px solid #dadada;border-radius: 4px; box-shadow: 0 0 4px #9ecaed;color:#FF3300 ;margin-left:8px ;margin-right:8px ;margin-bottom:2px ;margin-top:2px ;text-decoration:none ;font-size:12pt ;font-family:"Times New Roman"}   
+.ui-button {padding: .1em .1em ; border: 1px solid #dadada;border-radius: 4px; box-shadow: 0 0 4px #9ecaed;color:#FF3300 ;margin-left:8px ;margin-right:8px ;margin-bottom:2px ;margin-top:2px ;text-decoration:none ;font-size:12pt ;font-family:"Times New Roman"}   
+H3 {display: block;text-align: center;text-indent: 0pt;margin-top: 10pt;margin-bottom: 10pt;margin-right: 10pt;margin-left: 10pt;font-size: 12pt;font-weight: Bold;font-style: Regular;color: #00A000;text-decoration: none;vertical-align: baseline;text-transform: none;font-family: "Times New Roman";}
+H4 {display: block;text-align: left;text-indent: 0pt;margin-top: 10pt;margin-bottom: 6pt;margin-right: 10pt;margin-left: 10pt;font-size: 12pt;font-weight: Bold;font-style: Regular;color: #000000;text-decoration: none;vertical-align: baseline;text-transform: none;font-family: "Times New Roman";}
+H5 {display: block;text-align: left;text-indent: 0pt;margin-top: 10pt;margin-bottom: 6pt;margin-right: 10pt;margin-left: 10pt;font-size: 11pt;font-weight: Bold;font-style: Regular;color: #000000;text-decoration: none;vertical-align: baseline;text-transform: none;font-family: "Times New Roman";}
+H6.NoArticle {display: block;text-align: left;text-indent: 0pt;margin-top: 14pt;margin-bottom: 0pt;margin-right: 0pt;margin-left: 0pt;font-size: 14pt;font-weight: regular;font-style: Regular;color: #00a000;text-decoration: none;vertical-align: baseline;text-transform: none;font-family: "Times New Roman";}
+H2 {text-align:center;font-size:16pt;font-family:Georgia, "Times New Roman", Times, serif}
+P.ParaText {font-size: 12pt;font-weight: regular;font-style: italic;color: #000000;	text-decoration: none;vertical-align: baseline;text-transform: none;font-family:Georgia, "Times New Roman", Times, serif;}
+H2.Section,P.Section {font-size:12pt;font-weight:bold;font-style:Regular;color:#008000;font-family:Georgia,"Times New Roman"}
+P.Paragraphe, p.Paragraphe {Text-Align:center;Text-decoration:none;font-size:12pt;font-weight:bold;font-style:Normal;color:#00A000;font-family:Georgia,"Times New Roman"}
+H2.Livre,P.Livre {text-align:center;font-size:16pt;font-weight:bold;font-style:Regular;color:#008000;font-family:Georgia,"Times New Roman"}
+P.Partie,H2.Partie,P.TitreSub {text-align:center;font-size:14pt;font-weight:bold;font-style:Regular;color:#008000;font-family:Georgia,"Times New Roman"}
+H2.ChapitreNo,H2.TitreNo {text-align:center;font-size:14pt;font-weight:bold;font-style:Regular;color:#008000;font-family:Georgia,"Times New Roman"}
+H2.Chapitre, h2.Chapitre {text-align:center;font-size:14pt;font-weight:bold;font-style:Regular;color:#008000;font-family:Georgia,"Times New Roman"}
+H2.TitreNo {text-align:center;font-size:14pt;font-weight:bold;font-style:Regular;color:#008000;font-family:Georgia,"Times New Roman"}
+h3.Sous-Section, H3.Sous-Section, h3.Sous-section, h2.Section {font-size:12pt;font-weight:bold;font-style:Italic;color:#008000;font-family:Georgia,"Times New Roman"}
+hr,HR { display: block; width:90%;  margin-top: 0.5em; margin-bottom: 0.5em; margin-left: auto;  margin-right: auto;  border-style: inset; border-width: 1px;}
+P.TitreSub {text-align:center;font-size:14pt;font-weight:bold;font-style:Regular;color:#008000;font-family:Georgia,"Times New Roman"}
+.Reference {display: block;text-align: left;text-indent: 0pt;margin-top: 10pt;margin-bottom: 6pt;margin-right: 10pt;margin-left: 10pt;font-size: 14pt;font-weight: Bold;font-style: Regular;color: #7F5434;text-decoration: none;vertical-align: baseline;text-transform: none;font-family: "Times New Roman";}
+.ludwig,blockquote {padding-left:1em;background-color:#fafafa;font-size:12pt;font-weight:100;font-style:italic;}
+#articleList {position:absolute ;	z-index: 1 ;left: 10px ;top: 80px ;height:340px;width: 620px;border: 2px solid #cacaca ;border-radius: 5px ;background-color:#fafafa ;    box-shadow: 0 0 12px #333333;	margin-left:0px ;	padding: .3em .3em ;		overflow:hidden ;	visibility:hidden ;  }			
+#articleList h3 { text-align: center; margin: 0; }		
+
+.historique {
+  display:none ;
+  padding: .1em .3em ;
+  border: solid 2px #dadada;
+  border-radius: 7px;
+  box-shadow: 0 0 5px #9ecaed;  
+  
+}
+.histText {
+    display: block;
+    font-family: ;"Times New Roman"
+	padding: .1em .3em ;
+    margin: 1em 0px;
+	font-style:italic;
+	color:#000000;
+	overflow:auto;
+}
+.highlight {
+  font-weight:bold ;
+  color:#000000 ;
+  background-color:#FFFFCC ;
+  }
+.articleList-scroll {
+	overflow-x:hidden ;
+	overflow-y:scroll ;
+	scrollbar-width:thin ;
+	scrollbar-color:blue orange ;
+}
+
+#contenu {
+	overflow-x:hidden ;
+    overflow-y:scroll ;
+	scrollbar-width:thin ;
+	scrollbar-color:blue orange ;
+}		
+
+table, TABLE {
+ text-align:center; 
+    margin-left:.5em; 
+    margin-right:.5em; 
+    border:1px solid #000000;	
+	border-collapse:collapse ;
+    border-color: #9ecaed;
+    box-shadow: 0 0 10px #9ecaed;
+	
+   }
+  tr,td {text-align:left;}
+  
+
+
+ </style>
+ 
+<script src="/js/iscroll.js"></script>
+<script src="/js/jquery.js"></script>   
+<script src="/js/jquery-ui-1.10.3.custom.js"></script>    	    
+<script src="/js/jquery.ui.draggable.js" type="text/javascript"></script>			
+<script src="/js/jquery.ui.core.js"></script> 			
+<script src="/js/jquery.ui.widget.js"></script>			
+<script src="/js/jquery.ui.position.js"></script>			
+<script src="/js/jquery.ui.menu.js"></script>    		
+<script type="text/javascript" src="./xpages.js"></script>
+/* VERSION POUR PAGE HTML SUR SITE DGI.CGICI.COM */
+<script language="javascript">
+ function showButton(id) {
+    var x = document.getElementById(id) ;
+	if(x.style.display === "none") {
+	   x.style.display = "block" ;
+	  } else {
+	   x.style.display = "none" ;
+	   }
+	 }   
+	 var pagenumber="298";
+function loadpage(page, art) {
+      showHideHistoric(art);
+	  return false;
+	  } 
+function loadArticle(page, art) { var artno = art ;var pgno=page;scrolltoelementTag(pgno,artno) ;return false ;} 
+
+</script>
+</HEAD>
+<BODY><div ID="wrapper"><div ID="scroller">
+
+
+
+<H2 CLASS="ChapitreNo">
+
+<HR width="90%">
+
+
+Chapitre II</H2>
+
+
+<H2 CLASS="Chapitre">
+Garanties accord&eacute;es aux contribuables
+<HR width="90%">
+
+
+</H2>
+<span id="#A5015"></span>
+<H6 CLASS="NoArticle">
+Art. 15 &nbsp;&nbsp;&nbsp;&nbsp;<a href="#" onClick="loadpage('298','h225015');return false;" class="ui-button"   title="Consultez l'historique">2022...</a></H6>
+<P CLASS="ParaText"><font color='#000000'>
+Une vérification approfondie de la situation fiscale d’ensemble au regard de l’impôt général sur le revenu, ou une vérification de comptabilité, est engagée par l’envoi au contribuable par voie électronique d’un avis de vérification. </FONT></P>
+<H6 CLASS="Modification">
+Loi n° 2022-974 du 20 déc. 2022, an. fiscale, art. 15-1</H6>
+<P CLASS="ParaText">
+Cet avis doit pr&eacute;ciser les p&eacute;riodes et les imp&ocirc;ts, droits et taxes, soumis &agrave; v&eacute;rification et mentionner express&eacute;ment, sous peine de nullit&eacute; de la proc&eacute;dure, que le contribuable a la facult&eacute; de se faire assister par un conseil de son choix.</P>
+<P CLASS="ParaText">
+En cas de v&eacute;rification de comptabilit&eacute;, l&apos;avis pr&eacute;cise la date et l&apos;heure de la premi&egrave;re intervention sur place. Il doit &ecirc;tre remis au contribuable au moins quinze jours avant l&apos;engagement de la proc&eacute;dure.</P>
+<P CLASS="ParaText">
+Le contr&ocirc;le a lieu chez le contribuable ou au si&egrave;ge social de l&apos;entreprise. Le contribuable n&apos;est pas tenu d&apos;envoyer ou d&apos;apporter ses livres et documents comptables au bureau du v&eacute;rificateur. De son cot&eacute;, le v&eacute;rificateur ne peut les emporter qu&apos;avec l&apos;accord &eacute;crit du contribuable, en lui remettant un re&ccedil;u d&eacute;taill&eacute; de ses pi&egrave;ces dont l&apos;Administration devient alors d&eacute;positaire.</P>
+<P CLASS="ParaText">
+En cas de v&eacute;rification approfondie de la situation fiscale d&apos;ensemble, l&apos;avis pr&eacute;cise les documents, pi&egrave;ces et actes que le contribuable doit pr&eacute;senter au bureau du v&eacute;rificateur.</P>
+<H6 CLASS="Modification">
+Loi n&deg; 2018-984 du 28 d&eacute;cembre 2018, an. fiscaleArt. 22-1</H6>
+
+
+
+
+<span id="#A5016"></span>
+<H6 CLASS="NoArticle">
+Art. 16 &nbsp;&nbsp;&nbsp;&nbsp;<a href="#" onClick="loadpage('298','h225016');return false;" class="ui-button"   title="Consultez l'historique">2022...</a></H6>
+<P CLASS="ParaText">
+L&apos;Administration fiscale a la possibilit&eacute; de proc&eacute;der &agrave; tout moment, d&apos;une mani&egrave;re inopin&eacute;e, &agrave; toutes les constatations mat&eacute;rielles qu&apos;elle juge utiles, notamment en ce qui concerne la tenue des documents comptables, l&apos;inventaire des pi&egrave;ces justificatives de recettes et de d&eacute;penses, des immobilisations, des stocks ou des esp&egrave;ces en caisse, le relev&eacute; des prix et des marges pratiqu&eacute;s, le personnel employ&eacute;.</P>
+<P CLASS="ParaText">
+L&apos;agent v&eacute;rificateur dresse sur place un proc&egrave;s-verbal de constatation contresign&eacute; par le contribuable ou le cas &eacute;ch&eacute;ant son repr&eacute;sentant.</P>
+<P CLASS="ParaText">
+En cas de refus de signer, mention est faite au proc&egrave;s-verbal.</P>
+
+<H6 CLASS="Modification">
+Loi n<b>&deg;-</b> 2005-161 du 27 avril 2005, an. fiscale, art. 21-3.</H6>
+<P CLASS="ParaText"><font color='#000000'>
+L’avis de vérification est transmis au début des opérations au contribuable par voie électronique.</FONT></P>
+<H6 CLASS="Modification">
+Loi n° 2022-974 du 20 déc. 2022, an. fiscale, art. 15-2</H6>
+<P CLASS="ParaText">
+L&apos;examen au fond des documents comptables ne peut commencer qu&apos;&agrave; l&apos;issue d&apos;un d&eacute;lai de deux jours permettant au contribuable de se faire assister par un conseil de son choix.</P>
+
+
+<span id="#A5017"></span>
+<H6 CLASS="NoArticle">
+Art. 17 &nbsp;&nbsp;&nbsp;&nbsp;<a href="#" onClick="loadpage('298','h225017');return false;" class="ui-button"   title="Consultez l'historique">2022...</a></H6>
+<P CLASS="ParaText"><font color='#000000'>
+L’Administration fiscale doit porter à la connaissance du contribuable par voie électronique, les résultats d’une vérification approfondie de la situation fiscale d’ensemble ou d’une vérification de comptabilité, même en l’absence de redressement.</FONT></P>
+<H6 CLASS="Modification">
+Loi n° 2022-974 du 20 déc. 2022, an. fiscale, art. 15-3</H6>
+
+<span id="#A5018"></span>
+<H6 CLASS="NoArticle">
+Art. 18</H6>
+<P CLASS="ParaText">
+Lorsqu&apos;elle a proc&eacute;d&eacute; &agrave; une v&eacute;rification approfondie de la situation fiscale d&apos;ensemble, l&apos;Administration ne peut plus proc&eacute;der &agrave; des redressements pour la m&ecirc;me p&eacute;riode en mati&egrave;re d&apos;imp&ocirc;t g&eacute;n&eacute;ral sur le revenu, m&ecirc;me si aucun redressement n&apos;a &eacute;t&eacute; effectu&eacute; &agrave; l&apos;issue de cette v&eacute;rification, &agrave; moins que le contribuable ne lui ait fourni des &eacute;l&eacute;ments incomplets ou inexacts.</P>
+<P CLASS="ParaText">
+L&apos;impossibilit&eacute; de proc&eacute;der &agrave; de nouveaux redressements est effective douze mois &agrave; compter de la date de r&eacute;ception par le contribuable des r&eacute;sultats d&eacute;finitifs de la v&eacute;rification approfondie de la situation fiscale d&apos;ensemble.</P>
+<P CLASS="ParaText">
+Dans ce d&eacute;lai, toute nouvelle v&eacute;rification est subordonn&eacute;e &agrave; l&apos;autorisation sp&eacute;ciale du Directeur g&eacute;n&eacute;ral des Imp&ocirc;ts.</P>
+
+<H6 CLASS="Modification">
+Loi n<b>&deg;-</b> 2002-156 du 15 mars 2002, an. fiscale, art. 26-1<b>&deg;-</b>.</H6>
+
+
+<span id="#A5019"></span>
+<H6 CLASS="NoArticle">
+Art. 19 </H6>
+<P CLASS="ParaText">
+Lorsque la v&eacute;rification de la comptabilit&eacute;, pour une p&eacute;riode d&eacute;termin&eacute;e, au regard d&apos;un imp&ocirc;t ou taxe, ou d&apos;un groupe d&apos;imp&ocirc;ts ou taxes, est achev&eacute;e, l&apos;Administration ne peut proc&eacute;der &agrave; une nouvelle v&eacute;rification de ces &eacute;critures au regard des m&ecirc;mes imp&ocirc;ts ou taxes et pour la m&ecirc;me p&eacute;riode, m&ecirc;me lorsque aucun redressement n&apos;a &eacute;t&eacute; pratiqu&eacute; au regard d&apos;un ou plusieurs imp&ocirc;ts. Cette r&egrave;gle ne s&apos;applique pas :</P>
+<P CLASS="Liste2-Enumeree">
+-lorsque la v&eacute;rification a &eacute;t&eacute; limit&eacute;e &agrave; des op&eacute;rations d&eacute;termin&eacute;es, telles que notamment cr&eacute;dits de taxes, droits &agrave; d&eacute;duction, frais g&eacute;n&eacute;raux, amortissements, provisions, &agrave; condition que l&apos;avis de v&eacute;rification ait mentionn&eacute; que la v&eacute;rification portait sur lesdites op&eacute;rations;</P>
+<P CLASS="Liste2-Enumeree">
+-aux taxes sur le chiffre d&apos;affaires et aux taxes indirectes pour les p&eacute;riodes comprises dans des exercices comptables soumis &agrave; v&eacute;rification au regard des imp&ocirc;ts sur les b&eacute;n&eacute;fices;</P>
+<P CLASS="Liste2-Enumeree">
+-lorsque le r&eacute;examen des &eacute;critures et des documents comptables s&apos;av&egrave;re n&eacute;cessaire pour instruire les observations et r&eacute;clamations des contribuables.</P>
+<P CLASS="ParaText">
+L&apos;impossibilit&eacute; de proc&eacute;der &agrave; une nouvelle v&eacute;rification de comptabilit&eacute; au regard des m&ecirc;mes imp&ocirc;ts ou taxes et pour la m&ecirc;me p&eacute;riode, est effective douze mois &agrave; compter de la date de r&eacute;ception par le contribuable de la notification d&eacute;finitive.</P>
+<P CLASS="ParaText">
+L&apos;Administration conserve dans ce d&eacute;lai, la facult&eacute; de proc&eacute;der &agrave; de nouvelles v&eacute;rifications sur place. Tout contr&ocirc;le dans ce cadre est subordonn&eacute; &agrave; l&apos;autorisation sp&eacute;ciale du Directeur g&eacute;n&eacute;ral des Imp&ocirc;ts.</P>
+
+<H6 CLASS="Modification">
+Loi n<b>&deg;-</b> 2002-156 du 15 mars 2002, an. fiscale, art. 26-2<b>&deg;-</b>.</H6>
+<P CLASS="ParaText">
+Dans le cas o&ugrave; la proc&eacute;dure de v&eacute;rification est irr&eacute;guli&egrave;re, l&apos;Administration ne peut plus proc&eacute;der &agrave; une nouvelle v&eacute;rification de comptabilit&eacute; au regard des imp&ocirc;ts et des p&eacute;riodes pr&eacute;c&eacute;demment v&eacute;rifi&eacute;s.</P>
+<P CLASS="ParaText">
+Dans le d&eacute;lai de prescription, l&apos;Administration conserve en tout &eacute;tat de cause, la facult&eacute; de proc&eacute;der &agrave; des redressements suppl&eacute;mentaires sur la base des &eacute;l&eacute;ments en sa possession, quelle qu&apos;en soit l&apos;origine.</P>
+<P CLASS="ParaText">
+La facult&eacute; de proc&eacute;der aux redressements suppl&eacute;mentaires pr&eacute;vus &agrave; l&apos;alin&eacute;a ci-dessus ne peut donner droit &agrave; un r&eacute;examen des &eacute;critures comptables. Il ne peut &eacute;galement &ecirc;tre proc&eacute;d&eacute; &agrave; de nouvelles investigations sur place.</P>
+<H6 CLASS="Modification">
+Loi n<b>&deg;-</b> 2002-156 du 15 mars 2002, an. fiscale, art. 27.</H6>
+<P CLASS="ParaText"><FONT COLOR='#000000'>
+<a name="50634993_pgfId-1042012"></a>La v&eacute;rification de comptabilit&eacute; sans p&eacute;nalit&eacute;s des petites et moyennes entreprises vis&eacute;es &agrave; l&#8216;article 2 bis du pr&eacute;sent Livre ne peut &ecirc;tre effectu&eacute;e qu&#8216;une seule fois au cours des trois premi&egrave;res ann&eacute;es suivant la cr&eacute;ation de l&#8216;entreprise.</FONT></P>
+<H6 CLASS="Modification">
+<a name="50634993_pgfId-1042008"></a>Loi n&deg; 2018 - 984 du 28 d&eacute;cembre 2018, an. fiscaleArt. 1er-7</H6>
+
+
+<DIV>
+<H6 CLASS="NoArticle">
+
+Art. 20   &nbsp;&nbsp;&nbsp;&nbsp; <a href="#" onClick="loadpage('298','h255020');return false;" class="ui-button"  title="Consultez l'historique">2025...</a></H6>
+<P CLASS="Liste2-Enumeree">
+1&deg;				Sous peine de nullit&eacute; de l&apos;imposition, la v&eacute;rification sur place des livres et documents comptables ne peut s&apos;&eacute;tendre sur une dur&eacute;e sup&eacute;rieure &agrave;six mois . </P>
+<H6 CLASS="Modification">
+Loi n&deg; 2014-861 du 22 d&eacute;cembre 2014, an. fiscale, Art.21-1;  loi n&deg; 2025-987 du 19 déc. 2025, an.fiscale, art. 13.</H6>
+<P CLASS="Liste2-Enumeree"><FONT COLOR='#000000'>
+Le d&eacute;lai de six mois pr&eacute;vu &agrave; l&apos;alin&eacute;a pr&eacute;c&eacute;dent est prorog&eacute; de six mois, lorsque la v&eacute;rification porte sur les op&eacute;rations internationales intragroupe r&eacute;alis&eacute;es par le contribuable.</FONT></P>
+<H6 CLASS="Modification">
+Loi n&deg; 2017-870 du 27 d&eacute;cembre 2017, an. fiscaleArt. 14-4.</H6>
+<P CLASS="Liste2-Enumeree">
+L&apos;Administration dispose d&apos;un d&eacute;lai de dix mois pour notifier au contribuable les redressements envisag&eacute;s par une notification provisoire. Elle dispose d&apos;un d&eacute;lai maximum de  trois mois &agrave; compter de la date de la notification pour confirmer les redressements qu&apos;elle maintient par une notification d&eacute;finitive lorsque le contribuable a pr&eacute;sent&eacute; des observations.</P>
+<H6 CLASS="Modification">
+Loi n&deg; 2014-861 du 22 d&eacute;cembre 2014, an. fiscale, Art.21-1; loi n&deg; 2025-987 du 19 déc. 2025, an.fiscale, art. 13.</H6>
+<P CLASS="Liste2-Enumeree">
+Le contr&ocirc;le est prorog&eacute; du m&ecirc;me d&eacute;lai en cas de recours &agrave; l&apos;assistance administrative aupr&egrave;s d&apos;un Etat &eacute;tranger. Le contribuable en est inform&eacute; par &eacute;crit.</P>
+<H6 CLASS="Modification">
+Ord. n&deg; 2011-121 du 22 juin 2011, an. fiscale, art. 30-1.</H6>
+<P CLASS="Liste2-Enumeree">
+2&deg;	Le d&eacute;lai pr&eacute;vu &agrave; l&apos;alin&eacute;a premier pr&eacute;c&eacute;dent est limit&eacute; &agrave; trois mois,  en ce qui concerne :</P>
+<H6 CLASS="Modification">
+Loi n&deg; 2014-861 du 22 d&eacute;cembre 2014, an. fiscale, art.21-1; loi n&deg; 2025-987 du 19 déc. 2025, an.fiscale, art. 13..</H6>
+<P CLASS="Liste2-Enumeree">
+-	les entreprises relevant du r&eacute;gime r&eacute;el simplifi&eacute; en mati&egrave;re de b&eacute;n&eacute;fices industriels et commerciaux ou de taxe sur la valeur ajout&eacute;e;</P>
+<H6 CLASS="Modification">
+Loi n&deg; 2017-870 du 27 d&eacute;cembre 2017, an. fiscale, art. 11-16;ord. n&deg; 2018-145 du 14 f&eacute;vrier 2018, art. 1.</H6>
+<P CLASS="Liste2-Enumeree">
+-	les contribuables relevant de la taxe d&apos;Etat de l&apos;Entreprenant ou de l&apos;imp&ocirc;t des microentreprises;</P>
+<H6 CLASS="Modification">
+Loi n&deg; 2020-972 du 23 d&eacute;c. 2020, an. fiscale, art. 33-29.</H6>
+<P CLASS="Liste2-Enumeree">
+-	les contribuables relevant de l&apos;imp&ocirc;t sur les b&eacute;n&eacute;fices non commerciaux;</P>
+<P CLASS="Liste2-Enumeree">
+-	les entreprises relevant du r&eacute;gime r&eacute;el normal dont le chiffre d&apos;affaires annuel n&apos;exc&egrave;de pas 1 000 000 000 de francs toutes taxes comprises.</P>
+<H6 CLASS="Modification">
+Loi n&deg; 2020-972 du 23 d&eacute;c. 2020, an. fiscale, art. 33-29.</H6>
+<P CLASS="Liste2-Enumeree">
+L&apos;Administration dispose d&apos;un d&eacute;lai de six mois  pour notifier au contribuable les redressements envisag&eacute;s.</P>
+<H6 CLASS="Modification">
+Loi n&deg; 2014-861 du 22 d&eacute;cembre 2014, an. fiscale, art.21-1; loi n&deg; 2025-987 du 19 déc. 2025, an.fiscale, art. 13.</H6>
+<P CLASS="Liste2-Enumeree"><FONT COLOR='#000000'>
+<a name="50499587_pgfId-1004833"></a>Elle dispose d&rsquo;un d&eacute;lai maximum de trois mois &agrave; compter de la date de la notification pour confirmer les redressements qu&rsquo;elle maintient lorsque le contribuable a pr&eacute;sent&eacute; des observations.</FONT></P>
+<H6 CLASS="Modification">
+<a name="50499587_pgfId-1025409"></a>Loi n&deg; 2014-861 du 22 d&eacute;cembre 2014, an. fiscale, art.21-1; loi n&deg; 2021-899 du 21 d&eacute;c. 2021, an. fiscale, art. 18-1.</H6>
+<P CLASS="Liste2-Enumeree">
+3&deg;	Sous peine de nullit&eacute; de l&apos;imposition, le d&eacute;lai de v&eacute;rification sur place ne peut &agrave; l&apos;&eacute;gard de tous les contribuables, s&apos;&eacute;tendre sur une dur&eacute;e sup&eacute;rieure &agrave; trente jours ouvrables lorsque la v&eacute;rification est limit&eacute;e &agrave; des op&eacute;rations particuli&egrave;res ou &agrave; des imp&ocirc;ts d&eacute;termin&eacute;s.</P>
+<H6 CLASS="Modification">
+
+Ord. n&deg; 2007-675 du 28 d&eacute;cembre 2007, an. fiscale, art. 23-1;
+loi n&deg; 2014-861 du 22 d&eacute;cembre 2014, an. fiscale, art.21-1;
+loi n&deg; 2016-1116 du 08 d&eacute;cembre 2016, an. fiscale, art.21.</H6>
+
+<H6 CLASS="Modification">
+
+Ord. n&deg; 2007-675 du 28 d&eacute;cembre 2007, an. fiscale, art. 23-2; loi n&deg; 2014-861 du 22 d&eacute;cembre 2014, an. fiscale, art.21-1; loi n&deg; 2025-987 du 19 déc. 2025, an.fiscale, art. 13.</H6>
+<P CLASS="Liste2-Enumeree">
+L&apos;Administration dispose d&apos;un d&eacute;lai de soixante jours  pour notifier au contribuable les redressements envisag&eacute;s. Elle dispose d&apos;un d&eacute;lai maximum de soixante jours &agrave; compter de la date de la notification pour confirmer les redressements qu&apos;elle maintient lorsque le contribuable a pr&eacute;sent&eacute; des observations.</P>
+<P CLASS="Liste2-Enumeree">
+4&deg; Lors de la premi&egrave;re intervention sur place, l&apos;agent v&eacute;rificateur dresse un proc&egrave;s-verbal constatant le d&eacute;but des op&eacute;rations mat&eacute;rielles de contr&ocirc;le, contresign&eacute; par le contribuable ou le cas &eacute;ch&eacute;ant, son repr&eacute;sentant.</P>
+<H6 CLASS="Modification">
+Loi n&deg; 2020-972 du 23 d&eacute;c. 2020, an. fiscale, art. 19-1.</H6>
+<P CLASS="Liste2-Enumeree">
+5&deg; Les d&eacute;lais de notification des redressements envisag&eacute;s, pr&eacute;vus aux 1&deg;, 2&deg; et 3&deg; courent &agrave; compter de la date de la premi&egrave;re intervention sur place.</P>
+<P CLASS="Liste2-Enumeree">
+Toutefois, en cas de report de la date du d&eacute;but des op&eacute;rations mat&eacute;rielles de contr&ocirc;le sur place ou de suspension desdites op&eacute;rations sur demande du contribuable ou sur d&eacute;cision de l&apos;Administration, la dur&eacute;e des op&eacute;rations mat&eacute;rielles de contr&ocirc;le sur place ainsi que les d&eacute;lais de notification de redressements pr&eacute;vus aux paragraphes pr&eacute;c&eacute;dents sont rallong&eacute;s d&apos;une dur&eacute;e &eacute;quivalente &agrave; la p&eacute;riode de report ou de suspension.</P>
+<H6 CLASS="Modification">
+Loi n&deg; 2020-972 du 23 d&eacute;c. 2020, an. fiscale, art. 19-1.</H6>
+<P CLASS="Liste2-Enumeree"><FONT COLOR='#000000'>
+<a name="50499587_pgfId-1054174"></a>6&deg;En ce qui concerne le contr&ocirc;le sur pi&egrave;ces, l&rsquo;Administration dispose d&rsquo;un d&eacute;lai maximum de trois mois, &agrave; compter de la date de r&eacute;ception par le contribuable, de la notification des redressements envisag&eacute;s, pour lui faire conna&icirc;tre les redressements qu&rsquo;elle entend maintenir &agrave; sa charge.</FONT></P>
+<H6 CLASS="Modification">
+<a name="50499587_pgfId-1054192"></a>Loi n&deg; 2021-899 du 21 d&eacute;c. 2021, an. fiscale, art. 18-2.</H6>
+
+</DIV>
+
+
+<span id="#A5021"></span>
+<H6 CLASS="NoArticle">
+Art. 21 &nbsp;&nbsp;&nbsp;&nbsp;<a href="#" onClick="loadpage('298','h195021');return false;" class="ui-button"   title="Consultez l'historique">2019...</a></H6>
+<P CLASS="ParaText">
+1&deg;	 			Lorsque le contribuable a appliqu&eacute; des textes dont l&apos;interpr&eacute;tation par     l&apos;Administration a &eacute;t&eacute; publi&eacute;e au moyen d&apos;instructions, circulaires, ou documents ayant une port&eacute;e g&eacute;n&eacute;rale, l&apos;Administration ne peut effectuer aucun autre redressement concernant la m&ecirc;me op&eacute;ration en soutenant une interpr&eacute;tation diff&eacute;rente.</P>
+<P CLASS="Liste2-Enumeree">
+2&deg;	Les contribuables peuvent interroger l&apos;Administration sur l&apos;interpr&eacute;tation d&apos;un texte ou sur les cons&eacute;quences fiscales qu&apos;il convient de tirer d&apos;une situation de fait clairement exprim&eacute;e.</P>
+<P CLASS="Liste2-Enumeree">
+Cette demande doit &ecirc;tre adress&eacute;e au Directeur g&eacute;n&eacute;ral des Imp&ocirc;ts qui dispose d&apos;un d&eacute;lai de six mois pour r&eacute;pondre au contribuable.</P>
+<P CLASS="Liste2-Enumeree"><FONT COLOR='#000000'>
+La d&eacute;cision ou l&apos;interpr&eacute;tation fournie sur support papier ou par voie &eacute;lectronique est opposable au contribuable, mais celui-ci ne peut faire l&apos;objet de redressements fond&eacute;s sur une interpr&eacute;tation diff&eacute;rente. Cette garantie ne joue pas lorsque les faits sur la base desquels l&apos;interpr&eacute;tation a &eacute;t&eacute; fournie sont diff&eacute;rents de ceux qui sont constat&eacute;s ult&eacute;rieurement.</FONT></P>
+<P CLASS="Liste2-Enumeree"><FONT COLOR='#000000'>
+L&apos;utilisation de la voie &eacute;lectronique pour la notification de la d&eacute;cision doit r&eacute;sulter de l&apos;acceptation expresse du contribuable avec indication exacte de son adresse &eacute;lectronique.</FONT></P>
+<P CLASS="Liste2-Enumeree"><FONT COLOR='#000000'>
+Les conditions et modalit&eacute;s d&apos;utilisation de la voie &eacute;lectronique, sont d&eacute;termin&eacute;es par arr&ecirc;t&eacute; du Ministre en charge du Budget. </FONT></P>
+<H6 CLASS="Modification">
+Loi n&deg; 2019-1080 du 18 d&eacute;cembre 2019, an. fiscale, art. 10-4.</H6>
+<P CLASS="Liste2-Enumeree">
+3&deg;	Lorsque le contribuable a appliqu&eacute; une d&eacute;cision ou une solution qui lui a &eacute;t&eacute; notifi&eacute;e &agrave; la suite d&apos;une proc&eacute;dure de redressement, l&apos;Administration ne peut effectuer aucun autre redressement concernant la m&ecirc;me op&eacute;ration.</P>
+<P CLASS="Liste2-Enumeree">
+4&deg;	Les garanties vis&eacute;es aux alin&eacute;as 2 et 3 pr&eacute;c&eacute;dents ne jouent pas lorsque la l&eacute;gislation a &eacute;t&eacute; modifi&eacute;e ou lorsque l&apos;Administration a publi&eacute; son interpr&eacute;tation des textes au moyen d&apos;instructions, circulaires ou documents ayant une port&eacute;e g&eacute;n&eacute;rale.</P>
+
+<DIV>
+<H6 CLASS="NoArticle">
+<A NAME="pgfId-1156659"></A>Art. 21 bis </H6>
+<P CLASS="Liste1-Numerotee"><FONT COLOR='#d00000'>
+<A NAME="pgfId-1156715"></A>1&#176; Les entreprises qui sont sous la d&eacute;pendance ou qui poss&egrave;dent le contr&ocirc;le d&#8217;entreprises situ&eacute;es hors de C&ocirc;te d&#8217;Ivoire vis&eacute;es &agrave; l&#8217;article 38 du Code g&eacute;n&eacute;ral des Imp&ocirc;ts, peuvent conclure avec l'Administration fiscale un Accord pr&eacute;alable sur la d&eacute;termination des prix des transactions qu&#8217;elles envisagent de r&eacute;aliser avec les entreprises situ&eacute;es hors du territoire ivoirien avec lesquelles elles ont des liens de d&eacute;pendance ou de contr&ocirc;le.</FONT></P>
+<P CLASS="Liste1-Numerotee"><FONT COLOR='#d00000'>
+<A NAME="pgfId-1156660"></A>   La demande d&#8217;Accord, adress&eacute;e au Directeur g&eacute;n&eacute;ral des Imp&ocirc;ts, porte sur les modalit&eacute;s et m&eacute;thodes de d&eacute;termination de la valeur des transactions que l&#8217;entreprise requ&eacute;rante envisage de r&eacute;aliser avec des entreprises situ&eacute;es hors du territoire ivoirien, avec lesquelles elle a des liens de d&eacute;pendance ou de contr&ocirc;le.</FONT></P>
+<P CLASS="Liste1-Numerotee"><FONT COLOR='#d00000'>
+<A NAME="pgfId-1156661"></A>   Elle doit &ecirc;tre accompagn&eacute;e, sous peine d&#8217;irrecevabilit&eacute;, d&#8217;une proposition de m&eacute;thode de d&eacute;termination des prix des transactions susvis&eacute;es, bas&eacute;e sur la valeur que des entreprises n&#8217;ayant pas de liens de d&eacute;pendance ou de contr&ocirc;le et exploit&eacute;es dans des conditions analogues, auraient convenu pour de telles op&eacute;rations.</FONT></P>
+<P CLASS="Liste1-Numerotee"><FONT COLOR='#d00000'>
+<A NAME="pgfId-1156662"></A>  L'Administration fiscale peut &eacute;galement conclure de tels accords avec d'autres administrations fiscales concernant les transactions des contribuables dans les lesdites juridictions.</FONT></P>
+<P CLASS="Liste1-Numerotee"><FONT COLOR='#d00000'>
+<A NAME="pgfId-1156663"></A>2&#176; L'Accord prend effet pour les op&eacute;rations r&eacute;alis&eacute;es apr&egrave;s la date de sa signature et sera valable pour les exercices fiscaux sp&eacute;cifi&eacute;s dans l'Accord, sans que sa dur&eacute;e de validit&eacute; exc&egrave;de trois exercices fiscaux suivant celui de sa date de conclusion.</FONT></P>
+<P CLASS="Liste1-Numerotee"><FONT COLOR='#d00000'>
+<A NAME="pgfId-1156664"></A>  Toutefois, &agrave; condition que les parties en conviennent express&eacute;ment, l&#8217;Accord pourra &agrave; titre exceptionnel et nonobstant sa date de signature, prendre effet &agrave; compter du d&eacute;but de l&#8217;exercice fiscal au cours duquel la demande a &eacute;t&eacute; adress&eacute;e &agrave; l&#8217;Administration fiscale.</FONT></P>
+<P CLASS="Liste1-Numerotee"><FONT COLOR='#d00000'>
+<A NAME="pgfId-1156665"></A>3&#176; En cas de variation significative des circonstances &eacute;conomiques pertinentes existant au moment de sa signature, l&#8217;Accord peut &ecirc;tre modifi&eacute;, d&#8217;un commun accord, &agrave; la demande de l&#8217;une ou de l&#8217;autre partie, pour l'adapter aux nouvelles circonstances &eacute;conomiques.</FONT></P>
+<P CLASS="Liste1-Numerotee"><FONT COLOR='#d00000'>
+<A NAME="pgfId-1156666"></A>4&#176; Lorsque l&#8217;entreprise requ&eacute;rante s&#8217;est conform&eacute;e aux termes et obligations fix&eacute;es par l&#8217;Accord, l&#8217;Administration fiscale ne peut effectuer aucun redressement concernant les op&eacute;rations couvertes par l&#8217;Accord, en soutenant une position diff&eacute;rente de celle convenue dans l&#8217;Accord. </FONT></P>
+<P CLASS="Liste1-Numerotee"><FONT COLOR='#d00000'>
+<A NAME="pgfId-1156667"></A>5&#176; L&#8217;Administration fiscale peut r&eacute;voquer de fa&ccedil;on unilat&eacute;rale l&#8217;Accord avant sa date d&#8217;expiration, s&#8217;il est &eacute;tabli : </FONT></P>
+<P CLASS="Liste1-Numerotee"><FONT COLOR='#d00000'>
+<A NAME="pgfId-1156668"></A>- 	qu&#8217;une rupture mat&eacute;rielle d&#8217;une ou de plusieurs hypoth&egrave;ses critiques d&eacute;terminantes de l&#8217;Accord est intervenue au cours de la p&eacute;riode couverte ; ou </FONT></P>
+<P CLASS="Liste1-Numerotee"><FONT COLOR='#d00000'>
+<A NAME="pgfId-1156669"></A>- 	qu&#8217;un changement significatif de la l&eacute;gislation fiscale, y compris des clauses des conventions se rattachant &agrave; l&#8217;Accord est intervenu et qu&#8217;il n&#8217;est pas apparu possible de r&eacute;viser l&#8217;Accord, pour tenir compte des changements de circonstances ; ou</FONT></P>
+<P CLASS="Liste1-Numerotee"><FONT COLOR='#d00000'>
+<A NAME="pgfId-1156670"></A>- 	que l&#8217;entreprise requ&eacute;rante ne s&#8217;est pas conform&eacute;e au cours d&#8217;un exercice, &agrave; une clause, condition ou obligation fondamentale de l&#8217;Accord.</FONT></P>
+<P CLASS="Liste1-Numerotee"><FONT COLOR='#d00000'>
+<A NAME="pgfId-1156671"></A>  La r&eacute;vocation de l&#8217;Accord emporte des cons&eacute;quences fiscales uniquement pour les op&eacute;rations r&eacute;alis&eacute;es apr&egrave;s la date de cette r&eacute;vocation. </FONT></P>
+<P CLASS="Liste1-Numerotee"><FONT COLOR='#d00000'>
+<A NAME="pgfId-1156672"></A>6&#176; L&#8217;Administration fiscale peut, de fa&ccedil;on unilat&eacute;rale annuler l&#8217;Accord avant sa date d&#8217;expiration, s&#8217;il est d&eacute;montr&eacute; que :</FONT></P>
+<P CLASS="Liste1-Numerotee"><FONT COLOR='#d00000'>
+<A NAME="pgfId-1156673"></A>- 	l&#8217;entreprise requ&eacute;rante a pr&eacute;sent&eacute; des faits erron&eacute;s ou a commis des erreurs ou omissions imputables &agrave; la n&eacute;gligence, &agrave; l&#8217;inattention ou &agrave; un manquement volontaire ou a produit des documents justificatifs erron&eacute;s lors de la transmission et de l&#8217;instruction de la demande d&#8217;Accord ; ou</FONT></P>
+<P CLASS="Liste1-Numerotee"><FONT COLOR='#d00000'>
+<A NAME="pgfId-1156675"></A>- 	l&#8217;entreprise requ&eacute;rante n&#8217;a pas respect&eacute; de fa&ccedil;on r&eacute;currente, ses obligations issues de l&#8217;Accord.</FONT></P>
+<P CLASS="Liste1-Numerotee"><FONT COLOR='#d00000'>
+<A NAME="pgfId-1156676"></A>   L&#8217;annulation de l&#8217;Accord a un effet r&eacute;troactif et s&#8217;applique aux op&eacute;rations couvertes par l&#8217;Accord, r&eacute;alis&eacute;es depuis la date de sa prise d&#8217;effet.</FONT></P>
+<P CLASS="Liste1-Numerotee"><FONT COLOR='#d00000'>
+<A NAME="pgfId-1156677"></A>7&#176; L&#8217;Accord pr&eacute;voit un dispositif de suivi afin de contr&ocirc;ler le respect des obligations qui en d&eacute;coulent. A cet effet, l&#8217;entreprise requ&eacute;rante est tenue de produire, dans les d&eacute;lais et conditions fix&eacute;s par l&#8217;Accord, un rapport annuel visant &agrave; v&eacute;rifier la conformit&eacute; des m&eacute;thodes pratiqu&eacute;es par l&#8217;entreprise, aux termes pr&eacute;vus par l&#8217;Accord. L&#8217;entreprise est &eacute;galement tenue de produire &agrave; l&#8217;Administration fiscale, sur demande, toutes les informations et pi&egrave;ces attestant du respect de sa part, des obligations n&eacute;es de l&#8217;Accord.</FONT></P>
+<P CLASS="Liste1-Numerotee"><FONT COLOR='#d00000'>
+<A NAME="pgfId-1156678"></A>   La non-production du rapport annuel dans les d&eacute;lais fix&eacute;s, ainsi que le d&eacute;faut de r&eacute;gularisation dans les 30 jours suivant la mise en demeure de l&#8217;Administration, entra&icirc;ne la r&eacute;vocation de l&#8217;Accord. Dans ce cas, la r&eacute;vocation de l&#8217;Accord emporte des cons&eacute;quences fiscales pour les op&eacute;rations r&eacute;alis&eacute;es au cours de l&#8217;exercice au titre duquel le rapport n&#8217;a pas &eacute;t&eacute; produit et pour les exercices ult&eacute;rieurs.</FONT></P>
+<P CLASS="Liste1-Numerotee"><FONT COLOR='#d00000'>
+<A NAME="pgfId-1156679"></A>8&#176; L&#8217;entreprise est tenue de conserver, dans les d&eacute;lais et conditions pr&eacute;vus &agrave; l&#8217;article 33 du Livre de Proc&eacute;dures fiscales, l&#8217;ensemble de la documentation relative aux p&eacute;riodes couvertes par l&#8217;Accord.</FONT></P>
+<P CLASS="Liste1-Numerotee"><FONT COLOR='#d00000'>
+<A NAME="pgfId-1156680"></A>9&#176; L&#8217;Accord peut &ecirc;tre renouvel&eacute; &agrave; la demande de l&#8217;entreprise. La demande de renouvellement doit &ecirc;tre adress&eacute;e au Directeur g&eacute;n&eacute;ral des Imp&ocirc;ts au moins six mois avant l&#8217;expiration de l&#8217;Accord en cours. </FONT></P>
+<P CLASS="Liste1-Numerotee"><FONT COLOR='#d00000'>
+<A NAME="pgfId-1156681"></A>A d&eacute;faut de demande de renouvellement dans les d&eacute;lais requis, l&#8217;Accord prend fin de plein droit d&egrave;s l&#8217;expiration de la p&eacute;riode fix&eacute;e. Le d&eacute;faut de r&eacute;ponse de l&#8217;Administration, avant l&#8217;expiration de l&#8217;Accord en cours, &agrave; une demande de renouvellement vaut rejet de la demande de renouvellement.</FONT></P>
+<P CLASS="Liste1-Numerotee"><FONT COLOR='#d00000'>
+<A NAME="pgfId-1156682"></A>   En cas d&#8217;avis favorable exprim&eacute; express&eacute;ment par l&#8217;Administration fiscale, la n&eacute;gociation du nouvel Accord s&#8217;effectue dans les m&ecirc;mes conditions que celles de l&#8217;Accord initial. Toutefois, ces conditions peuvent &ecirc;tre all&eacute;g&eacute;es lorsqu&#8217;aucune modification substantielle des conditions d&#8217;exercice de l&#8217;activit&eacute; et des param&egrave;tres critiques de l&#8217;Accord ant&eacute;rieur n&#8217;est intervenue.</FONT></P>
+<P CLASS="Liste1-Numerotee"><FONT COLOR='#d00000'>
+<A NAME="pgfId-1156683"></A>10&#176; Les modalit&eacute;s de conclusion et de mise en &#339;uvre de l&#8217;Accord sont pr&eacute;cis&eacute;es par le Directeur g&eacute;n&eacute;ral des Imp&ocirc;ts. </FONT></P>
+<H6 CLASS="Modification">
+Loi n&#176; 2025-987 du 19  d&eacute;cembre 2025, art. 23.</H6>
+</DIV>
+
+ 
+
+
+<!-- Old wrapper body -->
+
+
+<span class="historique" id="h225015">
+   <div class="histText"> Art. 15 <br>
+	
+<br>	Une vérification approfondie de la situation fiscale d’ensemble au regard de l’impôt général sur le revenu, ou une vérification de comptabilité, est engagée par la remise ou l’envoi au contribuable d’un avis de vérification.
+<br>	
+<br>	Cet avis doit préciser les périodes et les impôts, droits et taxes, soumis à vérification et mentionner expressément, sous peine de nullité de la procédure, que le contribuable a la faculté de se faire assister par un conseil de son choix.
+<br>	
+<br>	En cas de vérification de comptabilité, l’avis précise la date et l’heure de la première intervention sur place. Il doit être remis au contribuable au moins quinze jours avant l’engagement de la procédure.
+<br>	
+<br>	Loi n° 2018 - 984 du 28 décembre 2018, an. fiscale art. 22-1
+<br>	
+<br>	Le contrôle a lieu chez le contribuable ou au siège social de l’entreprise. Le contribuable n’est pas tenu d’envoyer ou d’apporter ses livres et documents comptables au bureau du vérificateur. De son coté, le vérificateur ne peut les emporter qu’avec l’accord écrit du contribuable, en lui remettant un reçu détaillé de ses pièces dont l’Administration devient alors dépositaire.
+<br>	
+<br>	En cas de vérification approfondie de la situation fiscale d’ensemble, l’avis précise les documents, pièces et actes que le contribuable doit présenter au bureau du vérificateur.
+<br>	
+<BR> <BR> <BR> <BR> 
+   </div>
+ </span>
+ <finh225015>
+
+
+<span class="historique" id="h225016">
+   <div class="histText"> Art. 16 <br>
+	
+<br>	L’Administration fiscale a la possibilité de procéder à tout moment, d’une manière inopinée, à toutes les constatations matérielles qu’elle juge utiles, notamment en ce qui concerne la tenue des documents comptables, l’inventaire des pièces justificatives de recettes et de dépenses, des immobilisations, des stocks ou des espèces en caisse, le relevé des prix et des marges pratiqués, le personnel employé.	
+<br>		
+<br>	L’agent vérificateur dresse sur place un procès-verbal de constatation contresigné par le contribuable ou le cas échéant, son représentant.	
+<br>		
+<br>	En cas de refus de signer, mention est faite au procès-verbal.	
+<br>		
+<br>	Loi n° 2005-161 du 27 avril 2005, an. fiscale, art. 21-3.	
+<br>		
+<br>	L’avis de vérification est remis au début des opérations au contribuable ou en son absence, à son représentant, ou à défaut, à l’un de ses employés.	
+<br>		
+<br>	L’examen au fond des documents comptables ne peut commencer qu’à l’issue d’un délai de deux jours permettant au contribuable de se faire assister par un conseil de son choix.	
+<BR> <BR> <BR> <BR> <BR> 
+   </div>
+ </span>
+ <finh225016>
+ 
+ 
+<span class="historique" id="h225017">
+   <div class="histText"> Art. 17 <br>
+	<br>	L’Administration fiscale doit porter à la connaissance du contribuable les résultats d’une vérification approfondie de situation fiscale d’ensemble ou d’une vérification de comptabilité, même en l’absence de redressement.
+<br>	
+<BR> <BR> <BR> <BR> <BR> 
+
+   </div>
+ </span>
+ <finh225017>
+
+
+<span class="historique" ID="h225020">
+<div class="histText">
+
+<BR> Art. 20
+<BR> 
+<BR>1°Sous peine de nullit&eacute; de l'imposition, la v&eacute;rification sur place des livres et documents comptables ne peut s'&eacute;tendre sur une dur&eacute;e sup&eacute;rieure &agrave;six mois . Ce d&eacute;lai peut &ecirc;tre prorog&eacute; de trois mois lorsqu'&agrave; la demande du contribuable et sous r&eacute;serve de l'accord pr&eacute;alable de l'Administration, la v&eacute;rification a &eacute;t&eacute; suspendue. 
+<BR> 
+<BR>Loi n° 2014-861 du 22 d&eacute;cembre 2014, an. fiscale, art.21-1. Le d&eacute;lai de six mois pr&eacute;vu &agrave; l'alin&eacute;a pr&eacute;c&eacute;dent est prorog&eacute; de six mois, lorsque la v&eacute;rification porte sur les op&eacute;rations internationales intragroupe r&eacute;alis&eacute;es par le contribuable.
+<BR> 
+<BR>Loi n° 2017-870 du 27 d&eacute;cembre 2017, an. fiscaleArt. 14-4. 
+<BR> 
+<BR>L'Administration dispose d'un d&eacute;lai de dix mois &agrave; partir de la date de l'avis de v&eacute;rification pour notifier au contribuable les redressements envisag&eacute;s par une notification provisoire. Elle dispose d'un d&eacute;lai maximum detrois mois &agrave; compter de la date de la notification pour confirmer les redressements qu'elle maintient par une notification d&eacute;finitive lorsque le contribuable a pr&eacute;sent&eacute; des observations. 
+<BR> 
+<BR>Loi n° 2014-861 du 22 d&eacute;cembre 2014, an. fiscale, art.21-1. 
+<BR> 
+<BR>Le contr&ocirc;le est prorog&eacute; du m&ecirc;me d&eacute;lai en cas de recours &agrave; l'assistance administrative aupr&egrave;s d'un Etat &eacute;tranger. Le contribuable en est inform&eacute; par &eacute;crit. 
+<BR> 
+<BR>Ord. n° 2011-121 du 22 juin 2011, an. fiscale, art. 30-1. 
+<BR> 
+<BR>2°Le d&eacute;lai pr&eacute;vu &agrave; l'alin&eacute;a premier pr&eacute;c&eacute;dent est limit&eacute; &agrave; trois mois, prorog&eacute; &eacute;ventuellement de quarante-cinq jours en cas de suspension de la v&eacute;rification, en ce qui concerne : 
+<BR> 
+<BR>Loi n° 2014-861 du 22 d&eacute;cembre 2014, an. fiscale, art.21-1. 
+<BR> 
+<BR>-les entreprises relevant du r&eacute;gime r&eacute;el simplifi&eacute; en mati&egrave;re de b&eacute;n&eacute;fices industriels et commerciaux ou de taxe sur la valeur ajout&eacute;e; 
+<BR> 
+<BR>Loi n° 2017-870 du 27 d&eacute;cembre 2017, an. fiscaleArt. 11-16;ord. n° 2018-145 du 14 f&eacute;vrier 2018, art. 1. 
+<BR> 
+<BR>-les contribuables relevant de la taxe d'Etat de l'Entreprenant ou de l'imp&ocirc;t des microentreprises; 
+<BR> 
+<BR>Loi n° 2020-972 du 23 d&eacute;c. 2020, an. fiscale, art. 33-29. 
+<BR> 
+<BR>-les contribuables relevant de l'imp&ocirc;t sur les b&eacute;n&eacute;fices non commerciaux; 
+<BR> 
+<BR>-les entreprises relevant du r&eacute;gime r&eacute;el normal dont le chiffre d'affaires annuel n'exc&egrave;de pas1 000 000 000de francs toutes taxes comprises. 
+<BR> 
+<BR>Loi n° 2020-972 du 23 d&eacute;c. 2020, an. fiscale, art. 33-29. 
+<BR> 
+<BR>L'Administration dispose d'un d&eacute;lai de six mois &agrave; partir de la date de l'avis de v&eacute;rification pour notifier au contribuable les redressements envisag&eacute;s. 
+<BR> 
+<BR>Loi n° 2014-861 du 22 d&eacute;cembre 2014, an. fiscale, art.21-1. 
+<BR> 
+<BR>Elle dispose d'un d&eacute;lai maximum de deux mois &agrave; compter de la date de la notification pour confirmer les redressements qu'elle maintient lorsque le contribuable a pr&eacute;sent&eacute; des observations. 
+<BR> 
+<BR>Loi n° 2014-861 du 22 d&eacute;cembre 2014, an. fiscale, art.21-1. 
+<BR> 
+<BR>3°Sous peine de nullit&eacute; de l'imposition, le d&eacute;lai de v&eacute;rification sur place ne peut &agrave; l'&eacute;gard de tous les contribuables, s'&eacute;tendre sur une dur&eacute;e sup&eacute;rieure &agrave; trente jours ouvrables lorsque la v&eacute;rification est limit&eacute;e &agrave; des op&eacute;rations particuli&egrave;res ou &agrave; des imp&ocirc;ts d&eacute;termin&eacute;s. 
+<BR> Ord. n° 2007-675 du 28 d&eacute;cembre 2007, an. fiscale, art. 23-1;
+<BR>loi n° 2014-861 du 22 d&eacute;cembre 2014, an. fiscale, art.21-1;
+<BR>loi n° 2016-1116 du 08 d&eacute;cembre 2016, an. fiscale, art.21. 
+<BR> 
+<BR>Ce d&eacute;lai peut &ecirc;tre prorog&eacute; de quinze jours lorsqu'&agrave; la demande du contribuable et sous r&eacute;serve de l'accord pr&eacute;alable de l'Administration, la v&eacute;rification a &eacute;t&eacute; suspendue. 
+<BR> 
+<BR>Le d&eacute;lai peut &eacute;galement &ecirc;tre prorog&eacute; de dix jours lorsqu'&agrave; la demande de l'Administration elle-m&ecirc;me, la v&eacute;rification a &eacute;t&eacute; suspendue. 
+<BR> Ord. n° 2007-675 du 28 d&eacute;cembre 2007, an. fiscale, art. 23-2
+<BR>; loi n° 2014-861 du 22 d&eacute;cembre 2014, an. fiscale, art.21-1. 
+<BR> 
+<BR>L'Administration dispose d'un d&eacute;lai de soixante jours &agrave; partir de la date de l'avis de v&eacute;rification pour notifier au contribuable les redressements envisag&eacute;s. Elle dispose d'un d&eacute;lai maximum de soixante jours &agrave; compter de la date de la notification pour confirmer les redressements qu'elle maintient lorsque le contribuable a pr&eacute;sent&eacute; des observations. 
+<BR> 
+<BR>4° Lors de la premi&egrave;re intervention sur place, l'agent v&eacute;rificateur dresse un proc&egrave;s-verbal constatant le d&eacute;but des op&eacute;rations mat&eacute;rielles de contr&ocirc;le, contresign&eacute; par le contribuable ou le cas &eacute;ch&eacute;ant, son repr&eacute;sentant. 
+<BR> 
+<BR>Loi n° 2020-972 du 23 d&eacute;c. 2020, an. fiscale, art. 19-1. 
+<BR> 
+<BR>5° Les d&eacute;lais de notification des redressements envisag&eacute;s, pr&eacute;vus aux 1°, 2° et 3° courent &agrave; compter de la date de la premi&egrave;re intervention sur place. 
+<BR> 
+<BR>Toutefois, en cas de report de la date du d&eacute;but des op&eacute;rations mat&eacute;rielles de contr&ocirc;le sur place ou de suspension desdites op&eacute;rations sur demande du contribuable ou sur d&eacute;cision de l'Administration, la dur&eacute;e des op&eacute;rations mat&eacute;rielles de contr&ocirc;le sur place ainsi que les d&eacute;lais de notification de redressements pr&eacute;vus aux paragraphes pr&eacute;c&eacute;dents sont rallong&eacute;s d'une dur&eacute;e &eacute;quivalente &agrave; la p&eacute;riode de report ou de suspension. 
+<BR> 
+<BR>Loi n° 2020-972 du 23 d&eacute;c. 2020, an. fiscale, art. 19-1. 
+<BR>
+<BR> <BR> <BR> 
+<BR><BR><BR></div></span><finh215020>
+<span class="historique" ID="h205020">
+<div class="histText">
+
+<BR> Art. 20 
+<BR> 
+<BR>1°Sous peine de nullit&eacute; de l'imposition, la v&eacute;rification sur place des livres et documents comptables ne peut s'&eacute;tendre sur une dur&eacute;e sup&eacute;rieure &agrave;six mois . Ce d&eacute;lai peut &ecirc;tre prorog&eacute; de trois mois lorsqu'&agrave; la demande du contribuable et sous r&eacute;serve de l'accord pr&eacute;alable de l'Administration, la v&eacute;rification a &eacute;t&eacute; suspendue. 
+<BR> 
+<BR>Loi n° 2014-861 du 22 d&eacute;cembre 2014, an. fiscale, art.21-1. Le d&eacute;lai de six mois pr&eacute;vu &agrave; l'alin&eacute;a pr&eacute;c&eacute;dent est prorog&eacute; de six mois, lorsque la v&eacute;rification porte sur les op&eacute;rations internationales intragroupe r&eacute;alis&eacute;es par le contribuable.
+<BR> 
+<BR>Loi n° 2017-870 du 27 d&eacute;cembre 2017, an. fiscaleArt. 14-4. 
+<BR> 
+<BR>L'Administration dispose d'un d&eacute;lai de dix mois &agrave; partir de la date de l'avis de v&eacute;rification pour notifier au contribuable les redressements envisag&eacute;s par une notification provisoire. Elle dispose d'un d&eacute;lai maximum detrois mois &agrave; compter de la date de la notification pour confirmer les redressements qu'elle maintient par une notification d&eacute;finitive lorsque le contribuable a pr&eacute;sent&eacute; des observations. 
+<BR> 
+<BR>Loi n° 2014-861 du 22 d&eacute;cembre 2014, an. fiscale, art.21-1. 
+<BR> 
+<BR>Le contr&ocirc;le est prorog&eacute; du m&ecirc;me d&eacute;lai en cas de recours &agrave; l'assistance administrative aupr&egrave;s d'un Etat &eacute;tranger. Le contribuable en est inform&eacute; par &eacute;crit. 
+<BR> 
+<BR>Ord. n° 2011-121 du 22 juin 2011, an. fiscale, art. 30-1. 
+<BR> 
+<BR>2°Le d&eacute;lai pr&eacute;vu &agrave; l'alin&eacute;a premier pr&eacute;c&eacute;dent est limit&eacute; &agrave; trois mois, prorog&eacute; &eacute;ventuellement de quarante-cinq jours en cas de suspension de la v&eacute;rification, en ce qui concerne : 
+<BR> 
+<BR>Loi n° 2014-861 du 22 d&eacute;cembre 2014, an. fiscale, art.21-1. 
+<BR> 
+<BR>-les entreprises relevant du r&eacute;gime r&eacute;el simplifi&eacute; en mati&egrave;re de b&eacute;n&eacute;fices industriels et commerciaux ou de taxe sur la valeur ajout&eacute;e; 
+<BR> 
+<BR>Loi n° 2017-870 du 27 d&eacute;cembre 2017, an. fiscaleArt. 11-16;ord. n° 2018-145 du 14 f&eacute;vrier 2018, art. 1. 
+<BR> 
+<BR>-les contribuables relevant de l'imp&ocirc;t synth&eacute;tique; 
+<BR> 
+<BR>-les contribuables relevant de l'imp&ocirc;t sur les b&eacute;n&eacute;fices non commerciaux; 
+<BR> 
+<BR>-les entreprises relevant du r&eacute;gime r&eacute;el normal dont le chiffre d'affaires annuel n'exc&egrave;de pas 500 000 000 de francs toutes taxes comprises. 
+<BR> 
+<BR>L'Administration dispose d'un d&eacute;lai de six mois &agrave; partir de la date de l'avis de v&eacute;rification pour notifier au contribuable les redressements envisag&eacute;s. 
+<BR> 
+<BR>Loi n° 2014-861 du 22 d&eacute;cembre 2014, an. fiscale, art.21-1. 
+<BR> 
+<BR>Elle dispose d'un d&eacute;lai maximum de deux mois &agrave; compter de la date de la notification pour confirmer les redressements qu'elle maintient lorsque le contribuable a pr&eacute;sent&eacute; des observations. 
+<BR> 
+<BR>Loi n° 2014-861 du 22 d&eacute;cembre 2014, an. fiscale, art.21-1. 
+<BR> 
+<BR>3°Sous peine de nullit&eacute; de l'imposition, le d&eacute;lai de v&eacute;rification sur place ne peut &agrave; l'&eacute;gard de tous les contribuables, s'&eacute;tendre sur une dur&eacute;e sup&eacute;rieure &agrave; trente jours ouvrables lorsque la v&eacute;rification est limit&eacute;e &agrave; des op&eacute;rations particuli&egrave;res ou &agrave; des imp&ocirc;ts d&eacute;termin&eacute;s. 
+<BR> Ord. n° 2007-675 du 28 d&eacute;cembre 2007, an. fiscale, art. 23-1;
+<BR>loi n° 2014-861 du 22 d&eacute;cembre 2014, an. fiscale, art.21-1;
+<BR>loi n° 2016-1116 du 08 d&eacute;cembre 2016, an. fiscale, art.21. 
+<BR> 
+<BR>Ce d&eacute;lai peut &ecirc;tre prorog&eacute; de quinze jours lorsqu'&agrave; la demande du contribuable et sous r&eacute;serve de l'accord pr&eacute;alable de l'Administration, la v&eacute;rification a &eacute;t&eacute; suspendue. 
+<BR> 
+<BR>Le d&eacute;lai peut &eacute;galement &ecirc;tre prorog&eacute; de dix jours lorsqu'&agrave; la demande de l'Administration elle-m&ecirc;me, la v&eacute;rification a &eacute;t&eacute; suspendue. 
+<BR> Ord. n° 2007-675 du 28 d&eacute;cembre 2007, an. fiscale, art. 23-2
+<BR>; loi n° 2014-861 du 22 d&eacute;cembre 2014, an. fiscale, art.21-1. 
+<BR> 
+<BR>L'Administration dispose d'un d&eacute;lai de soixante jours &agrave; partir de la date de l'avis de v&eacute;rification pour notifier au contribuable les redressements envisag&eacute;s. Elle dispose d'un d&eacute;lai maximum de soixante jours &agrave; compter de la date de la notification pour confirmer les redressements qu'elle maintient lorsque le contribuable a pr&eacute;sent&eacute; des observations. 
+<BR> 
+<BR> <BR> 
+<BR><BR><BR></div></span><finh205020>
+<span class="historique" ID="h195021">
+<div class="histText">
+
+<BR> 
+<BR>Art. 21 
+<BR> 
+<BR>1 °- Lorsque le contribuable a appliqu&eacute; des textes dont l'interpr&eacute;tation par l'Administration a &eacute;t&eacute; publi&eacute;e au moyen d'instructions, circulaires, ou documents ayant une port&eacute;e g&eacute;n&eacute;rale, l'Administration ne peut effectuer aucun autre redressement concernant la m&ecirc;me op&eacute;ration en soutenant une interpr&eacute;tation diff&eacute;rente. 
+<BR> 
+<BR>2 °- Les contribuables peuvent interroger l'Administration sur l'interpr&eacute;tation d'un texte ou sur les cons&eacute;quences fiscales qu'il convient de tirer d'une situation de fait clairement exprim&eacute;e. 
+<BR> 
+<BR>Cette demande doit &ecirc;tre adress&eacute;e au Directeur g&eacute;n&eacute;ral des Imp&ocirc;ts qui dispose d'un d&eacute;lai de six mois pour r&eacute;pondre au contribuable. 
+<BR> 
+<BR>La d&eacute;cision ou l'interpr&eacute;tation express&eacute;ment fournie est opposable au contribuable, mais celui-ci ne peut faire l'objet de redressements fond&eacute;s sur une interpr&eacute;tation diff&eacute;rente. Cette garantie ne joue pas lorsque les faits sur la base desquels l'interpr&eacute;tation a &eacute;t&eacute; fournie sont diff&eacute;rents de ceux qui sont constat&eacute;s ult&eacute;rieurement. 
+<BR> 
+<BR>3 °- Lorsque le contribuable a appliqu&eacute; une d&eacute;cision ou une solution qui lui a &eacute;t&eacute; notifi&eacute;e &agrave; la suite d'une proc&eacute;dure de redressement, l'Administration ne peut effectuer aucun autre redressement concernant la m&ecirc;me op&eacute;ration. 
+<BR> 
+<BR>4 °- Les garanties vis&eacute;es aux alin&eacute;as 2 et 3 pr&eacute;c&eacute;dents ne jouent pas lorsque la l&eacute;gislation a &eacute;t&eacute; modifi&eacute;e ou lorsque l'Administration a publi&eacute; son interpr&eacute;tation des textes au moyen d'instructions, circulaires ou documents ayant une port&eacute;e g&eacute;n&eacute;rale. 
+<BR> 
+<BR> <BR> 
+<BR><BR><BR></div></span><finh195021>
+</div></div> <!-- wrapper -->
+	  <div id="articleList"><div id="contenu" style='height:auto; background-color:#FFFFCC'>&nbsp;</div>
+      </div><p>&nbsp;</p><p>&nbsp;</p><p>&nbsp;</p><p>&nbsp;</p><p>&nbsp;</p><p>&nbsp;</p><p>&nbsp;</p><p>&nbsp;</p><p>&nbsp;</p><p>&nbsp;</p>
+	  <p>&nbsp;</p><p>&nbsp;</p><p>&nbsp;</p><p>&nbsp;</p><p>&nbsp;</p><p>&nbsp;</p></BODY></HTML>
+	  

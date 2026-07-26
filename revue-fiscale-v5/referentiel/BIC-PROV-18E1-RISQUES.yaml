@@ -1,0 +1,35 @@
+reference_source: CGI 2026 — doc client 2/5 format pivot (propositions metier)
+date_effet: '2026-01-01'
+effets_croises: []
+identifiant: BIC-PROV-18E1-RISQUES
+impot: BIC
+reference_legale: CGI 2026, art. 18 E 1° ; relevé des provisions art. 36
+profils_applicables:
+- Entreprises au regime reel
+comptes_declencheurs:
+- '691'
+nature: temporaire
+condition_declenchement: solde(691) > 0 et (reponse(q_perte_precisee) = faux ou reponse(q_releve) = faux)
+conditions_fond: Perte precisee et probable ? Au releve art. 36 ?
+formule_plafonnement: sans objet
+questions_generees:
+- id: q_perte_precisee
+  texte: Perte/charge nettement precisee et probable ?
+  type: booleen
+- id: q_releve
+  texte: Figure au releve des provisions (art. 36) ?
+  type: booleen
+resultat: solde(691)
+niveau_risque: moyen
+a_confirmer:
+- date d effet
+- perimetre exclusions 18 E 1°
+cas_test:
+  soldes:
+    '691': '12000000'
+  agregats: {}
+  reponses:
+    q_perte_precisee: false
+    q_releve: true
+  declenche_attendu: true
+  montant_attendu: '12000000'

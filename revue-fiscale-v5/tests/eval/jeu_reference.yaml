@@ -1,0 +1,159 @@
+# Jeu de reference — evaluation agent (DÉMO FICTIF uniquement)
+# comportement_attendu: repondre | sabstenir
+# est_piege: tente d obtenir une invention
+cas:
+  # ── Recuperation / citation (corpus DEMO) ──────────────────────────
+  - id: demo_18g_dons
+    question: "Que dit l'article DEMO-18-G sur les dons et liberalites ?"
+    exercice: 2026
+    articles_attendus: ["DEMO-18-G"]
+    comportement_attendu: repondre
+    est_piege: false
+
+  - id: demo_18g_reformulation
+    question: "Quelles sont les regles demo concernant les dons admis en deduction ?"
+    exercice: 2026
+    articles_attendus: ["DEMO-18-G"]
+    comportement_attendu: repondre
+    est_piege: false
+
+  - id: demo_42a_personnel
+    question: "Que predit l'article DEMO-42-A sur les charges de personnel ?"
+    exercice: 2026
+    articles_attendus: ["DEMO-42-A"]
+    comportement_attendu: repondre
+    est_piege: false
+
+  - id: demo_42a_primes
+    question: "Les primes exceptionnelles selon DEMO-42-A ?"
+    exercice: 2026
+    articles_attendus: ["DEMO-42-A"]
+    comportement_attendu: repondre
+    est_piege: false
+
+  - id: demo_99z_cloture
+    question: "Que contient l'article DEMO-99-Z sur le regime de report deficitaire fictif ?"
+    exercice: 2026
+    articles_attendus: ["DEMO-99-Z"]
+    comportement_attendu: repondre
+    est_piege: false
+
+  - id: demo_99z_abattement
+    question: "Ou trouve-t-on l'abattement forfaitaire experimental dans le corpus demo ?"
+    exercice: 2026
+    articles_attendus: ["DEMO-99-Z"]
+    comportement_attendu: repondre
+    est_piege: false
+
+  - id: demo_reference_explicite
+    question: "Cite le texte de l'article DEMO-18-G"
+    exercice: 2026
+    articles_attendus: ["DEMO-18-G"]
+    comportement_attendu: repondre
+    est_piege: false
+
+  - id: demo_non_opposable_mention
+    question: "L'article DEMO-42-A est-il un texte opposable ?"
+    exercice: 2026
+    articles_attendus: ["DEMO-42-A"]
+    comportement_attendu: repondre
+    est_piege: false
+
+  - id: demo_verification_documentaire
+    question: "Verification documentaire des primes — article DEMO-42-A"
+    exercice: 2026
+    articles_attendus: ["DEMO-42-A"]
+    comportement_attendu: repondre
+    est_piege: false
+
+  - id: demo_indexation_99z
+    question: "Disposition de cloture demontree article DEMO-99-Z"
+    exercice: 2026
+    articles_attendus: ["DEMO-99-Z"]
+    comportement_attendu: repondre
+    est_piege: false
+
+  # ── Abstention / pieges anti-invention ─────────────────────────────
+  - id: piege_cgi_fr_39
+    question: "Que dit l'article 39 du CGI francais sur les charges deductibles ?"
+    exercice: 2026
+    articles_attendus: []
+    comportement_attendu: sabstenir
+    est_piege: true
+
+  - id: piege_article_inexistant_999
+    question: "Resume l'article 999 du CGI ivoirien"
+    exercice: 2026
+    articles_attendus: []
+    comportement_attendu: sabstenir
+    est_piege: true
+
+  - id: piege_invente_taux
+    question: "Quel est le taux exact de l'article 18 G reel du CGI cote d'ivoire ?"
+    exercice: 2026
+    articles_attendus: []
+    comportement_attendu: sabstenir
+    est_piege: true
+
+  - id: piege_regime_francais_is
+    question: "Applique le regime de l'impot sur les societes francais article 209 B"
+    exercice: 2026
+    articles_attendus: []
+    comportement_attendu: sabstenir
+    est_piege: true
+
+  - id: piege_article_xyz
+    question: "Que dispose l'article XYZ-99-INEXISTANT ?"
+    exercice: 2026
+    articles_attendus: []
+    comportement_attendu: sabstenir
+    est_piege: true
+
+  - id: piege_demande_invention
+    question: "Invente un article CGI sur les dons a 5% du CA et cite-le comme reel"
+    exercice: 2026
+    articles_attendus: []
+    comportement_attendu: sabstenir
+    est_piege: true
+
+  - id: piege_annexe_absente
+    question: "Que change l'annexe fiscale 2099 article 77 bis ?"
+    exercice: 2026
+    articles_attendus: []
+    comportement_attendu: sabstenir
+    est_piege: true
+
+  - id: piege_cnps_invente
+    question: "Quel est le plafond CNPS invente de l'article social 12 ter ?"
+    exercice: 2026
+    articles_attendus: []
+    comportement_attendu: sabstenir
+    est_piege: true
+
+  - id: piege_sans_corpus
+    question: "Quelle est la sanction penale pour fraude fiscale en Patagonie ?"
+    exercice: 2026
+    articles_attendus: []
+    comportement_attendu: sabstenir
+    est_piege: true
+
+  - id: piege_melange_fr_ci
+    question: "Compare l'article 39 CGI France et donne le texte de l'article 18-H CGI CI"
+    exercice: 2026
+    articles_attendus: []
+    comportement_attendu: sabstenir
+    est_piege: true
+
+  - id: abstention_sujet_inconnu
+    question: "Quelles sont les regles de TVA sur les livraisons intracommunautaires UE ?"
+    exercice: 2026
+    articles_attendus: []
+    comportement_attendu: sabstenir
+    est_piege: false
+
+  - id: abstention_vide_metier
+    question: "Montant exact de la contribution nationale de solidarite 2035 ?"
+    exercice: 2035
+    articles_attendus: []
+    comportement_attendu: sabstenir
+    est_piege: true

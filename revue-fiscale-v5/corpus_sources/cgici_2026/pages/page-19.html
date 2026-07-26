@@ -1,0 +1,191 @@
+<!DOCTYPE HTML><HTML><HEAD><META HTTP-EQUIV="Content-Type" CONTENT="text/html; charset=UTF-8">
+<TITLE>Code des impots -22</TITLE><LINK REL="STYLESHEET" HREF="/cicgi.css" CHARSET="ISO-8859-1" TYPE="text/css">
+<style type="text/css">
+body {margin-left: 5px;	margin-top: 0px; margin-right: .5em;margin-bottom: 0px;background-color:#fafafa ;}
+.Liste-Numerote {font-size: 12pt;font-weight: regular;font-style: italic;color: #000000;text-transform: none;margin-left:8px ;margin-bottom:8px ;margin-top:4px ;margin-right:10px ;font-family:Georgia, "Times New Roman", Times, serif}
+li {list-style-type: none; margin-left:0px ; padding-left:0em ; }
+.Paratext {font-size: 12pt;font-weight: regular;font-style: italic;color: #000000;text-decoration: none;vertical-align: baseline;text-transform: none;margin-left:0px ;font-family:Georgia, "Times New Roman", Times, serif}
+.Normal {font-size: 12pt;font-weight: regular;font-style: italic;color: #000000;text-decoration: none;vertical-align: baseline;text-transform: none;margin-left:0px ;font-family:Georgia, "Times New Roman", Times, serif}
+ul {list-style-type: none; margin-left:0px ; padding-left:0em ;  }
+.Liste2-Enumeree {font-size: 12pt;font-weight: regular;font-style: italic;color: #000000;text-decoration: none;vertical-align: baseline;text-transform: none;list-style-type:none ;margin-left:16px ;margin-bottom:8px;margin-right:10px;font-family:Georgia, "Times New Roman", Times, serif}
+P.Liste2-Enumeree {font-size: 12pt;font-weight: regular;font-style: italic;color: #000000;text-decoration: none;vertical-align: baseline;text-transform: none;list-style-type:none ;margin-left:16px ;margin-bottom:8px;margin-right:10px;font-family:Georgia, "Times New Roman", Times, serif}
+.Entete {font-size: 13pt;font-weight: regular;font-style: italic;color:#000000 ;text-decoration: none;vertical-align: baseline;text-transform: none;margin-left:8px ;font-family:Georgia, "Times New Roman", Times, serif}
+table, TABLE {border-width:1px; width:99% ;border-collapse:collapse;border-color: #9ecaed;box-shadow: 0 0 10px #9ecaed;}
+tr,td {text-align:left;vertical-align:bottom;border:1px solid #9ecaed;padding:.2em;marging-left:.2em}
+th, TH{text-align:center;vertical-align:middle;padding:.2em;}
+P.TableauEntete {font-size: 13pt;font-weight: regular;font-style: italic;color: #000000;font-family:Georgia, "Times New Roman"}
+P.TableauCelluleLeft, P.TableauCellule {text-align:right;margin-right:1em;font-size: 13pt;font-weight: regular;font-style: italic;color: #000000;font-family:Georgia, "Times New Roman"}
+P.TableauCelluleRight {text-align:left;margin-left:1em;font-size: 13pt;font-weight: regular;font-style: italic;color: #000000;font-family:Georgia, "Times New Roman"}
+.ui-buttonh {padding: .1em .1em ; border: 1px solid #dadada;border-radius: 4px; box-shadow: 0 0 4px #9ecaed;color:#FF3300 ;margin-left:8px ;margin-right:8px ;margin-bottom:2px ;margin-top:2px ;text-decoration:none ;font-size:12pt ;font-family:"Times New Roman"}   
+.ui-button {padding: .1em .1em ; border: 1px solid #dadada;border-radius: 4px; box-shadow: 0 0 4px #9ecaed;color:#FF3300 ;margin-left:8px ;margin-right:8px ;margin-bottom:2px ;margin-top:2px ;text-decoration:none ;font-size:12pt ;font-family:"Times New Roman"}   
+H3 {display: block;text-align: center;text-indent: 0pt;margin-top: 10pt;margin-bottom: 10pt;margin-right: 10pt;margin-left: 10pt;font-size: 12pt;font-weight: Bold;font-style: Regular;color: #00A000;text-decoration: none;vertical-align: baseline;text-transform: none;font-family: "Times New Roman";}
+H4 {display: block;text-align: left;text-indent: 0pt;margin-top: 10pt;margin-bottom: 6pt;margin-right: 10pt;margin-left: 10pt;font-size: 12pt;font-weight: Bold;font-style: Regular;color: #000000;text-decoration: none;vertical-align: baseline;text-transform: none;font-family: "Times New Roman";}
+H5 {display: block;text-align: left;text-indent: 0pt;margin-top: 10pt;margin-bottom: 6pt;margin-right: 10pt;margin-left: 10pt;font-size: 11pt;font-weight: Bold;font-style: Regular;color: #000000;text-decoration: none;vertical-align: baseline;text-transform: none;font-family: "Times New Roman";}
+H6.NoArticle {display: block;text-align: left;text-indent: 0pt;margin-top: 14pt;margin-bottom: 0pt;margin-right: 0pt;margin-left: 0pt;font-size: 14pt;font-weight: regular;font-style: Regular;color: #00a000;text-decoration: none;vertical-align: baseline;text-transform: none;font-family: "Times New Roman";}
+H2 {text-align:center;font-size:16pt;font-family:Georgia, "Times New Roman", Times, serif}
+P.ParaText {font-size: 12pt;font-weight: regular;font-style: italic;color: #000000;	text-decoration: none;vertical-align: baseline;text-transform: none;font-family:Georgia, "Times New Roman", Times, serif;}
+H2.Section,P.Section {font-size:12pt;font-weight:bold;font-style:Regular;color:#008000;font-family:Georgia,"Times New Roman"}
+P.Paragraphe, p.Paragraphe {Text-Align:center;Text-decoration:none;font-size:12pt;font-weight:bold;font-style:Normal;color:#00A000;font-family:Georgia,"Times New Roman"}
+H2.Livre,P.Livre {text-align:center;font-size:16pt;font-weight:bold;font-style:Regular;color:#008000;font-family:Georgia,"Times New Roman"}
+P.Partie,H2.Partie,P.TitreSub {text-align:center;font-size:14pt;font-weight:bold;font-style:Regular;color:#008000;font-family:Georgia,"Times New Roman"}
+H2.ChapitreNo,H2.TitreNo {text-align:center;font-size:14pt;font-weight:bold;font-style:Regular;color:#008000;font-family:Georgia,"Times New Roman"}
+H2.Chapitre, h2.Chapitre {text-align:center;font-size:14pt;font-weight:bold;font-style:Regular;color:#008000;font-family:Georgia,"Times New Roman"}
+H2.TitreNo {text-align:center;font-size:14pt;font-weight:bold;font-style:Regular;color:#008000;font-family:Georgia,"Times New Roman"}
+h3.Sous-Section, H3.Sous-Section, h3.Sous-section, h2.Section {font-size:12pt;font-weight:bold;font-style:Italic;color:#008000;font-family:Georgia,"Times New Roman"}
+hr,HR { display: block; width:90%;  margin-top: 0.5em; margin-bottom: 0.5em; margin-left: auto;  margin-right: auto;  border-style: inset; border-width: 1px;}
+P.TitreSub {text-align:center;font-size:14pt;font-weight:bold;font-style:Regular;color:#008000;font-family:Georgia,"Times New Roman"}
+.Reference {display: block;text-align: left;text-indent: 0pt;margin-top: 10pt;margin-bottom: 6pt;margin-right: 10pt;margin-left: 10pt;font-size: 14pt;font-weight: Bold;font-style: Regular;color: #7F5434;text-decoration: none;vertical-align: baseline;text-transform: none;font-family: "Times New Roman";}
+.ludwig,blockquote {padding-left:1em;background-color:#fafafa;font-size:12pt;font-weight:100;font-style:italic;}
+#articleList {position:absolute ;	z-index: 1 ;left: 10px ;top: 80px ;height:340px;width: 620px;border: 2px solid #cacaca ;border-radius: 5px ;background-color:#fafafa ;    box-shadow: 0 0 12px #333333;	margin-left:0px ;	padding: .3em .3em ;		overflow:hidden ;	visibility:hidden ;  }			
+#articleList h3 { text-align: center; margin: 0; }		
+
+.historique {
+  display:none ;
+  padding: .1em .3em ;
+  border: solid 2px #dadada;
+  border-radius: 7px;
+  box-shadow: 0 0 5px #9ecaed;  
+  
+}
+.histText {
+    display: block;
+    font-family: ;"Times New Roman"
+	padding: .1em .3em ;
+    margin: 1em 0px;
+	font-style:italic;
+	color:#000000;
+	overflow:auto;
+}
+.highlight {
+  font-weight:bold ;
+  color:#000000 ;
+  background-color:#FFFFCC ;
+  }
+.articleList-scroll {
+	overflow-x:hidden ;
+	overflow-y:scroll ;
+	scrollbar-width:thin ;
+	scrollbar-color:blue orange ;
+}
+
+#contenu {
+	overflow-x:hidden ;
+    overflow-y:scroll ;
+	scrollbar-width:thin ;
+	scrollbar-color:blue orange ;
+}		
+
+table, TABLE {
+ text-align:center; 
+    margin-left:.5em; 
+    margin-right:.5em; 
+    border:1px solid #000000;	
+	border-collapse:collapse ;
+    border-color: #9ecaed;
+    box-shadow: 0 0 10px #9ecaed;
+	
+   }
+  tr,td {text-align:left;}
+  
+
+
+ </style>
+ 
+<script src="/js/iscroll.js"></script>
+<script src="/js/jquery.js"></script>   
+<script src="/js/jquery-ui-1.10.3.custom.js"></script>    	    
+<script src="/js/jquery.ui.draggable.js" type="text/javascript"></script>			
+<script src="/js/jquery.ui.core.js"></script> 			
+<script src="/js/jquery.ui.widget.js"></script>			
+<script src="/js/jquery.ui.position.js"></script>			
+<script src="/js/jquery.ui.menu.js"></script>    		
+<script type="text/javascript" src="./xpages.js"></script>
+/* VERSION POUR PAGE HTML SUR SITE DGI.CGICI.COM */
+<script language="javascript">
+ function showButton(id) {
+    var x = document.getElementById(id) ;
+	if(x.style.display === "none") {
+	   x.style.display = "block" ;
+	  } else {
+	   x.style.display = "none" ;
+	   }
+	 }   
+	 var pagenumber="022";
+function loadpage(page, art) {
+      showHideHistoric(art);
+	  return false;
+	  } 
+function loadArticle(page, art) { var artno = art ;var pgno=page;scrolltoelementTag(pgno,artno) ;return false ;} 
+
+</script>
+</HEAD>
+<BODY><div ID="wrapper"><div ID="scroller">
+
+
+
+<H2 CLASS="ChapitreNo">
+
+<HR>
+
+Chapitre III</H2>
+
+
+<H2 CLASS="Chapitre">
+Dispositions sp&eacute;ciales visant les imp&ocirc;ts sur les b&eacute;n&eacute;fices
+<HR>
+
+</H2>
+
+
+<H2 CLASS="Section">
+Section I - Imposition des contribuables disposant de revenus professionnels provenant de sources diff&eacute;rentes</H2>
+<span id="#A0106"></span>
+<H6 CLASS="NoArticle">
+Art. 106</H6>
+<P CLASS="ParaText">
+Lorsqu&apos;une entreprise industrielle ou commerciale &eacute;tend son activit&eacute; &agrave; des op&eacute;rations relevant de la c&eacute;dule des professions non commerciales, les r&eacute;sultats de ces op&eacute;rations, d&eacute;termin&eacute;s suivant les r&egrave;gles propres &agrave; l&apos;imp&ocirc;t sur les b&eacute;n&eacute;fices industriels et commerciaux, sont compris dans les bases dudit imp&ocirc;t.</P>
+
+<span id="#A0107"></span>
+<H6 CLASS="NoArticle">
+Art. 107</H6>
+<P CLASS="ParaText">
+Lorsqu&apos;un contribuable a dispos&eacute; au cours de la m&ecirc;me ann&eacute;e de revenus de sources diff&eacute;rentes passibles de plusieurs imp&ocirc;ts c&eacute;dulaires, chaque cat&eacute;gorie de revenu est, sous r&eacute;serve de l&apos;application de l&apos;article 106 ci-dessus, tax&eacute;e d&apos;apr&egrave;s le taux et les r&egrave;gles qui lui sont propres. Mais le total des abattements applicables &agrave; ces diff&eacute;rentes cat&eacute;gories de revenus est limit&eacute; au montant de l&apos;abattement pr&eacute;vu pour celui des imp&ocirc;ts c&eacute;dulaires correspondant qui comporte l&apos;abattement le plus &eacute;lev&eacute;.</P>
+<P CLASS="ParaText">
+Dans cette limite, les abattements pr&eacute;vus par les articles <a class='ui-button' href='' onclick="loadArticle('022','0064');return false;">64</a> et <a class='ui-button' href='' onclick="loadArticle('022','0090');return false;">90</a> ci-dessus sont accord&eacute;s sur les revenus des cat&eacute;gories correspondantes en commen&ccedil;ant par celle qui est tax&eacute;e d&apos;apr&egrave;s le taux le plus &eacute;lev&eacute; et dans l&apos;ordre d&eacute;croissant des taux.</P>
+
+<DIV>
+<span id="#A0108"></span>
+<H6 CLASS="NoArticle">
+Art. 108 </H6>
+<P CLASS="Liste2-Enumeree">
+1&deg;				 Les entreprises qui, &agrave; l&apos;occasion de l&apos;exercice de leur activit&eacute; versent &agrave; des personnes physiques ne faisant pas partie de leur personnel salari&eacute; et &agrave; des personnes morales, des commissions, courtages, ristournes commerciales ou autres vacations, honoraires occasionnels ou non, gratifications et autres r&eacute;mun&eacute;rations, doivent d&eacute;clarer ces sommes dans les conditions pr&eacute;vues par l&apos;article 127 lorsqu&apos;elles d&eacute;passent 50 000 francs par an pour un m&ecirc;me b&eacute;n&eacute;ficiaire.</P>
+<H6 CLASS="Modification">
+Loi n&deg; 2002-156 du 15 mars 2002, an. fiscale,Art. 6.; Ord. n&deg; 2009-382 du 26 novembre 2009, an. fiscale,Art.17-1.</H6>
+<P CLASS="Liste2-Enumeree">
+2&deg;	Les entreprises, soci&eacute;t&eacute;s ou associations, qui proc&egrave;dent &agrave; l&apos;encaissement et au versement des droits d&apos;auteur ou d&apos;inventeur, sont tenues de d&eacute;clarer dans les conditions pr&eacute;vues par l&apos;article 127 le montant des sommes d&eacute;passant 10000 francs par an qu&apos;elles versent &agrave; leurs membres ou &agrave; leurs mandants.</P>
+<P CLASS="Liste2-Enumeree">
+Les sommes vis&eacute;es aux paragraphes 1&deg; et 2&deg; ci-dessus, sont cotis&eacute;es au nom du b&eacute;n&eacute;ficiaire &agrave; l&apos;imp&ocirc;t c&eacute;dulaire correspondant &agrave; la nature d&apos;activit&eacute; au titre de laquelle il les a per&ccedil;ues.</P>
+<P CLASS="Liste2-Enumeree">
+Les parties versantes, d&eacute;sign&eacute;es aux paragraphes pr&eacute;c&eacute;dents qui n&apos;ont pas satisfait aux obligations d&eacute;finies, perdent le droit de les porter parmi leurs frais professionnels pour l&apos;&eacute;tablissement de leurs propres impositions. L&apos;application de cette sanction ne met pas obstacle &agrave; celle de l&apos;amende pr&eacute;vue au paragraphe 3&deg; suivant, ni &agrave; l&apos;imposition des m&ecirc;mes sommes au nom du b&eacute;n&eacute;ficiaire, conform&eacute;ment &agrave; la disposition &eacute;nonc&eacute;e &agrave; l&apos;alin&eacute;a pr&eacute;c&eacute;dent.</P>
+<P CLASS="Liste2-Enumeree">
+En ce qui concerne les contribuables relevant de la Direction des grandes Entreprises ou de la Direction  des moyennes Entreprises, les &eacute;tats vis&eacute;s au 1&deg; et 2&deg; ci-dessus doivent &ecirc;tre produits aussi bien sur support papier que sur support magn&eacute;tique ou par voie d&apos;internet.</P>
+<H6 CLASS="Modification">
+Loi n&deg; 2014-861 du 22 d&eacute;cembre 2014, an. fiscale,Art.12-6.</H6>
+<P CLASS="Liste2-Enumeree">
+En cas de discordances constat&eacute;es entre les informations port&eacute;es sur les diff&eacute;rents supports ci-dessus indiqu&eacute;s, celles figurant sur la version papier font foi.</P>
+<H6 CLASS="Modification">
+Ord. n&deg; 2011-121 du 22 juin 2011, an. fiscale,Art. 26-2.</H6>
+<P CLASS="Liste2-Enumeree">
+3&deg;	Toute infraction aux prescriptions du pr&eacute;sent article entra&icirc;ne l&apos;application d&apos;une amende fiscale de 5 000 francs par omission ou inexactitude dans les renseignements exig&eacute;s.</P>
+<P CLASS="ParaText">
+Lorsque la d&eacute;claration n&apos;a pas &eacute;t&eacute; produite dans le d&eacute;lai exig&eacute; &agrave; l&apos;article 127 du Code g&eacute;n&eacute;ral des Imp&ocirc;ts, le retard ou le d&eacute;faut de production est sanctionn&eacute; conform&eacute;ment aux dispositions de l&apos;article 170 du Livre de Proc&eacute;dures fiscales.</P>
+<H6 CLASS="Modification">
+Ord. n&deg; 2009-382 du 26 novembre 2009, an. fiscale,Art.17-2.</H6>
+</DIV>
+
+
+</div></div> <p>&nbsp;</p><p>&nbsp;</p></div></div> <!-- wrapper -->
+	  <div id="articleList"><div id="contenu" style='height:auto; background-color:#FFFFCC'>&nbsp;</div>
+      </div><p>&nbsp;</p><p>&nbsp;</p><p>&nbsp;</p><p>&nbsp;</p><p>&nbsp;</p><p>&nbsp;</p><p>&nbsp;</p><p>&nbsp;</p><p>&nbsp;</p><p>&nbsp;</p>
+	  <p>&nbsp;</p><p>&nbsp;</p><p>&nbsp;</p><p>&nbsp;</p><p>&nbsp;</p><p>&nbsp;</p></BODY></HTML>
+	  

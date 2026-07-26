@@ -1,0 +1,371 @@
+<!DOCTYPE HTML><HTML><HEAD><META HTTP-EQUIV="Content-Type" CONTENT="text/html; charset=UTF-8">
+<TITLE>Code des impots -104</TITLE><LINK REL="STYLESHEET" HREF="/cicgi.css" CHARSET="ISO-8859-1" TYPE="text/css">
+<style type="text/css">
+body {margin-left: 5px;	margin-top: 0px; margin-right: .5em;margin-bottom: 0px;background-color:#fafafa ;}
+.Liste-Numerote {font-size: 12pt;font-weight: regular;font-style: italic;color: #000000;text-transform: none;margin-left:8px ;margin-bottom:8px ;margin-top:4px ;margin-right:10px ;font-family:Georgia, "Times New Roman", Times, serif}
+li {list-style-type: none; margin-left:0px ; padding-left:0em ; }
+.Paratext {font-size: 12pt;font-weight: regular;font-style: italic;color: #000000;text-decoration: none;vertical-align: baseline;text-transform: none;margin-left:0px ;font-family:Georgia, "Times New Roman", Times, serif}
+.Normal {font-size: 12pt;font-weight: regular;font-style: italic;color: #000000;text-decoration: none;vertical-align: baseline;text-transform: none;margin-left:0px ;font-family:Georgia, "Times New Roman", Times, serif}
+ul {list-style-type: none; margin-left:0px ; padding-left:0em ;  }
+.Liste2-Enumeree {font-size: 12pt;font-weight: regular;font-style: italic;color: #000000;text-decoration: none;vertical-align: baseline;text-transform: none;list-style-type:none ;margin-left:16px ;margin-bottom:8px;margin-right:10px;font-family:Georgia, "Times New Roman", Times, serif}
+P.Liste2-Enumeree {font-size: 12pt;font-weight: regular;font-style: italic;color: #000000;text-decoration: none;vertical-align: baseline;text-transform: none;list-style-type:none ;margin-left:16px ;margin-bottom:8px;margin-right:10px;font-family:Georgia, "Times New Roman", Times, serif}
+.Entete {font-size: 13pt;font-weight: regular;font-style: italic;color:#000000 ;text-decoration: none;vertical-align: baseline;text-transform: none;margin-left:8px ;font-family:Georgia, "Times New Roman", Times, serif}
+table, TABLE {border-width:1px; width:99% ;border-collapse:collapse;border-color: #9ecaed;box-shadow: 0 0 10px #9ecaed;}
+tr,td {text-align:left;vertical-align:bottom;border:1px solid #9ecaed;padding:.2em;marging-left:.2em}
+th, TH{text-align:center;vertical-align:middle;padding:.2em;}
+P.TableauEntete {font-size: 13pt;font-weight: regular;font-style: italic;color: #000000;font-family:Georgia, "Times New Roman"}
+P.TableauCelluleLeft, P.TableauCellule {text-align:right;margin-right:1em;font-size: 13pt;font-weight: regular;font-style: italic;color: #000000;font-family:Georgia, "Times New Roman"}
+P.TableauCelluleRight {text-align:left;margin-left:1em;font-size: 13pt;font-weight: regular;font-style: italic;color: #000000;font-family:Georgia, "Times New Roman"}
+.ui-buttonh {padding: .1em .1em ; border: 1px solid #dadada;border-radius: 4px; box-shadow: 0 0 4px #9ecaed;color:#FF3300 ;margin-left:8px ;margin-right:8px ;margin-bottom:2px ;margin-top:2px ;text-decoration:none ;font-size:12pt ;font-family:"Times New Roman"}   
+.ui-button {padding: .1em .1em ; border: 1px solid #dadada;border-radius: 4px; box-shadow: 0 0 4px #9ecaed;color:#FF3300 ;margin-left:8px ;margin-right:8px ;margin-bottom:2px ;margin-top:2px ;text-decoration:none ;font-size:12pt ;font-family:"Times New Roman"}   
+H3 {display: block;text-align: center;text-indent: 0pt;margin-top: 10pt;margin-bottom: 10pt;margin-right: 10pt;margin-left: 10pt;font-size: 12pt;font-weight: Bold;font-style: Regular;color: #00A000;text-decoration: none;vertical-align: baseline;text-transform: none;font-family: "Times New Roman";}
+H4 {display: block;text-align: left;text-indent: 0pt;margin-top: 10pt;margin-bottom: 6pt;margin-right: 10pt;margin-left: 10pt;font-size: 12pt;font-weight: Bold;font-style: Regular;color: #000000;text-decoration: none;vertical-align: baseline;text-transform: none;font-family: "Times New Roman";}
+H5 {display: block;text-align: left;text-indent: 0pt;margin-top: 10pt;margin-bottom: 6pt;margin-right: 10pt;margin-left: 10pt;font-size: 11pt;font-weight: Bold;font-style: Regular;color: #000000;text-decoration: none;vertical-align: baseline;text-transform: none;font-family: "Times New Roman";}
+H6.NoArticle {display: block;text-align: left;text-indent: 0pt;margin-top: 14pt;margin-bottom: 0pt;margin-right: 0pt;margin-left: 0pt;font-size: 14pt;font-weight: regular;font-style: Regular;color: #00a000;text-decoration: none;vertical-align: baseline;text-transform: none;font-family: "Times New Roman";}
+H2 {text-align:center;font-size:16pt;font-family:Georgia, "Times New Roman", Times, serif}
+P.ParaText {font-size: 12pt;font-weight: regular;font-style: italic;color: #000000;	text-decoration: none;vertical-align: baseline;text-transform: none;font-family:Georgia, "Times New Roman", Times, serif;}
+H2.Section,P.Section {font-size:12pt;font-weight:bold;font-style:Regular;color:#008000;font-family:Georgia,"Times New Roman"}
+P.Paragraphe, p.Paragraphe {Text-Align:center;Text-decoration:none;font-size:12pt;font-weight:bold;font-style:Normal;color:#00A000;font-family:Georgia,"Times New Roman"}
+H2.Livre,P.Livre {text-align:center;font-size:16pt;font-weight:bold;font-style:Regular;color:#008000;font-family:Georgia,"Times New Roman"}
+P.Partie,H2.Partie,P.TitreSub {text-align:center;font-size:14pt;font-weight:bold;font-style:Regular;color:#008000;font-family:Georgia,"Times New Roman"}
+H2.ChapitreNo,H2.TitreNo {text-align:center;font-size:14pt;font-weight:bold;font-style:Regular;color:#008000;font-family:Georgia,"Times New Roman"}
+H2.Chapitre, h2.Chapitre {text-align:center;font-size:14pt;font-weight:bold;font-style:Regular;color:#008000;font-family:Georgia,"Times New Roman"}
+H2.TitreNo {text-align:center;font-size:14pt;font-weight:bold;font-style:Regular;color:#008000;font-family:Georgia,"Times New Roman"}
+h3.Sous-Section, H3.Sous-Section, h3.Sous-section, h2.Section {font-size:12pt;font-weight:bold;font-style:Italic;color:#008000;font-family:Georgia,"Times New Roman"}
+hr,HR { display: block; width:90%;  margin-top: 0.5em; margin-bottom: 0.5em; margin-left: auto;  margin-right: auto;  border-style: inset; border-width: 1px;}
+P.TitreSub {text-align:center;font-size:14pt;font-weight:bold;font-style:Regular;color:#008000;font-family:Georgia,"Times New Roman"}
+.Reference {display: block;text-align: left;text-indent: 0pt;margin-top: 10pt;margin-bottom: 6pt;margin-right: 10pt;margin-left: 10pt;font-size: 14pt;font-weight: Bold;font-style: Regular;color: #7F5434;text-decoration: none;vertical-align: baseline;text-transform: none;font-family: "Times New Roman";}
+.ludwig,blockquote {padding-left:1em;background-color:#fafafa;font-size:12pt;font-weight:100;font-style:italic;}
+#articleList {position:absolute ;	z-index: 1 ;left: 10px ;top: 80px ;height:340px;width: 620px;border: 2px solid #cacaca ;border-radius: 5px ;background-color:#fafafa ;    box-shadow: 0 0 12px #333333;	margin-left:0px ;	padding: .3em .3em ;		overflow:hidden ;	visibility:hidden ;  }			
+#articleList h3 { text-align: center; margin: 0; }		
+
+.historique {
+  display:none ;
+  padding: .1em .3em ;
+  border: solid 2px #dadada;
+  border-radius: 7px;
+  box-shadow: 0 0 5px #9ecaed;  
+  
+}
+.histText {
+    display: block;
+    font-family: ;"Times New Roman"
+	padding: .1em .3em ;
+    margin: 1em 0px;
+	font-style:italic;
+	color:#000000;
+	overflow:auto;
+}
+.highlight {
+  font-weight:bold ;
+  color:#000000 ;
+  background-color:#FFFFCC ;
+  }
+.articleList-scroll {
+	overflow-x:hidden ;
+	overflow-y:scroll ;
+	scrollbar-width:thin ;
+	scrollbar-color:blue orange ;
+}
+
+#contenu {
+	overflow-x:hidden ;
+    overflow-y:scroll ;
+	scrollbar-width:thin ;
+	scrollbar-color:blue orange ;
+}		
+
+table, TABLE {
+ text-align:center; 
+    margin-left:.5em; 
+    margin-right:.5em; 
+    border:1px solid #000000;	
+	border-collapse:collapse ;
+    border-color: #9ecaed;
+    box-shadow: 0 0 10px #9ecaed;
+	
+   }
+  tr,td {text-align:left;}
+  
+
+
+ </style>
+ 
+<script src="/js/iscroll.js"></script>
+<script src="/js/jquery.js"></script>   
+<script src="/js/jquery-ui-1.10.3.custom.js"></script>    	    
+<script src="/js/jquery.ui.draggable.js" type="text/javascript"></script>			
+<script src="/js/jquery.ui.core.js"></script> 			
+<script src="/js/jquery.ui.widget.js"></script>			
+<script src="/js/jquery.ui.position.js"></script>			
+<script src="/js/jquery.ui.menu.js"></script>    		
+<script type="text/javascript" src="./xpages.js"></script>
+/* VERSION POUR PAGE HTML SUR SITE DGI.CGICI.COM */
+<script language="javascript">
+ function showButton(id) {
+    var x = document.getElementById(id) ;
+	if(x.style.display === "none") {
+	   x.style.display = "block" ;
+	  } else {
+	   x.style.display = "none" ;
+	   }
+	 }   
+	 var pagenumber="104";
+function loadpage(page, art) {
+      showHideHistoric(art);
+	  return false;
+	  } 
+function loadArticle(page, art) { var artno = art ;var pgno=page;scrolltoelementTag(pgno,artno) ;return false ;} 
+
+</script>
+</HEAD>
+<BODY><div ID="wrapper"><div ID="scroller">
+
+
+
+<H2 CLASS="Section">
+Section V - Assiette, taux, fait g&eacute;n&eacute;rateur et exigibilit&eacute;</H2>
+
+<H3 CLASS="Sous-section">
+I - Assiette de la taxe</H3>
+<span id="#A0358"></span>
+<H6 CLASS="NoArticle">
+Art. 358</H6>
+<P CLASS="Liste2-Enumeree">
+1<b>&deg;-</b>Pour la liquidation de l&apos;imp&ocirc;t, le chiffre d&apos;affaires comprend, outre le prix principal de la marchandise ou du service, les frais accessoires tels que les frais de commission, d&apos;emballage, de transport et d&apos;assurance demand&eacute;s par le fournisseur &agrave; l&apos;acheteur ou au preneur, ainsi que le montant des droits de douane, et toutes autres taxes applicables aux produits ou au service, &agrave; l&apos;exception de la taxe sur la valeur ajout&eacute;e elle-m&ecirc;me. Toutefois, les taxes pr&eacute;vues aux articles <a class='ui-button' href='' onClick="loadArticle('104','0403');return false;">403</a> &agrave;<a class='ui-button' href='' onClick="loadArticle('104','0411');return false;">411</a> ci-dessous ne sont pas comprises dans la valeur imposable des produits fabriqu&eacute;s en C&ocirc;te d&apos;Ivoire.</P>
+<P CLASS="Liste2-Enumeree">
+2<b>&deg;-</b>Les ristournes, remises et rabais accord&eacute;s par notes d&apos;avoir par les fabricants, les importateurs, les grossistes et demi-grossistes sont r&eacute;put&eacute;s nets de taxe sur la valeur ajout&eacute;e. Ils ne constituent donc pas une diminution du chiffre d&apos;affaires imposable &agrave; la taxe sur la valeur ajout&eacute;e.</P>
+<P CLASS="Liste2-Enumeree">
+3<b>&deg;-</b>En ce qui concerne les livraisons &agrave; soi-m&ecirc;me vis&eacute;es &agrave; l&apos;article <a class='ui-button' href='' onClick="loadArticle('104','0345');return false;">345</a> ci-dessus, la valeur imposable est d&eacute;termin&eacute;e :</P>
+<P CLASS="Liste2-Enumeree">
+a)pour les biens pr&eacute;lev&eacute;s, par leur prix de revient;</P>
+<P CLASS="Liste2-Enumeree">
+b)pour les prestations de services, par le montant des d&eacute;penses engag&eacute;es pour leur r&eacute;alisation;</P>
+<P CLASS="Liste2-Enumeree">
+c)pour les utilisations de biens, par la valeur de l&apos;op&eacute;ration.</P>
+<P CLASS="Liste2-Enumeree">
+4&deg;	La base d&apos;imposition des ventes faites par les n&eacute;gociants de biens d&apos;occasion, d&apos;oeuvres d&apos;art, d&apos;objets de collection ou d&apos;antiquit&eacute; &agrave; l&apos;exception des engins de chantier, est constitu&eacute;e par la diff&eacute;rence entre le prix de vente et le prix d&apos;achat de chaque bien exprim&eacute;s hors taxe sur la valeur ajout&eacute;e.</P>
+<P CLASS="Liste2-Enumeree">
+Les engins de chantier vis&eacute;s au paragraphe pr&eacute;c&eacute;dent sont les suivants :</P>
+<P CLASS="Liste2-Enumeree">
+- les bouteurs (bulldozer), les bouteurs biais (chargeuses sur pneus) et les bouteurs sur chenilles (chargeuses sur chenilles) ;</P>
+<P CLASS="Liste2-Enumeree">
+-les autres pelles m&eacute;caniques, excavateurs, chargeuses, pelleteuses (tractopelle) ;</P>
+<P CLASS="Liste2-Enumeree">
+-les chargeuses et chargeuses pelles &agrave; chargement frontal ;</P>
+<P CLASS="Liste2-Enumeree">
+-les niveleuses (finisher/asphaltfinisher) ;</P>
+<P CLASS="Liste2-Enumeree">
+-les compacteuses et rouleaux compresseurs ;</P>
+<P CLASS="Liste2-Enumeree">
+-les grues/camions grue ;</P>
+<P CLASS="Liste2-Enumeree">
+-les tombereaux ;</P>
+<P CLASS="Liste2-Enumeree">
+-les tombereaux articul&eacute;s (camions articul&eacute;s).</P>
+<H6 CLASS="Modification">
+Loi n&deg; 2017-870 du 27 d&eacute;cembre 2017, an. fiscaleArt. 4.</H6>
+<P CLASS="Liste2-Enumeree">
+5<b>&deg;-</b>En ce qui concerne les op&eacute;rations de cr&eacute;dit-bail, lorsqu&apos;en fin de contrat, l&apos;option d&apos;achat est lev&eacute;e par le preneur, l&apos;assiette de la taxe est constitu&eacute;e par le prix de cession hors taxes convenu et par le prix de cession en cas de vente &agrave; un tiers.</P>
+<P CLASS="Liste2-Enumeree">
+En cas de cession &agrave; un tiers, la taxe est per&ccedil;ue &agrave; un taux calcul&eacute; pour &ecirc;tre appliqu&eacute; &agrave; la valeur imposable de la marchandise, taxe sur la valeur ajout&eacute;e non comprise.</P>
+
+<H3 CLASS="Sous-section">
+II - Taux</H3>
+<span id="#A0359"></span>
+<H6 CLASS="NoArticle">
+Art. 359 &nbsp;&nbsp;&nbsp;&nbsp;<a href="#" onClick="loadpage('104','h23359');return false;" class="ui-button"  title="Consultez l'historique">2023...</a>
+&nbsp;&nbsp;&nbsp;&nbsp;<a href="#" onClick="loadpage('99','h24359');return false;" class="ui-button"  title="Consultez l'historique">2024...</a>
+&nbsp;&nbsp;&nbsp;&nbsp;<a href="#" onClick="loadpage('99','h25359');return false;" class="ui-button"  title="Consultez l'historique">2025...</a></H6>
+<P CLASS="ParaText">
+Pour la d&eacute;termination de la taxe sur la valeur ajout&eacute;e, telle que pr&eacute;vue par le pr&eacute;sent Livre, il est fait application du taux de 18 % sur une base hors taxe.</P>
+
+<H6 CLASS="Modification">
+Loi n<b>&deg;-</b> 2001-338 du 14 juin 2001, an. fiscaleArt.6-1<b>&deg;-</b>; loi n<b>&deg;-</b> 2003-206 du 7 juillet 2003, an. fiscaleArt.3-1).</H6>
+<P CLASS="ParaText">
+Le taux pr&eacute;vu au paragraphe ci-dessus est r&eacute;duit &agrave; 9% pour :</P>
+<P CLASS="Liste2-Enumeree">
+-	le lait  <FONT COLOR='#000000'>&agrave; l&apos;exclusion des yaourts et de tout autre produit laitier ;</FONT></P>
+<H6 CLASS="Modification">
+Ord. n&deg; 2011-121 du 22 juin 2011, an. fiscale,Art. 4;<FONT COLOR='#000000'> loi n&deg; 2020-972 du 23 d&eacute;c. 2020, an. fiscale,Art. 28.</FONT></H6>
+<P CLASS="Liste2-Enumeree"><FONT COLOR='#000000'>
+- le lait infantile ainsi que les pr&eacute;parations alimentaires composites homog&eacute;n&eacute;is&eacute;es destin&eacute;es aux nourrissons;</FONT></P>
+<H6 CLASS="Modification"><FONT COLOR='#000000'>
+Loi n&deg; 2020-972 du 23 d&eacute;c. 2020, an. fiscale,Art. 28.</FONT></H6>
+<P CLASS="Liste2-Enumeree">
+-	les p&acirc;tes alimentaires &agrave; base de semoule de bl&eacute; dur &agrave; 100 %;</P>
+<H6 CLASS="Modification">
+Ord. n&deg; 2008-381 du 18 d&eacute;cembre 2008, an. fiscale,Art. 2-1.</H6>
+<P CLASS="Liste2-Enumeree"><FONT COLOR='#000000'>
+– Abrogé</FONT></P>
+<H6 CLASS="Modification">
+<A NAME="50618378_pgfId-1065259"></A>Loi n° 2023-1000 du 18  déc. 2023, an. fiscale, art. 18-2.</H6>
+<P CLASS="Liste2-Enumeree">
+- les produits p&eacute;troliers;</P>
+<H6 CLASS="Modification">
+Ord. n&deg; 2011-480 du 28 d&eacute;cembre 2011, an. fiscale,Art. 2;      loi n&deg; 2012-1179 du 27 d&eacute;cembre 2012, an. fiscale,Art. 2.</H6>
+<P CLASS="Liste2-Enumeree"><FONT COLOR='#000000'>
+- la viande de luxe ;</FONT></P>
+<H6 CLASS="Modification">
+<A NAME="50434096_pgfId-1067493"></A>Loi n° 2024-1109 du 18 déc. 2024, an. fiscale, art. 1er-4.</H6>
+<P CLASS="Liste2-Enumeree"><FONT COLOR='#000000'>
+- le riz de luxe.</FONT></P>
+<H6 CLASS="Modification"><FONT COLOR='#000000'>
+Loi n&deg; 2020-972 du 23 d&eacute;c. 2020, an. fiscale,Art. 6-2.</FONT></H6>
+
+<P CLASS="Liste2-Enumeree"><FONT COLOR='#d00000'>
+- les op&eacute;rations portant sur les fibres de jute et de sisal; </FONT></P>
+<P CLASS="Liste2-Enumeree"><FONT COLOR='#d00000'> 
+- les aliments pour b&eacute;tail et animaux de basse-cour;</FONT></P>
+<P CLASS="Liste2-Enumeree"><FONT COLOR='#d00000'>
+- les intrants concourant &agrave; la fabrication des aliments pour b&eacute;tail et  animaux de basse-cour et les emballages servant &agrave; leur  conditionnement;</FONT></P>
+<P CLASS="Liste2-Enumeree"><FONT COLOR='#d00000'>  
+-les intrants concourant &agrave; la fabrication des engrais et les  emballages servant &agrave; leur conditionnement. </FONT></P>
+
+<H6 CLASS="Modification"><FONT COLOR='#000000'>
+Ord. n&deg; 2026-03 du 07 janvier 2026.</FONT></H6>
+
+<span id="#A0360"></span>
+<H6 CLASS="NoArticle">
+Art. 360</H6>
+
+<P CLASS="ParaText">
+Abrog&eacute;</P>
+<H6 CLASS="Modification">
+Loi n&deg;94-201 du 08 avril 1994, an. fiscale, article 24; loi n&deg;2003-206 du 07 juillet 2003, an. fiscale, article 3 -2; loi n&deg; 2017-870 du 27 d&eacute;cembre 2017, an. fiscaleArt. 5.</H6>
+
+
+<H3 CLASS="Sous-section">
+III - Fait g&eacute;n&eacute;rateur et exigibilit&eacute;</H3>
+<span id="#A0361"></span>
+<H6 CLASS="NoArticle">
+Art. 361 &nbsp;&nbsp;&nbsp;&nbsp; <a href="#" class="ui-buttonh" onClick="showHideHistoric('25361');return false;" title="Consultez l'historique">2025..</a>
+&nbsp;&nbsp;&nbsp;&nbsp; <a href="#" class="ui-buttonh" onClick="showHideHistoric('24361');return false;" title="Consultez l'historique">2024...</a></H6>
+<P CLASS="Liste2-Enumeree">
+1<b>&deg;-</b>Le fait g&eacute;n&eacute;rateur de la taxe se produit :</P>
+<P CLASS="Liste2-Enumeree">
+a)Pour les ventes de biens meubles corporels, lors de la livraison des biens.</P>
+<P CLASS="Liste2-Enumeree">
+b)Pour les prestations de services, les travaux immobiliers et les ventes &agrave; consommer sur place, lors de l&apos;ex&eacute;cution des services et des travaux.</P>
+<P CLASS="Liste2-Enumeree">
+c)Pour les prestations de services qui donnent lieu &agrave; l&apos;&eacute;tablissement de d&eacute;comptes ou &agrave; des encaissements successifs, au moment de l&apos;expiration des p&eacute;riodes auxquelles ces d&eacute;comptes ou encaissements se rapportent.</P>
+<P CLASS="Liste2-Enumeree">
+<FONT COLOR='#000000'>
+<a name="50634770_pgfId-1047701"></a>d) Pour les ventes ou fournitures de t&eacute;l&eacute;communication prepaid, lors de la facturation.</FONT></P>
+<H6 CLASS="Modification">
+<a name="50634770_pgfId-1047719"></a>Loi n&deg; 2018 - 984 du 28  d&eacute;cembre 2018, an. fiscaleArt. 19</H6>
+
+<P CLASS="Liste2-Enumeree">
+2<b>&deg;-</b>La taxe est exigible :</P>
+<P CLASS="Liste2-Enumeree">
+a)Pour les ventes de biens meubles corporels, lors de la livraison des biens.</P>
+<P CLASS="Liste2-Enumeree">
+b)	 Pour les prestations de services, les travaux immobiliers, les ventes à consommer sur place, les ventes ou fournitures d’eau, d’électricité et de gaz, lors de l’encaissement ou de l’inscription en compte courant, des avances, des acomptes, du prix ou de la rémunération.</P>
+<H6 CLASS="Modification"><FONT COLOR='#000000'>
+<A NAME="50434096_pgfId-1062144"></A> Loi n° 2024-1109 du 18 déc. 2024, an. fiscale, art. 3</FONT></H6>
+<P CLASS="Liste2-Enumeree"><FONT COLOR='#000000'>
+<a name="50499597_pgfId-1062144"></a> En ce qui concerne les prestations de services entre personnes ayant un lien de d&eacute;pendance, apr&egrave;s une p&eacute;riode de deux ans sans paiement de la prestation &agrave; compter de la comptabilisation de l&rsquo;op&eacute;ration dans un compte de charges ou au cr&eacute;dit d&rsquo;un compte de tiers.</FONT></P>
+<H6 CLASS="Modification">
+<a name="50499597_pgfId-1049246"></a> Loi n&deg; 2021-899 du 21 d&eacute;c. 2021, an. fiscale,Art. 6-3.</H6>
+<P CLASS="Liste2-Enumeree">
+<A NAME="50434096_pgfId-1062173"></A> Pour les ventes ou fournitures de télécommunication, lors de la facturation.</P>
+<H6 CLASS="Modification">
+<A NAME="50434096_pgfId-1027778"></A>Loi n° 2002-156 du 15 mars 2002, an. fiscale, art. 38-3°;        loi n° 2018 - 984 du 28  décembre 2018, an. fiscale art. 19;  <FONT COLOR='#000000'>  loi n° 2024-1109 du 18 déc. 2024, an. fiscale, art. 3.</FONT></H6>
+<P CLASS="Liste2-Enumeree">
+c)Les redevables qui r&eacute;alisent des op&eacute;rations pour lesquelles l&apos;exigibilit&eacute; est constitu&eacute;e par l&apos;encaissement peuvent, sur autorisation expresse du Directeur g&eacute;n&eacute;ral des Imp&ocirc;ts, &ecirc;tre autoris&eacute;s &agrave; acquitter la taxe d&apos;apr&egrave;s leurs d&eacute;bits.</P>
+<P CLASS="Liste2-Enumeree">
+L&apos;option ainsi exerc&eacute;e prend effet &agrave; compter du premier jour du mois suivant celui au cours duquel l&apos;autorisation est accord&eacute;e.</P>
+<P CLASS="Liste2-Enumeree">
+Cette option n&apos;est r&eacute;vocable qu&apos;&agrave; la fin du troisi&egrave;me exercice suivant celui au cours duquel elle est exerc&eacute;e, apr&egrave;s information de l&apos;Administration par simple lettre circonstanci&eacute;e.</P>
+<H6 CLASS="Modification">
+Ord. n<b>&deg;-</b> 2008-381 du 18 d&eacute;cembre 2008,Art. 3.</H6>
+
+<P CLASS="Liste2-Numerotee"><FONT COLOR='#d00000'>
+<A NAME="pgfId-1153530"></A>d) Pour les projets &eacute;tatiques cofinanc&eacute;s ou financ&eacute;s par des partenaires ext&eacute;rieurs et dont la prise en charge de la taxe sur la valeur ajout&eacute;e et des droits de douane est effectu&eacute;e au moyen des ch&egrave;ques sp&eacute;ciaux du Tr&eacute;sor, &agrave; la mise &agrave; disposition desdits ch&egrave;ques.</FONT></P>
+<H6 CLASS="Modification">
+<A NAME="pgfId-1153554"></A>Loi n&#176; 2025-987 du 19  d&eacute;cembre 2025, art. 27-1</H6>
+
+
+
+
+
+
+<!-- Old wrapper body -->
+<span class="historique" ID="h24359">
+<div class="histText">
+ 
+<BR>Art. 359 
+<BR> 
+ <p><br />
+  Pour la d&eacute;termination de la taxe sur la valeur ajout&eacute;e, telle que pr&eacute;vue par le pr&eacute;sent Livre, il est fait application du taux de 18 % sur une base hors taxe.</p>
+<p>Loi n&deg;- 2001-338 du 14 juin 2001, an. fiscaleArt.6-1&deg;-; loi n&deg;- 2003-206 du 7 juillet 2003, an. fiscaleArt.3-1).</p>
+<p>Le taux pr&eacute;vu au paragraphe ci-dessus est r&eacute;duit &agrave; 9% pour :</p>
+<p>-	le lait &agrave; l'exclusion des yaourts et de tout autre produit laitier ;</p>
+<p>Ord. n&deg; 2011-121 du 22 juin 2011, an. fiscale,Art. 4; loi n&deg; 2020-972 du 23 d&eacute;c. 2020, an. fiscale,Art. 28.</p>
+<p>- le lait infantile ainsi que les pr&eacute;parations alimentaires composites homog&eacute;n&eacute;is&eacute;es destin&eacute;es aux nourrissons;</p>
+<p>Loi n&deg; 2020-972 du 23 d&eacute;c. 2020, an. fiscale,Art. 28.</p>
+<p>-	les p&acirc;tes alimentaires &agrave; base de semoule de bl&eacute; dur &agrave; 100 %;</p>
+<p>Ord. n&deg; 2008-381 du 18 d&eacute;cembre 2008, an. fiscale,Art. 2-1.</p>
+<p>&ndash; Abrog&eacute;</p>
+<p>Loi n&deg; 2023-1000 du 18 d&eacute;c. 2023, an. fiscale, art. 18-2.</p>
+<p>- les produits p&eacute;troliers;</p>
+<p>Ord. n&deg; 2011-480 du 28 d&eacute;cembre 2011, an. fiscale,Art. 2; loi n&deg; 2012-1179 du 27 d&eacute;cembre 2012, an. fiscale,Art. 2.</p>
+<p>- la viande import&eacute;e en dehors de la zone CEDEAO; </p>
+<p>- le riz de luxe.</p>
+<p>Loi n&deg; 2020-972 du 23 d&eacute;c. 2020, an. fiscale,Art. 6-2.</p>
+<BR><BR><BR></div></span><finh24359>
+
+<span class="historique" ID="h23359">
+<div class="histText">
+ 
+<BR>Art. 359 
+<BR> 
+<p>Pour la d&eacute;termination de la taxe sur la valeur ajout&eacute;e, telle que pr&eacute;vue par le pr&eacute;sent Livre, il est fait application du taux de 18 % sur une base hors taxe.</p>
+<p>Loi n&deg;- 2001-338 du 14 juin 2001, an. fiscaleArt.6-1&deg;-; loi n&deg;- 2003-206 du 7 juillet 2003, an. fiscaleArt.3-1).</p>
+<p>Le taux pr&eacute;vu au paragraphe ci-dessus est r&eacute;duit &agrave; 9% pour :</p>
+<p>-	le lait &agrave; l'exclusion des yaourts et de tout autre produit laitier ;</p>
+<p>Ord. n&deg; 2011-121 du 22 juin 2011, an. fiscale,Art. 4; loi n&deg; 2020-972 du 23 d&eacute;c. 2020, an. fiscale,Art. 28.</p>
+<p>- le lait infantile ainsi que les pr&eacute;parations alimentaires composites homog&eacute;n&eacute;is&eacute;es destin&eacute;es aux nourrissons;</p>
+<p>Loi n&deg; 2020-972 du 23 d&eacute;c. 2020, an. fiscale,Art. 28.</p>
+<p>-	les p&acirc;tes alimentaires &agrave; base de semoule de bl&eacute; dur &agrave; 100 %;</p>
+<p>Ord. n&deg; 2008-381 du 18 d&eacute;cembre 2008, an. fiscale,Art. 2-1.</p>
+<p>- les mat&eacute;riels de production de l'&eacute;nergie solaire;</p>
+<p>- les produits p&eacute;troliers;</p>
+<p>Ord. n&deg; 2011-480 du 28 d&eacute;cembre 2011, an. fiscale,Art. 2; loi n&deg; 2012-1179 du 27 d&eacute;cembre 2012, an. fiscale,Art. 2.</p>
+<p>- la viande import&eacute;e en dehors de la zone CEDEAO; </p>
+<p>- le riz de luxe.</p>
+<p>Loi n&deg; 2020-972 du 23 d&eacute;c. 2020, an. fiscale,Art. 6-2.</p>
+<BR><BR><BR></div></span><finh23359>
+
+<span class="historique" ID="h24361">
+<div class="histText">
+
+<BR> 
+<BR>Art. 361
+<BR> 
+Art. 361 </p>
+<p>1&deg;-Le fait g&eacute;n&eacute;rateur de la taxe se produit :</p>
+<p>a)Pour les ventes de biens meubles corporels, lors de la livraison des biens.</p>
+<p>b)Pour les prestations de services, les travaux immobiliers et les ventes &agrave; consommer sur place, lors de l'ex&eacute;cution des services et des travaux.</p>
+<p>c)Pour les prestations de services qui donnent lieu &agrave; l'&eacute;tablissement de d&eacute;comptes ou &agrave; des encaissements successifs, au moment de l'expiration des p&eacute;riodes auxquelles ces d&eacute;comptes ou encaissements se rapportent.</p>
+<p>d) Pour les ventes ou fournitures de t&eacute;l&eacute;communication prepaid, lors de la facturation.</p>
+<p>Loi n&deg; 2018 - 984 du 28 d&eacute;cembre 2018, an. fiscaleArt. 19</p>
+<p>2&deg;-La taxe est exigible :</p>
+<p>a)Pour les ventes de biens meubles corporels, lors de la livraison des biens.</p>
+<p>b)	Pour les prestations de services, les travaux immobiliers, les ventes &agrave; consommer sur place, les ventes ou fournitures d&lsquo;eau, d&lsquo;&eacute;lectricit&eacute;, de gaz et de t&eacute;l&eacute;communications, lors de l&lsquo;encaissement ou de l&lsquo;inscription en compte courant, des avances, des acomptes, du prix ou de la r&eacute;mun&eacute;ration. </p>
+<p>En ce qui concerne les prestations de services entre personnes ayant un lien de d&eacute;pendance, apr&egrave;s une p&eacute;riode de deux ans sans paiement de la prestation &agrave; compter de la comptabilisation de l&rsquo;op&eacute;ration dans un compte de charges ou au cr&eacute;dit d&rsquo;un compte de tiers.</p>
+<p>Loi n&deg; 2021-899 du 21 d&eacute;c. 2021, an. fiscale,Art. 6-3.</p>
+<p>Pour les ventes ou fournitures de t&eacute;l&eacute;communication prepaid, lors de la facturation.</p>
+<p>Loi n&deg; 2002-156 du 15 mars 2002, an. fiscale,Art. 38-3&deg;; loi n&deg; 2018 - 984 du 28 d&eacute;cembre 2018, an. fiscaleArt. 19. </p>
+<p>c)Les redevables qui r&eacute;alisent des op&eacute;rations pour lesquelles l'exigibilit&eacute; est constitu&eacute;e par l'encaissement peuvent, sur autorisation expresse du Directeur g&eacute;n&eacute;ral des Imp&ocirc;ts, &ecirc;tre autoris&eacute;s &agrave; acquitter la taxe d'apr&egrave;s leurs d&eacute;bits.</p>
+<p>L'option ainsi exerc&eacute;e prend effet &agrave; compter du premier jour du mois suivant celui au cours duquel l'autorisation est accord&eacute;e.</p>
+<p>Cette option n'est r&eacute;vocable qu'&agrave; la fin du troisi&egrave;me exercice suivant celui au cours duquel elle est exerc&eacute;e, apr&egrave;s information de l'Administration par simple lettre circonstanci&eacute;e.</p>
+<p>Ord. n&deg;- 2008-381 du 18 d&eacute;cembre 2008,Art. 3.</p>
+<BR>
+<BR><BR><BR></div></span><finh24361>
+</div></div> 
+<!-- wrapper -->
+	  <div id="articleList"><div id="contenu" style='height:auto; background-color:#FFFFCC'>&nbsp;</div>
+      </div><p>&nbsp;</p><p>&nbsp;</p><p>&nbsp;</p><p>&nbsp;</p><p>&nbsp;</p><p>&nbsp;</p><p>&nbsp;</p><p>&nbsp;</p><p>&nbsp;</p><p>&nbsp;</p>
+	  <p>&nbsp;</p><p>&nbsp;</p><p>&nbsp;</p><p>&nbsp;</p><p>&nbsp;</p><p>&nbsp;</p></BODY></HTML>
+	  

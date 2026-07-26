@@ -1,0 +1,574 @@
+<!DOCTYPE HTML><HTML><HEAD><META HTTP-EQUIV="Content-Type" CONTENT="text/html; charset=UTF-8">
+<TITLE>Code des impots -28</TITLE><LINK REL="STYLESHEET" HREF="/cicgi.css" CHARSET="ISO-8859-1" TYPE="text/css">
+<style type="text/css">
+body {margin-left: 5px;	margin-top: 0px; margin-right: .5em;margin-bottom: 0px;background-color:#fafafa ;}
+.Liste-Numerote {font-size: 12pt;font-weight: regular;font-style: italic;color: #000000;text-transform: none;margin-left:8px ;margin-bottom:8px ;margin-top:4px ;margin-right:10px ;font-family:Georgia, "Times New Roman", Times, serif}
+li {list-style-type: none; margin-left:0px ; padding-left:0em ; }
+.Paratext {font-size: 12pt;font-weight: regular;font-style: italic;color: #000000;text-decoration: none;vertical-align: baseline;text-transform: none;margin-left:0px ;font-family:Georgia, "Times New Roman", Times, serif}
+.Normal {font-size: 12pt;font-weight: regular;font-style: italic;color: #000000;text-decoration: none;vertical-align: baseline;text-transform: none;margin-left:0px ;font-family:Georgia, "Times New Roman", Times, serif}
+ul {list-style-type: none; margin-left:0px ; padding-left:0em ;  }
+.Liste2-Enumeree {font-size: 12pt;font-weight: regular;font-style: italic;color: #000000;text-decoration: none;vertical-align: baseline;text-transform: none;list-style-type:none ;margin-left:16px ;margin-bottom:8px;margin-right:10px;font-family:Georgia, "Times New Roman", Times, serif}
+P.Liste2-Enumeree {font-size: 12pt;font-weight: regular;font-style: italic;color: #000000;text-decoration: none;vertical-align: baseline;text-transform: none;list-style-type:none ;margin-left:16px ;margin-bottom:8px;margin-right:10px;font-family:Georgia, "Times New Roman", Times, serif}
+.Entete {font-size: 13pt;font-weight: regular;font-style: italic;color:#000000 ;text-decoration: none;vertical-align: baseline;text-transform: none;margin-left:8px ;font-family:Georgia, "Times New Roman", Times, serif}
+table, TABLE {border-width:1px; width:99% ;border-collapse:collapse;border-color: #9ecaed;box-shadow: 0 0 10px #9ecaed;}
+tr,td {text-align:left;vertical-align:bottom;border:1px solid #9ecaed;padding:.2em;marging-left:.2em}
+th, TH{text-align:center;vertical-align:middle;padding:.2em;}
+P.TableauEntete {font-size: 13pt;font-weight: regular;font-style: italic;color: #000000;font-family:Georgia, "Times New Roman"}
+P.TableauCelluleLeft, P.TableauCellule {text-align:right;margin-right:1em;font-size: 13pt;font-weight: regular;font-style: italic;color: #000000;font-family:Georgia, "Times New Roman"}
+P.TableauCelluleRight {text-align:left;margin-left:1em;font-size: 13pt;font-weight: regular;font-style: italic;color: #000000;font-family:Georgia, "Times New Roman"}
+.ui-buttonh {padding: .1em .1em ; border: 1px solid #dadada;border-radius: 4px; box-shadow: 0 0 4px #9ecaed;color:#FF3300 ;margin-left:8px ;margin-right:8px ;margin-bottom:2px ;margin-top:2px ;text-decoration:none ;font-size:12pt ;font-family:"Times New Roman"}   
+.ui-button {padding: .1em .1em ; border: 1px solid #dadada;border-radius: 4px; box-shadow: 0 0 4px #9ecaed;color:#FF3300 ;margin-left:8px ;margin-right:8px ;margin-bottom:2px ;margin-top:2px ;text-decoration:none ;font-size:12pt ;font-family:"Times New Roman"}   
+H3 {display: block;text-align: center;text-indent: 0pt;margin-top: 10pt;margin-bottom: 10pt;margin-right: 10pt;margin-left: 10pt;font-size: 12pt;font-weight: Bold;font-style: Regular;color: #00A000;text-decoration: none;vertical-align: baseline;text-transform: none;font-family: "Times New Roman";}
+H4 {display: block;text-align: left;text-indent: 0pt;margin-top: 10pt;margin-bottom: 6pt;margin-right: 10pt;margin-left: 10pt;font-size: 12pt;font-weight: Bold;font-style: Regular;color: #000000;text-decoration: none;vertical-align: baseline;text-transform: none;font-family: "Times New Roman";}
+H5 {display: block;text-align: left;text-indent: 0pt;margin-top: 10pt;margin-bottom: 6pt;margin-right: 10pt;margin-left: 10pt;font-size: 11pt;font-weight: Bold;font-style: Regular;color: #000000;text-decoration: none;vertical-align: baseline;text-transform: none;font-family: "Times New Roman";}
+H6.NoArticle {display: block;text-align: left;text-indent: 0pt;margin-top: 14pt;margin-bottom: 0pt;margin-right: 0pt;margin-left: 0pt;font-size: 14pt;font-weight: regular;font-style: Regular;color: #00a000;text-decoration: none;vertical-align: baseline;text-transform: none;font-family: "Times New Roman";}
+H2 {text-align:center;font-size:16pt;font-family:Georgia, "Times New Roman", Times, serif}
+P.ParaText {font-size: 12pt;font-weight: regular;font-style: italic;color: #000000;	text-decoration: none;vertical-align: baseline;text-transform: none;font-family:Georgia, "Times New Roman", Times, serif;}
+H2.Section,P.Section {font-size:12pt;font-weight:bold;font-style:Regular;color:#008000;font-family:Georgia,"Times New Roman"}
+P.Paragraphe, p.Paragraphe {Text-Align:center;Text-decoration:none;font-size:12pt;font-weight:bold;font-style:Normal;color:#00A000;font-family:Georgia,"Times New Roman"}
+H2.Livre,P.Livre {text-align:center;font-size:16pt;font-weight:bold;font-style:Regular;color:#008000;font-family:Georgia,"Times New Roman"}
+P.Partie,H2.Partie,P.TitreSub {text-align:center;font-size:14pt;font-weight:bold;font-style:Regular;color:#008000;font-family:Georgia,"Times New Roman"}
+H2.ChapitreNo,H2.TitreNo {text-align:center;font-size:14pt;font-weight:bold;font-style:Regular;color:#008000;font-family:Georgia,"Times New Roman"}
+H2.Chapitre, h2.Chapitre {text-align:center;font-size:14pt;font-weight:bold;font-style:Regular;color:#008000;font-family:Georgia,"Times New Roman"}
+H2.TitreNo {text-align:center;font-size:14pt;font-weight:bold;font-style:Regular;color:#008000;font-family:Georgia,"Times New Roman"}
+h3.Sous-Section, H3.Sous-Section, h3.Sous-section, h2.Section {font-size:12pt;font-weight:bold;font-style:Italic;color:#008000;font-family:Georgia,"Times New Roman"}
+hr,HR { display: block; width:90%;  margin-top: 0.5em; margin-bottom: 0.5em; margin-left: auto;  margin-right: auto;  border-style: inset; border-width: 1px;}
+P.TitreSub {text-align:center;font-size:14pt;font-weight:bold;font-style:Regular;color:#008000;font-family:Georgia,"Times New Roman"}
+.Reference {display: block;text-align: left;text-indent: 0pt;margin-top: 10pt;margin-bottom: 6pt;margin-right: 10pt;margin-left: 10pt;font-size: 14pt;font-weight: Bold;font-style: Regular;color: #7F5434;text-decoration: none;vertical-align: baseline;text-transform: none;font-family: "Times New Roman";}
+.ludwig,blockquote {padding-left:1em;background-color:#fafafa;font-size:12pt;font-weight:100;font-style:italic;}
+#articleList {position:absolute ;	z-index: 1 ;left: 10px ;top: 80px ;height:340px;width: 620px;border: 2px solid #cacaca ;border-radius: 5px ;background-color:#fafafa ;    box-shadow: 0 0 12px #333333;	margin-left:0px ;	padding: .3em .3em ;		overflow:hidden ;	visibility:hidden ;  }			
+#articleList h3 { text-align: center; margin: 0; }		
+
+.historique {
+  display:none ;
+  padding: .1em .3em ;
+  border: solid 2px #dadada;
+  border-radius: 7px;
+  box-shadow: 0 0 5px #9ecaed;  
+  
+}
+.histText {
+    display: block;
+    font-family: ;"Times New Roman"
+	padding: .1em .3em ;
+    margin: 1em 0px;
+	font-style:italic;
+	color:#000000;
+	overflow:auto;
+}
+.highlight {
+  font-weight:bold ;
+  color:#000000 ;
+  background-color:#FFFFCC ;
+  }
+.articleList-scroll {
+	overflow-x:hidden ;
+	overflow-y:scroll ;
+	scrollbar-width:thin ;
+	scrollbar-color:blue orange ;
+}
+
+#contenu {
+	overflow-x:hidden ;
+    overflow-y:scroll ;
+	scrollbar-width:thin ;
+	scrollbar-color:blue orange ;
+}		
+
+table, TABLE {
+ text-align:center; 
+    margin-left:.5em; 
+    margin-right:.5em; 
+    border:1px solid #000000;	
+	border-collapse:collapse ;
+    border-color: #9ecaed;
+    box-shadow: 0 0 10px #9ecaed;
+	
+   }
+  tr,td {text-align:left;}
+  
+
+
+ </style>
+ 
+<script src="/js/iscroll.js"></script>
+<script src="/js/jquery.js"></script>   
+<script src="/js/jquery-ui-1.10.3.custom.js"></script>    	    
+<script src="/js/jquery.ui.draggable.js" type="text/javascript"></script>			
+<script src="/js/jquery.ui.core.js"></script> 			
+<script src="/js/jquery.ui.widget.js"></script>			
+<script src="/js/jquery.ui.position.js"></script>			
+<script src="/js/jquery.ui.menu.js"></script>    		
+<script type="text/javascript" src="./xpages.js"></script>
+/* VERSION POUR PAGE HTML SUR SITE DGI.CGICI.COM */
+<script language="javascript">
+ function showButton(id) {
+    var x = document.getElementById(id) ;
+	if(x.style.display === "none") {
+	   x.style.display = "block" ;
+	  } else {
+	   x.style.display = "none" ;
+	   }
+	 }   
+	 var pagenumber="028";
+function loadpage(page, art) {
+      showHideHistoric(art);
+	  return false;
+	  } 
+function loadArticle(page, art) { var artno = art ;var pgno=page;scrolltoelementTag(pgno,artno) ;return false ;} 
+
+</script>
+</HEAD>
+<BODY><div ID="wrapper"><div ID="scroller">
+
+
+
+<H2 CLASS="Section">
+Section III - Personnes imposables et bases d&apos;imposition</H2>
+<span id="#A0117"></span>
+<H6 CLASS="NoArticle">
+Art. 117</H6>
+<P CLASS="ParaText">
+L&apos;imp&ocirc;t est d&ucirc; par les b&eacute;n&eacute;ficiaires des revenus imposables.</P>
+<P CLASS="ParaText">
+Il porte chaque ann&eacute;e sur les traitements, soldes, indemnit&eacute;s, &eacute;moluments, salaires, pensions et rentes viag&egrave;res pay&eacute;s aux int&eacute;ress&eacute;s au cours de la m&ecirc;me ann&eacute;e.</P>
+
+<span id="#A0118"></span>
+<H6 CLASS="NoArticle">
+Art. 118</H6>
+<P CLASS="ParaText">
+Pour la d&eacute;termination des bases d&apos;imposition, il est tenu compte du montant total brut des traitements, y compris les sommes mandat&eacute;es au titre du p&eacute;cule, indemnit&eacute;s et &eacute;moluments, salaires, pensions et rentes viag&egrave;res, ainsi que de tous les avantages en argent ou en nature accord&eacute;s aux int&eacute;ress&eacute;s en sus des traitements, soldes, indemnit&eacute;s, &eacute;moluments, salaires, pensions et rentes viag&egrave;res proprement dits. Les avantages en argent comprennent notamment les cotisations patronales vers&eacute;es par les employeurs &agrave; des organismes de retraite et de pr&eacute;voyance compl&eacute;mentaires, sous r&eacute;serve des dispositions de l&apos;article <a class='ui-button' href='' onClick="loadArticle('028','0116');return false;">116</a>-9 du pr&eacute;sent Code.</P>
+
+<H6 CLASS="Modification">
+Loi n<b>&deg;-</b> 94-201 du 8 avril 1994, an. fiscale,Art. 10; loi n<b>&deg;-</b> 97-08 du 6 janv. 1997, an. fiscale,Art. 9-1<b>&deg;-</b>.</H6>
+<P CLASS="ParaText">
+Pour l&apos;application de l&apos;alin&eacute;a pr&eacute;c&eacute;dent, l&apos;estimation des r&eacute;mun&eacute;rations allou&eacute;es sous forme d&apos;avantages en nature est op&eacute;r&eacute;e selon les r&egrave;gles fix&eacute;es par arr&ecirc;t&eacute; du Ministre charg&eacute; des Finances. Les avantages en nature qui ne sont pas vis&eacute;s par l&apos;arr&ecirc;t&eacute; minist&eacute;riel pr&eacute;cit&eacute; sont retenus, pour la d&eacute;termination des bases d&apos;imposition, pour leur montant r&eacute;el.</P>
+
+
+<H6 CLASS="Modification">
+Loi n<b>&deg;-</b> 97-08 du 6 janv. 1997, an. fiscale,Art. 8; voir divers textes fiscaux, textes r&eacute;glementaires n<b>&deg;-</b> 12.</H6>
+
+
+<span id="#A0119"></span>
+<H6 CLASS="NoArticle">
+Art. 119 &nbsp;&nbsp;&nbsp;&nbsp;<a href="#" onClick="loadpage('326','h23119');return false;" class="ui-button"  title="Consultez l'historique">2023...</a></H6>
+<P CLASS="ParaText"> <FONT COLOR='#000000'>
+Le montant du revenu imposable servant &agrave; la d&eacute;termination de l&rsquo;imp&ocirc;t brut est le total des r&eacute;mun&eacute;rations tel qu&rsquo;il est d&eacute;fini &agrave; l&rsquo;article pr&eacute;c&eacute;dent.</font></P>
+<H6 CLASS="Modification">
+Loi n&deg; 97-08 du 6 janv. 1997, an. fiscale, art. 9-2&deg;; loi n&deg; 2003-206 du 7 juillet 2003, an. fiscale, art. 16-2; ord. n&deg;2007-488  du 31 mai 2007, an. fiscale, art.11-5, art.11-6; ord. n&deg; 2008-381 du 18  d&eacute;cembre 2008, an. fiscale, art. 18-1; ord. n&deg; 2011-480 du 28 d&eacute;cembre 2011, an. fiscale, art. 14-2; loi n&deg; 2016-1116 du 08 d&eacute;cembre 2016, an. fiscale, art. 5-2; ord  n&deg; 2023-719 du 13 sept. 2023, art.1er</H6>
+
+
+<span id="#A0119b"></span>
+<H6 CLASS="NoArticle">
+Art. 119 bis &nbsp;&nbsp;&nbsp;&nbsp;<a href="#" onClick="loadpage('326','h23119b');return false;" class="ui-button"  title="Consultez l'historique">2023...</a></H6>
+<P CLASS="ParaText"><FONT COLOR='#000000'> 
+Pour le calcul de l’impôt brut, il est fait application du barème d’imposition progressive par tranche de salaires qui se pr&eacute;sente comme suit: </font></P>
+<TABLE BORDER="1">
+<TR>
+<TD ROWSPAN="1" COLSPAN="1">
+<H6 CLASS="Courant"><FONT COLOR='#000000'>
+Tranche de revenus mensuels en francs</font></H6>
+</TD>
+<TD ROWSPAN="1" COLSPAN="1">
+<H6 CLASS="Courant"><FONT COLOR='#000000'>
+Taux</font></H6>
+</TD>
+</TR>
+<TR>
+<TD ROWSPAN="1" COLSPAN="1">
+<H6 CLASS="Courant"><FONT COLOR='#000000'>
+0 - 75 000</font></H6>
+</TD>
+<TD ROWSPAN="1" COLSPAN="1">
+<H6 CLASS="Courant"><FONT COLOR='#000000'>
+0 %</font></H6>
+</TD>
+</TR>
+<TR>
+<TD ROWSPAN="1" COLSPAN="1">
+<H6 CLASS="Courant"><FONT COLOR='#000000'>
+75 001 - 240 000</font></H6>
+</TD>
+<TD ROWSPAN="1" COLSPAN="1">
+<H6 CLASS="Courant"><FONT COLOR='#000000'>
+16 %</font></H6>
+</TD>
+</TR>
+<TR>
+<TD ROWSPAN="1" COLSPAN="1">
+<H6 CLASS="Courant"><FONT COLOR='#000000'>
+240 001 - 800 000</font></H6>
+</TD>
+<TD ROWSPAN="1" COLSPAN="1">
+<H6 CLASS="Courant"><FONT COLOR='#000000'>
+21 %</font></H6>
+</TD>
+</TR>
+<TR>
+<TD ROWSPAN="1" COLSPAN="1">
+<H6 CLASS="Courant"><FONT COLOR='#000000'>
+800 001 - 2 400 000</font></H6>
+</TD>
+<TD ROWSPAN="1" COLSPAN="1">
+<H6 CLASS="Courant"><FONT COLOR='#000000'>
+24 %</font></H6>
+</TD>
+</TR>
+<TR>
+<TD ROWSPAN="1" COLSPAN="1">
+<H6 CLASS="Courant"><FONT COLOR='#000000'>
+2 400 001 - 8 000 000</font></H6>
+</TD>
+<TD ROWSPAN="1" COLSPAN="1">
+<H6 CLASS="Courant"><FONT COLOR='#000000'>
+28 %</font></H6>
+</TD>
+</TR>
+<TR>
+<TD ROWSPAN="1" COLSPAN="1">
+<H6 CLASS="Courant"><FONT COLOR='#000000'>
+Au dessus de 8 000 000</font></H6>
+</TD>
+<TD ROWSPAN="1" COLSPAN="1">
+<H6 CLASS="Courant"><FONT COLOR='#000000'>
+32 %</font></H6>
+</TD>
+</TR>
+</TABLE>
+<H6 CLASS="Modification">
+Ord  n&deg; 2023-719 du 13 sept. 2023, art.1er</H6>
+
+
+<span id="#A0120"></span>
+<H6 CLASS="NoArticle">
+Art. 120 &nbsp;&nbsp;&nbsp;&nbsp;<a href="#" onClick="loadpage('326','h23120');return false;" class="ui-button"  title="Consultez l'historique">2023...</a></H6>
+<P CLASS="Liste1-Numerotee"><FONT COLOR='#000000'>
+<A NAME="50618371_pgfId-1129757"></A>1&deg; Il est appliqu&eacute; une R&eacute;duction d’Impôt pour Charges de Famille (RICF) imputable sur le montant de l’impôt brut tel qu’il est d&eacute;termin&eacute; à l’article pr&eacute;c&eacute;dent.</font></P>
+<P CLASS="Liste1-Numerotee"><FONT COLOR='#000000'>
+<A NAME="50618371_pgfId-1129758"></A>Cette r&eacute;duction est effectu&eacute;e suivant le  barème ci-après : </font></P>
+<TABLE>
+<TR>
+<TD ROWSPAN="2" COLSPAN="1">
+<P CLASS="TableauEntete">
+<A NAME="50618371_pgfId-1129761"></A>&nbsp;</P>
+<P CLASS="TableauEntete"><FONT COLOR='#000000'>
+<A NAME="50618371_pgfId-1129762"></A>Nombre de parts</font></P>
+</TD>
+<TD ROWSPAN="1" COLSPAN="2">
+<P CLASS="TableauEntete"><FONT COLOR='#000000'>
+<A NAME="50618371_pgfId-1129764"></A>R&eacute;duction d’Impôt pour Charges de Famille</font></P>
+</TD>
+</TR>
+<TR>
+<TD ROWSPAN="1" COLSPAN="1">
+<P CLASS="TableauEntete"><FONT COLOR='#000000'>
+<A NAME="50618371_pgfId-1129770"></A>Montant mensuel en francs </font></P>
+</TD>
+<TD ROWSPAN="1" COLSPAN="1">
+<P CLASS="TableauEntete"><FONT COLOR='#000000'>
+<A NAME="50618371_pgfId-1129772"></A>Montant annuel en francs </font></P>
+</TD>
+</TR>
+<TR>
+<TD ROWSPAN="1" COLSPAN="1">
+<P CLASS="TableauEntete"><FONT COLOR='#000000'>
+<A NAME="50618371_pgfId-1129774"></A>1</font></P>
+</TD>
+<TD ROWSPAN="1" COLSPAN="1">
+<P CLASS="TableauEntete"><FONT COLOR='#000000'>
+<A NAME="50618371_pgfId-1129776"></A> 0</font></P>
+</TD>
+<TD ROWSPAN="1" COLSPAN="1">
+<P CLASS="TableauEntete"><FONT COLOR='#000000'>
+<A NAME="50618371_pgfId-1129778"></A>0</font></P>
+</TD>
+</TR>
+<TR>
+<TD ROWSPAN="1" COLSPAN="1">
+<P CLASS="TableauEntete"><FONT COLOR='#000000'>
+<A NAME="50618371_pgfId-1129780"></A>1,5</font></P>
+</TD>
+<TD ROWSPAN="1" COLSPAN="1">
+<P CLASS="TableauEntete"><FONT COLOR='#000000'>
+<A NAME="50618371_pgfId-1129782"></A>5 500</font></P>
+</TD>
+<TD ROWSPAN="1" COLSPAN="1">
+<P CLASS="TableauEntete"><FONT COLOR='#000000'>
+<A NAME="50618371_pgfId-1129784"></A>66 000</font></P>
+</TD>
+</TR>
+<TR>
+<TD ROWSPAN="1" COLSPAN="1">
+<P CLASS="TableauEntete"><FONT COLOR='#000000'>
+<A NAME="50618371_pgfId-1129786"></A>2</font></P>
+</TD>
+<TD ROWSPAN="1" COLSPAN="1">
+<P CLASS="TableauEntete"><FONT COLOR='#000000'>
+<A NAME="50618371_pgfId-1129788"></A>11 000</font></P>
+</TD>
+<TD ROWSPAN="1" COLSPAN="1">
+<P CLASS="TableauEntete"><FONT COLOR='#000000'>
+<A NAME="50618371_pgfId-1129790"></A>132 000</font></P>
+</TD>
+</TR>
+<TR>
+<TD ROWSPAN="1" COLSPAN="1">
+<P CLASS="TableauEntete"><FONT COLOR='#000000'>
+<A NAME="50618371_pgfId-1129790"></A>2,5</font></P>
+</TD> 
+<TD ROWSPAN="1" COLSPAN="1">
+<P CLASS="TableauEntete"><FONT COLOR='#000000'>
+<A NAME="50618371_pgfId-1129794"></A>16 500</font></P>
+</TD>
+<TD ROWSPAN="1" COLSPAN="1">
+<P CLASS="TableauEntete"><FONT COLOR='#000000'>
+<A NAME="50618371_pgfId-1129796"></A>198 000</font></P>
+</TD>
+</TR>
+<TR>
+<TD ROWSPAN="1" COLSPAN="1">
+<P CLASS="TableauEntete"><FONT COLOR='#000000'> 
+<A NAME="50618371_pgfId-1129798"></A>3</font></P>
+</TD>
+<TD ROWSPAN="1" COLSPAN="1">
+<P CLASS="TableauEntete"><FONT COLOR='#000000'>
+<A NAME="50618371_pgfId-1129800"></A>22 000</font></P>
+</TD>
+<TD ROWSPAN="1" COLSPAN="1">
+<P CLASS="TableauEntete"><FONT COLOR='#000000'>
+<A NAME="50618371_pgfId-1129802"></A>264 000</font></P>
+</TD>
+</TR>
+<TR>
+<TD ROWSPAN="1" COLSPAN="1">
+<P CLASS="TableauEntete"><FONT COLOR='#000000'>
+<A NAME="50618371_pgfId-1129804"></A>3,5 </font></P>
+</TD>
+<TD ROWSPAN="1" COLSPAN="1">
+<P CLASS="TableauEntete"><FONT COLOR='#000000'>
+<A NAME="50618371_pgfId-1129806"></A> 27 500</font></P>
+</TD>
+<TD ROWSPAN="1" COLSPAN="1">
+<P CLASS="TableauEntete"><FONT COLOR='#000000'>
+<A NAME="50618371_pgfId-1129808"></A>330 000</font></P>
+</TD>
+</TR>
+<TR>
+<TD ROWSPAN="1" COLSPAN="1">
+<P CLASS="TableauEntete"><FONT COLOR='#000000'>
+<A NAME="50618371_pgfId-1129810"></A>4</font></P>
+</TD>
+<TD ROWSPAN="1" COLSPAN="1">
+<P CLASS="TableauEntete"><FONT COLOR='#000000'>
+<A NAME="50618371_pgfId-1129812"></A>33 000</font></P>
+</TD>
+<TD ROWSPAN="1" COLSPAN="1">
+<P CLASS="TableauEntete"><FONT COLOR='#000000'>
+<A NAME="50618371_pgfId-1129814"></A>396 000</font></P>
+</TD>
+</TR>
+<TR>
+<TD ROWSPAN="1" COLSPAN="1">
+<P CLASS="TableauEntete"><FONT COLOR='#000000'>
+<A NAME="50618371_pgfId-1129816"></A> 4,5</font></P>
+</TD>
+<TD ROWSPAN="1" COLSPAN="1">
+<P CLASS="TableauEntete"><FONT COLOR='#000000'>
+<A NAME="50618371_pgfId-1129818"></A>38 500</font></P>
+</TD>
+<TD ROWSPAN="1" COLSPAN="1">
+<P CLASS="TableauEntete"><FONT COLOR='#000000'>
+<A NAME="50618371_pgfId-1129820"></A>462 000</font></P>
+</TD>
+</TR>
+<TR>
+<TD ROWSPAN="1" COLSPAN="1">
+<P CLASS="TableauEntete"><FONT COLOR='#000000'>
+<A NAME="50618371_pgfId-1129822"></A>5 </font></P>
+</TD>
+<TD ROWSPAN="1" COLSPAN="1">
+<P CLASS="TableauEntete"><FONT COLOR='#000000'>
+<A NAME="50618371_pgfId-1129824"></A> 44 000</font></P>
+</TD>
+<TD ROWSPAN="1" COLSPAN="1">
+<P CLASS="TableauEntete"><FONT COLOR='#000000'>
+<A NAME="50618371_pgfId-1129826"></A>528 000</font></P>
+</TD>
+</TR>
+</TABLE>
+<P CLASS="Liste1-Numerotee"><FONT COLOR='#000000'>
+<A NAME="50618371_pgfId-1129828"></A>Les personnes retrait&eacute;es âg&eacute;es de plus de soixante-dix ans b&eacute;n&eacute;ficient d’un abattement de 75 % de l’impôt calcul&eacute; après application de la R&eacute;duction d’Impôt pour Charges de Famille.</font></P>
+<P CLASS="Liste1-Numerotee"><FONT COLOR='#000000'>
+<A NAME="50618371_pgfId-1129829"></A>2&deg; Le nombre de parts à prendre en compte pour la d&eacute;termination de la R&eacute;duction d’Impôt pour Charges de Famille pr&eacute;vue à l’alin&eacute;a pr&eacute;c&eacute;dent est fix&eacute; comme suit :</font></P>
+<TABLE>
+<TR>
+<TD ROWSPAN="1" COLSPAN="1">
+<P CLASS="TableauEntete"><FONT COLOR='#000000'>
+<A NAME="50618371_pgfId-1129832"></A>Situation matrimoniale</font></P>
+</TD>
+<TD ROWSPAN="1" COLSPAN="1">
+<P CLASS="TableauEntete"><FONT COLOR='#000000'>
+<A NAME="50618371_pgfId-1129834"></A>Nombre de parts </font></P>
+</TD>
+</TR>
+<TR>
+<TD ROWSPAN="1" COLSPAN="1">
+<P CLASS="TableauEntete"><FONT COLOR='#000000'>
+<A NAME="50618371_pgfId-1129836"></A>C&eacute;libataire, divorc&eacute; ou veuf sans enfant à charge</font></P>
+</TD>
+<TD ROWSPAN="1" COLSPAN="1">
+<P CLASS="TableauEntete"><FONT COLOR='#000000'>
+<A NAME="50618371_pgfId-1129838"></A>1 </font></P>
+</TD>
+</TR>
+<TR>
+<TD ROWSPAN="1" COLSPAN="1">
+<P CLASS="TableauEntete"><FONT COLOR='#000000'>
+<A NAME="50618371_pgfId-1129840"></A>Mari&eacute; sans enfant à charge</font></P>
+</TD>
+<TD ROWSPAN="1" COLSPAN="1">
+<P CLASS="TableauEntete"><FONT COLOR='#000000'>
+<A NAME="50618371_pgfId-1129842"></A> 2 </font></P>
+</TD>
+</TR>
+<TR>
+<TD ROWSPAN="1" COLSPAN="1">
+<P CLASS="TableauEntete"><FONT COLOR='#000000'>
+<A NAME="50618371_pgfId-1129844"></A>C&eacute;libataire ou divorc&eacute; ayant un enfant à charge</font></P>
+</TD>
+<TD ROWSPAN="1" COLSPAN="1">
+<P CLASS="TableauEntete"><FONT COLOR='#000000'>
+<A NAME="50618371_pgfId-1129846"></A>2 </font></P>
+</TD>
+</TR>
+<TR>
+<TD ROWSPAN="1" COLSPAN="1">
+<P CLASS="TableauEntete"><FONT COLOR='#000000'>
+<A NAME="50618371_pgfId-1129848"></A>Mari&eacute; ou veuf ayant un enfant à charge</font></P>
+</TD>
+<TD ROWSPAN="1" COLSPAN="1">
+<P CLASS="TableauEntete"><FONT COLOR='#000000'>
+<A NAME="50618371_pgfId-1129850"></A> 2,5 </font></P>
+</TD>
+</TR>
+<TR>
+<TD ROWSPAN="1" COLSPAN="1">
+<P CLASS="TableauEntete"><FONT COLOR='#000000'>
+<A NAME="50618371_pgfId-1129852"></A>C&eacute;libataire ou divorc&eacute; ayant deux enfants à charge </font></P>
+</TD>
+<TD ROWSPAN="1" COLSPAN="1">
+<P CLASS="TableauEntete"><FONT COLOR='#000000'>
+<A NAME="50618371_pgfId-1129854"></A>2,5</font> </P>
+</TD>
+</TR>
+<TR>
+<TD ROWSPAN="1" COLSPAN="1">
+<P CLASS="TableauEntete"><FONT COLOR='#000000'>
+<A NAME="50618371_pgfId-1129856"></A>Mari&eacute; ou veuf ayant deux enfants à charge</font></P>
+</TD>
+<TD ROWSPAN="1" COLSPAN="1">
+<P CLASS="TableauEntete"><FONT COLOR='#000000'>
+<A NAME="50618371_pgfId-1129858"></A>3 </font></P>
+</TD>
+</TR>
+<TR>
+<TD ROWSPAN="1" COLSPAN="1">
+<P CLASS="TableauEntete"><FONT COLOR='#000000'>
+<A NAME="50618371_pgfId-1129860"></A>C&eacute;libataire ou divorc&eacute; ayant trois enfants à charge</font> </P>
+</TD>
+<TD ROWSPAN="1" COLSPAN="1">
+<P CLASS="TableauEntete"><FONT COLOR='#000000'>
+<A NAME="50618371_pgfId-1129862"></A>3 </font></P>
+</TD>
+</TR>
+<TR>
+<TD ROWSPAN="1" COLSPAN="1">
+<P CLASS="TableauEntete"><FONT COLOR='#000000'>
+<A NAME="50618371_pgfId-1129864"></A>Mari&eacute; ou veuf ayant trois enfants à charge</font></P>
+</TD>
+<TD ROWSPAN="1" COLSPAN="1">
+<P CLASS="TableauEntete"><FONT COLOR='#000000'>
+<A NAME="50618371_pgfId-1129866"></A>3,5 </font></P>
+</TD>
+</TR>
+<TR>
+<TD ROWSPAN="1" COLSPAN="1">
+<P CLASS="TableauEntete"><FONT COLOR='#000000'>
+<A NAME="50618371_pgfId-1129868"></A>C&eacute;libataire ou divorc&eacute; ayant quatre enfants à charge</font></P>
+</TD>
+<TD ROWSPAN="1" COLSPAN="1">
+<P CLASS="TableauEntete"><FONT COLOR='#000000'>
+<A NAME="50618371_pgfId-1129870"></A>3,5</font></P>
+</TD>
+</TR>
+</TABLE>
+<P CLASS="Liste1-Numerotee"><FONT COLOR='#000000'>
+<A NAME="50618371_pgfId-1129871"></A>Le nombre de parts est major&eacute; d’un demi-point par enfant à charge. Cette majoration est port&eacute;e à un point par enfant à charge infirme mineur ou majeur .</font></P>
+<P CLASS="Liste1-Numerotee"><FONT COLOR='#000000'>
+<A NAME="50618371_pgfId-1129872"></A>Le veuf qui a à sa charge un ou plusieurs enfants non issus de son mariage avec le conjoint d&eacute;c&eacute;d&eacute; est trait&eacute; comme un c&eacute;libataire ayant à sa charge le même nombre d’enfants.</font></P>
+<P CLASS="Liste1-Numerotee"><FONT COLOR='#000000'>
+<A NAME="50618371_pgfId-1129873"></A>Toutefois, le nombre de parts à prendre en consid&eacute;ration pour la r&eacute;duction de l’impôt ne pourra en aucun cas d&eacute;passer cinq (5). </font></P>
+<P CLASS="Liste1-Numerotee"><FONT COLOR='#000000'>
+<A NAME="50618371_pgfId-1129874"></A>Par d&eacute;rogation aux dispositions qui pr&eacute;cèdent, le nombre de parts à prendre en consid&eacute;ration par l’employeur pour un enfant mineur n’ayant pas la qualit&eacute; de chef de famille est de un (1).</font></P>
+<P CLASS="Liste1-Numerotee"><FONT COLOR='#000000'>
+<A NAME="50618371_pgfId-1129875"></A>Sont consid&eacute;r&eacute;s comme &eacute;tant à la charge du contribuable, à la condition de n’avoir pas de revenus distincts de ceux qui concourent à la base d’imposition de ce dernier, les enfants l&eacute;gitimes, les enfants naturels reconnus et les enfants l&eacute;galement adopt&eacute;s qui sont mineurs ou âg&eacute;s de moins de 27 ans lorsqu’ils poursuivent leurs &eacute;tudes. </font></P>
+<P CLASS="Liste1-Numerotee"><FONT COLOR='#000000'>
+<A NAME="50618371_pgfId-1129876"></A>Pour l'application des dispositions du   pr&eacute;sent article, la situation de famille à retenir est celle existant au 1er janvier de l’ann&eacute;e d’acquisition du revenu.</font></P>
+<P CLASS="Liste1-Numerotee"><FONT COLOR='#000000'>
+<A NAME="50618371_pgfId-1129877"></A>Toutefois, en cas de mariage du contribuable ou d’augmentation de ses charges de famille en cours d’ann&eacute;e, il est fait &eacute;tat de la situation de famille au 31 d&eacute;cembre de ladite ann&eacute;e.</font></P>
+<P CLASS="Liste1-Numerotee"><FONT COLOR='#000000'>
+<A NAME="50618371_pgfId-1129878"></A>3&deg; Le nombre de parts des contribuables c&eacute;libataires, divorc&eacute;s ou veufs n’ayant pas d’enfant à leur charge est fix&eacute; à 1,5 lorsque ces contribuables :</font></P>
+<P CLASS="Liste2-Numerotee"><FONT COLOR='#000000'>
+<A NAME="50618371_pgfId-1129879"></A>1- ont un ou plusieurs enfants majeurs ou faisant l’objet d’une imposition distincte ; </font></P>
+<P CLASS="Liste2-Numerotee"><FONT COLOR='#000000'>
+<A NAME="50618371_pgfId-1129880"></A>2- ont eu un ou plusieurs enfants qui sont d&eacute;c&eacute;d&eacute;s, à la condition que l’un d’eux au moins ait atteint l’âge de seize ans ou que l’un d’eux au moins soit d&eacute;c&eacute;d&eacute; par suite de faits de guerre ; </font></P>
+<P CLASS="Liste2-Numerotee"><FONT COLOR='#000000'>
+<A NAME="50618371_pgfId-1129881"></A>3- sont titulaires d’une pension d’invalidit&eacute; de 40 % au moins, soit de guerre, soit d’accident de travail, ou d’une pension de veuve de guerre ; </font></P>
+<P CLASS="Liste2-Numerotee"><FONT COLOR='#000000'>
+<A NAME="50618371_pgfId-1129882"></A>4- ont adopt&eacute; un enfant.</font></P>
+<H6 CLASS="Modification">
+<A NAME="50618371_pgfId-1129883"></A>Ord. n&deg; 2007-488 du 31 mai 2007, an. fiscale, art. 11-7; ord. n&deg; 2008-381 du 18 d&eacute;cembre 2008, an. fiscale, art.18-2;       ord  n&deg; 2023-719 du 13 sept. 2023, art.1er.</H6>
+<H6 CLASS="NoArticle">
+<A NAME="50434094_pgfId-1141185"></A>120 bis</H6>
+<P CLASS="ParaText">
+<A NAME="50434094_pgfId-1141181"></A><FONT COLOR='#000000'>Pour le calcul de l’impôt dû par les dockers et dockers transit, il est fait application d’un taux de 1,5 % au total des rémunérations tel que défini à l’article 118 précédent. </FONT></P>
+<H6 CLASS="Modification">
+<A NAME="50434094_pgfId-1141179"></A>Loi n° 2024-1109 du 18 déc. 2024, an. fiscale, art. 16-1</H6>
+
+
+
+
+<span class="historique" ID="h23119">
+<div class="histText">
+
+<BR> 
+<BR>Art. 119 
+<BR> 
+<p>Le montant net du revenu imposable est le total des r&eacute;mun&eacute;rations tel qu'il est d&eacute;fini &agrave; l'article pr&eacute;c&eacute;dent, d&eacute;duction faite d'un abattement forfaitaire de 20%.</p>
+<p>Loi n&deg;- 97-08 du 6 janv. 1997, an. fiscale,Art. 9-2&deg;-; Ord. n&deg;- 2007-488 du 31 mai 2007Art. 11-5; Ord. n&deg;- 2008-381 du 18 d&eacute;cembre 2008, an. fiscale,Art. 18-1.</p>
+<p>En ce qui concerne les salari&eacute;s des entreprises agricoles autres que ceux vis&eacute;s &agrave; l'article 148 du pr&eacute;sent Code, qui sont soumis au paiement des imp&ocirc;ts sur les traitements et salaires, il sera appliqu&eacute; un abattement forfaitaire mensuel de 60 000 francs sur le montant net de leurs revenus imposables.</p>
+<p>Ord. n&deg;- 2007-488 du 31 mai 2007Art. 11-6.</p>
+<p>Les pensions de retraite et les rentes viag&egrave;res imposables font l'objet d'un abattement de 300 000 francs applicable sur leur montant mensuel.</p>
+<BR><BR><BR></div></span><finh23119>
+
+<span class="historique" ID="h23120">
+<div class="histText">
+
+<BR> 
+<BR>Art. 120
+<BR> 
+  Pour le calcul de l'imp&ocirc;t, toute fraction de revenu annuel n'exc&eacute;dant pas 1 000 francs est n&eacute;glig&eacute;e.</p>
+<p>Le taux applicable au revenu net annuel imposable est fix&eacute; &agrave; 1,5%. Il est appliqu&eacute; sur le montant du revenu d&eacute;fini &agrave; l'article 119 ci-dessus.</p>
+<p>Ord. n&deg;- 2007-488 du 31 mai 2007Art. 11-7; Ord. n&deg;- 2008-381 du 18 d&eacute;cembre 2008, an. fiscale,Art.18-2/ .</p>
+<BR><BR><BR></div></span><finh23120>
+
+
+
+
+
+</div></div> 
+    <p>&nbsp;</p><p>&nbsp;</p></div></div> <!-- wrapper -->
+	  <div id="articleList"><div id="contenu" style='height:auto; background-color:#FFFFCC'>&nbsp;</div>
+      </div><p>&nbsp;</p><p>&nbsp;</p><p>&nbsp;</p><p>&nbsp;</p><p>&nbsp;</p><p>&nbsp;</p><p>&nbsp;</p><p>&nbsp;</p><p>&nbsp;</p><p>&nbsp;</p>
+	  <p>&nbsp;</p><p>&nbsp;</p><p>&nbsp;</p><p>&nbsp;</p><p>&nbsp;</p><p>&nbsp;</p></BODY></HTML>
+	  

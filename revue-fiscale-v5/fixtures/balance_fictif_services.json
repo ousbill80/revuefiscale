@@ -1,0 +1,15 @@
+{
+  "avertissement": "[DÉMO FICTIF] Balance services synthétique — montants non réels, non opposables. Calage mapping/contrôles uniquement.",
+  "lignes": [
+    {"compte": "101", "libelle": "[FICTIF] Capital social", "debit": "0", "credit": "200000000"},
+    {"compte": "218", "libelle": "[FICTIF] Autres immobilisations", "debit": "35000000", "credit": "0"},
+    {"compte": "4111", "libelle": "[FICTIF] Clients", "debit": "45000000", "credit": "0"},
+    {"compte": "521", "libelle": "[FICTIF] Banque locale", "debit": "80000000", "credit": "0"},
+    {"compte": "4011", "libelle": "[FICTIF] Fournisseurs", "debit": "0", "credit": "25000000"},
+    {"compte": "7061", "libelle": "[FICTIF] Prestations de services", "debit": "0", "credit": "320000000"},
+    {"compte": "622", "libelle": "[FICTIF] Honoraires et commissions", "debit": "90000000", "credit": "0"},
+    {"compte": "641", "libelle": "[FICTIF] Remunerations du personnel", "debit": "180000000", "credit": "0"},
+    {"compte": "6582", "libelle": "[FICTIF] Dons et liberalites", "debit": "25000000", "credit": "0"},
+    {"compte": "661", "libelle": "[FICTIF] Interets bancaires", "debit": "90000000", "credit": "0"}
+  ]
+}

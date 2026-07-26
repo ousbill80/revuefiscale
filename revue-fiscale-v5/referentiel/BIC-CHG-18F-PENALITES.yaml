@@ -1,0 +1,32 @@
+reference_source: CGI 2026 — doc client 2/5 format pivot (propositions metier)
+date_effet: '2026-01-01'
+effets_croises: []
+identifiant: BIC-CHG-18F-PENALITES
+impot: BIC
+reference_legale: CGI 2026, art. 18 F
+profils_applicables:
+- Entreprises au regime reel
+comptes_declencheurs:
+- '6580'
+- '647'
+nature: permanente
+condition_declenchement: solde(6580) > 0 ou solde(647) > 0
+conditions_fond: CGI 2026, art. 18 F
+formule_plafonnement: sans objet
+questions_generees:
+- id: q_est_sanction
+  texte: Amende/penalite ?
+  type: booleen
+resultat: solde(6580) + solde(647)
+niveau_risque: faible
+a_confirmer:
+- date d effet 01/01/2026
+- valeurs issues doc client 5 — a valider metier
+cas_test:
+  soldes:
+    '6580': '2000000'
+    '647': '500000'
+  reponses: {}
+  agregats: {}
+  declenche_attendu: true
+  montant_attendu: '2500000'

@@ -1,0 +1,5 @@
+JournalCode|EcritureNum|EcritureDate|CompteNum|CompteLib|Debit|Credit
+VE|0001|20250115|411|Clients|1500,00|0,00
+VE|0001|20250115|701|Ventes|0,00|1500,00
+AC|0002|20250201|601|Achats|500,00|0,00
+AC|0002|20250201|401|Fournisseurs|0,00|500,00

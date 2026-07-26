@@ -1,0 +1,38 @@
+reference_source: CGI 2026 — docs client 6/9/10 (propositions metier)
+date_effet: '2026-01-01'
+effets_croises: []
+a_confirmer:
+- date d effet 01/01/2026
+- valeurs issues docs client 6/9/10 — a valider metier
+formule_plafonnement: sans objet
+questions_generees:
+- id: q_patente_anormale
+  texte: Patente manquante ou sous-evaluee ?
+  type: booleen
+- id: q_montant
+  texte: Ecart patente ?
+  type: montant
+profils_applicables:
+- Entreprises au regime reel
+nature: sans_objet
+identifiant: PAT-272-PATENTE
+impot: PAT
+reference_legale: CGI 2026, art. 272 et s. — patente
+comptes_declencheurs:
+- '635'
+- '701'
+condition_declenchement: agregat(CA) > 0 et reponse(q_patente_anormale) = vrai
+conditions_fond: Patente declaree coherente avec l activite ?
+resultat: reponse(q_montant)
+niveau_risque: moyen
+cas_test:
+  soldes:
+    '635': '1000000'
+    '701': '50000000'
+  agregats:
+    CA: '50000000'
+  reponses:
+    q_patente_anormale: true
+    q_montant: '400000'
+  declenche_attendu: true
+  montant_attendu: '400000'

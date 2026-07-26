@@ -1,0 +1,40 @@
+reference_source: CGI 2026 — docs client 6/9/10 (propositions metier)
+date_effet: '2026-01-01'
+effets_croises: []
+a_confirmer:
+- date d effet 01/01/2026
+- valeurs issues docs client 6/9/10 — a valider metier
+formule_plafonnement: sans objet
+questions_generees:
+- id: q_beneficiaire_nonres
+  texte: Beneficiaire non resident ?
+  type: booleen
+- id: q_ras_due
+  texte: RAS due non prelevee ?
+  type: montant
+profils_applicables:
+- Entreprises au regime reel
+nature: sans_objet
+identifiant: RAS-92-NONRESIDENT
+impot: RAS
+reference_legale: CGI 2026, art. 92 — RAS non residents
+comptes_declencheurs:
+- '622'
+- '651'
+- '672'
+condition_declenchement: (solde(622) > 0 ou solde(651) > 0 ou solde(672) > 0) et reponse(q_beneficiaire_nonres)
+  = vrai
+conditions_fond: Versement a non resident, prestation utilisee en CI ?
+resultat: reponse(q_ras_due)
+niveau_risque: eleve
+cas_test:
+  soldes:
+    '622': '8000000'
+    '651': '0'
+    '672': '0'
+  agregats: {}
+  reponses:
+    q_beneficiaire_nonres: true
+    q_ras_due: '1600000'
+  declenche_attendu: true
+  montant_attendu: '1600000'

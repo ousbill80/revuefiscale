@@ -1,0 +1,16 @@
+.DS_Store
+DOCUMENT FOURNIT PAR LE CLIENT /
+*.pdf
+*.zip
+*.docx
+/06-roadmap.md
+/09-multitenant.md
+/10-pedagogie-infobulles.md
+/Fondation_technique_cerveau_memoire_reglementaire.md
+/Prompt_systeme_developpement_revue_fiscale.md
+.env
+.venv/
+__pycache__/
+.mypy_cache/
+.pytest_cache/
+.ruff_cache/

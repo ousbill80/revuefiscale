@@ -1,0 +1,31 @@
+reference_source: CGI 2026 — doc client 2/5 format pivot (propositions metier)
+date_effet: '2026-01-01'
+effets_croises: []
+identifiant: BIC-CHG-18A4-ADMIN
+impot: BIC
+reference_legale: CGI 2026, art. 18 A 4°
+profils_applicables:
+- Societes anonymes
+comptes_declencheurs:
+- '6581'
+nature: permanente
+condition_declenchement: solde(6581) > 0
+conditions_fond: Indemnites de fonction administrateurs SA.
+formule_plafonnement: 3000000 * reponse(q_nb_admin)
+questions_generees:
+- id: q_nb_admin
+  texte: Nombre d administrateurs beneficiaires ?
+  type: montant
+resultat: max(0 ; solde(6581) - (3000000 * reponse(q_nb_admin)))
+niveau_risque: moyen
+a_confirmer:
+- date d effet
+- plafond 3 000 000 FCFA / beneficiaire / an
+cas_test:
+  soldes:
+    '6581': '10000000'
+  agregats: {}
+  reponses:
+    q_nb_admin: '2'
+  declenche_attendu: true
+  montant_attendu: '4000000'

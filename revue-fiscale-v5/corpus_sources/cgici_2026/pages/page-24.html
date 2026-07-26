@@ -1,0 +1,364 @@
+<!DOCTYPE HTML><HTML><HEAD><META HTTP-EQUIV="Content-Type" CONTENT="text/html; charset=UTF-8">
+<TITLE>Code des impots -27</TITLE><LINK REL="STYLESHEET" HREF="/cicgi.css" CHARSET="ISO-8859-1" TYPE="text/css">
+<style type="text/css">
+body {margin-left: 5px;	margin-top: 0px; margin-right: .5em;margin-bottom: 0px;background-color:#fafafa ;}
+.Liste-Numerote {font-size: 12pt;font-weight: regular;font-style: italic;color: #000000;text-transform: none;margin-left:8px ;margin-bottom:8px ;margin-top:4px ;margin-right:10px ;font-family:Georgia, "Times New Roman", Times, serif}
+li {list-style-type: none; margin-left:0px ; padding-left:0em ; }
+.Paratext {font-size: 12pt;font-weight: regular;font-style: italic;color: #000000;text-decoration: none;vertical-align: baseline;text-transform: none;margin-left:0px ;font-family:Georgia, "Times New Roman", Times, serif}
+.Normal {font-size: 12pt;font-weight: regular;font-style: italic;color: #000000;text-decoration: none;vertical-align: baseline;text-transform: none;margin-left:0px ;font-family:Georgia, "Times New Roman", Times, serif}
+ul {list-style-type: none; margin-left:0px ; padding-left:0em ;  }
+.Liste2-Enumeree {font-size: 12pt;font-weight: regular;font-style: italic;color: #000000;text-decoration: none;vertical-align: baseline;text-transform: none;list-style-type:none ;margin-left:16px ;margin-bottom:8px;margin-right:10px;font-family:Georgia, "Times New Roman", Times, serif}
+P.Liste2-Enumeree {font-size: 12pt;font-weight: regular;font-style: italic;color: #000000;text-decoration: none;vertical-align: baseline;text-transform: none;list-style-type:none ;margin-left:16px ;margin-bottom:8px;margin-right:10px;font-family:Georgia, "Times New Roman", Times, serif}
+.Entete {font-size: 13pt;font-weight: regular;font-style: italic;color:#000000 ;text-decoration: none;vertical-align: baseline;text-transform: none;margin-left:8px ;font-family:Georgia, "Times New Roman", Times, serif}
+table, TABLE {border-width:1px; width:99% ;border-collapse:collapse;border-color: #9ecaed;box-shadow: 0 0 10px #9ecaed;}
+tr,td {text-align:left;vertical-align:bottom;border:1px solid #9ecaed;padding:.2em;marging-left:.2em}
+th, TH{text-align:center;vertical-align:middle;padding:.2em;}
+P.TableauEntete {font-size: 13pt;font-weight: regular;font-style: italic;color: #000000;font-family:Georgia, "Times New Roman"}
+P.TableauCelluleLeft, P.TableauCellule {text-align:right;margin-right:1em;font-size: 13pt;font-weight: regular;font-style: italic;color: #000000;font-family:Georgia, "Times New Roman"}
+P.TableauCelluleRight {text-align:left;margin-left:1em;font-size: 13pt;font-weight: regular;font-style: italic;color: #000000;font-family:Georgia, "Times New Roman"}
+.ui-buttonh {padding: .1em .1em ; border: 1px solid #dadada;border-radius: 4px; box-shadow: 0 0 4px #9ecaed;color:#FF3300 ;margin-left:8px ;margin-right:8px ;margin-bottom:2px ;margin-top:2px ;text-decoration:none ;font-size:12pt ;font-family:"Times New Roman"}   
+.ui-button {padding: .1em .1em ; border: 1px solid #dadada;border-radius: 4px; box-shadow: 0 0 4px #9ecaed;color:#FF3300 ;margin-left:8px ;margin-right:8px ;margin-bottom:2px ;margin-top:2px ;text-decoration:none ;font-size:12pt ;font-family:"Times New Roman"}   
+H3 {display: block;text-align: center;text-indent: 0pt;margin-top: 10pt;margin-bottom: 10pt;margin-right: 10pt;margin-left: 10pt;font-size: 12pt;font-weight: Bold;font-style: Regular;color: #00A000;text-decoration: none;vertical-align: baseline;text-transform: none;font-family: "Times New Roman";}
+H4 {display: block;text-align: left;text-indent: 0pt;margin-top: 10pt;margin-bottom: 6pt;margin-right: 10pt;margin-left: 10pt;font-size: 12pt;font-weight: Bold;font-style: Regular;color: #000000;text-decoration: none;vertical-align: baseline;text-transform: none;font-family: "Times New Roman";}
+H5 {display: block;text-align: left;text-indent: 0pt;margin-top: 10pt;margin-bottom: 6pt;margin-right: 10pt;margin-left: 10pt;font-size: 11pt;font-weight: Bold;font-style: Regular;color: #000000;text-decoration: none;vertical-align: baseline;text-transform: none;font-family: "Times New Roman";}
+H6.NoArticle {display: block;text-align: left;text-indent: 0pt;margin-top: 14pt;margin-bottom: 0pt;margin-right: 0pt;margin-left: 0pt;font-size: 14pt;font-weight: regular;font-style: Regular;color: #00a000;text-decoration: none;vertical-align: baseline;text-transform: none;font-family: "Times New Roman";}
+H2 {text-align:center;font-size:16pt;font-family:Georgia, "Times New Roman", Times, serif}
+P.ParaText {font-size: 12pt;font-weight: regular;font-style: italic;color: #000000;	text-decoration: none;vertical-align: baseline;text-transform: none;font-family:Georgia, "Times New Roman", Times, serif;}
+H2.Section,P.Section {font-size:12pt;font-weight:bold;font-style:Regular;color:#008000;font-family:Georgia,"Times New Roman"}
+P.Paragraphe, p.Paragraphe {Text-Align:center;Text-decoration:none;font-size:12pt;font-weight:bold;font-style:Normal;color:#00A000;font-family:Georgia,"Times New Roman"}
+H2.Livre,P.Livre {text-align:center;font-size:16pt;font-weight:bold;font-style:Regular;color:#008000;font-family:Georgia,"Times New Roman"}
+P.Partie,H2.Partie,P.TitreSub {text-align:center;font-size:14pt;font-weight:bold;font-style:Regular;color:#008000;font-family:Georgia,"Times New Roman"}
+H2.ChapitreNo,H2.TitreNo {text-align:center;font-size:14pt;font-weight:bold;font-style:Regular;color:#008000;font-family:Georgia,"Times New Roman"}
+H2.Chapitre, h2.Chapitre {text-align:center;font-size:14pt;font-weight:bold;font-style:Regular;color:#008000;font-family:Georgia,"Times New Roman"}
+H2.TitreNo {text-align:center;font-size:14pt;font-weight:bold;font-style:Regular;color:#008000;font-family:Georgia,"Times New Roman"}
+h3.Sous-Section, H3.Sous-Section, h3.Sous-section, h2.Section {font-size:12pt;font-weight:bold;font-style:Italic;color:#008000;font-family:Georgia,"Times New Roman"}
+hr,HR { display: block; width:90%;  margin-top: 0.5em; margin-bottom: 0.5em; margin-left: auto;  margin-right: auto;  border-style: inset; border-width: 1px;}
+P.TitreSub {text-align:center;font-size:14pt;font-weight:bold;font-style:Regular;color:#008000;font-family:Georgia,"Times New Roman"}
+.Reference {display: block;text-align: left;text-indent: 0pt;margin-top: 10pt;margin-bottom: 6pt;margin-right: 10pt;margin-left: 10pt;font-size: 14pt;font-weight: Bold;font-style: Regular;color: #7F5434;text-decoration: none;vertical-align: baseline;text-transform: none;font-family: "Times New Roman";}
+.ludwig,blockquote {padding-left:1em;background-color:#fafafa;font-size:12pt;font-weight:100;font-style:italic;}
+#articleList {position:absolute ;	z-index: 1 ;left: 10px ;top: 80px ;height:340px;width: 620px;border: 2px solid #cacaca ;border-radius: 5px ;background-color:#fafafa ;    box-shadow: 0 0 12px #333333;	margin-left:0px ;	padding: .3em .3em ;		overflow:hidden ;	visibility:hidden ;  }			
+#articleList h3 { text-align: center; margin: 0; }		
+
+.historique {
+  display:none ;
+  padding: .1em .3em ;
+  border: solid 2px #dadada;
+  border-radius: 7px;
+  box-shadow: 0 0 5px #9ecaed;  
+  
+}
+.histText {
+    display: block;
+    font-family: ;"Times New Roman"
+	padding: .1em .3em ;
+    margin: 1em 0px;
+	font-style:italic;
+	color:#000000;
+	overflow:auto;
+}
+.highlight {
+  font-weight:bold ;
+  color:#000000 ;
+  background-color:#FFFFCC ;
+  }
+.articleList-scroll {
+	overflow-x:hidden ;
+	overflow-y:scroll ;
+	scrollbar-width:thin ;
+	scrollbar-color:blue orange ;
+}
+
+#contenu {
+	overflow-x:hidden ;
+    overflow-y:scroll ;
+	scrollbar-width:thin ;
+	scrollbar-color:blue orange ;
+}		
+
+table, TABLE {
+ text-align:center; 
+    margin-left:.5em; 
+    margin-right:.5em; 
+    border:1px solid #000000;	
+	border-collapse:collapse ;
+    border-color: #9ecaed;
+    box-shadow: 0 0 10px #9ecaed;
+	
+   }
+  tr,td {text-align:left;}
+  
+
+
+ </style>
+ 
+<script src="/js/iscroll.js"></script>
+<script src="/js/jquery.js"></script>   
+<script src="/js/jquery-ui-1.10.3.custom.js"></script>    	    
+<script src="/js/jquery.ui.draggable.js" type="text/javascript"></script>			
+<script src="/js/jquery.ui.core.js"></script> 			
+<script src="/js/jquery.ui.widget.js"></script>			
+<script src="/js/jquery.ui.position.js"></script>			
+<script src="/js/jquery.ui.menu.js"></script>    		
+<script type="text/javascript" src="./xpages.js"></script>
+/* VERSION POUR PAGE HTML SUR SITE DGI.CGICI.COM */
+<script language="javascript">
+ function showButton(id) {
+    var x = document.getElementById(id) ;
+	if(x.style.display === "none") {
+	   x.style.display = "block" ;
+	  } else {
+	   x.style.display = "none" ;
+	   }
+	 }   
+	 var pagenumber="027";
+function loadpage(page, art) {
+      showHideHistoric(art);
+	  return false;
+	  } 
+function loadArticle(page, art) { var artno = art ;var pgno=page;scrolltoelementTag(pgno,artno) ;return false ;} 
+
+</script>
+</HEAD>
+<BODY><div ID="wrapper"><div ID="scroller">
+
+
+<H2 CLASS="Section">
+Section II - Exon&eacute;rations</H2>
+
+    <DIV>
+ <span id="#A0116"></span>
+	<H6 class="NoArticle">
+Art. 116 &nbsp;&nbsp;&nbsp;&nbsp; <a href="#" onClick="loadpage('024','h22116');return false;" class="ui-button"  title="Consultez l'historique">2022...</a>
+&nbsp;&nbsp;&nbsp;&nbsp;<a href="#" onClick="loadpage('024','h23116');return false;" class="ui-button"  title="Consultez l'historique">2023...</a></H6>
+<P CLASS="ParaText">
+Sont affranchis de l&apos;imp&ocirc;t :</P>
+<P CLASS="Liste2-Enumeree">
+1-	Dans la limite du dixi&egrave;me de la r&eacute;mun&eacute;ration totale (indemnit&eacute;s comprises) per&ccedil;ue par le contribuable, les allocations sp&eacute;ciales destin&eacute;es &agrave; couvrir les frais inh&eacute;rents &agrave; la fonction ou &agrave; l&apos;emploi et effectivement utilis&eacute;es conform&eacute;ment &agrave; leur objet.</P>
+<H6 CLASS="Modification">
+Loi n&deg; 81-150 du 27 f&eacute;vr. 1981, an. fiscale,Art. 13.</H6>
+<P CLASS="Liste2-Enumeree">
+2-	Les allocations familiales, allocations d&apos;assistance &agrave; la famille, les majorations de soldes, d&apos;indemnit&eacute;s ou de pensions attribu&eacute;es en consid&eacute;ration de la situation ou des charges de famille.</P>
+<P CLASS="Liste2-Enumeree">
+3-	Les pensions servies en vertu de la loi du 31 mars 1919 &agrave; l&apos;exclusion de la partie des pensions mixtes vis&eacute;es &agrave; l&apos;article 60 (paragraphe 2) de ladite loi, qui correspond &agrave; la dur&eacute;e des services.</P>
+<P CLASS="Liste2-Enumeree">
+4-	Les pensions servies en vertu de la loi du 24 juin 1919 aux victimes civiles de la guerre et leurs ayants droit.</P>
+<P CLASS="Liste2-Enumeree">
+5-	Les rentes viag&egrave;res et indemnit&eacute;s temporaires attribu&eacute;es aux victimes d&apos;accidents du travail.</P>
+<P CLASS="Liste2-Enumeree">
+6-	La retraite du combattant institu&eacute;e par les articles 197 &agrave; 199 de la loi du 16 avril 1930.</P>
+<P CLASS="Liste2-Enumeree">
+7-	Les appointements des personnels diplomatiques pour l&apos;exercice de leurs fonctions dans la mesure o&ugrave; les pays qu&apos;ils repr&eacute;sentent accordent des avantages analogues aux personnels diplomatiques ivoiriens.</P>
+<P CLASS="Liste2-Enumeree">
+8-	Les salaires vers&eacute;s par les entreprises agricoles, agro-industrielles et assimil&eacute;es vis&eacute;es &agrave; l&apos;article 147, aux travailleurs class&eacute;s dans les cat&eacute;gories professionnelles fix&eacute;es &agrave; l&apos;article 148.</P>
+<H6 CLASS="Modification">
+Loi n&deg; 2003-206 du 7 juillet 2003, an. fiscale,Art. 43-1.</H6>
+<P CLASS="Liste2-Enumeree">
+9-	Sous la double limite du dixi&egrave;me de la r&eacute;mun&eacute;ration mensuelle brute imposable, hors avantages en nature, et d&apos;un montant mensuel de <FONT COLOR='#000000'>320 000</font> francs, les cotisations patronales vers&eacute;es par les employeurs &agrave; des organismes de retraite et de pr&eacute;voyance compl&eacute;mentaires.</P>
+<H6 CLASS="Modification">
+Ord n&deg; 2023-719 du 13 sept. 2023, art.1er</H6>
+<P CLASS="Liste2-Enumeree">
+10–	La prime de transport vers&eacute;e aux salari&eacute;s dans la limite <font color='#000000'>du montant pr&eacute;vu par arrêt&eacute; du Ministre charg&eacute; de l’Emploi et du Ministre charg&eacute; du Budget.
+</font></P>
+<H6 CLASS="Modification">
+Ord. n&deg; 2000-252 du 28 mars 2000, an. fiscale, art. 5; loi n&deg; 2001-338 du 14 juin 2001, an. fiscale, art. 19; ord. n&deg; 2007-488 du 31 mai 2007, an. fiscale, art. 14; loi n&deg; 2022-974 du 20 d&eacute;c. 2022, an. fiscale, art. 1er</H6>
+<P CLASS="Liste2-Enumeree">
+11-	Les d&eacute;penses que l&apos;employeur consacre &agrave; la prise en charge m&eacute;dicale et param&eacute;dicale des personnes ayant contract&eacute; le VIH/SIDA ainsi que celles correspondant aux co&ucirc;ts des dialyses pour insuffisance r&eacute;nale.</P>
+<P CLASS="Liste2-Enumeree">
+Les d&eacute;penses que l&apos;employeur consacre &agrave; la prise en charge m&eacute;dicale et param&eacute;dicale des personnes atteintes du cancer ainsi que celles aff&eacute;rentes aux frais de d&eacute;pistage de cette affection.</P>
+
+<H6 CLASS="Modification">
+Ord. n&deg; 2007-488 du 31 mai 2007, an. fiscale,Art. 15.</H6>
+<P CLASS="Liste2-Enumeree">
+Les d&eacute;penses peuvent &ecirc;tre r&eacute;alis&eacute;es au moyen de cotisations ou de subventions vers&eacute;es &agrave; des organisations sp&eacute;cialis&eacute;es ou des associations reconnues d&apos;utilit&eacute; publique et ayant exclusivement pour objet le financement de la prise en charge m&eacute;dicale et param&eacute;dicale des salari&eacute;s, &agrave; condition que ces organisations ou associations emploient au moins 85 % des cotisations ou subventions au financement de ces actions.</P>
+<H6 CLASS="Modification">
+Loi n&deg; 2001-338 du 14 juin 2001, an. fiscale,Art.18.</H6>
+<P CLASS="Liste2-Enumeree">
+12-L&apos;indemnit&eacute; vers&eacute;e au stagiaire pour une dur&eacute;e n&apos;exc&eacute;dant pas six mois et pour la tranche de l&apos;indemnit&eacute; mensuelle &eacute;gale ou inf&eacute;rieure &agrave; 150 000 francs. </P>
+<H6 CLASS="Modification">
+</a>Loi n&deg; 2001-338 du 14 juin 2001, an. fiscale,Art. 20; loi n&deg; 2015-840 du 18 d&eacute;cembre 2015, an. fiscale,Art. 1-3.</H6>
+<P CLASS="Liste2-Enumeree">
+L&apos;indemnit&eacute; d&apos;apprentissage vers&eacute;e aux apprenants dans le cadre d&apos;un contrat d&apos;apprentissage pour une dur&eacute;e n&apos;exc&eacute;dant pas deux ans et pour un montant mensuel &eacute;gal ou inf&eacute;rieur &agrave; 100 000 francs.</P>
+<H6 CLASS="Modification">
+Ord. n&deg; 2008-381 du 18 d&eacute;cembre 2008, an. fiscale,Art. 10-2; loi n&deg; 2015-840 du 18 d&eacute;cembre 2015, an. fiscale,Art. 1-3</H6>
+<P CLASS="Liste2-Enumeree">
+13- 	1&deg; La fraction des pensions de retraite et des rentes viag&egrave;res &eacute;gale ou inf&eacute;rieure &agrave;  <FONT COLOR='#000000'>320 000</font> francs par mois .</P>
+<H6 CLASS="Modification">
+</a>Loi n&deg; 2003-206 du 7 juillet 2003, an. fiscale,Art. 16-1; ord. n&deg; 2011-480 du 28 d&eacute;cembre 2011, an. fiscale,Art. 14.-1; loi n&deg; 2016-1116 du 08 d&eacute;cembre 2016, an. fiscale,Art. 5-1; ord n&deg; 2023-719 du 13 sept. 2023, art.1er.</H6>
+<P CLASS="Liste2-Enumeree">
+14-	Les d&eacute;penses de sant&eacute; engag&eacute;es par les entreprises pour la constitution de bo&icirc;te de pharmacie permettant de faire face aux premiers soins des employ&eacute;s malades, les co&ucirc;ts de traitement du paludisme, de la tuberculose, de l&apos;h&eacute;patite virale, du diab&egrave;te et de l&apos;hypertension art&eacute;rielle dont ces employ&eacute;s sont atteints ainsi que les sommes vers&eacute;es aux mutuelles de sant&eacute; du personnel ou aux compagnies d&apos;assurances, &agrave; leurs courtiers, gestionnaires de portefeuilles, dans le cadre de contrat groupe d&apos;assurances maladie.</P>
+<H6 CLASS="Modification">
+</a>Loi n&deg; 2005-161 du 27 avril 2005, an. fiscale,Art. 12;  Loi n&deg; 2012-1179 du 27 d&eacute;cembre 2012,  an. fiscale,Art. 8.</H6>
+<P CLASS="Liste2-Enumeree">
+15-	Les r&eacute;mun&eacute;rations vers&eacute;es par l&apos;Institut africain pour le D&eacute;veloppement &eacute;conomique et social, (INADES).</P>
+<H6 CLASS="Modification">
+Loi n&deg; 81-1127 du 30 d&eacute;cembre 1981, an. fiscale,Art. 31.</H6>
+<P CLASS="Liste2-Enumeree">
+16-	Les d&eacute;penses que l&apos;employeur consacre &agrave; la prise en charge des frais de transport en commun du personnel, dans la limite de 20 000 francs par mois et par salari&eacute;.</P>
+<P CLASS="Liste2-Enumeree">
+<FONT COLOR='#000000'>
+17-	Les d&eacute;penses support&eacute;es par l&apos;employeur pour la prise en charge des frais de restauration du personnel dans les cantines de l&apos;entreprise ou en dehors du lieu de travail dans la limite de 30 000 francs par mois et par salari&eacute;.</FONT></P>
+<P CLASS="Liste2-Enumeree">
+<FONT COLOR='#000000'>
+    Lorsque le service de restauration est offert en dehors des cantines de l&apos;entreprise, le b&eacute;n&eacute;fice de l&apos;exon&eacute;ration est subordonn&eacute; &agrave; la production d&apos;un contrat sign&eacute; entre l&apos;employeur et la structure ext&eacute;rieure de restauration et de la preuve de l&apos;effectivit&eacute; des d&eacute;penses effectu&eacute;es dans ce cadre.</FONT></P>
+<H6 CLASS="Modification">
+Ord. n&deg; 2008-381 du 18 d&eacute;cembre 2008, an. fiscale,Art. 20; loi n&deg; 2017-870 du 27 d&eacute;cembre 2017, an. fiscaleArt. 19-1.</H6>
+<P CLASS="Liste2-Enumeree">
+18-Les logements &agrave; caract&egrave;re social de quatre pi&egrave;ces au plus, dont le montant n&apos;exc&egrave;de pas vingt trois millions (23 000 000) de francs hors taxes, mis gratuitement &agrave; la disposition des ouvriers ou agents de ma&icirc;trise par les entreprises agricoles ou agro-industrielles, sur les sites de leurs plantations.</P>
+<H6 CLASS="Modification">
+Loi n&deg; 2014-861 du 22 d&eacute;cembre 2014, an. fiscale,Art.9-1; loi n&deg; 2017-870 du 27 d&eacute;cembre 2017, an. fiscaleArt. 16-1.</H6>
+<P CLASS="Liste2-Enumeree">
+<FONT COLOR='#000000'>
+19- Les sommes vers&eacute;es aux travailleurs par les employeurs &agrave; l&apos;occasion des c&eacute;r&eacute;monies de d&eacute;coration ou de distinction, dans la limite d&apos;un montant brut ne pouvant exc&eacute;der 6 mois de salaire hors avantage en nature.</FONT></P>
+<H6 CLASS="Modification">
+Loi n&deg; 2017-870 du 27 d&eacute;cembre 2017, an. fiscaleArt. 19-2.</H6>
+
+<P CLASS="ParaText">
+Si aucun de ces proc&eacute;d&eacute;s n'est applicable, la valeur locative est d&eacute;termin&eacute;e par voie d'appr&eacute;ciation directe : &eacute;valuation de la valeur v&eacute;nale, d&eacute;termination du taux moyen d'int&eacute;r&ecirc;t des placements immobiliers dans la r&eacute;gion consid&eacute;r&eacute;e pour chaque nature de propri&eacute;t&eacute;, application du taux d'int&eacute;r&ecirc;t &agrave; la valeur v&eacute;nale.</P>
+<P CLASS="ParaText">
+La valeur v&eacute;nale des biens imposables peut &ecirc;tre d&eacute;termin&eacute;e par les services comp&eacute;tents de la Direction g&eacute;n&eacute;rale des Imp&ocirc;ts, par tous moyens, notamment le recours &agrave; des experts immobiliers priv&eacute;s.</P>
+<H6 CLASS="Modification">
+Ord. n&deg; 2011-121 du 22 juin 2011, an. fiscale,Art. 21.</H6>
+<P CLASS="ParaText">
+La valeur locative des terrains &agrave; usage industriel, commercial est d&eacute;termin&eacute;e &agrave; raison de l'usage auquel ils sont affect&eacute;s y compris la valeur locative du sol.</P>
+
+</DIV>
+
+
+</div></div> <p>&nbsp;</p><p>&nbsp;</p>
+
+
+<span class="historique" id="h22116">
+   <div class="histText"> Art. 116 <br>
+<br>		
+<br>	Sont affranchis de l’impôt :	
+<br>		
+<br>	1–	Dans la limite du dixième de la r&eacute;mun&eacute;ration totale (indemnit&eacute;s comprises) perçue par le contribuable, les allocations sp&eacute;ciales destin&eacute;es à couvrir les frais inh&eacute;rents à la fonction ou à l’emploi et effectivement utilis&eacute;es conform&eacute;ment à leur objet.
+<br>		
+<br>	Loi n&deg; 81-150 du 27 f&eacute;vr. 1981, an. fiscale, art. 13.	
+<br>		
+<br>	2–	Les allocations familiales, allocations d’assistance à la famille, les majorations de soldes, d’indemnit&eacute;s ou de pensions attribu&eacute;es en consid&eacute;ration de la situation ou des charges de famille.
+<br>		
+<br>	3–	Les pensions servies en vertu de la loi du 31 mars 1919 à l’exclusion de la partie des pensions mixtes vis&eacute;es à l’article 60 (paragraphe 2) de ladite loi, qui correspond à la dur&eacute;e des services.
+<br>		
+<br>	4–	Les pensions servies en vertu de la loi du 24 juin 1919 aux victimes civiles de la guerre et leurs ayants droit.
+<br>		
+<br>	5–	Les rentes viagères et indemnit&eacute;s temporaires attribu&eacute;es aux victimes d’accidents du travail.
+<br>		
+<br>	6–	La retraite du combattant institu&eacute;e par les articles 197 à 199 de la loi du 16 avril 1930.
+<br>		
+<br>	7–	Les appointements des personnels diplomatiques pour l’exercice de leurs fonctions dans la mesure où les pays qu’ils repr&eacute;sentent accordent des avantages analogues aux personnels diplomatiques ivoiriens.
+<br>		
+<br>	8–	Les salaires vers&eacute;s par les entreprises agricoles, agro-industrielles et assimil&eacute;es vis&eacute;es à l’article 147, aux travailleurs class&eacute;s dans les cat&eacute;gories professionnelles fix&eacute;es à l’article 148.
+<br>		
+<br>	Loi n&deg; 2003-206 du 7 juillet 2003, an. fiscale, art. 43-1.	
+<br>		
+<br>	9–	Sous la double limite du dixième de la r&eacute;mun&eacute;ration mensuelle brute imposable, hors avantages en nature, et d’un montant mensuel de 300 000 francs, les cotisations patronales vers&eacute;es par les employeurs à des organismes de retraite et de pr&eacute;voyance compl&eacute;mentaires.
+<br>		
+<br>	10–	La prime de transport vers&eacute;e aux salari&eacute;s dans la limite d’un montant &eacute;gal à 25 000 francs par mois et par salari&eacute;.
+<br>		
+<br>	Ord. n&deg; 2000-252 du 28 mars 2000, an. fiscale, art. 5; loi n&deg; 2001-338 du 14 juin 2001, an. fiscale, art. 19; ord. n&deg; 2007-488 du 31 mai 2007, an. fiscale, art. 14.	
+<br>		
+<br>	11–	Les d&eacute;penses que l’employeur consacre à la prise en charge m&eacute;dicale et param&eacute;dicale des personnes ayant contract&eacute; le VIH/SIDA ainsi que celles correspondant aux coûts des dialyses pour insuffisance r&eacute;nale.
+<br>		
+<br>	Les d&eacute;penses que l’employeur consacre à la prise en charge m&eacute;dicale et param&eacute;dicale des personnes atteintes du cancer ainsi que celles aff&eacute;rentes aux frais de d&eacute;pistage de cette affection.	
+<br>		
+<br>	Ord. n&deg; 2007-488 du 31 mai 2007, an. fiscale, art. 15.	
+<br>		
+<br>	Les d&eacute;penses peuvent être r&eacute;alis&eacute;es au moyen de cotisations ou de subventions vers&eacute;es à des organisations sp&eacute;cialis&eacute;es ou des associations reconnues d’utilit&eacute; publique et ayant exclusivement pour objet le financement de la prise en charge m&eacute;dicale et param&eacute;dicale des salari&eacute;s, à condition que ces organisations ou associations emploient au moins 85 % des cotisations ou subventions au financement de ces actions.	
+<br>		
+<br>	Loi n&deg; 2001-338 du 14 juin 2001, an. fiscale, art.18.	
+<br>		
+<br>	12–L’indemnit&eacute; vers&eacute;e au stagiaire pour une dur&eacute;e n’exc&eacute;dant pas six mois et pour la tranche de l’indemnit&eacute; mensuelle &eacute;gale ou inf&eacute;rieure à 150 000 francs. 	
+<br>		
+<br>	Loi n&deg; 2001-338 du 14 juin 2001, an. fiscale, art. 20; loi n&deg; 2015-840 du 18 d&eacute;cembre 2015, an. fiscale, art. 1-3.	
+<br>		
+<br>	L’indemnit&eacute; d’apprentissage vers&eacute;e aux apprenants dans le cadre d’un contrat d’apprentissage pour une dur&eacute;e n’exc&eacute;dant pas deux ans et pour un montant mensuel &eacute;gal ou inf&eacute;rieur à 100 000 francs.	
+<br>		
+<br>	Ord. n&deg; 2008-381 du 18 d&eacute;cembre 2008, an. fiscale, art. 10-2; loi n&deg; 2015-840 du 18 d&eacute;cembre 2015, an. fiscale, art. 1-3	
+<br>		
+<br>	13– 1&deg; La fraction des pensions de retraite et des rentes viagères &eacute;gale ou inf&eacute;rieure à 300 000 francs par mois .	
+<br>		
+<br>	Loi n&deg; 2003-206 du 7 juillet 2003, an. fiscale, art. 16-1; ord. n&deg; 2011-480 du 28 d&eacute;cembre 2011, an. fiscale, art. 14.-1; loi n&deg; 2016-1116 du 08 d&eacute;cembre 2016, an. fiscale, art. 5-1.	
+<br>		
+<br>	14–	Les d&eacute;penses de sant&eacute; engag&eacute;es par les entreprises pour la constitution de boîte de pharmacie permettant de faire face aux premiers soins des employ&eacute;s malades, les coûts de traitement du paludisme, de la tuberculose, de l’h&eacute;patite virale, du diabète et de l’hypertension art&eacute;rielle dont ces employ&eacute;s sont atteints ainsi que les sommes vers&eacute;es aux mutuelles de sant&eacute; du personnel ou aux compagnies d’assurances, à leurs courtiers, gestionnaires de portefeuilles, dans le cadre de contrat groupe d’assurances maladie.
+<br>		
+<br>	Loi n&deg; 2005-161 du 27 avril 2005, an. fiscale, art. 12; loi n&deg; 2012-1179 du 27 d&eacute;cembre 2012, an. fiscale, art. 8.	
+<br>		
+<br>	15–	Les r&eacute;mun&eacute;rations vers&eacute;es par l’Institut africain pour le D&eacute;veloppement &eacute;conomique et social, (INADES).
+<br>		
+<br>	Loi n&deg; 81-1127 du 30 d&eacute;cembre 1981, an. fiscale, art. 31.	
+<br>		
+<br>	16–	Les d&eacute;penses que l’employeur consacre à la prise en charge des frais de transport en commun du personnel, dans la limite de 20 000 francs par mois et par salari&eacute;.
+<br>		
+<br>	17–	Les d&eacute;penses support&eacute;es par l’employeur pour la prise en charge des frais de restauration du personnel dans les cantines de l’entreprise ou en dehors du lieu de travail dans la limite de 30 000 francs par mois et par salari&eacute;.
+<br>		
+<br>	Lorsque le service de restauration est offert en dehors des cantines de l’entreprise, le b&eacute;n&eacute;fice de l’exon&eacute;ration est subordonn&eacute; à la production d’un contrat sign&eacute; entre l’employeur et la structure ext&eacute;rieure de restauration et de la preuve de l’effectivit&eacute; des d&eacute;penses effectu&eacute;es dans ce cadre.	
+<br>		
+<br>	Ord. n&deg; 2008-381 du 18 d&eacute;cembre 2008, an. fiscale, art. 20; loi n&deg; 2017-870 du 27 d&eacute;cembre 2017, an. fiscale art. 19-1.	
+<br>		
+<br>	18–Les logements à caractère social de quatre pièces au plus, dont le montant n’excède pas vingt trois millions (23 000 000) de francs hors taxes, mis gratuitement à la disposition des ouvriers ou agents de maîtrise par les entreprises agricoles ou agro-industrielles, sur les sites de leurs plantations.	
+<br>		
+<br>	Loi n&deg; 2014-861 du 22 d&eacute;cembre 2014, an. fiscale, art.9-1; loi n&deg; 2017-870 du 27 d&eacute;cembre 2017, an. fiscale art. 16-1.	
+<br>		
+<br>	19- Les sommes vers&eacute;es aux travailleurs par les employeurs à l’occasion des c&eacute;r&eacute;monies de d&eacute;coration ou de distinction, dans la limite d’un montant brut ne pouvant exc&eacute;der 6 mois de salaire hors avantage en nature.	
+<br>		
+<br>	Loi n&deg; 2017-870 du 27 d&eacute;cembre 2017, an. fiscale art. 19-2.	
+
+ </div>
+ </span>
+ <finh22116>
+ 
+ <span class="historique" ID="h23116">
+<div class="histText">
+
+<BR> 
+<BR>Art. 116 
+<BR> 
+<p>Sont affranchis de l'imp&ocirc;t :</p>
+<p>1-	Dans la limite du dixi&egrave;me de la r&eacute;mun&eacute;ration totale (indemnit&eacute;s comprises) per&ccedil;ue par le contribuable, les allocations sp&eacute;ciales destin&eacute;es &agrave; couvrir les frais inh&eacute;rents &agrave; la fonction ou &agrave; l'emploi et effectivement utilis&eacute;es conform&eacute;ment &agrave; leur objet.</p>
+<p>Loi n&deg; 81-150 du 27 f&eacute;vr. 1981, an. fiscale,Art. 13.</p>
+<p>2-	Les allocations familiales, allocations d'assistance &agrave; la famille, les majorations de soldes, d'indemnit&eacute;s ou de pensions attribu&eacute;es en consid&eacute;ration de la situation ou des charges de famille.</p>
+<p>3-	Les pensions servies en vertu de la loi du 31 mars 1919 &agrave; l'exclusion de la partie des pensions mixtes vis&eacute;es &agrave; l'article 60 (paragraphe 2) de ladite loi, qui correspond &agrave; la dur&eacute;e des services.</p>
+<p>4-	Les pensions servies en vertu de la loi du 24 juin 1919 aux victimes civiles de la guerre et leurs ayants droit.</p>
+<p>5-	Les rentes viag&egrave;res et indemnit&eacute;s temporaires attribu&eacute;es aux victimes d'accidents du travail.</p>
+<p>6-	La retraite du combattant institu&eacute;e par les articles 197 &agrave; 199 de la loi du 16 avril 1930.</p>
+<p>7-	Les appointements des personnels diplomatiques pour l'exercice de leurs fonctions dans la mesure o&ugrave; les pays qu'ils repr&eacute;sentent accordent des avantages analogues aux personnels diplomatiques ivoiriens.</p>
+<p>8-	Les salaires vers&eacute;s par les entreprises agricoles, agro-industrielles et assimil&eacute;es vis&eacute;es &agrave; l'article 147, aux travailleurs class&eacute;s dans les cat&eacute;gories professionnelles fix&eacute;es &agrave; l'article 148.</p>
+<p>Loi n&deg; 2003-206 du 7 juillet 2003, an. fiscale,Art. 43-1.</p>
+<p>9-	Sous la double limite du dixi&egrave;me de la r&eacute;mun&eacute;ration mensuelle brute imposable, hors avantages en nature, et d'un montant mensuel de 300 000 francs, les cotisations patronales vers&eacute;es par les employeurs &agrave; des organismes de retraite et de pr&eacute;voyance compl&eacute;mentaires.</p>
+<p>10&ndash;	La prime de transport vers&eacute;e aux salari&eacute;s dans la limite du montant pr&eacute;vu par arr&ecirc;t&eacute; du Ministre charg&eacute; de l&rsquo;Emploi et du Ministre charg&eacute; du Budget. </p>
+<p>Ord. n&deg; 2000-252 du 28 mars 2000, an. fiscale, art. 5; loi n&deg; 2001-338 du 14 juin 2001, an. fiscale, art. 19; ord. n&deg; 2007-488 du 31 mai 2007, an. fiscale, art. 14; loi n&deg; 2022-974 du 20 d&eacute;c. 2022, an. fiscale, art. 1er</p>
+<p>11-	Les d&eacute;penses que l'employeur consacre &agrave; la prise en charge m&eacute;dicale et param&eacute;dicale des personnes ayant contract&eacute; le VIH/SIDA ainsi que celles correspondant aux co&ucirc;ts des dialyses pour insuffisance r&eacute;nale.</p>
+<p>Les d&eacute;penses que l'employeur consacre &agrave; la prise en charge m&eacute;dicale et param&eacute;dicale des personnes atteintes du cancer ainsi que celles aff&eacute;rentes aux frais de d&eacute;pistage de cette affection.</p>
+<p>Ord. n&deg; 2007-488 du 31 mai 2007, an. fiscale,Art. 15.</p>
+<p>Les d&eacute;penses peuvent &ecirc;tre r&eacute;alis&eacute;es au moyen de cotisations ou de subventions vers&eacute;es &agrave; des organisations sp&eacute;cialis&eacute;es ou des associations reconnues d'utilit&eacute; publique et ayant exclusivement pour objet le financement de la prise en charge m&eacute;dicale et param&eacute;dicale des salari&eacute;s, &agrave; condition que ces organisations ou associations emploient au moins 85 % des cotisations ou subventions au financement de ces actions.</p>
+<p>Loi n&deg; 2001-338 du 14 juin 2001, an. fiscale,Art.18.</p>
+<p>12-L'indemnit&eacute; vers&eacute;e au stagiaire pour une dur&eacute;e n'exc&eacute;dant pas six mois et pour la tranche de l'indemnit&eacute; mensuelle &eacute;gale ou inf&eacute;rieure &agrave; 150 000 francs. </p>
+<p>Loi n&deg; 2001-338 du 14 juin 2001, an. fiscale,Art. 20; loi n&deg; 2015-840 du 18 d&eacute;cembre 2015, an. fiscale,Art. 1-3.</p>
+<p>L'indemnit&eacute; d'apprentissage vers&eacute;e aux apprenants dans le cadre d'un contrat d'apprentissage pour une dur&eacute;e n'exc&eacute;dant pas deux ans et pour un montant mensuel &eacute;gal ou inf&eacute;rieur &agrave; 100 000 francs.</p>
+<p>Ord. n&deg; 2008-381 du 18 d&eacute;cembre 2008, an. fiscale,Art. 10-2; loi n&deg; 2015-840 du 18 d&eacute;cembre 2015, an. fiscale,Art. 1-3</p>
+<p>13- 1&deg; La fraction des pensions de retraite et des rentes viag&egrave;res &eacute;gale ou inf&eacute;rieure &agrave; 300 000 francs par mois .</p>
+<p>Loi n&deg; 2003-206 du 7 juillet 2003, an. fiscale,Art. 16-1; ord. n&deg; 2011-480 du 28 d&eacute;cembre 2011, an. fiscale,Art. 14.-1; loi n&deg; 2016-1116 du 08 d&eacute;cembre 2016, an. fiscale,Art. 5-1.</p>
+<p>14-	Les d&eacute;penses de sant&eacute; engag&eacute;es par les entreprises pour la constitution de bo&icirc;te de pharmacie permettant de faire face aux premiers soins des employ&eacute;s malades, les co&ucirc;ts de traitement du paludisme, de la tuberculose, de l'h&eacute;patite virale, du diab&egrave;te et de l'hypertension art&eacute;rielle dont ces employ&eacute;s sont atteints ainsi que les sommes vers&eacute;es aux mutuelles de sant&eacute; du personnel ou aux compagnies d'assurances, &agrave; leurs courtiers, gestionnaires de portefeuilles, dans le cadre de contrat groupe d'assurances maladie.</p>
+<p>Loi n&deg; 2005-161 du 27 avril 2005, an. fiscale,Art. 12; Loi n&deg; 2012-1179 du 27 d&eacute;cembre 2012, an. fiscale,Art. 8.</p>
+<p>15-	Les r&eacute;mun&eacute;rations vers&eacute;es par l'Institut africain pour le D&eacute;veloppement &eacute;conomique et social, (INADES).</p>
+<p>Loi n&deg; 81-1127 du 30 d&eacute;cembre 1981, an. fiscale,Art. 31.</p>
+<p>16-	Les d&eacute;penses que l'employeur consacre &agrave; la prise en charge des frais de transport en commun du personnel, dans la limite de 20 000 francs par mois et par salari&eacute;.</p>
+<p>17-	Les d&eacute;penses support&eacute;es par l'employeur pour la prise en charge des frais de restauration du personnel dans les cantines de l'entreprise ou en dehors du lieu de travail dans la limite de 30 000 francs par mois et par salari&eacute;.</p>
+<p>Lorsque le service de restauration est offert en dehors des cantines de l'entreprise, le b&eacute;n&eacute;fice de l'exon&eacute;ration est subordonn&eacute; &agrave; la production d'un contrat sign&eacute; entre l'employeur et la structure ext&eacute;rieure de restauration et de la preuve de l'effectivit&eacute; des d&eacute;penses effectu&eacute;es dans ce cadre.</p>
+<p>Ord. n&deg; 2008-381 du 18 d&eacute;cembre 2008, an. fiscale,Art. 20; loi n&deg; 2017-870 du 27 d&eacute;cembre 2017, an. fiscaleArt. 19-1.</p>
+<p>18-Les logements &agrave; caract&egrave;re social de quatre pi&egrave;ces au plus, dont le montant n'exc&egrave;de pas vingt trois millions (23 000 000) de francs hors taxes, mis gratuitement &agrave; la disposition des ouvriers ou agents de ma&icirc;trise par les entreprises agricoles ou agro-industrielles, sur les sites de leurs plantations.</p>
+<p>Loi n&deg; 2014-861 du 22 d&eacute;cembre 2014, an. fiscale,Art.9-1; loi n&deg; 2017-870 du 27 d&eacute;cembre 2017, an. fiscaleArt. 16-1.</p>
+<p>19- Les sommes vers&eacute;es aux travailleurs par les employeurs &agrave; l'occasion des c&eacute;r&eacute;monies de d&eacute;coration ou de distinction, dans la limite d'un montant brut ne pouvant exc&eacute;der 6 mois de salaire hors avantage en nature.</p>
+<p>Loi n&deg; 2017-870 du 27 d&eacute;cembre 2017, an. fiscaleArt. 19-2.</p>
+<p>Si aucun de ces proc&eacute;d&eacute;s n'est applicable, la valeur locative est d&eacute;termin&eacute;e par voie d'appr&eacute;ciation directe : &eacute;valuation de la valeur v&eacute;nale, d&eacute;termination du taux moyen d'int&eacute;r&ecirc;t des placements immobiliers dans la r&eacute;gion consid&eacute;r&eacute;e pour chaque nature de propri&eacute;t&eacute;, application du taux d'int&eacute;r&ecirc;t &agrave; la valeur v&eacute;nale.</p>
+<p>La valeur v&eacute;nale des biens imposables peut &ecirc;tre d&eacute;termin&eacute;e par les services comp&eacute;tents de la Direction g&eacute;n&eacute;rale des Imp&ocirc;ts, par tous moyens, notamment le recours &agrave; des experts immobiliers priv&eacute;s.</p>
+<p>Ord. n&deg; 2011-121 du 22 juin 2011, an. fiscale,Art. 21.</p>
+<p>La valeur locative des terrains &agrave; usage industriel, commercial est d&eacute;termin&eacute;e &agrave; raison de l'usage auquel ils sont affect&eacute;s y compris la valeur locative du sol.</p>
+<BR><BR><BR></div></span><finh23116>
+ 
+</div></div> <!-- wrapper -->
+	  <div id="articleList"><div id="contenu" style='height:auto; background-color:#FFFFCC'>&nbsp;</div>
+      </div><p>&nbsp;</p><p>&nbsp;</p><p>&nbsp;</p><p>&nbsp;</p><p>&nbsp;</p><p>&nbsp;</p><p>&nbsp;</p><p>&nbsp;</p><p>&nbsp;</p><p>&nbsp;</p>
+	  <p>&nbsp;</p><p>&nbsp;</p><p>&nbsp;</p><p>&nbsp;</p><p>&nbsp;</p><p>&nbsp;</p></BODY></HTML>
+	  

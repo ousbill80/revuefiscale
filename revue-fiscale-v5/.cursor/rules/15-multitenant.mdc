@@ -1,0 +1,64 @@
+---
+description: Isolation multi-cabinets — RLS, contexte de tenant, quotas, métrage
+globs: ["backend/plateforme/**", "backend/socle/**", "backend/restitution/**", "migrations/**", "tests/isolation/**"]
+alwaysApply: false
+---
+
+# Multi-cabinets — isolation
+
+Le risque n'est plus « une erreur fiscale » mais « le cabinet A voit les dossiers du cabinet B ».
+C'est l'incident qui tue un produit SaaS.
+
+## Le modèle
+
+Base partagée, isolation par **sécurité au niveau ligne PostgreSQL**. Les tables du domaine
+éditorial — référentiel, corpus, sanctions — sont **communes** et ne portent pas de `tenant_id`.
+Seules les tables du domaine abonné sont cloisonnées.
+
+## Les six conditions — sans elles, RLS est pire que rien
+
+```sql
+ALTER TABLE mission ENABLE ROW LEVEL SECURITY;
+ALTER TABLE mission FORCE  ROW LEVEL SECURITY;   -- s'applique même au propriétaire
+
+CREATE POLICY mission_tenant ON mission
+  USING (tenant_id = current_setting('app.tenant_id', true)::BIGINT);
+```
+
+1. **`FORCE ROW LEVEL SECURITY`** partout — sinon le propriétaire contourne la politique.
+2. Le rôle applicatif n'est **ni superuser, ni propriétaire, ni `BYPASSRLS`**.
+3. **`tenant_id BIGINT NOT NULL`** sur chaque table cloisonnée.
+4. **`SET LOCAL app.tenant_id`, jamais `SET`.** Avec un pool, un `SET` de session survit à la
+   transaction : la connexion recyclée sert le tenant suivant avec le mauvais contexte. C'est la
+   fuite inter-tenants classique.
+5. **Refus par défaut** — contexte absent = zéro ligne, jamais toutes.
+6. **Test d'isolation bloquant** dans la CI : il tente une lecture croisée et vérifie l'échec.
+
+## Le contexte, en pratique
+
+```python
+@contextmanager
+def contexte_tenant(session: Session, tenant_id: int) -> Iterator[None]:
+    # SET LOCAL : la portée est la transaction, pas la connexion
+    session.execute(text("SET LOCAL app.tenant_id = :t"), {"t": str(tenant_id)})
+    yield
+```
+
+Toute route API qui touche le domaine abonné passe par ce contexte. Une route qui l'oublie doit
+échouer, pas retourner des données.
+
+## Quotas et métrage
+
+Chaque appel au modèle est mesuré et rattaché à un tenant, **même quand les tokens sont inclus dans
+l'abonnement**. Sans métrage, la dérive de marge se découvre sur la facture du fournisseur.
+
+- Compteur par tenant et par mois : appels, tokens, coût estimé
+- Plafond par palier d'abonnement, avec alerte à 80 %
+- Cache mutualisé : le corpus est commun, donc une même question posée par vingt cabinets doit
+  toucher le cache, pas déclencher vingt appels
+- Modèle proportionné : classer un libellé de grand livre ne demande pas le modèle le plus cher
+
+## Migrations
+
+Tous les tenants sont sur la même version. Une migration ratée casse tout le monde en même temps.
+`up` **et** `down` obligatoires, testés sur un jeu représentatif avant publication.

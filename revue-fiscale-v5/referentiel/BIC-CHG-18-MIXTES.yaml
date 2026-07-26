@@ -1,0 +1,36 @@
+reference_source: CGI 2026 — doc client 2/5 format pivot (propositions metier)
+date_effet: '2026-01-01'
+effets_croises: []
+identifiant: BIC-CHG-18-MIXTES
+impot: BIC
+reference_legale: CGI 2026, art. 18 (charges mixtes)
+profils_applicables:
+- Entreprises au regime reel
+comptes_declencheurs:
+- '625'
+- '624'
+nature: permanente
+condition_declenchement: reponse(q_mixte) = vrai et reponse(q_montant_mixte) > 0
+conditions_fond: CGI 2026, art. 18 (charges mixtes)
+formule_plafonnement: reponse(q_montant_mixte) / 3
+questions_generees:
+- id: q_mixte
+  texte: Charges mixtes ?
+  type: booleen
+- id: q_montant_mixte
+  texte: Montant charges mixtes ?
+  type: montant
+resultat: (2 * reponse(q_montant_mixte)) / 3
+niveau_risque: moyen
+a_confirmer:
+- date d effet 01/01/2026
+- valeurs issues doc client 5 — a valider metier
+cas_test:
+  soldes:
+    '625': '1'
+  reponses:
+    q_mixte: true
+    q_montant_mixte: '9000000'
+  agregats: {}
+  declenche_attendu: true
+  montant_attendu: '6000000'

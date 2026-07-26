@@ -1,0 +1,8 @@
+{
+  "avertissement": "[DÉMO FICTIF] Balance volontairement déséquilibrée — pour tests de contrôles d'équilibre uniquement. Non opposable.",
+  "lignes": [
+    {"compte": "7011", "libelle": "[FICTIF] Ventes de marchandises", "debit": "0", "credit": "500000000"},
+    {"compte": "6011", "libelle": "[FICTIF] Achats de marchandises", "debit": "200000000", "credit": "0"},
+    {"compte": "5121", "libelle": "[FICTIF] Banque locale", "debit": "50000000", "credit": "0"}
+  ]
+}
