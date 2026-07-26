@@ -9322,3 +9322,36 @@ tr.row-active td {
 .pilotage-badge { margin-left: auto; display: inline-flex; align-items: center; padding: 0.1rem 0.5rem; border: 1px solid transparent; border-radius: 999px; font-size: 0.7rem; font-weight: 800; white-space: nowrap; }
 .pilotage-badge.imminent { background: #fffbeb; color: #92400e; border-color: #fde68a; }
 .pilotage-badge.depasse { background: #fef2f2; color: #b91c1c; border-color: #fecaca; }
+
+/* ── Restitution — note de synthèse de mission (executive summary IA) ── */
+.rest-note-btn { white-space: nowrap; }
+.rest-note-btn:disabled { opacity: 0.6; cursor: default; }
+.rest-note { margin: 0.75rem 0 1rem; padding: 0.85rem 1rem; border: 1px solid var(--line, #e5e7eb); border-radius: 10px; background: var(--surface-soft, #f8fafc); }
+.rest-note-head { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 0.6rem; margin-bottom: 0.55rem; }
+.rest-note-titre { margin: 0; font-size: 0.95rem; font-weight: 800; color: var(--ink, #0f172a); }
+.rest-note-outils { display: inline-flex; flex-wrap: wrap; align-items: center; gap: 0.5rem; }
+.rest-note-version { display: inline-flex; align-items: center; gap: 0.35rem; font-size: 0.78rem; color: var(--ink-soft, #475569); }
+.rest-note-version select { padding: 0.25rem 0.4rem; border: 1px solid var(--line, #e5e7eb); border-radius: 7px; background: var(--surface, #fff); font-size: 0.78rem; color: var(--ink, #0f172a); }
+.rest-note-generer { border: 1px solid var(--accent, #0f766e); background: var(--accent, #0f766e); color: #fff; font-weight: 700; }
+.rest-note-generer:hover:not(:disabled) { background: var(--accent-deep, #115e59); }
+.rest-note-generer:disabled { opacity: 0.65; cursor: default; }
+.rest-note-erreur { margin: 0 0 0.5rem; padding: 0.55rem 0.7rem; border: 1px solid color-mix(in srgb, #b91c1c 35%, transparent); border-radius: 8px; font-size: 0.8rem; color: #991b1b; background: #fef2f2; }
+.rest-note-vide { margin: 0; padding: 0.6rem 0.75rem; border: 1px dashed var(--line, #e5e7eb); border-radius: 8px; font-size: 0.8rem; color: var(--muted, #64748b); background: var(--surface, #fff); }
+.rest-note-corps { display: grid; gap: 0.7rem; }
+.rest-note-bloc { padding: 0.6rem 0.75rem; border: 1px solid var(--line-soft, #f1f5f9); border-radius: 8px; background: var(--surface, #fff); }
+.rest-note-bloc h4 { margin: 0 0 0.4rem; font-size: 0.76rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.04em; color: var(--ink-soft, #475569); }
+.rest-note-bloc p { margin: 0; font-size: 0.85rem; color: var(--ink, #0f172a); }
+.rest-note-constats { list-style: none; margin: 0; padding: 0; display: grid; gap: 0.4rem; }
+.rest-note-constat { display: flex; flex-wrap: wrap; align-items: baseline; gap: 0.45rem 0.6rem; padding: 0.45rem 0.6rem; border: 1px solid var(--line-soft, #f1f5f9); border-radius: 8px; background: var(--surface-soft, #f8fafc); font-size: 0.83rem; }
+.rest-note-constat.haute { border-color: #fecaca; background: #fef2f2; }
+.rest-note-constat.moyenne { border-color: #fde68a; background: #fffbeb; }
+.rest-note-gravite { flex: none; padding: 0.1rem 0.5rem; border-radius: 999px; font-size: 0.66rem; font-weight: 800; letter-spacing: 0.03em; white-space: nowrap; border: 1px solid var(--line, #e5e7eb); background: var(--surface, #fff); color: var(--ink-soft, #475569); }
+.rest-note-gravite.haute { background: #fee2e2; color: #b91c1c; border-color: #fecaca; }
+.rest-note-gravite.moyenne { background: #fef3c7; color: #92400e; border-color: #fde68a; }
+.rest-note-gravite.faible { background: #ecfdf5; color: #047857; border-color: #a7f3d0; }
+.rest-note-regle { flex: none; padding: 0.05rem 0.45rem; border: 1px solid var(--accent, #0f766e); border-radius: 5px; background: var(--surface, #fff); color: var(--accent-deep, #115e59); font-family: ui-monospace, monospace; font-size: 0.74rem; font-weight: 700; cursor: pointer; }
+.rest-note-regle:hover { background: color-mix(in srgb, var(--accent, #0f766e) 8%, var(--surface, #fff)); }
+.rest-note-resume { flex: 1 1 14rem; min-width: 0; color: var(--ink, #0f172a); overflow-wrap: anywhere; }
+.rest-note-montant { margin-left: auto; font-variant-numeric: tabular-nums; font-weight: 700; white-space: nowrap; color: var(--ink, #0f172a); }
+.rest-note-liste { list-style: disc; margin: 0; padding: 0 0 0 1.1rem; display: grid; gap: 0.25rem; font-size: 0.83rem; color: var(--ink, #0f172a); }
+.rest-note-mention { margin: 0; font-size: 0.72rem; font-style: italic; color: var(--muted, #64748b); }

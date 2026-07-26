@@ -1460,6 +1460,104 @@ def api_obtenir_synthese_client(
         raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail=str(e)) from e
 
 
+# ── Note de synthèse de mission (executive summary IA) ────────────
+
+
+@router.post(
+    "/missions/{mission_id}/note-synthese",
+    status_code=status.HTTP_201_CREATED,
+)
+def api_generer_note_synthese(
+    mission_id: int,
+    utilisateur: UtilisateurDep,
+    session: Annotated[Session, Depends(session_abonne)],
+) -> dict:
+    """Génère une nouvelle version de la note de synthèse de mission.
+
+    Anti-rafale : refusée (409) si une génération est déjà en cours.
+    404 si mission hors tenant (RLS).
+    """
+    from backend.moteur.journal import append_journal
+    from backend.plateforme.note_synthese import (
+        ErreurNoteSynthese,
+        generer_note,
+    )
+
+    exiger_capacite(utilisateur, "lire")
+    try:
+        note = generer_note(
+            session,
+            utilisateur.tenant_id,
+            mission_id,
+            auteur=utilisateur.email,
+        )
+    except ErreurNoteSynthese as e:
+        msg = str(e)
+        if "introuvable" in msg:
+            code = status.HTTP_404_NOT_FOUND
+        elif "déjà en cours" in msg:
+            code = status.HTTP_409_CONFLICT
+        else:
+            code = status.HTTP_400_BAD_REQUEST
+        raise HTTPException(status_code=code, detail=msg) from e
+    append_journal(
+        session,
+        tenant_id=utilisateur.tenant_id,
+        mission_id=mission_id,
+        acteur=utilisateur.email,
+        action="generation_note_synthese",
+        charge_utile={
+            "note_id": note["id"],
+            "version": note["version"],
+            "statut": note["statut"],
+        },
+    )
+    return note
+
+
+@router.get("/missions/{mission_id}/notes-synthese")
+def api_lister_notes_synthese(
+    mission_id: int,
+    utilisateur: UtilisateurDep,
+    session: Annotated[Session, Depends(session_abonne)],
+) -> list[dict]:
+    from backend.plateforme.note_synthese import (
+        ErreurNoteSynthese,
+        lister_notes,
+    )
+
+    exiger_capacite(utilisateur, "lire")
+    try:
+        return lister_notes(session, utilisateur.tenant_id, mission_id)
+    except ErreurNoteSynthese as e:
+        raise HTTPException(
+            status_code=status.HTTP_404_NOT_FOUND, detail=str(e)
+        ) from e
+
+
+@router.get("/missions/{mission_id}/notes-synthese/{version}")
+def api_obtenir_note_synthese(
+    mission_id: int,
+    version: int,
+    utilisateur: UtilisateurDep,
+    session: Annotated[Session, Depends(session_abonne)],
+) -> dict:
+    from backend.plateforme.note_synthese import (
+        ErreurNoteSynthese,
+        obtenir_note,
+    )
+
+    exiger_capacite(utilisateur, "lire")
+    try:
+        return obtenir_note(
+            session, utilisateur.tenant_id, mission_id, version
+        )
+    except ErreurNoteSynthese as e:
+        raise HTTPException(
+            status_code=status.HTTP_404_NOT_FOUND, detail=str(e)
+        ) from e
+
+
 @router.post("/risques", status_code=status.HTTP_201_CREATED)
 def api_creer_risque(
     corps: RisqueIn,

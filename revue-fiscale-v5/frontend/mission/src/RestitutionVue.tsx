@@ -105,6 +105,46 @@ type RevueAnalytiqueOut = {
 
 const REVUE_ANALYTIQUE_MAX_LIGNES = 30;
 
+/* Note de synthèse de mission — executive summary IA versionné. */
+type NoteSyntheseVersion = {
+  id: number;
+  mission_id: number;
+  version: number;
+  statut: "en_cours" | "disponible" | "echec";
+  modele: string | null;
+  erreur: string | null;
+  auteur: string | null;
+  cree_le: string | null;
+};
+
+type NoteConstat = {
+  regle_id: string;
+  resume: string;
+  montant: string | null;
+  gravite: "faible" | "moyenne" | "haute";
+};
+
+type NoteContenu = {
+  contexte: string;
+  constats: NoteConstat[];
+  exposition: string;
+  points_attention: string[];
+  recommandations: string[];
+};
+
+type NoteSyntheseDetail = NoteSyntheseVersion & {
+  contenu: NoteContenu | null;
+};
+
+function libelleGraviteNote(g: string): string {
+  const m: Record<string, string> = {
+    haute: "Gravité haute",
+    moyenne: "Gravité moyenne",
+    faible: "Gravité faible",
+  };
+  return m[g] ?? g;
+}
+
 function badgeAnalytique(
   classement: LigneRevueAnalytique["classement"],
 ): { label: string; classe: string } | null {
@@ -309,6 +349,140 @@ export function RestitutionVue({
   const [cadrageErr, setCadrageErr] = useState<string | null>(null);
   const [lettreBusy, setLettreBusy] = useState(false);
   const [lettreErr, setLettreErr] = useState<string | null>(null);
+  const [noteOuverte, setNoteOuverte] = useState(false);
+  const [noteVersions, setNoteVersions] = useState<NoteSyntheseVersion[]>([]);
+  const [noteVersionSel, setNoteVersionSel] = useState<number | null>(null);
+  const [noteDetail, setNoteDetail] = useState<NoteSyntheseDetail | null>(
+    null,
+  );
+  const [noteBusy, setNoteBusy] = useState(false);
+  const [noteErr, setNoteErr] = useState<string | null>(null);
+  const notePollRef = useRef(false);
+
+  const chargerNoteVersions = async (): Promise<NoteSyntheseVersion[]> => {
+    if (!jeton || !r.mission_id) return [];
+    const liste = await api<NoteSyntheseVersion[]>(
+      `/api/v1/missions/${r.mission_id}/notes-synthese`,
+      { jeton },
+    );
+    const versions = Array.isArray(liste) ? liste : [];
+    setNoteVersions(versions);
+    return versions;
+  };
+
+  /** Polling 5 s / 90 s (même cadence que la synthèse Data Room). */
+  async function surveillerNote() {
+    if (notePollRef.current || !jeton || !r.mission_id) return;
+    notePollRef.current = true;
+    const idsTerminesConnus = new Set(
+      noteVersions.filter((v) => v.statut !== "en_cours").map((v) => v.id),
+    );
+    const debut = Date.now();
+    try {
+      while (Date.now() - debut < 90_000) {
+        await new Promise((res) => setTimeout(res, 5_000));
+        let liste: NoteSyntheseVersion[] = [];
+        try {
+          liste = await api<NoteSyntheseVersion[]>(
+            `/api/v1/missions/${r.mission_id}/notes-synthese`,
+            { jeton },
+          );
+        } catch {
+          continue;
+        }
+        const nouvelle = (Array.isArray(liste) ? liste : []).find(
+          (v) => !idsTerminesConnus.has(v.id) && v.statut !== "en_cours",
+        );
+        if (nouvelle) {
+          setNoteVersions(liste);
+          setNoteVersionSel(nouvelle.version);
+          return;
+        }
+      }
+    } finally {
+      notePollRef.current = false;
+    }
+  }
+
+  async function genererNote() {
+    if (!jeton || !r.mission_id || noteBusy) return;
+    setNoteBusy(true);
+    setNoteErr(null);
+    try {
+      const note = await api<NoteSyntheseDetail>(
+        `/api/v1/missions/${r.mission_id}/note-synthese`,
+        { method: "POST", jeton },
+      );
+      await chargerNoteVersions();
+      setNoteVersionSel(note.version);
+      if (note.statut === "echec" && note.erreur) {
+        setNoteErr(note.erreur);
+      }
+    } catch (e) {
+      setNoteErr(e instanceof Error ? e.message : String(e));
+      void surveillerNote();
+    } finally {
+      setNoteBusy(false);
+    }
+  }
+
+  useEffect(() => {
+    if (!noteOuverte || !jeton || !r.mission_id) return;
+    let annule = false;
+    void (async () => {
+      try {
+        const versions = await chargerNoteVersions();
+        if (annule) return;
+        const derniere = versions.find((v) => v.statut === "disponible");
+        setNoteVersionSel((sel) => sel ?? derniere?.version ?? null);
+      } catch (e) {
+        if (!annule) {
+          setNoteErr(e instanceof Error ? e.message : String(e));
+        }
+      }
+    })();
+    return () => {
+      annule = true;
+    };
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [noteOuverte, jeton, r.mission_id]);
+
+  useEffect(() => {
+    if (!noteOuverte || !jeton || !r.mission_id || noteVersionSel == null) {
+      setNoteDetail(null);
+      return;
+    }
+    let annule = false;
+    void (async () => {
+      try {
+        const detail = await api<NoteSyntheseDetail>(
+          `/api/v1/missions/${r.mission_id}/notes-synthese/${noteVersionSel}`,
+          { jeton },
+        );
+        if (!annule) setNoteDetail(detail);
+      } catch (e) {
+        if (!annule) {
+          setNoteDetail(null);
+          setNoteErr(e instanceof Error ? e.message : String(e));
+        }
+      }
+    })();
+    return () => {
+      annule = true;
+    };
+  }, [noteOuverte, jeton, r.mission_id, noteVersionSel]);
+
+  function allerRegleNote(regleId: string) {
+    const el = document.getElementById(`rest-regle-${regleId}`);
+    if (el) {
+      el.scrollIntoView({ behavior: scrollPref(), block: "center" });
+    } else {
+      setSectionActive("risques");
+      rootRef.current
+        ?.querySelector("#rest-risques")
+        ?.scrollIntoView({ behavior: scrollPref(), block: "start" });
+    }
+  }
 
   async function telechargerLettreMission() {
     if (!jeton || !r.mission_id || lettreBusy) return;
@@ -913,6 +1087,17 @@ export function RestitutionVue({
               {lettreErr}
             </span>
           )}
+          <Tooltip label="Note de synthèse de mission (executive summary IA) pour l'associé signataire — versionnée, chaque constat cite sa règle. Consultative : l'humain valide.">
+            <button
+              type="button"
+              className="btn btn-ghost btn-sm rest-note-btn"
+              onClick={() => setNoteOuverte((o) => !o)}
+              disabled={!jeton}
+              aria-expanded={noteOuverte}
+            >
+              Note de synthèse
+            </button>
+          </Tooltip>
           <Tooltip label={PROCESS_TIPS.audit}>
             <button
               type="button"
@@ -964,6 +1149,163 @@ export function RestitutionVue({
           )}
         </div>
       </div>
+
+      {noteOuverte && (
+        <section
+          className="rest-note"
+          aria-label="Note de synthèse de mission"
+        >
+          <div className="rest-note-head">
+            <h3 className="rest-note-titre label-with-tip">
+              Note de synthèse
+              <InfoTip
+                label="Executive summary généré par IA à partir des seules données de la mission : chaque constat cite la règle (regle_id) dont il provient — rien n'est inventé. Document consultatif versionné, à relire avant signature."
+                ariaLabel="Aide : note de synthèse"
+              />
+            </h3>
+            <div className="rest-note-outils">
+              {noteVersions.length > 0 && (
+                <label className="rest-note-version">
+                  Version{" "}
+                  <select
+                    value={noteVersionSel ?? ""}
+                    onChange={(e) =>
+                      setNoteVersionSel(
+                        e.target.value ? Number(e.target.value) : null,
+                      )
+                    }
+                  >
+                    {noteVersions.map((v) => (
+                      <option key={v.id} value={v.version}>
+                        v{v.version} ·{" "}
+                        {v.statut === "disponible"
+                          ? "disponible"
+                          : v.statut === "echec"
+                            ? "échec"
+                            : "en cours"}
+                        {v.cree_le
+                          ? ` · ${fmtHorodatage(v.cree_le)}`
+                          : ""}
+                      </option>
+                    ))}
+                  </select>
+                </label>
+              )}
+              <button
+                type="button"
+                className="btn btn-sm rest-note-generer"
+                onClick={() => void genererNote()}
+                disabled={noteBusy || !jeton}
+              >
+                {noteBusy ? "Génération…" : "Générer"}
+              </button>
+              <button
+                type="button"
+                className="btn btn-ghost btn-sm"
+                onClick={() => setNoteOuverte(false)}
+              >
+                Fermer
+              </button>
+            </div>
+          </div>
+          {noteErr && (
+            <p className="rest-note-erreur" role="alert">
+              {noteErr}
+            </p>
+          )}
+          {noteVersions.length === 0 && !noteBusy && !noteErr && (
+            <p className="rest-note-vide">
+              Aucune note générée pour cette mission. Cliquez sur « Générer »
+              pour produire la première version (quelques secondes).
+            </p>
+          )}
+          {noteDetail?.statut === "echec" && (
+            <p className="rest-note-erreur" role="alert">
+              Génération v{noteDetail.version} en échec
+              {noteDetail.erreur ? ` : ${noteDetail.erreur}` : "."}
+            </p>
+          )}
+          {noteDetail?.statut === "disponible" && noteDetail.contenu && (
+            <div className="rest-note-corps">
+              {noteDetail.contenu.contexte && (
+                <div className="rest-note-bloc">
+                  <h4>Contexte et périmètre</h4>
+                  <p>{noteDetail.contenu.contexte}</p>
+                </div>
+              )}
+              <div className="rest-note-bloc">
+                <h4>Principaux constats</h4>
+                {noteDetail.contenu.constats.length === 0 ? (
+                  <p className="rest-note-vide">
+                    Aucun constat sourcé par une règle dans cette version.
+                  </p>
+                ) : (
+                  <ul className="rest-note-constats">
+                    {noteDetail.contenu.constats.map((c, i) => (
+                      <li
+                        key={`${c.regle_id}-${i}`}
+                        className={`rest-note-constat ${c.gravite}`}
+                      >
+                        <span
+                          className={`rest-note-gravite ${c.gravite}`}
+                        >
+                          {libelleGraviteNote(c.gravite)}
+                        </span>
+                        <button
+                          type="button"
+                          className="rest-note-regle"
+                          onClick={() => allerRegleNote(c.regle_id)}
+                          title="Voir la conclusion de cette règle dans la restitution"
+                        >
+                          {c.regle_id}
+                        </button>
+                        <span className="rest-note-resume">{c.resume}</span>
+                        {c.montant && (
+                          <span className="rest-note-montant">
+                            {fmtMontant(c.montant)} FCFA
+                          </span>
+                        )}
+                      </li>
+                    ))}
+                  </ul>
+                )}
+              </div>
+              {noteDetail.contenu.exposition && (
+                <div className="rest-note-bloc">
+                  <h4>Exposition estimée</h4>
+                  <p>{noteDetail.contenu.exposition}</p>
+                </div>
+              )}
+              {noteDetail.contenu.points_attention.length > 0 && (
+                <div className="rest-note-bloc">
+                  <h4>Points d'attention</h4>
+                  <ul className="rest-note-liste">
+                    {noteDetail.contenu.points_attention.map((p, i) => (
+                      <li key={i}>{p}</li>
+                    ))}
+                  </ul>
+                </div>
+              )}
+              {noteDetail.contenu.recommandations.length > 0 && (
+                <div className="rest-note-bloc">
+                  <h4>Recommandations prioritaires</h4>
+                  <ul className="rest-note-liste">
+                    {noteDetail.contenu.recommandations.map((p, i) => (
+                      <li key={i}>{p}</li>
+                    ))}
+                  </ul>
+                </div>
+              )}
+              <p className="rest-note-mention">
+                Note générée par IA (v{noteDetail.version}
+                {noteDetail.auteur ? ` · ${noteDetail.auteur}` : ""}) à
+                partir des seules données de la mission — document
+                consultatif, à relire et valider avant diffusion.
+              </p>
+            </div>
+          )}
+        </section>
+      )}
 
       <header className="rest-hero">
         <p className="rest-eyebrow">Dossier de revue fiscale</p>
