@@ -64,6 +64,14 @@ def test_epinglage_stable_apres_nouvelle_publication(session):
             ),
             {"t": tid},
         ).scalar_one()
+        # Quota du mois courant : requis depuis l'enforcement a la creation
+        session.execute(
+            text(
+                "INSERT INTO quota (tenant_id, periode, missions_incluses) "
+                "VALUES (:t, date_trunc('month', current_date)::date, 100)"
+            ),
+            {"t": tid},
+        )
     effacer_contexte_tenant(session)
 
     mid = creer_mission(

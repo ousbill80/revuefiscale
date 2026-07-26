@@ -404,7 +404,6 @@ class MissionStatutOut(BaseModel):
     statut: str
     statut_precedent: str
     inchange: bool = False
-    points_ouverts_crees: int = 0
     risques_crees: int = 0
 
 
@@ -508,6 +507,7 @@ def api_lettre_mission_docx(
         generer_lettre_mission,
     )
 
+    exiger_capacite(utilisateur, "lire")
     try:
         contenu, nom_fichier = generer_lettre_mission(
             session, utilisateur.tenant_id, mission_id
@@ -962,6 +962,8 @@ def api_point_ouvert_depuis_conclusion(
 
 
 # ── Points ouverts (legacy lecture — hors calcul fiscal) ───────────
+# GET encore consommé par le frontend ; POST/PATCH gardés en 410 pour
+# signaler la migration vers /risques aux clients API existants.
 
 
 @router.get("/points-ouverts")
@@ -1129,6 +1131,7 @@ def api_rapport_risques_pdf(
         exporter_rapport_risques_pdf,
     )
 
+    exiger_capacite(utilisateur, "lire")
     try:
         nom, contenu = exporter_rapport_risques_pdf(
             session, utilisateur.tenant_id, contribuable_id

@@ -394,16 +394,3 @@ def patcher_tache(
         ).mappings().one()
         return _serialiser(dict(rows))
 
-
-def creer_points_ouverts_depuis_anomalies(
-    session: Session,
-    tenant_id: int,
-    mission_id: int,
-) -> int:
-    """DEPRECATED (R4) — ne plus appeler à la clôture.
-
-    Conservée pour compatibilité import ; retourne toujours 0.
-    La source N+1 est ``creer_risques_depuis_anomalies``.
-    """
-    del session, tenant_id, mission_id
-    return 0

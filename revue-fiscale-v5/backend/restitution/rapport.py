@@ -166,10 +166,11 @@ def section_fiabilite_source(
         badge = "ALERTE" if statut == "alerte" else "OK"
         libelle = str(c.get("libelle") or c.get("code") or "—")
         compteur = int(c.get("compteur") or 0)
-        if compteur > 0:
-            occ = f" — {compteur} occurrence{'s' if compteur > 1 else ''}"
-        else:
-            occ = ""
+        occ = (
+            f" — {compteur} occurrence{'s' if compteur > 1 else ''}"
+            if compteur > 0
+            else ""
+        )
         lignes.append(f"- [{badge}] {libelle}{occ}")
     lignes.append("")
     return lignes

@@ -170,7 +170,7 @@ def _trous_sequence(lignes: list[EcritureFec]) -> dict[str, Any]:
     compteur = 0
     for journal in sorted(numeros):
         suite = sorted(numeros[journal])
-        for precedent, suivant in zip(suite, suite[1:]):
+        for precedent, suivant in zip(suite, suite[1:], strict=False):
             if suivant - precedent > 1:
                 compteur += 1
                 if len(echantillon) < _MAX_ECHANTILLON:

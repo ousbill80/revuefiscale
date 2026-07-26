@@ -264,7 +264,6 @@ def test_cloture_cree_risque_depuis_anomalie(session, client_cab):
     )
     assert st.status_code == 200, st.text
     assert st.json().get("risques_crees", 0) >= 1
-    assert st.json().get("points_ouverts_crees", 0) == 0
 
     listed = client.get(
         f"/api/v1/contribuables/{cid}/risques", headers=h

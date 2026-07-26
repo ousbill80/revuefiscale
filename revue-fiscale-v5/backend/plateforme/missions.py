@@ -648,7 +648,6 @@ def changer_statut_mission(
             "statut": cible,
             "statut_precedent": actuel,
             "inchange": False,
-            "points_ouverts_crees": 0,
             "risques_crees": 0,
         }
 
@@ -660,7 +659,6 @@ def changer_statut_mission(
             session, tenant_id, mission_id
         )
         result["risques_crees"] = nb_r
-        result["points_ouverts_crees"] = 0
 
         from backend.plateforme.memoire_client import alimenter_memoire
 

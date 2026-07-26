@@ -1,7 +1,7 @@
 """Points ouverts inter-missions — legacy lecture (hors calcul fiscal).
 
-Écritures API coupées (410 → /risques). Les stubs creer/patch lèvent
-explicitement pour éviter toute réouverture accidentelle.
+Écritures API coupées (410 → /risques) directement dans routes.py ;
+ce module ne conserve que la lecture legacy.
 """
 from __future__ import annotations
 
@@ -14,13 +14,9 @@ from backend.plateforme.contexte import contexte_tenant
 
 STATUTS_POINT = frozenset({"ouvert", "repris", "clos"})
 
-MSG_ECRITURE_DEPRECATED = (
-    "point_ouvert écriture dépréciée après R4 — utiliser /api/v1/risques"
-)
-
 
 class ErreurPointOuvert(Exception):
-    """Echec lecture / écriture refusée point ouvert."""
+    """Echec lecture point ouvert."""
 
 
 def _serialiser(row: dict[str, Any]) -> dict[str, Any]:
@@ -49,22 +45,6 @@ def _serialiser(row: dict[str, Any]) -> dict[str, Any]:
         "cree_le": cree.isoformat() if hasattr(cree, "isoformat") else cree,
         "maj_le": maj.isoformat() if hasattr(maj, "isoformat") else maj,
     }
-
-
-def _lire(
-    session: Session, point_id: int
-) -> dict[str, Any]:
-    row = session.execute(
-        text(
-            "SELECT id, contribuable_id, mission_source_id, conclusion_id, "
-            "texte, statut, mission_reprise_id, cree_le, maj_le "
-            "FROM point_ouvert WHERE id = :id"
-        ),
-        {"id": point_id},
-    ).mappings().one_or_none()
-    if row is None:
-        raise ErreurPointOuvert(f"point_ouvert {point_id} introuvable")
-    return _serialiser(dict(row))
 
 
 def lister_points_ouverts(
@@ -101,44 +81,3 @@ def lister_points_ouverts(
     with contexte_tenant(session, tenant_id):
         rows = session.execute(text(" ".join(clauses)), params).mappings().all()
         return [_serialiser(dict(r)) for r in rows]
-
-
-def creer_point_ouvert(
-    session: Session,
-    tenant_id: int,
-    *,
-    contribuable_id: int,
-    texte: str,
-    mission_source_id: int | None = None,
-    conclusion_id: int | None = None,
-    statut: str = "ouvert",
-) -> dict[str, Any]:
-    """DEPRECATED — écriture refusée (API 410)."""
-    del session, tenant_id, contribuable_id, texte
-    del mission_source_id, conclusion_id, statut
-    raise ErreurPointOuvert(MSG_ECRITURE_DEPRECATED)
-
-
-def creer_point_ouvert_depuis_conclusion(
-    session: Session,
-    tenant_id: int,
-    mission_id: int,
-    conclusion_id: int,
-) -> dict[str, Any]:
-    """DEPRECATED — écrire via POST /risques."""
-    del session, tenant_id, mission_id, conclusion_id
-    raise ErreurPointOuvert(MSG_ECRITURE_DEPRECATED)
-
-
-def patcher_point_ouvert(
-    session: Session,
-    tenant_id: int,
-    point_id: int,
-    *,
-    texte: object | None = ...,
-    statut: object | None = ...,
-    mission_reprise_id: object | None = ...,
-) -> dict[str, Any]:
-    """DEPRECATED — écriture refusée (API 410)."""
-    del session, tenant_id, point_id, texte, statut, mission_reprise_id
-    raise ErreurPointOuvert(MSG_ECRITURE_DEPRECATED)

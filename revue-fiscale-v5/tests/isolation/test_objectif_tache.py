@@ -272,7 +272,6 @@ def test_cloture_cree_points_ouverts_anomalies(session, client_cabinet):
     )
     assert st.status_code == 200, st.text
     body = st.json()
-    assert body.get("points_ouverts_crees", 0) == 0
     assert "risques_crees" in body
 
     with contexte_tenant(session, tid):

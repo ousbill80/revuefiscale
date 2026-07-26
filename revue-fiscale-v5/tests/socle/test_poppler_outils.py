@@ -13,6 +13,14 @@ def test_etat_poppler_structure():
 
 
 def test_messages_poppler_non_vides():
-    assert "poppler" in poppler_outils.MESSAGE_PDFTOTEXT_ABSENT.casefold()
-    assert "pdftoppm" in poppler_outils.MESSAGE_PDFTOPPM_ABSENT.casefold()
-    assert "vision" in poppler_outils.MESSAGE_VISION_SANS_IMAGE.casefold()
+    # Messages destinés à l'utilisateur final : pas de jargon technique
+    # (poppler/pdftotext/pdftoppm), mais toujours une piste de repli.
+    for msg in (
+        poppler_outils.MESSAGE_PDFTOTEXT_ABSENT,
+        poppler_outils.MESSAGE_PDFTOPPM_ABSENT,
+        poppler_outils.MESSAGE_VISION_SANS_IMAGE,
+    ):
+        assert msg.strip()
+        assert "manuellement" in msg.casefold()
+    assert "pdf" in poppler_outils.MESSAGE_PDFTOTEXT_ABSENT.casefold()
+    assert "pdf" in poppler_outils.MESSAGE_PDFTOPPM_ABSENT.casefold()

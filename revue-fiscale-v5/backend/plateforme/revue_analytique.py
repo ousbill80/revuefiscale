@@ -99,10 +99,9 @@ def comparer_soldes(
         solde_n = n[compte]["solde"] if present_n else Decimal("0")
         solde_n1 = n1[compte]["solde"] if present_n1 else Decimal("0")
         variation = solde_n - solde_n1
-        if solde_n1 != 0:
-            variation_pct = (variation / abs(solde_n1)) * 100
-        else:
-            variation_pct = None
+        variation_pct = (
+            (variation / abs(solde_n1)) * 100 if solde_n1 != 0 else None
+        )
         if variation > 0:
             sens = "hausse"
         elif variation < 0:
