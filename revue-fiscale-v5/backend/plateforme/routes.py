@@ -568,6 +568,52 @@ def api_demande_renseignements_docx(
     )
 
 
+@router.get("/missions/{mission_id}/courrier-relance.docx")
+def api_courrier_relance_docx(
+    mission_id: int,
+    utilisateur: UtilisateurDep,
+    session: Annotated[Session, Depends(session_abonne)],
+) -> Response:
+    """Courrier de relance .docx — items du suivi encore en attente.
+
+    404 si mission hors tenant (RLS) ; 409 si aucun item en attente (la
+    relance est alors sans objet).
+    """
+    from backend.moteur.journal import append_journal
+    from backend.plateforme.courrier_relance import (
+        ErreurAucunItemEnAttente,
+        ErreurCourrierIntrouvable,
+        generer_courrier_relance,
+    )
+
+    exiger_capacite(utilisateur, "lire")
+    try:
+        contenu, nom_fichier, stats = generer_courrier_relance(
+            session, utilisateur.tenant_id, mission_id
+        )
+    except ErreurCourrierIntrouvable as e:
+        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail=str(e)) from e
+    except ErreurAucunItemEnAttente as e:
+        raise HTTPException(status_code=status.HTTP_409_CONFLICT, detail=str(e)) from e
+    append_journal(
+        session,
+        tenant_id=utilisateur.tenant_id,
+        mission_id=mission_id,
+        acteur=utilisateur.email,
+        action="telechargement_courrier_relance",
+        charge_utile=dict(stats),
+    )
+    return Response(
+        content=contenu,
+        media_type=(
+            "application/vnd.openxmlformats-officedocument.wordprocessingml.document"
+        ),
+        headers={
+            "Content-Disposition": f'attachment; filename="{nom_fichier}"'
+        },
+    )
+
+
 @router.get("/missions/{mission_id}/dossier-travail.zip")
 def api_dossier_travail_zip(
     mission_id: int,

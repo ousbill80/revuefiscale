@@ -448,6 +448,8 @@ export function RestitutionVue({
   const [suiviErr, setSuiviErr] = useState<string | null>(null);
   const [suiviBusyCle, setSuiviBusyCle] = useState<string | null>(null);
   const [suiviNotes, setSuiviNotes] = useState<Record<string, string>>({});
+  const [relanceBusy, setRelanceBusy] = useState(false);
+  const [relanceErr, setRelanceErr] = useState<string | null>(null);
   const [ctrlClotureOuvert, setCtrlClotureOuvert] = useState(false);
   const [ctrlCloture, setCtrlCloture] = useState<ControleClotureOut | null>(
     null,
@@ -803,6 +805,34 @@ export function RestitutionVue({
       );
     } finally {
       setDemandeBusy(false);
+    }
+  }
+
+  async function telechargerCourrierRelance() {
+    if (!jeton || !r.mission_id || relanceBusy) return;
+    setRelanceBusy(true);
+    setRelanceErr(null);
+    try {
+      const denom = (
+        r.identification?.contribuable_denomination || "client"
+      )
+        .normalize("NFKD")
+        .replace(/[\u0300-\u036f]/g, "")
+        .replace(/[^A-Za-z0-9]+/g, "_")
+        .replace(/^_+|_+$/g, "")
+        .toUpperCase() || "CLIENT";
+      const exo = r.identification?.exercice ?? "exercice";
+      await telecharger(
+        `/api/v1/missions/${r.mission_id}/courrier-relance.docx`,
+        jeton,
+        `relance_${denom}_${exo}.docx`,
+      );
+    } catch (e) {
+      setRelanceErr(
+        e instanceof Error ? e.message : "téléchargement impossible",
+      );
+    } finally {
+      setRelanceBusy(false);
     }
   }
 
@@ -1731,6 +1761,23 @@ export function RestitutionVue({
                   {suivi.synthese.a_relancer > 0
                     ? ` · ${suivi.synthese.a_relancer} à relancer`
                     : ""}
+                </span>
+              )}
+              {suivi && suivi.synthese.en_attente > 0 && (
+                <Tooltip label="Courrier de relance DOCX listant les éléments toujours en attente, avec nouveau délai de 8 jours">
+                  <button
+                    type="button"
+                    className="btn btn-ghost btn-sm rest-relance-btn"
+                    onClick={() => void telechargerCourrierRelance()}
+                    disabled={relanceBusy || !jeton}
+                  >
+                    {relanceBusy ? "Relance…" : "Courrier de relance"}
+                  </button>
+                </Tooltip>
+              )}
+              {relanceErr && (
+                <span className="rest-lettre-err" role="alert">
+                  {relanceErr}
                 </span>
               )}
               <button
