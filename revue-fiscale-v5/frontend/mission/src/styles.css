@@ -9355,3 +9355,8 @@ tr.row-active td {
 .rest-note-montant { margin-left: auto; font-variant-numeric: tabular-nums; font-weight: 700; white-space: nowrap; color: var(--ink, #0f172a); }
 .rest-note-liste { list-style: disc; margin: 0; padding: 0 0 0 1.1rem; display: grid; gap: 0.25rem; font-size: 0.83rem; color: var(--ink, #0f172a); }
 .rest-note-mention { margin: 0; font-size: 0.72rem; font-style: italic; color: var(--muted, #64748b); }
+
+/* ── Commentaire IA de revue analytique (réutilise rest-note-*) ── */
+.rest-comana { margin: 0.6rem 0 0.85rem; }
+.rest-comana-explication { align-items: flex-start; }
+.rest-comana-question { flex: 1 1 100%; padding: 0.4rem 0.55rem; border-left: 3px solid var(--accent, #0f766e); border-radius: 0 6px 6px 0; background: color-mix(in srgb, var(--accent, #0f766e) 7%, var(--surface, #fff)); font-size: 0.8rem; font-weight: 600; color: var(--accent-deep, #115e59); }

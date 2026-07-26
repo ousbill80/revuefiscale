@@ -136,6 +136,35 @@ type NoteSyntheseDetail = NoteSyntheseVersion & {
   contenu: NoteContenu | null;
 };
 
+/* Commentaire IA de revue analytique — versionné par mission. */
+type CommentaireAnalytiqueVersion = {
+  id: number;
+  mission_id: number;
+  version: number;
+  statut: "en_cours" | "disponible" | "echec";
+  modele: string | null;
+  erreur: string | null;
+  auteur: string | null;
+  cree_le: string | null;
+};
+
+type CommentaireExplication = {
+  poste: string;
+  hypothese_explicative: string;
+  question_a_poser_au_client: string;
+  gravite: "faible" | "moyenne" | "haute";
+};
+
+type CommentaireContenu = {
+  resume: string;
+  explications: CommentaireExplication[];
+  alertes_coherence: string[];
+};
+
+type CommentaireAnalytiqueDetail = CommentaireAnalytiqueVersion & {
+  contenu: CommentaireContenu | null;
+};
+
 function libelleGraviteNote(g: string): string {
   const m: Record<string, string> = {
     haute: "Gravité haute",
@@ -358,6 +387,138 @@ export function RestitutionVue({
   const [noteBusy, setNoteBusy] = useState(false);
   const [noteErr, setNoteErr] = useState<string | null>(null);
   const notePollRef = useRef(false);
+  const [comAnaOuvert, setComAnaOuvert] = useState(false);
+  const [comAnaVersions, setComAnaVersions] = useState<
+    CommentaireAnalytiqueVersion[]
+  >([]);
+  const [comAnaVersionSel, setComAnaVersionSel] = useState<number | null>(
+    null,
+  );
+  const [comAnaDetail, setComAnaDetail] =
+    useState<CommentaireAnalytiqueDetail | null>(null);
+  const [comAnaBusy, setComAnaBusy] = useState(false);
+  const [comAnaErr, setComAnaErr] = useState<string | null>(null);
+  const comAnaPollRef = useRef(false);
+
+  const chargerComAnaVersions = async (): Promise<
+    CommentaireAnalytiqueVersion[]
+  > => {
+    if (!jeton || !r.mission_id) return [];
+    const liste = await api<CommentaireAnalytiqueVersion[]>(
+      `/api/v1/missions/${r.mission_id}/commentaires-analytiques`,
+      { jeton },
+    );
+    const versions = Array.isArray(liste) ? liste : [];
+    setComAnaVersions(versions);
+    return versions;
+  };
+
+  /** Polling 5 s / 90 s (même cadence que la note de synthèse). */
+  async function surveillerComAna() {
+    if (comAnaPollRef.current || !jeton || !r.mission_id) return;
+    comAnaPollRef.current = true;
+    const idsTerminesConnus = new Set(
+      comAnaVersions.filter((v) => v.statut !== "en_cours").map((v) => v.id),
+    );
+    const debut = Date.now();
+    try {
+      while (Date.now() - debut < 90_000) {
+        await new Promise((res) => setTimeout(res, 5_000));
+        let liste: CommentaireAnalytiqueVersion[] = [];
+        try {
+          liste = await api<CommentaireAnalytiqueVersion[]>(
+            `/api/v1/missions/${r.mission_id}/commentaires-analytiques`,
+            { jeton },
+          );
+        } catch {
+          continue;
+        }
+        const nouvelle = (Array.isArray(liste) ? liste : []).find(
+          (v) => !idsTerminesConnus.has(v.id) && v.statut !== "en_cours",
+        );
+        if (nouvelle) {
+          setComAnaVersions(liste);
+          setComAnaVersionSel(nouvelle.version);
+          return;
+        }
+      }
+    } finally {
+      comAnaPollRef.current = false;
+    }
+  }
+
+  async function genererComAna() {
+    if (!jeton || !r.mission_id || comAnaBusy) return;
+    setComAnaBusy(true);
+    setComAnaErr(null);
+    try {
+      const commentaire = await api<CommentaireAnalytiqueDetail>(
+        `/api/v1/missions/${r.mission_id}/commentaire-analytique`,
+        { method: "POST", jeton },
+      );
+      await chargerComAnaVersions();
+      setComAnaVersionSel(commentaire.version);
+      if (commentaire.statut === "echec" && commentaire.erreur) {
+        setComAnaErr(commentaire.erreur);
+      }
+    } catch (e) {
+      setComAnaErr(e instanceof Error ? e.message : String(e));
+      void surveillerComAna();
+    } finally {
+      setComAnaBusy(false);
+    }
+  }
+
+  useEffect(() => {
+    if (!comAnaOuvert || !jeton || !r.mission_id) return;
+    let annule = false;
+    void (async () => {
+      try {
+        const versions = await chargerComAnaVersions();
+        if (annule) return;
+        const derniere = versions.find((v) => v.statut === "disponible");
+        setComAnaVersionSel((sel) => sel ?? derniere?.version ?? null);
+      } catch (e) {
+        if (!annule) {
+          setComAnaErr(e instanceof Error ? e.message : String(e));
+        }
+      }
+    })();
+    return () => {
+      annule = true;
+    };
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [comAnaOuvert, jeton, r.mission_id]);
+
+  useEffect(() => {
+    if (
+      !comAnaOuvert ||
+      !jeton ||
+      !r.mission_id ||
+      comAnaVersionSel == null
+    ) {
+      setComAnaDetail(null);
+      return;
+    }
+    let annule = false;
+    void (async () => {
+      try {
+        const detail = await api<CommentaireAnalytiqueDetail>(
+          `/api/v1/missions/${r.mission_id}/commentaires-analytiques/${comAnaVersionSel}`,
+          { jeton },
+        );
+        if (!annule) setComAnaDetail(detail);
+      } catch (e) {
+        if (!annule) {
+          setComAnaDetail(null);
+          setComAnaErr(e instanceof Error ? e.message : String(e));
+        }
+      }
+    })();
+    return () => {
+      annule = true;
+    };
+  }, [comAnaOuvert, jeton, r.mission_id, comAnaVersionSel]);
 
   const chargerNoteVersions = async (): Promise<NoteSyntheseVersion[]> => {
     if (!jeton || !r.mission_id) return [];
@@ -2087,7 +2248,175 @@ export function RestitutionVue({
                   client — chaque variation significative appelle une
                   explication.
                 </span>
+                {revueAnalytique.disponible && (
+                  <Tooltip label="Commentaire IA des variations significatives : hypothèse explicative et question à poser au client pour chaque poste. Versionné, consultatif — l'humain valide.">
+                    <button
+                      type="button"
+                      className="btn btn-ghost btn-sm rest-note-btn"
+                      onClick={() => setComAnaOuvert((o) => !o)}
+                      disabled={!jeton}
+                      aria-expanded={comAnaOuvert}
+                    >
+                      Commentaire IA
+                    </button>
+                  </Tooltip>
+                )}
               </div>
+              {comAnaOuvert && revueAnalytique.disponible && (
+                <section
+                  className="rest-note rest-comana"
+                  aria-label="Commentaire IA de revue analytique"
+                >
+                  <div className="rest-note-head">
+                    <h3 className="rest-note-titre label-with-tip">
+                      Commentaire IA de revue analytique
+                      <InfoTip
+                        label="Lecture commentée générée par IA à partir des SEULES variations significatives calculées ci-dessous : toute explication citant un poste absent des variations est retirée. Document consultatif versionné, à relire avant instruction."
+                        ariaLabel="Aide : commentaire IA de revue analytique"
+                      />
+                    </h3>
+                    <div className="rest-note-outils">
+                      {comAnaVersions.length > 0 && (
+                        <label className="rest-note-version">
+                          Version{" "}
+                          <select
+                            value={comAnaVersionSel ?? ""}
+                            onChange={(e) =>
+                              setComAnaVersionSel(
+                                e.target.value
+                                  ? Number(e.target.value)
+                                  : null,
+                              )
+                            }
+                          >
+                            {comAnaVersions.map((v) => (
+                              <option key={v.id} value={v.version}>
+                                v{v.version} ·{" "}
+                                {v.statut === "disponible"
+                                  ? "disponible"
+                                  : v.statut === "echec"
+                                    ? "échec"
+                                    : "en cours"}
+                                {v.cree_le
+                                  ? ` · ${fmtHorodatage(v.cree_le)}`
+                                  : ""}
+                              </option>
+                            ))}
+                          </select>
+                        </label>
+                      )}
+                      <button
+                        type="button"
+                        className="btn btn-sm rest-note-generer"
+                        onClick={() => void genererComAna()}
+                        disabled={comAnaBusy || !jeton}
+                      >
+                        {comAnaBusy ? "Génération…" : "Générer"}
+                      </button>
+                      <button
+                        type="button"
+                        className="btn btn-ghost btn-sm"
+                        onClick={() => setComAnaOuvert(false)}
+                      >
+                        Fermer
+                      </button>
+                    </div>
+                  </div>
+                  {comAnaErr && (
+                    <p className="rest-note-erreur" role="alert">
+                      {comAnaErr}
+                    </p>
+                  )}
+                  {comAnaVersions.length === 0 &&
+                    !comAnaBusy &&
+                    !comAnaErr && (
+                      <p className="rest-note-vide">
+                        Aucun commentaire généré pour cette mission. Cliquez
+                        sur « Générer » pour produire la première version
+                        (quelques secondes).
+                      </p>
+                    )}
+                  {comAnaDetail?.statut === "echec" && (
+                    <p className="rest-note-erreur" role="alert">
+                      Génération v{comAnaDetail.version} en échec
+                      {comAnaDetail.erreur
+                        ? ` : ${comAnaDetail.erreur}`
+                        : "."}
+                    </p>
+                  )}
+                  {comAnaDetail?.statut === "disponible" &&
+                    comAnaDetail.contenu && (
+                      <div className="rest-note-corps">
+                        {comAnaDetail.contenu.resume && (
+                          <div className="rest-note-bloc">
+                            <h4>Lecture d'ensemble</h4>
+                            <p>{comAnaDetail.contenu.resume}</p>
+                          </div>
+                        )}
+                        <div className="rest-note-bloc">
+                          <h4>Explications par poste</h4>
+                          {comAnaDetail.contenu.explications.length === 0 ? (
+                            <p className="rest-note-vide">
+                              Aucune explication sourcée par une variation
+                              dans cette version.
+                            </p>
+                          ) : (
+                            <ul className="rest-note-constats">
+                              {comAnaDetail.contenu.explications.map(
+                                (ex, i) => (
+                                  <li
+                                    key={`${ex.poste}-${i}`}
+                                    className={`rest-note-constat rest-comana-explication ${ex.gravite}`}
+                                  >
+                                    <span
+                                      className={`rest-note-gravite ${ex.gravite}`}
+                                    >
+                                      {libelleGraviteNote(ex.gravite)}
+                                    </span>
+                                    <code className="rest-analytique-compte">
+                                      {ex.poste}
+                                    </code>
+                                    <span className="rest-note-resume">
+                                      {ex.hypothese_explicative}
+                                    </span>
+                                    {ex.question_a_poser_au_client && (
+                                      <span className="rest-comana-question">
+                                        Question au client :{" "}
+                                        {ex.question_a_poser_au_client}
+                                      </span>
+                                    )}
+                                  </li>
+                                ),
+                              )}
+                            </ul>
+                          )}
+                        </div>
+                        {comAnaDetail.contenu.alertes_coherence.length >
+                          0 && (
+                          <div className="rest-note-bloc">
+                            <h4>Alertes de cohérence</h4>
+                            <ul className="rest-note-liste">
+                              {comAnaDetail.contenu.alertes_coherence.map(
+                                (a, i) => (
+                                  <li key={i}>{a}</li>
+                                ),
+                              )}
+                            </ul>
+                          </div>
+                        )}
+                        <p className="rest-note-mention">
+                          Commentaire généré par IA (v{comAnaDetail.version}
+                          {comAnaDetail.auteur
+                            ? ` · ${comAnaDetail.auteur}`
+                            : ""}
+                          ) à partir des seules variations significatives —
+                          document consultatif, à relire et instruire avec le
+                          client.
+                        </p>
+                      </div>
+                    )}
+                </section>
+              )}
               {!revueAnalytique.disponible ? (
                 <p className="rest-analytique-vide">
                   Aucun exercice antérieur comparable
