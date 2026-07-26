@@ -316,10 +316,14 @@ function lireSessionStockee(): SessionAuth | null {
   return null;
 }
 
-/** Deep-link applicatif écrit par la fiche client : `#fiche-{id}-{overview|missions}`. */
+/**
+ * Deep-link applicatif écrit par la fiche client :
+ * `#fiche-{id}-{overview|identite|pieces|risques|missions}`.
+ * `#fiche-{id}` et `#fiche-{id}-overview` restent valides (rétro-compat).
+ */
 function lireVueDeepLink(): { type: "fiche"; id: number } | null {
   try {
-    const m = /^#fiche-(\d+)(?:-(overview|missions))?$/.exec(
+    const m = /^#fiche-(\d+)(?:-(overview|identite|pieces|risques|missions))?$/.exec(
       window.location.hash || "",
     );
     if (m) {
@@ -949,7 +953,7 @@ export function App() {
     }
   }, [session]);
 
-  // Navigation à chaud sur hashchange (l'onglet overview/missions est géré par la fiche).
+  // Navigation à chaud sur hashchange (le sous-onglet de la fiche est géré par la fiche).
   useEffect(() => {
     if (!session) return;
     const onHash = () => {

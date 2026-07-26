@@ -21,9 +21,11 @@ import {
   formaterCreationTrace,
   identiteApiMinimale,
   libelleMoisCloture,
+  libelleSecteur,
   type FormePersonne,
   type IdentiteLegale,
 } from "./legalite";
+import { api } from "./api";
 import { PROCESS_TIPS } from "./processTips";
 import {
   PiecesContribuablePanel,
@@ -1338,18 +1340,25 @@ type FicheProps = {
 };
 
 type FiltreMissionsFiche = "toutes" | "actives" | "cloturees";
-type FicheTab = "overview" | "missions";
+type FicheTab = "overview" | "identite" | "pieces" | "risques" | "missions";
+
+const FICHE_TABS: ReadonlyArray<{ id: FicheTab; label: string }> = [
+  { id: "overview", label: "Vue d’ensemble" },
+  { id: "identite", label: "Identité" },
+  { id: "pieces", label: "Pièces" },
+  { id: "risques", label: "Risques" },
+  { id: "missions", label: "Missions" },
+];
 
 function hashFicheTab(clientId: number, tab: FicheTab): string {
-  return tab === "missions"
-    ? `#fiche-${clientId}-missions`
-    : `#fiche-${clientId}-overview`;
+  return `#fiche-${clientId}-${tab}`;
 }
 
 function tabDepuisHash(clientId: number): FicheTab {
-  const h = window.location.hash;
-  if (h === `#fiche-${clientId}-missions`) return "missions";
-  return "overview";
+  const m = new RegExp(
+    `^#fiche-${clientId}-(overview|identite|pieces|risques|missions)$`,
+  ).exec(window.location.hash || "");
+  return (m?.[1] as FicheTab) ?? "overview";
 }
 
 export function ClientFicheVue({
@@ -1407,6 +1416,55 @@ export function ClientFicheVue({
   const formeNorm = formePersonne(clientDetail.forme);
   const formeLbl = libelleFormeCourte(formeNorm);
 
+  // Compteurs pièces / risques (informative — masqués si l'API échoue).
+  const [nbPieces, setNbPieces] = useState<number | null>(null);
+  const [nbRisques, setNbRisques] = useState<number | null>(null);
+
+  useEffect(() => {
+    if (ficheTab !== "overview") return;
+    let annule = false;
+    void (async () => {
+      try {
+        const pieces = await api<unknown[]>(
+          `/api/v1/pieces-contribuable?contribuable_id=${clientDetail.id}`,
+          { jeton },
+        );
+        if (!annule) setNbPieces(Array.isArray(pieces) ? pieces.length : null);
+      } catch {
+        /* compteur indisponible — on n'affiche pas de chiffre */
+      }
+    })();
+    void (async () => {
+      try {
+        const risques = await api<unknown[]>(
+          `/api/v1/contribuables/${clientDetail.id}/risques`,
+          { jeton },
+        );
+        if (!annule)
+          setNbRisques(Array.isArray(risques) ? risques.length : null);
+      } catch {
+        /* compteur indisponible */
+      }
+    })();
+    return () => {
+      annule = true;
+    };
+  }, [clientDetail.id, jeton, ficheTab]);
+
+  // Alerte douce : TEE (régime de l'entreprenant) atypique pour une personne morale.
+  const alerteRegimeTee =
+    formeNorm === "pm" && clientDetail.regime_fiscal?.trim() === "tee";
+
+  // Secteur / activité : « secteur — précision » quand les deux existent.
+  const secteurAffiche = useMemo(() => {
+    const brut = clientDetail.activite_principale?.trim() || "";
+    if (!brut) return "";
+    const { secteur, precision } = decomposerActivite(brut);
+    if (!secteur) return brut;
+    if (!precision) return libelleSecteur(secteur);
+    return `${libelleSecteur(secteur)} — ${precision}`;
+  }, [clientDetail.activite_principale]);
+
   const missions = clientDetail.missions || [];
   const missionsFiltrees = useMemo(() => {
     return missions.filter((m) => {
@@ -1426,7 +1484,7 @@ export function ClientFicheVue({
     (clientDetail.cree_par != null ? `utilisateur #${clientDetail.cree_par}` : null);
 
   function ouvrirEditionManquants() {
-    changerFicheTab("overview");
+    changerFicheTab("identite");
     setModeEdition(true);
     window.requestAnimationFrame(() => {
       const premiere = completude.clesManquantes[0];
@@ -1454,6 +1512,184 @@ export function ClientFicheVue({
     return !remplie && completude.clesManquantes.includes(cle as keyof IdentiteLegale);
   }
 
+  // Barre de complétude — affichée dans Vue d'ensemble et Identité uniquement
+  // (le sous-titre d'en-tête n'affiche plus le score : pas de doublon).
+  const barreCompletude = (
+    <div
+      className={`completude-bar clients-fiche-completude${completude.complet ? " ok" : " is-incomplet"}`}
+    >
+      <div className="completude-meta">
+        <span>
+          Identité légale {completude.ok}/{completude.total}
+        </span>
+        <strong>{completude.pct}%</strong>
+      </div>
+      <div className="completude-track" aria-hidden="true">
+        <i style={{ width: `${completude.pct}%` }} />
+      </div>
+      {!completude.complet && (
+        <div className="clients-manquants-bandeau">
+          <p className="completude-miss clients-manquants-liste">
+            Manquant :{" "}
+            {completude.manquants.map((lib) => (
+              <span key={lib} className="clients-manquant-pill">
+                {lib}
+              </span>
+            ))}
+          </p>
+          {!estLecteur && (
+            <button
+              type="button"
+              className="btn btn-ghost btn-sm clients-manquants-cta"
+              disabled={busy}
+              onClick={ouvrirEditionManquants}
+            >
+              Compléter les infos manquantes
+            </button>
+          )}
+        </div>
+      )}
+    </div>
+  );
+
+  const resumeIdentite = (
+    <>
+      <dl className="clients-identite-resume" aria-label="Résumé d’identité">
+        <div>
+          <dt>Type</dt>
+          <dd>
+            <span className={`clients-badge clients-badge-${formeNorm}`}>
+              {formeLbl}
+            </span>
+            {clientDetail.forme_juridique
+              ? ` ${clientDetail.forme_juridique}`
+              : ""}
+          </dd>
+        </div>
+        <div
+          className={
+            valeurResumeManquante("ncc", !!clientDetail.ncc?.trim())
+              ? "is-manquant"
+              : undefined
+          }
+        >
+          <dt>NCC</dt>
+          <dd>{clientDetail.ncc?.trim() || "À compléter"}</dd>
+        </div>
+        {formeNorm === "pm" && (
+          <div
+            className={
+              valeurResumeManquante("rccm", !!clientDetail.rccm?.trim())
+                ? "is-manquant"
+                : undefined
+            }
+          >
+            <dt>RCCM</dt>
+            <dd>{clientDetail.rccm?.trim() || "À compléter"}</dd>
+          </div>
+        )}
+        <div
+          className={
+            valeurResumeManquante(
+              "regime_fiscal",
+              !!clientDetail.regime_fiscal?.trim(),
+            )
+              ? "is-manquant"
+              : undefined
+          }
+        >
+          <dt>Régime</dt>
+          <dd>
+            {clientDetail.regime_fiscal?.trim()
+              ? libelleRegime(clientDetail.regime_fiscal)
+              : "À compléter"}
+          </dd>
+        </div>
+        {formeNorm === "pm" && (
+          <div
+            className={
+              valeurResumeManquante(
+                "capital_social",
+                clientDetail.capital_social != null &&
+                  clientDetail.capital_social !== "",
+              )
+                ? "is-manquant"
+                : undefined
+            }
+          >
+            <dt>Capital</dt>
+            <dd>
+              {clientDetail.capital_social != null &&
+              clientDetail.capital_social !== ""
+                ? `${Number(clientDetail.capital_social).toLocaleString("fr-FR")} XOF`
+                : "À compléter"}
+            </dd>
+          </div>
+        )}
+        <div>
+          <dt>Clôture</dt>
+          <dd>{libelleMoisCloture(clientDetail.mois_cloture ?? 12)}</dd>
+        </div>
+        <div
+          className={
+            valeurResumeManquante(
+              "activite_principale",
+              !!clientDetail.activite_principale?.trim(),
+            )
+              ? "is-manquant"
+              : undefined
+          }
+        >
+          <dt>Secteur / activité</dt>
+          <dd>{secteurAffiche || "À compléter"}</dd>
+        </div>
+        <div
+          className={
+            valeurResumeManquante("commune", !!clientDetail.commune?.trim())
+              ? "is-manquant"
+              : undefined
+          }
+        >
+          <dt>Commune</dt>
+          <dd>{clientDetail.commune?.trim() || "À compléter"}</dd>
+        </div>
+        <div
+          className={
+            valeurResumeManquante(
+              "siege_social",
+              !!clientDetail.siege_social?.trim(),
+            )
+              ? "is-manquant"
+              : undefined
+          }
+        >
+          <dt>Adresse</dt>
+          <dd>{clientDetail.siege_social?.trim() || "À compléter"}</dd>
+        </div>
+        <div
+          className={
+            valeurResumeManquante(
+              "centre_impots",
+              !!clientDetail.centre_impots?.trim(),
+            )
+              ? "is-manquant"
+              : undefined
+          }
+        >
+          <dt>Centre des impôts</dt>
+          <dd>{clientDetail.centre_impots?.trim() || "À compléter"}</dd>
+        </div>
+      </dl>
+      {alerteRegimeTee && (
+        <p className="field-averti-msg clients-fiche-averti" role="note">
+          Régime TEE inhabituel pour une{" "}
+          {clientDetail.forme_juridique || "personne morale"} — vérifier le
+          régime déclaré.
+        </p>
+      )}
+    </>
+  );
+
   return (
     <div className="page clients-fiche">
       <header className="page-head clients-head">
@@ -1469,8 +1705,6 @@ export function ClientFicheVue({
             {" · "}
             {clientDetail.nb_missions} mission
             {clientDetail.nb_missions !== 1 ? "s" : ""}
-            {" · "}
-            identité {completude.ok}/{completude.total}
           </p>
           {(traceQui || traceQuand) && (
             <p className="clients-fiche-audit" aria-label="Traçabilité de création">
@@ -1506,207 +1740,87 @@ export function ClientFicheVue({
         role="tablist"
         aria-label="Sections de la fiche client"
       >
-        <button
-          type="button"
-          id={`fiche-${clientDetail.id}-tab-overview`}
-          className={`tab${ficheTab === "overview" ? " active" : ""}`}
-          role="tab"
-          aria-selected={ficheTab === "overview"}
-          aria-controls={`fiche-${clientDetail.id}-panel-overview`}
-          tabIndex={ficheTab === "overview" ? 0 : -1}
-          onClick={() => changerFicheTab("overview")}
-        >
-          Vue d’ensemble
-        </button>
-        <button
-          type="button"
-          id={`fiche-${clientDetail.id}-tab-missions`}
-          className={`tab${ficheTab === "missions" ? " active" : ""}`}
-          role="tab"
-          aria-selected={ficheTab === "missions"}
-          aria-controls={`fiche-${clientDetail.id}-panel-missions`}
-          tabIndex={ficheTab === "missions" ? 0 : -1}
-          onClick={() => changerFicheTab("missions")}
-        >
-          Missions
-          {clientDetail.nb_missions > 0 ? (
-            <span className="clients-fiche-tab-count" aria-hidden="true">
-              {clientDetail.nb_missions}
-            </span>
-          ) : null}
-        </button>
+        {FICHE_TABS.map(({ id, label }) => (
+          <button
+            key={id}
+            type="button"
+            id={`fiche-${clientDetail.id}-tab-${id}`}
+            className={`tab${ficheTab === id ? " active" : ""}`}
+            role="tab"
+            aria-selected={ficheTab === id}
+            aria-controls={`fiche-${clientDetail.id}-panel-${id}`}
+            tabIndex={ficheTab === id ? 0 : -1}
+            onClick={() => changerFicheTab(id)}
+          >
+            {label}
+            {id === "missions" && clientDetail.nb_missions > 0 ? (
+              <span className="clients-fiche-tab-count" aria-hidden="true">
+                {clientDetail.nb_missions}
+              </span>
+            ) : null}
+          </button>
+        ))}
       </div>
 
-      {ficheTab === "overview" ? (
+      {ficheTab === "overview" && (
         <div
           className="clients-fiche-tab-panel"
           id={`fiche-${clientDetail.id}-panel-overview`}
           role="tabpanel"
           aria-labelledby={`fiche-${clientDetail.id}-tab-overview`}
         >
+          {barreCompletude}
+
+          {resumeIdentite}
+
           <div
-            className={`completude-bar clients-fiche-completude${completude.complet ? " ok" : " is-incomplet"}`}
+            className="clients-fiche-compteurs"
+            role="group"
+            aria-label="Raccourcis vers les sections de la fiche"
           >
-            <div className="completude-meta">
-              <span>
-                Identité légale {completude.ok}/{completude.total}
-              </span>
-              <strong>{completude.pct}%</strong>
-            </div>
-            <div className="completude-track" aria-hidden="true">
-              <i style={{ width: `${completude.pct}%` }} />
-            </div>
-            {!completude.complet && (
-              <div className="clients-manquants-bandeau">
-                <p className="completude-miss clients-manquants-liste">
-                  Manquant :{" "}
-                  {completude.manquants.map((lib) => (
-                    <span key={lib} className="clients-manquant-pill">
-                      {lib}
-                    </span>
-                  ))}
-                </p>
-                {!estLecteur && (
-                  <button
-                    type="button"
-                    className="btn btn-ghost btn-sm clients-manquants-cta"
-                    disabled={busy}
-                    onClick={ouvrirEditionManquants}
-                  >
-                    Compléter les infos manquantes
-                  </button>
-                )}
-              </div>
-            )}
-          </div>
-
-          <dl className="clients-identite-resume" aria-label="Résumé d’identité">
-            <div>
-              <dt>Type</dt>
-              <dd>
-                <span className={`clients-badge clients-badge-${formeNorm}`}>
-                  {formeLbl}
+            <Tooltip label="Voir les missions du contribuable.">
+              <button
+                type="button"
+                className="clients-fiche-compteur"
+                onClick={() => changerFicheTab("missions")}
+              >
+                <strong>{clientDetail.nb_missions}</strong>
+                <span>
+                  mission{clientDetail.nb_missions !== 1 ? "s" : ""}
                 </span>
-                {clientDetail.forme_juridique
-                  ? ` ${clientDetail.forme_juridique}`
-                  : ""}
-              </dd>
-            </div>
-            <div
-              className={
-                valeurResumeManquante("ncc", !!clientDetail.ncc?.trim())
-                  ? "is-manquant"
-                  : undefined
-              }
-            >
-              <dt>NCC</dt>
-              <dd>{clientDetail.ncc?.trim() || "À compléter"}</dd>
-            </div>
-            {formeNorm === "pm" && (
-              <div
-                className={
-                  valeurResumeManquante("rccm", !!clientDetail.rccm?.trim())
-                    ? "is-manquant"
-                    : undefined
-                }
+              </button>
+            </Tooltip>
+            <Tooltip label="Voir les pièces du contribuable (upload, extraction).">
+              <button
+                type="button"
+                className="clients-fiche-compteur"
+                onClick={() => changerFicheTab("pieces")}
               >
-                <dt>RCCM</dt>
-                <dd>{clientDetail.rccm?.trim() || "À compléter"}</dd>
-              </div>
-            )}
-            <div
-              className={
-                valeurResumeManquante(
-                  "regime_fiscal",
-                  !!clientDetail.regime_fiscal?.trim(),
-                )
-                  ? "is-manquant"
-                  : undefined
-              }
-            >
-              <dt>Régime</dt>
-              <dd>
-                {clientDetail.regime_fiscal?.trim()
-                  ? libelleRegime(clientDetail.regime_fiscal)
-                  : "À compléter"}
-              </dd>
-            </div>
-            {formeNorm === "pm" && (
-              <div
-                className={
-                  valeurResumeManquante(
-                    "capital_social",
-                    clientDetail.capital_social != null &&
-                      clientDetail.capital_social !== "",
-                  )
-                    ? "is-manquant"
-                    : undefined
-                }
+                <strong>{nbPieces ?? "—"}</strong>
+                <span>pièce{(nbPieces ?? 0) !== 1 ? "s" : ""}</span>
+              </button>
+            </Tooltip>
+            <Tooltip label="Voir le registre des risques.">
+              <button
+                type="button"
+                className="clients-fiche-compteur"
+                onClick={() => changerFicheTab("risques")}
               >
-                <dt>Capital</dt>
-                <dd>
-                  {clientDetail.capital_social != null &&
-                  clientDetail.capital_social !== ""
-                    ? `${Number(clientDetail.capital_social).toLocaleString("fr-FR")} XOF`
-                    : "À compléter"}
-                </dd>
-              </div>
-            )}
-            <div>
-              <dt>Clôture</dt>
-              <dd>{libelleMoisCloture(clientDetail.mois_cloture ?? 12)}</dd>
-            </div>
-            <div
-              className={
-                valeurResumeManquante(
-                  "activite_principale",
-                  !!clientDetail.activite_principale?.trim(),
-                )
-                  ? "is-manquant"
-                  : undefined
-              }
-            >
-              <dt>Secteur / activité</dt>
-              <dd>{clientDetail.activite_principale?.trim() || "À compléter"}</dd>
-            </div>
-            <div
-              className={
-                valeurResumeManquante("commune", !!clientDetail.commune?.trim())
-                  ? "is-manquant"
-                  : undefined
-              }
-            >
-              <dt>Commune</dt>
-              <dd>{clientDetail.commune?.trim() || "À compléter"}</dd>
-            </div>
-            <div
-              className={
-                valeurResumeManquante(
-                  "siege_social",
-                  !!clientDetail.siege_social?.trim(),
-                )
-                  ? "is-manquant"
-                  : undefined
-              }
-            >
-              <dt>Adresse</dt>
-              <dd>{clientDetail.siege_social?.trim() || "À compléter"}</dd>
-            </div>
-            <div
-              className={
-                valeurResumeManquante(
-                  "centre_impots",
-                  !!clientDetail.centre_impots?.trim(),
-                )
-                  ? "is-manquant"
-                  : undefined
-              }
-            >
-              <dt>Centre des impôts</dt>
-              <dd>{clientDetail.centre_impots?.trim() || "À compléter"}</dd>
-            </div>
-          </dl>
+                <strong>{nbRisques ?? "—"}</strong>
+                <span>risque{(nbRisques ?? 0) !== 1 ? "s" : ""}</span>
+              </button>
+            </Tooltip>
+          </div>
+        </div>
+      )}
 
+      {ficheTab === "pieces" && (
+        <div
+          className="clients-fiche-tab-panel"
+          id={`fiche-${clientDetail.id}-panel-pieces`}
+          role="tabpanel"
+          aria-labelledby={`fiche-${clientDetail.id}-tab-pieces`}
+        >
           <PiecesContribuablePanel
             jeton={jeton}
             contribuableId={clientDetail.id}
@@ -1715,13 +1829,32 @@ export function ClientFicheVue({
             setEdit={setClientEdit}
             modeConformite
           />
+        </div>
+      )}
 
+      {ficheTab === "risques" && (
+        <div
+          className="clients-fiche-tab-panel"
+          id={`fiche-${clientDetail.id}-panel-risques`}
+          role="tabpanel"
+          aria-labelledby={`fiche-${clientDetail.id}-tab-risques`}
+        >
           <RegistreRisquesVue
             jeton={jeton}
             contribuableId={clientDetail.id}
             estLecteur={estLecteur}
           />
+        </div>
+      )}
 
+      {ficheTab === "identite" && (
+        <div
+          className="clients-fiche-tab-panel"
+          id={`fiche-${clientDetail.id}-panel-identite`}
+          role="tabpanel"
+          aria-labelledby={`fiche-${clientDetail.id}-tab-identite`}
+        >
+          {barreCompletude}
           <div className="panel dense clients-fiche-panel" id="clients-fiche-edition">
             <div className="clients-fiche-section-head">
               <div>
@@ -1789,24 +1922,28 @@ export function ClientFicheVue({
                 </div>
               </>
             ) : (
-              !completude.complet &&
-              !estLecteur && (
-                <p className="clients-fiche-nudge">
-                  Fiche incomplète —{" "}
-                  <button
-                    type="button"
-                    className="linkish"
-                    onClick={ouvrirEditionManquants}
-                  >
-                    compléter les infos manquantes
-                  </button>
-                  .
-                </p>
-              )
+              <>
+                {resumeIdentite}
+                {!completude.complet && !estLecteur && (
+                  <p className="clients-fiche-nudge">
+                    Fiche incomplète —{" "}
+                    <button
+                      type="button"
+                      className="linkish"
+                      onClick={ouvrirEditionManquants}
+                    >
+                      compléter les infos manquantes
+                    </button>
+                    .
+                  </p>
+                )}
+              </>
             )}
           </div>
         </div>
-      ) : (
+      )}
+
+      {ficheTab === "missions" && (
         <div
           className="clients-fiche-tab-panel"
           id={`fiche-${clientDetail.id}-panel-missions`}

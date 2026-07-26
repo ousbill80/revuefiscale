@@ -422,7 +422,7 @@ export function RegistreRisquesVue({
           </ul>
         </details>
       ))}
-      {!estLecteur && (
+      {!estLecteur && risques.length > 0 && (
         <p className="muted small">
           Motif acceptation (prérempli pour « Accepté ») :{" "}
           <input

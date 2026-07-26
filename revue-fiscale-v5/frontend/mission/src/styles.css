@@ -7467,6 +7467,7 @@ h2.section-title {
 }
 
 .clients-fiche-tabs {
+  grid-template-columns: repeat(5, 1fr);
   position: sticky;
   top: calc(var(--topbar-h) + var(--safe-top));
   z-index: 25;
@@ -7518,6 +7519,54 @@ h2.section-title {
 
 .clients-fiche-completude {
   margin: 0;
+}
+
+/* Compteurs cliquables (Vue d'ensemble) — raccourcis vers les sous-onglets. */
+.clients-fiche-compteurs {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.65rem;
+}
+
+.clients-fiche-compteur {
+  display: inline-flex;
+  align-items: baseline;
+  gap: 0.4rem;
+  padding: 0.55rem 0.9rem;
+  border: 1px solid var(--line);
+  border-radius: 10px;
+  background: var(--panel, #fff);
+  font: inherit;
+  cursor: pointer;
+  transition: border-color 0.15s ease, box-shadow 0.15s ease;
+}
+
+.clients-fiche-compteur:hover,
+.clients-fiche-compteur:focus-visible {
+  border-color: var(--accent);
+  box-shadow: 0 0 0 1px color-mix(in srgb, var(--accent) 25%, transparent);
+}
+
+.clients-fiche-compteur strong {
+  font-size: 1.05rem;
+  font-weight: 750;
+  font-variant-numeric: tabular-nums;
+  color: var(--ink);
+}
+
+.clients-fiche-compteur span {
+  font-size: 0.78rem;
+  font-weight: 600;
+  color: var(--muted);
+}
+
+/* Alerte cohérence fiscale douce (ex. TEE pour une personne morale). */
+.clients-fiche-averti {
+  margin: 0;
+  padding: 0.45rem 0.6rem;
+  border-radius: 8px;
+  border: 1px solid color-mix(in srgb, #d97706 35%, var(--line));
+  background: color-mix(in srgb, #fffbeb 75%, #fff);
 }
 
 .clients-fiche-panel {
