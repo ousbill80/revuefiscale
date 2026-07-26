@@ -103,7 +103,9 @@ def recherche_hybride(
     ``millesime_prioritaire`` : boost CGI + millésime (défaut 2026). Passer
     ``None`` pour désactiver (tests / comparaison à égalité).
 
-    Retourne [{fragment_id, article_id, reference, extrait, score, type, millesime}, ...]
+    Retourne [{fragment_id, article_id, reference, extrait, score,
+    score_lexical, type, millesime}, ...] — ``score_lexical`` est le score de
+    pertinence AVANT boost de priorite (seul valable pour un seuil minimal).
     """
     if not (requete or "").strip():
         return []
@@ -126,6 +128,11 @@ def recherche_hybride(
             ref = str(row["reference"] or "").upper()
             if _references_compatibles(ref_cand, ref):
                 scores[fid] += 20.0
+
+    # Score lexical pur (chevauchement + reference) AVANT boost de priorite.
+    # Le boost reordonne seulement — il ne doit jamais faire passer un fragment
+    # non pertinent au-dessus d'un seuil de pertinence (anti-invention).
+    scores_lexicaux = dict(scores)
 
     for fid in list(scores.keys()):
         row = meta.get(fid)
@@ -153,6 +160,7 @@ def recherche_hybride(
                 "reference": str(row["reference"]),
                 "extrait": extrait,
                 "score": float(score),
+                "score_lexical": float(scores_lexicaux.get(fid, 0.0)),
                 "type": str(row.get("doc_type") or ""),
                 "millesime": int(mill) if mill is not None else None,
             }

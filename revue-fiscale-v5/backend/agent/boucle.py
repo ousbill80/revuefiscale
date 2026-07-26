@@ -88,8 +88,15 @@ def repondre(
         pass
 
     hits = rechercher_corpus(session, q, limite=5, types=types_corpus)
-    # Filtrer les hits trop faibles (chevauchement fortuit sur stopwords)
-    hits = [h for h in hits if float(str(h.get("score") or 0)) >= SCORE_MIN]
+    # Filtrer les hits trop faibles (chevauchement fortuit sur un mot commun).
+    # Seuil applique au score LEXICAL pur (avant boost cgi/millesime) : le boost
+    # reordonne, il ne cree pas de pertinence — sinon un fragment hors sujet
+    # passerait le seuil et l agent citerait une reference non couverte.
+    hits = [
+        h
+        for h in hits
+        if float(str(h.get("score_lexical", h.get("score")) or 0)) >= SCORE_MIN
+    ]
 
     ref_demandee = _reference_demandee(q)
     if ref_demandee:
@@ -116,6 +123,7 @@ def repondre(
                     "reference": article["reference"],
                     "extrait": str(article["texte"])[:280],
                     "score": 100.0,
+                    "score_lexical": 100.0,
                 }
             ]
 
@@ -132,10 +140,13 @@ def repondre(
         ref = str(hit["reference"])
         if ref in refs_vues:
             continue
-        refs_vues.append(ref)
         article = lire_article(session, ref, types=types_corpus)
-        extrait = str(hit.get("extrait") or "")
-        texte_src = str(article["texte"]) if article else extrait
+        if article is None:
+            # Validation post-recuperation : reference introuvable dans le
+            # corpus → on ne la cite JAMAIS (anti-invention).
+            continue
+        refs_vues.append(ref)
+        texte_src = str(article["texte"])
         textes_fragments.append(texte_src)
         # Citation = premiere phrase / alinea utile (sous-chaine reelle)
         citation = _extraire_citation(texte_src)
@@ -147,6 +158,11 @@ def repondre(
             if citation
             else f"Selon {ref}{mention_demo}."
         )
+
+    if not refs_vues:
+        # Validation post-reponse : aucune reference verifiable dans le corpus
+        # recupere → abstention explicite plutot que citation inventee.
+        return _abstention(tenant_id, session, q)
 
     ancrage = verifier_ancrage(citations, textes_fragments)
     if not ancrage.ok or ancrage.citations_rejetees:
