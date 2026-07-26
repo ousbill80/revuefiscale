@@ -1,5 +1,5 @@
 import { useEffect, useMemo, useRef, useState } from "react";
-import { api, fmtMontant } from "./api";
+import { api, fmtMontant, telecharger } from "./api";
 import {
   CODES_IMPOT_PIVOT,
   PERIMETRE_DONS_HINT,
@@ -263,6 +263,36 @@ export function RestitutionVue({
   const [cadrageBusy, setCadrageBusy] = useState(false);
   const [cadrageMsg, setCadrageMsg] = useState<string | null>(null);
   const [cadrageErr, setCadrageErr] = useState<string | null>(null);
+  const [lettreBusy, setLettreBusy] = useState(false);
+  const [lettreErr, setLettreErr] = useState<string | null>(null);
+
+  async function telechargerLettreMission() {
+    if (!jeton || !r.mission_id || lettreBusy) return;
+    setLettreBusy(true);
+    setLettreErr(null);
+    try {
+      const denom = (
+        r.identification?.contribuable_denomination || "client"
+      )
+        .normalize("NFKD")
+        .replace(/[\u0300-\u036f]/g, "")
+        .replace(/[^A-Za-z0-9]+/g, "_")
+        .replace(/^_+|_+$/g, "")
+        .toUpperCase() || "CLIENT";
+      const exo = r.identification?.exercice ?? "exercice";
+      await telecharger(
+        `/api/v1/missions/${r.mission_id}/lettre-mission.docx`,
+        jeton,
+        `lettre_mission_${denom}_${exo}.docx`,
+      );
+    } catch (e) {
+      setLettreErr(
+        e instanceof Error ? e.message : "téléchargement impossible",
+      );
+    } finally {
+      setLettreBusy(false);
+    }
+  }
 
   useEffect(() => {
     if (!jeton || !r.mission_id) {
@@ -802,6 +832,21 @@ export function RestitutionVue({
               PDF
             </button>
           </Tooltip>
+          <Tooltip label="Lettre de mission (.docx) générée depuis le cadrage — à personnaliser et faire signer avant les travaux. Champs manquants : [à compléter].">
+            <button
+              type="button"
+              className="btn btn-ghost btn-sm rest-lettre-btn"
+              onClick={() => void telechargerLettreMission()}
+              disabled={lettreBusy || !jeton}
+            >
+              {lettreBusy ? "Lettre…" : "Lettre de mission"}
+            </button>
+          </Tooltip>
+          {lettreErr && (
+            <span className="rest-lettre-err" role="alert">
+              {lettreErr}
+            </span>
+          )}
           <Tooltip label={PROCESS_TIPS.audit}>
             <button
               type="button"

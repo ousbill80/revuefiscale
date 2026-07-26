@@ -496,6 +496,35 @@ def api_lire_mission(
     return _mission_out(detail)
 
 
+@router.get("/missions/{mission_id}/lettre-mission.docx")
+def api_lettre_mission_docx(
+    mission_id: int,
+    utilisateur: UtilisateurDep,
+    session: Annotated[Session, Depends(session_abonne)],
+) -> Response:
+    """Livrable Word de cadrage — lettre de mission à personnaliser et signer."""
+    from backend.plateforme.lettre_mission import (
+        ErreurLettreMission,
+        generer_lettre_mission,
+    )
+
+    try:
+        contenu, nom_fichier = generer_lettre_mission(
+            session, utilisateur.tenant_id, mission_id
+        )
+    except ErreurLettreMission as e:
+        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail=str(e)) from e
+    return Response(
+        content=contenu,
+        media_type=(
+            "application/vnd.openxmlformats-officedocument.wordprocessingml.document"
+        ),
+        headers={
+            "Content-Disposition": f'attachment; filename="{nom_fichier}"'
+        },
+    )
+
+
 @router.patch("/missions/{mission_id}/cadrage", response_model=MissionOut)
 def api_patcher_cadrage_mission(
     mission_id: int,

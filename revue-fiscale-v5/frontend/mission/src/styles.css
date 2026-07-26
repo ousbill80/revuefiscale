@@ -9254,3 +9254,8 @@ tr.row-active td {
 .rest-fiab-echantillon ul { list-style: none; margin: 0.3rem 0 0; padding: 0 0 0 0.4rem; display: grid; gap: 0.2rem; }
 .rest-fiab-echantillon li { font-size: 0.76rem; color: var(--ink-soft, #475569); overflow-wrap: anywhere; }
 .rest-fiab-echantillon code { padding: 0.02rem 0.35rem; border: 1px solid var(--line, #e5e7eb); border-radius: 5px; background: var(--surface-soft, #f8fafc); font-size: 0.72rem; }
+
+/* Restitution — lettre de mission (livrable Word du cadrage) */
+.rest-lettre-btn { white-space: nowrap; }
+.rest-lettre-btn:disabled { opacity: 0.6; cursor: default; }
+.rest-lettre-err { font-size: 0.74rem; color: #b91c1c; align-self: center; max-width: 16rem; overflow-wrap: anywhere; }
