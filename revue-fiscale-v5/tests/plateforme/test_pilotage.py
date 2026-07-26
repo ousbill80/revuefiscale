@@ -130,6 +130,7 @@ def test_pilotage_structure_complete(session, cab):
         "alertes_source",
         "risques_en_retard",
         "echeances_portefeuille",
+        "relances_circularisation",
     }
     assert isinstance(corps["exposition_par_client"], list)
     assert isinstance(corps["missions_a_cloturer"], list)
@@ -142,6 +143,17 @@ def test_pilotage_structure_complete(session, cab):
     assert set(echeances) == {"total", "lignes"}
     assert echeances["total"] == 0
     assert echeances["lignes"] == []
+    relances = corps["relances_circularisation"]
+    assert set(relances) == {
+        "missions_concernees",
+        "items_en_attente",
+        "items_a_relancer",
+        "missions",
+    }
+    assert relances["missions_concernees"] == 0
+    assert relances["items_en_attente"] == 0
+    assert relances["items_a_relancer"] == 0
+    assert relances["missions"] == []
 
 
 def test_exposition_cumulee_risques_ouverts(session, cab):
@@ -299,6 +311,149 @@ def test_echeances_portefeuille_tee_depassee(session, cab, monkeypatch):
     assert depassees_tee[0]["jours_restants"] == -16
     # Le contribuable sans régime ne produit aucune ligne.
     assert all(x["contribuable_id"] != cid_vide for x in lignes)
+
+
+def _mission(session, tid: int, cid: int, statut: str = "en_cours") -> int:
+    with contexte_tenant(session, tid):
+        return session.execute(
+            text(
+                "INSERT INTO mission (tenant_id, contribuable_id, exercice, "
+                "statut) VALUES (:t, :c, 2024, :s) RETURNING id"
+            ),
+            {"t": tid, "c": cid, "s": statut},
+        ).scalar_one()
+
+
+def _suivi(
+    session,
+    tid: int,
+    mid: int,
+    cle: str,
+    statut: str,
+    date_relance: str | None = None,
+    maj_le: str | None = None,
+) -> None:
+    with contexte_tenant(session, tid):
+        session.execute(
+            text(
+                "INSERT INTO suivi_demande_renseignements "
+                "(tenant_id, mission_id, cle_item, libelle, statut, "
+                "date_relance, maj_le) "
+                "VALUES (:t, :m, :c, :c, :s, :d, "
+                "COALESCE(CAST(:maj AS timestamptz), now()))"
+            ),
+            {
+                "t": tid,
+                "m": mid,
+                "c": cle,
+                "s": statut,
+                "d": date_relance,
+                "maj": maj_le,
+            },
+        )
+
+
+def test_relances_circularisation_mission_a_relancer(session, cab):
+    client, h, tid = cab
+    cid = _contrib(client, h, "SARL Circularisation Pilotage")
+    mid = _mission(session, tid, cid)
+    # 2 en attente (dont 1 relance échue), 1 reçu, 1 sans objet.
+    _suivi(
+        session,
+        tid,
+        mid,
+        "analytique:7011",
+        "en_attente",
+        date_relance="2020-01-15",
+        maj_le="2024-01-10T08:00:00+00:00",
+    )
+    _suivi(
+        session,
+        tid,
+        mid,
+        "analytique:6222",
+        "en_attente",
+        date_relance="2999-12-31",
+        maj_le="2024-03-01T08:00:00+00:00",
+    )
+    _suivi(session, tid, mid, "piece:R1", "recu")
+    _suivi(session, tid, mid, "piece:R2", "sans_objet")
+    session.commit()
+
+    r = client.get("/api/v1/pilotage", headers=h)
+    assert r.status_code == 200, r.text
+    volet = r.json()["relances_circularisation"]
+    assert volet["missions_concernees"] == 1
+    assert volet["items_en_attente"] == 2
+    assert volet["items_a_relancer"] == 1
+    assert len(volet["missions"]) == 1
+    ligne = volet["missions"][0]
+    assert ligne["mission_id"] == mid
+    assert ligne["client"] == "SARL Circularisation Pilotage"
+    assert ligne["exercice"] == 2024
+    assert ligne["en_attente"] == 2
+    assert ligne["recu"] == 1
+    assert ligne["a_relancer"] == 1
+    # Plus ancienne attente = maj_le minimal des items en_attente.
+    assert ligne["plus_ancienne_attente"].startswith("2024-01-10")
+
+
+def test_relances_circularisation_exclusions(session, cab):
+    client, h, tid = cab
+    cid = _contrib(client, h, "SA Exclusions Circularisation")
+    # Mission clôturée avec en_attente → exclue.
+    mid_close = _mission(session, tid, cid, statut="cloturee")
+    _suivi(
+        session, tid, mid_close, "analytique:7011", "en_attente",
+        date_relance="2020-01-01",
+    )
+    # Mission en cours sans aucun en_attente → exclue.
+    mid_recu = _mission(session, tid, cid)
+    _suivi(session, tid, mid_recu, "piece:R1", "recu")
+    _suivi(session, tid, mid_recu, "piece:R2", "sans_objet")
+    session.commit()
+
+    r = client.get("/api/v1/pilotage", headers=h)
+    assert r.status_code == 200, r.text
+    volet = r.json()["relances_circularisation"]
+    ids = [m["mission_id"] for m in volet["missions"]]
+    assert mid_close not in ids
+    assert mid_recu not in ids
+    assert volet["missions_concernees"] == 0
+    assert volet["items_en_attente"] == 0
+    assert volet["items_a_relancer"] == 0
+
+
+def test_relances_circularisation_isolation_cross_tenant(session, cab):
+    client, h, tid = cab
+    cid = _contrib(client, h, "Circularisation Secrète Tenant A")
+    mid = _mission(session, tid, cid)
+    _suivi(
+        session, tid, mid, "analytique:7011", "en_attente",
+        date_relance="2020-01-01",
+    )
+    session.commit()
+
+    # Tenant A voit sa mission.
+    ra = client.get("/api/v1/pilotage", headers=h)
+    assert ra.status_code == 200
+    assert any(
+        m["mission_id"] == mid
+        for m in ra.json()["relances_circularisation"]["missions"]
+    )
+
+    # Tenant B : rien ne fuit.
+    _client_b, h_b, _tid_b = _provisionner(session)
+    rb = client.get("/api/v1/pilotage", headers=h_b)
+    assert rb.status_code == 200, rb.text
+    volet_b = rb.json()["relances_circularisation"]
+    assert volet_b == {
+        "missions_concernees": 0,
+        "items_en_attente": 0,
+        "items_a_relancer": 0,
+        "missions": [],
+    }
+    assert "Circularisation Secrète Tenant A" not in rb.text
 
 
 def test_isolation_cross_tenant(session, cab):

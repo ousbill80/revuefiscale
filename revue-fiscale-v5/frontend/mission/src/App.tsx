@@ -341,6 +341,20 @@ type PilotagePortefeuille = {
       statut: string;
     }>;
   };
+  relances_circularisation: {
+    missions_concernees: number;
+    items_en_attente: number;
+    items_a_relancer: number;
+    missions: Array<{
+      mission_id: number;
+      client: string;
+      exercice: number;
+      en_attente: number;
+      recu: number;
+      a_relancer: number;
+      plus_ancienne_attente: string | null;
+    }>;
+  };
 };
 
 /** Date ISO (aaaa-mm-jj) → jj/mm/aaaa ; valeur inattendue renvoyée telle quelle. */
@@ -3924,6 +3938,71 @@ export function App() {
                         {!pilotage.echeances_portefeuille.total && (
                           <li className="pilotage-vide">
                             Aucune échéance déclarative imminente sur 30 jours.
+                          </li>
+                        )}
+                      </ul>
+                    </article>
+
+                    <article className="panel dense pilotage-card">
+                      <h4 className="pilotage-card-title">
+                        Relances client
+                        <span
+                          className={
+                            pilotage.relances_circularisation.items_a_relancer
+                              ? "pilotage-count warn"
+                              : "pilotage-count"
+                          }
+                        >
+                          {pilotage.relances_circularisation.items_a_relancer}
+                        </span>
+                      </h4>
+                      <p className="pilotage-relances-totaux">
+                        {pilotage.relances_circularisation.missions_concernees}{" "}
+                        mission(s) ·{" "}
+                        {pilotage.relances_circularisation.items_en_attente}{" "}
+                        item(s) en attente ·{" "}
+                        {pilotage.relances_circularisation.items_a_relancer} à
+                        relancer
+                      </p>
+                      <ul className="pilotage-list">
+                        {pilotage.relances_circularisation.missions.map(
+                          (m) => (
+                            <li key={m.mission_id}>
+                              <button
+                                type="button"
+                                className="pilotage-row"
+                                onClick={() =>
+                                  void ouvrirMission(m.mission_id)
+                                }
+                              >
+                                <span className="pilotage-row-nom">
+                                  {m.client}
+                                </span>
+                                <span className="pilotage-row-meta">
+                                  Ex. {m.exercice} · {m.en_attente} en attente
+                                  · {m.recu} reçu(s)
+                                  {m.plus_ancienne_attente
+                                    ? ` · depuis ${fmtDateFr(m.plus_ancienne_attente)}`
+                                    : ""}
+                                </span>
+                                {m.a_relancer > 0 ? (
+                                  <span className="pilotage-badge relance">
+                                    {m.a_relancer} à relancer
+                                  </span>
+                                ) : (
+                                  <span className="pilotage-badge attente">
+                                    En attente
+                                  </span>
+                                )}
+                              </button>
+                            </li>
+                          ),
+                        )}
+                        {!pilotage.relances_circularisation
+                          .missions_concernees && (
+                          <li className="pilotage-vide">
+                            Aucune réponse client en attente sur les missions
+                            ouvertes.
                           </li>
                         )}
                       </ul>

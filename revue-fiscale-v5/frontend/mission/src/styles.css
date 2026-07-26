@@ -9323,6 +9323,11 @@ tr.row-active td {
 .pilotage-badge.imminent { background: #fffbeb; color: #92400e; border-color: #fde68a; }
 .pilotage-badge.depasse { background: #fef2f2; color: #b91c1c; border-color: #fecaca; }
 
+/* ── Pilotage — carte « Relances client » (circularisation) ──────── */
+.pilotage-relances-totaux { margin: 0 0 0.5rem; font-size: 0.74rem; color: var(--muted, #64748b); }
+.pilotage-badge.relance { background: #fef2f2; color: #b91c1c; border-color: #fecaca; }
+.pilotage-badge.attente { background: #fffbeb; color: #92400e; border-color: #fde68a; }
+
 /* ── Restitution — note de synthèse de mission (executive summary IA) ── */
 .rest-note-btn { white-space: nowrap; }
 .rest-note-btn:disabled { opacity: 0.6; cursor: default; }

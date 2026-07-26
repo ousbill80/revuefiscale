@@ -41,6 +41,9 @@ TOP_RETARDS: Final[int] = 5
 # lignes affichées — le compteur total reste exhaustif.
 HORIZON_ECHEANCES_JOURS: Final[int] = 30
 TOP_ECHEANCES: Final[int] = 15
+# Volet relances de circularisation : plafond de missions affichées —
+# les compteurs globaux restent exhaustifs.
+TOP_RELANCES: Final[int] = 15
 
 
 def _decimal_str(valeur: Any) -> str:
@@ -296,10 +299,63 @@ def _echeances_portefeuille(session: Session) -> dict[str, Any]:
     return {"total": len(lignes), "lignes": lignes[:TOP_ECHEANCES]}
 
 
+def _relances_circularisation(session: Session) -> dict[str, Any]:
+    """Suivi cabinet de la circularisation client — relances échues.
+
+    Agrège ``suivi_demande_renseignements`` par mission non clôturée
+    ayant au moins un item ``en_attente``. « À relancer » = en attente
+    avec date de relance échue (<= aujourd'hui). Les compteurs globaux
+    sont exhaustifs ; la liste est plafonnée à :data:`TOP_RELANCES`,
+    triée relances échues d'abord puis attente la plus ancienne.
+    """
+    rows = session.execute(
+        text(
+            "SELECT m.id AS mission_id, m.exercice, c.denomination, "
+            "COUNT(*) FILTER (WHERE s.statut = 'en_attente') "
+            "  AS en_attente, "
+            "COUNT(*) FILTER (WHERE s.statut = 'recu') AS recu, "
+            "COUNT(*) FILTER (WHERE s.statut = 'en_attente' "
+            "  AND s.date_relance IS NOT NULL "
+            "  AND s.date_relance <= CURRENT_DATE) AS a_relancer, "
+            "MIN(s.maj_le) FILTER (WHERE s.statut = 'en_attente') "
+            "  AS plus_ancienne_attente "
+            "FROM suivi_demande_renseignements s "
+            "JOIN mission m ON m.id = s.mission_id "
+            "JOIN contribuable c ON c.id = m.contribuable_id "
+            "WHERE m.statut <> 'cloturee' "
+            "GROUP BY m.id, m.exercice, c.denomination "
+            "HAVING COUNT(*) FILTER (WHERE s.statut = 'en_attente') > 0 "
+            "ORDER BY a_relancer DESC, plus_ancienne_attente ASC, m.id"
+        )
+    ).mappings().all()
+    missions = [
+        {
+            "mission_id": int(r["mission_id"]),
+            "client": str(r["denomination"]),
+            "exercice": int(r["exercice"]),
+            "en_attente": int(r["en_attente"]),
+            "recu": int(r["recu"]),
+            "a_relancer": int(r["a_relancer"]),
+            "plus_ancienne_attente": (
+                r["plus_ancienne_attente"].isoformat()
+                if r["plus_ancienne_attente"] is not None
+                else None
+            ),
+        }
+        for r in rows
+    ]
+    return {
+        "missions_concernees": len(missions),
+        "items_en_attente": sum(m["en_attente"] for m in missions),
+        "items_a_relancer": sum(m["a_relancer"] for m in missions),
+        "missions": missions[:TOP_RELANCES],
+    }
+
+
 def pilotage_portefeuille(
     session: Session, tenant_id: int
 ) -> dict[str, Any]:
-    """Cockpit associé — cinq volets, lecture seule sous RLS."""
+    """Cockpit associé — six volets, lecture seule sous RLS."""
     with contexte_tenant(session, tenant_id):
         return {
             "exposition_par_client": _exposition_par_client(session),
@@ -307,4 +363,5 @@ def pilotage_portefeuille(
             "alertes_source": _alertes_source(session),
             "risques_en_retard": _risques_en_retard(session),
             "echeances_portefeuille": _echeances_portefeuille(session),
+            "relances_circularisation": _relances_circularisation(session),
         }
