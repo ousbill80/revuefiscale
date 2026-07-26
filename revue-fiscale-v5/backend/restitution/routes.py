@@ -123,6 +123,81 @@ def derniere_note_synthese_disponible(
     return None
 
 
+def dernier_commentaire_analytique_disponible(
+    session: Session, tenant_id: int, mission_id: int
+) -> dict[str, Any] | None:
+    """Dernière version « disponible » du commentaire de revue analytique.
+
+    Lecture seule — jamais de génération (aucun appel LLM à l'export) :
+    on relit uniquement ce qui est déjà en base. Aucun commentaire
+    disponible → ``None`` (le rapport n'ajoute alors pas de section).
+    """
+    from backend.plateforme.commentaire_analytique import (
+        ErreurCommentaireAnalytique,
+        lister_commentaires,
+        obtenir_commentaire,
+    )
+
+    try:
+        versions = lister_commentaires(session, tenant_id, mission_id)
+    except ErreurCommentaireAnalytique:
+        return None
+    for v in versions:
+        if str(v.get("statut") or "") != "disponible":
+            continue
+        try:
+            commentaire = obtenir_commentaire(
+                session, tenant_id, mission_id, int(v["version"])
+            )
+        except (ErreurCommentaireAnalytique, TypeError, ValueError):
+            continue
+        if (
+            str(commentaire.get("statut") or "") == "disponible"
+            and isinstance(commentaire.get("contenu"), dict)
+        ):
+            return commentaire
+    return None
+
+
+def risques_ouverts_chiffres(
+    session: Session, tenant_id: int, mission_id: int
+) -> list[dict[str, Any]]:
+    """Risques ouverts du contribuable de la mission, avec chiffrage.
+
+    Lecture seule via ``lister_risques`` (le chiffrage indicatif
+    ``chiffrage_penalites`` est déjà sérialisé par risques.py — aucun
+    recalcul ici). Liste vide → le rapport n'ajoute pas de section.
+    """
+    from sqlalchemy import text
+
+    from backend.plateforme.contexte import contexte_tenant
+    from backend.plateforme.risques import (
+        STATUTS_NON_CLOS,
+        ErreurRisque,
+        lister_risques,
+    )
+
+    with contexte_tenant(session, tenant_id):
+        contribuable_id = session.execute(
+            text("SELECT contribuable_id FROM mission WHERE id = :m"),
+            {"m": mission_id},
+        ).scalar_one_or_none()
+    if contribuable_id is None:
+        return []
+    try:
+        risques = lister_risques(
+            session, tenant_id, contribuable_id=int(contribuable_id)
+        )
+    except ErreurRisque:
+        return []
+    return [
+        r
+        for r in risques
+        if str(r.get("statut") or "") in STATUTS_NON_CLOS
+        and isinstance(r.get("chiffrage_penalites"), dict)
+    ]
+
+
 @router.get("/missions/{mission_id}/restitution/rapport.docx")
 def api_rapport_docx(
     mission_id: int,
@@ -141,6 +216,12 @@ def api_rapport_docx(
     note = derniere_note_synthese_disponible(
         session, utilisateur.tenant_id, mission_id
     )
+    commentaire = dernier_commentaire_analytique_disponible(
+        session, utilisateur.tenant_id, mission_id
+    )
+    risques = risques_ouverts_chiffres(
+        session, utilisateur.tenant_id, mission_id
+    )
     contenu = rendre_rapport_docx(
         meta=meta,
         passage=r.passage,
@@ -150,6 +231,8 @@ def api_rapport_docx(
         controles_fec=controles_fec,
         revue_analytique=revue_analytique,
         note_synthese=note,
+        commentaire_analytique=commentaire,
+        risques_chiffres=risques,
     )
     return Response(
         content=contenu,
@@ -182,6 +265,12 @@ def api_rapport_pdf(
     note = derniere_note_synthese_disponible(
         session, utilisateur.tenant_id, mission_id
     )
+    commentaire = dernier_commentaire_analytique_disponible(
+        session, utilisateur.tenant_id, mission_id
+    )
+    risques = risques_ouverts_chiffres(
+        session, utilisateur.tenant_id, mission_id
+    )
     contenu = rendre_rapport_pdf(
         meta=meta,
         passage=r.passage,
@@ -191,6 +280,8 @@ def api_rapport_pdf(
         controles_fec=controles_fec,
         revue_analytique=revue_analytique,
         note_synthese=note,
+        commentaire_analytique=commentaire,
+        risques_chiffres=risques,
     )
     return Response(
         content=contenu,

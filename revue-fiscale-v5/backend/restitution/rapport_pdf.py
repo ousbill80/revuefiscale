@@ -13,6 +13,8 @@ from reportlab.pdfgen import canvas
 from backend.restitution.passage import Passage
 from backend.restitution.rapport import (
     lignes_comptes_source,
+    section_commentaire_analytique,
+    section_exposition_penalites,
     section_fiabilite_source,
     section_note_synthese,
     section_perimetre,
@@ -40,6 +42,8 @@ def rendre_rapport_pdf(
     controles_fec: Mapping[str, Any] | None = None,
     revue_analytique: Mapping[str, Any] | None = None,
     note_synthese: Mapping[str, Any] | None = None,
+    commentaire_analytique: Mapping[str, Any] | None = None,
+    risques_chiffres: Sequence[Mapping[str, Any]] | None = None,
 ) -> bytes:
     """Produit un PDF simple a partir des donnees deja calculees."""
     buf = io.BytesIO()
@@ -105,6 +109,12 @@ def rendre_rapport_pdf(
     if lignes_note:
         bloc_markdown_multiligne(lignes_note)
         y -= 6
+    # Commentaire IA de revue analytique (dernière version disponible, lue
+    # en base — jamais générée à l'export). Vide → aucune section.
+    lignes_commentaire = section_commentaire_analytique(commentaire_analytique)
+    if lignes_commentaire:
+        bloc_markdown_multiligne(lignes_commentaire)
+        y -= 6
     bloc_markdown(section_perimetre(meta))
     y -= 6
     # En tête de synthèse (même ordre que l'écran) : fiabilité puis revue N/N-1.
@@ -112,6 +122,12 @@ def rendre_rapport_pdf(
     y -= 6
     bloc_markdown(section_revue_analytique(revue_analytique))
     y -= 6
+    # Exposition pénalités + intérêts (chiffrage indicatif déjà sérialisé
+    # sur les risques ouverts du contribuable). Vide → aucune section.
+    lignes_penalites = section_exposition_penalites(risques_chiffres)
+    if lignes_penalites:
+        bloc_markdown_multiligne(lignes_penalites)
+        y -= 6
     ligne("Passage comptable / fiscal", gras=True)
     for p in passage.lignes:
         ligne(

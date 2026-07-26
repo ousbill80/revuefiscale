@@ -11,6 +11,8 @@ from docx import Document
 from backend.restitution.passage import Passage
 from backend.restitution.rapport import (
     lignes_comptes_source,
+    section_commentaire_analytique,
+    section_exposition_penalites,
     section_fiabilite_source,
     section_note_synthese,
     section_perimetre,
@@ -49,6 +51,8 @@ def rendre_rapport_docx(
     controles_fec: Mapping[str, Any] | None = None,
     revue_analytique: Mapping[str, Any] | None = None,
     note_synthese: Mapping[str, Any] | None = None,
+    commentaire_analytique: Mapping[str, Any] | None = None,
+    risques_chiffres: Sequence[Mapping[str, Any]] | None = None,
 ) -> bytes:
     """Produit un .docx a partir des donnees deja calculees (aucun recalcul fiscal)."""
     doc = Document()
@@ -64,11 +68,23 @@ def rendre_rapport_docx(
     # lue en base — jamais générée à l'export). Vide → aucune section.
     _ajouter_lignes_markdown_simples(doc, section_note_synthese(note_synthese))
 
+    # Commentaire IA de revue analytique (dernière version disponible, lue
+    # en base — jamais générée à l'export). Vide → aucune section.
+    _ajouter_lignes_markdown_simples(
+        doc, section_commentaire_analytique(commentaire_analytique)
+    )
+
     _ajouter_lignes_markdown_simples(doc, section_perimetre(meta))
 
     # En tête de synthèse (même ordre que l'écran) : fiabilité puis revue N/N-1.
     _ajouter_lignes_markdown_simples(doc, section_fiabilite_source(controles_fec))
     _ajouter_lignes_markdown_simples(doc, section_revue_analytique(revue_analytique))
+
+    # Exposition pénalités + intérêts (chiffrage indicatif déjà sérialisé
+    # sur les risques ouverts du contribuable). Vide → aucune section.
+    _ajouter_lignes_markdown_simples(
+        doc, section_exposition_penalites(risques_chiffres)
+    )
 
     doc.add_heading("Passage comptable / fiscal", level=2)
     table = doc.add_table(rows=1, cols=4)

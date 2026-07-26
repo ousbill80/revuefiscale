@@ -371,3 +371,262 @@ def test_section_note_synthese_vide_ou_invalide():
     assert section_note_synthese(None) == []
     assert section_note_synthese({"statut": "echec", "contenu": None}) == []
     assert section_note_synthese({"contenu": "pas un dict"}) == []
+
+
+# ── Commentaire de revue analytique dans les exports ──────────────────
+
+
+def _commentaire_disponible():
+    return {
+        "id": 3,
+        "mission_id": 1,
+        "version": 1,
+        "statut": "disponible",
+        "modele": "provider-x",
+        "erreur": None,
+        "auteur": "admin@demo.local",
+        "cree_le": "2026-07-21T11:00:00",
+        "contenu": {
+            "resume": "Hausse marquée des ventes, trésorerie en tension.",
+            "explications": [
+                {
+                    "poste": "701100",
+                    "hypothese_explicative": (
+                        "La hausse des ventes pourrait refléter un nouveau "
+                        "contrat significatif."
+                    ),
+                    "question_a_poser_au_client": (
+                        "Pouvez-vous détailler les nouveaux clients de "
+                        "l'exercice ?"
+                    ),
+                    "gravite": "haute",
+                },
+                {
+                    "poste": "512100",
+                    "hypothese_explicative": (
+                        "La baisse de trésorerie serait liée aux "
+                        "investissements de fin d'exercice."
+                    ),
+                    "question_a_poser_au_client": "",
+                    "gravite": "faible",
+                },
+            ],
+            "alertes_coherence": [
+                "Charges en hausse sans hausse d'activité correspondante."
+            ],
+        },
+    }
+
+
+def test_docx_avec_commentaire_analytique_disponible():
+    """Commentaire disponible → section après la note, gravités et questions."""
+    passage, score, meta, conclusions, controles, revue = _donnees_communes()
+    docx = rendre_rapport_docx(
+        meta=meta,
+        passage=passage,
+        conclusions=conclusions,
+        score=score,
+        extrait_audit=[],
+        controles_fec=controles,
+        revue_analytique=revue,
+        note_synthese=_note_disponible(),
+        commentaire_analytique=_commentaire_disponible(),
+    )
+    textes = _texte_docx(docx)
+    assert "Commentaire de revue analytique" in textes
+    assert "version 1 du 21/07/2026" in textes
+    assert "Résumé : Hausse marquée des ventes" in textes
+    assert "[HAUTE] 701100" in textes
+    assert "[FAIBLE] 512100" in textes
+    assert (
+        "Question au client : Pouvez-vous détailler les nouveaux clients"
+        in textes
+    )
+    assert "Alertes de cohérence" in textes
+    assert "Charges en hausse sans hausse d'activité" in textes
+    # Placement : après la note de synthèse, avant le périmètre (corps).
+    assert (
+        textes.index("Note de synthèse")
+        < textes.index("Commentaire de revue analytique")
+        < textes.index("Périmètre déclaré")
+    )
+
+
+def test_docx_sans_commentaire_analytique_pas_de_section():
+    """Aucun commentaire disponible → aucune section (pas de titre vide)."""
+    passage, score, meta, conclusions, _, _ = _donnees_communes()
+    for commentaire in (None, {"statut": "echec", "contenu": None}):
+        docx = rendre_rapport_docx(
+            meta=meta,
+            passage=passage,
+            conclusions=conclusions,
+            score=score,
+            extrait_audit=[],
+            commentaire_analytique=commentaire,
+        )
+        assert "Commentaire de revue analytique" not in _texte_docx(docx)
+
+
+def test_pdf_avec_commentaire_analytique_disponible():
+    passage, score, meta, conclusions, controles, revue = _donnees_communes()
+    pdf = rendre_rapport_pdf(
+        meta=meta,
+        passage=passage,
+        conclusions=conclusions,
+        score=score,
+        extrait_audit=[],
+        controles_fec=controles,
+        revue_analytique=revue,
+        commentaire_analytique=_commentaire_disponible(),
+    )
+    assert pdf.startswith(b"%PDF")
+    texte = _texte_pdf(pdf)
+    assert "Commentaire de revue analytique" in texte
+    assert "701100" in texte
+    assert "512100" in texte
+    assert "Question au client" in texte
+
+
+def test_pdf_sans_commentaire_analytique_pas_de_section():
+    passage, score, meta, conclusions, _, _ = _donnees_communes()
+    pdf = rendre_rapport_pdf(
+        meta=meta,
+        passage=passage,
+        conclusions=conclusions,
+        score=score,
+        extrait_audit=[],
+        commentaire_analytique=None,
+    )
+    assert pdf.startswith(b"%PDF")
+    assert "Commentaire de revue analytique" not in _texte_pdf(pdf)
+
+
+def test_section_commentaire_analytique_vide_ou_invalide():
+    from backend.restitution.rapport import section_commentaire_analytique
+
+    assert section_commentaire_analytique(None) == []
+    assert (
+        section_commentaire_analytique({"statut": "echec", "contenu": None})
+        == []
+    )
+    assert section_commentaire_analytique({"contenu": "pas un dict"}) == []
+
+
+# ── Exposition pénalités et intérêts dans les exports ─────────────────
+
+
+def _risques_ouverts_chiffres():
+    """Risques sérialisés comme backend/plateforme/risques.py (chiffrage réel)."""
+    from backend.plateforme.penalites import chiffrer_risque
+
+    base = [
+        {
+            "id": 11,
+            "impot": "TVA",
+            "libelle": "TVA déductible non justifiée",
+            "statut": "ouvert",
+            "montant_estime": "1000000",
+            "exercice_origine": 2024,
+        },
+        {
+            "id": 12,
+            "impot": "BIC",
+            "libelle": "Dons non déductibles",
+            "statut": "en_traitement",
+            "montant_estime": "500000",
+            "exercice_origine": 2023,
+        },
+    ]
+    from datetime import date
+
+    for r in base:
+        r["chiffrage_penalites"] = chiffrer_risque(
+            r, aujourd_hui=date(2026, 7, 1)
+        )
+    return base
+
+
+def test_docx_avec_risques_ouverts_chiffres():
+    """Risque ouvert chiffré → section pénalités avec lignes, totaux, mention."""
+    passage, score, meta, conclusions, _, _ = _donnees_communes()
+    risques = _risques_ouverts_chiffres()
+    docx = rendre_rapport_docx(
+        meta=meta,
+        passage=passage,
+        conclusions=conclusions,
+        score=score,
+        extrait_audit=[],
+        risques_chiffres=risques,
+    )
+    textes = _texte_docx(docx)
+    assert "Exposition pénalités et intérêts (indicatif)" in textes
+    # Risque TVA 2024 : 18 mois au 01/07/2026 → intérêts 9 %, assiette 25 %.
+    assert "[TVA 2024] TVA déductible non justifiée" in textes
+    assert "droit simple 1 000 000 FCFA" in textes
+    assert "+ intérêts 90 000 FCFA" in textes
+    assert "+ pénalité 250 000 FCFA" in textes
+    assert "= total 1 340 000 FCFA (18 mois)" in textes
+    # Risque BIC 2023 : 30 mois → intérêts 15 % de 500 000 = 75 000.
+    assert "[BIC 2023] Dons non déductibles" in textes
+    assert "= total 700 000 FCFA (30 mois)" in textes
+    # Total général = 1 340 000 + 700 000, et mention obligatoire.
+    assert "Total général estimé : 2 040 000 FCFA" in textes
+    assert "Chiffrage indicatif, à valider par l'associé." in textes
+
+
+def test_docx_sans_risque_ouvert_chiffre_pas_de_section():
+    """Aucun risque ouvert chiffré → section omise (liste vide ou None)."""
+    passage, score, meta, conclusions, _, _ = _donnees_communes()
+    for risques in (None, [], [{"id": 1, "chiffrage_penalites": None}]):
+        docx = rendre_rapport_docx(
+            meta=meta,
+            passage=passage,
+            conclusions=conclusions,
+            score=score,
+            extrait_audit=[],
+            risques_chiffres=risques,
+        )
+        assert "Exposition pénalités" not in _texte_docx(docx)
+
+
+def test_pdf_avec_risques_ouverts_chiffres():
+    passage, score, meta, conclusions, _, _ = _donnees_communes()
+    pdf = rendre_rapport_pdf(
+        meta=meta,
+        passage=passage,
+        conclusions=conclusions,
+        score=score,
+        extrait_audit=[],
+        risques_chiffres=_risques_ouverts_chiffres(),
+    )
+    assert pdf.startswith(b"%PDF")
+    texte = _texte_pdf(pdf)
+    assert "Exposition p" in texte  # « pénalités » en WinAnsi
+    assert "1 340 000 FCFA" in texte
+    assert "2 040 000 FCFA" in texte
+    assert "valider par l'associ" in texte
+
+
+def test_pdf_sans_risque_ouvert_chiffre_pas_de_section():
+    passage, score, meta, conclusions, _, _ = _donnees_communes()
+    pdf = rendre_rapport_pdf(
+        meta=meta,
+        passage=passage,
+        conclusions=conclusions,
+        score=score,
+        extrait_audit=[],
+        risques_chiffres=[],
+    )
+    assert pdf.startswith(b"%PDF")
+    assert "Exposition p" not in _texte_pdf(pdf)
+
+
+def test_section_exposition_penalites_vide():
+    from backend.restitution.rapport import section_exposition_penalites
+
+    assert section_exposition_penalites(None) == []
+    assert section_exposition_penalites([]) == []
+    assert (
+        section_exposition_penalites([{"id": 1, "chiffrage_penalites": None}])
+        == []
+    )

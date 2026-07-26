@@ -1,6 +1,7 @@
 """Rendu markdown du rapport de mission (texte)."""
 from __future__ import annotations
 
+import contextlib
 from collections.abc import Mapping, Sequence
 from decimal import Decimal
 from typing import Any
@@ -265,6 +266,135 @@ def section_note_synthese(note: Mapping[str, Any] | None) -> list[str]:
             lignes.append(f"- {r}")
         lignes.append("")
 
+    return lignes
+
+
+def section_commentaire_analytique(
+    commentaire: Mapping[str, Any] | None,
+) -> list[str]:
+    """Section « Commentaire de revue analytique » — dernière version *disponible*.
+
+    Partagée DOCX/PDF, purement déclarative : le commentaire est lu en base
+    (jamais généré ici — aucun appel LLM à l'export). Retourne une liste
+    VIDE si aucun commentaire disponible : pas de section vide.
+    """
+    if not isinstance(commentaire, Mapping):
+        return []
+    contenu = commentaire.get("contenu")
+    if not isinstance(contenu, Mapping):
+        return []
+
+    lignes: list[str] = ["## Commentaire de revue analytique", ""]
+    entete = "Lecture commentée des variations N/N-1"
+    version = commentaire.get("version")
+    if version is not None:
+        entete += f" — version {version}"
+    date_txt = _fmt_date_jjmmaaaa(commentaire.get("cree_le"))
+    if date_txt:
+        entete += f" du {date_txt}"
+    lignes.append(
+        entete + " (assistance IA, consultative — l'humain valide)."
+    )
+    lignes.append("")
+
+    resume = str(contenu.get("resume") or "").strip()
+    if resume:
+        lignes.append(f"**Résumé** : {resume}")
+        lignes.append("")
+
+    explications = [
+        e for e in (contenu.get("explications") or []) if isinstance(e, Mapping)
+    ]
+    if explications:
+        lignes.append(f"Explications par poste ({len(explications)}) :")
+        lignes.append("")
+        for e in explications:
+            gravite = _LIBELLES_GRAVITE.get(
+                str(e.get("gravite") or "").strip().lower(), "MOYENNE"
+            )
+            poste = str(e.get("poste") or "—").strip() or "—"
+            hypothese = str(e.get("hypothese_explicative") or "").strip()
+            lignes.append(f"- [{gravite}] `{poste}` — {hypothese}")
+            question = str(e.get("question_a_poser_au_client") or "").strip()
+            if question:
+                lignes.append(f"  - Question au client : {question}")
+        lignes.append("")
+
+    alertes = [
+        str(a).strip()
+        for a in (contenu.get("alertes_coherence") or [])
+        if str(a).strip()
+    ]
+    if alertes:
+        lignes.append("Alertes de cohérence :")
+        lignes.append("")
+        for a in alertes:
+            lignes.append(f"- {a}")
+        lignes.append("")
+
+    return lignes
+
+
+def _fmt_fcfa_entier(valeur: Any) -> str:
+    """« 1 500 000 FCFA » depuis un montant str/Decimal (JSON-safe)."""
+    try:
+        montant = Decimal(str(valeur))
+    except ArithmeticError:
+        return f"{valeur} FCFA"
+    return f"{montant:,.0f} FCFA".replace(",", " ")
+
+
+def section_exposition_penalites(
+    risques: Sequence[Mapping[str, Any]] | None,
+) -> list[str]:
+    """Section « Exposition pénalités et intérêts (indicatif) » — DOCX/PDF.
+
+    Reprend le chiffrage indicatif déjà sérialisé sur chaque risque
+    (``chiffrage_penalites`` de backend/plateforme/risques.py — barème de
+    backend/plateforme/penalites.py, aucun recalcul ici). Seuls les risques
+    déjà filtrés en amont (ouverts + chiffrés) sont attendus : liste vide
+    ou None → aucune section.
+    """
+    lignes_risques: list[tuple[Mapping[str, Any], Mapping[str, Any]]] = []
+    for r in risques or []:
+        if not isinstance(r, Mapping):
+            continue
+        chiffrage = r.get("chiffrage_penalites")
+        if isinstance(chiffrage, Mapping):
+            lignes_risques.append((r, chiffrage))
+    if not lignes_risques:
+        return []
+
+    lignes: list[str] = ["## Exposition pénalités et intérêts (indicatif)", ""]
+    lignes.append(
+        f"Risques ouverts chiffrés du contribuable ({len(lignes_risques)}) — "
+        "intérêts et pénalités estimés depuis la fin de l'exercice d'origine :"
+    )
+    lignes.append("")
+    total_general = Decimal("0")
+    for r, chiffrage in lignes_risques:
+        titre = str(r.get("libelle") or "—").strip() or "—"
+        impot = str(r.get("impot") or "").strip()
+        exercice = r.get("exercice_origine")
+        prefixe = f"[{impot} {exercice}] " if impot and exercice else ""
+        mois = int(chiffrage.get("mois_retard") or 0)
+        with contextlib.suppress(ArithmeticError):
+            total_general += Decimal(str(chiffrage.get("total_estime") or "0"))
+        lignes.append(
+            f"- {prefixe}{titre} — droit simple "
+            f"{_fmt_fcfa_entier(chiffrage.get('droit_simple'))} "
+            f"+ intérêts {_fmt_fcfa_entier(chiffrage.get('interet_retard'))} "
+            f"+ pénalité {_fmt_fcfa_entier(chiffrage.get('penalite_assiette'))} "
+            f"= total {_fmt_fcfa_entier(chiffrage.get('total_estime'))} "
+            f"({mois} mois)"
+        )
+    lignes.append("")
+    lignes.append(
+        f"**Total général estimé** : {_fmt_fcfa_entier(total_general)}"
+    )
+    lignes.append("")
+    lignes.append("Chiffrage indicatif, à valider par l'associé.")
+    lignes.append("")
     return lignes
 
 
