@@ -113,6 +113,173 @@ def section_perimetre(meta: Mapping[str, Any]) -> list[str]:
 _section_perimetre = section_perimetre
 
 
+def _fmt_date_jjmmaaaa(valeur: Any) -> str | None:
+    """Date jj/mm/aaaa depuis un datetime/date ou une chaîne ISO."""
+    if valeur is None:
+        return None
+    if hasattr(valeur, "strftime"):
+        return valeur.strftime("%d/%m/%Y")
+    brut = str(valeur).strip()
+    if not brut:
+        return None
+    # Chaîne ISO « aaaa-mm-jj[Thh:mm:ss] » → jj/mm/aaaa.
+    date_part = brut.split("T")[0].split(" ")[0]
+    morceaux = date_part.split("-")
+    if len(morceaux) == 3 and all(m.isdigit() for m in morceaux):
+        return f"{morceaux[2]}/{morceaux[1]}/{morceaux[0]}"
+    return brut
+
+
+def section_fiabilite_source(
+    controles_fec: Mapping[str, Any] | None,
+) -> list[str]:
+    """Section « Fiabilité de la source » — contrôles de vraisemblance FEC.
+
+    Partagée DOCX/PDF (même source que le périmètre). Aucun recalcul :
+    restitue le dernier jeu de contrôles persisté à l'import.
+    """
+    lignes: list[str] = ["## Fiabilité de la source", ""]
+    controles = (
+        controles_fec.get("controles") if isinstance(controles_fec, Mapping) else None
+    )
+    if not controles:
+        lignes.append(
+            "_Aucun contrôle de vraisemblance FEC enregistré pour cette "
+            "mission (source non FEC ou non importée)._"
+        )
+        lignes.append("")
+        return lignes
+
+    exercice = controles_fec.get("exercice")
+    date_txt = _fmt_date_jjmmaaaa(controles_fec.get("cree_le"))
+    entete = "Contrôles de vraisemblance de la source FEC"
+    if exercice is not None:
+        entete += f" — exercice {exercice}"
+    if date_txt:
+        entete += f", importée le {date_txt}"
+    lignes.append(entete + " (informationnels, jamais bloquants) :")
+    lignes.append("")
+    for c in controles:
+        if not isinstance(c, Mapping):
+            continue
+        statut = str(c.get("statut") or "ok")
+        badge = "ALERTE" if statut == "alerte" else "OK"
+        libelle = str(c.get("libelle") or c.get("code") or "—")
+        compteur = int(c.get("compteur") or 0)
+        if compteur > 0:
+            occ = f" — {compteur} occurrence{'s' if compteur > 1 else ''}"
+        else:
+            occ = ""
+        lignes.append(f"- [{badge}] {libelle}{occ}")
+    lignes.append("")
+    return lignes
+
+
+_LIBELLES_CLASSEMENT = {
+    "apparition": "apparition",
+    "disparition": "disparition",
+    "variation_forte": "variation forte",
+    "stable": "stable",
+}
+
+_MAX_LIGNES_REVUE = 20
+
+
+def section_revue_analytique(
+    revue: Mapping[str, Any] | None,
+) -> list[str]:
+    """Section « Revue analytique N / N-1 » — partagée DOCX/PDF.
+
+    Reprend le payload de ``revue_analytique_mission`` : lignes principales
+    (max 20, déjà triées par variation absolue décroissante) et totaux par
+    classe SYSCOHADA. Mention sobre si aucun exercice antérieur comparable.
+    """
+    disponible = bool(isinstance(revue, Mapping) and revue.get("disponible"))
+    exercice_n = revue.get("exercice_n") if isinstance(revue, Mapping) else None
+    exercice_n1 = revue.get("exercice_n1") if isinstance(revue, Mapping) else None
+    titre = "## Revue analytique"
+    if exercice_n is not None and exercice_n1 is not None:
+        titre += f" {exercice_n} / {exercice_n1}"
+    else:
+        titre += " N / N-1"
+    lignes: list[str] = [titre, ""]
+    if not disponible:
+        lignes.append("_Aucun exercice antérieur comparable._")
+        lignes.append("")
+        return lignes
+
+    def _mt(v: Any) -> str:
+        if v is None:
+            return "—"
+        return _fmt_montant(Decimal(str(v)))
+
+    contenu = [x for x in (revue.get("lignes") or []) if isinstance(x, Mapping)]
+    lignes.append(
+        f"Lignes principales ({min(len(contenu), _MAX_LIGNES_REVUE)} "
+        f"sur {len(contenu)}, triées par variation absolue) :"
+    )
+    lignes.append("")
+    for ligne in contenu[:_MAX_LIGNES_REVUE]:
+        pct = ligne.get("variation_pct")
+        pct_txt = (
+            f"{str(pct).replace('.', ',')} %" if pct is not None else "—"
+        )
+        classement = _LIBELLES_CLASSEMENT.get(
+            str(ligne.get("classement") or ""), str(ligne.get("classement") or "—")
+        )
+        lignes.append(
+            f"- {ligne.get('compte')} · {ligne.get('libelle') or '—'} : "
+            f"N {_mt(ligne.get('solde_n'))} FCFA / "
+            f"N-1 {_mt(ligne.get('solde_n1'))} FCFA / "
+            f"variation {_mt(ligne.get('variation'))} FCFA ({pct_txt}) — "
+            f"{classement}"
+        )
+    lignes.append("")
+    totaux = [
+        t for t in (revue.get("totaux_par_classe") or []) if isinstance(t, Mapping)
+    ]
+    if totaux:
+        lignes.append("Totaux par classe SYSCOHADA :")
+        lignes.append("")
+        for t in totaux:
+            lignes.append(
+                f"- Classe {t.get('classe')} : N {_mt(t.get('total_n'))} FCFA / "
+                f"N-1 {_mt(t.get('total_n1'))} FCFA / "
+                f"variation {_mt(t.get('variation'))} FCFA"
+            )
+        lignes.append("")
+    return lignes
+
+
+def lignes_comptes_source(
+    conclusion: Mapping[str, Any],
+) -> list[str]:
+    """Puces « Comptes à l'origine » d'une conclusion (vide si aucun).
+
+    Format : compte · libellé · solde FCFA · sens — piste d'audit brute,
+    jamais un jugement fiscal.
+    """
+    comptes = conclusion.get("comptes_source")
+    if not isinstance(comptes, (list, tuple)) or not comptes:
+        return []
+    out: list[str] = []
+    for item in comptes:
+        if not isinstance(item, Mapping):
+            continue
+        solde = item.get("solde")
+        try:
+            solde_txt = (
+                _fmt_montant(Decimal(str(solde))) if solde not in (None, "") else "—"
+            )
+        except ArithmeticError:
+            solde_txt = str(solde)
+        out.append(
+            f"- {item.get('compte')} · {item.get('libelle') or '—'} · "
+            f"{solde_txt} FCFA · {item.get('sens') or '—'}"
+        )
+    return out
+
+
 def rendre_rapport_markdown(
     *,
     meta: Mapping[str, Any],

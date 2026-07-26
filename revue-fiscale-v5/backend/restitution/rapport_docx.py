@@ -9,7 +9,12 @@ from typing import Any
 from docx import Document
 
 from backend.restitution.passage import Passage
-from backend.restitution.rapport import section_perimetre
+from backend.restitution.rapport import (
+    lignes_comptes_source,
+    section_fiabilite_source,
+    section_perimetre,
+    section_revue_analytique,
+)
 from backend.restitution.risques import ScoreRisque
 
 
@@ -40,6 +45,8 @@ def rendre_rapport_docx(
     conclusions: Sequence[Mapping[str, object]],
     score: ScoreRisque,
     extrait_audit: Sequence[Mapping[str, Any]],
+    controles_fec: Mapping[str, Any] | None = None,
+    revue_analytique: Mapping[str, Any] | None = None,
 ) -> bytes:
     """Produit un .docx a partir des donnees deja calculees (aucun recalcul fiscal)."""
     doc = Document()
@@ -52,6 +59,10 @@ def rendre_rapport_docx(
     doc.add_paragraph(f"Version referentiel : {meta.get('version_referentiel_id')}")
 
     _ajouter_lignes_markdown_simples(doc, section_perimetre(meta))
+
+    # En tête de synthèse (même ordre que l'écran) : fiabilité puis revue N/N-1.
+    _ajouter_lignes_markdown_simples(doc, section_fiabilite_source(controles_fec))
+    _ajouter_lignes_markdown_simples(doc, section_revue_analytique(revue_analytique))
 
     doc.add_heading("Passage comptable / fiscal", level=2)
     table = doc.add_table(rows=1, cols=4)
@@ -66,6 +77,17 @@ def rendre_rapport_docx(
         row[1].text = str(ligne.sens)
         row[2].text = _fmt(ligne.montant)
         row[3].text = str(ligne.niveau_risque)
+
+    # Comptes à l'origine de chaque conclusion/anomalie (piste d'audit).
+    for c in conclusions:
+        puces = lignes_comptes_source(c)
+        if not puces:
+            continue
+        doc.add_paragraph(
+            f"Comptes à l'origine — {c.get('regle_id')} "
+            f"(statut {c.get('statut') or 'anomalie'}) :"
+        )
+        _ajouter_lignes_markdown_simples(doc, puces)
 
     doc.add_paragraph(
         f"Total reintegrations : {_fmt(passage.total_reintegration)} — "

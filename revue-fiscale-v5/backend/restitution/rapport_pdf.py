@@ -11,12 +11,22 @@ from reportlab.lib.units import cm
 from reportlab.pdfgen import canvas
 
 from backend.restitution.passage import Passage
-from backend.restitution.rapport import section_perimetre
+from backend.restitution.rapport import (
+    lignes_comptes_source,
+    section_fiabilite_source,
+    section_perimetre,
+    section_revue_analytique,
+)
 from backend.restitution.risques import ScoreRisque
 
 
 def _fmt(montant: Decimal) -> str:
     return f"{montant:,.2f}".replace(",", " ").replace(".", ",")
+
+
+def _winansi(texte: str) -> str:
+    """Helvetica encode en WinAnsi — remplace les glyphes hors Latin-1."""
+    return texte.encode("latin-1", "replace").decode("latin-1")
 
 
 def rendre_rapport_pdf(
@@ -26,6 +36,8 @@ def rendre_rapport_pdf(
     conclusions: Sequence[Mapping[str, object]],
     score: ScoreRisque,
     extrait_audit: Sequence[Mapping[str, Any]],
+    controles_fec: Mapping[str, Any] | None = None,
+    revue_analytique: Mapping[str, Any] | None = None,
 ) -> bytes:
     """Produit un PDF simple a partir des donnees deja calculees."""
     buf = io.BytesIO()
@@ -49,20 +61,46 @@ def rendre_rapport_pdf(
     ligne(f"Exercice : {meta.get('exercice')}")
     ligne(f"Version referentiel : {meta.get('version_referentiel_id')}")
     y -= 6
-    for brut in section_perimetre(meta):
-        texte = brut.strip()
-        if not texte:
-            continue
-        if texte.startswith("## "):
-            ligne(texte[3:].strip(), gras=True)
-        else:
-            ligne(texte.replace("**", "").replace("`", "").replace("_", ""))
+
+    def bloc_markdown(lignes_md: Sequence[str]) -> None:
+        for brut in lignes_md:
+            texte = brut.strip()
+            if not texte:
+                continue
+            if texte.startswith("## "):
+                ligne(_winansi(texte[3:].strip()), gras=True)
+            else:
+                ligne(
+                    _winansi(
+                        texte.replace("**", "").replace("`", "").replace("_", "")
+                    )
+                )
+
+    bloc_markdown(section_perimetre(meta))
+    y -= 6
+    # En tête de synthèse (même ordre que l'écran) : fiabilité puis revue N/N-1.
+    bloc_markdown(section_fiabilite_source(controles_fec))
+    y -= 6
+    bloc_markdown(section_revue_analytique(revue_analytique))
     y -= 6
     ligne("Passage comptable / fiscal", gras=True)
     for p in passage.lignes:
         ligne(
             f"{p.regle_id} | {p.sens} | {_fmt(p.montant)} | {p.niveau_risque}"
         )
+    # Comptes à l'origine de chaque conclusion/anomalie (piste d'audit).
+    for concl in conclusions:
+        puces = lignes_comptes_source(concl)
+        if not puces:
+            continue
+        ligne(
+            _winansi(
+                f"Comptes à l'origine — {concl.get('regle_id')} "
+                f"(statut {concl.get('statut') or 'anomalie'}) :"
+            )
+        )
+        for puce in puces:
+            ligne(_winansi("  " + puce[2:]))
     ligne(
         f"Solde net : {_fmt(passage.solde_net)} — "
         f"score risque (heuristique) : {score.score}"
@@ -75,6 +113,5 @@ def rendre_rapport_pdf(
         )
     y -= 6
     ligne("Montants issus du referentiel YAML (a confirmer possibles).", delta=12)
-    _ = conclusions  # deja resumes dans le passage
     c.save()
     return buf.getvalue()

@@ -65,6 +65,30 @@ def _meta_export_complet(
     return base
 
 
+def _enrichissements_export(
+    session: Session, tenant_id: int, mission_id: int
+) -> tuple[dict[str, Any] | None, dict[str, Any] | None]:
+    """Fiabilité source (contrôles FEC) + revue analytique N/N-1 pour l'export.
+
+    Réutilise les fonctions de collecte existantes — lecture seule, jamais
+    bloquant : une donnée absente donne simplement ``None``.
+    """
+    from backend.plateforme.contexte import contexte_tenant
+    from backend.plateforme.revue_analytique import (
+        ErreurRevueAnalytique,
+        revue_analytique_mission,
+    )
+    from backend.socle.depot import derniers_controles_fec
+
+    with contexte_tenant(session, tenant_id):
+        controles = derniers_controles_fec(session, mission_id)
+    try:
+        revue = revue_analytique_mission(session, tenant_id, mission_id)
+    except ErreurRevueAnalytique:
+        revue = None
+    return controles, revue
+
+
 @router.get("/missions/{mission_id}/restitution/rapport.docx")
 def api_rapport_docx(
     mission_id: int,
@@ -77,12 +101,17 @@ def api_rapport_docx(
         audit = lire_audit(session, utilisateur.tenant_id, mission_id, limite=20)
     except ErreurRestitution as e:
         raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail=str(e)) from e
+    controles_fec, revue_analytique = _enrichissements_export(
+        session, utilisateur.tenant_id, mission_id
+    )
     contenu = rendre_rapport_docx(
         meta=meta,
         passage=r.passage,
         conclusions=r.conclusions,
         score=r.score_risque,
         extrait_audit=audit,
+        controles_fec=controles_fec,
+        revue_analytique=revue_analytique,
     )
     return Response(
         content=contenu,
@@ -109,12 +138,17 @@ def api_rapport_pdf(
         audit = lire_audit(session, utilisateur.tenant_id, mission_id, limite=20)
     except ErreurRestitution as e:
         raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail=str(e)) from e
+    controles_fec, revue_analytique = _enrichissements_export(
+        session, utilisateur.tenant_id, mission_id
+    )
     contenu = rendre_rapport_pdf(
         meta=meta,
         passage=r.passage,
         conclusions=r.conclusions,
         score=r.score_risque,
         extrait_audit=audit,
+        controles_fec=controles_fec,
+        revue_analytique=revue_analytique,
     )
     return Response(
         content=contenu,
