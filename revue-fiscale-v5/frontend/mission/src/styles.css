@@ -9360,3 +9360,20 @@ tr.row-active td {
 .rest-comana { margin: 0.6rem 0 0.85rem; }
 .rest-comana-explication { align-items: flex-start; }
 .rest-comana-question { flex: 1 1 100%; padding: 0.4rem 0.55rem; border-left: 3px solid var(--accent, #0f766e); border-radius: 0 6px 6px 0; background: color-mix(in srgb, var(--accent, #0f766e) 7%, var(--surface, #fff)); font-size: 0.8rem; font-weight: 600; color: var(--accent-deep, #115e59); }
+
+/* ── Restitution — contrôle qualité de pré-clôture (consultatif) ── */
+.rest-ctrl-cloture { margin: 0.75rem 0 1rem; padding: 0.85rem 1rem; border: 1px solid var(--line, #e5e7eb); border-radius: 10px; background: var(--surface-soft, #f8fafc); }
+.rest-ctrl-cloture-head { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 0.6rem; margin-bottom: 0.55rem; }
+.rest-ctrl-cloture-titre { margin: 0; font-size: 0.95rem; font-weight: 800; color: var(--ink, #0f172a); }
+.rest-ctrl-cloture-verdict.ok { border-color: #15803d; color: #15803d; background: #f0fdf4; }
+.rest-ctrl-cloture-verdict.bloquant { border-color: #b91c1c; color: #991b1b; background: #fef2f2; }
+.rest-ctrl-cloture-points { list-style: none; margin: 0 0 0.55rem; padding: 0; display: grid; gap: 0.4rem; }
+.rest-ctrl-cloture-point { display: flex; flex-wrap: wrap; align-items: baseline; gap: 0.45rem 0.6rem; padding: 0.45rem 0.6rem; border: 1px solid var(--line-soft, #f1f5f9); border-radius: 8px; background: var(--surface, #fff); font-size: 0.83rem; }
+.rest-ctrl-cloture-pastille { flex: 0 0 auto; width: 0.7rem; height: 0.7rem; border-radius: 50%; align-self: center; }
+.rest-ctrl-cloture-pastille.ok { background: #16a34a; }
+.rest-ctrl-cloture-pastille.attention { background: #f59e0b; }
+.rest-ctrl-cloture-pastille.bloquant { background: #dc2626; }
+.rest-ctrl-cloture-libelle { font-weight: 700; color: var(--ink, #0f172a); }
+.rest-ctrl-cloture-detail { flex: 1 1 12rem; color: var(--ink-soft, #475569); }
+.rest-ctrl-cloture-synthese { margin: 0 0 0.6rem; font-size: 0.78rem; }
+.rest-ctrl-cloture-actions { display: inline-flex; flex-wrap: wrap; align-items: center; gap: 0.5rem; }

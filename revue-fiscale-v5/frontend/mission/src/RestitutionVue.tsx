@@ -165,6 +165,28 @@ type CommentaireAnalytiqueDetail = CommentaireAnalytiqueVersion & {
   contenu: CommentaireContenu | null;
 };
 
+/* Contrôle qualité de pré-clôture — déterministe et consultatif. */
+type ControleCloturePoint = {
+  code: string;
+  libelle: string;
+  statut: "ok" | "attention" | "bloquant";
+  detail: string;
+};
+
+type ControleClotureOut = {
+  mission_id: number;
+  statut_mission: string;
+  points: ControleCloturePoint[];
+  synthese: { ok: number; attention: number; bloquant: number };
+  cloture_recommandee: boolean;
+};
+
+function libelleStatutControle(statut: ControleCloturePoint["statut"]): string {
+  if (statut === "ok") return "OK";
+  if (statut === "bloquant") return "Bloquant";
+  return "Attention";
+}
+
 function libelleGraviteNote(g: string): string {
   const m: Record<string, string> = {
     haute: "Gravité haute",
@@ -380,6 +402,12 @@ export function RestitutionVue({
   const [lettreErr, setLettreErr] = useState<string | null>(null);
   const [demandeBusy, setDemandeBusy] = useState(false);
   const [demandeErr, setDemandeErr] = useState<string | null>(null);
+  const [ctrlClotureOuvert, setCtrlClotureOuvert] = useState(false);
+  const [ctrlCloture, setCtrlCloture] = useState<ControleClotureOut | null>(
+    null,
+  );
+  const [ctrlClotureBusy, setCtrlClotureBusy] = useState(false);
+  const [ctrlClotureErr, setCtrlClotureErr] = useState<string | null>(null);
   const [noteOuverte, setNoteOuverte] = useState(false);
   const [noteVersions, setNoteVersions] = useState<NoteSyntheseVersion[]>([]);
   const [noteVersionSel, setNoteVersionSel] = useState<number | null>(null);
@@ -634,6 +662,35 @@ export function RestitutionVue({
       annule = true;
     };
   }, [noteOuverte, jeton, r.mission_id, noteVersionSel]);
+
+  /** Étape intermédiaire avant clôture : revue qualité consultative. */
+  async function ouvrirControleCloture() {
+    if (ctrlClotureBusy) return;
+    setCtrlClotureBusy(true);
+    setCtrlClotureErr(null);
+    setCtrlCloture(null);
+    setCtrlClotureOuvert(true);
+    try {
+      if (!jeton || !r.mission_id) {
+        throw new Error("Session requise pour le contrôle de pré-clôture.");
+      }
+      const out = await api<ControleClotureOut>(
+        `/api/v1/missions/${r.mission_id}/controle-cloture`,
+        { jeton },
+      );
+      setCtrlCloture(out);
+    } catch (e) {
+      setCtrlClotureErr(e instanceof Error ? e.message : String(e));
+    } finally {
+      setCtrlClotureBusy(false);
+    }
+  }
+
+  function confirmerCloture() {
+    setCtrlClotureOuvert(false);
+    setCtrlCloture(null);
+    onCloturer?.();
+  }
 
   function allerRegleNote(regleId: string) {
     const el = document.getElementById(`rest-regle-${regleId}`);
@@ -1330,14 +1387,23 @@ export function RestitutionVue({
             </Tooltip>
           )}
           {!estLecteur && !estCloturee && onCloturer && !sansExecution && (
-            <Tooltip label="Clôture le dossier (statut serveur). Réouverture possible — l’épinglage référentiel est conservé.">
+            <Tooltip label="Revue qualité de pré-clôture (consultative) puis clôture du dossier (statut serveur). Réouverture possible — l’épinglage référentiel est conservé.">
               <button
                 type="button"
                 className="btn btn-ghost btn-sm"
-                disabled={busy}
-                onClick={onCloturer}
+                disabled={busy || ctrlClotureBusy}
+                aria-expanded={ctrlClotureOuvert}
+                onClick={() => {
+                  if (ctrlClotureOuvert) {
+                    setCtrlClotureOuvert(false);
+                    setCtrlCloture(null);
+                    setCtrlClotureErr(null);
+                  } else {
+                    void ouvrirControleCloture();
+                  }
+                }}
               >
-                Clôturer
+                {ctrlClotureBusy ? "Contrôle…" : "Clôturer"}
               </button>
             </Tooltip>
           )}
@@ -1355,6 +1421,90 @@ export function RestitutionVue({
           )}
         </div>
       </div>
+
+      {ctrlClotureOuvert && (
+        <section
+          className="rest-ctrl-cloture"
+          aria-label="Contrôle qualité de pré-clôture"
+        >
+          <div className="rest-ctrl-cloture-head">
+            <h3 className="rest-ctrl-cloture-titre label-with-tip">
+              Contrôle qualité de pré-clôture
+              <InfoTip
+                label="Revue déterministe avant clôture (esprit NEP / ISQM) : points instruits, risques traités ou acceptés, livrables produits. Consultatif : la clôture reste toujours possible — l'associé décide."
+                ariaLabel="Aide : contrôle de pré-clôture"
+              />
+            </h3>
+            {ctrlCloture && (
+              <span
+                className={`badge rest-ctrl-cloture-verdict ${
+                  ctrlCloture.cloture_recommandee ? "ok" : "bloquant"
+                }`}
+              >
+                {ctrlCloture.cloture_recommandee
+                  ? "Clôture recommandée"
+                  : "Clôture non recommandée"}
+              </span>
+            )}
+          </div>
+          {ctrlClotureBusy && <p className="muted">Contrôle en cours…</p>}
+          {ctrlClotureErr && (
+            <p className="rest-lettre-err" role="alert">
+              Contrôle indisponible : {ctrlClotureErr}
+            </p>
+          )}
+          {ctrlCloture && (
+            <>
+              <ul className="rest-ctrl-cloture-points">
+                {ctrlCloture.points.map((p) => (
+                  <li key={p.code} className="rest-ctrl-cloture-point">
+                    <span
+                      className={`rest-ctrl-cloture-pastille ${p.statut}`}
+                      aria-label={libelleStatutControle(p.statut)}
+                      title={libelleStatutControle(p.statut)}
+                    />
+                    <span className="rest-ctrl-cloture-libelle">
+                      {p.libelle}
+                    </span>
+                    <span className="rest-ctrl-cloture-detail">
+                      {p.detail}
+                    </span>
+                  </li>
+                ))}
+              </ul>
+              <p className="rest-ctrl-cloture-synthese muted">
+                {ctrlCloture.synthese.ok} OK ·{" "}
+                {ctrlCloture.synthese.attention} attention ·{" "}
+                {ctrlCloture.synthese.bloquant} bloquant
+                {ctrlCloture.synthese.bloquant > 1 ? "s" : ""}
+              </p>
+            </>
+          )}
+          <div className="rest-ctrl-cloture-actions">
+            <Tooltip label="Clôture le dossier malgré les éventuels points en attente — le contrôle est consultatif, la décision reste humaine.">
+              <button
+                type="button"
+                className="btn btn-sm"
+                disabled={busy || ctrlClotureBusy}
+                onClick={confirmerCloture}
+              >
+                Confirmer la clôture
+              </button>
+            </Tooltip>
+            <button
+              type="button"
+              className="btn btn-ghost btn-sm"
+              onClick={() => {
+                setCtrlClotureOuvert(false);
+                setCtrlCloture(null);
+                setCtrlClotureErr(null);
+              }}
+            >
+              Annuler
+            </button>
+          </div>
+        </section>
+      )}
 
       {noteOuverte && (
         <section

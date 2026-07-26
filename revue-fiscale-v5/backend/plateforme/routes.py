@@ -405,6 +405,9 @@ class MissionStatutOut(BaseModel):
     statut_precedent: str
     inchange: bool = False
     risques_crees: int = 0
+    # Résumé consultatif du contrôle qualité de pré-clôture (uniquement
+    # lors d'un passage à « cloturee ») — jamais bloquant.
+    controle_cloture: dict | None = None
 
 
 @router.post("/missions", response_model=MissionOut)
@@ -872,7 +875,49 @@ def api_changer_statut_mission(
                 "declencheur": "manuel",
             },
         )
-    return MissionStatutOut(**r)
+
+    # Passage à « cloturee » : joindre le résumé consultatif du contrôle
+    # qualité de pré-clôture (jamais bloquant, best-effort).
+    controle: dict | None = None
+    if corps.statut == "cloturee":
+        from backend.plateforme.controle_cloture import (
+            ErreurControleCloture,
+            evaluer_cloture,
+        )
+
+        try:
+            controle = evaluer_cloture(
+                session, utilisateur.tenant_id, mission_id
+            )
+        except ErreurControleCloture:
+            controle = None
+    return MissionStatutOut(**r, controle_cloture=controle)
+
+
+@router.get("/missions/{mission_id}/controle-cloture")
+def api_controle_cloture(
+    mission_id: int,
+    utilisateur: UtilisateurDep,
+    session: Annotated[Session, Depends(session_abonne)],
+) -> dict:
+    """Contrôle qualité de pré-clôture — déterministe et consultatif.
+
+    Revue des points avant clôture (conclusions instruites, risques
+    traités, note de synthèse, réponses client, preuves de résolution).
+    Ne bloque jamais la clôture. 404 si mission hors tenant (RLS).
+    """
+    from backend.plateforme.controle_cloture import (
+        ErreurControleCloture,
+        evaluer_cloture,
+    )
+
+    exiger_capacite(utilisateur, "lire")
+    try:
+        return evaluer_cloture(session, utilisateur.tenant_id, mission_id)
+    except ErreurControleCloture as e:
+        raise HTTPException(
+            status_code=status.HTTP_404_NOT_FOUND, detail=str(e)
+        ) from e
 
 
 # ── Conclusions (validation humaine) ───────────────────────────────
