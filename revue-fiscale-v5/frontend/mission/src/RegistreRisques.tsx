@@ -124,6 +124,7 @@ export function RegistreRisquesVue({
 
   const [score, setScore] = useState<ScoreRisque | null>(null);
   const [exportEnCours, setExportEnCours] = useState(false);
+  const [rapportEnCours, setRapportEnCours] = useState(false);
 
   const [preuveRisqueId, setPreuveRisqueId] = useState<number | null>(null);
   const [preuveFichier, setPreuveFichier] = useState<File | null>(null);
@@ -196,6 +197,23 @@ export function RegistreRisquesVue({
       setErr(e instanceof Error ? e.message : String(e));
     } finally {
       setExportEnCours(false);
+    }
+  }
+
+  async function exporterRapportPdf() {
+    setRapportEnCours(true);
+    setErr(null);
+    try {
+      const jour = new Date().toISOString().slice(0, 10);
+      await telecharger(
+        `/api/v1/contribuables/${contribuableId}/risques/rapport.pdf`,
+        jeton,
+        `rapport_risques_client_${contribuableId}_${jour}.pdf`,
+      );
+    } catch (e) {
+      setErr(e instanceof Error ? e.message : String(e));
+    } finally {
+      setRapportEnCours(false);
     }
   }
 
@@ -374,6 +392,15 @@ export function RegistreRisquesVue({
             disabled={exportEnCours || risques.length === 0}
           >
             {exportEnCours ? "Export…" : "Exporter CSV"}
+          </button>
+          <button
+            type="button"
+            className="btn ghost btn-xs registre-rapport-btn"
+            onClick={() => void exporterRapportPdf()}
+            disabled={rapportEnCours || risques.length === 0}
+            title="Synthèse des risques fiscaux (PDF, tous exercices)"
+          >
+            {rapportEnCours ? "Génération…" : "Rapport PDF"}
           </button>
           <button
             type="button"

@@ -1088,6 +1088,37 @@ def api_exporter_risques_csv(
     )
 
 
+@router.get("/contribuables/{contribuable_id}/risques/rapport.pdf")
+def api_rapport_risques_pdf(
+    contribuable_id: int,
+    utilisateur: UtilisateurDep,
+    session: Annotated[Session, Depends(session_abonne)],
+) -> Response:
+    """Synthèse PDF des risques fiscaux du contribuable (tous exercices)."""
+    from backend.plateforme.rapport_risques import (
+        ErreurRapportRisques,
+        exporter_rapport_risques_pdf,
+    )
+
+    try:
+        nom, contenu = exporter_rapport_risques_pdf(
+            session, utilisateur.tenant_id, contribuable_id
+        )
+    except ErreurRapportRisques as e:
+        msg = str(e)
+        code = (
+            status.HTTP_404_NOT_FOUND
+            if "introuvable" in msg
+            else status.HTTP_400_BAD_REQUEST
+        )
+        raise HTTPException(status_code=code, detail=msg) from e
+    return Response(
+        content=contenu,
+        media_type="application/pdf",
+        headers={"Content-Disposition": f'attachment; filename="{nom}"'},
+    )
+
+
 @router.get("/contribuables/{contribuable_id}/risques/resume")
 def api_resume_risques_contribuable(
     contribuable_id: int,

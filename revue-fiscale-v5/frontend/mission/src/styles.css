@@ -9229,3 +9229,7 @@ tr.row-active td {
 .rest-comptes-solde { font-variant-numeric: tabular-nums; font-weight: 600; color: var(--ink, #0f172a); white-space: nowrap; }
 .rest-comptes-sens { font-weight: 400; font-style: italic; color: var(--muted, #64748b); }
 .rest-comptes-note { margin: 0.4rem 0 0; font-size: 0.72rem; font-style: italic; color: var(--muted, #64748b); }
+
+/* Registre des risques — rapport PDF consolidé */
+.registre-rapport-btn { white-space: nowrap; }
+.registre-rapport-btn:disabled { opacity: 0.6; cursor: default; }
