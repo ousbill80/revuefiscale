@@ -9303,3 +9303,17 @@ tr.row-active td {
 .pilotage-row-montant { margin-left: auto; font-size: 0.78rem; font-weight: 700; font-variant-numeric: tabular-nums; white-space: nowrap; color: var(--ink-soft, #1e293b); }
 .pilotage-row-alerte { margin-left: auto; font-size: 0.74rem; font-weight: 700; white-space: nowrap; color: #b91c1c; }
 .pilotage-vide { padding: 0.5rem 0.6rem; border: 1px dashed var(--line, #e5e7eb); border-radius: 8px; font-size: 0.78rem; color: var(--muted, #64748b); }
+
+/* ── Échéancier déclaratif indicatif (fiche client) ──────────────── */
+.echeancier-encart { margin-top: 0.75rem; }
+.echeancier-head { margin-bottom: 0.5rem; }
+.echeancier-liste { list-style: none; margin: 0; padding: 0; display: flex; flex-direction: column; gap: 0.25rem; }
+.echeancier-ligne { display: flex; flex-wrap: wrap; align-items: baseline; gap: 0.3rem 0.6rem; padding: 0.4rem 0.55rem; border: 1px solid var(--line-soft, #f1f5f9); border-radius: 8px; background: var(--surface, #fff); font-size: 0.8rem; }
+.echeancier-date { font-weight: 700; font-variant-numeric: tabular-nums; white-space: nowrap; color: var(--ink, #0f172a); }
+.echeancier-libelle { flex: 1 1 12rem; min-width: 0; color: var(--ink-soft, #475569); overflow-wrap: anywhere; }
+.echeancier-badge { display: inline-block; margin-left: auto; padding: 0.1rem 0.5rem; border-radius: 999px; font-size: 0.68rem; font-weight: 700; letter-spacing: 0.03em; white-space: nowrap; border: 1px solid var(--line, #e5e7eb); background: var(--surface-soft, #f1f5f9); color: var(--ink, #0f172a); }
+.echeancier-badge.a-venir { background: #eff6ff; color: #1d4ed8; border-color: #bfdbfe; }
+.echeancier-badge.imminent { background: #fffbeb; color: #92400e; border-color: #fde68a; }
+.echeancier-badge.depasse { background: #fef2f2; color: #b91c1c; border-color: #fecaca; }
+.echeancier-vide { padding: 0.5rem 0.6rem; border: 1px dashed var(--line, #e5e7eb); border-radius: 8px; font-size: 0.78rem; color: var(--muted, #64748b); }
+.echeancier-note { margin: 0.55rem 0 0; font-size: 0.72rem; font-style: italic; color: var(--muted, #64748b); }

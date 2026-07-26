@@ -1309,6 +1309,55 @@ def api_timeline_contribuable(
     )
 
 
+# ── Échéancier déclaratif indicatif (par régime fiscal) ────────────
+
+
+@router.get("/contribuables/{contribuable_id}/echeancier")
+def api_echeancier_contribuable(
+    contribuable_id: int,
+    utilisateur: UtilisateurDep,
+    session: Annotated[Session, Depends(session_abonne)],
+) -> dict:
+    """Échéancier déclaratif indicatif du contribuable (90 jours).
+
+    Référentiel indicatif (pratique usuelle CI) — ne remplace pas le
+    calendrier officiel DGI. 404 si fiche hors tenant (RLS).
+    """
+    from datetime import date as _date
+
+    from backend.abonne.service import ErreurAbonne, lire_contribuable
+    from backend.plateforme.echeancier_fiscal import (
+        HORIZON_JOURS_DEFAUT,
+        prochaines_echeances,
+    )
+
+    exiger_capacite(utilisateur, "lire")
+    try:
+        fiche = lire_contribuable(session, contribuable_id)
+    except ErreurAbonne as e:
+        raise HTTPException(
+            status_code=status.HTTP_404_NOT_FOUND, detail=str(e)
+        ) from e
+
+    regime = fiche.get("regime_fiscal")
+    mois_cloture = fiche.get("mois_cloture")
+    reference = _date.today()
+    return {
+        "contribuable_id": contribuable_id,
+        "regime": regime,
+        "mois_cloture": mois_cloture,
+        "reference": reference.isoformat(),
+        "horizon_jours": HORIZON_JOURS_DEFAUT,
+        "indicatif": True,
+        "echeances": prochaines_echeances(
+            regime,
+            reference,
+            horizon_jours=HORIZON_JOURS_DEFAUT,
+            mois_cloture=mois_cloture,
+        ),
+    }
+
+
 # ── Data Room : synthèse IA client ─────────────────────────────────
 
 

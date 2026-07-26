@@ -65,6 +65,42 @@ export type ClientRow = {
   cree_par_email?: string | null;
 };
 
+/** Échéance déclarative indicative (GET /contribuables/{id}/echeancier). */
+export type EcheanceFiscale = {
+  code: string;
+  libelle: string;
+  periodicite: string;
+  impots: string[];
+  date_limite: string; // ISO aaaa-mm-jj
+  jours_restants: number;
+  statut: "a_venir" | "imminente" | "depassee";
+};
+
+export type EcheancierContribuable = {
+  contribuable_id: number;
+  regime: string | null;
+  mois_cloture?: number | null;
+  reference: string;
+  horizon_jours: number;
+  indicatif: boolean;
+  echeances: EcheanceFiscale[];
+};
+
+const ECHEANCE_BADGES: Record<
+  EcheanceFiscale["statut"],
+  { label: string; cls: string }
+> = {
+  a_venir: { label: "À venir", cls: "a-venir" },
+  imminente: { label: "Imminent", cls: "imminent" },
+  depassee: { label: "Dépassé", cls: "depasse" },
+};
+
+/** ISO aaaa-mm-jj → jj/mm/aaaa (affichage FR). */
+function formaterDateEcheance(iso: string): string {
+  const m = /^(\d{4})-(\d{2})-(\d{2})/.exec(iso || "");
+  return m ? `${m[3]}/${m[2]}/${m[1]}` : iso;
+}
+
 type Synthese = "tous" | "pm" | "pp" | "incomplets";
 type FiltreForme = "" | "pm" | "pp";
 type FiltreCompletude = "" | "complet" | "incomplet";
@@ -1450,6 +1486,30 @@ export function ClientFicheVue({
     };
   }, [clientDetail.id, jeton]);
 
+  // Échéancier déclaratif indicatif (Vue d'ensemble uniquement).
+  const [echeancier, setEcheancier] =
+    useState<EcheancierContribuable | null>(null);
+
+  useEffect(() => {
+    if (ficheTab !== "overview") return;
+    let annule = false;
+    void (async () => {
+      try {
+        const e = await api<EcheancierContribuable>(
+          `/api/v1/contribuables/${clientDetail.id}/echeancier`,
+          { jeton },
+        );
+        if (!annule)
+          setEcheancier(e && Array.isArray(e.echeances) ? e : null);
+      } catch {
+        if (!annule) setEcheancier(null); // Encart masqué si l'API échoue.
+      }
+    })();
+    return () => {
+      annule = true;
+    };
+  }, [clientDetail.id, jeton, ficheTab]);
+
   useEffect(() => {
     if (ficheTab !== "overview") return;
     let annule = false;
@@ -1871,6 +1931,66 @@ export function ClientFicheVue({
               </button>
             </Tooltip>
           </div>
+
+          {echeancier && (
+            <section
+              className="panel dense echeancier-encart"
+              aria-label="Échéancier déclaratif indicatif"
+            >
+              <div className="echeancier-head">
+                <p className="picker-kicker">
+                  Échéancier déclaratif (indicatif)
+                </p>
+                <p className="picker-hint">
+                  {echeancier.regime?.trim()
+                    ? `Régime ${libelleRegime(echeancier.regime)} — prochaines obligations sur ${echeancier.horizon_jours} jours.`
+                    : "Renseignez le régime fiscal pour projeter les obligations."}
+                </p>
+              </div>
+              {echeancier.echeances.length === 0 ? (
+                <p className="echeancier-vide">
+                  {echeancier.regime?.trim()
+                    ? "Aucune échéance connue sur l'horizon."
+                    : "Aucune échéance — régime fiscal non renseigné."}
+                </p>
+              ) : (
+                <ul className="echeancier-liste">
+                  {echeancier.echeances.map((e) => {
+                    const badge = ECHEANCE_BADGES[e.statut] ?? {
+                      label: e.statut,
+                      cls: "a-venir",
+                    };
+                    return (
+                      <li
+                        key={`${e.code}-${e.date_limite}`}
+                        className="echeancier-ligne"
+                      >
+                        <span className="echeancier-date">
+                          {formaterDateEcheance(e.date_limite)}
+                        </span>
+                        <span className="echeancier-libelle">
+                          {e.libelle}
+                        </span>
+                        <span
+                          className={`echeancier-badge ${badge.cls}`}
+                          title={
+                            e.jours_restants >= 0
+                              ? `Dans ${e.jours_restants} jour${e.jours_restants > 1 ? "s" : ""}`
+                              : `En retard de ${-e.jours_restants} jour${-e.jours_restants > 1 ? "s" : ""}`
+                          }
+                        >
+                          {badge.label}
+                        </span>
+                      </li>
+                    );
+                  })}
+                </ul>
+              )}
+              <p className="echeancier-note" role="note">
+                Référentiel indicatif — vérifier le calendrier officiel DGI.
+              </p>
+            </section>
+          )}
 
           <div className="panel dense clients-fiche-panel" id="clients-fiche-edition">
             <div className="clients-fiche-section-head">
