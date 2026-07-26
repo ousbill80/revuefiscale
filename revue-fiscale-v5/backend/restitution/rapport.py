@@ -176,6 +176,98 @@ def section_fiabilite_source(
     return lignes
 
 
+_LIBELLES_GRAVITE = {
+    "haute": "HAUTE",
+    "moyenne": "MOYENNE",
+    "faible": "FAIBLE",
+}
+
+
+def section_note_synthese(note: Mapping[str, Any] | None) -> list[str]:
+    """Section « Note de synthèse » — dernière version *disponible* de la note.
+
+    Partagée DOCX/PDF, purement déclarative : la note est lue en base
+    (jamais générée ici — aucun appel LLM à l'export). Retourne une liste
+    VIDE si aucune note disponible : pas de section vide dans le rapport.
+    """
+    if not isinstance(note, Mapping):
+        return []
+    contenu = note.get("contenu")
+    if not isinstance(contenu, Mapping):
+        return []
+
+    lignes: list[str] = ["## Note de synthèse", ""]
+    entete = "Executive summary de mission"
+    version = note.get("version")
+    if version is not None:
+        entete += f" — version {version}"
+    date_txt = _fmt_date_jjmmaaaa(note.get("cree_le"))
+    if date_txt:
+        entete += f" du {date_txt}"
+    lignes.append(
+        entete + " (assistance IA, consultative — l'humain signataire relit et signe)."
+    )
+    lignes.append("")
+
+    contexte = str(contenu.get("contexte") or "").strip()
+    if contexte:
+        lignes.append(f"**Contexte** : {contexte}")
+        lignes.append("")
+
+    constats = [
+        c for c in (contenu.get("constats") or []) if isinstance(c, Mapping)
+    ]
+    if constats:
+        lignes.append(f"Principaux constats ({len(constats)}) :")
+        lignes.append("")
+        for c in constats:
+            gravite = _LIBELLES_GRAVITE.get(
+                str(c.get("gravite") or "").strip().lower(), "MOYENNE"
+            )
+            resume = str(c.get("resume") or "").strip()
+            montant = c.get("montant")
+            montant_txt = (
+                f" (montant : {str(montant).strip()} FCFA)"
+                if montant is not None and str(montant).strip()
+                else ""
+            )
+            lignes.append(
+                f"- [{gravite}] `{c.get('regle_id')}` — {resume}{montant_txt}"
+            )
+        lignes.append("")
+
+    exposition = str(contenu.get("exposition") or "").strip()
+    if exposition:
+        lignes.append(f"**Exposition estimée** : {exposition}")
+        lignes.append("")
+
+    points = [
+        str(p).strip()
+        for p in (contenu.get("points_attention") or [])
+        if str(p).strip()
+    ]
+    if points:
+        lignes.append("Points d'attention :")
+        lignes.append("")
+        for p in points:
+            lignes.append(f"- {p}")
+        lignes.append("")
+
+    recos = [
+        str(r).strip()
+        for r in (contenu.get("recommandations") or [])
+        if str(r).strip()
+    ]
+    if recos:
+        lignes.append("Recommandations prioritaires :")
+        lignes.append("")
+        for r in recos:
+            lignes.append(f"- {r}")
+        lignes.append("")
+
+    return lignes
+
+
 _LIBELLES_CLASSEMENT = {
     "apparition": "apparition",
     "disparition": "disparition",

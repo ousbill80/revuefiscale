@@ -14,6 +14,7 @@ from backend.restitution.passage import Passage
 from backend.restitution.rapport import (
     lignes_comptes_source,
     section_fiabilite_source,
+    section_note_synthese,
     section_perimetre,
     section_revue_analytique,
 )
@@ -38,6 +39,7 @@ def rendre_rapport_pdf(
     extrait_audit: Sequence[Mapping[str, Any]],
     controles_fec: Mapping[str, Any] | None = None,
     revue_analytique: Mapping[str, Any] | None = None,
+    note_synthese: Mapping[str, Any] | None = None,
 ) -> bytes:
     """Produit un PDF simple a partir des donnees deja calculees."""
     buf = io.BytesIO()
@@ -76,6 +78,33 @@ def rendre_rapport_pdf(
                     )
                 )
 
+    def bloc_markdown_multiligne(lignes_md: Sequence[str], *, max_car: int = 105) -> None:
+        """Comme ``bloc_markdown`` mais replie les lignes longues (pas de troncature)."""
+        for brut in lignes_md:
+            texte = brut.strip()
+            if not texte:
+                continue
+            if texte.startswith("## "):
+                ligne(_winansi(texte[3:].strip()), gras=True)
+                continue
+            plat = texte.replace("**", "").replace("`", "").replace("_", "")
+            mots = plat.split(" ")
+            courante = ""
+            for mot in mots:
+                if courante and len(courante) + 1 + len(mot) > max_car:
+                    ligne(_winansi(courante))
+                    courante = "  " + mot
+                else:
+                    courante = f"{courante} {mot}" if courante else mot
+            if courante:
+                ligne(_winansi(courante))
+
+    # Note de synthèse IA en tête de rapport (dernière version disponible,
+    # lue en base — jamais générée à l'export). Vide → aucune section.
+    lignes_note = section_note_synthese(note_synthese)
+    if lignes_note:
+        bloc_markdown_multiligne(lignes_note)
+        y -= 6
     bloc_markdown(section_perimetre(meta))
     y -= 6
     # En tête de synthèse (même ordre que l'écran) : fiabilité puis revue N/N-1.

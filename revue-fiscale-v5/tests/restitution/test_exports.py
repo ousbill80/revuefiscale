@@ -218,3 +218,156 @@ def test_pdf_se_genere_sans_donnees_enrichissement():
         extrait_audit=[],
     )
     assert pdf.startswith(b"%PDF")
+
+
+# ── Note de synthèse dans les exports ─────────────────────────────────
+
+
+def _note_disponible():
+    return {
+        "id": 7,
+        "mission_id": 1,
+        "version": 2,
+        "statut": "disponible",
+        "modele": "provider-x",
+        "erreur": None,
+        "auteur": "admin@demo.local",
+        "cree_le": "2026-07-20T09:30:00",
+        "contenu": {
+            "contexte": "Revue fiscale préventive de Demo SA, exercice 2025.",
+            "constats": [
+                {
+                    "regle_id": "OBL-36-ETII",
+                    "resume": "État des transactions intra-groupe non produit.",
+                    "montant": None,
+                    "gravite": "haute",
+                },
+                {
+                    "regle_id": "BIC-CHG-18G-DONS",
+                    "resume": "Dons à réintégrer au résultat fiscal.",
+                    "montant": "1000",
+                    "gravite": "moyenne",
+                },
+            ],
+            "exposition": "Exposition estimée à 1 000 FCFA hors pénalités.",
+            "points_attention": ["2 écritures FEC non équilibrées."],
+            "recommandations": ["Produire l'état des transactions intra-groupe."],
+        },
+    }
+
+
+def _texte_pdf(pdf: bytes) -> str:
+    """Texte brut des content streams (ASCII85 + Flate de ReportLab) — sans dépendance."""
+    import base64
+    import re
+    import zlib
+
+    morceaux: list[bytes] = []
+    for m in re.finditer(rb"stream\r?\n(.*?)endstream", pdf, re.DOTALL):
+        brut = m.group(1).strip()
+        try:  # encodage ReportLab par défaut : ASCII85 puis Flate.
+            brut = base64.a85decode(brut, adobe=True)
+        except ValueError:
+            pass
+        try:
+            morceaux.append(zlib.decompress(brut))
+        except zlib.error:
+            morceaux.append(brut)
+    return b"\n".join(morceaux).decode("latin-1", "replace")
+
+
+def _texte_docx(docx: bytes) -> str:
+    from io import BytesIO
+
+    from docx import Document
+
+    doc = Document(BytesIO(docx))
+    return "\n".join(p.text for p in doc.paragraphs)
+
+
+def test_docx_avec_note_synthese_disponible():
+    """Note disponible → section en tête avec gravité, regle_id et contenu."""
+    passage, score, meta, conclusions, controles, revue = _donnees_communes()
+    docx = rendre_rapport_docx(
+        meta=meta,
+        passage=passage,
+        conclusions=conclusions,
+        score=score,
+        extrait_audit=[],
+        controles_fec=controles,
+        revue_analytique=revue,
+        note_synthese=_note_disponible(),
+    )
+    textes = _texte_docx(docx)
+    assert "Note de synthèse" in textes
+    assert "version 2 du 20/07/2026" in textes
+    assert "Contexte : Revue fiscale préventive de Demo SA" in textes
+    assert "[HAUTE] OBL-36-ETII" in textes
+    assert "[MOYENNE] BIC-CHG-18G-DONS" in textes
+    assert "montant : 1000 FCFA" in textes
+    assert "Exposition estimée" in textes
+    assert "Points d'attention" in textes
+    assert "2 écritures FEC non équilibrées." in textes
+    assert "Recommandations prioritaires" in textes
+    assert "Produire l'état des transactions intra-groupe." in textes
+    # La section précède le périmètre (en tête de rapport).
+    assert textes.index("Note de synthèse") < textes.index("Périmètre déclaré")
+
+
+def test_docx_sans_note_synthese_pas_de_section():
+    """Aucune note disponible → aucune section (pas de titre vide)."""
+    passage, score, meta, conclusions, _, _ = _donnees_communes()
+    for note in (None, {"statut": "echec", "contenu": None}):
+        docx = rendre_rapport_docx(
+            meta=meta,
+            passage=passage,
+            conclusions=conclusions,
+            score=score,
+            extrait_audit=[],
+            note_synthese=note,
+        )
+        assert "Note de synthèse" not in _texte_docx(docx)
+
+
+def test_pdf_avec_note_synthese_disponible():
+    """PDF valide et section note présente avec les regle_id."""
+    passage, score, meta, conclusions, controles, revue = _donnees_communes()
+    pdf = rendre_rapport_pdf(
+        meta=meta,
+        passage=passage,
+        conclusions=conclusions,
+        score=score,
+        extrait_audit=[],
+        controles_fec=controles,
+        revue_analytique=revue,
+        note_synthese=_note_disponible(),
+    )
+    assert pdf.startswith(b"%PDF")
+    texte = _texte_pdf(pdf)
+    assert "Note de synth" in texte
+    assert "OBL-36-ETII" in texte
+    assert "BIC-CHG-18G-DONS" in texte
+    assert "Recommandations prioritaires" in texte
+
+
+def test_pdf_sans_note_synthese_pas_de_section():
+    passage, score, meta, conclusions, _, _ = _donnees_communes()
+    pdf = rendre_rapport_pdf(
+        meta=meta,
+        passage=passage,
+        conclusions=conclusions,
+        score=score,
+        extrait_audit=[],
+        note_synthese=None,
+    )
+    assert pdf.startswith(b"%PDF")
+    assert "Note de synth" not in _texte_pdf(pdf)
+
+
+def test_section_note_synthese_vide_ou_invalide():
+    """Garde-fou : pas de lignes si note absente, sans contenu ou non-dict."""
+    from backend.restitution.rapport import section_note_synthese
+
+    assert section_note_synthese(None) == []
+    assert section_note_synthese({"statut": "echec", "contenu": None}) == []
+    assert section_note_synthese({"contenu": "pas un dict"}) == []

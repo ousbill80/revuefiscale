@@ -89,6 +89,40 @@ def _enrichissements_export(
     return controles, revue
 
 
+def derniere_note_synthese_disponible(
+    session: Session, tenant_id: int, mission_id: int
+) -> dict[str, Any] | None:
+    """Dernière version « disponible » de la note de synthèse — lecture seule.
+
+    Jamais de génération (aucun appel LLM à l'export) : on relit uniquement
+    ce qui est déjà en base. Aucune note disponible → ``None`` (le rapport
+    n'ajoute alors pas de section).
+    """
+    from backend.plateforme.note_synthese import (
+        ErreurNoteSynthese,
+        lister_notes,
+        obtenir_note,
+    )
+
+    try:
+        versions = lister_notes(session, tenant_id, mission_id)
+    except ErreurNoteSynthese:
+        return None
+    for v in versions:
+        if str(v.get("statut") or "") != "disponible":
+            continue
+        try:
+            note = obtenir_note(session, tenant_id, mission_id, int(v["version"]))
+        except (ErreurNoteSynthese, TypeError, ValueError):
+            continue
+        if (
+            str(note.get("statut") or "") == "disponible"
+            and isinstance(note.get("contenu"), dict)
+        ):
+            return note
+    return None
+
+
 @router.get("/missions/{mission_id}/restitution/rapport.docx")
 def api_rapport_docx(
     mission_id: int,
@@ -104,6 +138,9 @@ def api_rapport_docx(
     controles_fec, revue_analytique = _enrichissements_export(
         session, utilisateur.tenant_id, mission_id
     )
+    note = derniere_note_synthese_disponible(
+        session, utilisateur.tenant_id, mission_id
+    )
     contenu = rendre_rapport_docx(
         meta=meta,
         passage=r.passage,
@@ -112,6 +149,7 @@ def api_rapport_docx(
         extrait_audit=audit,
         controles_fec=controles_fec,
         revue_analytique=revue_analytique,
+        note_synthese=note,
     )
     return Response(
         content=contenu,
@@ -141,6 +179,9 @@ def api_rapport_pdf(
     controles_fec, revue_analytique = _enrichissements_export(
         session, utilisateur.tenant_id, mission_id
     )
+    note = derniere_note_synthese_disponible(
+        session, utilisateur.tenant_id, mission_id
+    )
     contenu = rendre_rapport_pdf(
         meta=meta,
         passage=r.passage,
@@ -149,6 +190,7 @@ def api_rapport_pdf(
         extrait_audit=audit,
         controles_fec=controles_fec,
         revue_analytique=revue_analytique,
+        note_synthese=note,
     )
     return Response(
         content=contenu,

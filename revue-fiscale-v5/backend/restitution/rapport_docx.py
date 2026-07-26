@@ -12,6 +12,7 @@ from backend.restitution.passage import Passage
 from backend.restitution.rapport import (
     lignes_comptes_source,
     section_fiabilite_source,
+    section_note_synthese,
     section_perimetre,
     section_revue_analytique,
 )
@@ -47,6 +48,7 @@ def rendre_rapport_docx(
     extrait_audit: Sequence[Mapping[str, Any]],
     controles_fec: Mapping[str, Any] | None = None,
     revue_analytique: Mapping[str, Any] | None = None,
+    note_synthese: Mapping[str, Any] | None = None,
 ) -> bytes:
     """Produit un .docx a partir des donnees deja calculees (aucun recalcul fiscal)."""
     doc = Document()
@@ -57,6 +59,10 @@ def rendre_rapport_docx(
     doc.add_paragraph(f"NCC : {meta.get('contribuable_ncc') or '—'}")
     doc.add_paragraph(f"Exercice : {meta.get('exercice')}")
     doc.add_paragraph(f"Version referentiel : {meta.get('version_referentiel_id')}")
+
+    # Note de synthèse IA en tête de rapport (dernière version disponible,
+    # lue en base — jamais générée à l'export). Vide → aucune section.
+    _ajouter_lignes_markdown_simples(doc, section_note_synthese(note_synthese))
 
     _ajouter_lignes_markdown_simples(doc, section_perimetre(meta))
 
