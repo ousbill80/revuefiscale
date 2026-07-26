@@ -568,6 +568,49 @@ def api_demande_renseignements_docx(
     )
 
 
+@router.get("/missions/{mission_id}/dossier-travail.zip")
+def api_dossier_travail_zip(
+    mission_id: int,
+    utilisateur: UtilisateurDep,
+    session: Annotated[Session, Depends(session_abonne)],
+) -> Response:
+    """Dossier de travail archivable (ZIP) — tous les livrables de la mission.
+
+    Assemblage déterministe (aucun LLM) : chaque pièce est produite par le
+    même module que son téléchargement individuel ; une pièce en échec est
+    omise et notée dans ``00_sommaire.txt`` — l'archive n'échoue jamais
+    pour une pièce manquante. 404 si mission hors tenant (RLS).
+    """
+    from backend.moteur.journal import append_journal
+    from backend.plateforme.archive_mission import (
+        ErreurArchiveIntrouvable,
+        construire_dossier,
+    )
+
+    exiger_capacite(utilisateur, "lire")
+    try:
+        contenu, nom_fichier, stats = construire_dossier(
+            session, utilisateur.tenant_id, mission_id
+        )
+    except ErreurArchiveIntrouvable as e:
+        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail=str(e)) from e
+    append_journal(
+        session,
+        tenant_id=utilisateur.tenant_id,
+        mission_id=mission_id,
+        acteur=utilisateur.email,
+        action="telechargement_dossier_travail",
+        charge_utile=dict(stats),
+    )
+    return Response(
+        content=contenu,
+        media_type="application/zip",
+        headers={
+            "Content-Disposition": f'attachment; filename="{nom_fichier}"'
+        },
+    )
+
+
 class SuiviRenseignementPatchIn(BaseModel):
     """Mise à jour du suivi d'un item de la demande de renseignements."""
 

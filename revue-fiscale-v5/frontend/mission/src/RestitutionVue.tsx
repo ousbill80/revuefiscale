@@ -441,6 +441,8 @@ export function RestitutionVue({
   const [lettreErr, setLettreErr] = useState<string | null>(null);
   const [demandeBusy, setDemandeBusy] = useState(false);
   const [demandeErr, setDemandeErr] = useState<string | null>(null);
+  const [dossierBusy, setDossierBusy] = useState(false);
+  const [dossierErr, setDossierErr] = useState<string | null>(null);
   const [suiviOuvert, setSuiviOuvert] = useState(false);
   const [suivi, setSuivi] = useState<SuiviOut | null>(null);
   const [suiviErr, setSuiviErr] = useState<string | null>(null);
@@ -801,6 +803,34 @@ export function RestitutionVue({
       );
     } finally {
       setDemandeBusy(false);
+    }
+  }
+
+  async function telechargerDossierTravail() {
+    if (!jeton || !r.mission_id || dossierBusy) return;
+    setDossierBusy(true);
+    setDossierErr(null);
+    try {
+      const denom = (
+        r.identification?.contribuable_denomination || "client"
+      )
+        .normalize("NFKD")
+        .replace(/[\u0300-\u036f]/g, "")
+        .replace(/[^A-Za-z0-9]+/g, "_")
+        .replace(/^_+|_+$/g, "")
+        .toUpperCase() || "CLIENT";
+      const exo = r.identification?.exercice ?? "exercice";
+      await telecharger(
+        `/api/v1/missions/${r.mission_id}/dossier-travail.zip`,
+        jeton,
+        `dossier_travail_${denom}_${exo}.zip`,
+      );
+    } catch (e) {
+      setDossierErr(
+        e instanceof Error ? e.message : "téléchargement impossible",
+      );
+    } finally {
+      setDossierBusy(false);
     }
   }
 
@@ -1543,6 +1573,21 @@ export function RestitutionVue({
                 Lien client
               </button>
             </Tooltip>
+          )}
+          <Tooltip label="Dossier de travail complet (ZIP) : tous les livrables de la mission pour archivage probant">
+            <button
+              type="button"
+              className="btn btn-ghost btn-sm rest-dossier-btn"
+              onClick={() => void telechargerDossierTravail()}
+              disabled={dossierBusy || !jeton}
+            >
+              {dossierBusy ? "Dossier…" : "Dossier de travail"}
+            </button>
+          </Tooltip>
+          {dossierErr && (
+            <span className="rest-lettre-err" role="alert">
+              {dossierErr}
+            </span>
           )}
           {!estLecteur && !estCloturee && onCloturer && !sansExecution && (
             <Tooltip label="Revue qualité de pré-clôture (consultative) puis clôture du dossier (statut serveur). Réouverture possible — l’épinglage référentiel est conservé.">
