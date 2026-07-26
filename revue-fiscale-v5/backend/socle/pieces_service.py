@@ -1,10 +1,13 @@
 """Pièces de mission — source active (solde_compte) vs annexes (traçabilité)."""
 from __future__ import annotations
 
+import logging
+
 from sqlalchemy.orm import Session
 
 from backend.plateforme.contexte import contexte_tenant
 from backend.socle import depot
+from backend.socle.controles_fec import controles_vraisemblance_fec
 from backend.socle.erreurs import (
     ErreurFiabilisation,
     ErreurLectureBalance,
@@ -31,6 +34,8 @@ from backend.socle.stockage_pieces import ecrire_piece, supprimer_fichier
 TYPES_IMPORTABLES = frozenset(
     {"balance", "etats_financiers", "grand_livre", "fec"}
 )
+
+_journal = logging.getLogger(__name__)
 
 
 def _piece_out(row: dict) -> PieceOut:
@@ -99,7 +104,12 @@ def _parser_et_fiabiliser(
     nom: str | None,
     brut: bytes,
     remap: dict[str, str] | None,
-) -> RapportFiab:
+) -> tuple[RapportFiab, list | None]:
+    """Retourne (rapport, écritures FEC parsées ou None).
+
+    Les écritures FEC sont renvoyées pour les contrôles de vraisemblance
+    (informationnels) — jamais pour bloquer l'import.
+    """
     if type_piece == "balance":
         nom_l = (nom or "").lower()
         if nom_l.endswith((".xlsx", ".xlsm")):
@@ -121,23 +131,35 @@ def _parser_et_fiabiliser(
                 lignes = corps.lignes
             else:
                 lignes = parser_balance(brut)
-        return fiabiliser_balance(
-            session, tenant_id, mission_id, lignes, remap=remap
+        return (
+            fiabiliser_balance(
+                session, tenant_id, mission_id, lignes, remap=remap
+            ),
+            None,
         )
     if type_piece == "etats_financiers":
         lignes = parser_etats_financiers(brut)
-        return fiabiliser_etats_financiers(
-            session, tenant_id, mission_id, lignes, remap=remap
+        return (
+            fiabiliser_etats_financiers(
+                session, tenant_id, mission_id, lignes, remap=remap
+            ),
+            None,
         )
     if type_piece == "grand_livre":
         ecritures = parser_grand_livre(brut)
-        return fiabiliser_grand_livre(
-            session, tenant_id, mission_id, ecritures, remap=remap
+        return (
+            fiabiliser_grand_livre(
+                session, tenant_id, mission_id, ecritures, remap=remap
+            ),
+            None,
         )
     if type_piece == "fec":
         ecritures = parser_fec(brut)
-        return fiabiliser_fec(
-            session, tenant_id, mission_id, ecritures, remap=remap
+        return (
+            fiabiliser_fec(
+                session, tenant_id, mission_id, ecritures, remap=remap
+            ),
+            ecritures,
         )
     raise ErreurPiece(
         f"type_piece « {type_piece} » ne peut pas alimenter solde_compte"
@@ -183,7 +205,7 @@ def designer_source_active(
             )
 
     try:
-        rapport = _parser_et_fiabiliser(
+        rapport, ecritures_fec = _parser_et_fiabiliser(
             session,
             tenant_id,
             mission_id,
@@ -194,6 +216,26 @@ def designer_source_active(
         )
     except ErreurLectureBalance:
         raise
+
+    # Contrôles de vraisemblance FEC — informationnels, jamais bloquants.
+    if ecritures_fec is not None:
+        try:
+            # SAVEPOINT : un échec ici n'invalide pas l'import en cours.
+            with session.begin_nested(), contexte_tenant(session, tenant_id):
+                exercice = depot.exercice_mission(session, mission_id)
+                if exercice is not None:
+                    controles = controles_vraisemblance_fec(
+                        ecritures_fec, exercice
+                    )
+                    depot.inserer_controles_fec(
+                        session, tenant_id, mission_id, exercice, controles
+                    )
+        except Exception:  # noqa: BLE001 — l'import ne doit jamais échouer ici
+            _journal.warning(
+                "controles vraisemblance FEC non persistés (mission %s)",
+                mission_id,
+                exc_info=True,
+            )
 
     if rapport.statut != "ok":
         # Pas de bascule de pièce si l'import est refusé (soldes conservés).

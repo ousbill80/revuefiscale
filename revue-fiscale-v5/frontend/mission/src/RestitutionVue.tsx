@@ -58,6 +58,26 @@ type PieceMissionOpt = {
   role: string;
 };
 
+type ControleFecOccurrence = {
+  ligne: number | null;
+  valeur: string;
+};
+
+type ControleFec = {
+  code: string;
+  libelle: string;
+  statut: "ok" | "alerte";
+  compteur: number;
+  echantillon: ControleFecOccurrence[];
+};
+
+type ControlesFecOut = {
+  disponible: boolean;
+  exercice?: number;
+  controles: ControleFec[];
+  cree_le: string | null;
+};
+
 type Props = {
   restitution: Restitution;
   jeton?: string | null;
@@ -222,6 +242,7 @@ export function RestitutionVue({
   const [filtreSensPassage, setFiltreSensPassage] = useState<string>("tous");
   const [noteDraft, setNoteDraft] = useState<Record<string, string>>({});
   const [pieces, setPieces] = useState<PieceMissionOpt[]>([]);
+  const [fiabSource, setFiabSource] = useState<ControlesFecOut | null>(null);
   const [collaborateursLocaux, setCollaborateursLocaux] = useState<
     CollaborateurOpt[]
   >([]);
@@ -258,6 +279,28 @@ export function RestitutionVue({
         if (!cancelled) setPieces(list);
       } catch {
         if (!cancelled) setPieces([]);
+      }
+    })();
+    return () => {
+      cancelled = true;
+    };
+  }, [jeton, r.mission_id]);
+
+  useEffect(() => {
+    if (!jeton || !r.mission_id) {
+      setFiabSource(null);
+      return;
+    }
+    let cancelled = false;
+    void (async () => {
+      try {
+        const out = await api<ControlesFecOut>(
+          `/api/v1/missions/${r.mission_id}/controles-fec`,
+          { jeton },
+        );
+        if (!cancelled) setFiabSource(out?.disponible ? out : null);
+      } catch {
+        if (!cancelled) setFiabSource(null);
       }
     })();
     return () => {
@@ -1514,6 +1557,67 @@ export function RestitutionVue({
               Priorités et pipeline — montants au Passage, suivi dans Risques.
             </p>
           </header>
+          {fiabSource && fiabSource.controles.length > 0 && (
+            <div
+              className="rest-fiab"
+              role="note"
+              aria-label="Fiabilité de la source"
+            >
+              <div className="rest-fiab-head">
+                <h4 className="rest-fiab-titre">Fiabilité de la source</h4>
+                <span className="rest-fiab-meta">
+                  Contrôles de vraisemblance FEC
+                  {fiabSource.exercice
+                    ? ` — exercice ${fiabSource.exercice}`
+                    : ""}
+                  {fiabSource.cree_le
+                    ? ` · ${fmtHorodatage(fiabSource.cree_le)}`
+                    : ""}{" "}
+                  (informationnel, n'a pas bloqué l'import)
+                </span>
+              </div>
+              <ul className="rest-fiab-liste">
+                {fiabSource.controles.map((c) => (
+                  <li
+                    key={c.code}
+                    className={`rest-fiab-item ${c.statut === "alerte" ? "alerte" : "ok"}`}
+                  >
+                    <span
+                      className={`rest-fiab-pastille ${c.statut === "alerte" ? "alerte" : "ok"}`}
+                      aria-hidden="true"
+                    />
+                    <span className="rest-fiab-libelle">{c.libelle}</span>
+                    <span className="rest-fiab-compteur">
+                      {c.statut === "alerte"
+                        ? `${c.compteur} occurrence${c.compteur > 1 ? "s" : ""}`
+                        : "OK"}
+                    </span>
+                    {c.echantillon.length > 0 && (
+                      <details className="rest-fiab-echantillon">
+                        <summary>
+                          Échantillon ({c.echantillon.length}
+                          {c.compteur > c.echantillon.length
+                            ? ` sur ${c.compteur}`
+                            : ""}
+                          )
+                        </summary>
+                        <ul>
+                          {c.echantillon.map((occ, idx) => (
+                            <li key={`${c.code}-${idx}`}>
+                              {occ.ligne != null ? (
+                                <code>écriture {occ.ligne}</code>
+                              ) : null}{" "}
+                              {occ.valeur}
+                            </li>
+                          ))}
+                        </ul>
+                      </details>
+                    )}
+                  </li>
+                ))}
+              </ul>
+            </div>
+          )}
           {tachesBloquees.length > 0 && (
             <div className="taches-bloquees-panneau" role="alert">
               <p className="taches-bloquees-titre">

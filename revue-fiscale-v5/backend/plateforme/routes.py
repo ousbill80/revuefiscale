@@ -1843,3 +1843,37 @@ def api_source_depuis_piece(
             source_ref=f"mission:{mission_id}:piece:{corps.piece_id}",
         )
     return out.model_dump(mode="json")
+
+
+@router.get("/missions/{mission_id}/controles-fec")
+def api_controles_fec_mission(
+    mission_id: int,
+    utilisateur: UtilisateurDep,
+    session: Annotated[Session, Depends(session_abonne)],
+) -> dict:
+    """Contrôles de vraisemblance FEC de la source active (informationnels).
+
+    Dernier jeu enregistré au moment de l'import — jamais bloquant.
+    disponible=false si la mission n'a pas de source FEC contrôlée.
+    """
+    from backend.plateforme.contexte import contexte_tenant
+    from backend.socle import depot
+
+    exiger_capacite(utilisateur, "lire")
+    with contexte_tenant(session, utilisateur.tenant_id):
+        if not depot.mission_existe(session, mission_id):
+            raise HTTPException(
+                status_code=status.HTTP_404_NOT_FOUND,
+                detail=f"mission {mission_id} introuvable pour ce tenant",
+            )
+        dernier = depot.derniers_controles_fec(session, mission_id)
+    if dernier is None:
+        return {"disponible": False, "controles": [], "cree_le": None}
+    return {
+        "disponible": True,
+        "exercice": int(dernier["exercice"]),
+        "controles": dernier["controles"],
+        "cree_le": dernier["cree_le"].isoformat()
+        if dernier["cree_le"] is not None
+        else None,
+    }

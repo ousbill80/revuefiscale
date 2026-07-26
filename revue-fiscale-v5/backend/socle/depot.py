@@ -21,6 +21,53 @@ def mission_existe(session: Session, mission_id: int) -> bool:
     )
 
 
+def exercice_mission(session: Session, mission_id: int) -> int | None:
+    """Exercice (année) de la mission — None si mission invisible."""
+    valeur = session.execute(
+        text("SELECT exercice FROM mission WHERE id = :m"),
+        {"m": mission_id},
+    ).scalar_one_or_none()
+    return int(valeur) if valeur is not None else None
+
+
+def inserer_controles_fec(
+    session: Session,
+    tenant_id: int,
+    mission_id: int,
+    exercice: int,
+    controles: list[dict],
+) -> int:
+    """Trace les contrôles de vraisemblance FEC d'un import. Retourne l'id."""
+    return int(
+        session.execute(
+            text(
+                "INSERT INTO controle_source_fec "
+                "(tenant_id, mission_id, exercice, controles) "
+                "VALUES (:t, :m, :e, CAST(:c AS jsonb)) RETURNING id"
+            ),
+            {
+                "t": tenant_id,
+                "m": mission_id,
+                "e": exercice,
+                "c": json.dumps(controles, ensure_ascii=False),
+            },
+        ).scalar_one()
+    )
+
+
+def derniers_controles_fec(session: Session, mission_id: int) -> dict | None:
+    """Dernier jeu de contrôles FEC d'une mission (le plus récent)."""
+    row = session.execute(
+        text(
+            "SELECT id, exercice, controles, cree_le "
+            "FROM controle_source_fec WHERE mission_id = :m "
+            "ORDER BY cree_le DESC, id DESC LIMIT 1"
+        ),
+        {"m": mission_id},
+    ).mappings().first()
+    return dict(row) if row else None
+
+
 def remplacer_soldes(
     session: Session,
     tenant_id: int,
