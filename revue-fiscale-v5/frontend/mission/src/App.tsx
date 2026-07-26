@@ -159,6 +159,22 @@ type AnnexeLocale = {
   type_piece: TypePieceApi;
 };
 
+/** Pièce tabulaire du Data Room (FEC/CSV/XLSX) utilisable comme source. */
+type PieceTabulaire = {
+  id: number;
+  nom_fichier: string;
+  format: "fec" | "csv" | "xlsx" | string;
+  taille_octets: number;
+  cree_le?: string | null;
+};
+
+function fmtTaillePiece(octets: number): string {
+  if (octets >= 1024 * 1024) {
+    return `${(octets / (1024 * 1024)).toFixed(1)} Mo`;
+  }
+  return `${Math.max(1, Math.round(octets / 1024))} Ko`;
+}
+
 function typePieceDepuisSource(kind: SourceComptableKind): TypePieceApi {
   switch (kind) {
     case "balance":
@@ -483,6 +499,13 @@ export function App() {
     useState<SourceComptableKind>("balance");
   const [sourceAltFile, setSourceAltFile] = useState<File | null>(null);
   const [sourceAltDrag, setSourceAltDrag] = useState(false);
+  const [sourceDataroomOnglet, setSourceDataroomOnglet] = useState(false);
+  const [sourceDataroomPiece, setSourceDataroomPiece] =
+    useState<PieceTabulaire | null>(null);
+  const [dataroomPieces, setDataroomPieces] = useState<PieceTabulaire[]>([]);
+  const [dataroomEtat, setDataroomEtat] = useState<
+    "pret" | "chargement" | "erreur"
+  >("pret");
   const [annexesLocales, setAnnexesLocales] = useState<AnnexeLocale[]>([]);
   const [annexeType, setAnnexeType] = useState<TypePieceApi>("autre");
   const [annexeDrag, setAnnexeDrag] = useState(false);
@@ -1063,6 +1086,37 @@ export function App() {
     };
   }, [session?.jeton, contribIdExistant]);
 
+  useEffect(() => {
+    setSourceDataroomPiece(null);
+    if (!session?.jeton || contribIdExistant == null) {
+      setDataroomPieces([]);
+      setDataroomEtat("pret");
+      return;
+    }
+    let cancelled = false;
+    setDataroomEtat("chargement");
+    void (async () => {
+      try {
+        const liste = await api<PieceTabulaire[]>(
+          `/api/v1/contribuables/${contribIdExistant}/pieces-tabulaires`,
+          { jeton: session.jeton },
+        );
+        if (!cancelled) {
+          setDataroomPieces(Array.isArray(liste) ? liste : []);
+          setDataroomEtat("pret");
+        }
+      } catch {
+        if (!cancelled) {
+          setDataroomPieces([]);
+          setDataroomEtat("erreur");
+        }
+      }
+    })();
+    return () => {
+      cancelled = true;
+    };
+  }, [session?.jeton, contribIdExistant]);
+
   async function rafraichirRestitution() {
     if (!session || !missionId) return;
     try {
@@ -1110,6 +1164,8 @@ export function App() {
     setSourceComptable("balance");
     setSourceAltFile(null);
     setSourceAltDrag(false);
+    setSourceDataroomOnglet(false);
+    setSourceDataroomPiece(null);
     setAnnexesLocales([]);
     setAnnexeType("autre");
     setAnnexeDrag(false);
@@ -1201,7 +1257,7 @@ export function App() {
   );
 
   const balanceAnalyseActive: BalanceAnalyse | null =
-    sourceComptable !== "balance"
+    sourceComptable !== "balance" || sourceDataroomOnglet
       ? null
       : balanceSource === "fichier"
         ? balanceFichierAnalyse
@@ -1209,6 +1265,7 @@ export function App() {
 
   const balanceExcelSeul =
     sourceComptable === "balance" &&
+    !sourceDataroomOnglet &&
     balanceSource === "fichier" &&
     !!balanceFile &&
     /\.(xlsx|xlsm)$/i.test(balanceFile.name);
@@ -1217,8 +1274,9 @@ export function App() {
     SOURCES_COMPTABLES.find((s) => s.id === sourceComptable) ??
     SOURCES_COMPTABLES[0];
 
-  const sourcePret =
-    sourceComptable === "balance"
+  const sourcePret = sourceDataroomOnglet
+    ? !!sourceDataroomPiece
+    : sourceComptable === "balance"
       ? balanceSource === "fichier"
         ? !!balanceFile &&
           (balanceExcelSeul || (balanceFichierAnalyse?.ok ?? false))
@@ -1231,7 +1289,11 @@ export function App() {
     const regimeLbl =
       REGIMES_FISCAUX.find((r) => r.value === regime)?.label ?? regime;
     let balanceDetail: string;
-    if (sourceComptable === "balance") {
+    if (sourceDataroomOnglet) {
+      balanceDetail = sourceDataroomPiece
+        ? `Pièce Data Room « ${sourceDataroomPiece.nom_fichier} » — import via /source-depuis-piece`
+        : "Choisir une pièce comptable au Data Room du client";
+    } else if (sourceComptable === "balance") {
       if (balanceExcelSeul) {
         balanceDetail = `Excel « ${balanceFile?.name ?? "—"} » — contrôle d’équilibre côté serveur`;
       } else if (balanceAnalyseActive?.ok) {
@@ -1277,6 +1339,8 @@ export function App() {
     regime,
     sourceAltFile,
     sourceComptable,
+    sourceDataroomOnglet,
+    sourceDataroomPiece,
     sourceMeta.label,
     sourceMeta.route,
     sourceMeta.short,
@@ -1303,6 +1367,7 @@ export function App() {
     setBalanceSource("json");
     setSourceComptable("balance");
     setSourceAltFile(null);
+    setSourceDataroomOnglet(false);
     setSourceActiveFigee(true);
   }
 
@@ -1313,6 +1378,7 @@ export function App() {
     setBalanceSource("fichier");
     setSourceComptable("balance");
     setSourceAltFile(null);
+    setSourceDataroomOnglet(false);
     setSourceActiveFigee(true);
     const nom = file.name.toLowerCase();
     if (nom.endsWith(".xlsx") || nom.endsWith(".xlsm")) {
@@ -1362,7 +1428,23 @@ export function App() {
 
   function lireFichierSourceAlt(file: File | null) {
     setSourceAltFile(file);
-    if (file) setSourceActiveFigee(true);
+    if (file) {
+      setSourceDataroomOnglet(false);
+      setSourceActiveFigee(true);
+    }
+  }
+
+  function utiliserPieceDataroom(p: PieceTabulaire) {
+    setSourceDataroomPiece(p);
+    setBalanceFile(null);
+    setBalanceFichierAnalyse(null);
+    setSourceAltFile(null);
+    setSourceActiveFigee(true);
+    if (p.format === "fec") {
+      setSourceComptable("fec");
+    } else if (p.format === "xlsx" || sourceComptable === "fec") {
+      setSourceComptable("balance");
+    }
   }
 
   function ajouterAnnexes(files: FileList | File[] | null) {
@@ -1608,7 +1690,31 @@ export function App() {
       const typePiece = typePieceDepuisSource(sourceComptable);
       let rapport: RapportFiab;
 
-      if (sourceComptable === "balance" && balanceSource === "json") {
+      if (sourceDataroomOnglet) {
+        if (!sourceDataroomPiece) {
+          throw new Error("Pièce du Data Room manquante.");
+        }
+        const designe = await api<DesigneOut>(
+          `/api/v1/missions/${mission.id}/source-depuis-piece`,
+          {
+            method: "POST",
+            jeton,
+            json: {
+              piece_id: sourceDataroomPiece.id,
+              type_piece:
+                sourceDataroomPiece.format === "fec" ? "fec" : typePiece,
+              confirmer: true,
+            },
+          },
+        );
+        rapport = designe.rapport;
+        if (rapport.statut && rapport.statut !== "ok") {
+          const detail = (rapport.anomalies ?? []).slice(0, 3).join(" · ");
+          throw new Error(
+            `Import refusé (${rapport.statut})${detail ? ` — ${detail}` : ""}. Corrigez la source puis relancez.`,
+          );
+        }
+      } else if (sourceComptable === "balance" && balanceSource === "json") {
         // Import JSON puis enregistrement métadonnée source_active.
         rapport = await api<RapportFiab>(
           `/api/v1/missions/${mission.id}/balance`,
@@ -4935,20 +5041,40 @@ export function App() {
                           <button
                             type="button"
                             role="tab"
-                            aria-selected={balanceSource === "json"}
-                            className={`balance-source-tab${balanceSource === "json" ? " active" : ""}`}
-                            onClick={() => setBalanceSource("json")}
+                            aria-selected={
+                              !sourceDataroomOnglet && balanceSource === "json"
+                            }
+                            className={`balance-source-tab${!sourceDataroomOnglet && balanceSource === "json" ? " active" : ""}`}
+                            onClick={() => {
+                              setSourceDataroomOnglet(false);
+                              setBalanceSource("json");
+                            }}
                           >
                             Éditeur JSON
                           </button>
                           <button
                             type="button"
                             role="tab"
-                            aria-selected={balanceSource === "fichier"}
-                            className={`balance-source-tab${balanceSource === "fichier" ? " active" : ""}`}
-                            onClick={() => setBalanceSource("fichier")}
+                            aria-selected={
+                              !sourceDataroomOnglet &&
+                              balanceSource === "fichier"
+                            }
+                            className={`balance-source-tab${!sourceDataroomOnglet && balanceSource === "fichier" ? " active" : ""}`}
+                            onClick={() => {
+                              setSourceDataroomOnglet(false);
+                              setBalanceSource("fichier");
+                            }}
                           >
                             Fichier CSV / Excel
+                          </button>
+                          <button
+                            type="button"
+                            role="tab"
+                            aria-selected={sourceDataroomOnglet}
+                            className={`balance-source-tab${sourceDataroomOnglet ? " active" : ""}`}
+                            onClick={() => setSourceDataroomOnglet(true)}
+                          >
+                            Depuis le Data Room
                           </button>
                         </div>
 
@@ -4974,7 +5100,7 @@ export function App() {
                           </div>
                         </div>
 
-                        {balanceSource === "json" && (
+                        {!sourceDataroomOnglet && balanceSource === "json" && (
                           <div className="field field-area is-filled">
                             <div className="field-control">
                               <textarea
@@ -5000,7 +5126,7 @@ export function App() {
                           </div>
                         )}
 
-                        {balanceSource === "fichier" && (
+                        {!sourceDataroomOnglet && balanceSource === "fichier" && (
                           <div
                             className={`field-upload balance-drop${balanceDrag ? " drag" : ""}${balanceFile ? " has-file" : ""}`}
                             onDragOver={(e) => {
@@ -5064,6 +5190,29 @@ export function App() {
                     )}
 
                     {sourceComptable !== "balance" && (
+                      <div className="balance-source-tabs" role="tablist">
+                        <button
+                          type="button"
+                          role="tab"
+                          aria-selected={!sourceDataroomOnglet}
+                          className={`balance-source-tab${!sourceDataroomOnglet ? " active" : ""}`}
+                          onClick={() => setSourceDataroomOnglet(false)}
+                        >
+                          Fichier {sourceMeta.short}
+                        </button>
+                        <button
+                          type="button"
+                          role="tab"
+                          aria-selected={sourceDataroomOnglet}
+                          className={`balance-source-tab${sourceDataroomOnglet ? " active" : ""}`}
+                          onClick={() => setSourceDataroomOnglet(true)}
+                        >
+                          Depuis le Data Room
+                        </button>
+                      </div>
+                    )}
+
+                    {sourceComptable !== "balance" && !sourceDataroomOnglet && (
                       <div
                         className={`field-upload balance-drop${sourceAltDrag ? " drag" : ""}${sourceAltFile ? " has-file" : ""}`}
                         onDragOver={(e) => {
@@ -5110,6 +5259,87 @@ export function App() {
                           >
                             Retirer le fichier
                           </button>
+                        )}
+                      </div>
+                    )}
+
+                    {sourceDataroomOnglet && (
+                      <div className="sources-dataroom" role="tabpanel">
+                        <p className="field-hint sources-dataroom-hint">
+                          Réutilisez un fichier comptable (FEC, CSV, XLSX) déjà
+                          déposé au coffre du client — sans re-téléverser.
+                          Équilibre et format vérifiés par le serveur à
+                          l’import.
+                        </p>
+                        {contribIdExistant == null ? (
+                          <p className="sources-dataroom-vide">
+                            Sélectionnez un client existant à l’étape 1 — le
+                            Data Room appartient à la fiche client.
+                          </p>
+                        ) : dataroomEtat === "chargement" ? (
+                          <p className="sources-dataroom-vide" role="status">
+                            Chargement du Data Room…
+                          </p>
+                        ) : dataroomEtat === "erreur" ? (
+                          <p className="sources-dataroom-erreur" role="alert">
+                            Impossible de charger le Data Room du client —
+                            rouvrez l’étape ou réessayez depuis la fiche
+                            client.
+                          </p>
+                        ) : dataroomPieces.length === 0 ? (
+                          <p className="sources-dataroom-vide">
+                            Aucun fichier comptable au Data Room — déposez un
+                            FEC au coffre du client.
+                          </p>
+                        ) : (
+                          <ul className="sources-dataroom-liste">
+                            {dataroomPieces.map((p) => (
+                              <li
+                                key={p.id}
+                                className={`sources-dataroom-piece${sourceDataroomPiece?.id === p.id ? " selected" : ""}`}
+                              >
+                                <div className="sources-dataroom-infos">
+                                  <strong className="sources-dataroom-nom">
+                                    {p.nom_fichier}
+                                  </strong>
+                                  <span className="sources-dataroom-meta">
+                                    <span
+                                      className={`sources-dataroom-badge fmt-${p.format}`}
+                                    >
+                                      {p.format.toUpperCase()}
+                                    </span>
+                                    {fmtTaillePiece(p.taille_octets)}
+                                    {p.cree_le
+                                      ? ` · ${String(p.cree_le).slice(0, 10)}`
+                                      : ""}
+                                  </span>
+                                </div>
+                                <button
+                                  type="button"
+                                  className="sources-dataroom-utiliser"
+                                  onClick={() => utiliserPieceDataroom(p)}
+                                  disabled={sourceDataroomPiece?.id === p.id}
+                                >
+                                  {sourceDataroomPiece?.id === p.id
+                                    ? "Source choisie"
+                                    : "Utiliser comme source"}
+                                </button>
+                              </li>
+                            ))}
+                          </ul>
+                        )}
+                        {sourceDataroomPiece && (
+                          <div className="balance-insight ok" role="status">
+                            <p className="sources-alt-ready">
+                              Source active prête :{" "}
+                              <strong>
+                                {sourceDataroomPiece.nom_fichier}
+                              </strong>{" "}
+                              (Data Room). L’import passe par le même pipeline
+                              serveur (<code>/source-depuis-piece</code>) —
+                              aucun re-téléversement.
+                            </p>
+                          </div>
                         )}
                       </div>
                     )}
@@ -5269,7 +5499,9 @@ export function App() {
                       </div>
                     )}
 
-                    {sourceComptable !== "balance" && sourceAltFile && (
+                    {sourceComptable !== "balance" &&
+                      !sourceDataroomOnglet &&
+                      sourceAltFile && (
                       <div className="balance-insight ok" role="status">
                         <p className="sources-alt-ready">
                           Source active prête :{" "}

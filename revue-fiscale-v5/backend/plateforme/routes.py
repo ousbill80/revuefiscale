@@ -1696,3 +1696,119 @@ def api_patcher_action_risque(
             else status.HTTP_400_BAD_REQUEST
         )
         raise HTTPException(status_code=code, detail=msg) from e
+
+
+# ── Pont Data Room → mission : source active depuis une pièce ──────
+
+
+@router.get("/contribuables/{contribuable_id}/pieces-tabulaires")
+def api_lister_pieces_tabulaires(
+    contribuable_id: int,
+    utilisateur: UtilisateurDep,
+    session: Annotated[Session, Depends(session_abonne)],
+) -> list[dict]:
+    from backend.plateforme.source_depuis_piece import (
+        ErreurSourceDepuisPiece,
+        lister_pieces_tabulaires,
+    )
+
+    exiger_capacite(utilisateur, "lire")
+    try:
+        return lister_pieces_tabulaires(
+            session, utilisateur.tenant_id, contribuable_id
+        )
+    except ErreurSourceDepuisPiece as e:
+        raise HTTPException(
+            status_code=status.HTTP_404_NOT_FOUND, detail=str(e)
+        ) from e
+
+
+class SourceDepuisPieceIn(BaseModel):
+    piece_id: int = Field(ge=1)
+    type_piece: (
+        Literal["balance", "etats_financiers", "grand_livre", "fec"] | None
+    ) = None
+    confirmer: bool = False
+
+
+@router.post("/missions/{mission_id}/source-depuis-piece")
+def api_source_depuis_piece(
+    mission_id: int,
+    corps: SourceDepuisPieceIn,
+    utilisateur: UtilisateurDep,
+    session: Annotated[Session, Depends(session_abonne)],
+) -> dict:
+    from backend.moteur.journal import append_journal
+    from backend.plateforme.memoire_client import alimenter_memoire
+    from backend.plateforme.source_depuis_piece import (
+        ErreurSourceDepuisPiece,
+        importer_source_depuis_piece,
+    )
+    from backend.socle.erreurs import (
+        ErreurFiabilisation,
+        ErreurLectureBalance,
+        ErreurPiece,
+    )
+
+    exiger_capacite(utilisateur, "importer_balance")
+    try:
+        piece, out = importer_source_depuis_piece(
+            session,
+            utilisateur.tenant_id,
+            mission_id,
+            piece_id=corps.piece_id,
+            type_piece=corps.type_piece,
+            confirmer=corps.confirmer,
+        )
+    except ErreurSourceDepuisPiece as e:
+        msg = str(e)
+        code = (
+            status.HTTP_404_NOT_FOUND
+            if "introuvable" in msg
+            else status.HTTP_400_BAD_REQUEST
+        )
+        raise HTTPException(status_code=code, detail=msg) from e
+    except ErreurFiabilisation as e:
+        raise HTTPException(
+            status_code=status.HTTP_404_NOT_FOUND, detail=str(e)
+        ) from e
+    except ErreurLectureBalance as e:
+        raise HTTPException(
+            status_code=status.HTTP_400_BAD_REQUEST, detail=str(e)
+        ) from e
+    except ErreurPiece as e:
+        code = (
+            status.HTTP_409_CONFLICT
+            if "déjà définie" in str(e)
+            else status.HTTP_400_BAD_REQUEST
+        )
+        raise HTTPException(status_code=code, detail=str(e)) from e
+
+    append_journal(
+        session,
+        tenant_id=utilisateur.tenant_id,
+        mission_id=mission_id,
+        acteur=utilisateur.email,
+        action="source_mission_depuis_piece",
+        charge_utile={
+            "piece_id": corps.piece_id,
+            "nom_fichier": piece["nom_fichier"],
+            "type_piece": out.piece.type_piece if out.piece else corps.type_piece,
+            "statut": out.rapport.statut,
+            "nb_comptes": out.rapport.nb_comptes,
+        },
+    )
+    if out.rapport.statut == "ok":
+        alimenter_memoire(
+            session,
+            utilisateur.tenant_id,
+            int(piece["contribuable_id"]),
+            type_entree="contexte",
+            contenu=(
+                f"Source comptable de la mission #{mission_id} alimentée "
+                f"depuis la pièce « {piece['nom_fichier']} » du Data Room"
+            ),
+            source_type="mission",
+            source_ref=f"mission:{mission_id}:piece:{corps.piece_id}",
+        )
+    return out.model_dump(mode="json")

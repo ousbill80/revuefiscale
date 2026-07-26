@@ -9198,3 +9198,21 @@ tr.row-active td {
 .taches-bloquees-item { display: flex; flex-wrap: wrap; align-items: center; gap: 0.5rem; font-size: 0.85rem; }
 .taches-bloquees-impot { font-weight: 600; color: var(--warn-ink, #92400e); }
 .taches-bloquees-motif { flex: 1 1 12rem; color: var(--ink-soft, #57534e); }
+
+/* Wizard étape 3 — source active depuis le Data Room du client */
+.sources-dataroom { display: grid; gap: 0.6rem; margin: 0.5rem 0 0.75rem; }
+.sources-dataroom-hint { margin: 0; }
+.sources-dataroom-vide { margin: 0; padding: 0.8rem 0.9rem; border: 1px dashed var(--line, #e5e7eb); border-radius: 8px; font-size: 0.82rem; color: var(--muted, #64748b); background: var(--surface-soft, #f8fafc); }
+.sources-dataroom-erreur { margin: 0; padding: 0.8rem 0.9rem; border: 1px solid color-mix(in srgb, var(--warn, #b42318) 35%, transparent); border-radius: 8px; font-size: 0.82rem; color: var(--warn-ink, #991b1b); background: var(--warn-soft, #fef2f2); }
+.sources-dataroom-liste { list-style: none; margin: 0; padding: 0; display: grid; gap: 0.45rem; }
+.sources-dataroom-piece { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 0.6rem; padding: 0.6rem 0.8rem; border: 1px solid var(--line, #e5e7eb); border-radius: 8px; background: var(--surface, #fff); }
+.sources-dataroom-piece.selected { border-color: var(--accent, #0f766e); background: color-mix(in srgb, var(--accent, #0f766e) 6%, var(--surface, #fff)); }
+.sources-dataroom-infos { display: grid; gap: 0.2rem; min-width: 0; }
+.sources-dataroom-nom { font-size: 0.85rem; overflow-wrap: anywhere; }
+.sources-dataroom-meta { display: inline-flex; align-items: center; gap: 0.45rem; font-size: 0.76rem; color: var(--muted, #64748b); }
+.sources-dataroom-badge { padding: 0.1rem 0.45rem; border-radius: 999px; font-size: 0.68rem; font-weight: 700; letter-spacing: 0.03em; background: var(--surface-soft, #f1f5f9); color: var(--ink, #0f172a); border: 1px solid var(--line, #e5e7eb); }
+.sources-dataroom-badge.fmt-fec { background: color-mix(in srgb, var(--accent, #0f766e) 12%, transparent); color: var(--accent-deep, #115e59); border-color: color-mix(in srgb, var(--accent, #0f766e) 35%, transparent); }
+.sources-dataroom-badge.fmt-xlsx { background: #eff6ff; color: #1d4ed8; border-color: #bfdbfe; }
+.sources-dataroom-utiliser { padding: 0.35rem 0.75rem; border: 1px solid var(--accent, #0f766e); border-radius: 7px; background: var(--surface, #fff); color: var(--accent-deep, #115e59); font-size: 0.78rem; font-weight: 600; cursor: pointer; }
+.sources-dataroom-utiliser:hover:not(:disabled) { background: color-mix(in srgb, var(--accent, #0f766e) 8%, var(--surface, #fff)); }
+.sources-dataroom-utiliser:disabled { cursor: default; opacity: 0.75; background: color-mix(in srgb, var(--accent, #0f766e) 12%, var(--surface, #fff)); }
