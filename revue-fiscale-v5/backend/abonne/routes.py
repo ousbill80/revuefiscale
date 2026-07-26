@@ -54,6 +54,7 @@ from backend.abonne.pieces_contribuable_service import (
 )
 from backend.abonne.service import (
     ErreurAbonne,
+    ErreurDoublonContribuable,
     accepter_invitation,
     creer_invitation,
     creer_lien_acces,
@@ -141,6 +142,8 @@ def api_patch_contribuable(
             activite_principale=corps.activite_principale,
             date_immatriculation=corps.date_immatriculation,
         )
+    except ErreurDoublonContribuable as e:
+        raise HTTPException(status_code=status.HTTP_409_CONFLICT, detail=str(e)) from e
     except ErreurAbonne as e:
         raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST, detail=str(e)) from e
 

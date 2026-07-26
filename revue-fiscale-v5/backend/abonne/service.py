@@ -23,6 +23,10 @@ class ErreurAbonne(Exception):
     """Echec metier espace abonne."""
 
 
+class ErreurDoublonContribuable(ErreurAbonne):
+    """NCC ou RCCM deja utilise par une autre fiche du cabinet."""
+
+
 ROLES_INVITABLES = frozenset({"admin", "reviseur", "lecteur"})
 
 _COLS_C = ", ".join(f"c.{c}" for c in ("id", *COLONNES_IDENTITE))
@@ -61,6 +65,33 @@ def lire_contribuable(session: Session, contribuable_id: int) -> dict[str, Any]:
     return serialiser_identite(dict(row))
 
 
+def verifier_unicite_identifiants(
+    session: Session,
+    *,
+    ncc: Any,
+    rccm: Any,
+    exclure_id: int | None = None,
+) -> None:
+    """Refuse tout doublon NCC ou RCCM au sein du cabinet (RLS)."""
+    for colonne, libelle, valeur in (("ncc", "NCC", ncc), ("rccm", "RCCM", rccm)):
+        if valeur is None or not str(valeur).strip():
+            continue
+        exclusion = "AND id <> :exclu " if exclure_id is not None else ""
+        row = session.execute(
+            text(
+                "SELECT id, denomination FROM contribuable "  # noqa: S608
+                f"WHERE upper(trim(coalesce({colonne}, ''))) = upper(trim(:v)) "
+                f"{exclusion}LIMIT 1"
+            ),
+            {"v": str(valeur), **({"exclu": exclure_id} if exclure_id is not None else {})},
+        ).mappings().one_or_none()
+        if row is not None:
+            raise ErreurDoublonContribuable(
+                f"Doublon interdit : le {libelle} « {str(valeur).strip()} » est déjà "
+                f"utilisé par la fiche « {row['denomination']} » (#{row['id']})."
+            )
+
+
 def creer_contribuable(
     session: Session,
     *,
@@ -69,6 +100,9 @@ def creer_contribuable(
     payload: dict[str, Any],
 ) -> dict[str, Any]:
     """Crée une fiche cloisonnée + horodatage / auteur."""
+    verifier_unicite_identifiants(
+        session, ncc=payload.get("ncc"), rccm=payload.get("rccm")
+    )
     cid = session.execute(
         text(
             "INSERT INTO contribuable ("
@@ -165,6 +199,12 @@ def patcher_contribuable(
     except ErreurIdentiteLegale as e:
         raise ErreurAbonne(str(e)) from e
 
+    verifier_unicite_identifiants(
+        session,
+        ncc=payload.get("ncc"),
+        rccm=payload.get("rccm"),
+        exclure_id=contribuable_id,
+    )
     session.execute(
         text(
             "UPDATE contribuable SET "

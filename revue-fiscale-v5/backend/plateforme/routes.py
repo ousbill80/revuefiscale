@@ -212,7 +212,7 @@ def api_creer_contribuable(
         normaliser_payload,
         valider_identite_legale,
     )
-    from backend.abonne.service import creer_contribuable
+    from backend.abonne.service import ErreurDoublonContribuable, creer_contribuable
     from backend.moteur.journal import append_journal
 
     exiger_capacite(
@@ -243,12 +243,17 @@ def api_creer_contribuable(
             status_code=status.HTTP_400_BAD_REQUEST, detail=str(e)
         ) from e
 
-    fiche = creer_contribuable(
-        session,
-        tenant_id=utilisateur.tenant_id,
-        cree_par=utilisateur.utilisateur_id,
-        payload=payload,
-    )
+    try:
+        fiche = creer_contribuable(
+            session,
+            tenant_id=utilisateur.tenant_id,
+            cree_par=utilisateur.utilisateur_id,
+            payload=payload,
+        )
+    except ErreurDoublonContribuable as e:
+        raise HTTPException(
+            status_code=status.HTTP_409_CONFLICT, detail=str(e)
+        ) from e
     append_journal(
         session,
         tenant_id=utilisateur.tenant_id,

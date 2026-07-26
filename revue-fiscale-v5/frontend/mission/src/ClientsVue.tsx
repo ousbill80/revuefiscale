@@ -661,6 +661,29 @@ function identiteDepuisEdit(edit: ClientEditState): IdentiteLegale {
   };
 }
 
+/** Doublon NCC/RCCM dans le portefeuille — bloque l'enregistrement. */
+function doublonIdentifiants(
+  clients: ClientRow[] | undefined,
+  edit: ClientEditState,
+  exclureId?: number,
+): string | null {
+  if (!clients?.length) return null;
+  const norm = (v: string | null | undefined) =>
+    (v ?? "").trim().toUpperCase();
+  const ncc = norm(edit.ncc);
+  const rccm = norm(edit.rccm);
+  for (const c of clients) {
+    if (exclureId != null && c.id === exclureId) continue;
+    if (ncc && norm(c.ncc) === ncc) {
+      return `Doublon interdit : le NCC « ${edit.ncc.trim()} » est déjà utilisé par « ${c.denomination} ».`;
+    }
+    if (rccm && norm(c.rccm) === rccm) {
+      return `Doublon interdit : le RCCM « ${edit.rccm.trim()} » est déjà utilisé par « ${c.denomination} ».`;
+    }
+  }
+  return null;
+}
+
 type ClientDetail = ClientRow & {
   missions: MissionRow[];
   nb_missions: number;
@@ -731,11 +754,30 @@ function IdentiteLegaleForm({
       );
       if (doublon) {
         avert.push(
-          `Un client avec ce NCC existe déjà : ${doublon.denomination}.`,
+          `Doublon interdit — ce NCC est déjà utilisé par « ${doublon.denomination} ». L'enregistrement sera refusé.`,
         );
       }
     }
     setNccWarn(avert.length ? avert.join(" ") : null);
+  }
+
+  function verifierRccm() {
+    toucher("rccm");
+    const avert: string[] = [];
+    const format = avertissementFormatRccm(edit.rccm);
+    if (format) avert.push(format);
+    const saisi = edit.rccm.trim().toUpperCase();
+    if (creation && saisi && clientsExistants?.length) {
+      const doublon = clientsExistants.find(
+        (c) => (c.rccm ?? "").trim().toUpperCase() === saisi,
+      );
+      if (doublon) {
+        avert.push(
+          `Doublon interdit — ce RCCM est déjà utilisé par « ${doublon.denomination} ». L'enregistrement sera refusé.`,
+        );
+      }
+    }
+    setRccmWarn(avert.length ? avert.join(" ") : null);
   }
 
   function majActivite(nextSecteur: string, nextPrecision: string) {
@@ -839,10 +881,7 @@ function IdentiteLegaleForm({
               onChange={(e) =>
                 setEdit((s) => ({ ...s, rccm: e.target.value }))
               }
-              onBlur={() => {
-                toucher("rccm");
-                setRccmWarn(avertissementFormatRccm(edit.rccm));
-              }}
+              onBlur={verifierRccm}
               required
               manquant={miss("rccm")}
               avertissement={rccmWarn}
@@ -1191,6 +1230,11 @@ export function ClientCreationVue({
       setErreurLocale(
         `Identité minimale incomplète : ${apiMin.manquants.join(", ")}.`,
       );
+      return;
+    }
+    const doublon = doublonIdentifiants(clients, edit);
+    if (doublon) {
+      setErreurLocale(doublon);
       return;
     }
     if (suite === "mission") await onCreerPuisMission(edit, sessionUpload);
