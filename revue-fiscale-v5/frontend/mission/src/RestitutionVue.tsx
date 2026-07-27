@@ -633,6 +633,13 @@ export function RestitutionVue({
   const [reponseErr, setReponseErr] = useState<string | null>(null);
   const [relanceBusy, setRelanceBusy] = useState(false);
   const [relanceErr, setRelanceErr] = useState<string | null>(null);
+  const [planifDate, setPlanifDate] = useState("");
+  const [planifBusy, setPlanifBusy] = useState(false);
+  const [planifErr, setPlanifErr] = useState<string | null>(null);
+  const [planifOut, setPlanifOut] = useState<{
+    planifiees: number;
+    deja_planifiees: number;
+  } | null>(null);
   const [tempsOuvert, setTempsOuvert] = useState(false);
   const [tempsRecap, setTempsRecap] = useState<TempsRecap | null>(null);
   const [tempsErr, setTempsErr] = useState<string | null>(null);
@@ -1348,6 +1355,32 @@ export function RestitutionVue({
       );
     } finally {
       setSuiviBusyCle(null);
+    }
+  }
+
+  async function planifierRelances(): Promise<void> {
+    if (!jeton || !r.mission_id || planifBusy || !planifDate) return;
+    setPlanifBusy(true);
+    setPlanifErr(null);
+    setPlanifOut(null);
+    try {
+      const out = await api<{
+        planifiees: number;
+        deja_planifiees: number;
+      }>(
+        `/api/v1/missions/${r.mission_id}/suivi-renseignements/planifier-relances`,
+        { jeton, method: "POST", json: { date_relance: planifDate } },
+      );
+      setPlanifOut(out ?? null);
+      await chargerSuivi();
+    } catch (e) {
+      setPlanifErr(
+        e instanceof Error
+          ? e.message
+          : "planification des relances impossible",
+      );
+    } finally {
+      setPlanifBusy(false);
     }
   }
 
@@ -3020,6 +3053,56 @@ export function RestitutionVue({
               </button>
             </div>
           </div>
+          {suivi && suivi.synthese.en_attente > 0 && (
+            <div className="rest-suivi-controles rest-suivi-planif">
+              <span className="muted">Planifier les relances</span>
+              <label className="rest-suivi-champ">
+                Date{" "}
+                <input
+                  type="date"
+                  value={planifDate}
+                  disabled={estLecteur || estCloturee || planifBusy}
+                  onChange={(e) => setPlanifDate(e.target.value)}
+                />
+              </label>
+              <Tooltip label="Fixe cette date de relance sur tous les items encore en attente qui n'ont pas déjà de date — les dates déjà saisies ne sont pas modifiées">
+                <button
+                  type="button"
+                  className="btn btn-ghost btn-sm"
+                  onClick={() => void planifierRelances()}
+                  disabled={
+                    estLecteur ||
+                    estCloturee ||
+                    planifBusy ||
+                    !planifDate ||
+                    !jeton
+                  }
+                >
+                  {planifBusy
+                    ? "Planification…"
+                    : "Planifier (items sans date)"}
+                </button>
+              </Tooltip>
+              {estCloturee && (
+                <span className="muted">
+                  Mission clôturée — action indisponible.
+                </span>
+              )}
+              {planifOut && (
+                <span className="muted" role="status">
+                  {planifOut.planifiees} planifiée
+                  {planifOut.planifiees > 1 ? "s" : ""} (
+                  {planifOut.deja_planifiees} déjà planifiée
+                  {planifOut.deja_planifiees > 1 ? "s" : ""})
+                </span>
+              )}
+              {planifErr && (
+                <span className="rest-lettre-err" role="alert">
+                  {planifErr}
+                </span>
+              )}
+            </div>
+          )}
           {suiviErr && (
             <p className="rest-lettre-err" role="alert">
               {suiviErr}

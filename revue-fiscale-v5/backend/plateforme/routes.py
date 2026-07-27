@@ -946,6 +946,68 @@ def api_ajouter_items_depuis_civisme(
     return resultat
 
 
+class PlanifierRelancesIn(BaseModel):
+    """Planification groupée des relances des items « en_attente »."""
+
+    date_relance: datetime.date
+    remplacer: bool = False
+
+
+@router.post("/missions/{mission_id}/suivi-renseignements/planifier-relances")
+def api_planifier_relances(
+    mission_id: int,
+    corps: PlanifierRelancesIn,
+    utilisateur: UtilisateurDep,
+    session: Annotated[Session, Depends(session_abonne)],
+) -> dict:
+    """Fixe la date de relance de tous les items encore « en_attente ».
+
+    Déclenchée par un clic explicite du fiscaliste. Sans ``remplacer``,
+    seuls les items sans date de relance sont planifiés ; date passée →
+    422 ; mission clôturée → 409 ; mission hors tenant → 404 (RLS).
+    """
+    from backend.moteur.journal import append_journal
+    from backend.plateforme.suivi_renseignements import (
+        ErreurSuiviDateInvalide,
+        ErreurSuiviIntrouvable,
+        ErreurSuiviMissionCloturee,
+        planifier_relances,
+    )
+
+    exiger_capacite(utilisateur, "executer_mission")
+    try:
+        resultat = planifier_relances(
+            session,
+            utilisateur.tenant_id,
+            mission_id,
+            corps.date_relance,
+            remplacer=corps.remplacer,
+        )
+    except ErreurSuiviIntrouvable as e:
+        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail=str(e)) from e
+    except ErreurSuiviMissionCloturee as e:
+        raise HTTPException(
+            status_code=status.HTTP_409_CONFLICT, detail=str(e)
+        ) from e
+    except ErreurSuiviDateInvalide as e:
+        raise HTTPException(
+            status_code=status.HTTP_422_UNPROCESSABLE_ENTITY, detail=str(e)
+        ) from e
+    append_journal(
+        session,
+        tenant_id=utilisateur.tenant_id,
+        mission_id=mission_id,
+        acteur=utilisateur.email,
+        action="planification_relances",
+        charge_utile={
+            **resultat,
+            "date_relance": corps.date_relance.isoformat(),
+            "remplacer": corps.remplacer,
+        },
+    )
+    return resultat
+
+
 class ReponseClientIn(BaseModel):
     """Saisie de la réponse client d'un item de circularisation."""
 

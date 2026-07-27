@@ -44,6 +44,10 @@ class ErreurSuiviMissionCloturee(ErreurSuiviRenseignements):
     """Mission clôturée — écriture refusée (409 côté route)."""
 
 
+class ErreurSuiviDateInvalide(ErreurSuiviRenseignements):
+    """Date de relance invalide (passée…) — 422 côté route."""
+
+
 def _mission_existe(session: Session, mission_id: int) -> bool:
     return (
         session.execute(
@@ -195,6 +199,83 @@ def maj_item(
     return _fusionner(
         [par_cle[cle_item]], {cle_item: dict(row)}
     )[0]
+
+
+def planifier_relances(
+    session: Session,
+    tenant_id: int,
+    mission_id: int,
+    date_relance: date,
+    *,
+    remplacer: bool = False,
+) -> dict[str, int]:
+    """Planifie en un clic la relance des items encore « en_attente ».
+
+    Fixe ``date_relance`` sur tous les items au statut ``en_attente`` qui
+    n'ont pas déjà de date de relance (avec ``remplacer=True`` : tous les
+    ``en_attente``, dates existantes écrasées). Les items sans saisie
+    préalable sont persistés (UPSERT, statut ``en_attente`` conservé,
+    note inchangée). Déclenché par un clic explicite du fiscaliste.
+    Mission clôturée → :class:`ErreurSuiviMissionCloturee` (409) ;
+    mission hors tenant → :class:`ErreurSuiviIntrouvable` (404) ; date
+    passée → :class:`ErreurSuiviDateInvalide` (422).
+
+    Retourne ``{planifiees, deja_planifiees}``.
+    """
+    if date_relance < date.today():
+        raise ErreurSuiviDateInvalide(
+            f"date de relance {date_relance.isoformat()} déjà passée — "
+            "choisissez une date à partir d'aujourd'hui"
+        )
+    planifiees = 0
+    deja = 0
+    with contexte_tenant(session, tenant_id):
+        statut_mission = session.execute(
+            text("SELECT statut FROM mission WHERE id = :m"),
+            {"m": mission_id},
+        ).scalar_one_or_none()
+        if statut_mission is None:
+            raise ErreurSuiviIntrouvable(f"mission {mission_id} introuvable")
+        if str(statut_mission).lower() == "cloturee":
+            raise ErreurSuiviMissionCloturee(
+                f"mission {mission_id} clôturée — réouvrez-la avant de "
+                "planifier des relances"
+            )
+        items = collecter_items(session, mission_id)
+        items += _items_civisme_persistes(session, mission_id)
+        suivis = _statuts_enregistres(session, mission_id)
+        for item in items:
+            cle = item["cle_item"]
+            s = suivis.get(cle)
+            statut = str(s["statut"]) if s else STATUT_DEFAUT
+            if statut != STATUT_DEFAUT:
+                continue
+            if s is not None and s.get("date_relance") and not remplacer:
+                deja += 1
+                continue
+            session.execute(
+                text(
+                    "INSERT INTO suivi_demande_renseignements "
+                    "(tenant_id, mission_id, cle_item, libelle, statut, "
+                    "date_relance, note) "
+                    "VALUES (:t, :m, :c, :l, :s, :d, :n) "
+                    "ON CONFLICT (tenant_id, mission_id, cle_item) "
+                    "DO UPDATE SET date_relance = EXCLUDED.date_relance, "
+                    "maj_le = now()"
+                ),
+                {
+                    "t": tenant_id,
+                    "m": mission_id,
+                    "c": cle,
+                    "l": item["libelle"],
+                    "s": STATUT_DEFAUT,
+                    "d": date_relance,
+                    "n": (s.get("note") if s else None) or None,
+                },
+            )
+            planifiees += 1
+    # Pas de commit ici : get_session committe en fin de requête.
+    return {"planifiees": planifiees, "deja_planifiees": deja}
 
 
 def synthese_depuis_items(items: list[dict[str, Any]]) -> dict[str, int]:
