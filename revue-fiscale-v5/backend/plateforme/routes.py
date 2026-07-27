@@ -738,6 +738,80 @@ def api_patcher_suivi_renseignements(
     return {"item": item, "synthese": synthese_depuis_items(items)}
 
 
+class ReponseClientIn(BaseModel):
+    """Saisie de la réponse client d'un item de circularisation."""
+
+    contenu: str = Field(min_length=1, max_length=10000)
+    pieces_recues: str | None = Field(default=None, max_length=4000)
+
+
+@router.put("/missions/{mission_id}/reponses/{cle_item}")
+def api_enregistrer_reponse_client(
+    mission_id: int,
+    cle_item: str,
+    corps: ReponseClientIn,
+    utilisateur: UtilisateurDep,
+    session: Annotated[Session, Depends(session_abonne)],
+) -> dict:
+    """Enregistre (UPSERT) la réponse client d'un item — item passé « recu »."""
+    from backend.moteur.journal import append_journal
+    from backend.plateforme.reponses_client import (
+        ErreurReponseClient,
+        ErreurReponseIntrouvable,
+        enregistrer_reponse,
+    )
+
+    exiger_capacite(utilisateur, "executer_mission")
+    try:
+        reponse = enregistrer_reponse(
+            session,
+            utilisateur.tenant_id,
+            mission_id,
+            cle_item,
+            contenu=corps.contenu,
+            pieces_recues=corps.pieces_recues,
+            saisie_par=utilisateur.email,
+        )
+    except ErreurReponseIntrouvable as e:
+        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail=str(e)) from e
+    except ErreurReponseClient as e:
+        raise HTTPException(
+            status_code=status.HTTP_422_UNPROCESSABLE_ENTITY, detail=str(e)
+        ) from e
+    append_journal(
+        session,
+        tenant_id=utilisateur.tenant_id,
+        mission_id=mission_id,
+        acteur=utilisateur.email,
+        action="saisie_reponse_client",
+        charge_utile={
+            "cle_item": reponse["cle_item"],
+            "pieces_recues_renseignees": bool(reponse["pieces_recues"]),
+        },
+    )
+    return {"reponse": reponse}
+
+
+@router.get("/missions/{mission_id}/reponses")
+def api_lister_reponses_client(
+    mission_id: int,
+    utilisateur: UtilisateurDep,
+    session: Annotated[Session, Depends(session_abonne)],
+) -> dict:
+    """Réponses client saisies + statut de la règle à la dernière exécution."""
+    from backend.plateforme.reponses_client import (
+        ErreurReponseIntrouvable,
+        lister_reponses,
+    )
+
+    exiger_capacite(utilisateur, "lire")
+    try:
+        reponses = lister_reponses(session, utilisateur.tenant_id, mission_id)
+    except ErreurReponseIntrouvable as e:
+        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail=str(e)) from e
+    return {"reponses": reponses}
+
+
 @router.patch("/missions/{mission_id}/cadrage", response_model=MissionOut)
 def api_patcher_cadrage_mission(
     mission_id: int,

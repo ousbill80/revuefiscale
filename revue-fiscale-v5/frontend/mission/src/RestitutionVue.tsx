@@ -190,6 +190,17 @@ type SuiviOut = {
   synthese: SuiviSynthese;
 };
 
+/* Réponse client saisie pour un item de circularisation. */
+type ReponseClient = {
+  cle_item: string;
+  contenu: string;
+  pieces_recues: string | null;
+  saisie_par: string;
+  saisie_le: string;
+  regle_id: string | null;
+  statut_derniere_execution: string | null;
+};
+
 /* Comparatif déterministe entre deux exécutions d'une mission. */
 type ComparatifItem = {
   regle_id: string;
@@ -492,6 +503,14 @@ export function RestitutionVue({
   const [suiviErr, setSuiviErr] = useState<string | null>(null);
   const [suiviBusyCle, setSuiviBusyCle] = useState<string | null>(null);
   const [suiviNotes, setSuiviNotes] = useState<Record<string, string>>({});
+  const [reponses, setReponses] = useState<Record<string, ReponseClient>>({});
+  const [reponseOuverteCle, setReponseOuverteCle] = useState<string | null>(
+    null,
+  );
+  const [reponseContenu, setReponseContenu] = useState("");
+  const [reponsePieces, setReponsePieces] = useState("");
+  const [reponseBusy, setReponseBusy] = useState(false);
+  const [reponseErr, setReponseErr] = useState<string | null>(null);
   const [relanceBusy, setRelanceBusy] = useState(false);
   const [relanceErr, setRelanceErr] = useState<string | null>(null);
   const [ctrlClotureOuvert, setCtrlClotureOuvert] = useState(false);
@@ -989,6 +1008,71 @@ export function RestitutionVue({
       );
     } finally {
       setSuiviBusyCle(null);
+    }
+  }
+
+  async function chargerReponses(): Promise<void> {
+    if (!jeton || !r.mission_id) return;
+    try {
+      const out = await api<{ reponses: ReponseClient[] }>(
+        `/api/v1/missions/${r.mission_id}/reponses`,
+        { jeton },
+      );
+      const map: Record<string, ReponseClient> = {};
+      for (const rep of out?.reponses ?? []) map[rep.cle_item] = rep;
+      setReponses(map);
+    } catch {
+      /* réponses indisponibles : le suivi reste utilisable */
+    }
+  }
+
+  function ouvrirReponse(cle: string): void {
+    if (reponseOuverteCle === cle) {
+      setReponseOuverteCle(null);
+      return;
+    }
+    const rep = reponses[cle];
+    setReponseContenu(rep?.contenu ?? "");
+    setReponsePieces(rep?.pieces_recues ?? "");
+    setReponseErr(null);
+    setReponseOuverteCle(cle);
+  }
+
+  async function enregistrerReponse(cle: string): Promise<void> {
+    if (!jeton || !r.mission_id || reponseBusy) return;
+    const contenu = reponseContenu.trim();
+    if (!contenu) {
+      setReponseErr("Le contenu de la réponse est obligatoire.");
+      return;
+    }
+    setReponseBusy(true);
+    setReponseErr(null);
+    try {
+      const out = await api<{ reponse: ReponseClient }>(
+        `/api/v1/missions/${r.mission_id}/reponses/${encodeURIComponent(cle)}`,
+        {
+          jeton,
+          method: "PUT",
+          json: {
+            contenu,
+            pieces_recues: reponsePieces.trim() || null,
+          },
+        },
+      );
+      setReponses((prev) => ({ ...prev, [cle]: out.reponse }));
+      setReponseOuverteCle(null);
+      // La saisie passe l'item « recu » côté serveur : recharger le suivi
+      // (statuts + synthèse) et les réponses (statut_derniere_execution).
+      await chargerSuivi();
+      await chargerReponses();
+    } catch (e) {
+      setReponseErr(
+        e instanceof Error
+          ? e.message
+          : "enregistrement de la réponse impossible",
+      );
+    } finally {
+      setReponseBusy(false);
     }
   }
 
@@ -1615,7 +1699,10 @@ export function RestitutionVue({
                 className="btn btn-ghost btn-sm rest-suivi-btn"
                 onClick={() => {
                   setSuiviOuvert((o) => !o);
-                  if (!suiviOuvert) void chargerSuivi();
+                  if (!suiviOuvert) {
+                    void chargerSuivi();
+                    void chargerReponses();
+                  }
                 }}
                 aria-expanded={suiviOuvert}
               >
@@ -2122,7 +2209,106 @@ export function RestitutionVue({
                           }}
                         />
                       </label>
+                      <button
+                        type="button"
+                        className="btn btn-ghost btn-sm rest-reponse-btn"
+                        disabled={estLecteur && !reponses[it.cle_item]}
+                        onClick={() => ouvrirReponse(it.cle_item)}
+                        aria-expanded={reponseOuverteCle === it.cle_item}
+                      >
+                        {reponses[it.cle_item]
+                          ? "Réponse client ✓"
+                          : "Saisir la réponse"}
+                      </button>
                     </div>
+                    {reponses[it.cle_item] &&
+                      reponseOuverteCle !== it.cle_item && (
+                        <div className="rest-reponse-resume">
+                          <span className="rest-reponse-contenu">
+                            {reponses[it.cle_item].contenu}
+                          </span>
+                          {reponses[it.cle_item].pieces_recues && (
+                            <span className="muted">
+                              {" "}
+                              — Pièces : {reponses[it.cle_item].pieces_recues}
+                            </span>
+                          )}
+                          <span className="muted">
+                            {" "}
+                            (saisie par {reponses[it.cle_item].saisie_par})
+                          </span>
+                          {reponses[it.cle_item]
+                            .statut_derniere_execution ===
+                            "non_verifiable" && (
+                            <span className="badge rest-reponse-badge-attente">
+                              Règle toujours non vérifiable — relancer une
+                              exécution
+                            </span>
+                          )}
+                        </div>
+                      )}
+                    {reponseOuverteCle === it.cle_item && (
+                      <div className="rest-reponse-form">
+                        <label className="rest-reponse-champ">
+                          Réponse du client
+                          <textarea
+                            rows={3}
+                            placeholder="Contenu de la réponse reçue…"
+                            value={reponseContenu}
+                            disabled={estLecteur || reponseBusy}
+                            onChange={(e) =>
+                              setReponseContenu(e.target.value)
+                            }
+                          />
+                        </label>
+                        <label className="rest-reponse-champ">
+                          Pièces reçues (optionnel)
+                          <input
+                            type="text"
+                            placeholder="ex : relevés bancaires, tableau d'amortissement…"
+                            value={reponsePieces}
+                            disabled={estLecteur || reponseBusy}
+                            onChange={(e) =>
+                              setReponsePieces(e.target.value)
+                            }
+                          />
+                        </label>
+                        {reponseErr && (
+                          <p className="rest-lettre-err" role="alert">
+                            {reponseErr}
+                          </p>
+                        )}
+                        <div className="rest-reponse-actions">
+                          <button
+                            type="button"
+                            className="btn btn-primary btn-sm"
+                            disabled={
+                              estLecteur ||
+                              reponseBusy ||
+                              !reponseContenu.trim()
+                            }
+                            onClick={() =>
+                              void enregistrerReponse(it.cle_item)
+                            }
+                          >
+                            {reponseBusy
+                              ? "Enregistrement…"
+                              : "Enregistrer la réponse"}
+                          </button>
+                          <button
+                            type="button"
+                            className="btn btn-ghost btn-sm"
+                            disabled={reponseBusy}
+                            onClick={() => setReponseOuverteCle(null)}
+                          >
+                            Annuler
+                          </button>
+                          <span className="muted rest-reponse-aide">
+                            L'enregistrement marque l'item « Reçu ».
+                          </span>
+                        </div>
+                      </div>
+                    )}
                   </li>
                 );
               })}

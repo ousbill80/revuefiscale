@@ -9444,3 +9444,13 @@ tr.row-active td {
 .rest-suivi-champ input { padding: 0.22rem 0.4rem; border: 1px solid var(--line, #e5e7eb); border-radius: 7px; background: var(--surface, #fff); font-size: 0.76rem; color: var(--ink, #0f172a); }
 .rest-suivi-note { flex: 1 1 14rem; }
 .rest-suivi-note input { flex: 1 1 auto; min-width: 10rem; }
+.rest-reponse-btn { font-size: 0.74rem; }
+.rest-reponse-resume { font-size: 0.78rem; color: var(--ink-soft, #475569); padding: 0.35rem 0.5rem; border: 1px dashed var(--line, #e5e7eb); border-radius: 7px; background: var(--surface-soft, #f8fafc); }
+.rest-reponse-contenu { color: var(--ink, #0f172a); }
+.rest-reponse-badge-attente { margin-left: 0.4rem; border-color: #b45309; color: #92400e; background: #fffbeb; font-size: 0.68rem; }
+.rest-reponse-form { display: grid; gap: 0.45rem; padding: 0.5rem 0.6rem; border: 1px solid var(--line, #e5e7eb); border-radius: 8px; background: var(--surface-soft, #f8fafc); }
+.rest-reponse-champ { display: grid; gap: 0.25rem; font-size: 0.75rem; color: var(--ink-soft, #475569); }
+.rest-reponse-champ textarea,
+.rest-reponse-champ input { padding: 0.3rem 0.45rem; border: 1px solid var(--line, #e5e7eb); border-radius: 7px; background: var(--surface, #fff); font-size: 0.78rem; color: var(--ink, #0f172a); font-family: inherit; resize: vertical; }
+.rest-reponse-actions { display: flex; flex-wrap: wrap; align-items: center; gap: 0.5rem; }
+.rest-reponse-aide { font-size: 0.72rem; }
