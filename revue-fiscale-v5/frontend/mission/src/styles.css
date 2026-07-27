@@ -1592,6 +1592,17 @@ body {
   justify-content: center;
 }
 
+/* Déclinaison orange discrète — relances échues (Tableau de bord). */
+.side-nav-item .nav-badge.orange {
+  background: rgba(251, 146, 60, 0.16);
+  color: #fdba74;
+}
+
+.side-nav-item.active .nav-badge.orange {
+  background: rgba(251, 146, 60, 0.24);
+  color: #fed7aa;
+}
+
 .side-nav-item .nav-dot {
   display: none;
 }

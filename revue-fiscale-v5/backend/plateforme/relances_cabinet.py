@@ -16,6 +16,8 @@ lecture seule sous RLS.
 """
 from __future__ import annotations
 
+import csv
+import io
 from datetime import date
 from typing import Any, Final
 
@@ -68,6 +70,43 @@ def synthese_relances(items: list[dict[str, Any]]) -> dict[str, Any]:
         "clients": len(clients),
         "plus_ancienne": plus_ancienne,
     }
+
+
+# ── Export CSV (Excel FR, séparateur « ; ») ──────────────────────────
+
+# En-tête du CSV des relances — délimiteur « ; » (usage cabinet / Excel FR).
+ENTETE_RELANCES_CSV: Final[tuple[str, ...]] = (
+    "date_relance",
+    "client",
+    "mission",
+    "exercice",
+    "libelle",
+)
+
+
+def generer_csv(relances: dict) -> str:
+    """PUR — CSV « ; » des relances à faire (Excel FR).
+
+    Une ligne par item de ``relances["items"]``, dans l'ordre trié des
+    relances (date de relance puis client, mission). Échappement CSV par
+    le module stdlib : valeurs entre guillemets (doublés) si elles
+    contiennent « ; », un guillemet ou un retour à la ligne. Le BOM
+    UTF-8 est ajouté côté route, pas ici. Liste vide → en-tête seul.
+    """
+    buf = io.StringIO()
+    w = csv.writer(buf, delimiter=";", lineterminator="\n")
+    w.writerow(ENTETE_RELANCES_CSV)
+    for i in list(relances.get("items") or []):
+        w.writerow(
+            [
+                str(i.get("date_relance") or ""),
+                str(i.get("client") or ""),
+                str(i.get("mission_id") or ""),
+                str(i.get("exercice") or ""),
+                str(i.get("libelle") or ""),
+            ]
+        )
+    return buf.getvalue()
 
 
 # ── Lecture cabinet (RLS) ────────────────────────────────────────────

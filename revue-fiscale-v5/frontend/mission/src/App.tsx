@@ -641,6 +641,8 @@ export function App() {
     etatInitialClientEdit("pm"),
   );
   const [missions, setMissions] = useState<MissionRow[]>([]);
+  /** Nb de relances échues (badge sidebar « Tableau de bord ») — fetch léger au montage. */
+  const [nbRelances, setNbRelances] = useState(0);
   const [quota, setQuota] = useState<QuotaResume | null>(null);
   const [invitations, setInvitations] = useState<
     Array<{ id: number; email: string; role: string; statut: string }>
@@ -1086,6 +1088,28 @@ export function App() {
     if (session?.jeton) void chargerCabinetProfil(session.jeton);
     else setCabinetProfil(null);
   }, [session?.jeton, chargerCabinetProfil]);
+
+  // Badge sidebar : total des relances échues (fetch léger au montage, pas de polling).
+  useEffect(() => {
+    if (!session?.jeton) {
+      setNbRelances(0);
+      return;
+    }
+    let annule = false;
+    void (async () => {
+      try {
+        const r = await api<{ total: number }>("/api/v1/cabinet/relances", {
+          jeton: session.jeton,
+        });
+        if (!annule) setNbRelances(r?.total ?? 0);
+      } catch {
+        /* badge optionnel — silencieux si l'endpoint est indisponible */
+      }
+    })();
+    return () => {
+      annule = true;
+    };
+  }, [session?.jeton]);
 
   // Boot : vérifie la session restaurée via un appel léger, puis charge les données.
   useEffect(() => {
@@ -2715,12 +2739,16 @@ export function App() {
     hide?: boolean;
     accent?: boolean;
     badge?: number | null;
+    /** Classe additionnelle du badge (ex. « orange » pour les relances échues). */
+    badgeClass?: string;
     icon: ReactNode;
   }> = [
     {
       id: "dashboard",
       label: "Tableau de bord",
       group: "pilotage",
+      badge: nbRelances || null,
+      badgeClass: "orange",
       icon: (
         <svg className="nav-ico" viewBox="0 0 24 24" aria-hidden="true">
           <rect x="3" y="3" width="7" height="9" rx="1" />
@@ -3558,7 +3586,13 @@ export function App() {
                             </span>
                             <span className="nav-label-txt">{n.label}</span>
                             {n.badge != null && n.badge > 0 && (
-                              <span className="nav-badge">{n.badge}</span>
+                              <span
+                                className={`nav-badge${
+                                  n.badgeClass ? ` ${n.badgeClass}` : ""
+                                }`}
+                              >
+                                {n.badge}
+                              </span>
                             )}
                           </button>
                         );

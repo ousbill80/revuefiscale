@@ -8,6 +8,7 @@ import pytest
 
 from backend.plateforme.relances_cabinet import (
     PLAFOND_ITEMS,
+    generer_csv,
     relances_cabinet,
     synthese_relances,
     trier_relances,
@@ -66,6 +67,66 @@ def test_synthese_relances():
         "clients": 0,
         "plus_ancienne": None,
     }
+
+
+# ── Tests purs — export CSV ────────────────────────────────────────
+
+
+def test_csv_entetes_et_lignes_dans_l_ordre_des_relances():
+    relances = {
+        "items": [
+            _item("2025-06-01", client="SARL Zêta FICTIVE", mission_id=9),
+            _item(
+                "2025-06-10",
+                client="SA Alpha FICTIVE",
+                mission_id=2,
+                libelle="Grand livre fournisseurs",
+            ),
+        ]
+    }
+    csv_txt = generer_csv(relances)
+    lignes = csv_txt.splitlines()
+    assert lignes[0] == "date_relance;client;mission;exercice;libelle"
+    assert lignes[1] == (
+        "2025-06-01;SARL Zêta FICTIVE;9;2025;Balance auxiliaire clients"
+    )
+    assert lignes[2] == (
+        "2025-06-10;SA Alpha FICTIVE;2;2025;Grand livre fournisseurs"
+    )
+    # Ordre des relances conservé (le tri est fait en amont).
+    assert [l.split(";")[0] for l in lignes[1:]] == ["2025-06-01", "2025-06-10"]
+
+
+def test_csv_echappement_point_virgule_guillemets_retour_ligne():
+    relances = {
+        "items": [
+            _item(
+                "2025-06-01",
+                client='SARL "Un; Deux" FICTIVE',
+                libelle="Balance ; grand\nlivre",
+            )
+        ]
+    }
+    csv_txt = generer_csv(relances)
+    # Valeurs à risque entre guillemets, guillemets internes doublés.
+    assert '"SARL ""Un; Deux"" FICTIVE"' in csv_txt
+    assert '"Balance ; grand\nlivre"' in csv_txt
+    # Relecture par le module csv : les valeurs sont restituées intactes.
+    import csv as _csv
+    import io as _io
+
+    lignes = list(_csv.reader(_io.StringIO(csv_txt), delimiter=";"))
+    assert lignes[1][1] == 'SARL "Un; Deux" FICTIVE'
+    assert lignes[1][4] == "Balance ; grand\nlivre"
+
+
+def test_csv_vide_en_tete_seul():
+    assert generer_csv({"items": []}) == (
+        "date_relance;client;mission;exercice;libelle\n"
+    )
+    assert generer_csv({}) == (
+        "date_relance;client;mission;exercice;libelle\n"
+    )
 
 
 # ── Tests DB / API ─────────────────────────────────────────────────
@@ -294,4 +355,55 @@ def test_api_401_sans_jeton(session):
 
     client = TestClient(app)
     r = client.get("/api/v1/cabinet/relances")
+    assert r.status_code == 401, r.text
+
+
+def test_api_relances_csv_export(session):
+    tid, email = _cabinet(session, "relances.csv")
+    mid = _mission(session, tid, "PM CSV Relances FICTIF")
+    _item_suivi(
+        session, tid, mid, "Balance générale",
+        date_relance=date.today() - timedelta(days=3),
+    )
+    _item_suivi(
+        session, tid, mid, "Grand livre",
+        date_relance=date.today() - timedelta(days=1),
+    )
+    _item_suivi(session, tid, mid, "Sans date")  # exclu (pas de relance).
+    session.commit()
+
+    client, h = _client_connecte(email)
+    r = client.get("/api/v1/cabinet/relances.csv", headers=h)
+    assert r.status_code == 200, r.text
+    assert r.headers["content-type"].startswith("text/csv")
+    assert "charset=utf-8" in r.headers["content-type"]
+    assert (
+        r.headers["content-disposition"]
+        == 'attachment; filename="relances.csv"'
+    )
+    # BOM UTF-8 en tête (ouverture directe dans Excel FR).
+    assert r.content[:3] == b"\xef\xbb\xbf"
+    corps = r.content.decode("utf-8-sig")
+    lignes = corps.splitlines()
+    assert lignes[0] == "date_relance;client;mission;exercice;libelle"
+    assert len(lignes) == 3
+    assert all(l.split(";")[2] == str(mid) for l in lignes[1:])
+    assert all("PM CSV Relances FICTIF" in l for l in lignes[1:])
+    # Tri par date de relance croissante (même tri que le JSON).
+    assert lignes[1].endswith("Balance générale")
+    assert lignes[2].endswith("Grand livre")
+
+    # Cohérence avec le JSON : autant de lignes que d'items.
+    rj = client.get("/api/v1/cabinet/relances", headers=h)
+    assert rj.status_code == 200
+    assert len(lignes) - 1 == len(rj.json()["items"])
+
+
+def test_api_relances_csv_401_sans_jeton(session):
+    from fastapi.testclient import TestClient
+
+    from backend.main import app
+
+    client = TestClient(app)
+    r = client.get("/api/v1/cabinet/relances.csv")
     assert r.status_code == 401, r.text
