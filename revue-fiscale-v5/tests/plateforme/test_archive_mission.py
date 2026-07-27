@@ -4,6 +4,7 @@ from __future__ import annotations
 import io
 import uuid
 import zipfile
+from datetime import date
 
 import pytest
 
@@ -17,6 +18,9 @@ from fastapi.testclient import TestClient  # noqa: E402
 from backend.main import app  # noqa: E402
 from backend.plateforme import archive_mission  # noqa: E402
 from backend.plateforme.contexte import contexte_tenant  # noqa: E402
+from backend.plateforme.reponses_client import enregistrer_reponse  # noqa: E402
+from backend.plateforme.temps_mission import saisir_temps  # noqa: E402
+from backend.plateforme.visas_mission import poser_visa  # noqa: E402
 from tests.plateforme.test_demande_renseignements import (  # noqa: E402
     _assurer_version,
     _cabinet,
@@ -93,9 +97,13 @@ def test_zip_valide_contenu_et_sommaire(session):
         assert "CONTRÔLE QUALITÉ DE PRÉ-CLÔTURE" in ctrl
         assert "Clôture recommandée" in ctrl
 
-        # Une seule exécution et aucun risque : 08 et 09 sont omises.
+        # Une seule exécution, aucun risque, ni temps/visa/réponse :
+        # 08, 09, 10, 11 et 12 sont omises.
         assert "08_comparatif_executions.txt" not in noms
         assert "09_provision_risques.txt" not in noms
+        assert "10_temps_mission.csv" not in noms
+        assert "11_visas_supervision.txt" not in noms
+        assert "12_reponses_client.txt" not in noms
 
         # Sommaire : identification + pièces incluses + omissions motivées.
         sommaire = z.read("00_sommaire.txt").decode("utf-8")
@@ -103,9 +111,21 @@ def test_zip_valide_contenu_et_sommaire(session):
         assert "PM Demande FICTIF" in sommaire
         assert "2025" in sommaire
         assert "PIÈCES INCLUSES (7)" in sommaire
-        assert "PIÈCES OMISES (2)" in sommaire
+        assert "PIÈCES OMISES (5)" in sommaire
         assert "08_comparatif_executions.txt : OMISE" in sommaire
         assert "09_provision_risques.txt : OMISE" in sommaire
+        assert (
+            "10_temps_mission.csv : OMISE — aucun temps saisi sur la mission"
+            in sommaire
+        )
+        assert (
+            "11_visas_supervision.txt : OMISE — aucun visa posé sur la mission"
+            in sommaire
+        )
+        assert (
+            "12_reponses_client.txt : OMISE — aucune réponse client saisie"
+            in sommaire
+        )
         assert "Généré le" in sommaire
 
 
@@ -165,7 +185,113 @@ def test_comparatif_et_provision_inclus_quand_disponibles(session):
 
         sommaire = z.read("00_sommaire.txt").decode("utf-8")
         assert "PIÈCES INCLUSES (9)" in sommaire
-        assert "PIÈCES OMISES (0)" in sommaire
+        # Ni temps, ni visa, ni réponse sur cette mission → 10/11/12 omises.
+        assert "PIÈCES OMISES (3)" in sommaire
+
+
+def test_temps_visas_reponses_inclus_quand_disponibles(session):
+    """Temps saisi + visa posé + réponse client → pièces 10, 11 et 12."""
+    _assurer_version(session)
+    email = _cabinet(session)
+    client = TestClient(app)
+    h, tid = _connexion(client, email)
+    mid = _mission(client, h)
+    suffixe = uuid.uuid4().hex[:6].upper()
+    _preparer(session, tid, mid, suffixe)
+    cle = f"piece:OBL-36-ETII-{suffixe}"
+
+    saisir_temps(
+        session,
+        tid,
+        mid,
+        collaborateur="Awa Koné",
+        phase="controles",
+        date_jour=date(2025, 3, 10),
+        heures="3.5",
+        note="Revue des déductions TVA",
+    )
+    saisir_temps(
+        session,
+        tid,
+        mid,
+        collaborateur="Moussa Diabaté",
+        phase="cadrage",
+        date_jour=date(2025, 3, 8),
+        heures="2",
+    )
+    poser_visa(
+        session,
+        tid,
+        mid,
+        phase="cadrage",
+        role="preparateur",
+        vise_par="Awa Koné",
+        commentaire="Cadrage documenté",
+    )
+    enregistrer_reponse(
+        session,
+        tid,
+        mid,
+        cle_item=cle,
+        contenu="État intragroupe transmis en PJ.",
+        pieces_recues="etat_intragroupe_2025.pdf",
+        saisie_par=email,
+    )
+    session.commit()
+
+    resp = _telecharger_zip(client, h, mid)
+    with zipfile.ZipFile(io.BytesIO(resp.content)) as z:
+        noms = set(z.namelist())
+        assert "10_temps_mission.csv" in noms
+        assert "11_visas_supervision.txt" in noms
+        assert "12_reponses_client.txt" in noms
+
+        # 10 — CSV « ; » : en-tête, entrées, synthèse (sans valorisation).
+        temps = z.read("10_temps_mission.csv").decode("utf-8")
+        lignes = temps.splitlines()
+        assert lignes[0] == "date_jour;collaborateur;phase;heures;note"
+        assert (
+            "2025-03-10;Awa Koné;controles;3.5;Revue des déductions TVA"
+            in lignes
+        )
+        assert "2025-03-08;Moussa Diabaté;cadrage;2;" in lignes
+        assert "synthese;total_heures=5.5" in lignes
+        assert "par_phase;controles;3.5" in lignes
+        assert "par_phase;cadrage;2" in lignes
+        assert "par_collaborateur;Awa Koné;3.5" in lignes
+        assert "par_collaborateur;Moussa Diabaté;2" in lignes
+        assert "valorisation" not in temps
+
+        # 11 — registre des visas : visés, manquants, synthèse.
+        visas = z.read("11_visas_supervision.txt").decode("utf-8")
+        assert "REGISTRE DES VISAS DE SUPERVISION" in visas
+        assert "PHASE CADRAGE — incomplète" in visas
+        assert "[VISÉ] preparateur : Awa Koné" in visas
+        assert "Cadrage documenté" in visas
+        assert "[MANQUANT] reviseur" in visas
+        assert "[MANQUANT] associe" in visas
+        assert "PHASE COLLECTE — incomplète" in visas
+        assert "Synthèse : 0 phase(s) complète(s), 1 visa(s) posé(s)." in visas
+
+        # 12 — réponses client : contenu, pièces, saisie, statut règle.
+        reponses = z.read("12_reponses_client.txt").decode("utf-8")
+        assert "RÉPONSES CLIENT SAISIES" in reponses
+        assert f"ITEM {cle}" in reponses
+        assert "Contenu : État intragroupe transmis en PJ." in reponses
+        assert "Pièces reçues : etat_intragroupe_2025.pdf" in reponses
+        assert f"Saisie par : {email} le " in reponses
+        assert (
+            f"Statut de la règle OBL-36-ETII-{suffixe} en dernière "
+            "exécution : non_verifiable" in reponses
+        )
+
+        # Sommaire cohérent : 10/11/12 incluses, plus omises.
+        sommaire = z.read("00_sommaire.txt").decode("utf-8")
+        assert "PIÈCES INCLUSES (10)" in sommaire
+        assert "PIÈCES OMISES (2)" in sommaire
+        assert "10_temps_mission.csv : Feuille de temps" in sommaire
+        assert "11_visas_supervision.txt : Registre des visas" in sommaire
+        assert "12_reponses_client.txt : Réponses client saisies" in sommaire
 
 
 def test_piece_en_echec_est_omise_et_notee(session, monkeypatch):
@@ -195,8 +321,9 @@ def test_piece_en_echec_est_omise_et_notee(session, monkeypatch):
             "02_rapport_restitution.docx : OMISE — panne simulée du rendu Word"
             in sommaire
         )
-        # Panne Word + 08 (une seule exécution) + 09 (aucun risque).
-        assert "PIÈCES OMISES (3)" in sommaire
+        # Panne Word + 08 (une seule exécution) + 09 (aucun risque)
+        # + 10/11/12 (ni temps, ni visa, ni réponse).
+        assert "PIÈCES OMISES (6)" in sommaire
 
 
 def test_dossier_cross_tenant_404(session):

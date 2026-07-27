@@ -35,10 +35,13 @@ from backend.plateforme.demande_renseignements import (
 from backend.plateforme.lettre_mission import generer_lettre_mission
 from backend.plateforme.provision_risques import calculer_provision
 from backend.plateforme.rapport_risques import exporter_rapport_risques_pdf
+from backend.plateforme.reponses_client import lister_reponses
 from backend.plateforme.suivi_renseignements import (
     lister_items,
     synthese_depuis_items,
 )
+from backend.plateforme.temps_mission import recap_temps
+from backend.plateforme.visas_mission import ORDRE_ROLES, etat_visas
 from backend.restitution.rapport_docx import rendre_rapport_docx
 from backend.restitution.rapport_pdf import rendre_rapport_pdf
 from backend.restitution.routes import (
@@ -340,6 +343,96 @@ def _piece_provision_risques(
     return "\n".join(lignes).encode("utf-8")
 
 
+# En-tête du CSV des temps — délimiteur « ; » (usage cabinet / Excel FR).
+ENTETE_TEMPS_CSV: Final = ("date_jour", "collaborateur", "phase", "heures", "note")
+
+
+def _piece_temps_mission(
+    session: Session, tenant_id: int, mission_id: int, meta: dict[str, Any]
+) -> bytes:
+    """Feuille de temps CSV — valorisation OMISE (pas de taux à l'archive)."""
+    r = recap_temps(session, tenant_id, mission_id)
+    if not r["entrees"]:
+        raise ErreurArchiveMission("aucun temps saisi sur la mission")
+    buf = io.StringIO()
+    w = csv.writer(buf, delimiter=";", lineterminator="\n")
+    w.writerow(ENTETE_TEMPS_CSV)
+    for e in r["entrees"]:
+        w.writerow([str(e.get(c) or "") for c in ENTETE_TEMPS_CSV])
+    w.writerow([])
+    w.writerow(["synthese", f"total_heures={r['total_heures']}"])
+    for phase, heures in r["par_phase"].items():
+        w.writerow(["par_phase", phase, heures])
+    for collab, heures in r["par_collaborateur"].items():
+        w.writerow(["par_collaborateur", collab, heures])
+    return buf.getvalue().encode("utf-8")
+
+
+def _piece_visas_supervision(
+    session: Session, tenant_id: int, mission_id: int, meta: dict[str, Any]
+) -> bytes:
+    v = etat_visas(session, tenant_id, mission_id)
+    s = v.get("synthese", {})
+    if not int(s.get("total_visas", 0)):
+        raise ErreurArchiveMission("aucun visa posé sur la mission")
+    lignes = [
+        "REGISTRE DES VISAS DE SUPERVISION — par phase de mission",
+        f"Mission #{mission_id} — ordre hiérarchique : "
+        + " < ".join(ORDRE_ROLES),
+        "",
+    ]
+    for p in v.get("phases", []):
+        visas = p.get("visas", [])
+        etat = "complète" if p.get("complet") else "incomplète"
+        lignes.append(f"PHASE {str(p.get('phase', '')).upper()} — {etat}")
+        for visa in visas:
+            ligne = (
+                f"  [VISÉ] {visa['role']} : {visa['vise_par']} "
+                f"le {visa['vise_le']}"
+            )
+            if visa.get("commentaire"):
+                ligne += f" — {visa['commentaire']}"
+            lignes.append(ligne)
+        presents = {visa["role"] for visa in visas}
+        for role in ORDRE_ROLES:
+            if role not in presents:
+                lignes.append(f"  [MANQUANT] {role}")
+        lignes.append("")
+    lignes.append(
+        "Synthèse : "
+        f"{s.get('phases_completes', 0)} phase(s) complète(s), "
+        f"{s.get('total_visas', 0)} visa(s) posé(s)."
+    )
+    return "\n".join(lignes).encode("utf-8")
+
+
+def _piece_reponses_client(
+    session: Session, tenant_id: int, mission_id: int, meta: dict[str, Any]
+) -> bytes:
+    reponses = lister_reponses(session, tenant_id, mission_id)
+    if not reponses:
+        raise ErreurArchiveMission("aucune réponse client saisie")
+    lignes = [
+        "RÉPONSES CLIENT SAISIES — traçabilité avant re-contrôle",
+        f"Mission #{mission_id} — {len(reponses)} réponse(s)",
+        "",
+    ]
+    for r in reponses:
+        lignes.append(f"ITEM {r['cle_item']}")
+        lignes.append(f"  Contenu : {r['contenu']}")
+        lignes.append(
+            f"  Pièces reçues : {r.get('pieces_recues') or '(aucune)'}"
+        )
+        lignes.append(f"  Saisie par : {r['saisie_par']} le {r['saisie_le']}")
+        if r.get("statut_derniere_execution"):
+            lignes.append(
+                f"  Statut de la règle {r.get('regle_id')} en dernière "
+                f"exécution : {r['statut_derniere_execution']}"
+            )
+        lignes.append("")
+    return "\n".join(lignes).encode("utf-8")
+
+
 # Ordre du dossier : (nom de fichier dans le ZIP, description, constructeur).
 _PIECES: Final[
     tuple[tuple[str, str, Callable[[Session, int, int, dict[str, Any]], bytes]], ...]
@@ -388,6 +481,21 @@ _PIECES: Final[
         "09_provision_risques.txt",
         "Provision pour risques fiscaux proposée (indicatif)",
         _piece_provision_risques,
+    ),
+    (
+        "10_temps_mission.csv",
+        "Feuille de temps de la mission (par phase et collaborateur)",
+        _piece_temps_mission,
+    ),
+    (
+        "11_visas_supervision.txt",
+        "Registre des visas de supervision par phase",
+        _piece_visas_supervision,
+    ),
+    (
+        "12_reponses_client.txt",
+        "Réponses client saisies (traçabilité avant re-contrôle)",
+        _piece_reponses_client,
     ),
 )
 
