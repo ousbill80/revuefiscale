@@ -1050,6 +1050,46 @@ def api_rentabilite_mission(
         raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail=str(e)) from e
 
 
+@router.get("/missions/{mission_id}/rentabilite.csv")
+def api_exporter_rentabilite_csv(
+    mission_id: int,
+    utilisateur: UtilisateurDep,
+    session: Annotated[Session, Depends(session_abonne)],
+) -> Response:
+    """Rentabilité au format CSV Excel FR (« ; ») — annexe du dossier."""
+    from backend.moteur.journal import append_journal
+    from backend.plateforme.rentabilite_mission import (
+        ErreurRentabilite,
+        ErreurRentabiliteIntrouvable,
+        exporter_rentabilite_csv,
+    )
+
+    exiger_capacite(utilisateur, "lire")
+    try:
+        nom, contenu = exporter_rentabilite_csv(
+            session, utilisateur.tenant_id, mission_id
+        )
+    except ErreurRentabiliteIntrouvable as e:
+        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail=str(e)) from e
+    except ErreurRentabilite as e:
+        raise HTTPException(
+            status_code=status.HTTP_422_UNPROCESSABLE_ENTITY, detail=str(e)
+        ) from e
+    append_journal(
+        session,
+        tenant_id=utilisateur.tenant_id,
+        mission_id=mission_id,
+        acteur=utilisateur.email,
+        action="export_rentabilite_csv",
+        charge_utile={"fichier": nom},
+    )
+    return Response(
+        content=contenu,
+        media_type="text/csv; charset=utf-8",
+        headers={"Content-Disposition": f'attachment; filename="{nom}"'},
+    )
+
+
 class VisaMissionIn(BaseModel):
     """Pose d'un visa de supervision (phase, rôle) — vise_par = email connecté."""
 

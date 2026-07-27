@@ -188,6 +188,101 @@ def test_auth_requise(session):
     ).status_code in (401, 403)
 
 
+def test_export_csv_contenu(session):
+    """CSV « ; » : en-tête, paramètres, temps valorisés, synthèse marge."""
+    _assurer_version(session)
+    email = _cabinet(session)
+    client = TestClient(app)
+    h, _ = _connexion(client, email)
+    mid = _mission(client, h)
+
+    # 10 h saisies (6 + 4) au nom de l'utilisateur connecté.
+    assert _saisir(client, h, mid, phase="controles",
+                   date_jour="2026-07-10", heures=6).status_code == 200
+    assert _saisir(client, h, mid, phase="restitution",
+                   date_jour="2026-07-15", heures=4).status_code == 200
+    assert _definir(
+        client, h, mid, honoraires=800000, taux_horaire=40000
+    ).status_code == 200
+
+    r = client.get(f"/api/v1/missions/{mid}/rentabilite.csv", headers=h)
+    assert r.status_code == 200, r.text
+    assert r.headers["content-type"].startswith("text/csv")
+    assert (
+        f'filename="rentabilite_mission_{mid}.csv"'
+        in r.headers["content-disposition"]
+    )
+    lignes = r.content.decode("utf-8").splitlines()
+    assert lignes[0] == "rubrique;cle;heures;montant_fcfa"
+    assert "parametre;honoraires;;800000" in lignes
+    assert "parametre;taux_horaire;;40000" in lignes
+    # Temps valorisés au taux horaire (Decimal exact).
+    assert "par_phase;controles;6;240000" in lignes
+    assert "par_phase;restitution;4;160000" in lignes
+    assert f"par_collaborateur;{email};10;400000" in lignes
+    # Synthèse marge : coût 400 000, marge 400 000, taux 50.0 %.
+    assert "synthese;total_heures;10;" in lignes
+    assert "synthese;cout_estime;;400000" in lignes
+    assert "synthese;marge_estimee;;400000" in lignes
+    assert "synthese;taux_marge_pct;;50.0" in lignes
+
+
+def test_export_csv_parametres_absents_422(session):
+    """Ni honoraires ni taux horaire → 422 (rien à valoriser)."""
+    _assurer_version(session)
+    email = _cabinet(session)
+    client = TestClient(app)
+    h, _ = _connexion(client, email)
+    mid = _mission(client, h)
+    assert _saisir(client, h, mid, heures=2).status_code == 200
+
+    r = client.get(f"/api/v1/missions/{mid}/rentabilite.csv", headers=h)
+    assert r.status_code == 422, r.text
+    assert "paramètres de rentabilité non renseignés" in r.json()["detail"]
+
+    # Taux horaire seul renseigné : l'export redevient possible.
+    assert _definir(client, h, mid, taux_horaire=40000).status_code == 200
+    ok = client.get(f"/api/v1/missions/{mid}/rentabilite.csv", headers=h)
+    assert ok.status_code == 200, ok.text
+    lignes = ok.content.decode("utf-8").splitlines()
+    assert "parametre;honoraires;;" in lignes
+    assert "synthese;cout_estime;;80000" in lignes
+    assert "synthese;marge_estimee;;" in lignes
+
+
+def test_export_csv_cross_tenant_404(session):
+    _assurer_version(session)
+    email_a = _cabinet(session)
+    email_b = _cabinet(session)
+    client = TestClient(app)
+    h_a, _ = _connexion(client, email_a)
+    mid = _mission(client, h_a)
+    assert _definir(
+        client, h_a, mid, honoraires=800000, taux_horaire=40000
+    ).status_code == 200
+
+    h_b, _ = _connexion(client, email_b)
+    assert client.get(
+        f"/api/v1/missions/{mid}/rentabilite.csv", headers=h_b
+    ).status_code == 404
+    # Le tenant légitime exporte normalement.
+    assert client.get(
+        f"/api/v1/missions/{mid}/rentabilite.csv", headers=h_a
+    ).status_code == 200
+
+
+def test_export_csv_auth_requise(session):
+    _assurer_version(session)
+    email = _cabinet(session)
+    client = TestClient(app)
+    h, _ = _connexion(client, email)
+    mid = _mission(client, h)
+
+    assert client.get(
+        f"/api/v1/missions/{mid}/rentabilite.csv"
+    ).status_code in (401, 403)
+
+
 def test_calculer_rentabilite_fonction_pure():
     from backend.plateforme.rentabilite_mission import (
         ErreurRentabilite,

@@ -17,7 +17,7 @@ float — testable sans base.
 from __future__ import annotations
 
 from decimal import ROUND_HALF_UP, Decimal, InvalidOperation
-from typing import Any
+from typing import Any, Final
 
 from sqlalchemy import text
 from sqlalchemy.orm import Session
@@ -163,4 +163,62 @@ def rentabilite_mission(
         honoraires=row["honoraires"],
         taux_horaire=row["taux_horaire"],
         total_heures=row["total_heures"],
+    )
+
+
+# En-tête du CSV de rentabilité — délimiteur « ; » (usage cabinet / Excel FR).
+ENTETE_RENTABILITE_CSV: Final = ("rubrique", "cle", "heures", "montant_fcfa")
+
+
+def exporter_rentabilite_csv(
+    session: Session, tenant_id: int, mission_id: int
+) -> tuple[str, bytes]:
+    """CSV Excel FR (« ; ») : paramètres, temps valorisés, synthèse marge.
+
+    Retourne (nom_fichier, contenu). Paramètres non renseignés (ni
+    honoraires ni taux horaire) → :class:`ErreurRentabilite` (422) —
+    l'export n'aurait aucune valorisation à montrer. Mission hors
+    périmètre du tenant → :class:`ErreurRentabiliteIntrouvable` (404).
+    """
+    import csv
+    import io
+
+    from backend.plateforme.temps_mission import (
+        ErreurTempsIntrouvable,
+        recap_temps,
+    )
+
+    r = rentabilite_mission(session, tenant_id, mission_id)
+    if r["honoraires"] is None and r["taux_horaire"] is None:
+        raise ErreurRentabilite(
+            "paramètres de rentabilité non renseignés "
+            "(honoraires ou taux horaire)"
+        )
+    try:
+        recap = recap_temps(session, tenant_id, mission_id)
+    except ErreurTempsIntrouvable as e:  # pragma: no cover — même RLS
+        raise ErreurRentabiliteIntrouvable(str(e)) from e
+    taux = None if r["taux_horaire"] is None else Decimal(r["taux_horaire"])
+
+    def _valorise(heures: str) -> str:
+        """Heures × taux horaire (Decimal) — vide sans taux renseigné."""
+        return "" if taux is None else _fmt(Decimal(heures) * taux)
+
+    buf = io.StringIO()
+    w = csv.writer(buf, delimiter=";", lineterminator="\n")
+    w.writerow(ENTETE_RENTABILITE_CSV)
+    w.writerow(["parametre", "honoraires", "", r["honoraires"] or ""])
+    w.writerow(["parametre", "taux_horaire", "", r["taux_horaire"] or ""])
+    for phase, heures in recap["par_phase"].items():
+        w.writerow(["par_phase", phase, heures, _valorise(heures)])
+    for collab, heures in recap["par_collaborateur"].items():
+        w.writerow(["par_collaborateur", collab, heures, _valorise(heures)])
+    w.writerow([])
+    w.writerow(["synthese", "total_heures", r["total_heures"], ""])
+    w.writerow(["synthese", "cout_estime", "", r["cout_estime"] or ""])
+    w.writerow(["synthese", "marge_estimee", "", r["marge_estimee"] or ""])
+    w.writerow(["synthese", "taux_marge_pct", "", r["taux_marge_pct"] or ""])
+    return (
+        f"rentabilite_mission_{mission_id}.csv",
+        buf.getvalue().encode("utf-8"),
     )

@@ -21,6 +21,7 @@ import re
 import unicodedata
 import zipfile
 from datetime import datetime, timezone
+from decimal import Decimal
 from typing import Any, Callable, Final
 
 from sqlalchemy import text
@@ -38,6 +39,7 @@ from backend.plateforme.lettre_mission import generer_lettre_mission
 from backend.plateforme.programme_travail import etat_programme
 from backend.plateforme.provision_risques import calculer_provision
 from backend.plateforme.rapport_risques import exporter_rapport_risques_pdf
+from backend.plateforme.rentabilite_mission import rentabilite_mission
 from backend.plateforme.reponses_client import lister_reponses
 from backend.plateforme.suivi_renseignements import (
     lister_items,
@@ -513,6 +515,83 @@ def _piece_courrier_envoi(
     return generer_courrier_envoi(session, tenant_id, mission_id)
 
 
+def _piece_rentabilite(
+    session: Session, tenant_id: int, mission_id: int, meta: dict[str, Any]
+) -> bytes:
+    """Rentabilité de la mission — honoraires, temps valorisé, marge.
+
+    Réutilise :func:`rentabilite_mission` (Decimal, jamais de float) et le
+    récap des temps. Sans aucun paramètre convenu (ni honoraires, ni taux
+    horaire), la pièce est OMISE : rien à valoriser."""
+    r = rentabilite_mission(session, tenant_id, mission_id)
+    if r["honoraires"] is None and r["taux_horaire"] is None:
+        raise ErreurArchiveMission(
+            "paramètres de rentabilité non renseignés "
+            "(honoraires ou taux horaire)"
+        )
+    recap = recap_temps(session, tenant_id, mission_id)
+    taux = None if r["taux_horaire"] is None else Decimal(r["taux_horaire"])
+
+    def _heures_valorisees(heures: str) -> str:
+        if taux is None:
+            return f"{heures} h (non valorisé — taux horaire non renseigné)"
+        montant = format((Decimal(heures) * taux).normalize(), "f")
+        return f"{heures} h = {montant} FCFA"
+
+    lignes = [
+        "RENTABILITÉ DE LA MISSION — honoraires, temps valorisé, marge",
+        f"Mission #{mission_id} — client : "
+        f"{meta.get('contribuable_denomination') or '[non renseigné]'}",
+        "",
+        "Honoraires convenus : "
+        + (
+            f"{r['honoraires']} FCFA"
+            if r["honoraires"] is not None
+            else "[non convenus]"
+        ),
+        "Taux horaire        : "
+        + (
+            f"{r['taux_horaire']} FCFA/h"
+            if r["taux_horaire"] is not None
+            else "[non renseigné]"
+        ),
+        f"Heures saisies      : {r['total_heures']} h",
+        "",
+        f"TEMPS PAR PHASE ({len(recap['par_phase'])})",
+    ]
+    for phase, heures in recap["par_phase"].items():
+        lignes.append(f"  - {phase} : {_heures_valorisees(heures)}")
+    if not recap["par_phase"]:
+        lignes.append("  (aucun temps saisi)")
+    lignes += ["", f"TEMPS PAR COLLABORATEUR ({len(recap['par_collaborateur'])})"]
+    for collab, heures in recap["par_collaborateur"].items():
+        lignes.append(f"  - {collab} : {_heures_valorisees(heures)}")
+    if not recap["par_collaborateur"]:
+        lignes.append("  (aucun temps saisi)")
+    lignes += [
+        "",
+        "Coût total estimé : "
+        + (
+            f"{r['cout_estime']} FCFA"
+            if r["cout_estime"] is not None
+            else "[non calculable — taux horaire non renseigné]"
+        ),
+        "Marge estimée     : "
+        + (
+            f"{r['marge_estimee']} FCFA"
+            if r["marge_estimee"] is not None
+            else "[non calculable — honoraires ou taux horaire manquant]"
+        ),
+        "Taux de marge     : "
+        + (
+            f"{r['taux_marge_pct']} %"
+            if r["taux_marge_pct"] is not None
+            else "[non calculable]"
+        ),
+    ]
+    return "\n".join(lignes).encode("utf-8")
+
+
 # Ordre du dossier : (nom de fichier dans le ZIP, description, constructeur).
 _PIECES: Final[
     tuple[tuple[str, str, Callable[[Session, int, int, dict[str, Any]], bytes]], ...]
@@ -591,6 +670,11 @@ _PIECES: Final[
         "15_echeancier_fiscal.txt",
         "Échéancier fiscal de l'exercice revu",
         _piece_echeancier_fiscal,
+    ),
+    (
+        "16_rentabilite_mission.txt",
+        "Rentabilité de la mission (honoraires, temps valorisé, marge)",
+        _piece_rentabilite,
     ),
 )
 

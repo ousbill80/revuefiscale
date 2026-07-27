@@ -140,7 +140,10 @@ def test_zip_valide_contenu_et_sommaire(session):
             "15_echeancier_fiscal.txt : Échéancier fiscal de l'exercice revu"
             in sommaire
         )
-        assert "PIÈCES OMISES (5)" in sommaire
+        # 16 — rentabilité : omise sans honoraires ni taux horaire saisis.
+        assert "16_rentabilite_mission.txt" not in noms
+
+        assert "PIÈCES OMISES (6)" in sommaire
         assert "08_comparatif_executions.txt : OMISE" in sommaire
         assert "09_provision_risques.txt : OMISE" in sommaire
         assert (
@@ -154,6 +157,10 @@ def test_zip_valide_contenu_et_sommaire(session):
         assert (
             "12_reponses_client.txt : OMISE — aucune réponse client saisie"
             in sommaire
+        )
+        assert (
+            "16_rentabilite_mission.txt : OMISE — paramètres de rentabilité "
+            "non renseignés" in sommaire
         )
         assert "Généré le" in sommaire
 
@@ -214,8 +221,9 @@ def test_comparatif_et_provision_inclus_quand_disponibles(session):
 
         sommaire = z.read("00_sommaire.txt").decode("utf-8")
         assert "PIÈCES INCLUSES (12)" in sommaire
-        # Ni temps, ni visa, ni réponse sur cette mission → 10/11/12 omises.
-        assert "PIÈCES OMISES (3)" in sommaire
+        # Ni temps, ni visa, ni réponse, ni paramètre de rentabilité sur
+        # cette mission → 10/11/12/16 omises.
+        assert "PIÈCES OMISES (4)" in sommaire
         assert "14_courrier_envoi_rapport.docx" in noms
         assert "15_echeancier_fiscal.txt" in noms
 
@@ -269,6 +277,12 @@ def test_temps_visas_reponses_inclus_quand_disponibles(session):
         saisie_par=email,
     )
     session.commit()
+    # Paramètres de rentabilité convenus → pièce 16 incluse.
+    assert client.put(
+        f"/api/v1/missions/{mid}/rentabilite",
+        headers=h,
+        json={"honoraires": 800000, "taux_horaire": 40000},
+    ).status_code == 200
 
     resp = _telecharger_zip(client, h, mid)
     with zipfile.ZipFile(io.BytesIO(resp.content)) as z:
@@ -276,6 +290,7 @@ def test_temps_visas_reponses_inclus_quand_disponibles(session):
         assert "10_temps_mission.csv" in noms
         assert "11_visas_supervision.txt" in noms
         assert "12_reponses_client.txt" in noms
+        assert "16_rentabilite_mission.txt" in noms
 
         # 10 — CSV « ; » : en-tête, entrées, synthèse (sans valorisation).
         temps = z.read("10_temps_mission.csv").decode("utf-8")
@@ -316,10 +331,27 @@ def test_temps_visas_reponses_inclus_quand_disponibles(session):
             "exécution : non_verifiable" in reponses
         )
 
-        # Sommaire cohérent : 10/11/12 incluses, plus omises.
+        # 16 — rentabilité : honoraires, temps valorisés, marge (Decimal).
+        rentabilite = z.read("16_rentabilite_mission.txt").decode("utf-8")
+        assert "RENTABILITÉ DE LA MISSION" in rentabilite
+        assert "Honoraires convenus : 800000 FCFA" in rentabilite
+        assert "Taux horaire        : 40000 FCFA/h" in rentabilite
+        # 5.5 h × 40 000 = 220 000 ; marge 580 000 ; 72.5 %.
+        assert "- controles : 3.5 h = 140000 FCFA" in rentabilite
+        assert "- Awa Koné : 3.5 h = 140000 FCFA" in rentabilite
+        assert "Coût total estimé : 220000 FCFA" in rentabilite
+        assert "Marge estimée     : 580000 FCFA" in rentabilite
+        assert "Taux de marge     : 72.5 %" in rentabilite
+        assert "marge" in rentabilite
+
+        # Sommaire cohérent : 10/11/12/16 incluses, plus omises.
         sommaire = z.read("00_sommaire.txt").decode("utf-8")
-        assert "PIÈCES INCLUSES (13)" in sommaire
+        assert "PIÈCES INCLUSES (14)" in sommaire
         assert "PIÈCES OMISES (2)" in sommaire
+        assert (
+            "16_rentabilite_mission.txt : Rentabilité de la mission"
+            in sommaire
+        )
         assert "10_temps_mission.csv : Feuille de temps" in sommaire
         assert "11_visas_supervision.txt : Registre des visas" in sommaire
         assert "12_reponses_client.txt : Réponses client saisies" in sommaire
@@ -366,8 +398,9 @@ def test_piece_en_echec_est_omise_et_notee(session, monkeypatch):
             in sommaire
         )
         # Panne Word + 08 (une seule exécution) + 09 (aucun risque)
-        # + 10/11/12 (ni temps, ni visa, ni réponse).
-        assert "PIÈCES OMISES (6)" in sommaire
+        # + 10/11/12 (ni temps, ni visa, ni réponse)
+        # + 16 (paramètres de rentabilité non renseignés).
+        assert "PIÈCES OMISES (7)" in sommaire
 
 
 def test_dossier_cross_tenant_404(session):
