@@ -1851,6 +1851,50 @@ def api_civisme_fiscal_mission(
     return analyse
 
 
+@router.get("/missions/{mission_id}/plan-actions")
+def api_plan_actions_mission(
+    mission_id: int,
+    utilisateur: UtilisateurDep,
+    session: Annotated[Session, Depends(session_abonne)],
+) -> dict:
+    """Plan d'actions post-revue (lecture seule, consultatif).
+
+    Pour chaque risque non clos du contribuable de la mission : une
+    action suggérée déterministe (déclaration rectificative, provision à
+    documenter, justificatif à collecter, point à discuter) avec
+    priorité (haute si exposition élevée ou prescription proche) et
+    synthèse. Le fiscaliste décide. 404 si mission hors tenant (RLS).
+    """
+    from backend.moteur.journal import append_journal
+    from backend.plateforme.plan_actions import (
+        ErreurPlanActions,
+        analyse_mission,
+    )
+
+    exiger_capacite(utilisateur, "lire")
+    try:
+        analyse = analyse_mission(
+            session, utilisateur.tenant_id, mission_id
+        )
+    except ErreurPlanActions as e:
+        raise HTTPException(
+            status_code=status.HTTP_404_NOT_FOUND, detail=str(e)
+        ) from e
+    append_journal(
+        session,
+        tenant_id=utilisateur.tenant_id,
+        mission_id=mission_id,
+        acteur=utilisateur.email,
+        action="consultation_plan_actions",
+        charge_utile={
+            "total_actions": analyse["synthese"]["total_actions"],
+            "priorite_haute": analyse["synthese"]["par_priorite"]["haute"],
+            "exposition_totale": analyse["synthese"]["exposition_totale"],
+        },
+    )
+    return analyse
+
+
 # ── Conclusions (validation humaine) ───────────────────────────────
 
 
