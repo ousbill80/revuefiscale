@@ -615,6 +615,86 @@ def api_courrier_relance_docx(
     )
 
 
+@router.get("/missions/{mission_id}/courrier-relance")
+def api_courrier_relance_mission(
+    mission_id: int,
+    utilisateur: UtilisateurDep,
+    session: Annotated[Session, Depends(session_abonne)],
+) -> dict:
+    """Courrier de relance texte — items du suivi encore en attente.
+
+    Déterministe et consultatif : le courrier est à relire et adapter
+    par le fiscaliste avant envoi. Sans item ouvert, le courrier signale
+    qu'aucune relance n'est nécessaire. 404 si mission hors tenant (RLS).
+    """
+    from backend.moteur.journal import append_journal
+    from backend.plateforme.courrier_relance import (
+        ErreurCourrierIntrouvable,
+        courrier_mission,
+    )
+
+    exiger_capacite(utilisateur, "lire")
+    try:
+        resultat = courrier_mission(
+            session, utilisateur.tenant_id, mission_id
+        )
+    except ErreurCourrierIntrouvable as e:
+        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail=str(e)) from e
+    append_journal(
+        session,
+        tenant_id=utilisateur.tenant_id,
+        mission_id=mission_id,
+        acteur=utilisateur.email,
+        action="consultation_courrier_relance",
+        charge_utile={"nb_items_ouverts": resultat["nb_items_ouverts"]},
+    )
+    return resultat
+
+
+@router.get("/missions/{mission_id}/courrier-relance.txt")
+def api_courrier_relance_txt(
+    mission_id: int,
+    utilisateur: UtilisateurDep,
+    session: Annotated[Session, Depends(session_abonne)],
+) -> Response:
+    """Courrier de relance texte téléchargeable (.txt, UTF-8).
+
+    Même contenu que ``GET /missions/{id}/courrier-relance`` — 404 si
+    mission hors tenant (RLS).
+    """
+    from backend.moteur.journal import append_journal
+    from backend.plateforme.courrier_relance import (
+        ErreurCourrierIntrouvable,
+        courrier_mission,
+    )
+
+    exiger_capacite(utilisateur, "lire")
+    try:
+        resultat = courrier_mission(
+            session, utilisateur.tenant_id, mission_id
+        )
+    except ErreurCourrierIntrouvable as e:
+        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail=str(e)) from e
+    append_journal(
+        session,
+        tenant_id=utilisateur.tenant_id,
+        mission_id=mission_id,
+        acteur=utilisateur.email,
+        action="consultation_courrier_relance_txt",
+        charge_utile={"nb_items_ouverts": resultat["nb_items_ouverts"]},
+    )
+    return Response(
+        content=resultat["courrier"],
+        media_type="text/plain; charset=utf-8",
+        headers={
+            "Content-Disposition": (
+                "attachment; "
+                f'filename="courrier-relance-mission-{mission_id}.txt"'
+            )
+        },
+    )
+
+
 @router.get("/missions/{mission_id}/courrier-envoi.docx")
 def api_courrier_envoi_docx(
     mission_id: int,

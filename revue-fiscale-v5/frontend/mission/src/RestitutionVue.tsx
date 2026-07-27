@@ -1160,6 +1160,25 @@ export function RestitutionVue({
     }
   }
 
+  async function telechargerCourrierRelanceTxt() {
+    if (!jeton || !r.mission_id || relanceBusy) return;
+    setRelanceBusy(true);
+    setRelanceErr(null);
+    try {
+      await telecharger(
+        `/api/v1/missions/${r.mission_id}/courrier-relance.txt`,
+        jeton,
+        `courrier-relance-mission-${r.mission_id}.txt`,
+      );
+    } catch (e) {
+      setRelanceErr(
+        e instanceof Error ? e.message : "téléchargement impossible",
+      );
+    } finally {
+      setRelanceBusy(false);
+    }
+  }
+
   async function telechargerCourrierEnvoi() {
     if (!jeton || !r.mission_id || courrierEnvoiBusy) return;
     setCourrierEnvoiBusy(true);
@@ -2949,6 +2968,18 @@ export function RestitutionVue({
                     disabled={relanceBusy || !jeton}
                   >
                     {relanceBusy ? "Relance…" : "Courrier de relance"}
+                  </button>
+                </Tooltip>
+              )}
+              {suivi && suivi.synthese.en_attente > 0 && (
+                <Tooltip label="Courrier de relance en texte brut (.txt) listant les éléments encore en attente — à relire et adapter avant envoi">
+                  <button
+                    type="button"
+                    className="btn btn-ghost btn-sm rest-relance-btn"
+                    onClick={() => void telechargerCourrierRelanceTxt()}
+                    disabled={relanceBusy || !jeton}
+                  >
+                    {relanceBusy ? "Relance…" : "Courrier de relance (.txt)"}
                   </button>
                 </Tooltip>
               )}

@@ -176,3 +176,192 @@ def test_relance_exige_authentification(session):
 
     resp = client.get(f"/api/v1/missions/{mid}/courrier-relance.docx")
     assert resp.status_code in (401, 403)
+
+
+# ── Courrier de relance texte (.txt) — tests purs, date figée ────────
+
+
+def test_construire_courrier_contenu_et_numerotation():
+    from backend.plateforme.courrier_relance import (
+        MENTION_COURRIER_TXT,
+        construire_courrier,
+    )
+
+    courrier = construire_courrier(
+        {
+            "cabinet": "Cabinet Fiduciaire Exemple",
+            "contribuable": "PM Demande FICTIF",
+            "exercice": 2025,
+            "aujourd_hui": date(2026, 7, 27),
+            "items": [
+                {"libelle": "Balance générale N", "date_relance": "2026-07-10"},
+                {"libelle": "Grand livre auxiliaire", "date_relance": None},
+            ],
+        }
+    )
+    assert "CABINET FIDUCIAIRE EXEMPLE" in courrier
+    assert "Le 27/07/2026" in courrier
+    assert "À l'attention de la Direction de PM Demande FICTIF" in courrier
+    assert (
+        "Objet : Relance — pièces et renseignements en attente "
+        "(mission 2025)" in courrier
+    )
+    assert "1. Balance générale N (demande du 10/07/2026)" in courrier
+    assert "2. Grand livre auxiliaire" in courrier
+    assert "2. Grand livre auxiliaire (demande" not in courrier
+    assert "Madame, Monsieur," in courrier
+    assert "salutations distinguées" in courrier
+    assert MENTION_COURRIER_TXT in courrier
+    # Déterminisme : même contexte → même courrier.
+    assert courrier == construire_courrier(
+        {
+            "cabinet": "Cabinet Fiduciaire Exemple",
+            "contribuable": "PM Demande FICTIF",
+            "exercice": 2025,
+            "aujourd_hui": date(2026, 7, 27),
+            "items": [
+                {"libelle": "Balance générale N", "date_relance": "2026-07-10"},
+                {"libelle": "Grand livre auxiliaire", "date_relance": None},
+            ],
+        }
+    )
+
+
+def test_construire_courrier_zero_item():
+    from backend.plateforme.courrier_relance import construire_courrier
+
+    courrier = construire_courrier(
+        {
+            "cabinet": "Cabinet X",
+            "contribuable": "Client Y",
+            "exercice": 2025,
+            "aujourd_hui": date(2026, 1, 5),
+            "items": [],
+        }
+    )
+    assert "Le 05/01/2026" in courrier
+    assert "aucune relance n'est nécessaire" in courrier
+    assert "1." not in courrier
+
+
+# ── Courrier texte — tests API ───────────────────────────────────────
+
+
+def test_courrier_relance_json_items_ouverts(session):
+    _assurer_version(session)
+    email = _cabinet(session)
+    client = TestClient(app)
+    h, tid = _connexion(client, email)
+    mid = _mission(client, h)
+    suffixe = uuid.uuid4().hex[:6].upper()
+    _preparer(session, tid, mid, suffixe)
+
+    # Un item soldé (reçu) — il ne doit PAS figurer au courrier.
+    r1 = client.patch(
+        f"/api/v1/missions/{mid}/suivi-renseignements/analytique:5121",
+        headers=h,
+        json={"statut": "recu"},
+    )
+    assert r1.status_code == 200, r1.text
+
+    resp = client.get(f"/api/v1/missions/{mid}/courrier-relance", headers=h)
+    assert resp.status_code == 200, resp.text
+    corps = resp.json()
+    assert corps["mission_id"] == mid
+    assert corps["contribuable"] == "PM Demande FICTIF"
+    assert str(corps["exercice"]) == "2025"
+    assert corps["nb_items_ouverts"] == 3  # 4 items dont 1 reçu
+    assert "à relire et adapter par le fiscaliste" in corps["note"]
+    courrier = corps["courrier"]
+    assert (
+        "Objet : Relance — pièces et renseignements en attente "
+        "(mission 2025)" in courrier
+    )
+    assert "1. " in courrier and "3. " in courrier
+    assert "Justification des amortissements" in courrier
+    assert "5121" not in courrier
+
+
+def test_courrier_relance_txt_headers(session):
+    _assurer_version(session)
+    email = _cabinet(session)
+    client = TestClient(app)
+    h, tid = _connexion(client, email)
+    mid = _mission(client, h)
+    suffixe = uuid.uuid4().hex[:6].upper()
+    _preparer(session, tid, mid, suffixe)
+
+    resp = client.get(
+        f"/api/v1/missions/{mid}/courrier-relance.txt", headers=h
+    )
+    assert resp.status_code == 200, resp.text
+    assert resp.headers["content-type"].startswith("text/plain")
+    assert "charset=utf-8" in resp.headers["content-type"]
+    dispo = resp.headers["content-disposition"]
+    assert "attachment" in dispo
+    assert f'filename="courrier-relance-mission-{mid}.txt"' in dispo
+    texte = resp.content.decode("utf-8")
+    assert "Relance — pièces et renseignements en attente" in texte
+    assert "PM Demande FICTIF" in texte
+
+
+def test_courrier_relance_txt_zero_item_ouvert(session):
+    """Mission sans item : courrier quand même généré, sans relance."""
+    _assurer_version(session)
+    email = _cabinet(session)
+    client = TestClient(app)
+    h, _ = _connexion(client, email)
+    mid = _mission(client, h)
+
+    resp = client.get(f"/api/v1/missions/{mid}/courrier-relance", headers=h)
+    assert resp.status_code == 200, resp.text
+    corps = resp.json()
+    assert corps["nb_items_ouverts"] == 0
+    assert "aucune relance n'est nécessaire" in corps["courrier"]
+
+
+def test_courrier_relance_txt_cross_tenant_404(session):
+    _assurer_version(session)
+    email_a = _cabinet(session)
+    email_b = _cabinet(session)
+    client = TestClient(app)
+    h_a, tid_a = _connexion(client, email_a)
+    mid = _mission(client, h_a)
+    suffixe = uuid.uuid4().hex[:6].upper()
+    _preparer(session, tid_a, mid, suffixe)
+
+    h_b, _ = _connexion(client, email_b)
+    assert (
+        client.get(
+            f"/api/v1/missions/{mid}/courrier-relance", headers=h_b
+        ).status_code
+        == 404
+    )
+    assert (
+        client.get(
+            f"/api/v1/missions/{mid}/courrier-relance.txt", headers=h_b
+        ).status_code
+        == 404
+    )
+    # Le tenant légitime, lui, lit normalement.
+    assert (
+        client.get(
+            f"/api/v1/missions/{mid}/courrier-relance.txt", headers=h_a
+        ).status_code
+        == 200
+    )
+
+
+def test_courrier_relance_txt_exige_authentification(session):
+    _assurer_version(session)
+    email = _cabinet(session)
+    client = TestClient(app)
+    h, _ = _connexion(client, email)
+    mid = _mission(client, h)
+
+    assert client.get(
+        f"/api/v1/missions/{mid}/courrier-relance"
+    ).status_code in (401, 403)
+    assert client.get(
+        f"/api/v1/missions/{mid}/courrier-relance.txt"
+    ).status_code in (401, 403)

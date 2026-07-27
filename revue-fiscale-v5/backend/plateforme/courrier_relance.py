@@ -32,6 +32,11 @@ from backend.plateforme.suivi_renseignements import (
 
 DELAI_RELANCE_JOURS: Final = 8
 
+MENTION_COURRIER_TXT: Final = (
+    "Courrier généré automatiquement à partir de la demande de "
+    "renseignements — à relire et adapter par le fiscaliste avant envoi."
+)
+
 
 class ErreurCourrierRelance(Exception):
     """Echec de génération du courrier de relance."""
@@ -248,3 +253,138 @@ def generer_courrier_relance(
         "nb_items_total": int(donnees["nb_items_total"]),
     }
     return contenu, nom, stats
+
+
+# ── Courrier de relance texte brut (.txt) ────────────────────────────
+
+
+def construire_courrier(contexte: dict[str, Any]) -> str:
+    """PUR — courrier de relance en texte brut, entièrement déterministe.
+
+    ``contexte`` : {cabinet, contribuable, exercice, aujourd_hui (date),
+    items ([{libelle, date_relance?}])}. Items numérotés 1., 2., … avec
+    date de demande/relance « JJ/MM/AAAA » si disponible. Sans item :
+    courrier signalant qu'aucune relance n'est nécessaire. La date du
+    jour vient du paramètre ``aujourd_hui`` (aucun ``date.today()`` ici).
+    """
+    cabinet = _champ(contexte.get("cabinet"))
+    contribuable = _champ(contexte.get("contribuable"))
+    exercice = _champ(contexte.get("exercice"))
+    jour: date = contexte["aujourd_hui"]
+    items: list[dict[str, Any]] = list(contexte.get("items") or [])
+
+    lignes: list[str] = [
+        cabinet.upper(),
+        f"Le {jour.strftime('%d/%m/%Y')}",
+        "",
+        f"À l'attention de la Direction de {contribuable}",
+        "",
+        "Objet : Relance — pièces et renseignements en attente "
+        f"(mission {exercice})",
+        "",
+        "Madame, Monsieur,",
+        "",
+    ]
+    if items:
+        lignes += [
+            "Dans le cadre de notre mission de revue fiscale de "
+            f"l'exercice {exercice}, les éléments suivants, demandés dans "
+            "notre demande de renseignements et de documents, demeurent en "
+            "attente à ce jour :",
+            "",
+        ]
+        for numero, it in enumerate(items, start=1):
+            libelle = str(it.get("libelle") or "").strip() or A_COMPLETER
+            date_demande = _date_fr(it.get("date_relance"))
+            suffixe = f" (demande du {date_demande})" if date_demande else ""
+            lignes.append(f"{numero}. {libelle}{suffixe}")
+        lignes += [
+            "",
+            "Nous vous remercions de bien vouloir nous faire parvenir ces "
+            "éléments dans les meilleurs délais.",
+        ]
+    else:
+        lignes.append(
+            "Aucun élément n'est en attente à ce jour : aucune relance "
+            "n'est nécessaire."
+        )
+    lignes += [
+        "",
+        "Nous vous prions d'agréer, Madame, Monsieur, l'expression de nos "
+        "salutations distinguées.",
+        "",
+        f"Pour le cabinet : {cabinet}",
+        "",
+        MENTION_COURRIER_TXT,
+    ]
+    return "\n".join(lignes) + "\n"
+
+
+def courrier_mission(
+    session: Session,
+    tenant_id: int,
+    mission_id: int,
+    *,
+    aujourd_hui: date | None = None,
+) -> dict[str, Any]:
+    """Courrier de relance texte de la mission (lecture seule, RLS).
+
+    Items OUVERTS = statut ``en_attente`` du suivi de circularisation
+    (les ``recu`` / ``sans_objet`` sont soldés). Mission hors tenant →
+    :class:`ErreurCourrierIntrouvable` (404 côté route). Sans item
+    ouvert : ``nb_items_ouverts = 0`` et courrier signalant qu'aucune
+    relance n'est nécessaire (pas d'erreur).
+    """
+    from backend.plateforme.suivi_renseignements import (
+        ErreurSuiviIntrouvable,
+    )
+
+    jour = aujourd_hui or date.today()
+    # lister_items ouvre son propre contexte_tenant : appel HORS de tout
+    # autre with contexte_tenant.
+    try:
+        items = lister_items(session, tenant_id, mission_id)
+    except ErreurSuiviIntrouvable as e:
+        raise ErreurCourrierIntrouvable(str(e)) from e
+    ouverts = [
+        i for i in items if str(i.get("statut") or "") == STATUT_DEFAUT
+    ]
+
+    with contexte_tenant(session, tenant_id):
+        row = session.execute(
+            text(
+                "SELECT m.exercice, c.denomination "
+                "FROM mission m JOIN contribuable c "
+                "ON c.id = m.contribuable_id WHERE m.id = :m"
+            ),
+            {"m": mission_id},
+        ).mappings().one_or_none()
+        if row is None:  # défense en profondeur — lister_items a vérifié
+            raise ErreurCourrierIntrouvable(
+                f"mission {mission_id} introuvable"
+            )
+
+    # Identité du cabinet (table tenant, sans RLS) — même garde que
+    # /api/v1/auth/connexion.
+    cabinet = session.execute(
+        text("SELECT denomination FROM tenant WHERE id = :t"),
+        {"t": tenant_id},
+    ).scalar_one_or_none()
+
+    courrier = construire_courrier(
+        {
+            "cabinet": cabinet,
+            "contribuable": row["denomination"],
+            "exercice": row["exercice"],
+            "aujourd_hui": jour,
+            "items": ouverts,
+        }
+    )
+    return {
+        "mission_id": mission_id,
+        "contribuable": row["denomination"],
+        "exercice": row["exercice"],
+        "nb_items_ouverts": len(ouverts),
+        "courrier": courrier,
+        "note": MENTION_COURRIER_TXT,
+    }
