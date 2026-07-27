@@ -247,8 +247,10 @@ def test_tout_traite_tous_les_points_ok(session):
     _cocher_tout_le_programme(session, tid, mid)
 
     r = evaluer_cloture(session, tid, mid)
-    assert [p["statut"] for p in r["points"]] == ["ok"] * 7
-    assert r["synthese"] == {"ok": 7, "attention": 0, "bloquant": 0}
+    # 8 points ok — le risque de fixture (exercice_origine 2025) n'est pas
+    # prescrit (droit de reprise jusqu'au 31/12/2028) et est accepté.
+    assert [p["statut"] for p in r["points"]] == ["ok"] * 8
+    assert r["synthese"] == {"ok": 8, "attention": 0, "bloquant": 0}
     assert r["cloture_recommandee"] is True
 
 
@@ -361,6 +363,7 @@ def test_api_cloture_enrichie_du_controle(session):
         "pieces_justificatives",
         "visas_supervision",
         "programme_travail",
+        "prescription",
     }
 
     clot = client.patch(

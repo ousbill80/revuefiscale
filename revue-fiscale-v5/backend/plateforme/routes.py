@@ -1763,6 +1763,52 @@ def api_pilotage_mission(
     return pilotage
 
 
+@router.get("/missions/{mission_id}/prescription")
+def api_prescription_mission(
+    mission_id: int,
+    utilisateur: UtilisateurDep,
+    session: Annotated[Session, Depends(session_abonne)],
+) -> dict:
+    """Analyse de prescription des risques (lecture seule, consultatif).
+
+    Délai de reprise de droit commun (pratique LPF CI) : risques du
+    contribuable juridiquement prescrits (à basculer au statut
+    « prescrit »), proches de la prescription (12 mois) et exercices
+    encore reprenables. 404 si mission hors tenant.
+    """
+    from backend.moteur.journal import append_journal
+    from backend.plateforme.prescription_risques import (
+        ErreurPrescriptionRisques,
+        analyse_mission,
+    )
+
+    exiger_capacite(utilisateur, "lire")
+    try:
+        analyse = analyse_mission(
+            session, utilisateur.tenant_id, mission_id
+        )
+    except ErreurPrescriptionRisques as e:
+        raise HTTPException(
+            status_code=status.HTTP_404_NOT_FOUND, detail=str(e)
+        ) from e
+    append_journal(
+        session,
+        tenant_id=utilisateur.tenant_id,
+        mission_id=mission_id,
+        acteur=utilisateur.email,
+        action="consultation_prescription_risques",
+        charge_utile={
+            "prescrits_a_basculer": analyse["synthese"][
+                "prescrits_a_basculer"
+            ],
+            "exposition_prescrite": analyse["synthese"][
+                "exposition_prescrite"
+            ],
+        },
+    )
+    return analyse
+
+
 # ── Conclusions (validation humaine) ───────────────────────────────
 
 

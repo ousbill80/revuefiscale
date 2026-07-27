@@ -352,6 +352,34 @@ def _point_programme_travail(etat: dict[str, Any]) -> dict[str, str]:
     )
 
 
+def _point_prescription(analyse: dict[str, Any]) -> dict[str, str]:
+    """Risques juridiquement prescrits encore ouverts — jamais bloquant.
+
+    Construit depuis ``prescription_risques.analyse_mission`` (délai de
+    reprise de droit commun, pratique LPF CI — délais spéciaux réservés).
+    """
+    libelle = "Prescription des risques"
+    nb = int(analyse["synthese"]["prescrits_a_basculer"])
+    if nb == 0:
+        return _point(
+            "prescription",
+            libelle,
+            STATUT_OK,
+            "Aucun risque ouvert juridiquement prescrit (délai de reprise "
+            "de droit commun, pratique LPF CI).",
+        )
+    exposition = analyse["synthese"]["exposition_prescrite"]
+    s = "s" if nb > 1 else ""
+    return _point(
+        "prescription",
+        libelle,
+        STATUT_ATTENTION,
+        f"{nb} risque{s} juridiquement prescrit{s} encore ouvert{s} — à "
+        f"basculer au statut prescrit, exposition {exposition} FCFA "
+        "(pratique LPF CI, sous réserve des délais spéciaux).",
+    )
+
+
 def evaluer_cloture(
     session: Session, tenant_id: int, mission_id: int
 ) -> dict[str, Any]:
@@ -389,6 +417,13 @@ def evaluer_cloture(
         _point_programme_travail(
             etat_programme(session, tenant_id, mission_id)
         )
+    )
+
+    # analyse_mission gère son propre contexte_tenant — appel hors du with.
+    from backend.plateforme.prescription_risques import analyse_mission
+
+    points.append(
+        _point_prescription(analyse_mission(session, tenant_id, mission_id))
     )
 
     synthese = {
