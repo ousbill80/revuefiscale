@@ -126,7 +126,7 @@ const JEUX_BALANCE = [
 
 const STEPS = [
   { n: 1, lbl: "Cadrage", desc: "Lettre de mission" },
-  { n: 2, lbl: "Sources", desc: "Import comptable" },
+  { n: 2, lbl: "Sources", desc: "Data room & import" },
   { n: 3, lbl: "Résultat", desc: "Restitution" },
 ] as const;
 
@@ -152,10 +152,13 @@ type TypePieceApi =
   | "fec"
   | "autre";
 
-type AnnexeLocale = {
-  id: string;
-  file: File;
-  type_piece: TypePieceApi;
+/** Pièce déposée dans la data room de la mission (GET /missions/{id}/pieces). */
+type PieceMission = {
+  id: number;
+  nom_fichier: string;
+  role: string;
+  type_piece?: string;
+  cree_le?: string | null;
 };
 
 /** Pièce tabulaire du Data Room (FEC/CSV/XLSX) utilisable comme source. */
@@ -187,7 +190,8 @@ function typePieceDepuisSource(kind: SourceComptableKind): TypePieceApi {
   }
 }
 
-const TYPES_ANNEXE: Array<{ id: TypePieceApi; label: string }> = [
+/** Types de pièce acceptés par le dépôt data room (backend socle). */
+const TYPES_PIECE_MISSION: Array<{ id: TypePieceApi; label: string }> = [
   { id: "balance", label: "Balance" },
   { id: "etats_financiers", label: "États financiers" },
   { id: "grand_livre", label: "Grand livre" },
@@ -603,9 +607,12 @@ export function App() {
   const [dataroomEtat, setDataroomEtat] = useState<
     "pret" | "chargement" | "erreur"
   >("pret");
-  const [annexesLocales, setAnnexesLocales] = useState<AnnexeLocale[]>([]);
-  const [annexeType, setAnnexeType] = useState<TypePieceApi>("autre");
-  const [annexeDrag, setAnnexeDrag] = useState(false);
+  const [piecesMission, setPiecesMission] = useState<PieceMission[]>([]);
+  const [depotTypePiece, setDepotTypePiece] = useState<TypePieceApi>("autre");
+  const [depotDrag, setDepotDrag] = useState(false);
+  const [depotBusy, setDepotBusy] = useState(false);
+  const [depotMsg, setDepotMsg] = useState<string | null>(null);
+  const [depotErr, setDepotErr] = useState<string | null>(null);
   /** Une source a déjà été « figée » dans le wizard (fichier / JSON prêt). */
   const [sourceActiveFigee, setSourceActiveFigee] = useState(false);
 
@@ -1263,6 +1270,30 @@ export function App() {
     };
   }, [session?.jeton, contribIdExistant]);
 
+  /* Data room mission : liste des pièces dès l'arrivée à l'étape Sources. */
+  useEffect(() => {
+    if (!session?.jeton || missionId == null) {
+      setPiecesMission([]);
+      return;
+    }
+    if (step !== 2) return;
+    let cancelled = false;
+    void (async () => {
+      try {
+        const liste = await api<PieceMission[]>(
+          `/api/v1/missions/${missionId}/pieces`,
+          { jeton: session.jeton },
+        );
+        if (!cancelled) setPiecesMission(Array.isArray(liste) ? liste : []);
+      } catch {
+        if (!cancelled) setPiecesMission([]);
+      }
+    })();
+    return () => {
+      cancelled = true;
+    };
+  }, [session?.jeton, missionId, step]);
+
   async function rafraichirRestitution() {
     if (!session || !missionId) return;
     try {
@@ -1312,9 +1343,12 @@ export function App() {
     setSourceAltDrag(false);
     setSourceDataroomOnglet(false);
     setSourceDataroomPiece(null);
-    setAnnexesLocales([]);
-    setAnnexeType("autre");
-    setAnnexeDrag(false);
+    setPiecesMission([]);
+    setDepotTypePiece("autre");
+    setDepotDrag(false);
+    setDepotBusy(false);
+    setDepotMsg(null);
+    setDepotErr(null);
     setSourceActiveFigee(false);
     setTypeEngagement("");
     setPrescriptionConfirmee(false);
@@ -1588,22 +1622,107 @@ export function App() {
     }
   }
 
-  function ajouterAnnexes(files: FileList | File[] | null) {
-    if (!files) return;
-    const liste = Array.from(files);
-    if (!liste.length) return;
-    setAnnexesLocales((prev) => [
-      ...prev,
-      ...liste.map((file) => ({
-        id: `${file.name}-${file.size}-${file.lastModified}-${Math.random().toString(36).slice(2, 8)}`,
-        file,
-        type_piece: annexeType,
-      })),
-    ]);
+  /** Recharge la liste des pièces de la mission (data room). */
+  async function rechargerPiecesMission() {
+    if (!session || !missionId) return;
+    try {
+      const liste = await api<PieceMission[]>(
+        `/api/v1/missions/${missionId}/pieces`,
+        { jeton: session.jeton },
+      );
+      setPiecesMission(Array.isArray(liste) ? liste : []);
+    } catch {
+      /* liste conservée en l'état */
+    }
   }
 
-  function retirerAnnexeLocale(id: string) {
-    setAnnexesLocales((prev) => prev.filter((a) => a.id !== id));
+  /**
+   * Dépose une ou plusieurs pièces dans la data room de la mission — même
+   * pipeline que le panneau « Sources & data room » du poste de travail
+   * (POST multipart /missions/{id}/pieces, champ type_piece).
+   */
+  async function deposerPiecesMission(fichiers: FileList | File[] | null) {
+    if (!fichiers || depotBusy) return;
+    const liste = Array.from(fichiers);
+    if (!liste.length) return;
+    if (!session || !missionId) return;
+    setDepotBusy(true);
+    setDepotMsg(null);
+    setDepotErr(null);
+    let envoyees = 0;
+    let derniereErreur: string | null = null;
+    for (const fichier of liste) {
+      try {
+        await apiUpload<PieceMission>(
+          `/api/v1/missions/${missionId}/pieces`,
+          fichier,
+          session.jeton,
+          { type_piece: depotTypePiece },
+        );
+        envoyees += 1;
+      } catch (e) {
+        derniereErreur = e instanceof Error ? e.message : String(e);
+      }
+    }
+    if (envoyees > 0) {
+      setDepotMsg(
+        envoyees === 1
+          ? "1 pièce déposée dans la data room."
+          : `${envoyees} pièces déposées dans la data room.`,
+      );
+      await rechargerPiecesMission();
+      // Capacité existante conservée : une balance déposée alimente aussi la
+      // section « Source active » (analyse locale + import au lancement) tant
+      // qu'aucune source n'a été préparée.
+      if (depotTypePiece === "balance" && !sourcePret) {
+        const premiere = liste.find((f) =>
+          /\.(csv|tsv|txt|json|xlsx|xlsm)$/i.test(f.name),
+        );
+        if (premiere) lireFichierBalance(premiere);
+      }
+    }
+    if (derniereErreur) {
+      setDepotErr(
+        envoyees > 0
+          ? `Certaines pièces ont été refusées : ${derniereErreur}`
+          : `Dépôt impossible : ${derniereErreur}`,
+      );
+    }
+    setDepotBusy(false);
+  }
+
+  /**
+   * Parcours non bloquant : ouvre l'étape Résultat même sans pièce ni revue
+   * exécutée. Si la mission a déjà une restitution, on la recharge.
+   */
+  async function passerRestitution() {
+    setStep(3);
+    if (restitution) return;
+    if (session && missionId) {
+      try {
+        const rest = await api<Restitution>(
+          `/api/v1/missions/${missionId}/restitution`,
+          { jeton: session.jeton },
+        );
+        setRestitution(rest);
+        if (rest.version_referentiel_id != null) {
+          setVersionEpinglee({
+            id: rest.version_referentiel_id,
+            libelle: rest.version_referentiel_libelle,
+          });
+        }
+        return;
+      } catch {
+        /* pas encore de revue exécutée — message doux ci-dessous */
+      }
+    }
+    setMissionStatus({
+      msg:
+        "Pas encore de revue exécutée — vous pourrez ajouter des sources à " +
+        "tout moment (data room de l'étape Sources ou poste de travail) " +
+        "puis lancer la revue.",
+      err: false,
+    });
   }
 
   function chargerContribuableDansWizard(c: Contribuable) {
@@ -1983,21 +2102,6 @@ export function App() {
           const detail = (rapport.anomalies ?? []).slice(0, 3).join(" · ");
           throw new Error(
             `Import refusé (${rapport.statut})${detail ? ` — ${detail}` : ""}. Corrigez la source puis relancez.`,
-          );
-        }
-      }
-
-      if (annexesLocales.length > 0) {
-        setMissionStatus({
-          msg: `Dépôt de ${annexesLocales.length} annexe(s) (sans écraser solde_compte)…`,
-          err: false,
-        });
-        for (const annexe of annexesLocales) {
-          await apiUpload(
-            `/api/v1/missions/${mission.id}/pieces`,
-            annexe.file,
-            jeton,
-            { type_piece: annexe.type_piece },
           );
         }
       }
@@ -4519,7 +4623,7 @@ export function App() {
                     {step === 1 &&
                       "On ne remplit pas un formulaire — on cadre une lettre de mission : le client, l’engagement, le périmètre."}
                     {step === 2 &&
-                      "Poste d’import des sources comptables — la balance alimente le moteur déterministe."}
+                      "Sources & data room de la mission — déposez des pièces de tout format, à tout moment ; une source comptable active unique alimente le moteur déterministe."}
                     {step === 3 &&
                       "Dossier de revue — synthèse, passage, risques et suivi."}
                   </p>
@@ -4620,39 +4724,20 @@ export function App() {
 
                 {step === 2 && (
                   <>
-                    <div className="sources-brief">
-                      <p className="sources-brief-lead">
-                        Une source pour les soldes · le reste en pièces
-                        jointes. Seule la{" "}
-                        <strong>source active</strong> alimente{" "}
-                        <code>solde_compte</code> ; les annexes sont
-                        déposées pour la traçabilité du dossier, sans
-                        écrasement.
+                    <div className="sources2-intro">
+                      <p className="sources2-intro-lead">
+                        La mission{missionId != null ? ` #${missionId}` : ""}{" "}
+                        dispose de sa <strong>data room</strong> : déposez des
+                        pièces de tout format, à tout moment — ici comme depuis
+                        le poste de travail. Seule la{" "}
+                        <strong>source active</strong>
+                        <InfoTip
+                          label={PROCESS_TIPS.sourceActive}
+                          ariaLabel="Aide : source active"
+                        />{" "}
+                        alimente <code>solde_compte</code> ; les autres pièces
+                        enrichissent la revue sans écrasement.
                       </p>
-                      <ol className="sources-flow" aria-label="Flux de revue">
-                        <li>
-                          <span className="sources-flow-n">1</span>
-                          Source active
-                        </li>
-                        <li>
-                          <span className="sources-flow-n">2</span>
-                          Annexes (optionnel)
-                        </li>
-                        <li>
-                          <span className="sources-flow-n">3</span>
-                          <span className="label-with-tip">
-                            Moteur (référentiel épinglé)
-                            <InfoTip
-                              label={PROCESS_TIPS.epingleWizard}
-                              ariaLabel="Aide : référentiel épinglé"
-                            />
-                          </span>
-                        </li>
-                        <li>
-                          <span className="sources-flow-n">4</span>
-                          Restitution à valider
-                        </li>
-                      </ol>
                     </div>
 
                     <div className="wizard-context wizard-context-rich">
@@ -4742,16 +4827,165 @@ export function App() {
                       </div>
                     </div>
 
+                    <section
+                      className="sources2-section"
+                      aria-labelledby="sources2-dataroom-titre"
+                    >
+                      <div className="sources2-head">
+                        <h3
+                          id="sources2-dataroom-titre"
+                          className="sources2-titre label-with-tip"
+                        >
+                          Sources &amp; data room
+                          <InfoTip
+                            label={PROCESS_TIPS.annexes}
+                            ariaLabel="Aide : data room de la mission"
+                          />
+                        </h3>
+                        <span className="sources2-pastille">
+                          {piecesMission.length} pièce
+                          {piecesMission.length !== 1 ? "s" : ""}
+                        </span>
+                      </div>
+                      <p className="sources2-note">
+                        Tout format accepté — chaque dépôt est enregistré
+                        immédiatement au dossier de la mission, sans remplacer
+                        la source comptable active.
+                      </p>
+                      {missionId == null ? (
+                        <p className="sources2-vide">
+                          Créez d&apos;abord la mission à l&apos;étape Cadrage —
+                          la data room est liée à la mission.
+                        </p>
+                      ) : (
+                        <>
+                          <div className="sources2-depot">
+                            <label
+                              className="sources2-type"
+                              htmlFor="sources2-type-piece"
+                            >
+                              Type de pièce
+                              <select
+                                id="sources2-type-piece"
+                                value={depotTypePiece}
+                                disabled={depotBusy}
+                                onChange={(e) =>
+                                  setDepotTypePiece(
+                                    e.target.value as TypePieceApi,
+                                  )
+                                }
+                              >
+                                {TYPES_PIECE_MISSION.map((t) => (
+                                  <option key={t.id} value={t.id}>
+                                    {t.label}
+                                  </option>
+                                ))}
+                              </select>
+                            </label>
+                          </div>
+                          <div
+                            className={`field-upload balance-drop sources2-drop${depotDrag ? " drag" : ""}`}
+                            onDragOver={(e) => {
+                              e.preventDefault();
+                              setDepotDrag(true);
+                            }}
+                            onDragLeave={() => setDepotDrag(false)}
+                            onDrop={(e) => {
+                              e.preventDefault();
+                              setDepotDrag(false);
+                              void deposerPiecesMission(e.dataTransfer.files);
+                            }}
+                          >
+                            <label
+                              htmlFor="sources2-files"
+                              className="field-upload-label"
+                            >
+                              <span className="field-upload-title">
+                                {depotBusy
+                                  ? "Dépôt en cours…"
+                                  : "Déposer des pièces ou cliquer"}
+                              </span>
+                              <span className="field-upload-meta">
+                                Plusieurs fichiers, tout format — type courant
+                                :{" "}
+                                {TYPES_PIECE_MISSION.find(
+                                  (t) => t.id === depotTypePiece,
+                                )?.label ?? depotTypePiece}
+                              </span>
+                            </label>
+                            <input
+                              id="sources2-files"
+                              type="file"
+                              multiple
+                              disabled={depotBusy}
+                              onChange={(e) => {
+                                void deposerPiecesMission(e.target.files);
+                                e.target.value = "";
+                              }}
+                            />
+                          </div>
+                          {depotMsg && !depotBusy && (
+                            <p className="sources2-msg" role="status">
+                              {depotMsg}
+                            </p>
+                          )}
+                          {depotErr && !depotBusy && (
+                            <p className="sources2-err" role="alert">
+                              {depotErr}
+                            </p>
+                          )}
+                          {piecesMission.length > 0 ? (
+                            <ul
+                              className="sources2-pieces"
+                              aria-label="Pièces de la mission"
+                            >
+                              {piecesMission.map((p) => (
+                                <li key={p.id}>
+                                  <div className="sources2-piece-infos">
+                                    <strong className="sources2-piece-nom">
+                                      {p.nom_fichier}
+                                      {p.role === "source_active" && (
+                                        <span className="sources2-badge-source">
+                                          Source active
+                                        </span>
+                                      )}
+                                    </strong>
+                                    <span className="sources2-piece-meta">
+                                      {TYPES_PIECE_MISSION.find(
+                                        (t) => t.id === p.type_piece,
+                                      )?.label ??
+                                        p.type_piece ??
+                                        "—"}
+                                      {p.cree_le
+                                        ? ` · déposée le ${String(p.cree_le).slice(0, 10)}`
+                                        : ""}
+                                    </span>
+                                  </div>
+                                </li>
+                              ))}
+                            </ul>
+                          ) : (
+                            <p className="sources2-vide">
+                              Aucune pièce pour l&apos;instant — le parcours
+                              n&apos;est pas bloqué : vous pourrez ajouter des
+                              sources à tout moment, ici ou depuis le poste de
+                              travail.
+                            </p>
+                          )}
+                        </>
+                      )}
+                    </section>
+
                     {contribIdExistant != null && (
                       <aside
                         className="sources-identite-dossier"
                         aria-label="Pièces d'identité du client"
                       >
-                        <div className="sources-block-head">
-                          <h3 className="sources-block-title">
+                        <div className="sources2-head">
+                          <h3 className="sources2-titre">
                             Dossier identité client
                           </h3>
-                          <span className="sources-block-badge muted">
+                          <span className="sources2-pastille muted">
                             Hors moteur · informatif
                           </span>
                         </div>
@@ -4782,11 +5016,11 @@ export function App() {
                       </aside>
                     )}
 
-                    <section className="sources-block" aria-labelledby="src-active-title">
-                      <div className="sources-block-head">
+                    <section className="sources2-section" aria-labelledby="src-active-title">
+                      <div className="sources2-head">
                         <h3
                           id="src-active-title"
-                          className="sources-block-title label-with-tip"
+                          className="sources2-titre label-with-tip"
                         >
                           Source active
                           <InfoTip
@@ -4794,7 +5028,7 @@ export function App() {
                             ariaLabel="Aide : source active"
                           />
                         </h3>
-                        <span className="sources-block-badge">
+                        <span className="sources2-pastille">
                           Unique · vers le moteur
                         </span>
                       </div>
@@ -5301,107 +5535,6 @@ export function App() {
                     )}
                     </section>
 
-                    <section className="sources-block sources-block-annexes" aria-labelledby="src-annexes-title">
-                      <div className="sources-block-head">
-                        <h3
-                          id="src-annexes-title"
-                          className="sources-block-title label-with-tip"
-                        >
-                          Annexes
-                          <InfoTip
-                            label={PROCESS_TIPS.annexes}
-                            ariaLabel="Aide : annexes"
-                          />
-                        </h3>
-                        <span className="sources-block-badge muted">
-                          Pièces jointes · hors soldes
-                        </span>
-                      </div>
-                      <p className="field-hint">
-                        Dépôts multiples pour la traçabilité du dossier. Ces
-                        fichiers ne remplacent pas{" "}
-                        <code>solde_compte</code>.
-                      </p>
-                      <div className="annexes-toolbar">
-                        <label className="annexes-type" htmlFor="annexe-type">
-                          Type
-                          <select
-                            id="annexe-type"
-                            value={annexeType}
-                            onChange={(e) =>
-                              setAnnexeType(e.target.value as TypePieceApi)
-                            }
-                          >
-                            {TYPES_ANNEXE.map((t) => (
-                              <option key={t.id} value={t.id}>
-                                {t.label}
-                              </option>
-                            ))}
-                          </select>
-                        </label>
-                      </div>
-                      <div
-                        className={`field-upload balance-drop annexes-drop${annexeDrag ? " drag" : ""}`}
-                        onDragOver={(e) => {
-                          e.preventDefault();
-                          setAnnexeDrag(true);
-                        }}
-                        onDragLeave={() => setAnnexeDrag(false)}
-                        onDrop={(e) => {
-                          e.preventDefault();
-                          setAnnexeDrag(false);
-                          ajouterAnnexes(e.dataTransfer.files);
-                        }}
-                      >
-                        <label
-                          htmlFor="annexes-files"
-                          className="field-upload-label"
-                        >
-                          <span className="field-upload-title">
-                            Déposer des annexes ou cliquer
-                          </span>
-                          <span className="field-upload-meta">
-                            Plusieurs fichiers — type courant :{" "}
-                            {TYPES_ANNEXE.find((t) => t.id === annexeType)
-                              ?.label ?? annexeType}
-                          </span>
-                        </label>
-                        <input
-                          id="annexes-files"
-                          type="file"
-                          multiple
-                          onChange={(e) => {
-                            ajouterAnnexes(e.target.files);
-                            e.target.value = "";
-                          }}
-                        />
-                      </div>
-                      {annexesLocales.length > 0 && (
-                        <ul className="annexes-list" aria-label="Annexes en attente">
-                          {annexesLocales.map((a) => (
-                            <li key={a.id}>
-                              <div>
-                                <strong>{a.file.name}</strong>
-                                <span>
-                                  {TYPES_ANNEXE.find(
-                                    (t) => t.id === a.type_piece,
-                                  )?.label ?? a.type_piece}{" "}
-                                  · {Math.round(a.file.size / 1024)} Ko
-                                </span>
-                              </div>
-                              <button
-                                type="button"
-                                className="linkish"
-                                onClick={() => retirerAnnexeLocale(a.id)}
-                              >
-                                Retirer
-                              </button>
-                            </li>
-                          ))}
-                        </ul>
-                      )}
-                    </section>
-
                     <div className="ctrl-panel">
                       <div className="ctrl-panel-head">
                         <span className="picker-kicker">
@@ -5445,6 +5578,15 @@ export function App() {
                       >
                         Retour
                       </button>
+                      <Tooltip label="Ouvrir le poste de travail de la mission — accessible même sans pièce : les sources s'ajoutent à tout moment.">
+                        <button
+                          type="button"
+                          className="btn btn-ghost"
+                          onClick={() => void passerRestitution()}
+                        >
+                          Passer à la restitution
+                        </button>
+                      </Tooltip>
                       <Tooltip
                         label={
                           peutLancerRevue
@@ -5463,7 +5605,9 @@ export function App() {
                       </Tooltip>
                       {!peutLancerRevue && !quota?.bloque && (
                         <span className="cta-hint">
-                          Source active non prête — voir la checklist ci-dessus.
+                          Sans source active prête, la revue ne peut pas être
+                          exécutée — vous pouvez néanmoins passer à la
+                          restitution et compléter plus tard.
                         </span>
                       )}
                     </div>
@@ -5608,6 +5752,13 @@ export function App() {
                     onClick={() => setStep(1)}
                   >
                     Retour
+                  </button>
+                  <button
+                    type="button"
+                    className="btn btn-ghost"
+                    onClick={() => void passerRestitution()}
+                  >
+                    Restitution
                   </button>
                   <button
                     type="button"

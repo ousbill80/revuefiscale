@@ -864,7 +864,7 @@ body {
 .rest-verdict-k .tip-info,
 .wizard-head .tip-info,
 .check-card .tip-info,
-.sources-block-head .tip-info {
+.sources2-head .tip-info {
   margin-left: 0.2rem;
 }
 
@@ -2961,8 +2961,8 @@ textarea {
   cursor: pointer;
 }
 
-/* —— Étape balance / sources —— */
-.sources-brief {
+/* —— Étape 2 « Sources & data room » — même langage que cadrage2-/dossier2- —— */
+.sources2-intro {
   margin: 0 0 0.95rem;
   padding: 0.75rem 0.85rem;
   border-radius: var(--radius);
@@ -2971,49 +2971,16 @@ textarea {
     linear-gradient(135deg, color-mix(in srgb, var(--accent-soft) 70%, #fff), #fff 62%);
 }
 
-.sources-brief-lead {
-  margin: 0 0 0.7rem;
+.sources2-intro-lead {
+  margin: 0;
   font-size: 0.86rem;
   line-height: 1.45;
   color: var(--ink-soft);
 }
 
-.sources-brief-lead strong {
+.sources2-intro-lead strong {
   font-weight: 700;
   color: var(--ink);
-}
-
-.sources-flow {
-  list-style: none;
-  margin: 0;
-  padding: 0;
-  display: grid;
-  grid-template-columns: repeat(4, minmax(0, 1fr));
-  gap: 0.4rem;
-}
-
-.sources-flow li {
-  display: flex;
-  align-items: flex-start;
-  gap: 0.4rem;
-  font-size: 0.72rem;
-  font-weight: 650;
-  color: var(--ink-soft);
-  line-height: 1.3;
-}
-
-.sources-flow-n {
-  flex: 0 0 auto;
-  width: 1.25rem;
-  height: 1.25rem;
-  border-radius: 999px;
-  display: grid;
-  place-items: center;
-  font-size: 0.65rem;
-  font-weight: 800;
-  color: var(--accent-deep);
-  background: #fff;
-  border: 1px solid color-mix(in srgb, var(--accent) 28%, var(--line));
 }
 
 .wizard-context-rich {
@@ -3103,7 +3070,7 @@ textarea {
   margin: 0 0 0.85rem;
 }
 
-.sources-block {
+.sources2-section {
   margin: 0 0 1.1rem;
   padding: 0.85rem 0.9rem 1rem;
   border: 1px solid var(--line);
@@ -3111,11 +3078,7 @@ textarea {
   background: #fff;
 }
 
-.sources-block-annexes {
-  background: linear-gradient(180deg, var(--bg-stripe), #fff 40%);
-}
-
-.sources-block-head {
+.sources2-head {
   display: flex;
   flex-wrap: wrap;
   align-items: center;
@@ -3123,15 +3086,29 @@ textarea {
   margin-bottom: 0.35rem;
 }
 
-.sources-block-title {
+/* Titres de section — petites capitales + trait d'accent (cf. cadrage2-titre). */
+.sources2-titre {
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
   margin: 0;
-  font-size: 0.95rem;
-  font-weight: 750;
-  color: var(--ink);
-  font-family: var(--font-brand);
+  font-size: 0.78rem;
+  font-weight: 800;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--accent-deep);
 }
 
-.sources-block-badge {
+.sources2-titre::before {
+  content: "";
+  flex: 0 0 auto;
+  width: 1.6rem;
+  height: 3px;
+  border-radius: 2px;
+  background: var(--accent);
+}
+
+.sources2-pastille {
   font-size: 0.68rem;
   font-weight: 700;
   letter-spacing: 0.02em;
@@ -3139,24 +3116,31 @@ textarea {
   color: var(--accent-deep);
   background: var(--accent-soft);
   border: 1px solid color-mix(in srgb, var(--accent) 22%, var(--line));
-  border-radius: var(--radius-sm);
-  padding: 0.15rem 0.45rem;
+  border-radius: 999px;
+  padding: 0.15rem 0.55rem;
 }
 
-.sources-block-badge.muted {
+.sources2-pastille.muted {
   color: var(--muted);
   background: var(--bg-stripe);
   border-color: var(--line);
 }
 
-.annexes-toolbar {
+.sources2-note {
+  margin: 0 0 0.65rem;
+  font-size: 0.8rem;
+  line-height: 1.5;
+  color: var(--muted);
+}
+
+.sources2-depot {
   display: flex;
   flex-wrap: wrap;
   gap: 0.55rem;
   margin: 0.35rem 0 0.55rem;
 }
 
-.annexes-type {
+.sources2-type {
   display: flex;
   align-items: center;
   gap: 0.4rem;
@@ -3165,7 +3149,7 @@ textarea {
   color: var(--muted);
 }
 
-.annexes-type select {
+.sources2-type select {
   font: inherit;
   font-weight: 600;
   color: var(--ink);
@@ -3173,6 +3157,87 @@ textarea {
   border-radius: var(--radius-sm);
   background: #fff;
   padding: 0.35rem 0.5rem;
+}
+
+.sources2-drop {
+  margin-bottom: 0.55rem;
+}
+
+.sources2-msg {
+  margin: 0 0 0.45rem;
+  font-size: 0.8rem;
+  font-weight: 600;
+  color: var(--ok);
+}
+
+.sources2-err {
+  margin: 0 0 0.45rem;
+  font-size: 0.8rem;
+  color: var(--warn);
+}
+
+.sources2-vide {
+  margin: 0;
+  padding: 0.8rem 0.9rem;
+  border: 1px dashed var(--line);
+  border-radius: var(--radius-sm);
+  font-size: 0.82rem;
+  line-height: 1.45;
+  color: var(--muted);
+  background: var(--bg-stripe);
+}
+
+.sources2-pieces {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 0.35rem;
+}
+
+.sources2-pieces li {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.75rem;
+  padding: 0.45rem 0.55rem;
+  border: 1px solid var(--line-soft);
+  border-radius: var(--radius-sm);
+  background: #fff;
+}
+
+.sources2-piece-infos {
+  display: grid;
+  gap: 0.1rem;
+  min-width: 0;
+}
+
+.sources2-piece-nom {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.4rem;
+  font-size: 0.82rem;
+  color: var(--ink);
+  overflow-wrap: anywhere;
+}
+
+.sources2-piece-meta {
+  font-size: 0.72rem;
+  color: var(--muted);
+}
+
+.sources2-badge-source {
+  font-size: 0.62rem;
+  font-weight: 800;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--accent-deep);
+  background: var(--accent-soft);
+  border: 1px solid color-mix(in srgb, var(--accent) 28%, var(--line));
+  border-radius: 999px;
+  padding: 0.1rem 0.45rem;
 }
 
 .annexes-drop {
@@ -3558,10 +3623,6 @@ textarea {
 
 @media (max-width: 720px) {
   .balance-metrics {
-    grid-template-columns: 1fr 1fr;
-  }
-
-  .sources-flow {
     grid-template-columns: 1fr 1fr;
   }
 
