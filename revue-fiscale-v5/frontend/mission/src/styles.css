@@ -9764,6 +9764,7 @@ tr.row-active td {
 .civisme-badge--manquante { background: #fef2f2; color: #b91c1c; border-color: #fecaca; }
 .civisme-item--couverte { border-left-color: #86efac; }
 .civisme-item--manquante { border-left-color: #fca5a5; }
+.civisme-reclamation { align-items: center; margin: 0.55rem 0 0.35rem; }
 
 /* ── Plan d'actions post-revue — variantes du panneau Prescription ── */
 .planactions-stat--haute { border-color: #fecaca; background: #fef2f2; }

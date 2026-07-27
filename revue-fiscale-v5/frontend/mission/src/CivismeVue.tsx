@@ -60,16 +60,49 @@ const LIBELLES_STATUT: Record<string, string> = {
   manquante: "Manquante",
 };
 
+type ReclamationOut = {
+  crees: number;
+  ignores_existants: number;
+  total_manquantes: number;
+};
+
 type Props = {
   missionId: number;
   jeton?: string | null;
   onFermer: () => void;
+  /** Mission clôturée : la réclamation des pièces manquantes est désactivée. */
+  missionCloturee?: boolean;
 };
 
-export function CivismeVue({ missionId, jeton, onFermer }: Props) {
+export function CivismeVue({ missionId, jeton, onFermer, missionCloturee }: Props) {
   const [etat, setEtat] = useState<CivismeOut | null>(null);
   const [err, setErr] = useState<string | null>(null);
   const [busy, setBusy] = useState(false);
+  const [reclamation, setReclamation] = useState<ReclamationOut | null>(null);
+  const [reclamationErr, setReclamationErr] = useState<string | null>(null);
+  const [reclamationBusy, setReclamationBusy] = useState(false);
+
+  async function reclamerPiecesManquantes() {
+    if (!jeton || !missionId || reclamationBusy) return;
+    setReclamationBusy(true);
+    setReclamationErr(null);
+    try {
+      const out = await api<ReclamationOut>(
+        `/api/v1/missions/${missionId}/suivi-renseignements/depuis-civisme`,
+        { jeton, method: "POST" },
+      );
+      setReclamation(out ?? null);
+    } catch (e) {
+      setReclamation(null);
+      setReclamationErr(
+        e instanceof Error
+          ? e.message
+          : "ajout à la demande de renseignements impossible",
+      );
+    } finally {
+      setReclamationBusy(false);
+    }
+  }
 
   useEffect(() => {
     if (!jeton || !missionId) return;
@@ -166,6 +199,41 @@ export function CivismeVue({ missionId, jeton, onFermer }: Props) {
               <span className="rest-prescription-stat-lbl">En attente</span>
             </div>
           </div>
+
+          {etat.synthese.manquantes > 0 && (
+            <div className="rest-prescription-meta civisme-reclamation">
+              <button
+                type="button"
+                className="btn btn-ghost btn-sm"
+                onClick={() => void reclamerPiecesManquantes()}
+                disabled={reclamationBusy || Boolean(missionCloturee)}
+                title={
+                  missionCloturee
+                    ? "Mission clôturée — réouvrez-la pour réclamer les pièces"
+                    : "Ajoute un item par échéance manquante à la demande de renseignements"
+                }
+              >
+                {reclamationBusy
+                  ? "Ajout en cours…"
+                  : "Réclamer les pièces manquantes au client"}
+              </button>
+              {missionCloturee && (
+                <span className="muted">Mission clôturée — action indisponible.</span>
+              )}
+              {reclamation && (
+                <span className="muted" role="status">
+                  {reclamation.crees} ajoutée{reclamation.crees > 1 ? "s" : ""} à
+                  la demande de renseignements ({reclamation.ignores_existants}{" "}
+                  déjà présente{reclamation.ignores_existants > 1 ? "s" : ""})
+                </span>
+              )}
+              {reclamationErr && (
+                <span className="rest-lettre-err" role="alert">
+                  {reclamationErr}
+                </span>
+              )}
+            </div>
+          )}
 
           {etat.rapprochement.length === 0 ? (
             <p className="muted">

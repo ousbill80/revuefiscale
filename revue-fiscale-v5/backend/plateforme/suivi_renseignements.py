@@ -7,6 +7,12 @@ des items est RECONSTRUITE à chaque lecture depuis les mêmes sources que
 le livrable .docx (``demande_renseignements.collecter_items``) puis
 fusionnée (LEFT JOIN logique) avec les statuts saisis dans la table
 ``suivi_demande_renseignements``. Aucun taux ni seuil fiscal ici.
+
+Passerelle civisme → demande : le fiscaliste peut, d'un clic explicite,
+ajouter un item par échéance « manquante » de l'analyse de civisme
+fiscal (:func:`ajouter_items_depuis_civisme`). Ces items sont PERSISTÉS
+dans ``suivi_demande_renseignements`` (préfixe ``civisme:``) car ils ne
+sont pas reconstructibles depuis les sources du .docx.
 """
 from __future__ import annotations
 
@@ -22,6 +28,9 @@ from backend.plateforme.demande_renseignements import collecter_items
 STATUTS_SUIVI: Final = ("en_attente", "recu", "sans_objet")
 STATUT_DEFAUT: Final = "en_attente"
 
+# Préfixe des clés d'items ajoutés depuis l'analyse de civisme fiscal.
+PREFIXE_CIVISME: Final = "civisme:"
+
 
 class ErreurSuiviRenseignements(Exception):
     """Echec du suivi (mission introuvable, statut ou item invalide…)."""
@@ -31,6 +40,10 @@ class ErreurSuiviIntrouvable(ErreurSuiviRenseignements):
     """Mission ou item hors périmètre du tenant — 404 côté route."""
 
 
+class ErreurSuiviMissionCloturee(ErreurSuiviRenseignements):
+    """Mission clôturée — écriture refusée (409 côté route)."""
+
+
 def _mission_existe(session: Session, mission_id: int) -> bool:
     return (
         session.execute(
@@ -38,6 +51,28 @@ def _mission_existe(session: Session, mission_id: int) -> bool:
         ).scalar_one_or_none()
         is not None
     )
+
+
+def _items_civisme_persistes(
+    session: Session, mission_id: int
+) -> list[dict[str, str]]:
+    """Items « civisme » persistés — [{cle_item, libelle}] dans l'ordre d'ajout.
+
+    Contrairement aux items reconstruits (``collecter_items``), les items
+    ajoutés depuis l'analyse de civisme n'existent que dans la table de
+    suivi. Contexte tenant déjà posé par l'appelant.
+    """
+    rows = session.execute(
+        text(
+            "SELECT cle_item, libelle FROM suivi_demande_renseignements "
+            "WHERE mission_id = :m AND cle_item LIKE :p ORDER BY id"
+        ),
+        {"m": mission_id, "p": f"{PREFIXE_CIVISME}%"},
+    ).mappings().all()
+    return [
+        {"cle_item": str(r["cle_item"]), "libelle": str(r["libelle"] or "")}
+        for r in rows
+    ]
 
 
 def _statuts_enregistres(
@@ -86,13 +121,16 @@ def lister_items(
     """Liste courante des items demandables fusionnée avec leurs statuts.
 
     [{cle_item, libelle, statut, date_relance, note, maj_le}] — mêmes
-    sources et même ordre que le .docx. RLS via ``contexte_tenant`` :
-    mission d'un autre tenant → :class:`ErreurSuiviIntrouvable`.
+    sources et même ordre que le .docx, suivis des items « civisme »
+    persistés (ajout explicite du fiscaliste). RLS via
+    ``contexte_tenant`` : mission d'un autre tenant →
+    :class:`ErreurSuiviIntrouvable`.
     """
     with contexte_tenant(session, tenant_id):
         if not _mission_existe(session, mission_id):
             raise ErreurSuiviIntrouvable(f"mission {mission_id} introuvable")
         items = collecter_items(session, mission_id)
+        items += _items_civisme_persistes(session, mission_id)
         suivis = _statuts_enregistres(session, mission_id)
     return _fusionner(items, suivis)
 
@@ -122,6 +160,7 @@ def maj_item(
         if not _mission_existe(session, mission_id):
             raise ErreurSuiviIntrouvable(f"mission {mission_id} introuvable")
         items = collecter_items(session, mission_id)
+        items += _items_civisme_persistes(session, mission_id)
         par_cle = {i["cle_item"]: i for i in items}
         if cle_item not in par_cle:
             raise ErreurSuiviIntrouvable(
@@ -179,3 +218,123 @@ def synthese(
 ) -> dict[str, int]:
     """Synthèse du suivi — recalculée depuis la liste fusionnée."""
     return synthese_depuis_items(lister_items(session, tenant_id, mission_id))
+
+
+# ── Passerelle civisme fiscal → demande de renseignements ────────────
+
+
+def _libelle_echeance_manquante(echeance: dict[str, Any]) -> str:
+    """Libellé clair d'une échéance manquante — ex. « Déclaration TVA —
+    janvier 2025 (échéance 15/02/2025) »."""
+    obligation = str(echeance.get("obligation") or "").strip()
+    impot = str(echeance.get("impot") or "").strip()
+    periode = str(echeance.get("periode") or "").strip()
+    date_limite = date.fromisoformat(str(echeance["date_limite"]))
+    tete = obligation or impot or "Obligation déclarative"
+    corps = f"{tete} — {periode}" if periode else tete
+    return f"{corps} (échéance {date_limite.strftime('%d/%m/%Y')})"
+
+
+def _cle_civisme(echeance: dict[str, Any]) -> str:
+    """Clé stable d'un item civisme : civisme:{impot}|{periode}|{date}."""
+    return (
+        f"{PREFIXE_CIVISME}{echeance.get('impot')}"
+        f"|{echeance.get('periode')}|{echeance.get('date_limite')}"
+    )
+
+
+def ajouter_items_depuis_civisme(
+    session: Session,
+    tenant_id: int,
+    mission_id: int,
+    *,
+    aujourd_hui: date | None = None,
+) -> dict[str, int]:
+    """Ajoute un item de demande par échéance « manquante » du civisme.
+
+    Déclenché par un clic explicite du fiscaliste. IDEMPOTENT : une
+    échéance dont le libellé figure déjà dans la liste courante des
+    items (reconstruits ou persistés) est ignorée — le second appel ne
+    crée aucun doublon. Mission clôturée →
+    :class:`ErreurSuiviMissionCloturee` (409) ; mission hors tenant →
+    :class:`ErreurSuiviIntrouvable` (404).
+
+    Retourne ``{crees, ignores_existants, total_manquantes}``.
+    """
+    from backend.plateforme.civisme_fiscal import (
+        STATUT_MANQUANTE,
+        ErreurCivismeIntrouvable,
+        analyse_mission,
+    )
+
+    # analyse_mission ouvre son propre contexte_tenant : appel HORS de
+    # tout autre with contexte_tenant.
+    try:
+        analyse = analyse_mission(
+            session, tenant_id, mission_id, aujourd_hui=aujourd_hui
+        )
+    except ErreurCivismeIntrouvable as e:
+        raise ErreurSuiviIntrouvable(str(e)) from e
+
+    manquantes = [
+        e
+        for e in analyse["rapprochement"]
+        if e.get("statut") == STATUT_MANQUANTE
+    ]
+
+    crees = 0
+    ignores = 0
+    with contexte_tenant(session, tenant_id):
+        statut_mission = session.execute(
+            text("SELECT statut FROM mission WHERE id = :m"),
+            {"m": mission_id},
+        ).scalar_one_or_none()
+        if statut_mission is None:
+            raise ErreurSuiviIntrouvable(f"mission {mission_id} introuvable")
+        if str(statut_mission).lower() == "cloturee":
+            raise ErreurSuiviMissionCloturee(
+                f"mission {mission_id} clôturée — réouvrez-la avant "
+                "d'ajouter des items à la demande de renseignements"
+            )
+
+        libelles_existants = {
+            i["libelle"]
+            for i in collecter_items(session, mission_id)
+        } | {
+            i["libelle"]
+            for i in _items_civisme_persistes(session, mission_id)
+        }
+        for echeance in manquantes:
+            libelle = _libelle_echeance_manquante(echeance)
+            if libelle in libelles_existants:
+                ignores += 1
+                continue
+            # ON CONFLICT DO NOTHING : ceinture et bretelles sur la clé
+            # unique (tenant_id, mission_id, cle_item).
+            insere = session.execute(
+                text(
+                    "INSERT INTO suivi_demande_renseignements "
+                    "(tenant_id, mission_id, cle_item, libelle, statut) "
+                    "VALUES (:t, :m, :c, :l, :s) "
+                    "ON CONFLICT (tenant_id, mission_id, cle_item) "
+                    "DO NOTHING RETURNING id"
+                ),
+                {
+                    "t": tenant_id,
+                    "m": mission_id,
+                    "c": _cle_civisme(echeance),
+                    "l": libelle,
+                    "s": STATUT_DEFAUT,
+                },
+            ).scalar_one_or_none()
+            if insere is None:
+                ignores += 1
+            else:
+                crees += 1
+                libelles_existants.add(libelle)
+    # Pas de commit ici : get_session committe en fin de requête.
+    return {
+        "crees": crees,
+        "ignores_existants": ignores,
+        "total_manquantes": len(manquantes),
+    }

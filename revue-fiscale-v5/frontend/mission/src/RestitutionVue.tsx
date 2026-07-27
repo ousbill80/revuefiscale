@@ -3597,6 +3597,7 @@ export function RestitutionVue({
         <CivismeVue
           missionId={r.mission_id}
           jeton={jeton}
+          missionCloturee={estCloturee}
           onFermer={() => setCivismeOuvert(false)}
         />
       )}

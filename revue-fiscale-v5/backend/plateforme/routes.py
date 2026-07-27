@@ -825,6 +825,47 @@ def api_patcher_suivi_renseignements(
     return {"item": item, "synthese": synthese_depuis_items(items)}
 
 
+@router.post("/missions/{mission_id}/suivi-renseignements/depuis-civisme")
+def api_ajouter_items_depuis_civisme(
+    mission_id: int,
+    utilisateur: UtilisateurDep,
+    session: Annotated[Session, Depends(session_abonne)],
+) -> dict:
+    """Passerelle civisme → demande : un item par échéance « manquante ».
+
+    Déclenchée par un clic explicite du fiscaliste. Idempotente (aucun
+    doublon au second appel) ; mission clôturée → 409 ; mission hors
+    tenant → 404 (RLS).
+    """
+    from backend.moteur.journal import append_journal
+    from backend.plateforme.suivi_renseignements import (
+        ErreurSuiviIntrouvable,
+        ErreurSuiviMissionCloturee,
+        ajouter_items_depuis_civisme,
+    )
+
+    exiger_capacite(utilisateur, "executer_mission")
+    try:
+        resultat = ajouter_items_depuis_civisme(
+            session, utilisateur.tenant_id, mission_id
+        )
+    except ErreurSuiviIntrouvable as e:
+        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail=str(e)) from e
+    except ErreurSuiviMissionCloturee as e:
+        raise HTTPException(
+            status_code=status.HTTP_409_CONFLICT, detail=str(e)
+        ) from e
+    append_journal(
+        session,
+        tenant_id=utilisateur.tenant_id,
+        mission_id=mission_id,
+        acteur=utilisateur.email,
+        action="ajout_items_demande_depuis_civisme",
+        charge_utile=dict(resultat),
+    )
+    return resultat
+
+
 class ReponseClientIn(BaseModel):
     """Saisie de la réponse client d'un item de circularisation."""
 
