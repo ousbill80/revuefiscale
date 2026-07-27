@@ -11124,3 +11124,89 @@ tr.row-active td {
   font-variant-numeric: tabular-nums;
   color: var(--accent-deep, #115e59);
 }
+
+/* ── Bilan de clôture (panneau consultatif de pré-clôture) ──────────
+   Pattern rest-suivi (panneau outil) ; pastilles ok (vert #f0fdf4 /
+   #166534) et attention (orange #fffbeb / #92400e) — palettes déjà
+   utilisées ailleurs. Jamais bloquant : simple lecture d'ensemble. */
+.bilancloture-synthese {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  gap: 0.35rem 0.75rem;
+  padding: 0.5rem 0.75rem;
+  border-radius: 0.5rem;
+  border: 1px solid transparent;
+}
+
+.bilancloture-synthese--pret {
+  background: #f0fdf4;
+  border-color: color-mix(in srgb, #166534 25%, transparent);
+}
+
+.bilancloture-synthese--attention {
+  background: #fffbeb;
+  border-color: color-mix(in srgb, #92400e 25%, transparent);
+}
+
+.bilancloture-verdict {
+  font-size: 0.82rem;
+  font-weight: 800;
+}
+
+.bilancloture-synthese--pret .bilancloture-verdict {
+  color: #166534;
+}
+
+.bilancloture-synthese--attention .bilancloture-verdict {
+  color: #92400e;
+}
+
+.bilancloture-compteurs {
+  font-size: 0.76rem;
+  color: var(--muted, #64748b);
+}
+
+.bilancloture-points {
+  list-style: none;
+  margin: 0.6rem 0 0;
+  padding: 0;
+  display: grid;
+  gap: 0.35rem;
+}
+
+.bilancloture-point {
+  display: flex;
+  align-items: baseline;
+  gap: 0.5rem;
+  font-size: 0.8rem;
+}
+
+.bilancloture-pastille {
+  flex: none;
+  width: 0.6rem;
+  height: 0.6rem;
+  border-radius: 50%;
+  align-self: center;
+}
+
+.bilancloture-pastille--ok {
+  background: #166534;
+  box-shadow: 0 0 0 3px #f0fdf4;
+}
+
+.bilancloture-pastille--attention {
+  background: #92400e;
+  box-shadow: 0 0 0 3px #fffbeb;
+}
+
+.bilancloture-point--attention .bilancloture-libelle {
+  color: #92400e;
+  font-weight: 600;
+}
+
+.bilancloture-note {
+  margin: 0.6rem 0 0;
+  font-size: 0.76rem;
+  font-style: italic;
+}

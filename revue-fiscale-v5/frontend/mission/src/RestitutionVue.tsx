@@ -27,6 +27,7 @@ import { PilotageVue } from "./PilotageVue";
 import { PrescriptionVue } from "./PrescriptionVue";
 import { CivismeVue } from "./CivismeVue";
 import { PlanActionsVue } from "./PlanActionsVue";
+import { BilanClotureVue } from "./BilanClotureVue";
 import type { AuditEntree, AuditJournal, ConclusionRestitution, Restitution } from "./types";
 
 type CollaborateurOpt = {
@@ -666,6 +667,7 @@ export function RestitutionVue({
   const [prescriptionOuverte, setPrescriptionOuverte] = useState(false);
   const [civismeOuvert, setCivismeOuvert] = useState(false);
   const [planActionsOuvert, setPlanActionsOuvert] = useState(false);
+  const [bilanClotureOuvert, setBilanClotureOuvert] = useState(false);
   const [ctrlClotureOuvert, setCtrlClotureOuvert] = useState(false);
   const [ctrlCloture, setCtrlCloture] = useState<ControleClotureOut | null>(
     null,
@@ -944,6 +946,7 @@ export function RestitutionVue({
     | "visas"
     | "note"
     | "comparatif"
+    | "bilan_cloture"
     | "ctrlCloture";
 
   function fermerPanneaux(sauf?: PanneauId) {
@@ -959,6 +962,7 @@ export function RestitutionVue({
     if (sauf !== "visas") setVisasOuvert(false);
     if (sauf !== "note") setNoteOuverte(false);
     if (sauf !== "comparatif") setComparatifOuvert(false);
+    if (sauf !== "bilan_cloture") setBilanClotureOuvert(false);
     if (sauf !== "ctrlCloture" && ctrlClotureOuvert) {
       setCtrlClotureOuvert(false);
       setCtrlCloture(null);
@@ -2627,6 +2631,25 @@ export function RestitutionVue({
             <div className="dossier2-groupe" role="group" aria-label="Clôturer">
               <span className="dossier2-groupe-lbl">Clôturer</span>
               <div className="dossier2-groupe-actions">
+                <Tooltip label="Bilan de pré-clôture consultatif : ce qui reste en suspens (visas, temps, demande de renseignements, note de synthèse, data room, risques). Jamais bloquant — la clôture reste possible telle quelle.">
+                  <button
+                    type="button"
+                    className={`btn btn-ghost btn-sm dossier2-action${
+                      bilanClotureOuvert ? " is-actif" : ""
+                    }`}
+                    disabled={busy}
+                    aria-expanded={bilanClotureOuvert}
+                    onClick={() =>
+                      togglePanneau(
+                        "bilan_cloture",
+                        bilanClotureOuvert,
+                        setBilanClotureOuvert,
+                      )
+                    }
+                  >
+                    Bilan de clôture
+                  </button>
+                </Tooltip>
                 {onLienClient && (
                   <Tooltip label={PROCESS_TIPS.lienClient}>
                     <button
@@ -3646,6 +3669,14 @@ export function RestitutionVue({
           missionId={r.mission_id}
           jeton={jeton}
           onFermer={() => setPlanActionsOuvert(false)}
+        />
+      )}
+
+      {bilanClotureOuvert && (
+        <BilanClotureVue
+          missionId={r.mission_id}
+          jeton={jeton}
+          onFermer={() => setBilanClotureOuvert(false)}
         />
       )}
 

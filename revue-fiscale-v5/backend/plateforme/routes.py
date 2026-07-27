@@ -2017,6 +2017,48 @@ def api_plan_actions_mission(
     return analyse
 
 
+@router.get("/missions/{mission_id}/bilan-cloture")
+def api_bilan_cloture_mission(
+    mission_id: int,
+    utilisateur: UtilisateurDep,
+    session: Annotated[Session, Depends(session_abonne)],
+) -> dict:
+    """Bilan de pré-clôture (lecture seule, consultatif).
+
+    Agrège les signaux existants de la mission (visas, temps saisis,
+    demande de renseignements, note de synthèse, data room, risques
+    ouverts) en points « ok » / « attention ». Jamais bloquant : la
+    clôture reste à l'appréciation du fiscaliste. 404 si mission hors
+    tenant (RLS).
+    """
+    from backend.moteur.journal import append_journal
+    from backend.plateforme.bilan_cloture import (
+        ErreurBilanCloture,
+        bilan_mission,
+    )
+
+    exiger_capacite(utilisateur, "lire")
+    try:
+        bilan = bilan_mission(session, utilisateur.tenant_id, mission_id)
+    except ErreurBilanCloture as e:
+        raise HTTPException(
+            status_code=status.HTTP_404_NOT_FOUND, detail=str(e)
+        ) from e
+    append_journal(
+        session,
+        tenant_id=utilisateur.tenant_id,
+        mission_id=mission_id,
+        acteur=utilisateur.email,
+        action="consultation_bilan_cloture",
+        charge_utile={
+            "points_ok": bilan["synthese"]["points_ok"],
+            "points_attention": bilan["synthese"]["points_attention"],
+            "pret": bilan["synthese"]["pret"],
+        },
+    )
+    return bilan
+
+
 # ── Conclusions (validation humaine) ───────────────────────────────
 
 
