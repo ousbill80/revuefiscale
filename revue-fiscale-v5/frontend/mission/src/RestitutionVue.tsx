@@ -1,5 +1,5 @@
 import { useEffect, useMemo, useRef, useState } from "react";
-import { api, fmtMontant, telecharger } from "./api";
+import { api, apiUpload, fmtMontant, telecharger } from "./api";
 import {
   CODES_IMPOT_PIVOT,
   PERIMETRE_DONS_HINT,
@@ -59,7 +59,24 @@ type PieceMissionOpt = {
   id: number;
   nom_fichier: string;
   role: string;
+  type_piece?: string;
+  cree_le?: string | null;
 };
+
+/** Types de pièce acceptés par le dépôt mission (backend socle). */
+const TYPES_PIECE_MISSION = [
+  { value: "balance", label: "Balance" },
+  { value: "etats_financiers", label: "États financiers" },
+  { value: "grand_livre", label: "Grand livre" },
+  { value: "fec", label: "FEC" },
+  { value: "autre", label: "Autre" },
+] as const;
+
+function libelleTypePieceMission(type?: string): string {
+  return (
+    TYPES_PIECE_MISSION.find((t) => t.value === type)?.label || type || "—"
+  );
+}
 
 type ControleFecOccurrence = {
   ligne: number | null;
@@ -633,6 +650,11 @@ export function RestitutionVue({
   const [visasEtat, setVisasEtat] = useState<VisasEtat | null>(null);
   const [visasErr, setVisasErr] = useState<string | null>(null);
   const [visaBusy, setVisaBusy] = useState<string | null>(null);
+  const [sourcesOuvert, setSourcesOuvert] = useState(false);
+  const [sourcesTypeDepot, setSourcesTypeDepot] = useState("autre");
+  const [sourcesDepotBusy, setSourcesDepotBusy] = useState(false);
+  const [sourcesDepotMsg, setSourcesDepotMsg] = useState<string | null>(null);
+  const [sourcesDepotErr, setSourcesDepotErr] = useState<string | null>(null);
   const [progOuvert, setProgOuvert] = useState(false);
   const [progEtat, setProgEtat] = useState<ProgrammeEtat | null>(null);
   const [progErr, setProgErr] = useState<string | null>(null);
@@ -906,6 +928,7 @@ export function RestitutionVue({
    * Ferme tous les panneaux d'outil sauf celui passé en argument.
    */
   type PanneauId =
+    | "sources"
     | "pilotage"
     | "suivi"
     | "temps"
@@ -918,6 +941,7 @@ export function RestitutionVue({
     | "ctrlCloture";
 
   function fermerPanneaux(sauf?: PanneauId) {
+    if (sauf !== "sources") setSourcesOuvert(false);
     if (sauf !== "pilotage") setPilotageOuvert(false);
     if (sauf !== "suivi") setSuiviOuvert(false);
     if (sauf !== "temps") setTempsOuvert(false);
@@ -948,6 +972,59 @@ export function RestitutionVue({
       setOuvert(true);
       onOuverture?.();
     }
+  }
+
+  /** Recharge la liste des pièces de la mission (data room). */
+  async function rechargerPiecesMission() {
+    if (!jeton || !r.mission_id) return;
+    try {
+      const list = await api<PieceMissionOpt[]>(
+        `/api/v1/missions/${r.mission_id}/pieces`,
+        { jeton },
+      );
+      setPieces(list);
+    } catch {
+      /* liste conservée en l'état */
+    }
+  }
+
+  /** Dépose une ou plusieurs pièces dans la data room de la mission. */
+  async function deposerPiecesMission(fichiers: FileList | null) {
+    if (!fichiers || fichiers.length === 0 || sourcesDepotBusy) return;
+    if (!jeton || !r.mission_id) return;
+    const liste = Array.from(fichiers);
+    setSourcesDepotBusy(true);
+    setSourcesDepotMsg(null);
+    setSourcesDepotErr(null);
+    let envoyees = 0;
+    let derniereErreur: string | null = null;
+    for (const fichier of liste) {
+      try {
+        await apiUpload<PieceMissionOpt>(
+          `/api/v1/missions/${r.mission_id}/pieces`,
+          fichier,
+          jeton,
+          { type_piece: sourcesTypeDepot },
+        );
+        envoyees += 1;
+      } catch (e) {
+        derniereErreur = e instanceof Error ? e.message : String(e);
+      }
+    }
+    if (envoyees > 0) {
+      setSourcesDepotMsg(
+        envoyees === 1 ? "1 pièce déposée." : `${envoyees} pièces déposées.`,
+      );
+      await rechargerPiecesMission();
+    }
+    if (derniereErreur) {
+      setSourcesDepotErr(
+        envoyees > 0
+          ? `Certaines pièces ont été refusées : ${derniereErreur}`
+          : `Dépôt impossible : ${derniereErreur}`,
+      );
+    }
+    setSourcesDepotBusy(false);
   }
 
   /** Étape intermédiaire avant clôture : revue qualité consultative. */
@@ -2133,6 +2210,7 @@ export function RestitutionVue({
               Exécution #{r.execution_id}
             </span>
           )}
+          <span className="dossier2-indic">Sources : {pieces.length}</span>
           {progEtat && (
             <span className="dossier2-indic">
               Programme {progEtat.synthese.faites}/{progEtat.synthese.total}
@@ -2161,6 +2239,23 @@ export function RestitutionVue({
         <div className="dossier2-groupe" role="group" aria-label="Travailler">
           <span className="dossier2-groupe-lbl">Travailler</span>
           <div className="dossier2-groupe-actions">
+            <Tooltip label="Sources & data room de la mission : toutes les pièces du dossier (source active et annexes), avec dépôt de nouvelles pièces à tout moment — tout type, tout format.">
+              <button
+                type="button"
+                className={`btn btn-ghost btn-sm dossier2-action rest-sources-btn${
+                  sourcesOuvert ? " is-actif" : ""
+                }`}
+                onClick={() =>
+                  togglePanneau("sources", sourcesOuvert, setSourcesOuvert, () =>
+                    void rechargerPiecesMission(),
+                  )
+                }
+                disabled={!jeton}
+                aria-expanded={sourcesOuvert}
+              >
+                Sources &amp; data room
+              </button>
+            </Tooltip>
             <Tooltip label="Programme de travail standard : diligences par phase que le collaborateur coche au fil de l'exécution — avancement par phase et global. Complète les visas de supervision.">
               <button
                 type="button"
@@ -3227,6 +3322,113 @@ export function RestitutionVue({
               </p>
             )}
           </div>
+        </section>
+      )}
+
+      {sourcesOuvert && (
+        <section
+          className="rest-suivi rest-sources"
+          aria-label="Sources et data room de la mission"
+        >
+          <div className="rest-suivi-head">
+            <h3 className="rest-suivi-titre label-with-tip">
+              Sources &amp; data room
+              <InfoTip
+                label="Pièces de la mission : la source comptable active et toutes les annexes déposées. La data room s'enrichit à tout moment de la mission."
+                ariaLabel="Aide : sources et data room"
+              />
+            </h3>
+            <div className="rest-suivi-outils">
+              <span className="muted">
+                {pieces.length} pièce{pieces.length !== 1 ? "s" : ""}
+              </span>
+              <button
+                type="button"
+                className="btn btn-ghost btn-sm"
+                onClick={() => setSourcesOuvert(false)}
+              >
+                Fermer
+              </button>
+            </div>
+          </div>
+
+          {estCloturee ? (
+            <p className="muted">
+              Mission clôturée — le dépôt de nouvelles pièces est désactivé.
+            </p>
+          ) : estLecteur ? (
+            <p className="muted">
+              Accès en lecture seule — dépôt de pièces indisponible.
+            </p>
+          ) : (
+            <div className="rest-sources-depot">
+              <label className="rest-sources-depot-type">
+                Type de pièce{" "}
+                <select
+                  value={sourcesTypeDepot}
+                  disabled={sourcesDepotBusy}
+                  onChange={(e) => setSourcesTypeDepot(e.target.value)}
+                >
+                  {TYPES_PIECE_MISSION.map((t) => (
+                    <option key={t.value} value={t.value}>
+                      {t.label}
+                    </option>
+                  ))}
+                </select>
+              </label>
+              <input
+                type="file"
+                multiple
+                disabled={sourcesDepotBusy}
+                aria-label="Déposer des pièces dans la data room"
+                onChange={(e) => {
+                  void deposerPiecesMission(e.target.files);
+                  e.target.value = "";
+                }}
+              />
+              <span className="muted">
+                Tout format accepté — les pièces déposées ici enrichissent la
+                revue sans remplacer la source comptable active.
+              </span>
+              {sourcesDepotBusy && (
+                <span className="muted">Dépôt en cours…</span>
+              )}
+            </div>
+          )}
+          {sourcesDepotMsg && !sourcesDepotBusy && (
+            <p className="rest-maj">{sourcesDepotMsg}</p>
+          )}
+          {sourcesDepotErr && !sourcesDepotBusy && (
+            <p className="rest-lettre-err" role="alert">
+              {sourcesDepotErr}
+            </p>
+          )}
+
+          {pieces.length > 0 ? (
+            <ul className="rest-suivi-items rest-sources-items">
+              {pieces.map((p) => (
+                <li key={p.id} className="rest-suivi-item">
+                  <div className="rest-suivi-libelle">
+                    <span className="rest-suivi-cle">
+                      <span className="muted">#{p.id}</span> {p.nom_fichier}
+                      {p.role === "source_active" && (
+                        <span className="badge"> Source active</span>
+                      )}
+                    </span>
+                    <span className="muted">
+                      {libelleTypePieceMission(p.type_piece)}
+                      {p.cree_le ? ` · déposée le ${p.cree_le.slice(0, 10)}` : ""}
+                    </span>
+                  </div>
+                </li>
+              ))}
+            </ul>
+          ) : (
+            <p className="muted">
+              Aucune pièce dans la data room — déposez un premier document
+              ci-dessus.
+            </p>
+          )}
         </section>
       )}
 
