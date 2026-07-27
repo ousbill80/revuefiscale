@@ -20,6 +20,7 @@ pures + lecture seule sous RLS.
 """
 from __future__ import annotations
 
+import unicodedata
 from datetime import date, timedelta
 from typing import Any, Final
 
@@ -154,6 +155,134 @@ def synthese_agenda(items: list[dict[str, Any]]) -> dict[str, Any]:
         "couvertes": couvertes,
         "prochaine_echeance": prochaine,
     }
+
+
+# ── Export iCalendar (RFC 5545, texte brut, sans dépendance) ─────────
+
+_ICS_PRODID: Final[str] = "-//Revue Fiscale//Agenda fiscal cabinet//FR"
+_ICS_FIN_LIGNE: Final[str] = "\r\n"
+
+
+def _echapper_ics(valeur: str) -> str:
+    """PUR — échappe une valeur texte iCalendar (RFC 5545 §3.3.11).
+
+    Antislash d'abord (sinon double échappement), puis point-virgule,
+    virgule et retours à la ligne (``\\n`` littéral).
+    """
+    return (
+        str(valeur)
+        .replace("\\", "\\\\")
+        .replace(";", "\\;")
+        .replace(",", "\\,")
+        .replace("\r\n", "\\n")
+        .replace("\n", "\\n")
+        .replace("\r", "\\n")
+    )
+
+
+def _plier_ligne_ics(ligne: str) -> list[str]:
+    """PUR — plie une ligne de contenu à 75 octets (RFC 5545 §3.1).
+
+    Les lignes de continuation commencent par un espace et comptent 74
+    octets utiles. Coupe sur des frontières d'octets UTF-8 valides (on
+    recule si l'octet suivant est une continuation ``10xxxxxx``).
+    """
+    octets = ligne.encode("utf-8")
+    if len(octets) <= 75:
+        return [ligne]
+    morceaux: list[str] = []
+    debut, limite = 0, 75
+    while debut < len(octets):
+        fin = min(debut + limite, len(octets))
+        # Ne pas couper au milieu d'un caractère multi-octets.
+        while fin < len(octets) and (octets[fin] & 0xC0) == 0x80:
+            fin -= 1
+        prefixe = " " if morceaux else ""
+        morceaux.append(prefixe + octets[debut:fin].decode("utf-8"))
+        debut, limite = fin, 74
+    return morceaux
+
+
+def _uid_ics(echeance: dict[str, Any]) -> str:
+    """PUR — UID déterministe et stable d'une échéance.
+
+    ``{mission_id}-{impot normalisé}-{date}@revuefiscale`` : ne dépend
+    que de la mission, de l'impôt et de la date limite (stable entre
+    deux exports — les agendas mettent à jour l'événement au lieu de le
+    dupliquer). L'impôt est réduit à un jeton ASCII sûr pour un UID.
+    L'obligation normalisée est ajoutée si nécessaire pour distinguer
+    deux obligations du même impôt à la même date.
+    """
+    impot = _jeton_uid(str(echeance["impot"]))
+    obligation = _jeton_uid(str(echeance.get("obligation") or ""))
+    base = f"{int(echeance['mission_id'])}-{impot}-{echeance['date_limite']}"
+    if obligation:
+        base = f"{base}-{obligation}"
+    return f"{base}@revuefiscale"
+
+
+def _jeton_uid(valeur: str) -> str:
+    """PUR — réduit un libellé à un jeton ``[a-z0-9-]`` (UID lisible)."""
+    sans_accents = "".join(
+        c
+        for c in unicodedata.normalize("NFKD", valeur.lower())
+        if not unicodedata.combining(c)
+    )
+    jeton = "".join(c if c.isalnum() else "-" for c in sans_accents)
+    while "--" in jeton:
+        jeton = jeton.replace("--", "-")
+    return jeton.strip("-")
+
+
+def generer_ics(echeances: list[dict[str, Any]], aujourd_hui: date) -> str:
+    """PUR — calendrier iCalendar (RFC 5545) des échéances de l'agenda.
+
+    Un ``VEVENT`` par échéance : événement « journée entière »
+    (``DTSTART;VALUE=DATE``), ``SUMMARY`` « [impot] obligation —
+    client », ``DESCRIPTION`` avec période / mission / statut,
+    ``CATEGORIES`` reprenant le statut et ``UID`` déterministe stable
+    (:func:`_uid_ics`). ``DTSTAMP`` figé sur ``aujourd_hui`` à minuit
+    UTC — sortie entièrement déterministe pour des entrées données.
+    Texte brut, aucune dépendance ; lignes pliées à 75 octets, fins de
+    ligne CRLF.
+    """
+    horodatage = f"{aujourd_hui.strftime('%Y%m%d')}T000000Z"
+    lignes: list[str] = [
+        "BEGIN:VCALENDAR",
+        "VERSION:2.0",
+        f"PRODID:{_ICS_PRODID}",
+        "CALSCALE:GREGORIAN",
+        "METHOD:PUBLISH",
+        "X-WR-CALNAME:Agenda fiscal du cabinet",
+    ]
+    for e in echeances:
+        date_limite = date.fromisoformat(str(e["date_limite"]))
+        statut = str(e.get("statut") or STATUT_A_PREPARER)
+        resume = (
+            f"[{e['impot']}] {e['obligation']} — {e.get('client') or ''}"
+        ).rstrip(" —")
+        description = (
+            f"Période : {e.get('periode') or '—'}\n"
+            f"Mission : #{int(e['mission_id'])}"
+            + (f" — {e['client']}" if e.get("client") else "")
+            + "\nStatut : "
+            + ("couverte" if statut == STATUT_COUVERTE else "à préparer")
+        )
+        lignes += [
+            "BEGIN:VEVENT",
+            f"UID:{_uid_ics(e)}",
+            f"DTSTAMP:{horodatage}",
+            f"DTSTART;VALUE=DATE:{date_limite.strftime('%Y%m%d')}",
+            f"SUMMARY:{_echapper_ics(resume)}",
+            f"DESCRIPTION:{_echapper_ics(description)}",
+            f"CATEGORIES:{_echapper_ics(statut)}",
+            "END:VEVENT",
+        ]
+    lignes.append("END:VCALENDAR")
+    pliees: list[str] = []
+    for ligne in lignes:
+        pliees.extend(_plier_ligne_ics(ligne))
+    return _ICS_FIN_LIGNE.join(pliees) + _ICS_FIN_LIGNE
 
 
 # ── Lecture cabinet (RLS) ────────────────────────────────────────────

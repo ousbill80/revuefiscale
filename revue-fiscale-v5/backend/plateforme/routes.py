@@ -3448,3 +3448,46 @@ def api_agenda_fiscal_cabinet(
         },
     )
     return agenda
+
+
+@router.get("/cabinet/agenda-fiscal.ics")
+def api_agenda_fiscal_cabinet_ics(
+    utilisateur: UtilisateurDep,
+    session: Annotated[Session, Depends(session_abonne)],
+    jours: Annotated[int, Query(ge=1, le=90)] = 30,
+) -> Response:
+    """Export iCalendar (RFC 5545) de l'agenda fiscal du cabinet.
+
+    Mêmes échéances que ``GET /cabinet/agenda-fiscal`` (fenêtre
+    ``jours``, 1 à 90, défaut 30) au format ``text/calendar`` : un
+    événement journée entière par échéance, importable dans tout
+    agenda (Outlook, Google Agenda…). Déterministe — UID stables.
+    """
+    from datetime import date as _date
+
+    from backend.moteur.journal import append_journal
+    from backend.plateforme.agenda_cabinet import agenda_cabinet, generer_ics
+
+    exiger_capacite(utilisateur, "lire")
+    agenda = agenda_cabinet(session, utilisateur.tenant_id, jours=jours)
+    contenu = generer_ics(
+        agenda["echeances"], _date.fromisoformat(agenda["aujourd_hui"])
+    )
+    append_journal(
+        session,
+        tenant_id=utilisateur.tenant_id,
+        mission_id=None,
+        acteur=utilisateur.email,
+        action="consultation_agenda_cabinet_ics",
+        charge_utile={
+            "jours": agenda["jours"],
+            "total": agenda["synthese"]["total"],
+        },
+    )
+    return Response(
+        content=contenu,
+        media_type="text/calendar; charset=utf-8",
+        headers={
+            "Content-Disposition": 'attachment; filename="agenda-fiscal.ics"'
+        },
+    )

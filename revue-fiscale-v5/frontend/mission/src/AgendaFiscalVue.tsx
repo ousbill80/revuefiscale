@@ -1,5 +1,5 @@
 import { useEffect, useMemo, useState } from "react";
-import { api } from "./api";
+import { api, telecharger } from "./api";
 import { LIBELLES_IMPOT, type CodeImpotPivot } from "./impotLabels";
 
 /** Agenda fiscal du cabinet (GET /api/v1/cabinet/agenda-fiscal?jours=N). */
@@ -68,6 +68,24 @@ export function AgendaFiscalVue({ jeton, onOuvrirMission }: Props) {
   const [agenda, setAgenda] = useState<AgendaFiscalOut | null>(null);
   const [busy, setBusy] = useState(false);
   const [err, setErr] = useState<string | null>(null);
+  const [exportBusy, setExportBusy] = useState(false);
+
+  async function exporterIcs() {
+    if (!jeton || exportBusy) return;
+    setExportBusy(true);
+    setErr(null);
+    try {
+      await telecharger(
+        `/api/v1/cabinet/agenda-fiscal.ics?jours=${jours}`,
+        jeton,
+        "agenda-fiscal.ics",
+      );
+    } catch {
+      setErr("Export du calendrier impossible pour le moment.");
+    } finally {
+      setExportBusy(false);
+    }
+  }
 
   useEffect(() => {
     if (!jeton) return;
@@ -126,6 +144,15 @@ export function AgendaFiscalVue({ jeton, onOuvrirMission }: Props) {
               {n} j
             </button>
           ))}
+          <button
+            type="button"
+            className="agenda2-pastille"
+            title={`Télécharger les échéances (${jours} jours) au format iCalendar`}
+            disabled={exportBusy || !agenda?.echeances.length}
+            onClick={() => void exporterIcs()}
+          >
+            {exportBusy ? "Export…" : "Exporter (.ics)"}
+          </button>
         </div>
       </div>
 

@@ -9,6 +9,7 @@ import pytest
 from backend.plateforme.agenda_cabinet import (
     construire_agenda,
     echeances_dans_fenetre,
+    generer_ics,
     synthese_agenda,
 )
 
@@ -124,6 +125,114 @@ def test_synthese_agenda():
         "couvertes": 0,
         "prochaine_echeance": None,
     }
+
+
+# ── Tests purs — export iCalendar ──────────────────────────────────
+
+
+def _echeance_ics(**surcharges) -> dict:
+    base = {
+        "date_limite": "2025-06-15",
+        "impot": "TVA",
+        "obligation": "Déclaration mensuelle de TVA",
+        "periode": "mai 2025",
+        "mission_id": 7,
+        "client": "SA Alpha FICTIVE",
+        "statut": "a_preparer",
+    }
+    base.update(surcharges)
+    return base
+
+
+def test_ics_structure_vcalendar_et_un_vevent_par_echeance():
+    echeances = [
+        _echeance_ics(),
+        _echeance_ics(impot="ITS", obligation="Déclaration ITS"),
+    ]
+    ics = generer_ics(echeances, date(2025, 6, 1))
+    assert ics.startswith("BEGIN:VCALENDAR\r\n")
+    assert ics.endswith("END:VCALENDAR\r\n")
+    assert "VERSION:2.0" in ics
+    assert "PRODID:" in ics
+    assert ics.count("BEGIN:VEVENT") == 2
+    assert ics.count("END:VEVENT") == 2
+    assert "DTSTART;VALUE=DATE:20250615" in ics
+    assert "DTSTAMP:20250601T000000Z" in ics
+    assert "CATEGORIES:a_preparer" in ics
+    # Fins de ligne CRLF exclusivement (RFC 5545).
+    assert "\n" not in ics.replace("\r\n", "")
+
+
+def test_ics_vide_reste_valide():
+    ics = generer_ics([], date(2025, 6, 1))
+    assert ics.startswith("BEGIN:VCALENDAR\r\n")
+    assert ics.endswith("END:VCALENDAR\r\n")
+    assert "BEGIN:VEVENT" not in ics
+
+
+def test_ics_echappement_virgules_et_points_virgules():
+    ics = generer_ics(
+        [
+            _echeance_ics(
+                client="SARL Un, Deux; Trois FICTIVE",
+                obligation="Déclaration, dépôt; paiement",
+            )
+        ],
+        date(2025, 6, 1),
+    )
+    deplie = ics.replace("\r\n ", "")
+    assert "Un\\, Deux\\; Trois" in deplie
+    assert "Déclaration\\, dépôt\\; paiement" in deplie
+    # DESCRIPTION multi-ligne : retours encodés en « \n » littéral.
+    assert "\\n" in deplie
+
+
+def test_ics_uid_deterministe_et_stable():
+    e = _echeance_ics()
+    ics_1 = generer_ics([e], date(2025, 6, 1))
+    ics_2 = generer_ics([e], date(2025, 6, 1))
+    assert ics_1 == ics_2
+    deplie = ics_1.replace("\r\n ", "")
+    uid = next(
+        l for l in deplie.split("\r\n") if l.startswith("UID:")
+    )
+    assert uid == "UID:7-tva-2025-06-15-declaration-mensuelle-de-tva@revuefiscale"
+    # Deux obligations du même impôt à la même date → UID distincts.
+    autres = generer_ics(
+        [e, _echeance_ics(obligation="Paiement de la TVA")],
+        date(2025, 6, 1),
+    )
+    uids = [
+        l
+        for l in autres.replace("\r\n ", "").split("\r\n")
+        if l.startswith("UID:")
+    ]
+    assert len(uids) == len(set(uids)) == 2
+
+
+def test_ics_lignes_pliees_75_octets_max():
+    ics = generer_ics(
+        [
+            _echeance_ics(
+                client="Société à dénomination particulièrement longue "
+                "pour éprouver le pliage des lignes FICTIVE",
+            )
+        ],
+        date(2025, 6, 1),
+    )
+    for ligne in ics.split("\r\n"):
+        assert len(ligne.encode("utf-8")) <= 75, ligne
+    # Le dépliage restitue le résumé complet (aucun octet perdu).
+    assert "particulièrement longue" in ics.replace("\r\n ", "")
+
+
+def test_ics_summary_format():
+    ics = generer_ics([_echeance_ics()], date(2025, 6, 1))
+    deplie = ics.replace("\r\n ", "")
+    assert (
+        "SUMMARY:[TVA] Déclaration mensuelle de TVA — SA Alpha FICTIVE"
+        in deplie
+    )
 
 
 # ── Tests API (DB) ─────────────────────────────────────────────────
@@ -277,4 +386,41 @@ def test_api_401_sans_jeton(session):
 
     client = TestClient(app)
     r = client.get("/api/v1/cabinet/agenda-fiscal")
+    assert r.status_code == 401, r.text
+
+
+def test_api_agenda_ics_export(session):
+    tid, email = _cabinet(session, "agenda.ics")
+    mid = _mission_en_cours(session, tid, date.today().year)
+    session.commit()
+
+    client, h = _client_connecte(email)
+    r = client.get("/api/v1/cabinet/agenda-fiscal.ics?jours=90", headers=h)
+    assert r.status_code == 200, r.text
+    assert r.headers["content-type"].startswith("text/calendar")
+    assert (
+        r.headers["content-disposition"]
+        == 'attachment; filename="agenda-fiscal.ics"'
+    )
+    corps = r.text
+    assert corps.startswith("BEGIN:VCALENDAR")
+    assert corps.rstrip("\r\n").endswith("END:VCALENDAR")
+    # Au moins un événement (obligations mensuelles du régime réel sur
+    # 90 jours) et l'UID référence bien la mission créée.
+    assert corps.count("BEGIN:VEVENT") >= 1
+    assert f"UID:{mid}-" in corps.replace("\r\n ", "")
+
+    # Cohérence avec l'agenda JSON : autant de VEVENT que d'échéances.
+    rj = client.get("/api/v1/cabinet/agenda-fiscal?jours=90", headers=h)
+    assert rj.status_code == 200
+    assert corps.count("BEGIN:VEVENT") == len(rj.json()["echeances"])
+
+
+def test_api_agenda_ics_401_sans_jeton(session):
+    from fastapi.testclient import TestClient
+
+    from backend.main import app
+
+    client = TestClient(app)
+    r = client.get("/api/v1/cabinet/agenda-fiscal.ics")
     assert r.status_code == 401, r.text
