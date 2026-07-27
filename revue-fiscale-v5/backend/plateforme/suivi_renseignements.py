@@ -48,6 +48,10 @@ class ErreurSuiviDateInvalide(ErreurSuiviRenseignements):
     """Date de relance invalide (passée…) — 422 côté route."""
 
 
+class ErreurSuiviItemDejaRecu(ErreurSuiviRenseignements):
+    """Item déjà reçu ou sans objet — relance sans objet (409 côté route)."""
+
+
 def _mission_existe(session: Session, mission_id: int) -> bool:
     return (
         session.execute(
@@ -84,7 +88,8 @@ def _statuts_enregistres(
 ) -> dict[str, dict[str, Any]]:
     rows = session.execute(
         text(
-            "SELECT cle_item, statut, date_relance, note, maj_le "
+            "SELECT cle_item, statut, date_relance, derniere_relance_le, "
+            "nb_relances, note, maj_le "
             "FROM suivi_demande_renseignements WHERE mission_id = :m"
         ),
         {"m": mission_id},
@@ -110,6 +115,12 @@ def _fusionner(
                     if s and s.get("date_relance")
                     else None
                 ),
+                "derniere_relance_le": (
+                    s["derniere_relance_le"].isoformat()
+                    if s and s.get("derniere_relance_le")
+                    else None
+                ),
+                "nb_relances": int(s.get("nb_relances") or 0) if s else 0,
                 "note": (s.get("note") if s else None) or None,
                 "maj_le": (
                     s["maj_le"].isoformat() if s and s.get("maj_le") else None
@@ -182,7 +193,8 @@ def maj_item(
                 "note = EXCLUDED.note, "
                 "libelle = EXCLUDED.libelle, "
                 "maj_le = now() "
-                "RETURNING cle_item, statut, date_relance, note, maj_le"
+                "RETURNING cle_item, statut, date_relance, "
+                "derniere_relance_le, nb_relances, note, maj_le"
             ),
             {
                 "t": tenant_id,
@@ -276,6 +288,148 @@ def planifier_relances(
             planifiees += 1
     # Pas de commit ici : get_session committe en fin de requête.
     return {"planifiees": planifiees, "deja_planifiees": deja}
+
+
+def _item_pour_relance(
+    session: Session, mission_id: int, cle_item: str
+) -> tuple[dict[str, str], dict[str, Any] | None]:
+    """(item courant, suivi enregistré ou None) — gardes communes.
+
+    Contexte tenant déjà posé par l'appelant. Mission introuvable →
+    :class:`ErreurSuiviIntrouvable` ; mission clôturée →
+    :class:`ErreurSuiviMissionCloturee` ; item inconnu → 404 ; item déjà
+    ``recu`` ou ``sans_objet`` → :class:`ErreurSuiviItemDejaRecu` (409).
+    """
+    statut_mission = session.execute(
+        text("SELECT statut FROM mission WHERE id = :m"),
+        {"m": mission_id},
+    ).scalar_one_or_none()
+    if statut_mission is None:
+        raise ErreurSuiviIntrouvable(f"mission {mission_id} introuvable")
+    if str(statut_mission).lower() == "cloturee":
+        raise ErreurSuiviMissionCloturee(
+            f"mission {mission_id} clôturée — réouvrez-la avant de "
+            "gérer les relances"
+        )
+    items = collecter_items(session, mission_id)
+    items += _items_civisme_persistes(session, mission_id)
+    par_cle = {i["cle_item"]: i for i in items}
+    if cle_item not in par_cle:
+        raise ErreurSuiviIntrouvable(
+            f"item « {cle_item} » inconnu pour la mission {mission_id}"
+        )
+    s = _statuts_enregistres(session, mission_id).get(cle_item)
+    statut = str(s["statut"]) if s else STATUT_DEFAUT
+    if statut != STATUT_DEFAUT:
+        raise ErreurSuiviItemDejaRecu(
+            f"item « {cle_item} » déjà au statut « {statut} » — "
+            "aucune relance à effectuer"
+        )
+    return par_cle[cle_item], s
+
+
+def relance_effectuee(
+    session: Session,
+    tenant_id: int,
+    mission_id: int,
+    cle_item: str,
+    *,
+    aujourd_hui: date | None = None,
+) -> dict[str, Any]:
+    """Marque la relance d'un item comme EFFECTUÉE par le fiscaliste.
+
+    Trace ``derniere_relance_le`` (aujourd'hui), incrémente
+    ``nb_relances`` et efface ``date_relance`` (plus rien de planifié :
+    à re-planifier ou reporter). L'item reste ``en_attente`` — seul le
+    client peut le faire passer « reçu ». Mission hors tenant ou item
+    inconnu → :class:`ErreurSuiviIntrouvable` (404) ; mission clôturée →
+    :class:`ErreurSuiviMissionCloturee` (409) ; item déjà reçu / sans
+    objet → :class:`ErreurSuiviItemDejaRecu` (409).
+
+    Retourne l'item fusionné à jour.
+    """
+    jour = aujourd_hui or date.today()
+    cle_item = str(cle_item or "").strip()
+    with contexte_tenant(session, tenant_id):
+        item, _s = _item_pour_relance(session, mission_id, cle_item)
+        row = session.execute(
+            text(
+                "INSERT INTO suivi_demande_renseignements "
+                "(tenant_id, mission_id, cle_item, libelle, statut, "
+                "derniere_relance_le, nb_relances) "
+                "VALUES (:t, :m, :c, :l, :s, :j, 1) "
+                "ON CONFLICT (tenant_id, mission_id, cle_item) DO UPDATE SET "
+                "date_relance = NULL, "
+                "derniere_relance_le = EXCLUDED.derniere_relance_le, "
+                "nb_relances = suivi_demande_renseignements.nb_relances + 1, "
+                "maj_le = now() "
+                "RETURNING cle_item, statut, date_relance, "
+                "derniere_relance_le, nb_relances, note, maj_le"
+            ),
+            {
+                "t": tenant_id,
+                "m": mission_id,
+                "c": cle_item,
+                "l": item["libelle"],
+                "s": STATUT_DEFAUT,
+                "j": jour,
+            },
+        ).mappings().one()
+    # Pas de commit ici : get_session committe en fin de requête.
+    return _fusionner([item], {cle_item: dict(row)})[0]
+
+
+def reporter_relance(
+    session: Session,
+    tenant_id: int,
+    mission_id: int,
+    cle_item: str,
+    nouvelle_date: date,
+    *,
+    aujourd_hui: date | None = None,
+) -> dict[str, Any]:
+    """Reporte la relance d'un item à une nouvelle date.
+
+    Nouvelle date passée → :class:`ErreurSuiviDateInvalide` (422) ;
+    mission hors tenant ou item inconnu →
+    :class:`ErreurSuiviIntrouvable` (404) ; mission clôturée →
+    :class:`ErreurSuiviMissionCloturee` (409) ; item déjà reçu / sans
+    objet → :class:`ErreurSuiviItemDejaRecu` (409).
+
+    Retourne l'item fusionné à jour.
+    """
+    jour = aujourd_hui or date.today()
+    if nouvelle_date < jour:
+        raise ErreurSuiviDateInvalide(
+            f"date de relance {nouvelle_date.isoformat()} déjà passée — "
+            "choisissez une date à partir d'aujourd'hui"
+        )
+    cle_item = str(cle_item or "").strip()
+    with contexte_tenant(session, tenant_id):
+        item, _s = _item_pour_relance(session, mission_id, cle_item)
+        row = session.execute(
+            text(
+                "INSERT INTO suivi_demande_renseignements "
+                "(tenant_id, mission_id, cle_item, libelle, statut, "
+                "date_relance) "
+                "VALUES (:t, :m, :c, :l, :s, :d) "
+                "ON CONFLICT (tenant_id, mission_id, cle_item) DO UPDATE SET "
+                "date_relance = EXCLUDED.date_relance, "
+                "maj_le = now() "
+                "RETURNING cle_item, statut, date_relance, "
+                "derniere_relance_le, nb_relances, note, maj_le"
+            ),
+            {
+                "t": tenant_id,
+                "m": mission_id,
+                "c": cle_item,
+                "l": item["libelle"],
+                "s": STATUT_DEFAUT,
+                "d": nouvelle_date,
+            },
+        ).mappings().one()
+    # Pas de commit ici : get_session committe en fin de requête.
+    return _fusionner([item], {cle_item: dict(row)})[0]
 
 
 def synthese_depuis_items(items: list[dict[str, Any]]) -> dict[str, int]:

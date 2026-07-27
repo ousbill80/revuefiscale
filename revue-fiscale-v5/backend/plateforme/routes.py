@@ -1008,6 +1008,124 @@ def api_planifier_relances(
     return resultat
 
 
+@router.post(
+    "/missions/{mission_id}/suivi-renseignements/{cle_item}/relance-effectuee"
+)
+def api_relance_effectuee(
+    mission_id: int,
+    cle_item: str,
+    utilisateur: UtilisateurDep,
+    session: Annotated[Session, Depends(session_abonne)],
+) -> dict:
+    """Marque la relance d'un item comme effectuée par le fiscaliste.
+
+    Trace la date de dernière relance, incrémente le compteur et efface
+    la date planifiée. Item déjà reçu ou mission clôturée → 409 ;
+    mission ou item hors tenant → 404 (RLS).
+    """
+    from backend.moteur.journal import append_journal
+    from backend.plateforme.suivi_renseignements import (
+        ErreurSuiviIntrouvable,
+        ErreurSuiviItemDejaRecu,
+        ErreurSuiviMissionCloturee,
+        lister_items,
+        relance_effectuee,
+        synthese_depuis_items,
+    )
+
+    exiger_capacite(utilisateur, "executer_mission")
+    try:
+        item = relance_effectuee(
+            session, utilisateur.tenant_id, mission_id, cle_item
+        )
+    except ErreurSuiviIntrouvable as e:
+        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail=str(e)) from e
+    except (ErreurSuiviMissionCloturee, ErreurSuiviItemDejaRecu) as e:
+        raise HTTPException(
+            status_code=status.HTTP_409_CONFLICT, detail=str(e)
+        ) from e
+    append_journal(
+        session,
+        tenant_id=utilisateur.tenant_id,
+        mission_id=mission_id,
+        acteur=utilisateur.email,
+        action="relance_effectuee",
+        charge_utile={
+            "cle_item": item["cle_item"],
+            "derniere_relance_le": item["derniere_relance_le"],
+            "nb_relances": item["nb_relances"],
+        },
+    )
+    items = lister_items(session, utilisateur.tenant_id, mission_id)
+    return {"item": item, "synthese": synthese_depuis_items(items)}
+
+
+class ReporterRelanceIn(BaseModel):
+    """Report de la relance d'un item à une nouvelle date."""
+
+    date_relance: datetime.date
+
+
+@router.post(
+    "/missions/{mission_id}/suivi-renseignements/{cle_item}/reporter"
+)
+def api_reporter_relance(
+    mission_id: int,
+    cle_item: str,
+    corps: ReporterRelanceIn,
+    utilisateur: UtilisateurDep,
+    session: Annotated[Session, Depends(session_abonne)],
+) -> dict:
+    """Reporte la relance d'un item à une nouvelle date.
+
+    Date passée → 422 ; item déjà reçu ou mission clôturée → 409 ;
+    mission ou item hors tenant → 404 (RLS).
+    """
+    from backend.moteur.journal import append_journal
+    from backend.plateforme.suivi_renseignements import (
+        ErreurSuiviDateInvalide,
+        ErreurSuiviIntrouvable,
+        ErreurSuiviItemDejaRecu,
+        ErreurSuiviMissionCloturee,
+        lister_items,
+        reporter_relance,
+        synthese_depuis_items,
+    )
+
+    exiger_capacite(utilisateur, "executer_mission")
+    try:
+        item = reporter_relance(
+            session,
+            utilisateur.tenant_id,
+            mission_id,
+            cle_item,
+            corps.date_relance,
+        )
+    except ErreurSuiviIntrouvable as e:
+        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail=str(e)) from e
+    except (ErreurSuiviMissionCloturee, ErreurSuiviItemDejaRecu) as e:
+        raise HTTPException(
+            status_code=status.HTTP_409_CONFLICT, detail=str(e)
+        ) from e
+    except ErreurSuiviDateInvalide as e:
+        raise HTTPException(
+            status_code=status.HTTP_422_UNPROCESSABLE_ENTITY, detail=str(e)
+        ) from e
+    append_journal(
+        session,
+        tenant_id=utilisateur.tenant_id,
+        mission_id=mission_id,
+        acteur=utilisateur.email,
+        action="report_relance",
+        charge_utile={
+            "cle_item": item["cle_item"],
+            "date_relance": item["date_relance"],
+        },
+    )
+    items = lister_items(session, utilisateur.tenant_id, mission_id)
+    return {"item": item, "synthese": synthese_depuis_items(items)}
+
+
 class ReponseClientIn(BaseModel):
     """Saisie de la réponse client d'un item de circularisation."""
 

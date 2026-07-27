@@ -196,6 +196,8 @@ type SuiviItem = {
   libelle: string;
   statut: SuiviStatut;
   date_relance: string | null;
+  derniere_relance_le: string | null;
+  nb_relances: number;
   note: string | null;
   maj_le: string | null;
 };
@@ -623,6 +625,9 @@ export function RestitutionVue({
   const [suiviErr, setSuiviErr] = useState<string | null>(null);
   const [suiviBusyCle, setSuiviBusyCle] = useState<string | null>(null);
   const [suiviNotes, setSuiviNotes] = useState<Record<string, string>>({});
+  const [reportCle, setReportCle] = useState<string | null>(null);
+  const [reportDate, setReportDate] = useState("");
+  const [relanceItemMsg, setRelanceItemMsg] = useState<string | null>(null);
   const [reponses, setReponses] = useState<Record<string, ReponseClient>>({});
   const [reponseOuverteCle, setReponseOuverteCle] = useState<string | null>(
     null,
@@ -1381,6 +1386,55 @@ export function RestitutionVue({
       );
     } finally {
       setPlanifBusy(false);
+    }
+  }
+
+  async function relanceFaite(it: SuiviItem): Promise<void> {
+    if (!jeton || !r.mission_id || suiviBusyCle) return;
+    setSuiviBusyCle(it.cle_item);
+    setSuiviErr(null);
+    setRelanceItemMsg(null);
+    try {
+      const out = await api<{ item: SuiviItem; synthese: SuiviSynthese }>(
+        `/api/v1/missions/${r.mission_id}/suivi-renseignements/${encodeURIComponent(it.cle_item)}/relance-effectuee`,
+        { jeton, method: "POST" },
+      );
+      const n = out?.item.nb_relances ?? 0;
+      setRelanceItemMsg(
+        `Relance enregistrée (${n} relance${n > 1 ? "s" : ""} au total)`,
+      );
+      await chargerSuivi();
+    } catch (e) {
+      setSuiviErr(
+        e instanceof Error ? e.message : "relance impossible à enregistrer",
+      );
+    } finally {
+      setSuiviBusyCle(null);
+    }
+  }
+
+  async function reporterRelance(it: SuiviItem): Promise<void> {
+    if (!jeton || !r.mission_id || suiviBusyCle || !reportDate) return;
+    setSuiviBusyCle(it.cle_item);
+    setSuiviErr(null);
+    setRelanceItemMsg(null);
+    try {
+      const out = await api<{ item: SuiviItem; synthese: SuiviSynthese }>(
+        `/api/v1/missions/${r.mission_id}/suivi-renseignements/${encodeURIComponent(it.cle_item)}/reporter`,
+        { jeton, method: "POST", json: { date_relance: reportDate } },
+      );
+      setRelanceItemMsg(
+        `Relance reportée au ${out?.item.date_relance ?? reportDate}`,
+      );
+      setReportCle(null);
+      setReportDate("");
+      await chargerSuivi();
+    } catch (e) {
+      setSuiviErr(
+        e instanceof Error ? e.message : "report de la relance impossible",
+      );
+    } finally {
+      setSuiviBusyCle(null);
     }
   }
 
@@ -3108,6 +3162,11 @@ export function RestitutionVue({
               {suiviErr}
             </p>
           )}
+          {relanceItemMsg && (
+            <p className="muted rest-suivi-relance-msg" role="status">
+              {relanceItemMsg}
+            </p>
+          )}
           {suivi && suivi.items.length === 0 && (
             <p className="muted">
               Aucun item demandable : générez d'abord le commentaire
@@ -3166,6 +3225,98 @@ export function RestitutionVue({
                           }
                         />
                       </label>
+                      {it.statut === "en_attente" && it.date_relance && (
+                        <span className="rest-suivi-relance-actions">
+                          <Tooltip label="Marque la relance comme effectuée : la date de dernière relance est tracée, le compteur incrémenté et la date planifiée effacée">
+                            <button
+                              type="button"
+                              className="btn btn-ghost btn-sm rest-suivi-relance-faite"
+                              disabled={
+                                estLecteur ||
+                                estCloturee ||
+                                suiviBusyCle === it.cle_item ||
+                                !jeton
+                              }
+                              onClick={() => void relanceFaite(it)}
+                            >
+                              Relance faite
+                            </button>
+                          </Tooltip>
+                          {reportCle === it.cle_item ? (
+                            <>
+                              <input
+                                type="date"
+                                className="rest-suivi-report-date"
+                                aria-label="Nouvelle date de relance"
+                                value={reportDate}
+                                disabled={
+                                  estLecteur ||
+                                  estCloturee ||
+                                  suiviBusyCle === it.cle_item
+                                }
+                                onChange={(e) =>
+                                  setReportDate(e.target.value)
+                                }
+                              />
+                              <button
+                                type="button"
+                                className="btn btn-ghost btn-sm"
+                                disabled={
+                                  estLecteur ||
+                                  estCloturee ||
+                                  suiviBusyCle === it.cle_item ||
+                                  !reportDate ||
+                                  !jeton
+                                }
+                                onClick={() => void reporterRelance(it)}
+                              >
+                                Confirmer le report
+                              </button>
+                              <button
+                                type="button"
+                                className="btn btn-ghost btn-sm"
+                                disabled={suiviBusyCle === it.cle_item}
+                                onClick={() => {
+                                  setReportCle(null);
+                                  setReportDate("");
+                                }}
+                              >
+                                Annuler
+                              </button>
+                            </>
+                          ) : (
+                            <Tooltip label="Reporte la relance de cet item à une nouvelle date (à partir d'aujourd'hui)">
+                              <button
+                                type="button"
+                                className="btn btn-ghost btn-sm rest-suivi-relance-report"
+                                disabled={
+                                  estLecteur ||
+                                  estCloturee ||
+                                  suiviBusyCle === it.cle_item ||
+                                  !jeton
+                                }
+                                onClick={() => {
+                                  setReportCle(it.cle_item);
+                                  setReportDate(it.date_relance ?? "");
+                                }}
+                              >
+                                Reporter
+                              </button>
+                            </Tooltip>
+                          )}
+                        </span>
+                      )}
+                      {it.nb_relances > 0 && (
+                        <span className="muted rest-suivi-relance-trace">
+                          Relancé {it.nb_relances} fois
+                          {it.derniere_relance_le
+                            ? ` (dernière le ${it.derniere_relance_le
+                                .split("-")
+                                .reverse()
+                                .join("/")})`
+                            : ""}
+                        </span>
+                      )}
                       <label className="rest-suivi-champ rest-suivi-note">
                         Note{" "}
                         <input
