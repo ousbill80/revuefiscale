@@ -1534,6 +1534,35 @@ def api_provision_risques_contribuable(
         ) from e
 
 
+@router.get("/contribuables/{contribuable_id}/historique")
+def api_historique_contribuable(
+    contribuable_id: int,
+    utilisateur: UtilisateurDep,
+    session: Annotated[Session, Depends(session_abonne)],
+) -> dict:
+    """Vision pluriannuelle du contribuable (récurrence, prescription).
+
+    Pour chaque exercice/mission : statut, exécutions, répartition des
+    conclusions de la dernière exécution, montant des anomalies et
+    tendance vs exercice précédent — plus les risques encore ouverts.
+    Déterministe, lecture seule. 404 si fiche hors tenant (RLS).
+    """
+    from backend.plateforme.historique_contribuable import (
+        ErreurHistoriqueContribuable,
+        construire_historique,
+    )
+
+    exiger_capacite(utilisateur, "lire")
+    try:
+        return construire_historique(
+            session, utilisateur.tenant_id, contribuable_id
+        )
+    except ErreurHistoriqueContribuable as e:
+        raise HTTPException(
+            status_code=status.HTTP_404_NOT_FOUND, detail=str(e)
+        ) from e
+
+
 # ── Data Room : mémoire client + timeline ──────────────────────────
 
 

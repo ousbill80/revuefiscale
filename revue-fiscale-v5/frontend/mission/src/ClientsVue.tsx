@@ -32,6 +32,7 @@ import {
   nouvelleSessionUpload,
 } from "./PiecesContribuable";
 import { DataRoomPanel } from "./DataRoomPanel";
+import { HistoriqueContribuablePanel } from "./HistoriqueContribuable";
 import {
   RegistreRisquesVue,
   tipInterpretationScoreRisque,
@@ -1381,12 +1382,13 @@ type FicheProps = {
 };
 
 type FiltreMissionsFiche = "toutes" | "actives" | "cloturees";
-type FicheTab = "overview" | "risques" | "missions" | "dataroom";
+type FicheTab = "overview" | "risques" | "missions" | "historique" | "dataroom";
 
 const FICHE_TABS: ReadonlyArray<{ id: FicheTab; label: string }> = [
   { id: "overview", label: "Vue d’ensemble" },
   { id: "risques", label: "Risques" },
   { id: "missions", label: "Missions" },
+  { id: "historique", label: "Historique" },
   { id: "dataroom", label: "Data Room" },
 ];
 
@@ -1396,11 +1398,16 @@ function hashFicheTab(clientId: number, tab: FicheTab): string {
 
 function tabDepuisHash(clientId: number): FicheTab {
   const m = new RegExp(
-    `^#fiche-${clientId}-(overview|identite|pieces|risques|missions|dataroom)$`,
+    `^#fiche-${clientId}-(overview|identite|pieces|risques|missions|historique|dataroom)$`,
   ).exec(window.location.hash || "");
   const brut = m?.[1];
   // Rétro-compat : identité et pièces vivent dans la vue d'ensemble.
-  if (brut === "risques" || brut === "missions" || brut === "dataroom")
+  if (
+    brut === "risques" ||
+    brut === "missions" ||
+    brut === "historique" ||
+    brut === "dataroom"
+  )
     return brut;
   return "overview";
 }
@@ -2102,6 +2109,21 @@ export function ClientFicheVue({
             jeton={jeton}
             contribuableId={clientDetail.id}
             estLecteur={estLecteur}
+          />
+        </div>
+      )}
+
+      {ficheTab === "historique" && (
+        <div
+          className="clients-fiche-tab-panel"
+          id={`fiche-${clientDetail.id}-panel-historique`}
+          role="tabpanel"
+          aria-labelledby={`fiche-${clientDetail.id}-tab-historique`}
+        >
+          <HistoriqueContribuablePanel
+            jeton={jeton}
+            contribuableId={clientDetail.id}
+            onOuvrirMission={onOuvrirMission}
           />
         </div>
       )}
