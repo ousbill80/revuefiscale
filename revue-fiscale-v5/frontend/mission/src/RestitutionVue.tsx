@@ -406,6 +406,8 @@ type Props = {
   collaborateurs?: CollaborateurOpt[];
   onExport: (kind: "docx" | "pdf") => void;
   onAudit: () => void;
+  /** Ouvre la fiche client (bandeau mission). */
+  onOuvrirClient?: (contribuableId: number) => void;
   onLienClient?: () => void;
   onCopierLien?: () => void;
   lienMsg?: string | null;
@@ -539,6 +541,7 @@ export function RestitutionVue({
   collaborateurs: collaborateursProp,
   onExport,
   onAudit,
+  onOuvrirClient,
   onLienClient,
   onCopierLien,
   lienMsg,
@@ -897,6 +900,55 @@ export function RestitutionVue({
       annule = true;
     };
   }, [noteOuverte, jeton, r.mission_id, noteVersionSel]);
+
+  /**
+   * Poste de travail : un seul panneau ouvert à la fois.
+   * Ferme tous les panneaux d'outil sauf celui passé en argument.
+   */
+  type PanneauId =
+    | "pilotage"
+    | "suivi"
+    | "temps"
+    | "programme"
+    | "echeancier"
+    | "prescription"
+    | "visas"
+    | "note"
+    | "comparatif"
+    | "ctrlCloture";
+
+  function fermerPanneaux(sauf?: PanneauId) {
+    if (sauf !== "pilotage") setPilotageOuvert(false);
+    if (sauf !== "suivi") setSuiviOuvert(false);
+    if (sauf !== "temps") setTempsOuvert(false);
+    if (sauf !== "programme") setProgOuvert(false);
+    if (sauf !== "echeancier") setEcheancierOuvert(false);
+    if (sauf !== "prescription") setPrescriptionOuverte(false);
+    if (sauf !== "visas") setVisasOuvert(false);
+    if (sauf !== "note") setNoteOuverte(false);
+    if (sauf !== "comparatif") setComparatifOuvert(false);
+    if (sauf !== "ctrlCloture" && ctrlClotureOuvert) {
+      setCtrlClotureOuvert(false);
+      setCtrlCloture(null);
+      setCtrlClotureErr(null);
+    }
+  }
+
+  /** Toggle standard d'un panneau : ferme les autres, ouvre/ferme celui-ci. */
+  function togglePanneau(
+    id: PanneauId,
+    ouvert: boolean,
+    setOuvert: (v: boolean) => void,
+    onOuverture?: () => void,
+  ) {
+    fermerPanneaux(id);
+    if (ouvert) {
+      setOuvert(false);
+    } else {
+      setOuvert(true);
+      onOuverture?.();
+    }
+  }
 
   /** Étape intermédiaire avant clôture : revue qualité consultative. */
   async function ouvrirControleCloture() {
@@ -2034,299 +2086,429 @@ export function RestitutionVue({
 
   return (
     <div className="rest-artifact rest-vue" ref={rootRef}>
-      <div className="rest-toolbar" role="toolbar" aria-label="Actions restitution">
-        <div className="rest-toolbar-brand">
-          <span className="rest-toolbar-mark" aria-hidden="true" />
-          <span className="label-with-tip">
-            Artefact · Restitution
-            <InfoTip
-              label={PROCESS_TIPS.artefact}
-              ariaLabel="Aide : artefact restitution"
-            />
+      <div className="dossier2-bandeau" role="region" aria-label="Bandeau mission">
+        <div className="dossier2-bandeau-id">
+          <span className="dossier2-mark" aria-hidden="true" />
+          {onOuvrirClient && id.contribuable_id != null ? (
+            <Tooltip label="Ouvrir la fiche client">
+              <button
+                type="button"
+                className="dossier2-client-lien"
+                onClick={() => onOuvrirClient(id.contribuable_id!)}
+              >
+                {id.contribuable_denomination || `Mission #${r.mission_id}`}
+              </button>
+            </Tooltip>
+          ) : (
+            <strong className="dossier2-client-nom">
+              {id.contribuable_denomination || `Mission #${r.mission_id}`}
+            </strong>
+          )}
+          {id.exercice != null && (
+            <span className="dossier2-bandeau-meta">
+              Exercice {id.exercice}
+            </span>
+          )}
+          <span className={`badge statut-${statutMission}`}>
+            {libelleStatut(statutMission)}
           </span>
+          {id.type_engagement_libelle ? (
+            <span className="dossier2-bandeau-meta">
+              {id.type_engagement_libelle}
+            </span>
+          ) : null}
+          {id.contribuable_regime_fiscal || profil.regime ? (
+            <span className="dossier2-bandeau-meta">
+              {id.contribuable_regime_fiscal || String(profil.regime)}
+            </span>
+          ) : null}
+          <InfoTip
+            label={PROCESS_TIPS.artefact}
+            ariaLabel="Aide : artefact restitution"
+          />
         </div>
-        <div className="rest-toolbar-actions">
-          <Tooltip label={PROCESS_TIPS.exportWord}>
-            <button
-              type="button"
-              className="btn btn-ghost btn-sm"
-              onClick={() => onExport("docx")}
-              disabled={sansExecution}
-            >
-              Word
-            </button>
-          </Tooltip>
-          <Tooltip label={PROCESS_TIPS.exportPdf}>
-            <button
-              type="button"
-              className="btn btn-ghost btn-sm"
-              onClick={() => onExport("pdf")}
-              disabled={sansExecution}
-            >
-              PDF
-            </button>
-          </Tooltip>
-          <Tooltip label="Lettre de mission (.docx) générée depuis le cadrage — à personnaliser et faire signer avant les travaux. Champs manquants : [à compléter].">
-            <button
-              type="button"
-              className="btn btn-ghost btn-sm rest-lettre-btn"
-              onClick={() => void telechargerLettreMission()}
-              disabled={lettreBusy || !jeton}
-            >
-              {lettreBusy ? "Lettre…" : "Lettre de mission"}
-            </button>
-          </Tooltip>
-          {lettreErr && (
-            <span className="rest-lettre-err" role="alert">
-              {lettreErr}
+        <div className="dossier2-bandeau-indics">
+          {r.execution_id != null && (
+            <span className="dossier2-indic">
+              Exécution #{r.execution_id}
             </span>
           )}
-          <Tooltip label="Courrier d'envoi du rapport (.docx) — lettre d'accompagnement à en-tête du cabinet : livrables remis, principaux constats chiffrés, invitation à la réunion de restitution, signature associé.">
-            <button
-              type="button"
-              className="btn btn-ghost btn-sm rest-courrier-envoi-btn"
-              onClick={() => void telechargerCourrierEnvoi()}
-              disabled={courrierEnvoiBusy || !jeton}
-            >
-              {courrierEnvoiBusy ? "Courrier…" : "Courrier d'envoi"}
-            </button>
-          </Tooltip>
-          {courrierEnvoiErr && (
-            <span className="rest-lettre-err" role="alert">
-              {courrierEnvoiErr}
+          {progEtat && (
+            <span className="dossier2-indic">
+              Programme {progEtat.synthese.faites}/{progEtat.synthese.total}
             </span>
           )}
-          <Tooltip label="Lettre d'affirmation de la direction (.docx) — à en-tête du client, adressée au cabinet : la direction confirme l'exhaustivité des informations transmises (comptabilité/FEC, déclarations, litiges et contrôles en cours, passifs fiscaux, réponses). À faire signer par le représentant légal avant la clôture.">
-            <button
-              type="button"
-              className="btn btn-ghost btn-sm rest-affirmation-btn"
-              onClick={() => void telechargerLettreAffirmation()}
-              disabled={affirmationBusy || !jeton}
-            >
-              {affirmationBusy ? "Lettre…" : "Lettre d'affirmation"}
-            </button>
-          </Tooltip>
-          {affirmationErr && (
-            <span className="rest-lettre-err" role="alert">
-              {affirmationErr}
-            </span>
-          )}
-          <Tooltip label="Demande de renseignements et de documents au client — questions de la revue analytique et pièces manquantes, numérotées pour réponse">
-            <button
-              type="button"
-              className="btn btn-ghost btn-sm rest-demande-btn"
-              onClick={() => void telechargerDemandeRenseignements()}
-              disabled={demandeBusy || !jeton}
-            >
-              {demandeBusy ? "Demande…" : "Demande de renseignements"}
-            </button>
-          </Tooltip>
-          {demandeErr && (
-            <span className="rest-lettre-err" role="alert">
-              {demandeErr}
-            </span>
-          )}
-          <Tooltip label="Pilotage de mission : synthèse transverse en un coup d'œil — avancement du programme, contrôle de pré-clôture, temps passés, rentabilité, visas et conclusions de la dernière exécution.">
-            <button
-              type="button"
-              className="btn btn-ghost btn-sm rest-pilotage-btn"
-              onClick={() => setPilotageOuvert((o) => !o)}
-              disabled={!jeton}
-              aria-expanded={pilotageOuvert}
-            >
-              Pilotage
-            </button>
-          </Tooltip>
           {suivi && suivi.synthese.total > 0 && (
-            <Tooltip label="Suivi des réponses client à la demande de renseignements : marquez chaque item reçu / sans objet, planifiez les relances.">
-              <button
-                type="button"
-                className="btn btn-ghost btn-sm rest-suivi-btn"
-                onClick={() => {
-                  setSuiviOuvert((o) => !o);
-                  if (!suiviOuvert) {
-                    void chargerSuivi();
-                    void chargerReponses();
-                  }
-                }}
-                aria-expanded={suiviOuvert}
-              >
-                <span
-                  className={`rest-suivi-compteur${
-                    suivi.synthese.a_relancer > 0 ? " relance" : ""
-                  }`}
-                >
-                  {suivi.synthese.recu}/{suivi.synthese.total} reçues
-                  {suivi.synthese.a_relancer > 0
-                    ? ` · ${suivi.synthese.a_relancer} à relancer`
-                    : ""}
-                </span>
-              </button>
-            </Tooltip>
-          )}
-          <Tooltip label="Temps passés sur la mission : chaque collaborateur saisit ses heures par phase et par jour — total, répartition et valorisation pour piloter la rentabilité.">
-            <button
-              type="button"
-              className="btn btn-ghost btn-sm rest-temps-btn"
-              onClick={() => {
-                setTempsOuvert((o) => !o);
-                if (!tempsOuvert) void chargerTemps();
-              }}
-              disabled={!jeton}
-              aria-expanded={tempsOuvert}
+            <span
+              className={`dossier2-indic${
+                suivi.synthese.a_relancer > 0 ? " is-alerte" : ""
+              }`}
             >
-              Temps passés
-            </button>
-          </Tooltip>
-          <Tooltip label="Programme de travail standard : diligences par phase que le collaborateur coche au fil de l'exécution — avancement par phase et global. Complète les visas de supervision.">
-            <button
-              type="button"
-              className="btn btn-ghost btn-sm rest-programme-btn"
-              onClick={() => {
-                setProgOuvert((o) => !o);
-                if (!progOuvert) void chargerProgramme();
-              }}
-              disabled={!jeton}
-              aria-expanded={progOuvert}
-            >
-              Programme
-            </button>
-          </Tooltip>
-          <Tooltip label="Échéancier fiscal de l'exercice revu : calendrier déterministe des obligations déclaratives et de paiement selon le régime du profil mission — dates indicatives, sans calcul d'impôt.">
-            <button
-              type="button"
-              className="btn btn-ghost btn-sm rest-echeancier-btn"
-              onClick={() => setEcheancierOuvert((o) => !o)}
-              disabled={!jeton}
-              aria-expanded={echeancierOuvert}
-            >
-              Échéancier fiscal
-            </button>
-          </Tooltip>
-          <Tooltip label="Prescription des risques : analyse déterministe du délai de reprise de droit commun — risques prescrits à basculer, proches de prescription (<12 mois) et non prescrits, avec exposition prescrite. Consultative : l'humain décide.">
-            <button
-              type="button"
-              className="btn btn-ghost btn-sm rest-prescription-btn"
-              onClick={() => setPrescriptionOuverte((o) => !o)}
-              disabled={!jeton}
-              aria-expanded={prescriptionOuverte}
-            >
-              Prescription
-            </button>
-          </Tooltip>
-          <Tooltip label="Visas de supervision par phase : le préparateur atteste son travail, le réviseur revoit, l'associé signe — dans cet ordre. Registre formel exigé par les normes d'exercice professionnel.">
-            <button
-              type="button"
-              className="btn btn-ghost btn-sm rest-visas-btn"
-              onClick={() => {
-                setVisasOuvert((o) => !o);
-                if (!visasOuvert) void chargerVisas();
-              }}
-              disabled={!jeton}
-              aria-expanded={visasOuvert}
-            >
-              Visas
-            </button>
-          </Tooltip>
-          <Tooltip label="Note de synthèse de mission (executive summary IA) pour l'associé signataire — versionnée, chaque constat cite sa règle. Consultative : l'humain valide.">
-            <button
-              type="button"
-              className="btn btn-ghost btn-sm rest-note-btn"
-              onClick={() => setNoteOuverte((o) => !o)}
-              disabled={!jeton}
-              aria-expanded={noteOuverte}
-            >
-              Note de synthèse
-            </button>
-          </Tooltip>
-          <Tooltip label="Comparatif déterministe entre les deux dernières exécutions : constats améliorés, dégradés, inchangés à risque, nouveaux et disparus — avec évolution des montants.">
-            <button
-              type="button"
-              className="btn btn-ghost btn-sm rest-comparatif-btn"
-              onClick={() => {
-                setComparatifOuvert((o) => !o);
-                if (!comparatifOuvert) void chargerComparatif();
-              }}
-              disabled={!jeton || comparatifBusy}
-              aria-expanded={comparatifOuvert}
-            >
-              {comparatifBusy ? "Comparatif…" : "Comparer les exécutions"}
-            </button>
-          </Tooltip>
-          <Tooltip label={PROCESS_TIPS.audit}>
-            <button
-              type="button"
-              className="btn btn-ghost btn-sm"
-              disabled={busy}
-              onClick={() => {
-                onAudit();
-                allerSection("audit");
-              }}
-            >
-              Audit
-            </button>
-          </Tooltip>
-          {!estLecteur && onLienClient && (
-            <Tooltip label={PROCESS_TIPS.lienClient}>
-              <button
-                type="button"
-                className="btn btn-ghost btn-sm"
-                onClick={onLienClient}
-                disabled={busy}
-              >
-                Lien client
-              </button>
-            </Tooltip>
-          )}
-          <Tooltip label="Dossier de travail complet (ZIP) : tous les livrables de la mission pour archivage probant">
-            <button
-              type="button"
-              className="btn btn-ghost btn-sm rest-dossier-btn"
-              onClick={() => void telechargerDossierTravail()}
-              disabled={dossierBusy || !jeton}
-            >
-              {dossierBusy ? "Dossier…" : "Dossier de travail"}
-            </button>
-          </Tooltip>
-          {dossierErr && (
-            <span className="rest-lettre-err" role="alert">
-              {dossierErr}
+              Relances {suivi.synthese.recu}/{suivi.synthese.total} reçues
+              {suivi.synthese.a_relancer > 0
+                ? ` · ${suivi.synthese.a_relancer} à relancer`
+                : ""}
             </span>
           )}
-          {!estLecteur && !estCloturee && onCloturer && !sansExecution && (
-            <Tooltip label="Revue qualité de pré-clôture (consultative) puis clôture du dossier (statut serveur). Réouverture possible — l’épinglage référentiel est conservé.">
+        </div>
+      </div>
+
+      <div
+        className="dossier2-groupes"
+        role="toolbar"
+        aria-label="Actions du dossier"
+      >
+        <div className="dossier2-groupe" role="group" aria-label="Travailler">
+          <span className="dossier2-groupe-lbl">Travailler</span>
+          <div className="dossier2-groupe-actions">
+            <Tooltip label="Programme de travail standard : diligences par phase que le collaborateur coche au fil de l'exécution — avancement par phase et global. Complète les visas de supervision.">
               <button
                 type="button"
-                className="btn btn-ghost btn-sm"
-                disabled={busy || ctrlClotureBusy}
-                aria-expanded={ctrlClotureOuvert}
-                onClick={() => {
-                  if (ctrlClotureOuvert) {
-                    setCtrlClotureOuvert(false);
-                    setCtrlCloture(null);
-                    setCtrlClotureErr(null);
-                  } else {
-                    void ouvrirControleCloture();
+                className={`btn btn-ghost btn-sm dossier2-action rest-programme-btn${
+                  progOuvert ? " is-actif" : ""
+                }`}
+                onClick={() =>
+                  togglePanneau("programme", progOuvert, setProgOuvert, () =>
+                    void chargerProgramme(),
+                  )
+                }
+                disabled={!jeton}
+                aria-expanded={progOuvert}
+              >
+                Programme
+              </button>
+            </Tooltip>
+            <Tooltip label="Visas de supervision par phase : le préparateur atteste son travail, le réviseur revoit, l'associé signe — dans cet ordre. Registre formel exigé par les normes d'exercice professionnel.">
+              <button
+                type="button"
+                className={`btn btn-ghost btn-sm dossier2-action rest-visas-btn${
+                  visasOuvert ? " is-actif" : ""
+                }`}
+                onClick={() =>
+                  togglePanneau("visas", visasOuvert, setVisasOuvert, () =>
+                    void chargerVisas(),
+                  )
+                }
+                disabled={!jeton}
+                aria-expanded={visasOuvert}
+              >
+                Visas
+              </button>
+            </Tooltip>
+            <Tooltip label="Comparatif déterministe entre les deux dernières exécutions : constats améliorés, dégradés, inchangés à risque, nouveaux et disparus — avec évolution des montants.">
+              <button
+                type="button"
+                className={`btn btn-ghost btn-sm dossier2-action rest-comparatif-btn${
+                  comparatifOuvert ? " is-actif" : ""
+                }`}
+                onClick={() =>
+                  togglePanneau(
+                    "comparatif",
+                    comparatifOuvert,
+                    setComparatifOuvert,
+                    () => void chargerComparatif(),
+                  )
+                }
+                disabled={!jeton || comparatifBusy}
+                aria-expanded={comparatifOuvert}
+              >
+                {comparatifBusy ? "Comparatif…" : "Comparer les exécutions"}
+              </button>
+            </Tooltip>
+            <Tooltip label="Dossier de travail complet (ZIP) : tous les livrables de la mission pour archivage probant">
+              <button
+                type="button"
+                className="btn btn-ghost btn-sm dossier2-action rest-dossier-btn"
+                onClick={() => void telechargerDossierTravail()}
+                disabled={dossierBusy || !jeton}
+              >
+                {dossierBusy ? "Dossier…" : "Dossier de travail"}
+              </button>
+            </Tooltip>
+            {dossierErr && (
+              <span className="rest-lettre-err" role="alert">
+                {dossierErr}
+              </span>
+            )}
+            <Tooltip label="Temps passés sur la mission : chaque collaborateur saisit ses heures par phase et par jour — total, répartition et valorisation pour piloter la rentabilité.">
+              <button
+                type="button"
+                className={`btn btn-ghost btn-sm dossier2-action rest-temps-btn${
+                  tempsOuvert ? " is-actif" : ""
+                }`}
+                onClick={() =>
+                  togglePanneau("temps", tempsOuvert, setTempsOuvert, () =>
+                    void chargerTemps(),
+                  )
+                }
+                disabled={!jeton}
+                aria-expanded={tempsOuvert}
+              >
+                Temps passés
+              </button>
+            </Tooltip>
+          </div>
+        </div>
+
+        <div className="dossier2-groupe" role="group" aria-label="Analyser">
+          <span className="dossier2-groupe-lbl">Analyser</span>
+          <div className="dossier2-groupe-actions">
+            <Tooltip label="Pilotage de mission : synthèse transverse en un coup d'œil — avancement du programme, contrôle de pré-clôture, temps passés, rentabilité, visas et conclusions de la dernière exécution.">
+              <button
+                type="button"
+                className={`btn btn-ghost btn-sm dossier2-action rest-pilotage-btn${
+                  pilotageOuvert ? " is-actif" : ""
+                }`}
+                onClick={() =>
+                  togglePanneau("pilotage", pilotageOuvert, setPilotageOuvert)
+                }
+                disabled={!jeton}
+                aria-expanded={pilotageOuvert}
+              >
+                Pilotage
+              </button>
+            </Tooltip>
+            <Tooltip label="Échéancier fiscal de l'exercice revu : calendrier déterministe des obligations déclaratives et de paiement selon le régime du profil mission — dates indicatives, sans calcul d'impôt.">
+              <button
+                type="button"
+                className={`btn btn-ghost btn-sm dossier2-action rest-echeancier-btn${
+                  echeancierOuvert ? " is-actif" : ""
+                }`}
+                onClick={() =>
+                  togglePanneau(
+                    "echeancier",
+                    echeancierOuvert,
+                    setEcheancierOuvert,
+                  )
+                }
+                disabled={!jeton}
+                aria-expanded={echeancierOuvert}
+              >
+                Échéancier fiscal
+              </button>
+            </Tooltip>
+            <Tooltip label="Prescription des risques : analyse déterministe du délai de reprise de droit commun — risques prescrits à basculer, proches de prescription (<12 mois) et non prescrits, avec exposition prescrite. Consultative : l'humain décide.">
+              <button
+                type="button"
+                className={`btn btn-ghost btn-sm dossier2-action rest-prescription-btn${
+                  prescriptionOuverte ? " is-actif" : ""
+                }`}
+                onClick={() =>
+                  togglePanneau(
+                    "prescription",
+                    prescriptionOuverte,
+                    setPrescriptionOuverte,
+                  )
+                }
+                disabled={!jeton}
+                aria-expanded={prescriptionOuverte}
+              >
+                Prescription
+              </button>
+            </Tooltip>
+            <Tooltip label="Demande de renseignements et de documents au client — questions de la revue analytique et pièces manquantes, numérotées pour réponse">
+              <button
+                type="button"
+                className="btn btn-ghost btn-sm dossier2-action rest-demande-btn"
+                onClick={() => void telechargerDemandeRenseignements()}
+                disabled={demandeBusy || !jeton}
+              >
+                {demandeBusy ? "Demande…" : "Demande de renseignements"}
+              </button>
+            </Tooltip>
+            {demandeErr && (
+              <span className="rest-lettre-err" role="alert">
+                {demandeErr}
+              </span>
+            )}
+            {suivi && suivi.synthese.total > 0 && (
+              <Tooltip label="Suivi des réponses client à la demande de renseignements : marquez chaque item reçu / sans objet, planifiez les relances.">
+                <button
+                  type="button"
+                  className={`btn btn-ghost btn-sm dossier2-action rest-suivi-btn${
+                    suiviOuvert ? " is-actif" : ""
+                  }`}
+                  onClick={() =>
+                    togglePanneau("suivi", suiviOuvert, setSuiviOuvert, () => {
+                      void chargerSuivi();
+                      void chargerReponses();
+                    })
                   }
+                  aria-expanded={suiviOuvert}
+                >
+                  <span
+                    className={`rest-suivi-compteur${
+                      suivi.synthese.a_relancer > 0 ? " relance" : ""
+                    }`}
+                  >
+                    {suivi.synthese.recu}/{suivi.synthese.total} reçues
+                    {suivi.synthese.a_relancer > 0
+                      ? ` · ${suivi.synthese.a_relancer} à relancer`
+                      : ""}
+                  </span>
+                </button>
+              </Tooltip>
+            )}
+          </div>
+        </div>
+
+        <div className="dossier2-groupe" role="group" aria-label="Restituer">
+          <span className="dossier2-groupe-lbl">Restituer</span>
+          <div className="dossier2-groupe-actions">
+            <Tooltip label={PROCESS_TIPS.exportWord}>
+              <button
+                type="button"
+                className="btn btn-ghost btn-sm dossier2-action"
+                onClick={() => onExport("docx")}
+                disabled={sansExecution}
+              >
+                Word
+              </button>
+            </Tooltip>
+            <Tooltip label={PROCESS_TIPS.exportPdf}>
+              <button
+                type="button"
+                className="btn btn-ghost btn-sm dossier2-action"
+                onClick={() => onExport("pdf")}
+                disabled={sansExecution}
+              >
+                PDF
+              </button>
+            </Tooltip>
+            <Tooltip label="Note de synthèse de mission (executive summary IA) pour l'associé signataire — versionnée, chaque constat cite sa règle. Consultative : l'humain valide.">
+              <button
+                type="button"
+                className={`btn btn-ghost btn-sm dossier2-action rest-note-btn${
+                  noteOuverte ? " is-actif" : ""
+                }`}
+                onClick={() =>
+                  togglePanneau("note", noteOuverte, setNoteOuverte)
+                }
+                disabled={!jeton}
+                aria-expanded={noteOuverte}
+              >
+                Note de synthèse
+              </button>
+            </Tooltip>
+            <Tooltip label="Lettre de mission (.docx) générée depuis le cadrage — à personnaliser et faire signer avant les travaux. Champs manquants : [à compléter].">
+              <button
+                type="button"
+                className="btn btn-ghost btn-sm dossier2-action rest-lettre-btn"
+                onClick={() => void telechargerLettreMission()}
+                disabled={lettreBusy || !jeton}
+              >
+                {lettreBusy ? "Lettre…" : "Lettre de mission"}
+              </button>
+            </Tooltip>
+            {lettreErr && (
+              <span className="rest-lettre-err" role="alert">
+                {lettreErr}
+              </span>
+            )}
+            <Tooltip label="Courrier d'envoi du rapport (.docx) — lettre d'accompagnement à en-tête du cabinet : livrables remis, principaux constats chiffrés, invitation à la réunion de restitution, signature associé.">
+              <button
+                type="button"
+                className="btn btn-ghost btn-sm dossier2-action rest-courrier-envoi-btn"
+                onClick={() => void telechargerCourrierEnvoi()}
+                disabled={courrierEnvoiBusy || !jeton}
+              >
+                {courrierEnvoiBusy ? "Courrier…" : "Courrier d'envoi"}
+              </button>
+            </Tooltip>
+            {courrierEnvoiErr && (
+              <span className="rest-lettre-err" role="alert">
+                {courrierEnvoiErr}
+              </span>
+            )}
+            <Tooltip label="Lettre d'affirmation de la direction (.docx) — à en-tête du client, adressée au cabinet : la direction confirme l'exhaustivité des informations transmises (comptabilité/FEC, déclarations, litiges et contrôles en cours, passifs fiscaux, réponses). À faire signer par le représentant légal avant la clôture.">
+              <button
+                type="button"
+                className="btn btn-ghost btn-sm dossier2-action rest-affirmation-btn"
+                onClick={() => void telechargerLettreAffirmation()}
+                disabled={affirmationBusy || !jeton}
+              >
+                {affirmationBusy ? "Lettre…" : "Lettre d'affirmation"}
+              </button>
+            </Tooltip>
+            {affirmationErr && (
+              <span className="rest-lettre-err" role="alert">
+                {affirmationErr}
+              </span>
+            )}
+            <Tooltip label={PROCESS_TIPS.audit}>
+              <button
+                type="button"
+                className="btn btn-ghost btn-sm dossier2-action"
+                disabled={busy}
+                onClick={() => {
+                  onAudit();
+                  allerSection("audit");
                 }}
               >
-                {ctrlClotureBusy ? "Contrôle…" : "Clôturer"}
+                Audit
               </button>
             </Tooltip>
-          )}
-          {!estLecteur && estCloturee && onReouvrir && (
-            <Tooltip label="Repasse la mission en cours pour permettre une nouvelle exécution sur la même version épinglée.">
-              <button
-                type="button"
-                className="btn btn-ghost btn-sm"
-                disabled={busy}
-                onClick={onReouvrir}
-              >
-                Réouvrir
-              </button>
-            </Tooltip>
-          )}
+          </div>
         </div>
+
+        {!estLecteur &&
+          (onLienClient ||
+            (!estCloturee && onCloturer && !sansExecution) ||
+            (estCloturee && onReouvrir)) && (
+            <div className="dossier2-groupe" role="group" aria-label="Clôturer">
+              <span className="dossier2-groupe-lbl">Clôturer</span>
+              <div className="dossier2-groupe-actions">
+                {onLienClient && (
+                  <Tooltip label={PROCESS_TIPS.lienClient}>
+                    <button
+                      type="button"
+                      className="btn btn-ghost btn-sm dossier2-action"
+                      onClick={onLienClient}
+                      disabled={busy}
+                    >
+                      Lien client
+                    </button>
+                  </Tooltip>
+                )}
+                {!estCloturee && onCloturer && !sansExecution && (
+                  <Tooltip label="Revue qualité de pré-clôture (consultative) puis clôture du dossier (statut serveur). Réouverture possible — l’épinglage référentiel est conservé.">
+                    <button
+                      type="button"
+                      className={`btn btn-ghost btn-sm dossier2-action${
+                        ctrlClotureOuvert ? " is-actif" : ""
+                      }`}
+                      disabled={busy || ctrlClotureBusy}
+                      aria-expanded={ctrlClotureOuvert}
+                      onClick={() => {
+                        if (ctrlClotureOuvert) {
+                          setCtrlClotureOuvert(false);
+                          setCtrlCloture(null);
+                          setCtrlClotureErr(null);
+                        } else {
+                          fermerPanneaux("ctrlCloture");
+                          void ouvrirControleCloture();
+                        }
+                      }}
+                    >
+                      {ctrlClotureBusy ? "Contrôle…" : "Clôturer"}
+                    </button>
+                  </Tooltip>
+                )}
+                {estCloturee && onReouvrir && (
+                  <Tooltip label="Repasse la mission en cours pour permettre une nouvelle exécution sur la même version épinglée.">
+                    <button
+                      type="button"
+                      className="btn btn-ghost btn-sm dossier2-action"
+                      disabled={busy}
+                      onClick={onReouvrir}
+                    >
+                      Réouvrir
+                    </button>
+                  </Tooltip>
+                )}
+              </div>
+            </div>
+          )}
       </div>
 
       {ctrlClotureOuvert && (
@@ -4047,7 +4229,7 @@ export function RestitutionVue({
         )}
         {tachesParObjectif.length > 0 && (
           <section className="rest-section rest-worklist" aria-label="Worklist">
-            <header className="rest-section-head">
+            <header className="rest-section-head dossier2-sec-head">
               <h3>Tâches ouvertes</h3>
               <p>
                 Groupées par objectif fiscal — plan dérivé (hors choix LLM).
@@ -4120,7 +4302,7 @@ export function RestitutionVue({
           </section>
         )}
         <section id="rest-synthese" className="rest-section">
-          <header className="rest-section-head">
+          <header className="rest-section-head dossier2-sec-head">
             <h3>Synthèse</h3>
             <p>
               Priorités et pipeline — montants au Passage, suivi dans Risques.
@@ -4600,7 +4782,7 @@ export function RestitutionVue({
         </section>
 
         <section id="rest-passage" className="rest-section">
-          <header className="rest-section-head">
+          <header className="rest-section-head dossier2-sec-head">
             <h3 className="label-with-tip">
               Passage
               <InfoTip
@@ -4701,7 +4883,7 @@ export function RestitutionVue({
         </section>
 
         <section id="rest-risques" className="rest-section">
-          <header className="rest-section-head">
+          <header className="rest-section-head dossier2-sec-head">
             <h3>Risques &amp; traitement</h3>
             <p>
               Workspace réviseur — suivi via statut tâche (serveur), hors calcul
@@ -4971,7 +5153,7 @@ export function RestitutionVue({
         </section>
 
         <section id="rest-rapport" className="rest-section">
-          <header className="rest-section-head">
+          <header className="rest-section-head dossier2-sec-head">
             <h3 className="label-with-tip">
               Rapport
               <InfoTip
@@ -4985,7 +5167,7 @@ export function RestitutionVue({
         </section>
 
         <section id="rest-audit" className="rest-section">
-          <header className="rest-section-head">
+          <header className="rest-section-head dossier2-sec-head">
             <h3 className="label-with-tip">
               Audit
               <InfoTip

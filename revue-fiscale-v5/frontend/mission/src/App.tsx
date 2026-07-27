@@ -5486,6 +5486,7 @@ export function App() {
                         lienUrl={lienUrl}
                         onExport={(kind) => void exportFichier(kind)}
                         onAudit={() => void chargerAudit()}
+                        onOuvrirClient={(cid) => void ouvrirClient(cid)}
                         onRestitutionRefresh={() => void rafraichirRestitution()}
                         onLienClient={
                           estLecteur

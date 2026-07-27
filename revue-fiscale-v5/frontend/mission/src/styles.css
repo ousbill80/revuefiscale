@@ -3628,9 +3628,9 @@ textarea {
 
 .rest-artifact {
   --rest-pad: clamp(0.85rem, 1.8vw, 1.25rem);
-  --rest-toolbar-h: 2.75rem;
+  --dossier2-bandeau-h: 2.85rem;
   --rest-rail-h: 2.55rem;
-  --rest-sticky-stack: calc(var(--rest-toolbar-h) + var(--rest-rail-h));
+  --rest-sticky-stack: calc(var(--dossier2-bandeau-h) + var(--rest-rail-h));
   position: relative;
   display: flex;
   flex-direction: column;
@@ -3651,7 +3651,8 @@ textarea {
   animation: rest-fade-up 0.35s ease both;
 }
 
-.rest-toolbar {
+/* --- Dossier v2 : bandeau mission sticky --- */
+.dossier2-bandeau {
   position: sticky;
   top: 0;
   z-index: 5;
@@ -3659,9 +3660,9 @@ textarea {
   flex-wrap: wrap;
   align-items: center;
   justify-content: space-between;
-  gap: 0.45rem;
-  min-height: var(--rest-toolbar-h);
-  padding: 0.4rem var(--rest-pad);
+  gap: 0.35rem 0.85rem;
+  min-height: var(--dossier2-bandeau-h);
+  padding: 0.45rem var(--rest-pad);
   border-bottom: 1px solid color-mix(in srgb, var(--teal) 12%, var(--line));
   border-radius: 14px 14px 0 0;
   background: color-mix(in srgb, #ffffff 90%, var(--teal-soft));
@@ -3669,18 +3670,16 @@ textarea {
   -webkit-backdrop-filter: blur(12px);
 }
 
-.rest-toolbar-brand {
+.dossier2-bandeau-id {
   display: inline-flex;
+  flex-wrap: wrap;
   align-items: center;
-  gap: 0.45rem;
-  font-size: 0.68rem;
-  font-weight: 700;
-  letter-spacing: 0.03em;
-  text-transform: uppercase;
-  color: var(--teal-deep);
+  gap: 0.3rem 0.55rem;
+  min-width: 0;
 }
 
-.rest-toolbar-mark {
+.dossier2-mark {
+  flex: 0 0 auto;
   width: 0.5rem;
   height: 0.5rem;
   border-radius: 2px;
@@ -3688,20 +3687,172 @@ textarea {
   box-shadow: 0 0 0 3px color-mix(in srgb, var(--teal) 18%, transparent);
 }
 
-.rest-toolbar-actions {
+.dossier2-client-nom,
+.dossier2-client-lien {
+  font-size: 0.86rem;
+  font-weight: 750;
+  letter-spacing: -0.01em;
+  color: var(--ink);
+  max-width: 26ch;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.dossier2-client-lien {
+  appearance: none;
+  border: 0;
+  padding: 0;
+  background: transparent;
+  font: inherit;
+  font-size: 0.86rem;
+  font-weight: 750;
+  cursor: pointer;
+  text-decoration: underline;
+  text-decoration-color: color-mix(in srgb, var(--teal) 45%, transparent);
+  text-underline-offset: 3px;
+}
+
+.dossier2-client-lien:hover,
+.dossier2-client-lien:focus-visible {
+  color: var(--teal-deep);
+  text-decoration-color: var(--teal-deep);
+  outline: none;
+}
+
+.dossier2-bandeau-meta {
+  font-size: 0.72rem;
+  font-weight: 600;
+  color: var(--muted);
+  white-space: nowrap;
+}
+
+.dossier2-bandeau-indics {
+  display: inline-flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.3rem;
+}
+
+.dossier2-indic {
+  display: inline-flex;
+  align-items: center;
+  padding: 0.12rem 0.55rem;
+  border: 1px solid color-mix(in srgb, var(--teal) 22%, var(--line));
+  border-radius: 999px;
+  font-size: 0.68rem;
+  font-weight: 700;
+  color: var(--teal-deep);
+  background: color-mix(in srgb, #ffffff 65%, var(--teal-soft));
+  white-space: nowrap;
+}
+
+.dossier2-indic.is-alerte {
+  border-color: #b45309;
+  color: #92400e;
+  background: #fffbeb;
+}
+
+/* --- Dossier v2 : groupes d'actions nommés --- */
+.dossier2-groupes {
   display: flex;
   flex-wrap: wrap;
+  align-items: stretch;
+  gap: 0.6rem 1.4rem;
+  padding: 0.55rem var(--rest-pad) 0.65rem;
+  border-bottom: 1px solid var(--line);
+  background: color-mix(in srgb, #ffffff 94%, var(--bg-stripe));
+}
+
+.dossier2-groupe {
+  display: flex;
+  flex-direction: column;
+  gap: 0.3rem;
+  min-width: 0;
+}
+
+.dossier2-groupe + .dossier2-groupe {
+  padding-left: 1.4rem;
+  border-left: 1px solid var(--line-soft);
+}
+
+.dossier2-groupe-lbl {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.45rem;
+  font-size: 0.62rem;
+  font-weight: 800;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--teal-deep);
+}
+
+.dossier2-groupe-lbl::before {
+  content: "";
+  flex: 0 0 auto;
+  width: 1.1rem;
+  height: 2px;
+  border-radius: 2px;
+  background: var(--teal);
+}
+
+.dossier2-groupe-actions {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
   gap: 0.25rem;
 }
 
-.rest-toolbar-actions .btn-ghost {
+.dossier2-groupe-actions .btn-ghost {
   border-color: transparent;
 }
 
-.rest-toolbar-actions .btn-ghost:hover:not(:disabled) {
+.dossier2-groupe-actions .btn-ghost:hover:not(:disabled) {
   background: var(--teal-soft);
   color: var(--teal-deep);
   border-color: color-mix(in srgb, var(--teal) 20%, var(--line));
+}
+
+.dossier2-action.is-actif,
+.dossier2-groupe-actions .btn-ghost.dossier2-action.is-actif {
+  background: var(--teal-soft);
+  color: var(--teal-deep);
+  border-color: color-mix(in srgb, var(--teal) 38%, var(--line));
+  box-shadow: inset 0 -2px 0 var(--teal);
+}
+
+/* Titres de section du corps — petites capitales + trait d'accent. */
+.dossier2-sec-head h3 {
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+  font-size: 0.74rem;
+  font-weight: 800;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--teal-deep);
+}
+
+.dossier2-sec-head h3::before {
+  content: "";
+  flex: 0 0 auto;
+  width: 1.6rem;
+  height: 3px;
+  border-radius: 2px;
+  background: var(--teal);
+}
+
+@media (max-width: 900px) {
+  .dossier2-groupes {
+    flex-direction: column;
+    gap: 0.55rem;
+  }
+  .dossier2-groupe + .dossier2-groupe {
+    padding-left: 0;
+    border-left: none;
+    padding-top: 0.55rem;
+    border-top: 1px solid var(--line-soft);
+  }
 }
 
 .rest-hero {
@@ -4065,7 +4216,7 @@ textarea {
 
 .rest-rail {
   position: sticky;
-  top: var(--rest-toolbar-h);
+  top: var(--dossier2-bandeau-h);
   z-index: 4;
   display: flex;
   flex-wrap: wrap;
@@ -5119,7 +5270,7 @@ textarea {
   .rest-rail {
     top: 0;
   }
-  .rest-toolbar {
+  .dossier2-bandeau {
     position: static;
   }
 }
