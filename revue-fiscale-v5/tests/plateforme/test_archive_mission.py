@@ -155,12 +155,22 @@ def test_zip_valide_contenu_et_sommaire(session):
         assert "TVA" in civisme
         assert "Rapprochement consultatif" in civisme
 
+        # 20 — plan d'actions : toujours présent (plan vide sans risque
+        # non clos), synthèse à zéro et mention consultative.
+        assert "20_plan_actions.txt" in noms
+        plan = z.read("20_plan_actions.txt").decode("utf-8")
+        assert "PLAN D'ACTIONS POST-REVUE" in plan
+        assert "Actions suggérées : 0 (haute : 0, moyenne : 0, basse : 0)" in plan
+        assert "Exposition totale : 0 FCFA" in plan
+        assert "Aucun risque ouvert — rien à planifier." in plan
+        assert "consultatif" in plan
+
         # Sommaire : identification + pièces incluses + omissions motivées.
         sommaire = z.read("00_sommaire.txt").decode("utf-8")
         assert "DOSSIER DE TRAVAIL" in sommaire
         assert "PM Demande FICTIF" in sommaire
         assert "2025" in sommaire
-        assert "PIÈCES INCLUSES (13)" in sommaire
+        assert "PIÈCES INCLUSES (14)" in sommaire
         assert (
             "14_courrier_envoi_rapport.docx : Courrier d'envoi du rapport"
             in sommaire
@@ -180,6 +190,10 @@ def test_zip_valide_contenu_et_sommaire(session):
         assert (
             "19_civisme_fiscal.txt : Civisme déclaratif (échéancier "
             "rapproché des pièces collectées)" in sommaire
+        )
+        assert (
+            "20_plan_actions.txt : Plan d'actions post-revue "
+            "(suggestions par risque non clos)" in sommaire
         )
         # 16 — rentabilité : omise sans honoraires ni taux horaire saisis.
         assert "16_rentabilite_mission.txt" not in noms
@@ -266,8 +280,22 @@ def test_comparatif_et_provision_inclus_quand_disponibles(session):
         assert "TVA collectée non déclarée" in prescription
         assert "exercice 2024" in prescription
 
+        # 20 — plan d'actions : le risque ouvert donne une action suggérée.
+        assert "20_plan_actions.txt" in noms
+        plan = z.read("20_plan_actions.txt").decode("utf-8")
+        assert "PLAN D'ACTIONS POST-REVUE" in plan
+        assert "Actions suggérées : 1" in plan
+        assert "TVA collectée non déclarée" in plan
+        assert "(TVA, exercice 2024)" in plan
+        assert "exposition : 1000000" in plan
+        assert "Exposition totale : 1000000" in plan
+        assert "FCFA" in plan
+        assert "Motifs :" in plan
+        assert "Aucun risque ouvert" not in plan
+        assert "consultatif" in plan
+
         sommaire = z.read("00_sommaire.txt").decode("utf-8")
-        assert "PIÈCES INCLUSES (15)" in sommaire
+        assert "PIÈCES INCLUSES (16)" in sommaire
         # Ni temps, ni visa, ni réponse, ni paramètre de rentabilité sur
         # cette mission → 10/11/12/16 omises.
         assert "PIÈCES OMISES (4)" in sommaire
@@ -276,6 +304,7 @@ def test_comparatif_et_provision_inclus_quand_disponibles(session):
         assert "17_lettre_affirmation.docx" in noms
         assert "18_prescription_risques.txt" in noms
         assert "19_civisme_fiscal.txt" in noms
+        assert "20_plan_actions.txt" in noms
 
 
 def test_temps_visas_reponses_inclus_quand_disponibles(session):
@@ -396,7 +425,7 @@ def test_temps_visas_reponses_inclus_quand_disponibles(session):
 
         # Sommaire cohérent : 10/11/12/16 incluses, plus omises.
         sommaire = z.read("00_sommaire.txt").decode("utf-8")
-        assert "PIÈCES INCLUSES (17)" in sommaire
+        assert "PIÈCES INCLUSES (18)" in sommaire
         assert "PIÈCES OMISES (2)" in sommaire
         assert (
             "16_rentabilite_mission.txt : Rentabilité de la mission"
@@ -450,6 +479,7 @@ def test_piece_en_echec_est_omise_et_notee(session, monkeypatch):
         assert "17_lettre_affirmation.docx" in noms
         assert "18_prescription_risques.txt" in noms
         assert "19_civisme_fiscal.txt" in noms
+        assert "20_plan_actions.txt" in noms
         sommaire = z.read("00_sommaire.txt").decode("utf-8")
         assert (
             "02_rapport_restitution.docx : OMISE — panne simulée du rendu Word"

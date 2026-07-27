@@ -39,6 +39,9 @@ from backend.plateforme.demande_renseignements import (
     generer_demande_renseignements,
 )
 from backend.plateforme.echeancier_fiscal import echeancier_mission
+from backend.plateforme.plan_actions import (
+    analyse_mission as analyse_plan_actions,
+)
 from backend.plateforme.lettre_affirmation import generer_lettre_affirmation
 from backend.plateforme.lettre_mission import generer_lettre_mission
 from backend.plateforme.prescription_risques import (
@@ -695,6 +698,52 @@ def _piece_civisme_fiscal(
     return "\n".join(lignes).encode("utf-8")
 
 
+def _piece_plan_actions(
+    session: Session, tenant_id: int, mission_id: int, meta: dict[str, Any]
+) -> bytes:
+    """Plan d'actions post-revue — toujours produit (dérivation
+    consultative déterministe des risques non clos, plan vide sans
+    risque). ``analyse_mission`` ouvre son propre ``contexte_tenant`` :
+    appel HORS de tout autre contexte."""
+    a = analyse_plan_actions(session, tenant_id, mission_id)
+    s = a["synthese"]
+    p = s["par_priorite"]
+    lignes = [
+        "PLAN D'ACTIONS POST-REVUE — suggestion consultative déterministe",
+        f"Mission #{a['mission_id']} — client : "
+        f"{meta.get('contribuable_denomination') or '[non renseigné]'} — "
+        f"analyse au {a['date_analyse']}",
+        "",
+        f"Actions suggérées : {s['total_actions']} "
+        f"(haute : {p['haute']}, moyenne : {p['moyenne']}, "
+        f"basse : {p['basse']})",
+        f"Exposition totale : {s['exposition_totale']} FCFA",
+        "",
+        f"ACTIONS ({s['total_actions']})",
+    ]
+    for it in a["plan"]:
+        exposition = (
+            f"{it['exposition']} FCFA"
+            if it.get("exposition") is not None
+            else "non chiffrée"
+        )
+        lignes.append(
+            f"  [{str(it['priorite']).upper()}] {it['action']}"
+        )
+        lignes.append(
+            f"    Risque #{it['risque_id']} {it['libelle_risque']} "
+            f"({it['impot']}, exercice {it['exercice_origine']}) — "
+            f"exposition : {exposition}"
+        )
+        lignes.append(
+            "    Motifs : " + " ; ".join(it.get("motifs", []))
+        )
+    if not a["plan"]:
+        lignes.append("  Aucun risque ouvert — rien à planifier.")
+    lignes += ["", f"* {a['note']}"]
+    return "\n".join(lignes).encode("utf-8")
+
+
 # Ordre du dossier : (nom de fichier dans le ZIP, description, constructeur).
 _PIECES: Final[
     tuple[tuple[str, str, Callable[[Session, int, int, dict[str, Any]], bytes]], ...]
@@ -793,6 +842,11 @@ _PIECES: Final[
         "19_civisme_fiscal.txt",
         "Civisme déclaratif (échéancier rapproché des pièces collectées)",
         _piece_civisme_fiscal,
+    ),
+    (
+        "20_plan_actions.txt",
+        "Plan d'actions post-revue (suggestions par risque non clos)",
+        _piece_plan_actions,
     ),
 )
 
