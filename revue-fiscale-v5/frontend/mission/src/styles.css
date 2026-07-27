@@ -11499,6 +11499,104 @@ tr.row-active td {
   color: var(--accent-deep, #115e59);
 }
 
+/* ── Fiche client — Évolution N / N-1 (comparaison inter-exercices) ──
+   Bloc consultatif compact : deltas du registre des risques entre les
+   deux derniers exercices revus. Flèches ▲ rouge (dégradation) /
+   ▼ vert (amélioration) / = neutre (stable). Préfixe dédié compex-. */
+.compex-encart {
+  display: grid;
+  gap: 0.55rem;
+}
+
+.compex-synthese {
+  margin: 0;
+  font-size: 0.8rem;
+  padding: 0.45rem 0.65rem;
+  border-radius: 0.5rem;
+  border: 1px solid transparent;
+}
+
+.compex-synthese--degradation {
+  background: #fef2f2;
+  border-color: color-mix(in srgb, #b91c1c 25%, transparent);
+}
+
+.compex-synthese--amelioration {
+  background: #f0fdf4;
+  border-color: color-mix(in srgb, #166534 25%, transparent);
+}
+
+.compex-synthese--stable {
+  background: #f8fafc;
+  border-color: color-mix(in srgb, #64748b 25%, transparent);
+}
+
+.compex-liste {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: grid;
+  gap: 0.3rem;
+}
+
+.compex-ligne {
+  display: flex;
+  align-items: baseline;
+  gap: 0.5rem;
+  font-size: 0.78rem;
+}
+
+.compex-impot {
+  flex: none;
+  min-width: 3.2rem;
+  font-weight: 800;
+  color: var(--accent-deep, #115e59);
+}
+
+.compex-detail {
+  flex: 1 1 auto;
+  min-width: 0;
+  color: var(--ink, #0f172a);
+  font-variant-numeric: tabular-nums;
+}
+
+.compex-fleche {
+  flex: none;
+  font-weight: 800;
+  font-size: 0.82rem;
+}
+
+.compex-fleche--degradation {
+  color: #b91c1c;
+}
+
+.compex-fleche--amelioration {
+  color: #166534;
+}
+
+.compex-fleche--stable {
+  color: var(--muted, #64748b);
+}
+
+.compex-indispo {
+  margin: 0;
+  font-size: 0.8rem;
+  color: var(--muted, #64748b);
+}
+
+.compex-note {
+  margin: 0;
+  font-size: 0.76rem;
+  font-style: italic;
+  color: var(--muted, #64748b);
+}
+
+@media (max-width: 720px) {
+  .compex-ligne {
+    flex-wrap: wrap;
+  }
+}
+
 /* ── Bilan de clôture (panneau consultatif de pré-clôture) ──────────
    Pattern rest-suivi (panneau outil) ; pastilles ok (vert #f0fdf4 /
    #166534) et attention (orange #fffbeb / #92400e) — palettes déjà

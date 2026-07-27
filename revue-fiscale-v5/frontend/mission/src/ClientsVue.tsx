@@ -771,6 +771,61 @@ type ActionRetenueRow = {
   maj_le: string | null;
 };
 
+/** Montant FCFA formaté fr-FR — chaîne d'origine si non numérique. */
+function montantFcfa(v: string): string {
+  const n = Number(v);
+  return Number.isFinite(n) ? n.toLocaleString("fr-FR") : v;
+}
+
+/** Delta signé (« +1 500 000 » / « −250 000 » / « 0 ») pour l'évolution. */
+function deltaSigne(v: string | number): string {
+  const n = Number(v);
+  if (!Number.isFinite(n)) return String(v);
+  if (n > 0) return `+${n.toLocaleString("fr-FR")}`;
+  if (n < 0) return `−${Math.abs(n).toLocaleString("fr-FR")}`;
+  return "0";
+}
+
+/** Flèche de tendance : ▲ rouge = dégradation, ▼ vert = amélioration. */
+const COMPEX_TENDANCES: Record<
+  "amelioration" | "degradation" | "stable",
+  { fleche: string; cls: string; label: string }
+> = {
+  degradation: { fleche: "▲", cls: "degradation", label: "Dégradation" },
+  amelioration: { fleche: "▼", cls: "amelioration", label: "Amélioration" },
+  stable: { fleche: "=", cls: "stable", label: "Stable" },
+};
+
+/** Comparaison inter-exercices N vs N-1 (registre des risques). */
+type ComparaisonImpotRow = {
+  impot: string;
+  nb_ouverts_recent: number;
+  nb_ouverts_precedent: number;
+  delta_nb_ouverts: number;
+  exposition_recente: string;
+  exposition_precedente: string;
+  delta_exposition: string;
+  tendance: "amelioration" | "degradation" | "stable";
+};
+
+type ComparaisonExercicesOut = {
+  disponible: boolean;
+  raison: string | null;
+  note: string;
+  exercice_recent?: { exercice: number; mission_id: number };
+  exercice_precedent?: { exercice: number; mission_id: number };
+  par_impot?: ComparaisonImpotRow[];
+  synthese?: {
+    nb_ouverts_recent: number;
+    nb_ouverts_precedent: number;
+    delta_nb_ouverts: number;
+    exposition_recente: string;
+    exposition_precedente: string;
+    delta_exposition: string;
+    tendance: "amelioration" | "degradation" | "stable";
+  };
+};
+
 type ClientDetail = ClientRow & {
   missions: MissionRow[];
   nb_missions: number;
@@ -1671,6 +1726,33 @@ export function ClientFicheVue({
     };
   }, [clientDetail.id, jeton]);
 
+  // Évolution N / N-1 — comparaison inter-exercices du registre des
+  // risques (Vue d'ensemble uniquement ; encart masqué si l'API échoue).
+  const [comparaisonEx, setComparaisonEx] =
+    useState<ComparaisonExercicesOut | null>(null);
+
+  useEffect(() => {
+    if (ficheTab !== "overview") return;
+    let annule = false;
+    void (async () => {
+      try {
+        const c = await api<ComparaisonExercicesOut>(
+          `/api/v1/contribuables/${clientDetail.id}/comparaison-exercices`,
+          { jeton },
+        );
+        if (!annule)
+          setComparaisonEx(
+            c && typeof c.disponible === "boolean" ? c : null,
+          );
+      } catch {
+        if (!annule) setComparaisonEx(null);
+      }
+    })();
+    return () => {
+      annule = true;
+    };
+  }, [clientDetail.id, jeton, ficheTab]);
+
   // Alerte douce : TEE (régime de l'entreprenant) atypique pour une personne morale.
   const alerteRegimeTee =
     formeNorm === "pm" && clientDetail.regime_fiscal?.trim() === "tee";
@@ -2326,6 +2408,98 @@ export function ClientFicheVue({
               <p className="agenda2-note" role="note">
                 Suivi consultatif du plan d'actions — décisions du cabinet, le
                 client reste seul décideur de la mise en œuvre.
+              </p>
+            </section>
+          )}
+
+          {comparaisonEx && (
+            <section
+              className="panel dense compex-encart"
+              id={`fiche-${clientDetail.id}-comparaison-exercices`}
+              aria-label="Évolution du risque entre les deux derniers exercices revus"
+            >
+              <div className="fiche2-echeances-head">
+                <h3 className="fiche2-titre">Évolution N / N-1</h3>
+                {comparaisonEx.disponible &&
+                  comparaisonEx.exercice_recent &&
+                  comparaisonEx.exercice_precedent && (
+                    <span className="fiche2-echeances-hint">
+                      Exercices {comparaisonEx.exercice_recent.exercice} vs{" "}
+                      {comparaisonEx.exercice_precedent.exercice} · risques
+                      ouverts du registre
+                    </span>
+                  )}
+              </div>
+
+              {!comparaisonEx.disponible ? (
+                <p className="compex-indispo">
+                  {comparaisonEx.raison ?? "Comparaison indisponible."}
+                </p>
+              ) : (
+                <>
+                  {comparaisonEx.synthese && (
+                    <p
+                      className={`compex-synthese compex-synthese--${COMPEX_TENDANCES[comparaisonEx.synthese.tendance].cls}`}
+                    >
+                      <span
+                        className={`compex-fleche compex-fleche--${COMPEX_TENDANCES[comparaisonEx.synthese.tendance].cls}`}
+                        aria-hidden="true"
+                      >
+                        {COMPEX_TENDANCES[comparaisonEx.synthese.tendance].fleche}
+                      </span>
+                      <strong>
+                        {COMPEX_TENDANCES[comparaisonEx.synthese.tendance].label}
+                      </strong>
+                      {" · "}
+                      {deltaSigne(
+                        comparaisonEx.synthese.delta_nb_ouverts,
+                      )}{" "}
+                      risque(s) ouvert(s) (
+                      {comparaisonEx.synthese.nb_ouverts_precedent} →{" "}
+                      {comparaisonEx.synthese.nb_ouverts_recent})
+                      {" · exposition "}
+                      {deltaSigne(comparaisonEx.synthese.delta_exposition)}{" "}
+                      FCFA
+                    </p>
+                  )}
+                  {(comparaisonEx.par_impot?.length ?? 0) > 0 ? (
+                    <ul className="compex-liste">
+                      {(comparaisonEx.par_impot ?? []).map((ligne) => (
+                        <li key={ligne.impot} className="compex-ligne">
+                          <span
+                            className="compex-impot"
+                            title={libelleImpotAgenda(ligne.impot)}
+                          >
+                            {ligne.impot}
+                          </span>
+                          <span className="compex-detail">
+                            {deltaSigne(ligne.delta_nb_ouverts)} risque(s) (
+                            {ligne.nb_ouverts_precedent} →{" "}
+                            {ligne.nb_ouverts_recent}) · exposition{" "}
+                            {montantFcfa(ligne.exposition_precedente)} →{" "}
+                            {montantFcfa(ligne.exposition_recente)} FCFA (
+                            {deltaSigne(ligne.delta_exposition)})
+                          </span>
+                          <span
+                            className={`compex-fleche compex-fleche--${COMPEX_TENDANCES[ligne.tendance].cls}`}
+                            title={COMPEX_TENDANCES[ligne.tendance].label}
+                            aria-label={COMPEX_TENDANCES[ligne.tendance].label}
+                          >
+                            {COMPEX_TENDANCES[ligne.tendance].fleche}
+                          </span>
+                        </li>
+                      ))}
+                    </ul>
+                  ) : (
+                    <p className="compex-indispo">
+                      Aucun risque ouvert au registre sur les deux exercices
+                      comparés.
+                    </p>
+                  )}
+                </>
+              )}
+              <p className="compex-note" role="note">
+                {comparaisonEx.note}
               </p>
             </section>
           )}

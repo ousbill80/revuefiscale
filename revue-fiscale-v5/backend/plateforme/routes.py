@@ -2755,6 +2755,54 @@ def api_historique_contribuable(
         ) from e
 
 
+@router.get("/contribuables/{contribuable_id}/comparaison-exercices")
+def api_comparaison_exercices_contribuable(
+    contribuable_id: int,
+    utilisateur: UtilisateurDep,
+    session: Annotated[Session, Depends(session_abonne)],
+) -> dict:
+    """Comparaison inter-exercices N vs N-1 (registre des risques).
+
+    Deux missions les plus récentes sur deux exercices distincts :
+    risques encore ouverts nés de chaque mission, exposition par impôt,
+    deltas et tendance (amélioration / dégradation / stable). Sans deux
+    exercices revus : ``disponible = false`` avec la raison. Consultatif
+    et déterministe. 404 si fiche hors tenant (RLS).
+    """
+    from backend.moteur.journal import append_journal
+    from backend.plateforme.comparaison_exercices import (
+        ErreurComparaisonExercices,
+        comparaison_contribuable,
+    )
+
+    exiger_capacite(utilisateur, "lire")
+    try:
+        comparaison = comparaison_contribuable(
+            session, utilisateur.tenant_id, contribuable_id
+        )
+    except ErreurComparaisonExercices as e:
+        raise HTTPException(
+            status_code=status.HTTP_404_NOT_FOUND, detail=str(e)
+        ) from e
+    append_journal(
+        session,
+        tenant_id=utilisateur.tenant_id,
+        mission_id=None,
+        acteur=utilisateur.email,
+        action="consultation_comparaison_exercices",
+        charge_utile={
+            "contribuable_id": contribuable_id,
+            "disponible": comparaison["disponible"],
+            "tendance": (
+                comparaison["synthese"]["tendance"]
+                if comparaison["disponible"]
+                else None
+            ),
+        },
+    )
+    return comparaison
+
+
 # ── Data Room : mémoire client + timeline ──────────────────────────
 
 
