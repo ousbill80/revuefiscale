@@ -113,12 +113,21 @@ def test_zip_valide_contenu_et_sommaire(session):
         assert "[À FAIRE] CAD-01" in programme
         assert "0/15 diligences faites (0.0 %)" in programme
 
+        # 14 — courrier d'envoi du rapport : toujours présent (produit
+        # même sans exécution), format Word réel.
+        assert "14_courrier_envoi_rapport.docx" in noms
+        assert z.read("14_courrier_envoi_rapport.docx")[:4] == b"PK\x03\x04"
+
         # Sommaire : identification + pièces incluses + omissions motivées.
         sommaire = z.read("00_sommaire.txt").decode("utf-8")
         assert "DOSSIER DE TRAVAIL" in sommaire
         assert "PM Demande FICTIF" in sommaire
         assert "2025" in sommaire
-        assert "PIÈCES INCLUSES (8)" in sommaire
+        assert "PIÈCES INCLUSES (9)" in sommaire
+        assert (
+            "14_courrier_envoi_rapport.docx : Courrier d'envoi du rapport"
+            in sommaire
+        )
         assert "PIÈCES OMISES (5)" in sommaire
         assert "08_comparatif_executions.txt : OMISE" in sommaire
         assert "09_provision_risques.txt : OMISE" in sommaire
@@ -192,9 +201,10 @@ def test_comparatif_et_provision_inclus_quand_disponibles(session):
         assert "CREDIT 1918" in provision
 
         sommaire = z.read("00_sommaire.txt").decode("utf-8")
-        assert "PIÈCES INCLUSES (10)" in sommaire
+        assert "PIÈCES INCLUSES (11)" in sommaire
         # Ni temps, ni visa, ni réponse sur cette mission → 10/11/12 omises.
         assert "PIÈCES OMISES (3)" in sommaire
+        assert "14_courrier_envoi_rapport.docx" in noms
 
 
 def test_temps_visas_reponses_inclus_quand_disponibles(session):
@@ -295,13 +305,17 @@ def test_temps_visas_reponses_inclus_quand_disponibles(session):
 
         # Sommaire cohérent : 10/11/12 incluses, plus omises.
         sommaire = z.read("00_sommaire.txt").decode("utf-8")
-        assert "PIÈCES INCLUSES (11)" in sommaire
+        assert "PIÈCES INCLUSES (12)" in sommaire
         assert "PIÈCES OMISES (2)" in sommaire
         assert "10_temps_mission.csv : Feuille de temps" in sommaire
         assert "11_visas_supervision.txt : Registre des visas" in sommaire
         assert "12_reponses_client.txt : Réponses client saisies" in sommaire
         assert (
             "13_programme_travail.txt : Programme de travail" in sommaire
+        )
+        assert (
+            "14_courrier_envoi_rapport.docx : Courrier d'envoi du rapport"
+            in sommaire
         )
 
 
@@ -327,6 +341,7 @@ def test_piece_en_echec_est_omise_et_notee(session, monkeypatch):
         # Les autres pièces restent produites (indépendance des pièces).
         assert "03_rapport_restitution.pdf" in noms
         assert "06_suivi_circularisation.csv" in noms
+        assert "14_courrier_envoi_rapport.docx" in noms
         sommaire = z.read("00_sommaire.txt").decode("utf-8")
         assert (
             "02_rapport_restitution.docx : OMISE — panne simulée du rendu Word"

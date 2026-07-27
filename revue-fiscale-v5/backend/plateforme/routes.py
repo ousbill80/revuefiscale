@@ -614,6 +614,49 @@ def api_courrier_relance_docx(
     )
 
 
+@router.get("/missions/{mission_id}/courrier-envoi.docx")
+def api_courrier_envoi_docx(
+    mission_id: int,
+    utilisateur: UtilisateurDep,
+    session: Annotated[Session, Depends(session_abonne)],
+) -> Response:
+    """Courrier d'envoi du rapport .docx — lettre d'accompagnement client.
+
+    Produit même sans exécution (constats « en cours d'instruction ») :
+    seule une mission hors tenant (RLS) renvoie 404.
+    """
+    from backend.moteur.journal import append_journal
+    from backend.plateforme.courrier_envoi_rapport import (
+        ErreurCourrierEnvoiIntrouvable,
+        generer_courrier_envoi_complet,
+    )
+
+    exiger_capacite(utilisateur, "lire")
+    try:
+        contenu, nom_fichier, stats = generer_courrier_envoi_complet(
+            session, utilisateur.tenant_id, mission_id
+        )
+    except ErreurCourrierEnvoiIntrouvable as e:
+        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail=str(e)) from e
+    append_journal(
+        session,
+        tenant_id=utilisateur.tenant_id,
+        mission_id=mission_id,
+        acteur=utilisateur.email,
+        action="telechargement_courrier_envoi",
+        charge_utile=dict(stats),
+    )
+    return Response(
+        content=contenu,
+        media_type=(
+            "application/vnd.openxmlformats-officedocument.wordprocessingml.document"
+        ),
+        headers={
+            "Content-Disposition": f'attachment; filename="{nom_fichier}"'
+        },
+    )
+
+
 @router.get("/missions/{mission_id}/dossier-travail.zip")
 def api_dossier_travail_zip(
     mission_id: int,

@@ -584,6 +584,8 @@ export function RestitutionVue({
   const [demandeErr, setDemandeErr] = useState<string | null>(null);
   const [dossierBusy, setDossierBusy] = useState(false);
   const [dossierErr, setDossierErr] = useState<string | null>(null);
+  const [courrierEnvoiBusy, setCourrierEnvoiBusy] = useState(false);
+  const [courrierEnvoiErr, setCourrierEnvoiErr] = useState<string | null>(null);
   const [comparatifOuvert, setComparatifOuvert] = useState(false);
   const [comparatif, setComparatif] = useState<ComparatifOut | null>(null);
   const [comparatifErr, setComparatifErr] = useState<string | null>(null);
@@ -1010,6 +1012,34 @@ export function RestitutionVue({
       );
     } finally {
       setRelanceBusy(false);
+    }
+  }
+
+  async function telechargerCourrierEnvoi() {
+    if (!jeton || !r.mission_id || courrierEnvoiBusy) return;
+    setCourrierEnvoiBusy(true);
+    setCourrierEnvoiErr(null);
+    try {
+      const denom = (
+        r.identification?.contribuable_denomination || "client"
+      )
+        .normalize("NFKD")
+        .replace(/[\u0300-\u036f]/g, "")
+        .replace(/[^A-Za-z0-9]+/g, "_")
+        .replace(/^_+|_+$/g, "")
+        .toUpperCase() || "CLIENT";
+      const exo = r.identification?.exercice ?? "exercice";
+      await telecharger(
+        `/api/v1/missions/${r.mission_id}/courrier-envoi.docx`,
+        jeton,
+        `courrier_envoi_rapport_${denom}_${exo}.docx`,
+      );
+    } catch (e) {
+      setCourrierEnvoiErr(
+        e instanceof Error ? e.message : "téléchargement impossible",
+      );
+    } finally {
+      setCourrierEnvoiBusy(false);
     }
   }
 
@@ -2013,6 +2043,21 @@ export function RestitutionVue({
           {lettreErr && (
             <span className="rest-lettre-err" role="alert">
               {lettreErr}
+            </span>
+          )}
+          <Tooltip label="Courrier d'envoi du rapport (.docx) — lettre d'accompagnement à en-tête du cabinet : livrables remis, principaux constats chiffrés, invitation à la réunion de restitution, signature associé.">
+            <button
+              type="button"
+              className="btn btn-ghost btn-sm rest-courrier-envoi-btn"
+              onClick={() => void telechargerCourrierEnvoi()}
+              disabled={courrierEnvoiBusy || !jeton}
+            >
+              {courrierEnvoiBusy ? "Courrier…" : "Courrier d'envoi"}
+            </button>
+          </Tooltip>
+          {courrierEnvoiErr && (
+            <span className="rest-lettre-err" role="alert">
+              {courrierEnvoiErr}
             </span>
           )}
           <Tooltip label="Demande de renseignements et de documents au client — questions de la revue analytique et pièces manquantes, numérotées pour réponse">

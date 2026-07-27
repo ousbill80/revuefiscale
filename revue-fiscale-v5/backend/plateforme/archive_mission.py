@@ -29,6 +29,7 @@ from sqlalchemy.orm import Session
 from backend.plateforme.comparatif_executions import comparer_executions
 from backend.plateforme.contexte import contexte_tenant
 from backend.plateforme.controle_cloture import evaluer_cloture
+from backend.plateforme.courrier_envoi_rapport import generer_courrier_envoi
 from backend.plateforme.demande_renseignements import (
     generer_demande_renseignements,
 )
@@ -466,6 +467,14 @@ def _piece_programme_travail(
     return "\n".join(lignes).encode("utf-8")
 
 
+def _piece_courrier_envoi(
+    session: Session, tenant_id: int, mission_id: int, meta: dict[str, Any]
+) -> bytes:
+    """Courrier d'envoi du rapport — toujours produit (même sans exécution :
+    la lettre mentionne alors « constats en cours d'instruction »)."""
+    return generer_courrier_envoi(session, tenant_id, mission_id)
+
+
 # Ordre du dossier : (nom de fichier dans le ZIP, description, constructeur).
 _PIECES: Final[
     tuple[tuple[str, str, Callable[[Session, int, int, dict[str, Any]], bytes]], ...]
@@ -534,6 +543,11 @@ _PIECES: Final[
         "13_programme_travail.txt",
         "Programme de travail et avancement des diligences",
         _piece_programme_travail,
+    ),
+    (
+        "14_courrier_envoi_rapport.docx",
+        "Courrier d'envoi du rapport au client",
+        _piece_courrier_envoi,
     ),
 )
 
