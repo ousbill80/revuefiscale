@@ -322,6 +322,36 @@ def _point_visas_supervision(
     )
 
 
+def _point_programme_travail(etat: dict[str, Any]) -> dict[str, str]:
+    """Avancement du programme de travail — consultatif, jamais bloquant."""
+    libelle = "Programme de travail exécuté"
+    synthese = etat["synthese"]
+    faites = int(synthese["faites"])
+    total = int(synthese["total"])
+    if total > 0 and faites == total:
+        return _point(
+            "programme_travail",
+            libelle,
+            STATUT_OK,
+            f"Les {total} diligences du programme de travail sont faites "
+            f"({synthese['avancement_pct']} %).",
+        )
+    restantes = [
+        d["code"]
+        for phase in etat["phases"]
+        for d in phase["diligences"]
+        if not d["fait"]
+    ]
+    apercu = ", ".join(restantes[:6]) + ("…" if len(restantes) > 6 else "")
+    return _point(
+        "programme_travail",
+        libelle,
+        STATUT_ATTENTION,
+        f"{faites}/{total} diligences faites "
+        f"({synthese['avancement_pct']} %) — restantes : {apercu}.",
+    )
+
+
 def evaluer_cloture(
     session: Session, tenant_id: int, mission_id: int
 ) -> dict[str, Any]:
@@ -351,6 +381,15 @@ def evaluer_cloture(
             _point_pieces_justificatives(session, contribuable_id),
             _point_visas_supervision(session, mission_id),
         ]
+
+    # etat_programme gère son propre contexte_tenant — appel hors du with.
+    from backend.plateforme.programme_travail import etat_programme
+
+    points.append(
+        _point_programme_travail(
+            etat_programme(session, tenant_id, mission_id)
+        )
+    )
 
     synthese = {
         STATUT_OK: sum(1 for p in points if p["statut"] == STATUT_OK),

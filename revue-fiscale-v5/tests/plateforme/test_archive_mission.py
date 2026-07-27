@@ -105,12 +105,20 @@ def test_zip_valide_contenu_et_sommaire(session):
         assert "11_visas_supervision.txt" not in noms
         assert "12_reponses_client.txt" not in noms
 
+        # 13 — programme de travail : toujours présent (init paresseuse),
+        # toutes les diligences à faire sur une mission fraîche.
+        assert "13_programme_travail.txt" in noms
+        programme = z.read("13_programme_travail.txt").decode("utf-8")
+        assert "PROGRAMME DE TRAVAIL" in programme
+        assert "[À FAIRE] CAD-01" in programme
+        assert "0/15 diligences faites (0.0 %)" in programme
+
         # Sommaire : identification + pièces incluses + omissions motivées.
         sommaire = z.read("00_sommaire.txt").decode("utf-8")
         assert "DOSSIER DE TRAVAIL" in sommaire
         assert "PM Demande FICTIF" in sommaire
         assert "2025" in sommaire
-        assert "PIÈCES INCLUSES (7)" in sommaire
+        assert "PIÈCES INCLUSES (8)" in sommaire
         assert "PIÈCES OMISES (5)" in sommaire
         assert "08_comparatif_executions.txt : OMISE" in sommaire
         assert "09_provision_risques.txt : OMISE" in sommaire
@@ -184,7 +192,7 @@ def test_comparatif_et_provision_inclus_quand_disponibles(session):
         assert "CREDIT 1918" in provision
 
         sommaire = z.read("00_sommaire.txt").decode("utf-8")
-        assert "PIÈCES INCLUSES (9)" in sommaire
+        assert "PIÈCES INCLUSES (10)" in sommaire
         # Ni temps, ni visa, ni réponse sur cette mission → 10/11/12 omises.
         assert "PIÈCES OMISES (3)" in sommaire
 
@@ -287,11 +295,14 @@ def test_temps_visas_reponses_inclus_quand_disponibles(session):
 
         # Sommaire cohérent : 10/11/12 incluses, plus omises.
         sommaire = z.read("00_sommaire.txt").decode("utf-8")
-        assert "PIÈCES INCLUSES (10)" in sommaire
+        assert "PIÈCES INCLUSES (11)" in sommaire
         assert "PIÈCES OMISES (2)" in sommaire
         assert "10_temps_mission.csv : Feuille de temps" in sommaire
         assert "11_visas_supervision.txt : Registre des visas" in sommaire
         assert "12_reponses_client.txt : Réponses client saisies" in sommaire
+        assert (
+            "13_programme_travail.txt : Programme de travail" in sommaire
+        )
 
 
 def test_piece_en_echec_est_omise_et_notee(session, monkeypatch):

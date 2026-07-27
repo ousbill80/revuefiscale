@@ -33,6 +33,7 @@ from backend.plateforme.demande_renseignements import (
     generer_demande_renseignements,
 )
 from backend.plateforme.lettre_mission import generer_lettre_mission
+from backend.plateforme.programme_travail import etat_programme
 from backend.plateforme.provision_risques import calculer_provision
 from backend.plateforme.rapport_risques import exporter_rapport_risques_pdf
 from backend.plateforme.reponses_client import lister_reponses
@@ -433,6 +434,38 @@ def _piece_reponses_client(
     return "\n".join(lignes).encode("utf-8")
 
 
+def _piece_programme_travail(
+    session: Session, tenant_id: int, mission_id: int, meta: dict[str, Any]
+) -> bytes:
+    etat = etat_programme(session, tenant_id, mission_id)
+    s = etat["synthese"]
+    lignes = [
+        "PROGRAMME DE TRAVAIL — avancement des diligences par phase",
+        f"Mission #{mission_id} — {s['faites']}/{s['total']} diligences "
+        f"faites ({s['avancement_pct']} %)",
+        "",
+    ]
+    for p in etat["phases"]:
+        lignes.append(
+            f"PHASE {str(p['phase']).upper()} — {p['faites']}/{p['total']} "
+            f"({p['avancement_pct']} %)"
+        )
+        for d in p["diligences"]:
+            if d["fait"]:
+                lignes.append(
+                    f"  [FAIT par {d['fait_par']} le {d['fait_le']}] "
+                    f"{d['code']} — {d['libelle']}"
+                )
+            else:
+                lignes.append(f"  [À FAIRE] {d['code']} — {d['libelle']}")
+        lignes.append("")
+    lignes.append(
+        f"Synthèse : {s['faites']}/{s['total']} diligences faites "
+        f"({s['avancement_pct']} %)."
+    )
+    return "\n".join(lignes).encode("utf-8")
+
+
 # Ordre du dossier : (nom de fichier dans le ZIP, description, constructeur).
 _PIECES: Final[
     tuple[tuple[str, str, Callable[[Session, int, int, dict[str, Any]], bytes]], ...]
@@ -496,6 +529,11 @@ _PIECES: Final[
         "12_reponses_client.txt",
         "Réponses client saisies (traçabilité avant re-contrôle)",
         _piece_reponses_client,
+    ),
+    (
+        "13_programme_travail.txt",
+        "Programme de travail et avancement des diligences",
+        _piece_programme_travail,
     ),
 )
 

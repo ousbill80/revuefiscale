@@ -185,6 +185,23 @@ def _viser_restitution(session, tenant_id: int, mission_id: int) -> None:
         )
 
 
+def _cocher_tout_le_programme(session, tenant_id: int, mission_id: int):
+    from backend.plateforme.programme_travail import (
+        PROGRAMME_STANDARD,
+        cocher_diligence,
+    )
+
+    for _, code, _ in PROGRAMME_STANDARD:
+        cocher_diligence(
+            session,
+            tenant_id,
+            mission_id,
+            code=code,
+            fait=True,
+            fait_par="collab@test.ci",
+        )
+
+
 def _points_par_code(resultat: dict) -> dict[str, dict]:
     return {p["code"]: p for p in resultat["points"]}
 
@@ -227,10 +244,11 @@ def test_tout_traite_tous_les_points_ok(session):
     _creer_risque(session, tid, cid, montant=1_000_000, statut="accepte")
     _note_disponible(session, tid, mid)
     _viser_restitution(session, tid, mid)
+    _cocher_tout_le_programme(session, tid, mid)
 
     r = evaluer_cloture(session, tid, mid)
-    assert [p["statut"] for p in r["points"]] == ["ok"] * 6
-    assert r["synthese"] == {"ok": 6, "attention": 0, "bloquant": 0}
+    assert [p["statut"] for p in r["points"]] == ["ok"] * 7
+    assert r["synthese"] == {"ok": 7, "attention": 0, "bloquant": 0}
     assert r["cloture_recommandee"] is True
 
 
@@ -342,6 +360,7 @@ def test_api_cloture_enrichie_du_controle(session):
         "reponses_client",
         "pieces_justificatives",
         "visas_supervision",
+        "programme_travail",
     }
 
     clot = client.patch(
