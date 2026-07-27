@@ -31,6 +31,7 @@ from backend.plateforme.civisme_fiscal import (
     STATUT_MANQUANTE,
     analyse_mission as analyse_civisme_fiscal,
 )
+from backend.plateforme.bilan_cloture import bilan_mission
 from backend.plateforme.comparatif_executions import comparer_executions
 from backend.plateforme.contexte import contexte_tenant
 from backend.plateforme.controle_cloture import evaluer_cloture
@@ -756,6 +757,37 @@ def _piece_courrier_relance(
     return str(c["courrier"]).encode("utf-8")
 
 
+def _piece_bilan_cloture(
+    session: Session, tenant_id: int, mission_id: int, meta: dict[str, Any]
+) -> bytes:
+    """Bilan de pré-clôture texte — toujours produit (points « ok » ou
+    « attention », jamais bloquant). ``bilan_mission`` ouvre son propre
+    ``contexte_tenant`` : appel HORS de tout autre contexte."""
+    b = bilan_mission(session, tenant_id, mission_id)
+    s = b.get("synthese", {})
+    date_bilan = datetime.now(timezone.utc).strftime("%d/%m/%Y %H:%M UTC")
+    lignes = [
+        "BILAN DE PRÉ-CLÔTURE — consultatif, déterministe",
+        f"Mission #{b['mission_id']} — statut : {b['statut_mission']} — "
+        f"bilan au {date_bilan}",
+        "",
+    ]
+    for p in b.get("points", []):
+        statut = _LIBELLES_STATUT_POINT.get(
+            str(p.get("statut")), str(p.get("statut", "")).upper()
+        )
+        lignes.append(f"[{statut}] {p.get('libelle')}")
+    lignes += [
+        "",
+        f"Synthèse : {s.get('points_ok', 0)} point(s) ok, "
+        f"{s.get('points_attention', 0)} point(s) d'attention — "
+        "prêt à clôturer : " + ("oui" if s.get("pret") else "non") + ".",
+        "",
+        f"* {b.get('note')}",
+    ]
+    return "\n".join(lignes).encode("utf-8")
+
+
 # Ordre du dossier : (nom de fichier dans le ZIP, description, constructeur).
 _PIECES: Final[
     tuple[tuple[str, str, Callable[[Session, int, int, dict[str, Any]], bytes]], ...]
@@ -864,6 +896,11 @@ _PIECES: Final[
         "21_courrier_relance.txt",
         "Courrier de relance des éléments en attente (circularisation)",
         _piece_courrier_relance,
+    ),
+    (
+        "22_bilan_cloture.txt",
+        "Bilan de pré-clôture (points ok / attention, consultatif)",
+        _piece_bilan_cloture,
     ),
 )
 
