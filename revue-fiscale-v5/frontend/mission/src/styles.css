@@ -9504,3 +9504,395 @@ tr.row-active td {
 /* Visas de supervision — grille phases × rôles (préparateur, réviseur, associé). */
 .rest-visas-roles { display: grid; gap: 0.3rem; width: 100%; margin-top: 0.15rem; }
 .rest-visas-role { display: flex; flex-wrap: wrap; align-items: center; gap: 0.35rem; font-size: 0.8rem; color: var(--ink, #0f172a); }
+
+/* =============================================================
+   Cadrage mission — « on cadre une lettre de mission »
+   Page fluide Qui / Quoi / Comment + lettre récapitulative sticky.
+   ============================================================= */
+.cadrage {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) 21rem;
+  gap: 1rem;
+  align-items: start;
+  animation: fadein 0.3s ease both;
+}
+
+.cadrage-main {
+  display: flex;
+  flex-direction: column;
+  gap: 0.85rem;
+  min-width: 0;
+}
+
+.cadrage-bloc {
+  background: var(--surface-solid);
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+  padding: 0.85rem 0.95rem 1rem;
+  box-shadow: var(--shadow-xs);
+  transition: opacity 0.15s ease;
+}
+
+.cadrage-bloc.is-locked {
+  opacity: 0.45;
+  pointer-events: none;
+  user-select: none;
+}
+
+.cadrage-bloc-head {
+  display: flex;
+  gap: 0.65rem;
+  align-items: flex-start;
+  margin-bottom: 0.75rem;
+}
+
+.cadrage-bloc-n {
+  flex: 0 0 auto;
+  width: 1.5rem;
+  height: 1.5rem;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 50%;
+  background: var(--accent-soft);
+  border: 1px solid var(--accent);
+  color: var(--accent-deep);
+  font-size: 0.75rem;
+  font-weight: 700;
+}
+
+.cadrage-bloc-head h3 {
+  margin: 0;
+  font-size: 0.95rem;
+  color: var(--ink);
+}
+
+.cadrage-bloc-head p {
+  margin: 0.15rem 0 0;
+  font-size: 0.78rem;
+  color: var(--muted);
+}
+
+.cadrage-sous-titre {
+  font-size: 0.85rem;
+  font-weight: 600;
+  color: var(--ink-soft);
+  margin: 0 0 0.35rem;
+}
+
+/* --- Bloc Qui : recherche + cartes clients --- */
+.cadrage-search {
+  width: 100%;
+  margin-bottom: 0.6rem;
+}
+
+.cadrage-clients {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(13rem, 1fr));
+  gap: 0.45rem;
+}
+
+.cadrage-client-card {
+  appearance: none;
+  display: flex;
+  flex-direction: column;
+  gap: 0.15rem;
+  padding: 0.55rem 0.7rem;
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+  background: var(--surface);
+  font: inherit;
+  text-align: left;
+  cursor: pointer;
+  transition:
+    border-color 0.12s ease,
+    background 0.12s ease,
+    box-shadow 0.12s ease;
+}
+
+.cadrage-client-card:hover {
+  border-color: color-mix(in srgb, var(--accent) 35%, var(--line));
+  background: var(--accent-soft);
+}
+
+.cadrage-client-card:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 1px;
+}
+
+.cadrage-client-card strong {
+  font-size: 0.82rem;
+  color: var(--ink);
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.cadrage-client-card span {
+  font-size: 0.7rem;
+  font-weight: 550;
+  color: var(--muted);
+}
+
+.cadrage-client-resume {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.75rem;
+  padding: 0.6rem 0.75rem;
+  border: 1px solid var(--accent);
+  border-radius: var(--radius);
+  background: var(--accent-soft);
+}
+
+.cadrage-client-resume strong {
+  display: block;
+  font-size: 0.86rem;
+  color: var(--accent-deep);
+}
+
+.cadrage-client-resume span {
+  display: block;
+  font-size: 0.72rem;
+  color: var(--ink-soft);
+}
+
+.cadrage-creer-lien {
+  margin-top: 0.7rem;
+  display: inline-block;
+}
+
+.cadrage-fiche {
+  margin-top: 0.75rem;
+  padding-top: 0.75rem;
+  border-top: 1px dashed var(--line);
+}
+
+/* --- Bloc Quoi : cartes engagement + exercice rapide --- */
+.engagement-cards {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(13.5rem, 1fr));
+  gap: 0.5rem;
+  margin-bottom: 0.9rem;
+}
+
+.engagement-card {
+  appearance: none;
+  display: flex;
+  flex-direction: column;
+  gap: 0.2rem;
+  padding: 0.6rem 0.75rem;
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+  background: var(--surface);
+  font: inherit;
+  text-align: left;
+  cursor: pointer;
+  transition:
+    border-color 0.12s ease,
+    background 0.12s ease,
+    box-shadow 0.12s ease;
+}
+
+.engagement-card:hover {
+  border-color: color-mix(in srgb, var(--accent) 35%, var(--line));
+}
+
+.engagement-card:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 1px;
+}
+
+.engagement-card.is-on {
+  border-color: var(--accent);
+  background: var(--accent-soft);
+  box-shadow: 0 0 0 2px var(--accent-ring);
+}
+
+.engagement-card strong {
+  font-size: 0.82rem;
+  color: var(--ink);
+}
+
+.engagement-card.is-on strong {
+  color: var(--accent-deep);
+}
+
+.engagement-card span {
+  font-size: 0.72rem;
+  line-height: 1.35;
+  color: var(--muted);
+}
+
+.cadrage-exercice {
+  margin: 0.35rem 0 0.9rem;
+}
+
+.cadrage-exercice-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.45rem;
+  align-items: stretch;
+}
+
+.exercice-btn {
+  appearance: none;
+  display: inline-flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0;
+  padding: 0.4rem 0.9rem;
+  border: 1px solid var(--line);
+  border-radius: var(--radius-sm);
+  background: var(--surface);
+  font: inherit;
+  font-weight: 700;
+  font-size: 0.85rem;
+  color: var(--ink-soft);
+  cursor: pointer;
+  transition:
+    border-color 0.12s ease,
+    background 0.12s ease;
+}
+
+.exercice-btn small {
+  font-size: 0.62rem;
+  font-weight: 550;
+  color: var(--muted);
+}
+
+.exercice-btn:hover {
+  border-color: color-mix(in srgb, var(--accent) 35%, var(--line));
+}
+
+.exercice-btn.is-on {
+  border-color: var(--accent);
+  background: var(--accent-soft);
+  color: var(--accent-deep);
+}
+
+.exercice-btn.is-on small {
+  color: var(--accent-deep);
+}
+
+.exercice-libre {
+  width: 6.5rem;
+  text-align: center;
+}
+
+.cadrage-profil {
+  margin-top: 0.35rem;
+}
+
+.cadrage-forme-pp {
+  margin-top: 0.9rem;
+}
+
+/* --- Bloc Comment : affinage replié --- */
+.cadrage-affiner {
+  margin-top: 0.9rem;
+  border-top: 1px solid var(--line);
+  padding-top: 0.7rem;
+}
+
+.cadrage-affiner summary {
+  cursor: pointer;
+  font-size: 0.82rem;
+  font-weight: 600;
+  color: var(--accent-deep);
+  list-style-position: inside;
+}
+
+.cadrage-affiner summary:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 1px;
+}
+
+.cadrage-affiner-corps {
+  margin-top: 0.75rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+}
+
+/* --- Lettre de mission sticky --- */
+.lettre-panel {
+  position: sticky;
+  top: 0.75rem;
+  background: var(--surface-solid);
+  border: 1px solid var(--line);
+  border-radius: var(--radius-lg);
+  padding: 0.85rem 0.95rem 1rem;
+  box-shadow: var(--shadow-xs);
+}
+
+.lettre-kicker {
+  margin: 0 0 0.6rem;
+  font-size: 0.68rem;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--accent-deep);
+}
+
+.lettre-corps {
+  display: flex;
+  flex-direction: column;
+  gap: 0.55rem;
+  padding-bottom: 0.75rem;
+  border-bottom: 1px dashed var(--line);
+  margin-bottom: 0.75rem;
+}
+
+.lettre-ligne {
+  margin: 0;
+  font-size: 0.78rem;
+  line-height: 1.45;
+  color: var(--muted);
+}
+
+.lettre-ligne.ok {
+  color: var(--ink-soft);
+}
+
+.lettre-ligne em {
+  color: var(--muted);
+}
+
+.lettre-k {
+  display: block;
+  font-size: 0.62rem;
+  font-weight: 700;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--muted);
+}
+
+.lettre-ligne.ok .lettre-k {
+  color: var(--accent-deep);
+}
+
+.lettre-creer {
+  width: 100%;
+  justify-content: center;
+}
+
+.lettre-manque {
+  margin: 0.5rem 0 0;
+  font-size: 0.72rem;
+  color: var(--muted);
+}
+
+.lettre-panel .status {
+  margin: 0 0 0.6rem;
+}
+
+@media (max-width: 1100px) {
+  .cadrage {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .lettre-panel {
+    position: static;
+  }
+}

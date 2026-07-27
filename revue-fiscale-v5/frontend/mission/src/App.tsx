@@ -22,17 +22,11 @@ import {
   type BalanceAnalyse,
   type ChecklistItem,
 } from "./balanceAnalyse";
-import { Field, SelectField } from "./Field";
 import { Logo, LogoMark } from "./Logo";
 import {
-  FORMES_JURIDIQUES_PM,
-  FORMES_PERSONNE,
-  MOIS_CLOTURE,
   REGIMES_FISCAUX,
-  SECTEURS_ACTIVITE,
   composerActivite,
   completudeIdentite,
-  decomposerActivite,
   identiteApiMinimale,
   type FormePersonne,
 } from "./legalite";
@@ -50,6 +44,7 @@ import {
   libelleStatut,
   type MissionRow,
 } from "./MissionsVue";
+import { CadrageMissionVue } from "./CadrageMissionVue";
 import { CompteVue } from "./CompteVue";
 import { EquipeVue } from "./EquipeVue";
 import { FacturationVue } from "./FacturationVue";
@@ -58,12 +53,6 @@ import {
   type PieceContribuable,
 } from "./PiecesContribuable";
 import { PhoneField } from "./PhoneField";
-import {
-  CODES_IMPOT_PIVOT,
-  PERIMETRE_DONS_HINT,
-  PERIMETRE_EXONERATIONS_HINT,
-  tipImpot,
-} from "./impotLabels";
 import { PROCESS_TIPS } from "./processTips";
 import { RestitutionVue } from "./RestitutionVue";
 import type { ResumeRisques } from "./RegistreRisques";
@@ -132,10 +121,9 @@ const JEUX_BALANCE = [
 ] as const;
 
 const STEPS = [
-  { n: 1, lbl: "Client", desc: "Identité légale" },
-  { n: 2, lbl: "Mission", desc: "Paramètres" },
-  { n: 3, lbl: "Sources", desc: "Import comptable" },
-  { n: 4, lbl: "Résultat", desc: "Restitution" },
+  { n: 1, lbl: "Cadrage", desc: "Lettre de mission" },
+  { n: 2, lbl: "Sources", desc: "Import comptable" },
+  { n: 3, lbl: "Résultat", desc: "Restitution" },
 ] as const;
 
 const TYPES_ENGAGEMENT = [
@@ -258,7 +246,7 @@ type Vue =
   | "facturation"
   | "compte";
 
-type Contribuable = {
+export type Contribuable = {
   id: number;
   denomination: string;
   ncc?: string | null;
@@ -1367,11 +1355,6 @@ export function App() {
   const exerciceFutur = Number(exercice) > anneeCourante;
   const exercicePrescrit =
     !exerciceFutur && Number(exercice) < anneeCourante - 3;
-  const etape1Ok = apiMin.ok && !conflitFiche;
-  const etape2Ok =
-    !exerciceFutur &&
-    (!exercicePrescrit || prescriptionConfirmee) &&
-    !!typeEngagement;
 
   const balanceAnalyseJson = useMemo(
     () => analyserBalanceJson(balanceJson),
@@ -1617,6 +1600,23 @@ export function App() {
     }
   }
 
+  /** Cadrage — repart sur une fiche contribuable vierge. */
+  function reinitialiserClientCadrage() {
+    setContribIdExistant(null);
+    setContribNom("");
+    setContribNcc("");
+    setContribRccm("");
+    setContribDfe("");
+    setContribSiege("");
+    setContribCommune("");
+    setContribCentreImpots("");
+    setContribCapital("");
+    setContribMoisCloture("12");
+    setContribActivite("");
+    setContribDateImmat("");
+    setSecteur("");
+  }
+
   async function aller(
     v: Vue,
     opts?: { filtreStatut?: string; filtreExercice?: string },
@@ -1662,6 +1662,178 @@ export function App() {
     }
   }
 
+  /** Validations bloquantes du cadrage (client + exercice + engagement). */
+  function validerCadrage() {
+    if (!apiMin.ok) {
+      throw new Error(
+        `Identité minimale incomplète : ${apiMin.manquants.join(", ")}.`,
+      );
+    }
+    if (conflitFiche) {
+      throw new Error(
+        `Cette entreprise existe déjà : « ${conflitFiche.client.denomination} » (#${conflitFiche.client.id}) — utilisez la fiche existante du portefeuille.`,
+      );
+    }
+    if (!typeEngagement) {
+      throw new Error(
+        "Type d'engagement non choisi — sélectionnez-le au cadrage.",
+      );
+    }
+    if (exerciceFutur) {
+      throw new Error(
+        `L'exercice ${exercice} n'est pas encore clos — une revue fiscale porte sur un exercice achevé.`,
+      );
+    }
+    if (exercicePrescrit && !prescriptionConfirmee) {
+      throw new Error(
+        `L'exercice ${exercice} est a priori prescrit — confirmez la revue volontaire au cadrage.`,
+      );
+    }
+  }
+
+  /** Crée ou met à jour le contribuable de la fiche courante → id. */
+  async function assurerContribuable(jeton: string): Promise<number> {
+    const payloadIdentite = {
+      denomination: contribNom.trim(),
+      ncc: contribNcc.trim(),
+      forme: contribForme,
+      rccm: contribForme === "pm" ? contribRccm.trim() : null,
+      dfe: contribForme === "pm" ? contribDfe.trim() || null : null,
+      regime_fiscal: regime,
+      forme_juridique: contribForme === "pp" ? "EI" : forme,
+      siege_social: contribSiege.trim() || null,
+      commune: contribCommune.trim() || null,
+      centre_impots: contribCentreImpots.trim() || null,
+      capital_social:
+        contribForme === "pm" && contribCapital.trim()
+          ? Number(contribCapital.replace(/\s/g, "").replace(",", "."))
+          : null,
+      mois_cloture: Number(contribMoisCloture) || 12,
+      activite_principale: contribActivite.trim() || null,
+      date_immatriculation: contribDateImmat.trim() || null,
+    };
+    if (contribIdExistant) {
+      setMissionStatus({ msg: "Mise à jour du contribuable…", err: false });
+      await api(`/api/v1/contribuables/${contribIdExistant}`, {
+        method: "PATCH",
+        jeton,
+        json: payloadIdentite,
+      });
+      return contribIdExistant;
+    }
+    setMissionStatus({ msg: "Création du contribuable…", err: false });
+    const contrib = await api<{ id: number }>("/api/v1/contribuables", {
+      method: "POST",
+      jeton,
+      json: payloadIdentite,
+    });
+    setContribIdExistant(contrib.id);
+    return contrib.id;
+  }
+
+  /** Crée la mission (ou réutilise celle d'une tentative précédente). */
+  async function assurerMission(
+    jeton: string,
+    cid: number,
+  ): Promise<{ id: number; version_referentiel_id: number }> {
+    if (
+      missionCreee &&
+      missionCreee.cid === cid &&
+      missionCreee.exercice === Number(exercice)
+    ) {
+      // Mission déjà créée lors d'une tentative précédente — on la réutilise
+      // au lieu de créer un doublon (la contrainte serveur le refuserait).
+      setMissionStatus({
+        msg: `Reprise de la mission #${missionCreee.id} déjà créée…`,
+        err: false,
+      });
+      return {
+        id: missionCreee.id,
+        version_referentiel_id: versionEpinglee?.id ?? 0,
+      };
+    }
+    setMissionStatus({ msg: "Création de la mission…", err: false });
+    const profil: Record<string, string | boolean> = {
+      regime,
+      forme_juridique: contribForme === "pp" ? "EI" : forme,
+    };
+    const secteurProfil = contribActivite.trim() || secteur.trim();
+    if (secteurProfil) profil.secteur = secteurProfil;
+    if (typeEntite.trim()) profil.type_entite = typeEntite.trim();
+    if (crossBorder) profil.cross_border = true;
+
+    const mission = await api<{ id: number; version_referentiel_id: number }>(
+      "/api/v1/missions",
+      {
+        method: "POST",
+        jeton,
+        json: {
+          contribuable_id: cid,
+          exercice: Number(exercice),
+          profil,
+          type_engagement: typeEngagement,
+          perimetre_impots: perimetreImpots.length > 0 ? perimetreImpots : null,
+          exclusions_declarees: exclusionsDeclarees.trim() || null,
+          seuil_signification: seuilSignification.trim()
+            ? Number(seuilSignification)
+            : null,
+          objectifs: objectifsLibelles
+            .map((l) => l.trim())
+            .filter(Boolean)
+            .map((libelle) => ({ libelle })),
+        },
+      },
+    );
+    setMissionCreee({ id: mission.id, cid, exercice: Number(exercice) });
+    setVersionEpinglee({ id: mission.version_referentiel_id });
+    return mission;
+  }
+
+  /** Erreurs de création — 403 quota, 409 doublon, 400 validation. */
+  function messageErreurCreation(err: unknown): string {
+    let msg = err instanceof Error ? err.message : String(err);
+    if (err instanceof ApiError && err.status === 403) {
+      const bas = msg.toLowerCase();
+      if (bas.includes("quota") || bas.includes("epuise") || bas.includes("épuis")) {
+        msg =
+          "Quota missions épuisé — impossible de créer une nouvelle mission. " +
+          "Contactez l’admin billing ou attendez la prochaine période. " +
+          `(${err.message})`;
+      }
+    } else if (err instanceof ApiError && err.status === 409) {
+      msg = `${err.message} Votre paramétrage est conservé — ajustez le cadrage.`;
+    } else if (err instanceof ApiError && err.status === 400) {
+      msg = `Création refusée : ${err.message}`;
+    }
+    return msg;
+  }
+
+  /**
+   * Bouton « Créer la mission » du cadrage — contribuable + mission, puis
+   * enchaîne sur l'étape Sources existante.
+   */
+  async function creerMissionDepuisCadrage() {
+    if (!session) return;
+    setBusy(true);
+    setMissionStatus(null);
+    const jeton = session.jeton;
+    try {
+      validerCadrage();
+      const cid = await assurerContribuable(jeton);
+      const mission = await assurerMission(jeton, cid);
+      setMissionId(mission.id);
+      setMissionStatus({
+        msg: `Mission #${mission.id} créée — référentiel épinglé id=${mission.version_referentiel_id}. Déposez la source comptable.`,
+        err: false,
+      });
+      setStep(2);
+    } catch (err) {
+      setMissionStatus({ msg: messageErreurCreation(err), err: true });
+    } finally {
+      setBusy(false);
+    }
+  }
+
   async function lancerRevue() {
     if (!session) return;
     setBusy(true);
@@ -1669,125 +1841,15 @@ export function App() {
     setAuditJournal(null);
     setMissionId(null);
     setEtapeRetour(null);
-    setStep(4);
+    setStep(3);
     const jeton = session.jeton;
     let etapeEnCours = 1;
     try {
-      if (!apiMin.ok) {
-        throw new Error(
-          `Identité minimale incomplète : ${apiMin.manquants.join(", ")}.`,
-        );
-      }
-      if (conflitFiche) {
-        throw new Error(
-          `Cette entreprise existe déjà : « ${conflitFiche.client.denomination} » (#${conflitFiche.client.id}) — utilisez la fiche existante à l'étape Client.`,
-        );
-      }
-      etapeEnCours = 2;
-      if (!typeEngagement) {
-        throw new Error(
-          "Type d'engagement non choisi — sélectionnez-le à l'étape Mission.",
-        );
-      }
-      if (exerciceFutur) {
-        throw new Error(
-          `L'exercice ${exercice} n'est pas encore clos — une revue fiscale porte sur un exercice achevé.`,
-        );
-      }
-      etapeEnCours = 1;
-      const payloadIdentite = {
-        denomination: contribNom.trim(),
-        ncc: contribNcc.trim(),
-        forme: contribForme,
-        rccm: contribForme === "pm" ? contribRccm.trim() : null,
-        dfe: contribForme === "pm" ? contribDfe.trim() || null : null,
-        regime_fiscal: regime,
-        forme_juridique: contribForme === "pp" ? "EI" : forme,
-        siege_social: contribSiege.trim() || null,
-        commune: contribCommune.trim() || null,
-        centre_impots: contribCentreImpots.trim() || null,
-        capital_social:
-          contribForme === "pm" && contribCapital.trim()
-            ? Number(contribCapital.replace(/\s/g, "").replace(",", "."))
-            : null,
-        mois_cloture: Number(contribMoisCloture) || 12,
-        activite_principale: contribActivite.trim() || null,
-        date_immatriculation: contribDateImmat.trim() || null,
-      };
-
-      let cid: number;
-      if (contribIdExistant) {
-        setMissionStatus({ msg: "Mise à jour du contribuable…", err: false });
-        await api(`/api/v1/contribuables/${contribIdExistant}`, {
-          method: "PATCH",
-          jeton,
-          json: payloadIdentite,
-        });
-        cid = contribIdExistant;
-      } else {
-        setMissionStatus({ msg: "Création du contribuable…", err: false });
-        const contrib = await api<{ id: number }>("/api/v1/contribuables", {
-          method: "POST",
-          jeton,
-          json: payloadIdentite,
-        });
-        cid = contrib.id;
-        setContribIdExistant(cid);
-      }
-
-      etapeEnCours = 2;
-      let mission: { id: number; version_referentiel_id: number };
-      if (
-        missionCreee &&
-        missionCreee.cid === cid &&
-        missionCreee.exercice === Number(exercice)
-      ) {
-        // Mission déjà créée lors d'une tentative précédente — on la réutilise
-        // au lieu de créer un doublon (la contrainte serveur le refuserait).
-        setMissionStatus({
-          msg: `Reprise de la mission #${missionCreee.id} déjà créée…`,
-          err: false,
-        });
-        mission = { id: missionCreee.id, version_referentiel_id: versionEpinglee?.id ?? 0 };
-      } else {
-        setMissionStatus({ msg: "Création de la mission…", err: false });
-        const profil: Record<string, string | boolean> = {
-          regime,
-          forme_juridique: payloadIdentite.forme_juridique,
-        };
-        const secteurProfil = (contribActivite.trim() || secteur.trim());
-        if (secteurProfil) profil.secteur = secteurProfil;
-        if (typeEntite.trim()) profil.type_entite = typeEntite.trim();
-        if (crossBorder) profil.cross_border = true;
-
-        mission = await api<{ id: number; version_referentiel_id: number }>(
-          "/api/v1/missions",
-          {
-            method: "POST",
-            jeton,
-            json: {
-              contribuable_id: cid,
-              exercice: Number(exercice),
-              profil,
-              type_engagement: typeEngagement,
-              perimetre_impots:
-                perimetreImpots.length > 0 ? perimetreImpots : null,
-              exclusions_declarees: exclusionsDeclarees.trim() || null,
-              seuil_signification: seuilSignification.trim()
-                ? Number(seuilSignification)
-                : null,
-              objectifs: objectifsLibelles
-                .map((l) => l.trim())
-                .filter(Boolean)
-                .map((libelle) => ({ libelle })),
-            },
-          },
-        );
-        setMissionCreee({ id: mission.id, cid, exercice: Number(exercice) });
-        setVersionEpinglee({ id: mission.version_referentiel_id });
-      }
+      validerCadrage();
+      const cid = await assurerContribuable(jeton);
+      const mission = await assurerMission(jeton, cid);
       setMissionId(mission.id);
-      etapeEnCours = 3;
+      etapeEnCours = 2;
 
       if (!peutLancerRevue) {
         throw new Error(
@@ -1944,22 +2006,8 @@ export function App() {
         /* quota indicatif — silencieux */
       }
     } catch (err) {
-      let msg = err instanceof Error ? err.message : String(err);
-      if (err instanceof ApiError && err.status === 403) {
-        const bas = msg.toLowerCase();
-        if (bas.includes("quota") || bas.includes("epuise") || bas.includes("épuis")) {
-          msg =
-            "Quota missions épuisé — impossible de créer une nouvelle mission. " +
-            "Contactez l’admin billing ou attendez la prochaine période. " +
-            `(${err.message})`;
-        }
-      } else if (err instanceof ApiError && err.status === 409) {
-        msg = `${err.message} Votre paramétrage est conservé — « Revenir au paramétrage » pour l'ajuster.`;
-      } else if (err instanceof ApiError && err.status === 400) {
-        msg = `Création refusée : ${err.message}`;
-      }
       setEtapeRetour(etapeEnCours);
-      setMissionStatus({ msg, err: true });
+      setMissionStatus({ msg: messageErreurCreation(err), err: true });
     } finally {
       setBusy(false);
     }
@@ -1969,7 +2017,7 @@ export function App() {
     if (!session) return;
     setBusy(true);
     setVue("nouvelle");
-    setStep(4);
+    setStep(3);
     setMissionId(id);
     try {
       const rest = await api<Restitution>(`/api/v1/missions/${id}/restitution`, {
@@ -2506,7 +2554,7 @@ export function App() {
     session && vue === "nouvelle"
       ? restitution
         ? 100
-        : ((step - 1) / 3) * 100
+        : ((step - 1) / 2) * 100
       : 0;
 
   const navItems: Array<{
@@ -3500,7 +3548,6 @@ export function App() {
                           }
                         : !done && id === "premiere_mission"
                           ? () => {
-                              setStep(clients.length ? 2 : 1);
                               void naviguer("nouvelle");
                             }
                           : !done && id === "equipe_invitee" && estAdmin
@@ -4410,13 +4457,13 @@ export function App() {
                   <p className="page-eyebrow">Nouvelle revue</p>
                   <h2 className="section-title label-with-tip">
                     {STEPS[step - 1]?.lbl ?? "Mission"}
-                    {step === 4 && (
+                    {step === 3 && (
                       <InfoTip
                         label={PROCESS_TIPS.artefact}
                         ariaLabel="Aide : étape résultat"
                       />
                     )}
-                    {step === 2 && (
+                    {step === 1 && (
                       <InfoTip
                         label={PROCESS_TIPS.epingleWizard}
                         ariaLabel="Aide : cadrage mission"
@@ -4425,12 +4472,10 @@ export function App() {
                   </h2>
                   <p className="section-sub">
                     {step === 1 &&
-                      "Identité légale complète — PM (RCCM, NCC, régime, siège) ou PP."}
+                      "On ne remplit pas un formulaire — on cadre une lettre de mission : le client, l’engagement, le périmètre."}
                     {step === 2 &&
-                      "Cadrez l’exercice et le contexte de la mission."}
-                    {step === 3 &&
                       "Poste d’import des sources comptables — la balance alimente le moteur déterministe."}
-                    {step === 4 &&
+                    {step === 3 &&
                       "Dossier de revue — synthèse, passage, risques et suivi."}
                   </p>
                 </div>
@@ -4445,17 +4490,15 @@ export function App() {
 
               <nav className="wizard-steps" aria-label="Étapes de la mission">
                 {STEPS.map((s, idx) => {
-                  const done = s.n < step || (s.n === 4 && !!restitution);
+                  const done = s.n < step || (s.n === 3 && !!restitution);
                   const active = step === s.n;
-                  const reachable = s.n <= step || (s.n === 4 && !!restitution);
+                  const reachable = s.n <= step || (s.n === 3 && !!restitution);
                   const stepTip =
                     s.n === 1
-                      ? "Identité du contribuable — cloisonnée à votre cabinet."
+                      ? PROCESS_TIPS.epingleWizard
                       : s.n === 2
-                        ? PROCESS_TIPS.epingleWizard
-                        : s.n === 3
-                          ? PROCESS_TIPS.sourceActive
-                          : PROCESS_TIPS.artefact;
+                        ? PROCESS_TIPS.sourceActive
+                        : PROCESS_TIPS.artefact;
                   return (
                     <Tooltip key={s.n} label={stepTip} side="bottom">
                       <button
@@ -4483,843 +4526,76 @@ export function App() {
                 })}
               </nav>
 
+              {step === 1 && (
+                <CadrageMissionVue
+                  busy={busy}
+                  quotaBloque={!!quota?.bloque}
+                  missionStatus={missionStatus}
+                  clients={clients}
+                  contribIdExistant={contribIdExistant}
+                  contribNom={contribNom}
+                  setContribNom={setContribNom}
+                  contribNcc={contribNcc}
+                  setContribNcc={setContribNcc}
+                  contribForme={contribForme}
+                  setContribForme={setContribForme}
+                  contribRccm={contribRccm}
+                  setContribRccm={setContribRccm}
+                  contribDfe={contribDfe}
+                  setContribDfe={setContribDfe}
+                  contribSiege={contribSiege}
+                  setContribSiege={setContribSiege}
+                  contribCommune={contribCommune}
+                  setContribCommune={setContribCommune}
+                  contribCentreImpots={contribCentreImpots}
+                  setContribCentreImpots={setContribCentreImpots}
+                  contribCapital={contribCapital}
+                  setContribCapital={setContribCapital}
+                  contribMoisCloture={contribMoisCloture}
+                  setContribMoisCloture={setContribMoisCloture}
+                  contribActivite={contribActivite}
+                  setContribActivite={setContribActivite}
+                  contribDateImmat={contribDateImmat}
+                  setContribDateImmat={setContribDateImmat}
+                  chargerContribuable={chargerContribuableDansWizard}
+                  reinitialiserClient={reinitialiserClientCadrage}
+                  apiMin={apiMin}
+                  conflitFiche={conflitFiche}
+                  exercice={exercice}
+                  setExercice={setExercice}
+                  typeEngagement={typeEngagement}
+                  setTypeEngagement={setTypeEngagement}
+                  regime={regime}
+                  setRegime={setRegime}
+                  forme={forme}
+                  setForme={setForme}
+                  setSecteur={setSecteur}
+                  exerciceFutur={exerciceFutur}
+                  exercicePrescrit={exercicePrescrit}
+                  prescriptionConfirmee={prescriptionConfirmee}
+                  setPrescriptionConfirmee={setPrescriptionConfirmee}
+                  resumeRisques={resumeRisques}
+                  pointsOuverts={pointsOuverts}
+                  perimetreImpots={perimetreImpots}
+                  setPerimetreImpots={setPerimetreImpots}
+                  seuilSignification={seuilSignification}
+                  setSeuilSignification={setSeuilSignification}
+                  exclusionsDeclarees={exclusionsDeclarees}
+                  setExclusionsDeclarees={setExclusionsDeclarees}
+                  objectifsLibelles={objectifsLibelles}
+                  setObjectifsLibelles={setObjectifsLibelles}
+                  crossBorder={crossBorder}
+                  setCrossBorder={setCrossBorder}
+                  typeEntite={typeEntite}
+                  setTypeEntite={setTypeEntite}
+                  onCreerMission={() => void creerMissionDepuisCadrage()}
+                />
+              )}
+
+              {step > 1 && (
               <div className="panel dense wizard-panel">
-                {step === 1 && (
-                  <>
-                    {clients.length > 0 && (
-                      <div className="picker-block">
-                        <div className="picker-head">
-                          <p className="picker-kicker label-with-tip">
-                            Portefeuille
-                            <InfoTip
-                              label={PROCESS_TIPS.portefeuille}
-                              ariaLabel="Aide : portefeuille clients"
-                            />
-                          </p>
-                          <p className="picker-hint">
-                            Réutilise un client existant — la fiche légale est
-                            rechargée.
-                          </p>
-                        </div>
-                        <div className="picker-chips" role="list">
-                          {clients.map((c) => {
-                            const selected = contribIdExistant === c.id;
-                            return (
-                              <Tooltip
-                                key={c.id}
-                                label={`${c.denomination}${c.ncc ? ` · NCC ${c.ncc}` : ""}${c.forme === "pm" ? " · PM" : c.forme === "pp" ? " · PP" : ""}`}
-                                side="bottom"
-                              >
-                                <button
-                                  type="button"
-                                  role="listitem"
-                                  className={`picker-chip${selected ? " selected" : ""}`}
-                                  onClick={() => chargerContribuableDansWizard(c)}
-                                >
-                                  <span className="picker-chip-name">
-                                    {c.denomination}
-                                  </span>
-                                  <span className="picker-chip-meta">
-                                    {(c.forme || "pm").toUpperCase()}
-                                    {c.ncc ? ` · ${c.ncc}` : ""}
-                                  </span>
-                                </button>
-                              </Tooltip>
-                            );
-                          })}
-                        </div>
-                        <div className="picker-divider" role="separator">
-                          <span>
-                            {contribIdExistant
-                              ? "Client sélectionné — ou créer un nouveau"
-                              : "ou saisir un nouveau contribuable"}
-                          </span>
-                        </div>
-                        {contribIdExistant && (
-                          <button
-                            type="button"
-                            className="linkish"
-                            style={{ marginBottom: "0.75rem" }}
-                            onClick={() => {
-                              setContribIdExistant(null);
-                              setContribRccm("");
-                              setContribDfe("");
-                              setContribSiege("");
-                              setContribCommune("");
-                              setContribCentreImpots("");
-                              setContribActivite("");
-                              setSecteur("");
-                            }}
-                          >
-                            Nouveau contribuable (ne pas réutiliser)
-                          </button>
-                        )}
-                      </div>
-                    )}
-
-                    <div
-                      className="persona-toggle"
-                      role="group"
-                      aria-label="Type de contribuable"
-                    >
-                      {FORMES_PERSONNE.map((p) => (
-                        <Tooltip key={p.value} label={p.hint} side="bottom">
-                          <button
-                            type="button"
-                            className={`persona-btn${contribForme === p.value ? " active" : ""}`}
-                            onClick={() => {
-                              setContribForme(p.value);
-                              if (p.value === "pp") setForme("EI");
-                              else if (forme === "EI") setForme("SA");
-                            }}
-                          >
-                            <strong>{p.label}</strong>
-                            <small>
-                              {p.value === "pm"
-                                ? "Entreprise · RCCM + NCC"
-                                : "Individuel · fiche allégée"}
-                            </small>
-                          </button>
-                        </Tooltip>
-                      ))}
-                    </div>
-
-                    <div
-                      className={`completude-bar${completude.complet ? " ok" : ""}`}
-                      role="status"
-                    >
-                      <div className="completude-meta">
-                        <span>
-                          Identité légale {completude.ok}/{completude.total}
-                        </span>
-                        <strong>{completude.pct}%</strong>
-                      </div>
-                      <div className="completude-track" aria-hidden="true">
-                        <i style={{ width: `${completude.pct}%` }} />
-                      </div>
-                      {!completude.complet && (
-                        <p className="completude-miss">
-                          Manque : {completude.manquants.join(" · ")}
-                        </p>
-                      )}
-                    </div>
-
-                    <div className="field-grid field-grid-2">
-                      <Field
-                        id="contrib-nom"
-                        label={
-                          contribForme === "pm"
-                            ? "Dénomination / raison sociale"
-                            : "Nom du contribuable"
-                        }
-                        value={contribNom}
-                        onChange={(e) => setContribNom(e.target.value)}
-                        required
-                        autoComplete="organization"
-                        hint={
-                          contribForme === "pm"
-                            ? "Raison sociale telle qu’au RCCM."
-                            : "Nom et prénoms tels qu’à la DGI."
-                        }
-                      />
-                      <Field
-                        id="contrib-ncc"
-                        label="NCC"
-                        value={contribNcc}
-                        onChange={(e) => setContribNcc(e.target.value)}
-                        required
-                        autoComplete="off"
-                        spellCheck={false}
-                        tip={PROCESS_TIPS.ncc}
-                        hint="N° de compte contribuable — figurant sur la DFE."
-                      />
-                    </div>
-
-                    {conflitFiche && (
-                      <div className="conflit-fiche" role="alert">
-                        <p className="conflit-fiche-titre">
-                          Cette entreprise existe déjà : «{" "}
-                          {conflitFiche.client.denomination} » (#
-                          {conflitFiche.client.id})
-                        </p>
-                        <p className="conflit-fiche-detail">
-                          Le {conflitFiche.champ} «{" "}
-                          {conflitFiche.valeur} » est déjà rattaché à cette
-                          fiche de votre portefeuille. Utilisez la fiche
-                          existante — votre paramétrage de mission est
-                          conservé.
-                        </p>
-                        <button
-                          type="button"
-                          className="btn btn-primary btn-sm"
-                          onClick={() =>
-                            chargerContribuableDansWizard(conflitFiche.client)
-                          }
-                        >
-                          Utiliser la fiche existante
-                        </button>
-                      </div>
-                    )}
-
-                    {contribForme === "pm" && (
-                      <div className="legal-block">
-                        <div className="legal-block-head">
-                          <p className="picker-kicker">Identité d’entreprise</p>
-                          <p className="picker-hint">
-                            Le NCC suffit ; la DFE est la pièce, pas un second
-                            numéro.
-                          </p>
-                        </div>
-                        <div className="field-grid field-grid-2">
-                          <Field
-                            id="contrib-rccm"
-                            label="RCCM"
-                            value={contribRccm}
-                            onChange={(e) => setContribRccm(e.target.value)}
-                            required
-                            spellCheck={false}
-                            hint="Registre de commerce et du crédit mobilier."
-                          />
-                          <Field
-                            id="contrib-dfe"
-                            label="Réf. DFE (optionnel)"
-                            value={contribDfe}
-                            onChange={(e) => setContribDfe(e.target.value)}
-                            spellCheck={false}
-                            tip={PROCESS_TIPS.dfe}
-                            hint="Ne resaisissez pas le NCC sauf référence distincte."
-                          />
-                          <SelectField
-                            id="contrib-forme-jur"
-                            label="Forme juridique"
-                            value={forme}
-                            onChange={(e) => setForme(e.target.value)}
-                            options={FORMES_JURIDIQUES_PM}
-                            required
-                            tip={PROCESS_TIPS.formeJuridique}
-                            hint="Statut juridique — OHADA / pratique CI."
-                          />
-                          <SelectField
-                            id="contrib-regime"
-                            label="Régime fiscal"
-                            value={regime}
-                            onChange={(e) => setRegime(e.target.value)}
-                            options={REGIMES_FISCAUX.map((r) => ({
-                              value: r.value,
-                              label: r.label,
-                            }))}
-                            required
-                            tip={PROCESS_TIPS.regime}
-                            hint="Régime déclaré — recopié dans le profil de mission."
-                          />
-                          <Field
-                            id="contrib-capital"
-                            label="Capital social"
-                            type="number"
-                            inputMode="decimal"
-                            min={0}
-                            step="1"
-                            value={contribCapital}
-                            onChange={(e) => setContribCapital(e.target.value)}
-                            required
-                            trailing="XOF"
-                            hint="Capital social déclaré — cadrage revue."
-                          />
-                          <SelectField
-                            id="contrib-cloture"
-                            label="Clôture d’exercice"
-                            value={contribMoisCloture}
-                            onChange={(e) =>
-                              setContribMoisCloture(e.target.value)
-                            }
-                            options={MOIS_CLOTURE}
-                            required
-                            hint="Mois de clôture (année civile = décembre)."
-                          />
-                          <SelectField
-                            id="contrib-secteur"
-                            label="Secteur d’activité"
-                            value={decomposerActivite(contribActivite).secteur}
-                            onChange={(e) => {
-                              const prec =
-                                decomposerActivite(contribActivite).precision;
-                              const next = composerActivite(
-                                e.target.value,
-                                prec,
-                              );
-                              setContribActivite(next);
-                              setSecteur(next);
-                            }}
-                            options={SECTEURS_ACTIVITE}
-                            required
-                            tip={PROCESS_TIPS.secteur}
-                            hint="Cadrage revue — recopié dans le profil mission."
-                          />
-                          <Field
-                            id="contrib-activite-prec"
-                            label="Précision d’activité"
-                            value={
-                              decomposerActivite(contribActivite).precision
-                            }
-                            onChange={(e) => {
-                              const sec =
-                                decomposerActivite(contribActivite).secteur;
-                              const next = composerActivite(
-                                sec,
-                                e.target.value,
-                              );
-                              setContribActivite(next);
-                              setSecteur(next);
-                            }}
-                            hint="Libellé libre — pas de NAF."
-                          />
-                          <Field
-                            id="contrib-immat"
-                            label="Date d’immatriculation"
-                            type="date"
-                            value={contribDateImmat}
-                            onChange={(e) =>
-                              setContribDateImmat(e.target.value)
-                            }
-                            hint="Date d’immatriculation DGI (optionnel)."
-                          />
-                        </div>
-                      </div>
-                    )}
-
-                    {contribForme === "pp" && (
-                      <div className="legal-block">
-                        <div className="legal-block-head">
-                          <p className="picker-kicker">Profil fiscal</p>
-                          <p className="picker-hint">
-                            Personne physique — RCCM non exigé.
-                          </p>
-                        </div>
-                        <div className="field-grid field-grid-2">
-                          <SelectField
-                            id="contrib-regime-pp"
-                            label="Régime fiscal"
-                            value={regime}
-                            onChange={(e) => setRegime(e.target.value)}
-                            options={REGIMES_FISCAUX.map((r) => ({
-                              value: r.value,
-                              label: r.label,
-                            }))}
-                            required
-                            tip={PROCESS_TIPS.regime}
-                          />
-                          <SelectField
-                            id="contrib-cloture-pp"
-                            label="Clôture d’exercice"
-                            value={contribMoisCloture}
-                            onChange={(e) =>
-                              setContribMoisCloture(e.target.value)
-                            }
-                            options={MOIS_CLOTURE}
-                            required
-                          />
-                          <SelectField
-                            id="contrib-secteur-pp"
-                            label="Secteur d’activité"
-                            value={decomposerActivite(contribActivite).secteur}
-                            onChange={(e) => {
-                              const prec =
-                                decomposerActivite(contribActivite).precision;
-                              const next = composerActivite(
-                                e.target.value,
-                                prec,
-                              );
-                              setContribActivite(next);
-                              setSecteur(next);
-                            }}
-                            options={SECTEURS_ACTIVITE}
-                            required
-                            tip={PROCESS_TIPS.secteur}
-                          />
-                          <Field
-                            id="contrib-activite-pp"
-                            label="Précision d’activité"
-                            value={
-                              decomposerActivite(contribActivite).precision
-                            }
-                            onChange={(e) => {
-                              const sec =
-                                decomposerActivite(contribActivite).secteur;
-                              const next = composerActivite(
-                                sec,
-                                e.target.value,
-                              );
-                              setContribActivite(next);
-                              setSecteur(next);
-                            }}
-                          />
-                          <Field
-                            id="contrib-immat-pp"
-                            label="Date d’immatriculation"
-                            type="date"
-                            value={contribDateImmat}
-                            onChange={(e) =>
-                              setContribDateImmat(e.target.value)
-                            }
-                          />
-                        </div>
-                      </div>
-                    )}
-
-                    <div className="legal-block">
-                      <div className="legal-block-head">
-                        <p className="picker-kicker">
-                          Siège effectif / domicile fiscal
-                        </p>
-                        <p className="picker-hint">
-                          Lieu réel — rattachement au centre des impôts.
-                          Justificatifs usuels : bail, CIE, SODECI.
-                        </p>
-                      </div>
-                      <div className="field-grid field-grid-2">
-                        <Field
-                          id="contrib-commune"
-                          label="Ville / commune"
-                          value={contribCommune}
-                          onChange={(e) => setContribCommune(e.target.value)}
-                          required
-                          tip={PROCESS_TIPS.siegeEffectif}
-                          hint="Commune du siège effectif."
-                        />
-                        <Field
-                          id="contrib-siege"
-                          label="Adresse / quartier"
-                          value={contribSiege}
-                          onChange={(e) => setContribSiege(e.target.value)}
-                          required={contribForme === "pm"}
-                          hint="Quartier, voie, immeuble — siège effectif."
-                        />
-                        <Field
-                          id="contrib-centre"
-                          label="Centre des impôts"
-                          value={contribCentreImpots}
-                          onChange={(e) =>
-                            setContribCentreImpots(e.target.value)
-                          }
-                          required
-                          tip={PROCESS_TIPS.centreImpots}
-                          hint="Figurant sur la DFE ou l’avis (ex. CDI, CIME, DGE)."
-                        />
-                      </div>
-                    </div>
-
-                    <div className="cta-row desktop-only wizard-cta">
-                      <button
-                        type="button"
-                        className="btn btn-primary"
-                        disabled={!etape1Ok}
-                        onClick={() => setStep(2)}
-                      >
-                        Continuer
-                      </button>
-                      {conflitFiche ? (
-                        <span className="cta-hint">
-                          Doublon {conflitFiche.champ} — utilisez la fiche
-                          existante ou corrigez l’identifiant.
-                        </span>
-                      ) : !apiMin.ok ? (
-                        <span className="cta-hint">
-                          Minimum requis : {apiMin.manquants.join(" · ")}.
-                        </span>
-                      ) : !completude.complet ? (
-                        <span className="cta-hint">
-                          Identité {completude.ok}/{completude.total} —
-                          complétez avant lancement :{" "}
-                          {completude.manquants.join(" · ")}.
-                        </span>
-                      ) : null}
-                    </div>
-                  </>
-                )}
 
                 {step === 2 && (
-                  <>
-                    <div className="wizard-context">
-                      <span className="wizard-context-k">
-                        {contribForme === "pm" ? "Entreprise" : "PP"}
-                      </span>
-                      <strong>{contribNom || "—"}</strong>
-                      <span className="wizard-context-meta">
-                        NCC {contribNcc || "—"}
-                        {contribForme === "pm" && contribRccm
-                          ? ` · RCCM ${contribRccm}`
-                          : ""}
-                        {contribCommune ? ` · ${contribCommune}` : ""}
-                        {contribCentreImpots
-                          ? ` · ${contribCentreImpots}`
-                          : ""}
-                        {` · ${contribForme === "pp" ? "EI" : forme} · ${regime}`}
-                      </span>
-                    </div>
-                    <div className="field-grid field-grid-2">
-                      <Field
-                        id="exercice"
-                        label="Exercice"
-                        type="number"
-                        value={exercice}
-                        onChange={(e) => {
-                          setExercice(Number(e.target.value));
-                          setPrescriptionConfirmee(false);
-                        }}
-                        manquant={exerciceFutur}
-                        tip={PROCESS_TIPS.exercice}
-                        hint="Année fiscale contrôlée — détermine le millésime du référentiel."
-                      />
-                      <SelectField
-                        id="secteur"
-                        label="Secteur (profil mission)"
-                        value={
-                          decomposerActivite(
-                            contribActivite.trim() || secteur,
-                          ).secteur
-                        }
-                        onChange={(e) => {
-                          const prec = decomposerActivite(
-                            contribActivite.trim() || secteur,
-                          ).precision;
-                          const next = composerActivite(e.target.value, prec);
-                          setContribActivite(next);
-                          setSecteur(next);
-                        }}
-                        options={SECTEURS_ACTIVITE}
-                        tip={PROCESS_TIPS.secteur}
-                        hint="Prérempli depuis la fiche client."
-                      />
-                      <Field
-                        id="type-entite"
-                        label="Type d’entité"
-                        value={typeEntite}
-                        onChange={(e) => setTypeEntite(e.target.value)}
-                        tip={PROCESS_TIPS.typeEntite}
-                        hint="Optionnel — précise le profil pour le moteur."
-                      />
-                    </div>
-                    {exerciceFutur && (
-                      <p className="status err" role="alert">
-                        L’exercice {exercice} n’est pas encore clos — une revue
-                        fiscale porte sur un exercice achevé.
-                      </p>
-                    )}
-                    {exercicePrescrit && (
-                      <label className="check check-card exercice-prescrit">
-                        <input
-                          type="checkbox"
-                          checked={prescriptionConfirmee}
-                          onChange={(e) =>
-                            setPrescriptionConfirmee(e.target.checked)
-                          }
-                        />
-                        <span>
-                          <strong>
-                            Exercice antérieur à N-3 : en principe prescrit
-                            (art. L171 s. LPF)
-                          </strong>
-                          <small>
-                            Confirmez que la revue est volontaire (contentieux,
-                            contrôle en cours…).
-                          </small>
-                        </span>
-                      </label>
-                    )}
-                    <label className="check check-card">
-                      <input
-                        type="checkbox"
-                        checked={crossBorder}
-                        onChange={(e) => setCrossBorder(e.target.checked)}
-                      />
-                      <span>
-                        <strong className="label-with-tip">
-                          Opérations cross-border
-                          <InfoTip
-                            label={PROCESS_TIPS.crossBorder}
-                            ariaLabel="Aide : opérations cross-border"
-                          />
-                        </strong>
-                        <small>
-                          Active les contrôles liés aux flux internationaux.
-                        </small>
-                      </span>
-                    </label>
-
-                    <div className="engagement-block">
-                      <div className="legal-block-head">
-                        <p className="picker-kicker label-with-tip">
-                          Engagement
-                          <InfoTip
-                            label={PROCESS_TIPS.typeEngagement}
-                            ariaLabel="Aide : type d’engagement"
-                          />
-                        </p>
-                        <p className="picker-hint">
-                          Cadrage lettre de mission — figé dès le passage en
-                          cours.
-                          {perimetreImpots.length > 0 ? (
-                            <>
-                              {" "}
-                              <span className="badge badge-partielle">
-                                Revue partielle
-                              </span>
-                            </>
-                          ) : null}
-                        </p>
-                      </div>
-                      {resumeRisques && resumeRisques.total > 0 ? (
-                        <div
-                          className="points-ouverts-bandeau risques-resume-bandeau"
-                          role="status"
-                          aria-label="Résumé registre des risques N+1"
-                        >
-                          <p className="picker-kicker">
-                            Suivi N+1 — registre des risques
-                          </p>
-                          <p className="picker-hint">
-                            {resumeRisques.total} risque
-                            {resumeRisques.total > 1 ? "s" : ""},{" "}
-                            {resumeRisques.ouverts} ouvert
-                            {resumeRisques.ouverts > 1 ? "s" : ""} / en
-                            traitement, {resumeRisques.traites} traité
-                            {resumeRisques.traites > 1 ? "s" : ""},{" "}
-                            {resumeRisques.actions_en_retard} en retard,{" "}
-                            {resumeRisques.acceptes_client} accepté
-                            {resumeRisques.acceptes_client > 1 ? "s" : ""}{" "}
-                            client
-                            {resumeRisques.actions_refusees > 0
-                              ? `, ${resumeRisques.actions_refusees} action(s) refusée(s)`
-                              : ""}
-                            .
-                          </p>
-                        </div>
-                      ) : null}
-                      {/* Legacy R4 : point_ouvert en lecture seule si encore présent */}
-                      {pointsOuverts.length > 0 &&
-                      !(resumeRisques && resumeRisques.total > 0) ? (
-                        <div
-                          className="points-ouverts-bandeau"
-                          role="status"
-                          aria-label="Points ouverts legacy"
-                        >
-                          <p className="picker-kicker">
-                            Points ouverts legacy ({pointsOuverts.length})
-                          </p>
-                          <p className="picker-hint">
-                            Ancien pont inter-exercices — basculé vers le
-                            registre risques (R4). Lecture seule.
-                          </p>
-                          <ul className="points-ouverts-list">
-                            {pointsOuverts.map((p) => (
-                              <li key={p.id}>
-                                <span className="badge">ouvert</span>
-                                {p.mission_source_id != null
-                                  ? ` Mission #${p.mission_source_id} — `
-                                  : " "}
-                                {p.texte}
-                              </li>
-                            ))}
-                          </ul>
-                        </div>
-                      ) : null}
-                      <div className="field-grid field-grid-2">
-                        <SelectField
-                          id="type-engagement"
-                          label="Type d’engagement"
-                          value={typeEngagement}
-                          onChange={(e) => setTypeEngagement(e.target.value)}
-                          options={[...TYPES_ENGAGEMENT]}
-                          required
-                          manquant={!typeEngagement}
-                          tip={PROCESS_TIPS.typeEngagement}
-                          hint="Choix explicite requis — « Autre » reste possible. N’altère aucune formule."
-                        />
-                        <Field
-                          id="seuil-signification"
-                          label="Seuil de signification (FCFA)"
-                          type="number"
-                          value={seuilSignification}
-                          onChange={(e) =>
-                            setSeuilSignification(e.target.value)
-                          }
-                          tip={PROCESS_TIPS.seuilSignification}
-                          hint="Matérialité cabinet — optionnel."
-                          min={0}
-                          step="1"
-                        />
-                      </div>
-                      <div className="impot-perimetre">
-                        <p className="label-with-tip impot-perimetre-lbl">
-                          Périmètre impôts
-                          <InfoTip
-                            label={PROCESS_TIPS.perimetreImpots}
-                            ariaLabel="Aide : périmètre impôts"
-                          />
-                        </p>
-                        <p className="field-hint">
-                          Aucun impôt coché = tous les impôts du référentiel
-                          (revue complète).
-                        </p>
-                        <div
-                          className="impot-chips"
-                          role="group"
-                          aria-label="Codes impôts du périmètre"
-                        >
-                          {CODES_IMPOT_PIVOT.map((code) => {
-                            const checked = perimetreImpots.includes(code);
-                            return (
-                              <Tooltip
-                                key={code}
-                                label={tipImpot(code)}
-                                side="bottom"
-                              >
-                                <label
-                                  className={`impot-chip${checked ? " is-on" : ""}`}
-                                >
-                                  <input
-                                    type="checkbox"
-                                    checked={checked}
-                                    onChange={() => {
-                                      setPerimetreImpots((prev) =>
-                                        checked
-                                          ? prev.filter((c) => c !== code)
-                                          : [...prev, code],
-                                      );
-                                    }}
-                                  />
-                                  {code}
-                                </label>
-                              </Tooltip>
-                            );
-                          })}
-                        </div>
-                        <p className="field-hint label-with-tip impot-ref-hints">
-                          {PERIMETRE_EXONERATIONS_HINT}
-                          <InfoTip
-                            label={PROCESS_TIPS.perimetreExonerations}
-                            ariaLabel="Aide : exonérations référentiel"
-                          />
-                        </p>
-                        <p className="field-hint label-with-tip impot-ref-hints">
-                          {PERIMETRE_DONS_HINT}
-                          <InfoTip
-                            label={PROCESS_TIPS.perimetreDons}
-                            ariaLabel="Aide : dons et libéralités"
-                          />
-                        </p>
-                      </div>
-                      <div className="field">
-                        <p className="label-with-tip impot-perimetre-lbl">
-                          Objectifs de la mission
-                          <InfoTip
-                            label={PROCESS_TIPS.objectifsMission}
-                            ariaLabel="Aide : objectifs mission"
-                          />
-                        </p>
-                        <p className="field-hint">
-                          Plusieurs objectifs possibles — libellés libres (lettre
-                          de mission).
-                        </p>
-                        <ul className="objectifs-edit-list">
-                          {objectifsLibelles.map((lib, idx) => (
-                            <li key={`obj-${idx}`}>
-                              <input
-                                className="field-input"
-                                type="text"
-                                value={lib}
-                                maxLength={500}
-                                placeholder={`Objectif ${idx + 1}`}
-                                aria-label={`Objectif ${idx + 1}`}
-                                onChange={(e) => {
-                                  const v = e.target.value;
-                                  setObjectifsLibelles((prev) =>
-                                    prev.map((x, i) => (i === idx ? v : x)),
-                                  );
-                                }}
-                              />
-                              <button
-                                type="button"
-                                className="btn btn-ghost btn-sm"
-                                disabled={objectifsLibelles.length <= 1}
-                                aria-label={`Retirer l’objectif ${idx + 1}`}
-                                onClick={() => {
-                                  setObjectifsLibelles((prev) =>
-                                    prev.length <= 1
-                                      ? prev
-                                      : prev.filter((_, i) => i !== idx),
-                                  );
-                                }}
-                              >
-                                Retirer
-                              </button>
-                            </li>
-                          ))}
-                        </ul>
-                        <button
-                          type="button"
-                          className="btn btn-ghost btn-sm"
-                          disabled={objectifsLibelles.length >= 50}
-                          onClick={() =>
-                            setObjectifsLibelles((prev) => [...prev, ""])
-                          }
-                        >
-                          Ajouter un objectif
-                        </button>
-                      </div>
-                      <div className="field">
-                        <label
-                          className="field-label-static"
-                          htmlFor="exclusions-declarees"
-                        >
-                          Exclusions déclarées
-                        </label>
-                        <textarea
-                          id="exclusions-declarees"
-                          className="field-input field-textarea"
-                          rows={2}
-                          value={exclusionsDeclarees}
-                          onChange={(e) =>
-                            setExclusionsDeclarees(e.target.value)
-                          }
-                          placeholder="Ex. hors contrôles sur place…"
-                        />
-                        <p className="field-hint">
-                          {PROCESS_TIPS.exclusionsDeclarees}
-                        </p>
-                      </div>
-                    </div>
-
-                    <div className="cta-row desktop-only wizard-cta">
-                      <button
-                        type="button"
-                        className="btn btn-ghost"
-                        onClick={() => setStep(1)}
-                      >
-                        Retour
-                      </button>
-                      <button
-                        type="button"
-                        className="btn btn-primary"
-                        disabled={!etape2Ok}
-                        onClick={() => setStep(3)}
-                      >
-                        Continuer
-                      </button>
-                      {!etape2Ok && (
-                        <span className="cta-hint">
-                          {exerciceFutur
-                            ? "Exercice futur — choisissez un exercice achevé."
-                            : exercicePrescrit && !prescriptionConfirmee
-                              ? "Exercice a priori prescrit — cochez la confirmation."
-                              : "Choisissez le type d’engagement."}
-                        </span>
-                      )}
-                    </div>
-                  </>
-                )}
-
-                {step === 3 && (
                   <>
                     <div className="sources-brief">
                       <p className="sources-brief-lead">
@@ -6142,7 +5418,7 @@ export function App() {
                       <button
                         type="button"
                         className="btn btn-ghost"
-                        onClick={() => setStep(2)}
+                        onClick={() => setStep(1)}
                       >
                         Retour
                       </button>
@@ -6171,7 +5447,7 @@ export function App() {
                   </>
                 )}
 
-                {step === 4 && (
+                {step === 3 && (
                   <>
                     {restitution ? (
                       <RestitutionVue
@@ -6210,7 +5486,7 @@ export function App() {
                           estLecteur
                             ? undefined
                             : () => {
-                                setStep(3);
+                                setStep(2);
                                 setMissionStatus({
                                   msg: "Reprise de l'import — déposez la source active puis lancez la revue.",
                                   err: false,
@@ -6244,7 +5520,7 @@ export function App() {
                         <button
                           type="button"
                           className="btn btn-primary"
-                          onClick={() => setStep(etapeRetour ?? 2)}
+                          onClick={() => setStep(etapeRetour ?? 1)}
                         >
                           Revenir au paramétrage
                         </button>
@@ -6260,6 +5536,7 @@ export function App() {
                   </>
                 )}
               </div>
+              )}
             </div>
           )}
           </main>
@@ -6297,46 +5574,34 @@ export function App() {
             })}
           </nav>
 
-          {mobile && vue === "nouvelle" && (
+          {mobile && vue === "nouvelle" && step > 1 && (
             <div className="dock on" aria-label="Actions">
-              {step > 1 && step < 4 && (
-                <button
-                  type="button"
-                  className="btn btn-ghost"
-                  onClick={() => setStep(step - 1)}
-                >
-                  Retour
-                </button>
-              )}
-              {step < 3 && (
-                <button
-                  type="button"
-                  className="btn btn-primary"
-                  disabled={
-                    (step === 1 && !etape1Ok) || (step === 2 && !etape2Ok)
-                  }
-                  onClick={() => setStep(step + 1)}
-                >
-                  Continuer
-                </button>
+              {step === 2 && (
+                <>
+                  <button
+                    type="button"
+                    className="btn btn-ghost"
+                    onClick={() => setStep(1)}
+                  >
+                    Retour
+                  </button>
+                  <button
+                    type="button"
+                    className="btn btn-primary"
+                    disabled={!peutLancerRevue}
+                    onClick={() => void lancerRevue()}
+                  >
+                    Lancer la revue
+                  </button>
+                </>
               )}
               {step === 3 && (
-                <button
-                  type="button"
-                  className="btn btn-primary"
-                  disabled={!peutLancerRevue}
-                  onClick={() => void lancerRevue()}
-                >
-                  Lancer la revue
-                </button>
-              )}
-              {step === 4 && (
                 <>
                   {missionStatus?.err && !restitution && (
                     <button
                       type="button"
                       className="btn btn-primary"
-                      onClick={() => setStep(etapeRetour ?? 2)}
+                      onClick={() => setStep(etapeRetour ?? 1)}
                     >
                       Revenir au paramétrage
                     </button>
