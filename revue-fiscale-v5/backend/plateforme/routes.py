@@ -2197,6 +2197,79 @@ def api_plan_actions_mission(
     return analyse
 
 
+class DeciderActionIn(BaseModel):
+    """Décision du fiscaliste sur une action du plan d'actions."""
+
+    decision: str
+    note: str | None = None
+
+
+@router.post(
+    "/missions/{mission_id}/plan-actions/{cle_action}/decision"
+)
+def api_decider_action_plan(
+    mission_id: int,
+    cle_action: str,
+    corps: DeciderActionIn,
+    utilisateur: UtilisateurDep,
+    session: Annotated[Session, Depends(session_abonne)],
+) -> dict:
+    """Marque une action du plan « retenue », « écartée » ou « faite ».
+
+    Décision HUMAINE persistée par-dessus le plan dérivé consultatif —
+    clic explicite du fiscaliste, upsert (une nouvelle décision remplace
+    la précédente). Décision invalide → 422 ; action inconnue du plan ou
+    mission hors tenant → 404 (RLS) ; mission clôturée → 409.
+    """
+    from backend.moteur.journal import append_journal
+    from backend.plateforme.plan_actions import (
+        ErreurPlanActionsDecisionInvalide,
+        ErreurPlanActionsIntrouvable,
+        ErreurPlanActionsMissionCloturee,
+        analyse_mission,
+        decider_action,
+    )
+
+    exiger_capacite(utilisateur, "executer_mission")
+    try:
+        action = decider_action(
+            session,
+            utilisateur.tenant_id,
+            mission_id,
+            cle_action,
+            corps.decision,
+            note=corps.note,
+        )
+    except ErreurPlanActionsIntrouvable as e:
+        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail=str(e)) from e
+    except ErreurPlanActionsMissionCloturee as e:
+        raise HTTPException(
+            status_code=status.HTTP_409_CONFLICT, detail=str(e)
+        ) from e
+    except ErreurPlanActionsDecisionInvalide as e:
+        raise HTTPException(
+            status_code=status.HTTP_422_UNPROCESSABLE_ENTITY, detail=str(e)
+        ) from e
+    append_journal(
+        session,
+        tenant_id=utilisateur.tenant_id,
+        mission_id=mission_id,
+        acteur=utilisateur.email,
+        action="decision_plan_action",
+        charge_utile={
+            "cle_action": action["cle_action"],
+            "decision": action["decision"],
+            "type_action": action["type_action"],
+            "risque_id": action["risque_id"],
+        },
+    )
+    analyse = analyse_mission(session, utilisateur.tenant_id, mission_id)
+    return {
+        "action": action,
+        "synthese": analyse["synthese"],
+    }
+
+
 @router.get("/missions/{mission_id}/bilan-cloture")
 def api_bilan_cloture_mission(
     mission_id: int,

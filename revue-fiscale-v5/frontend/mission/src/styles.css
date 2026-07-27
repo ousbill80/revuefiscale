@@ -9778,6 +9778,32 @@ tr.row-active td {
 .planactions-action { font-weight: 700; }
 .planactions-motifs { margin-top: 0.15rem; font-size: 0.72rem; }
 
+/* Suivi du plan d'actions — décision humaine par action. */
+.planactions-decisions {
+  display: inline-flex;
+  gap: 0.25rem;
+  margin-left: auto;
+  flex-wrap: wrap;
+}
+.planactions-btn-decision { font-size: 0.72rem; padding: 0.1rem 0.45rem; }
+.planactions-btn-decision--active { font-weight: 700; }
+.planactions-decision-badge { text-transform: none; }
+.planactions-decision--retenue { background: #eff6ff; color: #1d4ed8; border-color: #bfdbfe; }
+.planactions-decision--ecartee { background: #f3f4f6; color: #6b7280; border-color: #d1d5db; }
+.planactions-decision--faite { background: #ecfdf5; color: #047857; border-color: #a7f3d0; }
+.planactions-item--dec-ecartee .planactions-action {
+  text-decoration: line-through;
+  color: #6b7280;
+}
+.planactions-item--dec-faite { border-left-color: #6ee7b7; }
+.planactions-decision-ok {
+  color: #047857;
+  font-size: 0.8rem;
+  margin: 0.35rem 0 0;
+}
+.planactions-stat--decisions { border-color: #bfdbfe; background: #eff6ff; }
+.planactions-stat--decisions .rest-prescription-stat-val { color: #1d4ed8; }
+
 /* ── Pilotage — carte « Échéances déclaratives » ─────────────────── */
 .pilotage-badge { margin-left: auto; display: inline-flex; align-items: center; padding: 0.1rem 0.5rem; border: 1px solid transparent; border-radius: 999px; font-size: 0.7rem; font-weight: 800; white-space: nowrap; }
 .pilotage-badge.imminent { background: #fffbeb; color: #92400e; border-color: #fde68a; }

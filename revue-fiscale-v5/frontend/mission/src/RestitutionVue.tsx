@@ -3902,6 +3902,8 @@ export function RestitutionVue({
         <PlanActionsVue
           missionId={r.mission_id}
           jeton={jeton}
+          estCloturee={estCloturee}
+          estLecteur={estLecteur}
           onFermer={() => setPlanActionsOuvert(false)}
         />
       )}

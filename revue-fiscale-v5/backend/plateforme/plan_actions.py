@@ -26,6 +26,13 @@ Priorité déterministe :
 Analyse CONSULTATIVE : aucune écriture, aucun LLM — le plan est une
 suggestion déterministe que le fiscaliste et le client restent seuls à
 décider d'appliquer. Fonctions pures + lecture seule sous RLS.
+
+Suivi du plan : le fiscaliste peut marquer chaque action « retenue »,
+« écartée » ou « faite » (décision HUMAINE persistée dans la table
+``suivi_plan_actions`` par-dessus le plan dérivé, sur clic explicite —
+:func:`decider_action`). Le plan reste reconstruit à chaque lecture ;
+seules les décisions sont stockées, avec ``cle_action`` stable
+(``risque:{risque_id}``) comme identifiant de fusion.
 """
 from __future__ import annotations
 
@@ -78,6 +85,19 @@ _LIBELLES_TYPE: Final[dict[str, str]] = {
 # passe en « haute » quel que soit le reste.
 SEUIL_EXPOSITION_HAUTE: Final[Decimal] = Decimal("5000000")
 
+# Décisions humaines possibles sur une action du plan.
+DECISION_RETENUE: Final[str] = "retenue"
+DECISION_ECARTEE: Final[str] = "ecartee"
+DECISION_FAITE: Final[str] = "faite"
+DECISIONS: Final[tuple[str, ...]] = (
+    DECISION_RETENUE,
+    DECISION_ECARTEE,
+    DECISION_FAITE,
+)
+
+# Préfixe de la clé stable d'une action dérivée d'un risque.
+PREFIXE_CLE_RISQUE: Final[str] = "risque:"
+
 MENTION_NOTE: Final[str] = (
     "Plan d'actions consultatif dérivé de façon déterministe des risques "
     "non clos du client — chaque action est une suggestion : le "
@@ -91,7 +111,15 @@ class ErreurPlanActions(Exception):
 
 
 class ErreurPlanActionsIntrouvable(ErreurPlanActions):
-    """Mission hors périmètre du tenant — 404 côté route."""
+    """Mission ou action hors périmètre du tenant — 404 côté route."""
+
+
+class ErreurPlanActionsDecisionInvalide(ErreurPlanActions):
+    """Décision hors « retenue / ecartee / faite » — 422 côté route."""
+
+
+class ErreurPlanActionsMissionCloturee(ErreurPlanActions):
+    """Mission clôturée — écriture refusée (409 côté route)."""
 
 
 # ── Fonctions pures ──────────────────────────────────────────────────
@@ -177,6 +205,7 @@ def deriver_action(
         motifs.append("exposition non chiffrée ou probabilité faible")
 
     return {
+        "cle_action": f"{PREFIXE_CLE_RISQUE}{int(risque['id'])}",
         "risque_id": int(risque["id"]),
         "libelle_risque": str(risque.get("libelle") or ""),
         "impot": str(risque.get("impot") or "").upper(),
@@ -189,6 +218,11 @@ def deriver_action(
         "action": _LIBELLES_TYPE[type_action],
         "priorite": priorite,
         "motifs": motifs,
+        # Décision humaine (fusionnée depuis suivi_plan_actions) — null
+        # tant que le fiscaliste n'a pas tranché.
+        "decision": None,
+        "decision_note": None,
+        "decision_maj_le": None,
     }
 
 
@@ -218,6 +252,41 @@ def deriver_plan(
     return items
 
 
+def fusionner_decisions(
+    plan: list[dict[str, Any]], decisions: dict[str, dict[str, Any]]
+) -> list[dict[str, Any]]:
+    """PUR — recopie la décision persistée sur chaque action du plan.
+
+    ``decisions`` : {cle_action: {decision, note, maj_le}}. Une clé
+    persistée absente du plan courant (risque clos depuis) est ignorée —
+    le plan dérivé fait foi.
+    """
+    for item in plan:
+        d = decisions.get(str(item.get("cle_action") or ""))
+        if d is None:
+            continue
+        item["decision"] = str(d["decision"])
+        item["decision_note"] = (d.get("note") or None) or None
+        maj = d.get("maj_le")
+        item["decision_maj_le"] = (
+            maj.isoformat() if maj is not None else None
+        )
+    return plan
+
+
+def synthese_decisions(plan: list[dict[str, Any]]) -> dict[str, int]:
+    """PUR — compteurs {retenues, ecartees, faites, sans_decision}."""
+    compte = {"retenues": 0, "ecartees": 0, "faites": 0, "sans_decision": 0}
+    cle = {
+        DECISION_RETENUE: "retenues",
+        DECISION_ECARTEE: "ecartees",
+        DECISION_FAITE: "faites",
+    }
+    for item in plan:
+        compte[cle.get(str(item.get("decision")), "sans_decision")] += 1
+    return compte
+
+
 def synthese_plan(plan: list[dict[str, Any]]) -> dict[str, Any]:
     """PUR — compteurs par priorité + exposition totale (str Decimal)."""
     par_priorite = {p: 0 for p in PRIORITES}
@@ -230,10 +299,26 @@ def synthese_plan(plan: list[dict[str, Any]]) -> dict[str, Any]:
         "total_actions": len(plan),
         "par_priorite": par_priorite,
         "exposition_totale": str(exposition),
+        "decisions": synthese_decisions(plan),
     }
 
 
 # ── Lecture par mission (RLS) ────────────────────────────────────────
+
+
+def _decisions_enregistrees(
+    session: Session, mission_id: int
+) -> dict[str, dict[str, Any]]:
+    """Décisions persistées de la mission — {cle_action: {decision, note,
+    maj_le}}. Contexte tenant déjà posé par l'appelant."""
+    rows = session.execute(
+        text(
+            "SELECT cle_action, decision, note, maj_le "
+            "FROM suivi_plan_actions WHERE mission_id = :m"
+        ),
+        {"m": mission_id},
+    ).mappings().all()
+    return {str(r["cle_action"]): dict(r) for r in rows}
 
 
 def analyse_mission(
@@ -270,8 +355,11 @@ def analyse_mission(
             ),
             {"c": contribuable_id, "sts": list(STATUTS_NON_CLOS)},
         ).mappings().all()
+        decisions = _decisions_enregistrees(session, mission_id)
 
-    plan = deriver_plan([dict(r) for r in rows], jour)
+    plan = fusionner_decisions(
+        deriver_plan([dict(r) for r in rows], jour), decisions
+    )
     return {
         "mission_id": mission_id,
         "contribuable_id": contribuable_id,
@@ -280,3 +368,93 @@ def analyse_mission(
         "synthese": synthese_plan(plan),
         "note": MENTION_NOTE,
     }
+
+
+# ── Décision humaine sur une action (écriture explicite) ─────────────
+
+
+def decider_action(
+    session: Session,
+    tenant_id: int,
+    mission_id: int,
+    cle_action: str,
+    decision: str,
+    note: str | None = None,
+) -> dict[str, Any]:
+    """Persiste la DÉCISION du fiscaliste sur une action du plan (UPSERT).
+
+    Déclenché par un clic explicite — le plan reste dérivé, seule la
+    décision humaine est stockée. Décision hors ``retenue / ecartee /
+    faite`` → :class:`ErreurPlanActionsDecisionInvalide` (422) ; mission
+    hors tenant ou ``cle_action`` absente du plan dérivé courant →
+    :class:`ErreurPlanActionsIntrouvable` (404) ; mission clôturée →
+    :class:`ErreurPlanActionsMissionCloturee` (409).
+
+    Retourne l'action fusionnée à jour (avec sa décision).
+    """
+    decision = str(decision or "").strip().lower()
+    if decision not in DECISIONS:
+        raise ErreurPlanActionsDecisionInvalide(
+            f"décision invalide « {decision} » — attendues : "
+            + ", ".join(DECISIONS)
+        )
+    cle_action = str(cle_action or "").strip()
+    jour = date.today()
+    with contexte_tenant(session, tenant_id):
+        mission = session.execute(
+            text(
+                "SELECT statut, contribuable_id FROM mission WHERE id = :m"
+            ),
+            {"m": mission_id},
+        ).mappings().one_or_none()
+        if mission is None:
+            raise ErreurPlanActionsIntrouvable(
+                f"mission {mission_id} introuvable"
+            )
+        if str(mission["statut"] or "").lower() == "cloturee":
+            raise ErreurPlanActionsMissionCloturee(
+                f"mission {mission_id} clôturée — réouvrez-la avant de "
+                "décider du plan d'actions"
+            )
+        rows = session.execute(
+            text(
+                "SELECT id, libelle, impot, exercice_origine, statut, "
+                "probabilite, montant_estime, penalites_estimees "
+                "FROM risque WHERE contribuable_id = :c "
+                "AND statut = ANY(:sts) "
+                "ORDER BY exercice_origine ASC, id ASC"
+            ),
+            {
+                "c": int(mission["contribuable_id"]),
+                "sts": list(STATUTS_NON_CLOS),
+            },
+        ).mappings().all()
+        plan = deriver_plan([dict(r) for r in rows], jour)
+        par_cle = {i["cle_action"]: i for i in plan}
+        if cle_action not in par_cle:
+            raise ErreurPlanActionsIntrouvable(
+                f"action « {cle_action} » inconnue du plan de la "
+                f"mission {mission_id}"
+            )
+        row = session.execute(
+            text(
+                "INSERT INTO suivi_plan_actions "
+                "(tenant_id, mission_id, cle_action, decision, note) "
+                "VALUES (:t, :m, :c, :d, :n) "
+                "ON CONFLICT (tenant_id, mission_id, cle_action) "
+                "DO UPDATE SET decision = EXCLUDED.decision, "
+                "note = EXCLUDED.note, maj_le = now() "
+                "RETURNING cle_action, decision, note, maj_le"
+            ),
+            {
+                "t": tenant_id,
+                "m": mission_id,
+                "c": cle_action,
+                "d": decision,
+                "n": (note or "").strip() or None,
+            },
+        ).mappings().one()
+    # Pas de commit ici : get_session committe en fin de requête.
+    return fusionner_decisions(
+        [par_cle[cle_action]], {cle_action: dict(row)}
+    )[0]

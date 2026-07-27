@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import { api } from "./api";
 import { InfoTip } from "./Tooltip";
 
@@ -8,9 +8,15 @@ import { InfoTip } from "./Tooltip";
  * contribuable de la mission : déclaration rectificative, provision à
  * documenter, justificatif à collecter ou point à discuter — avec
  * priorité (haute / moyenne / basse) et motifs traçables.
- * Consultatif — le fiscaliste apprécie, le client décide.
+ * Consultatif — le fiscaliste apprécie, le client décide. Le fiscaliste
+ * peut marquer chaque action « retenue », « écartée » ou « faite »
+ * (POST /missions/{id}/plan-actions/{cle_action}/decision — décision
+ * humaine persistée par-dessus le plan dérivé).
  */
+type Decision = "retenue" | "ecartee" | "faite";
+
 type ActionPlan = {
+  cle_action: string;
   risque_id: number;
   libelle_risque: string;
   impot: string;
@@ -23,6 +29,9 @@ type ActionPlan = {
   action: string;
   priorite: "haute" | "moyenne" | "basse" | string;
   motifs: string[];
+  decision: Decision | null;
+  decision_note: string | null;
+  decision_maj_le: string | null;
 };
 
 type PlanActionsOut = {
@@ -34,6 +43,12 @@ type PlanActionsOut = {
     total_actions: number;
     par_priorite: { haute: number; moyenne: number; basse: number };
     exposition_totale: string;
+    decisions: {
+      retenues: number;
+      ecartees: number;
+      faites: number;
+      sans_decision: number;
+    };
   };
   note: string;
 };
@@ -59,16 +74,41 @@ const LIBELLES_PRIORITE: Record<string, string> = {
   basse: "Priorité basse",
 };
 
+const LIBELLES_DECISION: Record<string, string> = {
+  retenue: "Retenue",
+  ecartee: "Écartée",
+  faite: "Faite",
+};
+
 type Props = {
   missionId: number;
   jeton?: string | null;
+  estCloturee?: boolean;
+  estLecteur?: boolean;
   onFermer: () => void;
 };
 
-export function PlanActionsVue({ missionId, jeton, onFermer }: Props) {
+export function PlanActionsVue({
+  missionId,
+  jeton,
+  estCloturee,
+  estLecteur,
+  onFermer,
+}: Props) {
   const [etat, setEtat] = useState<PlanActionsOut | null>(null);
   const [err, setErr] = useState<string | null>(null);
   const [busy, setBusy] = useState(false);
+  const [decisionBusyCle, setDecisionBusyCle] = useState<string | null>(null);
+  const [decisionErr, setDecisionErr] = useState<string | null>(null);
+  const [decisionOk, setDecisionOk] = useState<string | null>(null);
+
+  const charger = useCallback(async () => {
+    const out = await api<PlanActionsOut>(
+      `/api/v1/missions/${missionId}/plan-actions`,
+      { jeton },
+    );
+    return out ?? null;
+  }, [jeton, missionId]);
 
   useEffect(() => {
     if (!jeton || !missionId) return;
@@ -77,11 +117,8 @@ export function PlanActionsVue({ missionId, jeton, onFermer }: Props) {
     setErr(null);
     void (async () => {
       try {
-        const out = await api<PlanActionsOut>(
-          `/api/v1/missions/${missionId}/plan-actions`,
-          { jeton },
-        );
-        if (!annule) setEtat(out ?? null);
+        const out = await charger();
+        if (!annule) setEtat(out);
       } catch (e) {
         if (!annule) {
           setEtat(null);
@@ -98,7 +135,32 @@ export function PlanActionsVue({ missionId, jeton, onFermer }: Props) {
     return () => {
       annule = true;
     };
-  }, [jeton, missionId]);
+  }, [jeton, missionId, charger]);
+
+  const decider = async (a: ActionPlan, decision: Decision) => {
+    if (!jeton || estLecteur || estCloturee || decisionBusyCle) return;
+    setDecisionBusyCle(a.cle_action);
+    setDecisionErr(null);
+    setDecisionOk(null);
+    try {
+      await api(
+        `/api/v1/missions/${missionId}/plan-actions/${encodeURIComponent(
+          a.cle_action,
+        )}/decision`,
+        { jeton, method: "POST", json: { decision } },
+      );
+      setDecisionOk(
+        `Action « ${LIBELLES_DECISION[decision].toLowerCase()} » enregistrée.`,
+      );
+      setEtat(await charger());
+    } catch (e) {
+      setDecisionErr(
+        e instanceof Error ? e.message : "décision non enregistrée",
+      );
+    } finally {
+      setDecisionBusyCle(null);
+    }
+  };
 
   return (
     <section
@@ -174,7 +236,34 @@ export function PlanActionsVue({ missionId, jeton, onFermer }: Props) {
                 Exposition totale
               </span>
             </div>
+            <div className="rest-prescription-stat planactions-stat--decisions">
+              <span className="rest-prescription-stat-val">
+                {etat.synthese.decisions.retenues} /{" "}
+                {etat.synthese.decisions.ecartees} /{" "}
+                {etat.synthese.decisions.faites}
+              </span>
+              <span className="rest-prescription-stat-lbl">
+                Retenues / écartées / faites
+                {etat.synthese.decisions.sans_decision > 0 && (
+                  <>
+                    {" — "}
+                    {etat.synthese.decisions.sans_decision} sans décision
+                  </>
+                )}
+              </span>
+            </div>
           </div>
+
+          {decisionErr && (
+            <p className="rest-lettre-err" role="alert">
+              Décision non enregistrée : {decisionErr}
+            </p>
+          )}
+          {decisionOk && !decisionErr && (
+            <p className="planactions-decision-ok" role="status">
+              {decisionOk}
+            </p>
+          )}
 
           {etat.plan.length === 0 ? (
             <p className="muted">
@@ -184,8 +273,10 @@ export function PlanActionsVue({ missionId, jeton, onFermer }: Props) {
             <ul className="rest-suivi-items rest-prescription-items">
               {etat.plan.map((a) => (
                 <li
-                  key={a.risque_id}
-                  className={`rest-suivi-item rest-prescription-item planactions-item--${a.priorite}`}
+                  key={a.cle_action}
+                  className={`rest-suivi-item rest-prescription-item planactions-item--${a.priorite}${
+                    a.decision ? ` planactions-item--dec-${a.decision}` : ""
+                  }`}
                 >
                   <div className="rest-suivi-libelle">
                     <span
@@ -195,6 +286,48 @@ export function PlanActionsVue({ missionId, jeton, onFermer }: Props) {
                     </span>
                     <span className="rest-prescription-libelle planactions-action">
                       {a.action || "—"}
+                    </span>
+                    {a.decision && (
+                      <span
+                        className={`rest-prescription-badge planactions-decision-badge planactions-decision--${a.decision}`}
+                      >
+                        {LIBELLES_DECISION[a.decision] ?? a.decision}
+                      </span>
+                    )}
+                    <span className="planactions-decisions">
+                      {(
+                        ["retenue", "ecartee", "faite"] as Decision[]
+                      ).map((d) => (
+                        <button
+                          key={d}
+                          type="button"
+                          className={`btn btn-ghost btn-sm planactions-btn-decision${
+                            a.decision === d
+                              ? " planactions-btn-decision--active"
+                              : ""
+                          }`}
+                          disabled={
+                            estLecteur ||
+                            estCloturee ||
+                            decisionBusyCle !== null ||
+                            a.decision === d
+                          }
+                          onClick={() => void decider(a, d)}
+                          title={
+                            d === "retenue"
+                              ? "Retenir cette action (à mettre en œuvre)"
+                              : d === "ecartee"
+                                ? "Écarter cette action (non pertinente)"
+                                : "Marquer cette action comme faite"
+                          }
+                        >
+                          {d === "retenue"
+                            ? "Retenir"
+                            : d === "ecartee"
+                              ? "Écarter"
+                              : "Fait"}
+                        </button>
+                      ))}
                     </span>
                   </div>
                   <div className="rest-prescription-meta muted">
