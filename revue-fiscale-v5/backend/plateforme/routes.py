@@ -4023,3 +4023,36 @@ def api_relances_cabinet_csv(
             "Content-Disposition": 'attachment; filename="relances.csv"'
         },
     )
+
+
+@router.get("/cabinet/actions-retenues")
+def api_actions_retenues_cabinet(
+    utilisateur: UtilisateurDep,
+    session: Annotated[Session, Depends(session_abonne)],
+) -> dict:
+    """Actions à mettre en œuvre du cabinet — retenues, tous clients.
+
+    Vue transverse pour le fiscaliste : sur toutes les missions du
+    tenant, les actions du plan d'actions marquées « retenue » (non
+    encore faites ni écartées), avec le risque d'origine et l'exposition
+    totale en jeu. Consultatif et déterministe — trié par exposition
+    décroissante puis client.
+    """
+    from backend.moteur.journal import append_journal
+    from backend.plateforme.actions_cabinet import actions_retenues_cabinet
+
+    exiger_capacite(utilisateur, "lire")
+    actions = actions_retenues_cabinet(session, utilisateur.tenant_id)
+    append_journal(
+        session,
+        tenant_id=utilisateur.tenant_id,
+        mission_id=None,
+        acteur=utilisateur.email,
+        action="consultation_actions_retenues_cabinet",
+        charge_utile={
+            "total": actions["total"],
+            "clients": actions["synthese"]["clients"],
+            "exposition_totale": actions["synthese"]["exposition_totale"],
+        },
+    )
+    return actions

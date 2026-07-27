@@ -11290,6 +11290,150 @@ tr.row-active td {
   }
 }
 
+/* ── Actions à mettre en œuvre du cabinet (tableau de bord) ─────────── */
+.actionscab-zone {
+  margin: 1rem 0 0.5rem;
+}
+.actionscab-head {
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
+  gap: 0.75rem;
+  flex-wrap: wrap;
+  margin-bottom: 0.6rem;
+}
+.actionscab-title {
+  margin: 0;
+  font-size: 1rem;
+  font-weight: 800;
+  font-variant: small-caps;
+  letter-spacing: 0.04em;
+  color: var(--ink, #0f172a);
+}
+.actionscab-title::before {
+  content: "— ";
+  color: var(--accent, #0f766e);
+}
+.actionscab-sub {
+  margin: 0.15rem 0 0;
+  font-size: 0.78rem;
+  color: var(--muted, #64748b);
+}
+.actionscab-card {
+  display: flex;
+  flex-direction: column;
+  gap: 0.6rem;
+  min-width: 0;
+}
+.actionscab-synthese {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.4rem;
+}
+.actionscab-chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.3rem;
+  padding: 0.15rem 0.55rem;
+  border: 1px solid var(--line, #e5e7eb);
+  border-radius: 999px;
+  font-size: 0.72rem;
+  color: var(--ink-soft, #1e293b);
+  background: #fff;
+}
+.actionscab-chip.alerte {
+  background: var(--accent-soft, #ecfdf8);
+  color: var(--accent-deep, #115e59);
+  border-color: var(--accent, #0f766e);
+}
+.actionscab-chip.exposition {
+  background: #fef2f2;
+  color: #991b1b;
+  border-color: #fecaca;
+}
+.actionscab-liste {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  display: flex;
+  flex-direction: column;
+  gap: 0.3rem;
+}
+.actionscab-row {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  gap: 0.55rem;
+  padding: 0.4rem 0.6rem;
+  border: 1px solid var(--line, #e5e7eb);
+  border-radius: 8px;
+  background: #fff;
+  text-align: left;
+  font: inherit;
+  cursor: pointer;
+  min-width: 0;
+}
+.actionscab-row:hover {
+  border-color: var(--accent, #0f766e);
+  background: var(--accent-soft, #ecfdf8);
+}
+.actionscab-libelle {
+  font-size: 0.8rem;
+  font-weight: 600;
+  color: var(--ink, #0f172a);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+.actionscab-meta {
+  font-size: 0.74rem;
+  color: var(--muted, #64748b);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+.actionscab-badge {
+  margin-left: auto;
+  flex: none;
+  display: inline-flex;
+  align-items: center;
+  padding: 0.1rem 0.5rem;
+  border: 1px solid var(--accent, #0f766e);
+  border-radius: 999px;
+  font-size: 0.7rem;
+  font-weight: 800;
+  white-space: nowrap;
+  background: var(--accent-soft, #ecfdf8);
+  color: var(--accent-deep, #115e59);
+}
+.actionscab-vide {
+  margin: 0;
+  padding: 0.5rem 0.6rem;
+  border: 1px dashed var(--line, #e5e7eb);
+  border-radius: 8px;
+  font-size: 0.78rem;
+  color: var(--muted, #64748b);
+}
+.actionscab-err {
+  margin: 0;
+  font-size: 0.78rem;
+  color: #b91c1c;
+}
+.actionscab-note {
+  margin: 0;
+  font-size: 0.72rem;
+  font-style: italic;
+  color: var(--muted, #64748b);
+}
+@media (max-width: 720px) {
+  .actionscab-row {
+    flex-wrap: wrap;
+  }
+  .actionscab-meta {
+    white-space: normal;
+  }
+}
+
 /* ---- Fiche client — obligations à venir (agenda cabinet filtré client) ---- */
 /* Réutilise le langage agenda2- (lignes, badges, note) ; le préfixe
    fiche2-echeances- porte le conteneur et les éléments propres à la fiche. */
