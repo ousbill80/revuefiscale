@@ -2865,3 +2865,20 @@ def api_pilotage_portefeuille(
 
     exiger_capacite(utilisateur, "lire")
     return pilotage_portefeuille(session, utilisateur.tenant_id)
+
+
+@router.get("/pilotage/supervision")
+def api_supervision_cabinet(
+    utilisateur: UtilisateurDep,
+    session: Annotated[Session, Depends(session_abonne)],
+) -> dict:
+    """Supervision transverse des missions actives (lecture seule).
+
+    Pour chaque mission non clôturée du tenant : temps cumulés, visas
+    de supervision (phases complètes, restitution), circularisation en
+    attente / à relancer et alertes courtes — plus une synthèse cabinet.
+    """
+    from backend.plateforme.supervision_cabinet import construire_supervision
+
+    exiger_capacite(utilisateur, "lire")
+    return construire_supervision(session, utilisateur.tenant_id)

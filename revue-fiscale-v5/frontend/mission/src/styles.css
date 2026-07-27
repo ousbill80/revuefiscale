@@ -9343,6 +9343,11 @@ tr.row-active td {
 .pilotage-badge.relance { background: #fef2f2; color: #b91c1c; border-color: #fecaca; }
 .pilotage-badge.attente { background: #fffbeb; color: #92400e; border-color: #fde68a; }
 
+/* ── Supervision transverse des missions actives ─────────────────── */
+.pilotage-badge.ok { background: #f0fdf4; color: #166534; border-color: #bbf7d0; }
+.supervision-table td .pilotage-badge { margin: 0 0.3rem 0.15rem 0; }
+.supervision-table td { font-size: 0.78rem; }
+
 /* ── Restitution — note de synthèse de mission (executive summary IA) ── */
 .rest-note-btn { white-space: nowrap; }
 .rest-note-btn:disabled { opacity: 0.6; cursor: default; }

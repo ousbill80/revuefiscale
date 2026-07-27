@@ -357,6 +357,29 @@ type PilotagePortefeuille = {
   };
 };
 
+/** Réponse GET /api/v1/pilotage/supervision — supervision transverse. */
+type SupervisionCabinet = {
+  missions: Array<{
+    mission_id: number;
+    contribuable: string;
+    exercice: number;
+    statut: string;
+    heures_totales: string;
+    phases_completes: number;
+    visas_restitution_complets: boolean;
+    items_en_attente: number;
+    items_a_relancer: number;
+    alertes: string[];
+  }>;
+  synthese: {
+    missions_actives: number;
+    sans_aucun_visa: number;
+    restitution_non_visee: number;
+    heures_totales: string;
+    items_a_relancer: number;
+  };
+};
+
 /** Date ISO (aaaa-mm-jj) → jj/mm/aaaa ; valeur inattendue renvoyée telle quelle. */
 function fmtDateFr(iso: string): string {
   const m = /^(\d{4})-(\d{2})-(\d{2})/.exec(iso);
@@ -567,6 +590,9 @@ export function App() {
     }>
   >([]);
   const [pilotage, setPilotage] = useState<PilotagePortefeuille | null>(null);
+  const [supervision, setSupervision] = useState<SupervisionCabinet | null>(
+    null,
+  );
   const [balanceJson, setBalanceJson] = useState(BALANCE_DEMO);
   const [balanceFile, setBalanceFile] = useState<File | null>(null);
   const [balanceSource, setBalanceSource] = useState<"json" | "fichier">("json");
@@ -1144,6 +1170,15 @@ export function App() {
         if (!cancelled) setPilotage(p);
       } catch {
         if (!cancelled) setPilotage(null);
+      }
+      try {
+        const s = await api<SupervisionCabinet>(
+          "/api/v1/pilotage/supervision",
+          { jeton: session.jeton },
+        );
+        if (!cancelled) setSupervision(s);
+      } catch {
+        if (!cancelled) setSupervision(null);
       }
     })();
     return () => {
@@ -4008,6 +4043,91 @@ export function App() {
                       </ul>
                     </article>
                   </div>
+                </section>
+              )}
+
+              {supervision && (
+                <section
+                  className="pilotage-zone"
+                  aria-label="Supervision des missions"
+                >
+                  <div className="pilotage-head">
+                    <h3 className="pilotage-title">
+                      Supervision des missions
+                    </h3>
+                    <p className="pilotage-sub">
+                      Où en est chaque mission active : temps, visas,
+                      circularisation.
+                    </p>
+                  </div>
+                  <article className="panel dense pilotage-card">
+                    <div className="missions-table-wrap">
+                      <table className="missions-table supervision-table">
+                        <thead className="missions-thead">
+                          <tr>
+                            <th>Client</th>
+                            <th className="missions-th-ex">Exercice</th>
+                            <th>Statut</th>
+                            <th>Heures</th>
+                            <th>Visas</th>
+                            <th>Alertes</th>
+                          </tr>
+                        </thead>
+                        <tbody>
+                          {supervision.missions.map((m) => (
+                            <tr
+                              key={m.mission_id}
+                              className="missions-tr"
+                              onClick={() => void ouvrirMission(m.mission_id)}
+                            >
+                              <td>{m.contribuable}</td>
+                              <td className="missions-th-ex">{m.exercice}</td>
+                              <td>
+                                <span className={`badge statut-${m.statut}`}>
+                                  {libelleStatut(m.statut)}
+                                </span>
+                              </td>
+                              <td>{m.heures_totales} h</td>
+                              <td>{m.phases_completes}/4</td>
+                              <td>
+                                {m.alertes.length ? (
+                                  m.alertes.map((a) => (
+                                    <span
+                                      key={a}
+                                      className="pilotage-badge relance"
+                                    >
+                                      {a}
+                                    </span>
+                                  ))
+                                ) : (
+                                  <span className="pilotage-badge ok">
+                                    RAS
+                                  </span>
+                                )}
+                              </td>
+                            </tr>
+                          ))}
+                          {!supervision.missions.length && (
+                            <tr>
+                              <td colSpan={6} className="pilotage-vide">
+                                Aucune mission active au portefeuille.
+                              </td>
+                            </tr>
+                          )}
+                        </tbody>
+                      </table>
+                    </div>
+                    <p className="pilotage-relances-totaux">
+                      {supervision.synthese.missions_actives} mission(s)
+                      active(s) · {supervision.synthese.heures_totales} h
+                      saisies · {supervision.synthese.sans_aucun_visa} sans
+                      aucun visa ·{" "}
+                      {supervision.synthese.restitution_non_visee} restitution
+                      (s) non visée(s) ·{" "}
+                      {supervision.synthese.items_a_relancer} item(s) à
+                      relancer
+                    </p>
+                  </article>
                 </section>
               )}
 
