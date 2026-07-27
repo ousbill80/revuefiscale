@@ -37,6 +37,9 @@ from backend.plateforme.demande_renseignements import (
 from backend.plateforme.echeancier_fiscal import echeancier_mission
 from backend.plateforme.lettre_affirmation import generer_lettre_affirmation
 from backend.plateforme.lettre_mission import generer_lettre_mission
+from backend.plateforme.prescription_risques import (
+    analyse_mission as analyse_prescription_risques,
+)
 from backend.plateforme.programme_travail import etat_programme
 from backend.plateforme.provision_risques import calculer_provision
 from backend.plateforme.rapport_risques import exporter_rapport_risques_pdf
@@ -602,6 +605,54 @@ def _piece_rentabilite(
     return "\n".join(lignes).encode("utf-8")
 
 
+_LIBELLES_CATEGORIES_PRESCRIPTION: Final[tuple[tuple[str, str], ...]] = (
+    ("prescrits_a_basculer", "RISQUES PRESCRITS À BASCULER"),
+    ("proches_prescription", "RISQUES PROCHES DE LA PRESCRIPTION (12 MOIS)"),
+    ("non_prescrits", "RISQUES NON PRESCRITS (EXERCICES REPRENABLES)"),
+)
+
+
+def _piece_prescription_risques(
+    session: Session, tenant_id: int, mission_id: int, meta: dict[str, Any]
+) -> bytes:
+    """Analyse de prescription des risques — toujours produite (les listes
+    sont simplement vides sans risque non clos). ``analyse_mission`` ouvre
+    son propre ``contexte_tenant`` : appel HORS de tout autre contexte."""
+    a = analyse_prescription_risques(session, tenant_id, mission_id)
+    lignes = [
+        "PRESCRIPTION DES RISQUES — analyse consultative (pratique LPF CI)",
+        f"Mission #{a['mission_id']} — client : "
+        f"{meta.get('contribuable_denomination') or '[non renseigné]'} — "
+        f"analyse au {a['date_analyse']}",
+        "Exercices encore reprenables (droit commun) : "
+        + ", ".join(str(e) for e in a["exercices_reprenables"]),
+        "",
+    ]
+    for cle, libelle in _LIBELLES_CATEGORIES_PRESCRIPTION:
+        items = a["analyse"].get(cle, [])
+        lignes.append(f"{libelle} ({len(items)})")
+        for it in items:
+            montant = (
+                f"{it['montant']} FCFA"
+                if it.get("montant") is not None
+                else "montant non chiffré"
+            )
+            lignes.append(
+                f"  - #{it['risque_id']} {it['libelle']} ({it['impot']}, "
+                f"exercice {it['exercice_origine']}) : {montant} — "
+                f"prescription le {it['date_prescription']}"
+            )
+        if not items:
+            lignes.append("  (aucun)")
+        lignes.append("")
+    lignes.append(
+        "Exposition prescrite (à sortir du chiffrage) : "
+        f"{a['analyse']['exposition_prescrite']} FCFA"
+    )
+    lignes += ["", f"* {a['hypothese']}"]
+    return "\n".join(lignes).encode("utf-8")
+
+
 # Ordre du dossier : (nom de fichier dans le ZIP, description, constructeur).
 _PIECES: Final[
     tuple[tuple[str, str, Callable[[Session, int, int, dict[str, Any]], bytes]], ...]
@@ -690,6 +741,11 @@ _PIECES: Final[
         "17_lettre_affirmation.docx",
         "Lettre d'affirmation de la direction (à faire signer)",
         _piece_lettre_affirmation,
+    ),
+    (
+        "18_prescription_risques.txt",
+        "Analyse de prescription des risques (délai de reprise)",
+        _piece_prescription_risques,
     ),
 )
 

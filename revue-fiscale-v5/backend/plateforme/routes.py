@@ -1809,6 +1809,48 @@ def api_prescription_mission(
     return analyse
 
 
+@router.get("/missions/{mission_id}/civisme-fiscal")
+def api_civisme_fiscal_mission(
+    mission_id: int,
+    utilisateur: UtilisateurDep,
+    session: Annotated[Session, Depends(session_abonne)],
+) -> dict:
+    """Civisme fiscal — rapprochement échéancier / pièces collectées.
+
+    Pour chaque échéance théorique de l'exercice revu : couverte par une
+    pièce de la data room, en attente (future) ou manquante (passée non
+    couverte). Consultatif et déterministe — l'application ne stocke pas
+    les déclarations déposées. 404 si mission hors tenant (RLS).
+    """
+    from backend.moteur.journal import append_journal
+    from backend.plateforme.civisme_fiscal import (
+        ErreurCivismeFiscal,
+        analyse_mission,
+    )
+
+    exiger_capacite(utilisateur, "lire")
+    try:
+        analyse = analyse_mission(
+            session, utilisateur.tenant_id, mission_id
+        )
+    except ErreurCivismeFiscal as e:
+        raise HTTPException(
+            status_code=status.HTTP_404_NOT_FOUND, detail=str(e)
+        ) from e
+    append_journal(
+        session,
+        tenant_id=utilisateur.tenant_id,
+        mission_id=mission_id,
+        acteur=utilisateur.email,
+        action="consultation_civisme_fiscal",
+        charge_utile={
+            "taux_civisme": analyse["synthese"]["taux_civisme"],
+            "manquantes": analyse["synthese"]["manquantes"],
+        },
+    )
+    return analyse
+
+
 # ── Conclusions (validation humaine) ───────────────────────────────
 
 

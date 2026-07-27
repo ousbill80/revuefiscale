@@ -131,12 +131,22 @@ def test_zip_valide_contenu_et_sommaire(session):
         assert "17_lettre_affirmation.docx" in noms
         assert z.read("17_lettre_affirmation.docx")[:4] == b"PK\x03\x04"
 
+        # 18 — prescription des risques : toujours présente (listes
+        # vides sans risque non clos), avec exercices reprenables.
+        assert "18_prescription_risques.txt" in noms
+        prescription = z.read("18_prescription_risques.txt").decode("utf-8")
+        assert "PRESCRIPTION DES RISQUES" in prescription
+        assert "Exercices encore reprenables" in prescription
+        assert "RISQUES PRESCRITS À BASCULER (0)" in prescription
+        assert "Exposition prescrite" in prescription
+        assert "pratique LPF CI" in prescription
+
         # Sommaire : identification + pièces incluses + omissions motivées.
         sommaire = z.read("00_sommaire.txt").decode("utf-8")
         assert "DOSSIER DE TRAVAIL" in sommaire
         assert "PM Demande FICTIF" in sommaire
         assert "2025" in sommaire
-        assert "PIÈCES INCLUSES (11)" in sommaire
+        assert "PIÈCES INCLUSES (12)" in sommaire
         assert (
             "14_courrier_envoi_rapport.docx : Courrier d'envoi du rapport"
             in sommaire
@@ -148,6 +158,10 @@ def test_zip_valide_contenu_et_sommaire(session):
         assert (
             "17_lettre_affirmation.docx : Lettre d'affirmation de la "
             "direction (à faire signer)" in sommaire
+        )
+        assert (
+            "18_prescription_risques.txt : Analyse de prescription des "
+            "risques (délai de reprise)" in sommaire
         )
         # 16 — rentabilité : omise sans honoraires ni taux horaire saisis.
         assert "16_rentabilite_mission.txt" not in noms
@@ -228,14 +242,21 @@ def test_comparatif_et_provision_inclus_quand_disponibles(session):
         assert "DEBIT  6911" in provision
         assert "CREDIT 1918" in provision
 
+        # 18 — prescription : le risque ouvert 2024 (reprenable) y figure.
+        assert "18_prescription_risques.txt" in noms
+        prescription = z.read("18_prescription_risques.txt").decode("utf-8")
+        assert "TVA collectée non déclarée" in prescription
+        assert "exercice 2024" in prescription
+
         sommaire = z.read("00_sommaire.txt").decode("utf-8")
-        assert "PIÈCES INCLUSES (13)" in sommaire
+        assert "PIÈCES INCLUSES (14)" in sommaire
         # Ni temps, ni visa, ni réponse, ni paramètre de rentabilité sur
         # cette mission → 10/11/12/16 omises.
         assert "PIÈCES OMISES (4)" in sommaire
         assert "14_courrier_envoi_rapport.docx" in noms
         assert "15_echeancier_fiscal.txt" in noms
         assert "17_lettre_affirmation.docx" in noms
+        assert "18_prescription_risques.txt" in noms
 
 
 def test_temps_visas_reponses_inclus_quand_disponibles(session):
@@ -356,7 +377,7 @@ def test_temps_visas_reponses_inclus_quand_disponibles(session):
 
         # Sommaire cohérent : 10/11/12/16 incluses, plus omises.
         sommaire = z.read("00_sommaire.txt").decode("utf-8")
-        assert "PIÈCES INCLUSES (15)" in sommaire
+        assert "PIÈCES INCLUSES (16)" in sommaire
         assert "PIÈCES OMISES (2)" in sommaire
         assert (
             "16_rentabilite_mission.txt : Rentabilité de la mission"
@@ -408,6 +429,7 @@ def test_piece_en_echec_est_omise_et_notee(session, monkeypatch):
         assert "14_courrier_envoi_rapport.docx" in noms
         assert "15_echeancier_fiscal.txt" in noms
         assert "17_lettre_affirmation.docx" in noms
+        assert "18_prescription_risques.txt" in noms
         sommaire = z.read("00_sommaire.txt").decode("utf-8")
         assert (
             "02_rapport_restitution.docx : OMISE — panne simulée du rendu Word"
