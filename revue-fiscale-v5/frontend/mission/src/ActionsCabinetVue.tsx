@@ -28,13 +28,18 @@ type ActionsCabinetOut = {
 
 type Props = {
   jeton?: string | null;
+  estLecteur?: boolean;
   onOuvrirMission: (missionId: number) => void;
 };
 
-export function ActionsCabinetVue({ jeton, onOuvrirMission }: Props) {
+export function ActionsCabinetVue({ jeton, estLecteur, onOuvrirMission }: Props) {
   const [actions, setActions] = useState<ActionsCabinetOut | null>(null);
   const [busy, setBusy] = useState(false);
   const [err, setErr] = useState<string | null>(null);
+  // Rechargement après « Marquer faite » (clic explicite du fiscaliste).
+  const [version, setVersion] = useState(0);
+  const [faiteBusy, setFaiteBusy] = useState<string | null>(null);
+  const [faiteErr, setFaiteErr] = useState<string | null>(null);
 
   useEffect(() => {
     if (!jeton) return;
@@ -60,7 +65,35 @@ export function ActionsCabinetVue({ jeton, onOuvrirMission }: Props) {
     return () => {
       annule = true;
     };
-  }, [jeton]);
+  }, [jeton, version]);
+
+  /** Marque l'action « faite » (POST explicite) puis recharge le bloc. */
+  async function marquerFaite(it: ItemAction) {
+    if (!jeton) return;
+    const cle = `${it.mission_id}:${it.cle_action}`;
+    setFaiteBusy(cle);
+    setFaiteErr(null);
+    try {
+      await api(
+        `/api/v1/missions/${it.mission_id}/plan-actions/` +
+          `${encodeURIComponent(it.cle_action)}/decision`,
+        {
+          method: "POST",
+          jeton,
+          json: { decision: "faite", note: it.decision_note ?? "" },
+        },
+      );
+      setVersion((v) => v + 1);
+    } catch (e) {
+      setFaiteErr(
+        e instanceof Error
+          ? e.message
+          : "Impossible de marquer l'action faite.",
+      );
+    } finally {
+      setFaiteBusy(null);
+    }
+  }
 
   return (
     <section className="actionscab-zone" aria-label="Actions à mettre en œuvre">
@@ -133,9 +166,30 @@ export function ActionsCabinetVue({ jeton, onOuvrirMission }: Props) {
                       </span>
                       <span className="actionscab-badge">Retenue</span>
                     </button>
+                    {!estLecteur && (
+                      <button
+                        type="button"
+                        className="btn btn-ghost btn-sm actionscab-faite"
+                        title="Marquer cette action comme faite — la décision est enregistrée et la ligne quitte la liste"
+                        disabled={
+                          !jeton ||
+                          busy ||
+                          faiteBusy === `${it.mission_id}:${it.cle_action}`
+                        }
+                        onClick={() => void marquerFaite(it)}
+                      >
+                        Marquer faite
+                      </button>
+                    )}
                   </li>
                 ))}
               </ul>
+            )}
+
+            {faiteErr && (
+              <p className="actionscab-err" role="alert">
+                {faiteErr}
+              </p>
             )}
 
             {actions.note && <p className="actionscab-note">{actions.note}</p>}

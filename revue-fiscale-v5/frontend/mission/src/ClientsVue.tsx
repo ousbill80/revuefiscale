@@ -1430,6 +1430,8 @@ type FicheProps = {
   onSauver: () => void;
   onOuvrirMission: (id: number) => void;
   onNouvelleMission: () => void;
+  /** Recharge la fiche après une décision (« Marquer faite »). */
+  onRafraichir?: () => void;
 };
 
 type FiltreMissionsFiche = "toutes" | "actives" | "cloturees";
@@ -1474,10 +1476,42 @@ export function ClientFicheVue({
   onSauver,
   onOuvrirMission,
   onNouvelleMission,
+  onRafraichir,
 }: FicheProps) {
   const [filtreMissions, setFiltreMissions] =
     useState<FiltreMissionsFiche>("toutes");
   const [modeEdition, setModeEdition] = useState(false);
+  // « Marquer faite » sur une action retenue — clic explicite.
+  const [actionFaiteBusy, setActionFaiteBusy] = useState<string | null>(null);
+  const [actionFaiteErr, setActionFaiteErr] = useState<string | null>(null);
+
+  /** Marque l'action « faite » (POST explicite) puis rafraîchit la fiche. */
+  async function marquerActionFaite(a: ActionRetenueRow) {
+    if (!jeton) return;
+    const cle = `${a.mission_id}:${a.cle_action}`;
+    setActionFaiteBusy(cle);
+    setActionFaiteErr(null);
+    try {
+      await api(
+        `/api/v1/missions/${a.mission_id}/plan-actions/` +
+          `${encodeURIComponent(a.cle_action)}/decision`,
+        {
+          method: "POST",
+          jeton,
+          json: { decision: "faite", note: a.decision_note ?? "" },
+        },
+      );
+      onRafraichir?.();
+    } catch (e) {
+      setActionFaiteErr(
+        e instanceof Error
+          ? e.message
+          : "Impossible de marquer l'action faite.",
+      );
+    } finally {
+      setActionFaiteBusy(null);
+    }
+  }
   const [ficheTab, setFicheTab] = useState<FicheTab>(() =>
     tabDepuisHash(clientDetail.id),
   );
@@ -2235,7 +2269,10 @@ export function ClientFicheVue({
               </div>
               <ul className="agenda2-liste">
                 {actionsRetenues.map((a) => (
-                  <li key={`${a.mission_id}-${a.cle_action}`}>
+                  <li
+                    key={`${a.mission_id}-${a.cle_action}`}
+                    className="fiche2-action-item"
+                  >
                     <button
                       type="button"
                       className="agenda2-row"
@@ -2263,9 +2300,29 @@ export function ClientFicheVue({
                       </span>
                       <span className="agenda2-badge preparer">Retenue</span>
                     </button>
+                    {!estLecteur && (
+                      <button
+                        type="button"
+                        className="btn btn-ghost btn-sm fiche2-action-faite"
+                        title="Marquer cette action comme faite — la décision est enregistrée et la ligne quitte la liste"
+                        disabled={
+                          busy ||
+                          actionFaiteBusy ===
+                            `${a.mission_id}:${a.cle_action}`
+                        }
+                        onClick={() => void marquerActionFaite(a)}
+                      >
+                        Marquer faite
+                      </button>
+                    )}
                   </li>
                 ))}
               </ul>
+              {actionFaiteErr && (
+                <p className="fiche2-action-err" role="alert">
+                  {actionFaiteErr}
+                </p>
+              )}
               <p className="agenda2-note" role="note">
                 Suivi consultatif du plan d'actions — décisions du cabinet, le
                 client reste seul décideur de la mise en œuvre.

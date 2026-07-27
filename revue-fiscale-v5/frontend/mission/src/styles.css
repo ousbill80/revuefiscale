@@ -11359,7 +11359,19 @@ tr.row-active td {
   flex-direction: column;
   gap: 0.3rem;
 }
+.actionscab-liste li {
+  display: flex;
+  align-items: center;
+  gap: 0.35rem;
+}
+/* Bouton discret « Marquer faite » à côté de la ligne d'action. */
+.actionscab-faite {
+  flex: none;
+  font-size: 0.72rem;
+  white-space: nowrap;
+}
 .actionscab-row {
+  flex: 1 1 auto;
   width: 100%;
   display: flex;
   align-items: center;
@@ -11456,6 +11468,27 @@ tr.row-active td {
   font-size: 0.72rem;
   color: var(--muted, #64748b);
   white-space: nowrap;
+}
+
+/* Bloc « Actions retenues en cours » — ligne + bouton « Marquer faite ». */
+.fiche2-action-item {
+  display: flex;
+  align-items: center;
+  gap: 0.35rem;
+}
+.fiche2-action-item .agenda2-row {
+  flex: 1 1 auto;
+  min-width: 0;
+}
+.fiche2-action-faite {
+  flex: none;
+  font-size: 0.72rem;
+  white-space: nowrap;
+}
+.fiche2-action-err {
+  margin: 0;
+  font-size: 0.78rem;
+  color: #b91c1c;
 }
 
 .fiche2-echeances-date {

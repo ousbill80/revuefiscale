@@ -4401,6 +4401,7 @@ export function App() {
 
               <ActionsCabinetVue
                 jeton={session?.jeton ?? null}
+                estLecteur={estLecteur}
                 onOuvrirMission={(id) => void ouvrirMission(id)}
               />
 
@@ -4595,6 +4596,7 @@ export function App() {
                   chargerContribuableDansWizard(clientDetail);
                 })();
               }}
+              onRafraichir={() => void ouvrirClient(clientDetail.id)}
             />
           )}
 
