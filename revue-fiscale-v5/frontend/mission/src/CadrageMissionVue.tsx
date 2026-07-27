@@ -85,12 +85,24 @@ function exerciceSuggere(moisCloture: number, maintenant = new Date()): number {
   return mois > moisCloture ? annee : annee - 1;
 }
 
+/** Coordonnées réelles du cabinet (GET /api/v1/compte) — en-tête / pied de lettre. */
+export type CabinetProfil = {
+  siege_social: string | null;
+  commune: string | null;
+  ncc: string | null;
+  rccm: string | null;
+  email: string | null;
+  telephone: string | null;
+};
+
 export type CadrageMissionVueProps = {
   busy: boolean;
   quotaBloque: boolean;
   missionStatus: { msg: string; err: boolean } | null;
   /** Dénomination du cabinet — en-tête du document d'engagement. */
   cabinet: string;
+  /** Coordonnées du cabinet — optionnelles, enrichissent la lettre. */
+  cabinetProfil?: CabinetProfil | null;
   /* ------- Client : liaison au portefeuille uniquement ------- */
   clients: Contribuable[];
   missions: MissionRow[];
@@ -168,6 +180,8 @@ export function CadrageMissionVue(props: CadrageMissionVueProps) {
 
   const [recherche, setRecherche] = useState("");
   const [listeOuverte, setListeOuverte] = useState(false);
+  /* Saisie libre d'exercice : masquée par défaut, révélée via « Autre… ». */
+  const [anneeLibreOuverte, setAnneeLibreOuverte] = useState(false);
   const comboRef = useRef<HTMLDivElement | null>(null);
 
   const client = useMemo(
@@ -274,6 +288,31 @@ export function CadrageMissionVue(props: CadrageMissionVueProps) {
   });
 
   const anneesProposees = [suggestion, suggestion - 1, suggestion - 2];
+
+  /* ---- Branding cabinet — uniquement les données réellement disponibles ---- */
+  const profil = props.cabinetProfil ?? null;
+  const monogramme =
+    (cabinet || "Cabinet")
+      .split(/\s+/)
+      .filter(Boolean)
+      .slice(0, 2)
+      .map((mot) => mot.charAt(0))
+      .join("")
+      .toUpperCase() || "C";
+  const coordonneesCabinet = [
+    profil?.siege_social,
+    profil?.commune,
+    profil?.email,
+    profil?.telephone,
+  ]
+    .map((v) => (v ?? "").trim())
+    .filter(Boolean)
+    .join(" · ");
+  const nccClientCourt = (client?.ncc ?? "")
+    .replace(/\s/g, "")
+    .slice(0, 6)
+    .toUpperCase();
+  const refLettre = `LM-${exercice}-${nccClientCourt || "XXX"}`;
 
   return (
     <div className="cadrage2">
@@ -465,6 +504,7 @@ export function CadrageMissionVue(props: CadrageMissionVueProps) {
                     onClick={() => {
                       props.setExercice(annee);
                       props.setPrescriptionConfirmee(false);
+                      setAnneeLibreOuverte(false);
                     }}
                   >
                     {annee}
@@ -472,16 +512,27 @@ export function CadrageMissionVue(props: CadrageMissionVueProps) {
                   </button>
                 );
               })}
-              <input
-                type="number"
-                className="cadrage2-annee-libre"
-                aria-label="Exercice — saisie libre"
-                value={exercice}
-                onChange={(e) => {
-                  props.setExercice(Number(e.target.value));
-                  props.setPrescriptionConfirmee(false);
-                }}
-              />
+              {anneeLibreOuverte || !anneesProposees.includes(exercice) ? (
+                <input
+                  type="number"
+                  className="cadrage2-annee-libre"
+                  aria-label="Exercice — saisie libre"
+                  autoFocus={anneeLibreOuverte}
+                  value={exercice}
+                  onChange={(e) => {
+                    props.setExercice(Number(e.target.value));
+                    props.setPrescriptionConfirmee(false);
+                  }}
+                />
+              ) : (
+                <button
+                  type="button"
+                  className="cadrage2-annee cadrage2-annee-autre"
+                  onClick={() => setAnneeLibreOuverte(true)}
+                >
+                  Autre…
+                </button>
+              )}
             </div>
             {client && (
               <p className="cadrage2-note">
@@ -551,7 +602,6 @@ export function CadrageMissionVue(props: CadrageMissionVueProps) {
               }))}
               required
               tip={PROCESS_TIPS.regime}
-              hint="Prérempli depuis la fiche client — modifiable."
             />
             {estPP ? (
               <div className="field">
@@ -569,10 +619,12 @@ export function CadrageMissionVue(props: CadrageMissionVueProps) {
                 options={FORMES_JURIDIQUES_PM}
                 required
                 tip={PROCESS_TIPS.formeJuridique}
-                hint="Prérempli depuis la fiche client — modifiable."
               />
             )}
           </div>
+          <p className="field-hint cadrage2-profil-hint">
+            Régime et forme préremplis depuis la fiche client — modifiables.
+          </p>
 
           {props.resumeRisques && props.resumeRisques.total > 0 ? (
             <div
@@ -644,7 +696,7 @@ export function CadrageMissionVue(props: CadrageMissionVueProps) {
           </p>
 
           <div
-            className="impot-chips"
+            className="cadrage2-chips"
             role="group"
             aria-label="Codes impôts du périmètre"
           >
@@ -652,7 +704,7 @@ export function CadrageMissionVue(props: CadrageMissionVueProps) {
               const checked = perimetreImpots.includes(code);
               return (
                 <Tooltip key={code} label={tipImpot(code)} side="bottom">
-                  <label className={`impot-chip${checked ? " is-on" : ""}`}>
+                  <label className={`cadrage2-chip${checked ? " is-on" : ""}`}>
                     <input
                       type="checkbox"
                       checked={checked}
@@ -764,7 +816,7 @@ export function CadrageMissionVue(props: CadrageMissionVueProps) {
                   </small>
                 </span>
               </label>
-              <div className="field">
+              <div className="field cadrage2-affiner-pleine">
                 <p className="label-with-tip impot-perimetre-lbl">
                   Objectifs de la mission
                   <InfoTip
@@ -789,21 +841,23 @@ export function CadrageMissionVue(props: CadrageMissionVueProps) {
                           );
                         }}
                       />
-                      <button
-                        type="button"
-                        className="btn btn-ghost btn-sm"
-                        disabled={objectifsLibelles.length <= 1}
-                        aria-label={`Retirer l'objectif ${idx + 1}`}
-                        onClick={() => {
-                          props.setObjectifsLibelles((prev) =>
-                            prev.length <= 1
-                              ? prev
-                              : prev.filter((_, i) => i !== idx),
-                          );
-                        }}
-                      >
-                        Retirer
-                      </button>
+                      <Tooltip label={`Retirer l'objectif ${idx + 1}`}>
+                        <button
+                          type="button"
+                          className="cadrage2-obj-retirer"
+                          disabled={objectifsLibelles.length <= 1}
+                          aria-label={`Retirer l'objectif ${idx + 1}`}
+                          onClick={() => {
+                            props.setObjectifsLibelles((prev) =>
+                              prev.length <= 1
+                                ? prev
+                                : prev.filter((_, i) => i !== idx),
+                            );
+                          }}
+                        >
+                          ×
+                        </button>
+                      </Tooltip>
                     </li>
                   ))}
                 </ul>
@@ -818,7 +872,7 @@ export function CadrageMissionVue(props: CadrageMissionVueProps) {
                   Ajouter un objectif
                 </button>
               </div>
-              <div className="field">
+              <div className="field cadrage2-affiner-pleine">
                 <label
                   className="field-label-static"
                   htmlFor="cadrage-exclusions"
@@ -827,8 +881,8 @@ export function CadrageMissionVue(props: CadrageMissionVueProps) {
                 </label>
                 <textarea
                   id="cadrage-exclusions"
-                  className="field-input field-textarea"
-                  rows={2}
+                  className="field-input field-textarea cadrage2-exclusions"
+                  rows={3}
                   value={exclusionsDeclarees}
                   onChange={(e) =>
                     props.setExclusionsDeclarees(e.target.value)
@@ -855,13 +909,31 @@ export function CadrageMissionVue(props: CadrageMissionVueProps) {
               Brouillon
             </span>
           )}
+          <span className="cadrage2-doc-bande" aria-hidden="true" />
           <header className="cadrage2-doc-head">
-            <p className="cadrage2-doc-cabinet">{cabinet || "Cabinet"}</p>
-            <p className="cadrage2-doc-type">Lettre de mission</p>
-            <p className="cadrage2-doc-date">
-              Abidjan, le {dateDuJour}
+            <div className="cadrage2-doc-identite">
+              <span className="cadrage2-doc-monogramme" aria-hidden="true">
+                {monogramme}
+              </span>
+              <div className="cadrage2-doc-cab">
+                <p className="cadrage2-doc-cabinet">{cabinet || "Cabinet"}</p>
+                {coordonneesCabinet && (
+                  <p className="cadrage2-doc-coords">{coordonneesCabinet}</p>
+                )}
+              </div>
+            </div>
+            <p className="cadrage2-doc-ref">
+              Réf. {refLettre} · Abidjan, le {dateDuJour}
             </p>
           </header>
+
+          <p className="cadrage2-doc-objet">
+            <span>
+              Objet : Lettre de mission —{" "}
+              {engagement ? engagement.titre : "engagement à préciser"} ·
+              exercice {exercice}
+            </span>
+          </p>
 
           <div className="cadrage2-doc-corps">
             <p>
@@ -977,6 +1049,11 @@ export function CadrageMissionVue(props: CadrageMissionVueProps) {
                 {missionStatus.msg}
               </p>
             )}
+            <div className="cadrage2-doc-sign">
+              <p className="cadrage2-doc-sign-pour">Pour le cabinet,</p>
+              <p className="cadrage2-doc-sign-nom">{cabinet || "—"}</p>
+              <span className="cadrage2-doc-sign-trait" aria-hidden="true" />
+            </div>
             <div className="cadrage2-signature">
               <p className="cadrage2-signature-lieu">
                 Fait pour valoir engagement de mission
@@ -995,6 +1072,11 @@ export function CadrageMissionVue(props: CadrageMissionVueProps) {
                 </p>
               )}
             </div>
+            <p className="cadrage2-doc-footer">
+              {[cabinet || "Cabinet", coordonneesCabinet]
+                .filter(Boolean)
+                .join(" · ")}
+            </p>
           </footer>
         </article>
       </aside>

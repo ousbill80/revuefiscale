@@ -9553,9 +9553,21 @@ tr.row-active td {
 .cadrage2-form {
   display: flex;
   flex-direction: column;
-  gap: 2.25rem;
+  gap: 1.4rem;
   min-width: 0;
   padding-top: 0.35rem;
+}
+
+/* Spinners natifs masqués — les montants/années se pilotent au clavier ou via chips. */
+.cadrage2 input[type="number"] {
+  appearance: textfield;
+  -moz-appearance: textfield;
+}
+
+.cadrage2 input[type="number"]::-webkit-outer-spin-button,
+.cadrage2 input[type="number"]::-webkit-inner-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
 }
 
 .cadrage2-section {
@@ -9800,7 +9812,7 @@ tr.row-active td {
 
 /* --- Exercice : années + suggestion clôture --- */
 .cadrage2-exercice {
-  margin-top: 1.35rem;
+  margin-top: 1rem;
 }
 
 .cadrage2-exercice-row {
@@ -9878,6 +9890,15 @@ tr.row-active td {
   box-shadow: 0 0 0 3px var(--accent-ring);
 }
 
+/* Bouton « Autre… » — révèle la saisie libre seulement si besoin. */
+.cadrage2-annee-autre {
+  min-width: 4.4rem;
+  border-style: dashed;
+  font-size: 0.82rem;
+  font-weight: 650;
+  color: var(--muted);
+}
+
 .cadrage2-prescrit {
   margin-top: 0.6rem;
 }
@@ -9909,8 +9930,68 @@ tr.row-active td {
 }
 
 .cadrage2-profil {
-  margin-top: 1.35rem;
+  margin-top: 1rem;
   max-width: 40rem;
+}
+
+.cadrage2-profil-hint {
+  margin-top: 0.35rem;
+}
+
+/* --- Chips périmètre : pilules togglables compactes (checkbox masquée) --- */
+.cadrage2-chips {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.35rem;
+  margin-top: 0.4rem;
+  max-width: 34rem;
+}
+
+.cadrage2-chip {
+  display: inline-flex;
+  align-items: center;
+  padding: 0.28rem 0.7rem;
+  border: 1px solid var(--line);
+  border-radius: 999px;
+  background: var(--surface-solid);
+  font-size: 0.74rem;
+  font-weight: 700;
+  letter-spacing: 0.03em;
+  color: var(--ink-soft);
+  cursor: pointer;
+  user-select: none;
+  transition:
+    border-color 0.12s ease,
+    background 0.12s ease,
+    color 0.12s ease;
+}
+
+.cadrage2-chip input {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  margin: 0;
+  padding: 0;
+  border: 0;
+  clip: rect(0 0 0 0);
+  clip-path: inset(50%);
+  overflow: hidden;
+  white-space: nowrap;
+}
+
+.cadrage2-chip:hover {
+  border-color: color-mix(in srgb, var(--accent) 45%, var(--line));
+}
+
+.cadrage2-chip:has(input:focus-visible) {
+  outline: 2px solid var(--accent);
+  outline-offset: 1px;
+}
+
+.cadrage2-chip.is-on {
+  border-color: var(--accent-deep);
+  background: var(--accent-deep);
+  color: #fff;
 }
 
 .cadrage2-forme-pp {
@@ -9922,17 +10003,26 @@ tr.row-active td {
   color: var(--accent-deep);
 }
 
-/* --- Seuil de signification : champ + suggestions cliquables --- */
+/* --- Seuil de signification : champ + suggestions sur la même ligne --- */
 .cadrage2-seuil {
-  margin-top: 1.1rem;
-  max-width: 26rem;
+  margin-top: 1rem;
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  column-gap: 0.75rem;
+  row-gap: 0.45rem;
+  max-width: 44rem;
+}
+
+.cadrage2-seuil > .field {
+  flex: 0 1 16rem;
+  min-width: 13rem;
 }
 
 .cadrage2-seuil-suggestions {
   display: flex;
   flex-wrap: wrap;
   gap: 0.4rem;
-  margin-top: 0.45rem;
 }
 
 .cadrage2-seuil-btn {
@@ -9963,7 +10053,7 @@ tr.row-active td {
 
 /* --- Affinage replié --- */
 .cadrage2-affiner {
-  margin-top: 1.1rem;
+  margin-top: 1rem;
 }
 
 .cadrage2-affiner summary {
@@ -9979,12 +10069,85 @@ tr.row-active td {
   outline-offset: 1px;
 }
 
+/* Grille 2 colonnes aérée : type d'entité + cross-border côte à côte,
+   objectifs et exclusions en pleine largeur. */
 .cadrage2-affiner-corps {
   margin-top: 0.85rem;
-  display: flex;
-  flex-direction: column;
-  gap: 0.85rem;
-  max-width: 40rem;
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 0.9rem 1.1rem;
+  align-items: start;
+  max-width: 44rem;
+}
+
+.cadrage2-affiner-pleine {
+  grid-column: 1 / -1;
+}
+
+@media (max-width: 640px) {
+  .cadrage2-affiner-corps {
+    grid-template-columns: minmax(0, 1fr);
+  }
+}
+
+/* Objectifs — lignes compactes, retrait discret en icône. */
+.cadrage2-affiner .objectifs-edit-list {
+  margin-top: 0.35rem;
+}
+
+.cadrage2-affiner .objectifs-edit-list .field-input {
+  padding: 0.5rem 0.65rem;
+  font-size: 0.86rem;
+}
+
+.cadrage2-obj-retirer {
+  appearance: none;
+  flex: 0 0 auto;
+  width: 1.7rem;
+  height: 1.7rem;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0;
+  border: 1px solid transparent;
+  border-radius: 50%;
+  background: transparent;
+  font: inherit;
+  font-size: 1rem;
+  line-height: 1;
+  color: var(--muted);
+  cursor: pointer;
+  transition:
+    background 0.12s ease,
+    color 0.12s ease;
+}
+
+.cadrage2-obj-retirer:hover:not(:disabled) {
+  background: var(--danger-soft, #fee2e2);
+  color: var(--danger, #b91c1c);
+}
+
+.cadrage2-obj-retirer:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 1px;
+}
+
+.cadrage2-obj-retirer:disabled {
+  opacity: 0.35;
+  cursor: default;
+}
+
+/* Exclusions — 3 rangées, police normale (pas de monospace). */
+.cadrage2-exclusions,
+.cadrage2-exclusions::placeholder {
+  font-family: inherit;
+  font-size: 0.86rem;
+  line-height: 1.5;
+}
+
+.cadrage2-exclusions {
+  min-height: 0;
+  padding-top: 0.6rem;
 }
 
 /* --- Document papier : lettre de mission --- */
@@ -10030,36 +10193,102 @@ tr.row-active td {
   user-select: none;
 }
 
+/* Bande fine d'accent en tête — signature visuelle type cabinet international. */
+.cadrage2-doc-bande {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 5px;
+  background: linear-gradient(
+    90deg,
+    var(--accent-deep),
+    var(--accent) 55%,
+    color-mix(in srgb, var(--accent) 35%, #fff)
+  );
+}
+
 .cadrage2-doc-head {
   position: relative;
-  padding-bottom: 0.9rem;
-  margin-bottom: 1.1rem;
-  border-bottom: 2px solid var(--accent-deep);
+  display: flex;
+  flex-direction: column;
+  gap: 0.55rem;
+  padding-bottom: 0.85rem;
+  margin-bottom: 0.9rem;
+  border-bottom: 1.5px solid var(--accent-deep);
+}
+
+.cadrage2-doc-identite {
+  display: flex;
+  align-items: center;
+  gap: 0.65rem;
+  min-width: 0;
+}
+
+.cadrage2-doc-monogramme {
+  flex: 0 0 auto;
+  width: 2.35rem;
+  height: 2.35rem;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 4px;
+  background: var(--accent-deep);
+  color: #fff;
+  font-family: Georgia, "Times New Roman", serif;
+  font-size: 1rem;
+  font-weight: 700;
+  letter-spacing: 0.05em;
+}
+
+.cadrage2-doc-cab {
+  min-width: 0;
 }
 
 .cadrage2-doc-cabinet {
   margin: 0;
-  font-family: var(--font-brand);
-  font-size: 1.05rem;
-  font-weight: 800;
+  font-family: Georgia, "Times New Roman", serif;
+  font-size: 1.08rem;
+  font-weight: 700;
   color: var(--accent-deep);
   letter-spacing: 0.01em;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
 }
 
-.cadrage2-doc-type {
-  margin: 0.15rem 0 0;
+.cadrage2-doc-coords {
+  margin: 0.1rem 0 0;
   font-size: 0.66rem;
-  font-weight: 750;
-  letter-spacing: 0.22em;
-  text-transform: uppercase;
+  letter-spacing: 0.02em;
   color: var(--muted);
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
 }
 
-.cadrage2-doc-date {
-  margin: 0.55rem 0 0;
-  font-size: 0.76rem;
+/* Bloc référence — aligné à droite, comme un courrier. */
+.cadrage2-doc-ref {
+  margin: 0;
+  align-self: flex-end;
+  font-size: 0.72rem;
   font-style: italic;
   color: var(--muted);
+  text-align: right;
+}
+
+/* Objet — gras, souligné fin. */
+.cadrage2-doc-objet {
+  margin: 0 0 0.85rem;
+  font-family: Georgia, "Times New Roman", serif;
+  font-size: 0.85rem;
+  font-weight: 700;
+  color: var(--ink);
+}
+
+.cadrage2-doc-objet span {
+  border-bottom: 1px solid color-mix(in srgb, var(--ink) 55%, transparent);
+  padding-bottom: 1px;
 }
 
 .cadrage2-doc-corps {
@@ -10067,15 +10296,32 @@ tr.row-active td {
   display: flex;
   flex-direction: column;
   gap: 0.75rem;
+  counter-reset: lm-par;
 }
 
 .cadrage2-doc-corps p {
+  position: relative;
   margin: 0;
+  padding-left: 1.35rem;
   font-size: 0.83rem;
   line-height: 1.65;
   color: var(--ink-soft);
   text-align: justify;
   hyphens: auto;
+}
+
+/* Numérotation discrète des paragraphes — usage courrier de cabinet. */
+.cadrage2-doc-corps p::before {
+  counter-increment: lm-par;
+  content: counter(lm-par) ".";
+  position: absolute;
+  left: 0;
+  top: 0;
+  font-family: Georgia, "Times New Roman", serif;
+  font-size: 0.76rem;
+  font-weight: 700;
+  color: var(--accent-deep);
+  line-height: 1.8;
 }
 
 .cadrage2-doc-corps strong {
@@ -10087,10 +10333,52 @@ tr.row-active td {
   border-bottom: 1px dotted var(--muted-soft);
 }
 
-/* --- Pied de document : bloc signature --- */
+/* --- Pied de document : signature cabinet + bloc action --- */
 .cadrage2-doc-pied {
   position: relative;
-  margin-top: 1.4rem;
+  margin-top: 1.3rem;
+}
+
+.cadrage2-doc-sign {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  gap: 0.1rem;
+  margin-bottom: 0.9rem;
+  text-align: right;
+}
+
+.cadrage2-doc-sign-pour {
+  margin: 0;
+  font-size: 0.78rem;
+  color: var(--ink-soft);
+}
+
+.cadrage2-doc-sign-nom {
+  margin: 0;
+  font-family: Georgia, "Times New Roman", serif;
+  font-size: 0.85rem;
+  font-weight: 700;
+  color: var(--ink);
+}
+
+/* Espace de signature — trait fin. */
+.cadrage2-doc-sign-trait {
+  display: block;
+  width: 10.5rem;
+  height: 2.6rem;
+  border-bottom: 1px solid color-mix(in srgb, var(--ink) 45%, transparent);
+}
+
+/* Footer coordonnées — minuscule, gris, centré, séparé par un filet. */
+.cadrage2-doc-footer {
+  margin: 0.9rem 0 0;
+  padding-top: 0.55rem;
+  border-top: 1px solid var(--line);
+  font-size: 0.6rem;
+  letter-spacing: 0.04em;
+  text-align: center;
+  color: var(--muted);
 }
 
 .cadrage2-doc-pied .status {

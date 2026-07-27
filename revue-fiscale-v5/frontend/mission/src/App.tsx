@@ -1,4 +1,5 @@
 import {
+  useCallback,
   useEffect,
   useMemo,
   useRef,
@@ -44,7 +45,10 @@ import {
   libelleStatut,
   type MissionRow,
 } from "./MissionsVue";
-import { CadrageMissionVue } from "./CadrageMissionVue";
+import {
+  CadrageMissionVue,
+  type CabinetProfil,
+} from "./CadrageMissionVue";
 import { CompteVue } from "./CompteVue";
 import { EquipeVue } from "./EquipeVue";
 import { FacturationVue } from "./FacturationVue";
@@ -1038,6 +1042,38 @@ export function App() {
       /* ignore */
     }
   }, [session]);
+
+  // Profil cabinet (coordonnées réelles du tenant) — en-tête de la lettre de mission.
+  const [cabinetProfil, setCabinetProfil] = useState<CabinetProfil | null>(
+    null,
+  );
+  const chargerCabinetProfil = useCallback(async (jeton: string) => {
+    try {
+      const r = await api<{
+        tenant: {
+          siege_social?: string | null;
+          commune?: string | null;
+          ncc?: string | null;
+          rccm?: string | null;
+        };
+        utilisateur: { email: string; telephone: string | null };
+      }>("/api/v1/compte", { jeton });
+      setCabinetProfil({
+        siege_social: r.tenant.siege_social ?? null,
+        commune: r.tenant.commune ?? null,
+        ncc: r.tenant.ncc ?? null,
+        rccm: r.tenant.rccm ?? null,
+        email: r.utilisateur.email ?? null,
+        telephone: r.utilisateur.telephone ?? null,
+      });
+    } catch {
+      /* Coordonnées facultatives — l'en-tête retombe sur la dénomination seule. */
+    }
+  }, []);
+  useEffect(() => {
+    if (session?.jeton) void chargerCabinetProfil(session.jeton);
+    else setCabinetProfil(null);
+  }, [session?.jeton, chargerCabinetProfil]);
 
   // Boot : vérifie la session restaurée via un appel léger, puis charge les données.
   useEffect(() => {
@@ -4451,7 +4487,10 @@ export function App() {
               onDenominationChange={(d) =>
                 setSession((s) => (s ? { ...s, tenant_denomination: d } : s))
               }
-              onProfilSaved={() => void chargerOnboarding(session.jeton)}
+              onProfilSaved={() => {
+                void chargerOnboarding(session.jeton);
+                void chargerCabinetProfil(session.jeton);
+              }}
               onOuvrirFacturation={() => void naviguer("facturation")}
             />
           )}
@@ -4538,6 +4577,7 @@ export function App() {
                   quotaBloque={!!quota?.bloque}
                   missionStatus={missionStatus}
                   cabinet={session?.tenant_denomination ?? ""}
+                  cabinetProfil={cabinetProfil}
                   clients={clients}
                   missions={missions}
                   contribIdExistant={contribIdExistant}
