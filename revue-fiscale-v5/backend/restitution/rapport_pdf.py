@@ -18,6 +18,7 @@ from backend.restitution.rapport import (
     section_fiabilite_source,
     section_note_synthese,
     section_perimetre,
+    section_provision_risques,
     section_revue_analytique,
 )
 from backend.restitution.risques import ScoreRisque
@@ -44,6 +45,7 @@ def rendre_rapport_pdf(
     note_synthese: Mapping[str, Any] | None = None,
     commentaire_analytique: Mapping[str, Any] | None = None,
     risques_chiffres: Sequence[Mapping[str, Any]] | None = None,
+    provision: Mapping[str, Any] | None = None,
 ) -> bytes:
     """Produit un PDF simple a partir des donnees deja calculees."""
     buf = io.BytesIO()
@@ -127,6 +129,12 @@ def rendre_rapport_pdf(
     lignes_penalites = section_exposition_penalites(risques_chiffres)
     if lignes_penalites:
         bloc_markdown_multiligne(lignes_penalites)
+        y -= 6
+    # Provision pour risques fiscaux proposée (payload calculer_provision
+    # déjà calculé en amont — aucun recalcul). Vide → aucune section.
+    lignes_provision = section_provision_risques(provision)
+    if lignes_provision:
+        bloc_markdown_multiligne(lignes_provision)
         y -= 6
     ligne("Passage comptable / fiscal", gras=True)
     for p in passage.lignes:

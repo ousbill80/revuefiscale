@@ -398,6 +398,99 @@ def section_exposition_penalites(
     return lignes
 
 
+def section_provision_risques(
+    provision: Mapping[str, Any] | None,
+) -> list[str]:
+    """Section « Provision pour risques fiscaux proposée » — DOCX/PDF.
+
+    Reprend le payload de ``calculer_provision`` (backend/plateforme/
+    provision_risques.py — aucun recalcul ici) : lignes provisionnables,
+    total, passifs éventuels, écriture SYSCOHADA proposée et hypothèses.
+    Provision absente ou totalement vide (total nul ET aucun passif
+    éventuel) → aucune section.
+    """
+    if not isinstance(provision, Mapping):
+        return []
+    total = Decimal("0")
+    with contextlib.suppress(ArithmeticError):
+        total = Decimal(str(provision.get("total_provision") or "0"))
+    passifs = [
+        p for p in (provision.get("passifs_eventuels") or []) if isinstance(p, Mapping)
+    ]
+    if total == 0 and not passifs:
+        return []
+
+    lignes: list[str] = ["## Provision pour risques fiscaux proposée", ""]
+
+    contenu = [
+        x for x in (provision.get("lignes") or []) if isinstance(x, Mapping)
+    ]
+    if contenu:
+        lignes.append(f"Risques provisionnables ({len(contenu)}) :")
+        lignes.append("")
+        for ligne in contenu:
+            titre = str(ligne.get("titre") or "—").strip() or "—"
+            impot = str(ligne.get("impot") or "").strip()
+            exercice = ligne.get("exercice")
+            probabilite = str(ligne.get("probabilite") or "probable").strip()
+            lignes.append(
+                f"- {titre} ({impot} {exercice}, {probabilite}) — provision "
+                f"{_fmt_fcfa_entier(ligne.get('montant_provisionnable'))}"
+            )
+        lignes.append("")
+        lignes.append(
+            f"**Total de la provision proposée** : {_fmt_fcfa_entier(total)}"
+        )
+        lignes.append("")
+
+    if passifs:
+        lignes.append(f"Passifs éventuels ({len(passifs)}) :")
+        lignes.append("")
+        for p in passifs:
+            titre = str(p.get("titre") or "—").strip() or "—"
+            lignes.append(
+                f"- {titre} — montant estimé "
+                f"{_fmt_fcfa_entier(p.get('montant_estime'))} "
+                "(mention en annexe recommandée)"
+            )
+        lignes.append("")
+
+    ecriture = provision.get("ecriture_proposee")
+    if isinstance(ecriture, Mapping) and total > 0:
+        lignes.append("Écriture proposée :")
+        lignes.append("")
+        morceaux: list[str] = []
+        montant_txt = _fmt_fcfa_entier(total)
+        for le in ecriture.get("lignes") or []:
+            if not isinstance(le, Mapping):
+                continue
+            sens = "Débit" if str(le.get("sens") or "") == "debit" else "Crédit"
+            morceaux.append(
+                f"{sens} {le.get('compte')} {le.get('intitule') or ''}".strip()
+            )
+            montant_txt = _fmt_fcfa_entier(le.get("montant"))
+        if morceaux:
+            lignes.append(f"- {' / '.join(morceaux)} — {montant_txt}")
+        libelle = str(ecriture.get("libelle") or "").strip()
+        if libelle:
+            lignes.append(f"- Libellé : {libelle}")
+        lignes.append("")
+
+    hypotheses = [
+        str(h).strip()
+        for h in (provision.get("hypotheses") or [])
+        if str(h).strip()
+    ]
+    if hypotheses:
+        lignes.append("Hypothèses et mentions :")
+        lignes.append("")
+        for h in hypotheses:
+            lignes.append(f"- {h}")
+        lignes.append("")
+
+    return lignes
+
+
 _LIBELLES_CLASSEMENT = {
     "apparition": "apparition",
     "disparition": "disparition",

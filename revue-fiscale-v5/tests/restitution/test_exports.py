@@ -630,3 +630,154 @@ def test_section_exposition_penalites_vide():
         section_exposition_penalites([{"id": 1, "chiffrage_penalites": None}])
         == []
     )
+
+
+# ── Provision pour risques fiscaux dans les exports ───────────────────
+
+
+def _provision_non_vide():
+    """Provision réelle : chiffrage penalites.py + provision_risques.py."""
+    from datetime import date
+
+    from backend.plateforme.penalites import chiffrer_risque
+    from backend.plateforme.provision_risques import (
+        calculer_provision_depuis_risques,
+    )
+
+    risques = [
+        {
+            "id": 11,
+            "impot": "TVA",
+            "libelle": "TVA déductible non justifiée",
+            "statut": "ouvert",
+            "probabilite": "probable",
+            "montant_estime": "1000000",
+            "exercice_origine": 2024,
+        },
+        {
+            "id": 12,
+            "impot": "BIC",
+            "libelle": "Dons non déductibles",
+            "statut": "en_traitement",
+            "probabilite": "possible",
+            "montant_estime": "500000",
+            "exercice_origine": 2023,
+        },
+    ]
+    for r in risques:
+        r["chiffrage_penalites"] = chiffrer_risque(
+            r, aujourd_hui=date(2026, 7, 1)
+        )
+    return calculer_provision_depuis_risques(risques, exercice_courant=2026)
+
+
+def test_docx_avec_provision_risques():
+    """Provision non vide → section après pénalités : lignes, total, écriture."""
+    passage, score, meta, conclusions, _, _ = _donnees_communes()
+    docx = rendre_rapport_docx(
+        meta=meta,
+        passage=passage,
+        conclusions=conclusions,
+        score=score,
+        extrait_audit=[],
+        risques_chiffres=_risques_ouverts_chiffres(),
+        provision=_provision_non_vide(),
+    )
+    textes = _texte_docx(docx)
+    assert "Provision pour risques fiscaux proposée" in textes
+    # Ligne provisionnable : TVA 2024 probable, total 1 340 000 (18 mois).
+    assert (
+        "TVA déductible non justifiée (TVA 2024, probable) — provision "
+        "1 340 000 FCFA" in textes
+    )
+    assert "Total de la provision proposée : 1 340 000 FCFA" in textes
+    # Passif éventuel : BIC possible, exposition 700 000 (30 mois).
+    assert (
+        "Dons non déductibles — montant estimé 700 000 FCFA "
+        "(mention en annexe recommandée)" in textes
+    )
+    # Écriture SYSCOHADA proposée + libellé.
+    assert (
+        "Débit 6911 Dotations aux provisions d'exploitation / "
+        "Crédit 1918 Autres provisions pour risques — 1 340 000 FCFA"
+        in textes
+    )
+    assert (
+        "Libellé : Provision pour risques fiscaux — exercice 2026" in textes
+    )
+    # Hypothèses reprises telles quelles.
+    assert "Proposition indicative à valider par l'expert-comptable" in textes
+    assert "passifs éventuels" in textes
+    # Placement : après la section exposition pénalités.
+    assert textes.index("Exposition pénalités") < textes.index(
+        "Provision pour risques fiscaux proposée"
+    )
+
+
+def test_docx_sans_provision_pas_de_section():
+    """Provision None ou vide (total 0, aucun passif) → section omise."""
+    from backend.plateforme.provision_risques import (
+        calculer_provision_depuis_risques,
+    )
+
+    passage, score, meta, conclusions, _, _ = _donnees_communes()
+    provision_vide = calculer_provision_depuis_risques([], exercice_courant=2026)
+    assert provision_vide["total_provision"] == "0"
+    for provision in (None, provision_vide):
+        docx = rendre_rapport_docx(
+            meta=meta,
+            passage=passage,
+            conclusions=conclusions,
+            score=score,
+            extrait_audit=[],
+            provision=provision,
+        )
+        assert "Provision pour risques fiscaux" not in _texte_docx(docx)
+
+
+def test_pdf_avec_provision_risques():
+    passage, score, meta, conclusions, _, _ = _donnees_communes()
+    pdf = rendre_rapport_pdf(
+        meta=meta,
+        passage=passage,
+        conclusions=conclusions,
+        score=score,
+        extrait_audit=[],
+        risques_chiffres=_risques_ouverts_chiffres(),
+        provision=_provision_non_vide(),
+    )
+    assert pdf.startswith(b"%PDF")
+    texte = _texte_pdf(pdf)
+    assert "Provision pour risques fiscaux propos" in texte
+    assert "1 340 000 FCFA" in texte
+    assert "6911" in texte and "1918" in texte
+    assert "mention en annexe recommand" in texte
+
+
+def test_pdf_sans_provision_pas_de_section():
+    passage, score, meta, conclusions, _, _ = _donnees_communes()
+    pdf = rendre_rapport_pdf(
+        meta=meta,
+        passage=passage,
+        conclusions=conclusions,
+        score=score,
+        extrait_audit=[],
+        provision=None,
+    )
+    assert pdf.startswith(b"%PDF")
+    assert "Provision pour risques fiscaux" not in _texte_pdf(pdf)
+
+
+def test_section_provision_risques_vide():
+    from backend.plateforme.provision_risques import (
+        calculer_provision_depuis_risques,
+    )
+    from backend.restitution.rapport import section_provision_risques
+
+    assert section_provision_risques(None) == []
+    assert (
+        section_provision_risques(
+            calculer_provision_depuis_risques([], exercice_courant=2026)
+        )
+        == []
+    )

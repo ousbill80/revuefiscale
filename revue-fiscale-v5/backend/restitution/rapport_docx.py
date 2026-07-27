@@ -16,6 +16,7 @@ from backend.restitution.rapport import (
     section_fiabilite_source,
     section_note_synthese,
     section_perimetre,
+    section_provision_risques,
     section_revue_analytique,
 )
 from backend.restitution.risques import ScoreRisque
@@ -53,6 +54,7 @@ def rendre_rapport_docx(
     note_synthese: Mapping[str, Any] | None = None,
     commentaire_analytique: Mapping[str, Any] | None = None,
     risques_chiffres: Sequence[Mapping[str, Any]] | None = None,
+    provision: Mapping[str, Any] | None = None,
 ) -> bytes:
     """Produit un .docx a partir des donnees deja calculees (aucun recalcul fiscal)."""
     doc = Document()
@@ -85,6 +87,10 @@ def rendre_rapport_docx(
     _ajouter_lignes_markdown_simples(
         doc, section_exposition_penalites(risques_chiffres)
     )
+
+    # Provision pour risques fiscaux proposée (payload calculer_provision
+    # déjà calculé en amont — aucun recalcul). Vide → aucune section.
+    _ajouter_lignes_markdown_simples(doc, section_provision_risques(provision))
 
     doc.add_heading("Passage comptable / fiscal", level=2)
     table = doc.add_table(rows=1, cols=4)

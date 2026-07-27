@@ -198,6 +198,34 @@ def risques_ouverts_chiffres(
     ]
 
 
+def provision_du_contribuable(
+    session: Session, tenant_id: int, mission_id: int
+) -> dict[str, Any] | None:
+    """Provision pour risques fiscaux du contribuable de la mission.
+
+    Lecture seule via ``calculer_provision`` (backend/plateforme/
+    provision_risques.py — aucun recalcul ici, aucun LLM). Toute erreur →
+    ``None`` : l'export ne doit jamais casser pour une provision absente
+    (le rapport n'ajoute alors pas de section).
+    """
+    from sqlalchemy import text
+
+    from backend.plateforme.contexte import contexte_tenant
+    from backend.plateforme.provision_risques import calculer_provision
+
+    try:
+        with contexte_tenant(session, tenant_id):
+            contribuable_id = session.execute(
+                text("SELECT contribuable_id FROM mission WHERE id = :m"),
+                {"m": mission_id},
+            ).scalar_one_or_none()
+        if contribuable_id is None:
+            return None
+        return calculer_provision(session, tenant_id, int(contribuable_id))
+    except Exception:  # noqa: BLE001 — jamais bloquant pour l'export.
+        return None
+
+
 @router.get("/missions/{mission_id}/restitution/rapport.docx")
 def api_rapport_docx(
     mission_id: int,
@@ -222,6 +250,9 @@ def api_rapport_docx(
     risques = risques_ouverts_chiffres(
         session, utilisateur.tenant_id, mission_id
     )
+    provision = provision_du_contribuable(
+        session, utilisateur.tenant_id, mission_id
+    )
     contenu = rendre_rapport_docx(
         meta=meta,
         passage=r.passage,
@@ -233,6 +264,7 @@ def api_rapport_docx(
         note_synthese=note,
         commentaire_analytique=commentaire,
         risques_chiffres=risques,
+        provision=provision,
     )
     return Response(
         content=contenu,
@@ -271,6 +303,9 @@ def api_rapport_pdf(
     risques = risques_ouverts_chiffres(
         session, utilisateur.tenant_id, mission_id
     )
+    provision = provision_du_contribuable(
+        session, utilisateur.tenant_id, mission_id
+    )
     contenu = rendre_rapport_pdf(
         meta=meta,
         passage=r.passage,
@@ -282,6 +317,7 @@ def api_rapport_pdf(
         note_synthese=note,
         commentaire_analytique=commentaire,
         risques_chiffres=risques,
+        provision=provision,
     )
     return Response(
         content=contenu,
