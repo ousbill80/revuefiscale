@@ -1984,14 +1984,22 @@ export function ClientFicheVue({
                   type="button"
                   className={`fiche2-indic fiche2-indic-score niveau-${scoreRisque.niveau}`}
                   aria-label={
-                    scoreRisque.plage
-                      ? `Score risque ${scoreRisque.score} sur 100 — ${scoreRisque.libelle_niveau} (${scoreRisque.plage})`
-                      : `Score risque ${scoreRisque.score} sur 100 — ${scoreRisque.libelle_niveau}`
+                    scoreRisque.score === 0
+                      ? scoreRisque.libelle_niveau
+                      : scoreRisque.plage
+                        ? `Score risque ${scoreRisque.score} sur 100 — ${scoreRisque.libelle_niveau} (${scoreRisque.plage})`
+                        : `Score risque ${scoreRisque.score} sur 100 — ${scoreRisque.libelle_niveau}`
                   }
                   onClick={() => changerFicheTab("risques")}
                 >
-                  Score <strong>{scoreRisque.score}/100</strong>
-                  {` · ${scoreRisque.libelle_niveau}`}
+                  {scoreRisque.score === 0 ? (
+                    scoreRisque.libelle_niveau
+                  ) : (
+                    <>
+                      Score <strong>{scoreRisque.score}/100</strong>
+                      {` · ${scoreRisque.libelle_niveau}`}
+                    </>
+                  )}
                 </button>
               </Tooltip>
             )}
