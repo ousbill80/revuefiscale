@@ -17,6 +17,8 @@ seule sous RLS.
 """
 from __future__ import annotations
 
+import csv
+import io
 from decimal import Decimal
 from typing import Any, Final
 
@@ -88,6 +90,47 @@ def synthese_actions(items: list[dict[str, Any]]) -> dict[str, Any]:
         "clients": len(clients),
         "exposition_totale": str(exposition),
     }
+
+
+# ── Export CSV (Excel FR, séparateur « ; ») ──────────────────────────
+
+# En-tête du CSV des actions retenues — délimiteur « ; » (Excel FR).
+ENTETE_ACTIONS_CSV: Final[tuple[str, ...]] = (
+    "client",
+    "mission",
+    "exercice",
+    "impot",
+    "libelle",
+    "exposition",
+    "note",
+)
+
+
+def generer_csv(actions: dict) -> str:
+    """PUR — CSV « ; » des actions retenues à mettre en œuvre (Excel FR).
+
+    Une ligne par item de ``actions["items"]``, dans l'ordre trié des
+    actions (exposition décroissante puis client, mission). Échappement
+    CSV par le module stdlib : valeurs entre guillemets (doublés) si
+    elles contiennent « ; », un guillemet ou un retour à la ligne. Le
+    BOM UTF-8 est ajouté côté route, pas ici. Liste vide → en-tête seul.
+    """
+    buf = io.StringIO()
+    w = csv.writer(buf, delimiter=";", lineterminator="\n")
+    w.writerow(ENTETE_ACTIONS_CSV)
+    for i in list(actions.get("items") or []):
+        w.writerow(
+            [
+                str(i.get("client") or ""),
+                str(i.get("mission_id") or ""),
+                str(i.get("exercice") or ""),
+                str(i.get("impot") or ""),
+                str(i.get("libelle_risque") or ""),
+                str(i.get("exposition") or ""),
+                str(i.get("decision_note") or ""),
+            ]
+        )
+    return buf.getvalue()
 
 
 # ── Lecture cabinet (RLS) ────────────────────────────────────────────

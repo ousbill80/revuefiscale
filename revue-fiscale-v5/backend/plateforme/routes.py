@@ -4104,3 +4104,47 @@ def api_actions_retenues_cabinet(
         },
     )
     return actions
+
+
+@router.get("/cabinet/actions-retenues.csv")
+def api_actions_retenues_cabinet_csv(
+    utilisateur: UtilisateurDep,
+    session: Annotated[Session, Depends(session_abonne)],
+) -> Response:
+    """Export CSV (Excel FR, séparateur « ; ») des actions retenues.
+
+    Mêmes items que ``GET /cabinet/actions-retenues`` au format
+    ``text/csv`` : une ligne par action retenue à mettre en œuvre,
+    encodage UTF-8 précédé d'un BOM pour une ouverture directe dans
+    Excel. Déterministe — même tri que la liste des actions.
+    """
+    from backend.moteur.journal import append_journal
+    from backend.plateforme.actions_cabinet import (
+        actions_retenues_cabinet,
+        generer_csv,
+    )
+
+    exiger_capacite(utilisateur, "lire")
+    actions = actions_retenues_cabinet(session, utilisateur.tenant_id)
+    contenu = "\ufeff" + generer_csv(actions)
+    append_journal(
+        session,
+        tenant_id=utilisateur.tenant_id,
+        mission_id=None,
+        acteur=utilisateur.email,
+        action="consultation_actions_retenues_cabinet_csv",
+        charge_utile={
+            "total": actions["total"],
+            "clients": actions["synthese"]["clients"],
+            "exposition_totale": actions["synthese"]["exposition_totale"],
+        },
+    )
+    return Response(
+        content=contenu,
+        media_type="text/csv; charset=utf-8",
+        headers={
+            "Content-Disposition": (
+                'attachment; filename="actions-retenues.csv"'
+            )
+        },
+    )

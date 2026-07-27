@@ -75,7 +75,13 @@ def construire_bilan(signaux: dict[str, Any]) -> dict[str, Any]:
       ``plan_sans_decision`` : synthèse des décisions du plan d'actions
       (:func:`backend.plateforme.plan_actions.analyse_mission`) — signal
       OPTIONNEL : absent (analyse indisponible), le point « Plan
-      d'actions » n'apparaît pas (échec silencieux, jamais bloquant).
+      d'actions » n'apparaît pas (échec silencieux, jamais bloquant) ;
+    - ``comparaison_disponible`` / ``comparaison_tendance`` /
+      ``comparaison_delta_exposition`` : évolution N vs N-1 du
+      contribuable (:func:`backend.plateforme.comparaison_exercices.
+      comparaison_contribuable`) — signal OPTIONNEL : absent ou
+      indisponible (un seul exercice revu), le point « Évolution
+      N/N-1 » n'apparaît pas (échec silencieux, jamais bloquant).
 
     Retourne ``{points, synthese, note}`` — ``synthese.pret`` est vrai
     quand AUCUN point n'est en attention (simple lecture d'ensemble,
@@ -164,6 +170,27 @@ def construire_bilan(signaux: dict[str, Any]) -> dict[str, Any]:
         points.append(
             _point("plan_actions", libelle, plan_sans_decision > 0)
         )
+    # Point « Évolution N/N-1 » — seulement si la comparaison
+    # inter-exercices du contribuable est disponible (deux exercices
+    # revus) : échec silencieux → point absent, jamais bloquant.
+    if bool(signaux.get("comparaison_disponible")):
+        tendance = str(signaux.get("comparaison_tendance") or "")
+        delta = Decimal(
+            str(signaux.get("comparaison_delta_exposition") or "0")
+        )
+        degradation = tendance == "degradation"
+        if degradation and delta > 0:
+            libelle = (
+                "Exposition en hausse vs exercice précédent "
+                f"(+{delta} FCFA)"
+            )
+        elif degradation:
+            # Dégradation par le nombre de risques (exposition non en
+            # hausse) — même attention, sans montant trompeur.
+            libelle = "Risques ouverts en hausse vs exercice précédent"
+        else:
+            libelle = "Exposition stable ou en baisse vs exercice précédent"
+        points.append(_point("evolution_exercices", libelle, degradation))
     points_ok = sum(1 for p in points if p["statut"] == STATUT_OK)
     points_attention = len(points) - points_ok
     return {
@@ -266,6 +293,32 @@ def bilan_mission(
     except ErreurPlanActions:
         plan_signaux = {}
 
+    # Évolution N vs N-1 du contribuable — comparaison inter-exercices
+    # (ouvre son propre contexte_tenant : appel HORS de tout with).
+    # Échec ou comparaison indisponible : le point est simplement absent.
+    comparaison_signaux: dict[str, Any] = {}
+    try:
+        from backend.plateforme.comparaison_exercices import (
+            ErreurComparaisonExercices,
+            comparaison_contribuable,
+        )
+
+        comparaison = comparaison_contribuable(
+            session, tenant_id, contribuable_id
+        )
+        if bool(comparaison.get("disponible")):
+            comparaison_signaux = {
+                "comparaison_disponible": True,
+                "comparaison_tendance": str(
+                    comparaison["synthese"]["tendance"]
+                ),
+                "comparaison_delta_exposition": str(
+                    comparaison["synthese"]["delta_exposition"]
+                ),
+            }
+    except ErreurComparaisonExercices:
+        comparaison_signaux = {}
+
     restitution = next(
         (p for p in visas["phases"] if p["phase"] == "restitution"), None
     )
@@ -286,6 +339,7 @@ def bilan_mission(
         "nb_pieces": nb_pieces,
         "risques_ouverts": risques_ouverts,
         **plan_signaux,
+        **comparaison_signaux,
     }
     bilan = construire_bilan(signaux)
     return {

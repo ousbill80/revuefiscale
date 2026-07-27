@@ -122,6 +122,72 @@ def test_construire_bilan_plan_actions_ok_vide_ou_tout_decide():
     assert bilan["synthese"]["pret"] is True
 
 
+def test_construire_bilan_comparaison_absente_sans_signal():
+    # Comparaison N/N-1 indisponible → point absent (échec silencieux).
+    bilan = construire_bilan(_signaux_tous_ok())
+    assert "evolution_exercices" not in {p["code"] for p in bilan["points"]}
+    bilan = construire_bilan(
+        _signaux_tous_ok() | {"comparaison_disponible": False}
+    )
+    assert "evolution_exercices" not in {p["code"] for p in bilan["points"]}
+
+
+def test_construire_bilan_comparaison_degradation_attention():
+    bilan = construire_bilan(
+        _signaux_tous_ok()
+        | {
+            "comparaison_disponible": True,
+            "comparaison_tendance": "degradation",
+            "comparaison_delta_exposition": "1500000.00",
+        }
+    )
+    par_code = {p["code"]: p for p in bilan["points"]}
+    assert par_code["evolution_exercices"]["statut"] == "attention"
+    assert par_code["evolution_exercices"]["libelle"] == (
+        "Exposition en hausse vs exercice précédent (+1500000.00 FCFA)"
+    )
+    assert bilan["synthese"]["pret"] is False
+
+
+def test_construire_bilan_comparaison_degradation_par_le_nombre():
+    # Dégradation par le nombre de risques, exposition non en hausse :
+    # attention, sans montant trompeur.
+    bilan = construire_bilan(
+        _signaux_tous_ok()
+        | {
+            "comparaison_disponible": True,
+            "comparaison_tendance": "degradation",
+            "comparaison_delta_exposition": "0",
+        }
+    )
+    par_code = {p["code"]: p for p in bilan["points"]}
+    assert par_code["evolution_exercices"]["statut"] == "attention"
+    assert par_code["evolution_exercices"]["libelle"] == (
+        "Risques ouverts en hausse vs exercice précédent"
+    )
+
+
+def test_construire_bilan_comparaison_amelioration_ou_stable_ok():
+    for tendance, delta in (
+        ("amelioration", "-500000.00"),
+        ("stable", "0"),
+    ):
+        bilan = construire_bilan(
+            _signaux_tous_ok()
+            | {
+                "comparaison_disponible": True,
+                "comparaison_tendance": tendance,
+                "comparaison_delta_exposition": delta,
+            }
+        )
+        par_code = {p["code"]: p for p in bilan["points"]}
+        assert par_code["evolution_exercices"]["statut"] == "ok"
+        assert par_code["evolution_exercices"]["libelle"] == (
+            "Exposition stable ou en baisse vs exercice précédent"
+        )
+        assert bilan["synthese"]["pret"] is True
+
+
 def test_construire_bilan_plan_actions_attention_sans_decision():
     bilan = construire_bilan(
         _signaux_tous_ok()
@@ -247,6 +313,8 @@ def test_api_bilan_mission_reelle_coherence(session):
     # Aucun risque → plan d'actions vide → ok.
     assert par_code["plan_actions"]["statut"] == "ok"
     assert "vide" in par_code["plan_actions"]["libelle"]
+    # Un seul exercice revu → comparaison N/N-1 indisponible → point absent.
+    assert "evolution_exercices" not in par_code
 
     s = corps["synthese"]
     assert s["points_ok"] == sum(
@@ -294,6 +362,76 @@ def test_bilan_plan_actions_attention_puis_ok_apres_decision(session):
     assert "1 action(s), toutes décidées" in par_code["plan_actions"]["libelle"]
     # Le risque reste ouvert : ce point-là demeure en attention.
     assert par_code["risques_ouverts"]["statut"] == "attention"
+
+
+def test_bilan_evolution_exercices_degradation_puis_amelioration(session):
+    """Deux exercices revus : dégradation → attention ; recul → ok."""
+    from backend.plateforme.bilan_cloture import bilan_mission
+    from backend.plateforme.missions import creer_mission
+
+    tid, mid, _email = _mission_en_cours(session)  # exercice 2025.
+    with contexte_tenant(session, tid):
+        cid = int(
+            session.execute(
+                text("SELECT contribuable_id FROM mission WHERE id = :m"),
+                {"m": mid},
+            ).scalar_one()
+        )
+        mid_prec = creer_mission(
+            session,
+            tid,
+            contribuable_id=cid,
+            exercice=2024,
+            profil={"regime": "reel", "forme_juridique": "SA"},
+        )
+        # Risque ouvert né de la mission 2025 (récente), aucun en 2024 :
+        # delta exposition +2000000 → dégradation.
+        rid = int(
+            session.execute(
+                text(
+                    "INSERT INTO risque (tenant_id, contribuable_id, "
+                    "impot, libelle, montant_estime, probabilite, statut, "
+                    "exercice_origine, origine_mission_id) VALUES "
+                    "(:t, :c, 'TVA', 'Risque évolution FICTIF', "
+                    "'2000000', 'possible', 'ouvert', 2025, :m) "
+                    "RETURNING id"
+                ),
+                {"t": tid, "c": cid, "m": mid},
+            ).scalar_one()
+        )
+
+    bilan = bilan_mission(session, tid, mid)
+    par_code = {p["code"]: p for p in bilan["points"]}
+    assert par_code["evolution_exercices"]["statut"] == "attention"
+    assert par_code["evolution_exercices"]["libelle"] == (
+        "Exposition en hausse vs exercice précédent (+2000000.00 FCFA)"
+    )
+    assert bilan["synthese"]["pret"] is False
+
+    # Risque récent résolu + risque ouvert né de la mission 2024 :
+    # delta négatif → amélioration → ok.
+    with contexte_tenant(session, tid):
+        session.execute(
+            text("UPDATE risque SET statut = 'resolu' WHERE id = :r"),
+            {"r": rid},
+        )
+        session.execute(
+            text(
+                "INSERT INTO risque (tenant_id, contribuable_id, impot, "
+                "libelle, montant_estime, probabilite, statut, "
+                "exercice_origine, origine_mission_id) VALUES "
+                "(:t, :c, 'IS', 'Risque N-1 FICTIF', '500000', "
+                "'possible', 'ouvert', 2024, :m)"
+            ),
+            {"t": tid, "c": cid, "m": int(mid_prec)},
+        )
+
+    bilan = bilan_mission(session, tid, mid)
+    par_code = {p["code"]: p for p in bilan["points"]}
+    assert par_code["evolution_exercices"]["statut"] == "ok"
+    assert par_code["evolution_exercices"]["libelle"] == (
+        "Exposition stable ou en baisse vs exercice précédent"
+    )
 
 
 def test_api_bilan_mission_cloturee_renvoye_quand_meme(session):

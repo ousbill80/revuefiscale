@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { api, fmtMontant } from "./api";
+import { api, fmtMontant, telecharger } from "./api";
 
 /** Actions à mettre en œuvre du cabinet (GET /api/v1/cabinet/actions-retenues). */
 type ItemAction = {
@@ -40,6 +40,24 @@ export function ActionsCabinetVue({ jeton, estLecteur, onOuvrirMission }: Props)
   const [version, setVersion] = useState(0);
   const [faiteBusy, setFaiteBusy] = useState<string | null>(null);
   const [faiteErr, setFaiteErr] = useState<string | null>(null);
+  const [exportCsvBusy, setExportCsvBusy] = useState(false);
+
+  async function exporterCsv() {
+    if (!jeton || exportCsvBusy) return;
+    setExportCsvBusy(true);
+    setErr(null);
+    try {
+      await telecharger(
+        "/api/v1/cabinet/actions-retenues.csv",
+        jeton,
+        "actions-retenues.csv",
+      );
+    } catch {
+      setErr("Export du tableur impossible pour le moment.");
+    } finally {
+      setExportCsvBusy(false);
+    }
+  }
 
   useEffect(() => {
     if (!jeton) return;
@@ -105,6 +123,15 @@ export function ActionsCabinetVue({ jeton, estLecteur, onOuvrirMission }: Props)
             clients confondus.
           </p>
         </div>
+        <button
+          type="button"
+          className="agenda2-pastille"
+          title="Télécharger les actions retenues au format CSV (Excel)"
+          disabled={exportCsvBusy || !actions?.total}
+          onClick={() => void exporterCsv()}
+        >
+          {exportCsvBusy ? "Export…" : "Exporter (.csv)"}
+        </button>
       </div>
 
       <article className="panel dense actionscab-card">

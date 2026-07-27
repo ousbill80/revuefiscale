@@ -8,6 +8,7 @@ import pytest
 from backend.plateforme.actions_cabinet import (
     PLAFOND_ITEMS,
     actions_retenues_cabinet,
+    generer_csv,
     synthese_actions,
     trier_actions,
 )
@@ -77,6 +78,64 @@ def test_synthese_actions():
 def test_plafond_constant():
     # Le plafond limite la liste, pas la synthèse (calculée en amont).
     assert PLAFOND_ITEMS == 50
+
+
+# ── Tests purs — export CSV ────────────────────────────────────────
+
+
+def test_csv_entetes_et_lignes_dans_l_ordre_des_actions():
+    actions = {
+        "items": [
+            _item(
+                "2000000",
+                client="SARL Zêta FICTIVE",
+                mission_id=9,
+                cle_action="risque:9",
+            )
+            | {"decision_note": "à régulariser"},
+            _item("500000", client="SA Alpha FICTIVE", mission_id=2),
+            _item(None, client="SA Alpha FICTIVE", mission_id=3),
+        ]
+    }
+    csv_txt = generer_csv(actions)
+    lignes = csv_txt.splitlines()
+    assert lignes[0] == "client;mission;exercice;impot;libelle;exposition;note"
+    assert lignes[1] == (
+        "SARL Zêta FICTIVE;9;2025;TVA;"
+        "TVA déductible non justifiée;2000000;à régulariser"
+    )
+    assert lignes[2] == (
+        "SA Alpha FICTIVE;2;2025;TVA;TVA déductible non justifiée;500000;"
+    )
+    # Exposition non chiffrée → colonne vide (ordre des items conservé).
+    assert lignes[3] == (
+        "SA Alpha FICTIVE;3;2025;TVA;TVA déductible non justifiée;;"
+    )
+
+
+def test_csv_echappement_point_virgule_guillemets_retour_ligne():
+    item = _item("100000", client='SA "Un; Deux" FICTIVE')
+    item["libelle_risque"] = "TVA ; grand\nlivre"
+    csv_txt = generer_csv({"items": [item]})
+    # Valeurs à risque entre guillemets, guillemets internes doublés.
+    assert '"SA ""Un; Deux"" FICTIVE"' in csv_txt
+    assert '"TVA ; grand\nlivre"' in csv_txt
+    # Relecture par le module csv : les valeurs sont restituées intactes.
+    import csv as _csv
+    import io as _io
+
+    lignes = list(_csv.reader(_io.StringIO(csv_txt), delimiter=";"))
+    assert lignes[1][0] == 'SA "Un; Deux" FICTIVE'
+    assert lignes[1][4] == "TVA ; grand\nlivre"
+
+
+def test_csv_vide_en_tete_seul():
+    assert generer_csv({"items": []}) == (
+        "client;mission;exercice;impot;libelle;exposition;note\n"
+    )
+    assert generer_csv({}) == (
+        "client;mission;exercice;impot;libelle;exposition;note\n"
+    )
 
 
 # ── Tests DB / API ─────────────────────────────────────────────────
@@ -310,6 +369,56 @@ def test_api_isolation_cross_tenant(session):
     # Le cabinet B ne voit pas les actions du cabinet A.
     assert corps["total"] == 0
     assert corps["items"] == []
+
+
+def test_api_actions_csv_export(session):
+    tid, email = _cabinet(session, "actionscab.csv")
+    mid, cid = _mission(session, tid, "PM CSV Actions FICTIF")
+    r_gros = _creer_risque(
+        session, tid, cid, montant="2000000", libelle="Gros risque CSV"
+    )
+    r_petit = _creer_risque(
+        session, tid, cid, montant="150000", libelle="Petit risque CSV"
+    )
+    _decider(session, tid, mid, r_gros, "retenue", note="à provisionner")
+    _decider(session, tid, mid, r_petit, "retenue")
+    session.commit()
+
+    client, h = _client_connecte(email)
+    r = client.get("/api/v1/cabinet/actions-retenues.csv", headers=h)
+    assert r.status_code == 200, r.text
+    assert r.headers["content-type"].startswith("text/csv")
+    assert "charset=utf-8" in r.headers["content-type"]
+    assert (
+        r.headers["content-disposition"]
+        == 'attachment; filename="actions-retenues.csv"'
+    )
+    # BOM UTF-8 en tête (ouverture directe dans Excel FR).
+    assert r.content[:3] == b"\xef\xbb\xbf"
+    corps = r.content.decode("utf-8-sig")
+    lignes = corps.splitlines()
+    assert lignes[0] == "client;mission;exercice;impot;libelle;exposition;note"
+    assert len(lignes) == 3
+    assert all(l.split(";")[1] == str(mid) for l in lignes[1:])
+    assert all(l.startswith("PM CSV Actions FICTIF;") for l in lignes[1:])
+    # Tri par exposition décroissante (même tri que le JSON).
+    assert "Gros risque CSV;2000000.00;à provisionner" in lignes[1]
+    assert "Petit risque CSV;150000.00;" in lignes[2]
+
+    # Cohérence avec le JSON : autant de lignes que d'items.
+    rj = client.get("/api/v1/cabinet/actions-retenues", headers=h)
+    assert rj.status_code == 200
+    assert len(lignes) - 1 == len(rj.json()["items"])
+
+
+def test_api_actions_csv_401_sans_jeton(session):
+    from fastapi.testclient import TestClient
+
+    from backend.main import app
+
+    client = TestClient(app)
+    r = client.get("/api/v1/cabinet/actions-retenues.csv")
+    assert r.status_code == 401, r.text
 
 
 def test_api_401_sans_jeton(session):
