@@ -13,6 +13,12 @@ exécution de la mission (mêmes tables execution/conclusion que
 produite quand même avec la mention « constats en cours d'instruction »
 — jamais d'erreur pour ce cas (la pièce du dossier de travail ne doit
 jamais être omise). Aucun taux ni seuil fiscal ici — document d'envoi.
+
+Le courrier rappelle en outre les actions du plan d'actions marquées
+« retenue » par le fiscaliste (décisions humaines persistées dans
+``suivi_plan_actions``, clé ``risque:{id}``) : section « Actions
+convenues à mettre en œuvre » — omise s'il n'y a aucune action retenue.
+Formulation consultative : le client reste seul décideur.
 """
 from __future__ import annotations
 
@@ -29,6 +35,11 @@ from sqlalchemy.orm import Session
 
 from backend.plateforme.contexte import contexte_tenant
 from backend.plateforme.demande_renseignements import A_COMPLETER, _champ
+from backend.plateforme.plan_actions import (
+    DECISION_RETENUE,
+    PREFIXE_CLE_RISQUE,
+    _exposition,
+)
 
 # Livrables usuellement joints au courrier — liste indicative que
 # l'associé raye ou complète à la main avant envoi (pratique cabinet).
@@ -124,6 +135,80 @@ def _synthese_derniere_execution(
     }
 
 
+def composer_lignes_actions_convenues(
+    actions: list[dict[str, Any]],
+) -> list[str]:
+    """PUR — une ligne de puce par action retenue du plan d'actions.
+
+    ``actions`` : items {libelle_risque, impot, exposition, decision_note}
+    (sortie de :func:`_actions_retenues_mission`). Libellé du risque,
+    impôt et exposition estimée en FCFA quand ils sont connus, note de
+    décision du fiscaliste si présente. Liste vide → liste vide (le
+    courrier n'affiche alors pas la section).
+    """
+    lignes: list[str] = []
+    for a in actions:
+        libelle = str(a.get("libelle_risque") or "").strip() or (
+            "Action retenue au plan d'actions"
+        )
+        morceaux = [libelle]
+        impot = str(a.get("impot") or "").strip()
+        if impot:
+            morceaux.append(f"impôt : {impot.upper()}")
+        exposition = a.get("exposition")
+        if exposition is not None and str(exposition).strip() != "":
+            morceaux.append(
+                f"exposition estimée : {_fmt_montant(exposition)} FCFA"
+            )
+        note = str(a.get("decision_note") or "").strip()
+        if note:
+            morceaux.append(f"note : {note}")
+        lignes.append(" — ".join(morceaux))
+    return lignes
+
+
+def _actions_retenues_mission(
+    session: Session, mission_id: int
+) -> list[dict[str, Any]]:
+    """Actions « retenues » (non faites) de la mission — décisions humaines.
+
+    Table ``suivi_plan_actions`` (UPSERT par ``cle_action`` : une décision
+    ultérieure « faite » / « écartée » remplace la ligne, seul l'état
+    courant « retenue » est donc listé). Le risque d'origine est rejoint
+    via ``cle_action`` (``risque:{id}``) pour le libellé, l'impôt et
+    l'exposition. Contexte tenant déjà posé par l'appelant.
+    """
+    rows = session.execute(
+        text(
+            "SELECT s.cle_action, s.note, r.libelle, r.impot, "
+            "r.montant_estime, r.penalites_estimees "
+            "FROM suivi_plan_actions s "
+            "JOIN mission m ON m.id = s.mission_id "
+            "LEFT JOIN risque r "
+            "ON s.cle_action = :prefixe || r.id::text "
+            "AND r.contribuable_id = m.contribuable_id "
+            "WHERE s.mission_id = :m AND s.decision = :d "
+            "ORDER BY s.id ASC"
+        ),
+        {"m": mission_id, "d": DECISION_RETENUE, "prefixe": PREFIXE_CLE_RISQUE},
+    ).mappings().all()
+    actions: list[dict[str, Any]] = []
+    for r in rows:
+        exposition = _exposition(dict(r))
+        actions.append(
+            {
+                "cle_action": str(r["cle_action"]),
+                "libelle_risque": str(r["libelle"] or ""),
+                "impot": str(r["impot"] or "").upper(),
+                "exposition": (
+                    str(exposition) if exposition is not None else None
+                ),
+                "decision_note": (r["note"] or None) or None,
+            }
+        )
+    return actions
+
+
 def collecter_donnees_courrier_envoi(
     session: Session, tenant_id: int, mission_id: int
 ) -> dict[str, Any]:
@@ -149,6 +234,7 @@ def collecter_donnees_courrier_envoi(
                 f"mission {mission_id} introuvable"
             )
         synthese = _synthese_derniere_execution(session, mission_id)
+        actions_retenues = _actions_retenues_mission(session, mission_id)
 
     cabinet = session.execute(
         text(
@@ -173,6 +259,7 @@ def collecter_donnees_courrier_envoi(
         },
         "cabinet": dict(cabinet) if cabinet is not None else {},
         "synthese": synthese,
+        "actions_retenues": actions_retenues,
     }
 
 
@@ -276,6 +363,28 @@ def rendre_courrier_envoi_docx(donnees: dict[str, Any]) -> bytes:
             "recommandations figurent dans le rapport joint."
         )
 
+    # Actions retenues du plan d'actions — décisions humaines persistées
+    # (suivi_plan_actions). Aucune action retenue → pas de section.
+    actions_retenues: list[dict[str, Any]] = (
+        donnees.get("actions_retenues") or []
+    )
+    if actions_retenues:
+        doc.add_heading("Actions convenues à mettre en œuvre", level=2)
+        doc.add_paragraph(
+            "À l'issue de nos échanges sur le plan d'actions, les actions "
+            "suivantes ont été retenues d'un commun accord et restent à "
+            "mettre en œuvre :"
+        )
+        for ligne in composer_lignes_actions_convenues(actions_retenues):
+            doc.add_paragraph(ligne, style="List Bullet")
+        doc.add_paragraph(
+            "Ces actions constituent des recommandations de notre cabinet : "
+            "la décision de leur mise en œuvre, ainsi que son calendrier, "
+            "relèvent de votre seule appréciation. Nous restons à vos côtés "
+            "pour vous accompagner dans leur réalisation si vous le "
+            "souhaitez."
+        )
+
     # Invitation à la réunion de restitution — pratique cabinet.
     doc.add_heading("Réunion de restitution", level=2)
     doc.add_paragraph(
@@ -326,6 +435,7 @@ def generer_courrier_envoi_complet(
         "total_montant_anomalies": (
             str(synthese["total_montant_anomalies"]) if synthese else "0"
         ),
+        "nb_actions_retenues": len(donnees.get("actions_retenues") or []),
     }
     return contenu, nom, stats
 
