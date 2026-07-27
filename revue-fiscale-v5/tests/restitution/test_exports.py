@@ -373,6 +373,204 @@ def test_section_note_synthese_vide_ou_invalide():
     assert section_note_synthese({"contenu": "pas un dict"}) == []
 
 
+# ── Sections déterministes de la note (civisme / plan / obligations) ──
+
+
+def _note_avec_sections_deterministes():
+    """Note disponible enrichie des trois sections déterministes stockées."""
+    note = _note_disponible()
+    note["contenu"]["civisme_declaratif"] = {
+        "disponible": True,
+        "exercice": 2025,
+        "regime": "reel_normal",
+        "taux_civisme": "62.5",
+        "couvertes": 5,
+        "en_attente": 1,
+        "manquantes": 2,
+        "echeances_manquantes": [
+            {
+                "impot": "TVA",
+                "obligation": "Déclaration mensuelle TVA",
+                "periode": "2025-03",
+                "date_limite": "2025-04-15",
+            },
+            {
+                "impot": "BIC",
+                "obligation": "État annexe",
+                "periode": "2025",
+                "date_limite": "2025-06-30",
+            },
+        ],
+        "reserve": (
+            "Rapprochement fondé sur les pièces de la data room, pas sur "
+            "les déclarations effectivement déposées."
+        ),
+    }
+    note["contenu"]["plan_actions"] = {
+        "disponible": True,
+        "total_actions": 3,
+        "par_priorite": {"haute": 2, "moyenne": 1, "basse": 0},
+        "exposition_totale": "1340000",
+        "actions": [
+            {
+                "risque_id": 11,
+                "libelle_risque": "TVA déductible non justifiée",
+                "impot": "TVA",
+                "type_action": "declaration_rectificative",
+                "action": "Déposer une déclaration rectificative TVA",
+                "priorite": "haute",
+                "exposition": "1000000",
+                "date_prescription": "2027-12-31",
+            },
+            {
+                "risque_id": 12,
+                "libelle_risque": "Dons non déductibles",
+                "impot": "BIC",
+                "type_action": "reintegration",
+                "action": "Réintégrer les dons au résultat fiscal",
+                "priorite": "moyenne",
+                "exposition": "340000",
+                "date_prescription": "2026-12-31",
+            },
+        ],
+        "reserve": "Plan consultatif à valider par l'associé signataire.",
+    }
+    note["contenu"]["prochaines_obligations"] = {
+        "disponible": True,
+        "fenetre_jours": 90,
+        "aujourd_hui": "2026-07-20",
+        "obligations": [
+            {
+                "date_limite": "2026-08-15",
+                "impot": "TVA",
+                "obligation": "Déclaration mensuelle TVA",
+                "periode": "2026-07",
+                "statut": "en_attente",
+            },
+            {
+                "date_limite": "2026-09-15",
+                "impot": "ITS",
+                "obligation": "Déclaration ITS",
+                "periode": "2026-08",
+                "statut": "en_attente",
+            },
+        ],
+        "reserve": "Échéancier théorique, consultatif.",
+    }
+    return note
+
+
+def test_docx_note_avec_sections_deterministes():
+    """Les trois sections stockées dans la note sont rendues dans le Word."""
+    passage, score, meta, conclusions, _, _ = _donnees_communes()
+    docx = rendre_rapport_docx(
+        meta=meta,
+        passage=passage,
+        conclusions=conclusions,
+        score=score,
+        extrait_audit=[],
+        note_synthese=_note_avec_sections_deterministes(),
+    )
+    textes = _texte_docx(docx)
+    # Civisme déclaratif : taux, compteurs, échéances jj/mm/aaaa, réserve.
+    assert "Civisme déclaratif" in textes
+    assert "Taux de civisme : 62,5 %" in textes
+    assert "couvertes 5 · en attente 1 · manquantes 2" in textes
+    assert "15/04/2025 — TVA — 2025-03" in textes
+    assert "30/06/2025 — BIC — 2025" in textes
+    assert "pas sur les déclarations effectivement déposées" in textes
+    # Plan d'actions : compteurs par priorité, exposition FCFA, actions.
+    assert "Plan d'actions proposé" in textes
+    assert "Actions proposées : 3 (haute : 2, moyenne : 1, basse : 0)" in textes
+    assert "Exposition totale : 1 340 000 FCFA" in textes
+    assert (
+        "[HAUTE] Déposer une déclaration rectificative TVA — "
+        "TVA déductible non justifiée" in textes
+    )
+    assert (
+        "[MOYENNE] Réintégrer les dons au résultat fiscal — "
+        "Dons non déductibles" in textes
+    )
+    assert "Plan consultatif à valider par l'associé signataire." in textes
+    # Prochaines obligations : fenêtre, liste triée date — impôt — statut.
+    assert "Prochaines obligations déclaratives" in textes
+    assert "90 prochains jours" in textes
+    assert "à compter du 20/07/2026" in textes
+    assert "15/08/2026 — TVA — Déclaration mensuelle TVA — en_attente" in textes
+    assert "15/09/2026 — ITS — Déclaration ITS — en_attente" in textes
+    assert "Échéancier théorique, consultatif." in textes
+    # Ordre : les trois sections dans la note, avant le périmètre.
+    assert (
+        textes.index("Note de synthèse")
+        < textes.index("Civisme déclaratif")
+        < textes.index("Plan d'actions proposé")
+        < textes.index("Prochaines obligations déclaratives")
+        < textes.index("Périmètre déclaré")
+    )
+
+
+def test_docx_note_ancienne_sans_sections_deterministes():
+    """Note ancienne (sans les clés) ou disponible=False → aucun titre, aucune erreur."""
+    passage, score, meta, conclusions, _, _ = _donnees_communes()
+    note_indispo = _note_disponible()
+    note_indispo["contenu"]["civisme_declaratif"] = {"disponible": False}
+    note_indispo["contenu"]["plan_actions"] = {"disponible": False}
+    note_indispo["contenu"]["prochaines_obligations"] = {"disponible": False}
+    for note in (_note_disponible(), note_indispo):
+        docx = rendre_rapport_docx(
+            meta=meta,
+            passage=passage,
+            conclusions=conclusions,
+            score=score,
+            extrait_audit=[],
+            note_synthese=note,
+        )
+        textes = _texte_docx(docx)
+        assert "Note de synthèse" in textes  # la note elle-même reste rendue
+        assert "Civisme déclaratif" not in textes
+        assert "Plan d'actions proposé" not in textes
+        assert "Prochaines obligations déclaratives" not in textes
+
+
+def test_pdf_note_avec_sections_deterministes():
+    """PDF valide et sections déterministes présentes dans les content streams."""
+    passage, score, meta, conclusions, _, _ = _donnees_communes()
+    pdf = rendre_rapport_pdf(
+        meta=meta,
+        passage=passage,
+        conclusions=conclusions,
+        score=score,
+        extrait_audit=[],
+        note_synthese=_note_avec_sections_deterministes(),
+    )
+    assert pdf.startswith(b"%PDF")
+    texte = _texte_pdf(pdf)
+    assert "Civisme d" in texte  # « déclaratif » en WinAnsi
+    assert "Taux de civisme : 62,5 %" in texte
+    assert "Plan d'actions propos" in texte
+    assert "1 340 000 FCFA" in texte
+    assert "Prochaines obligations d" in texte
+    assert "15/08/2026" in texte
+
+
+def test_pdf_note_ancienne_sans_sections_deterministes():
+    passage, score, meta, conclusions, _, _ = _donnees_communes()
+    pdf = rendre_rapport_pdf(
+        meta=meta,
+        passage=passage,
+        conclusions=conclusions,
+        score=score,
+        extrait_audit=[],
+        note_synthese=_note_disponible(),
+    )
+    assert pdf.startswith(b"%PDF")
+    texte = _texte_pdf(pdf)
+    assert "Note de synth" in texte
+    assert "Civisme d" not in texte
+    assert "Plan d'actions propos" not in texte
+    assert "Prochaines obligations" not in texte
+
+
 # ── Commentaire de revue analytique dans les exports ──────────────────
 
 

@@ -266,6 +266,178 @@ def section_note_synthese(note: Mapping[str, Any] | None) -> list[str]:
             lignes.append(f"- {r}")
         lignes.append("")
 
+    # Sections déterministes stockées dans le contenu de la note (jamais
+    # rédigées par le LLM, jamais recalculées ici). Absentes ou
+    # disponible=False (notes anciennes) → rien : compat ascendante.
+    lignes.extend(_sous_section_civisme(contenu.get("civisme_declaratif")))
+    lignes.extend(_sous_section_plan_actions(contenu.get("plan_actions")))
+    lignes.extend(
+        _sous_section_prochaines_obligations(
+            contenu.get("prochaines_obligations")
+        )
+    )
+
+    return lignes
+
+
+def _sous_section_civisme(section: Any) -> list[str]:
+    """Sous-section « Civisme déclaratif » de la note — DOCX/PDF.
+
+    Restitue UNIQUEMENT ce qui est stocké dans le contenu de la note
+    (aucun recalcul). Section absente ou ``disponible`` falsy → rien.
+    """
+    if not isinstance(section, Mapping) or not section.get("disponible"):
+        return []
+    lignes: list[str] = ["## Civisme déclaratif", ""]
+
+    entete = "Rapprochement échéancier théorique / pièces de la data room"
+    exercice = section.get("exercice")
+    if exercice is not None:
+        entete += f" — exercice {exercice}"
+    regime = str(section.get("regime") or "").strip()
+    if regime:
+        entete += f", régime {regime}"
+    lignes.append(entete + " :")
+    lignes.append("")
+
+    taux = section.get("taux_civisme")
+    taux_txt = f"{str(taux).replace('.', ',')} %" if taux is not None else "—"
+    lignes.append(f"- **Taux de civisme** : {taux_txt}")
+    lignes.append(
+        f"- **Échéances** : couvertes {section.get('couvertes') if section.get('couvertes') is not None else '—'} · "
+        f"en attente {section.get('en_attente') if section.get('en_attente') is not None else '—'} · "
+        f"manquantes {section.get('manquantes') if section.get('manquantes') is not None else '—'}"
+    )
+    lignes.append("")
+
+    manquantes = [
+        e
+        for e in (section.get("echeances_manquantes") or [])
+        if isinstance(e, Mapping)
+    ]
+    if manquantes:
+        lignes.append(f"Échéances manquantes notables ({len(manquantes)}) :")
+        lignes.append("")
+        for e in manquantes:
+            date_txt = _fmt_date_jjmmaaaa(e.get("date_limite")) or "—"
+            impot = str(e.get("impot") or "—").strip() or "—"
+            periode = str(e.get("periode") or "—").strip() or "—"
+            lignes.append(f"- {date_txt} — {impot} — {periode}")
+        lignes.append("")
+
+    reserve = str(section.get("reserve") or "").strip()
+    if reserve:
+        lignes.append(f"_{reserve}_")
+        lignes.append("")
+    return lignes
+
+
+_LIBELLES_PRIORITE = {
+    "haute": "HAUTE",
+    "moyenne": "MOYENNE",
+    "basse": "BASSE",
+}
+
+
+def _sous_section_plan_actions(section: Any) -> list[str]:
+    """Sous-section « Plan d'actions proposé » de la note — DOCX/PDF.
+
+    Restitue UNIQUEMENT ce qui est stocké dans le contenu de la note
+    (aucun recalcul). Section absente ou ``disponible`` falsy → rien.
+    """
+    if not isinstance(section, Mapping) or not section.get("disponible"):
+        return []
+    lignes: list[str] = ["## Plan d'actions proposé", ""]
+
+    total = section.get("total_actions")
+    par_priorite = section.get("par_priorite")
+    compteurs = ""
+    if isinstance(par_priorite, Mapping):
+        compteurs = (
+            f" (haute : {par_priorite.get('haute') if par_priorite.get('haute') is not None else '—'}, "
+            f"moyenne : {par_priorite.get('moyenne') if par_priorite.get('moyenne') is not None else '—'}, "
+            f"basse : {par_priorite.get('basse') if par_priorite.get('basse') is not None else '—'})"
+        )
+    lignes.append(
+        f"- **Actions proposées** : "
+        f"{total if total is not None else '—'}{compteurs}"
+    )
+    exposition = section.get("exposition_totale")
+    if exposition is not None and str(exposition).strip():
+        lignes.append(
+            f"- **Exposition totale** : {_fmt_fcfa_entier(exposition)}"
+        )
+    lignes.append("")
+
+    actions = [
+        a for a in (section.get("actions") or []) if isinstance(a, Mapping)
+    ]
+    if actions:
+        lignes.append(f"Actions prioritaires ({len(actions)}) :")
+        lignes.append("")
+        for a in actions:
+            priorite = _LIBELLES_PRIORITE.get(
+                str(a.get("priorite") or "").strip().lower(), "MOYENNE"
+            )
+            action = str(a.get("action") or "—").strip() or "—"
+            motif = str(a.get("libelle_risque") or "").strip()
+            suffixe = f" — {motif}" if motif else ""
+            lignes.append(f"- [{priorite}] {action}{suffixe}")
+        lignes.append("")
+
+    reserve = str(section.get("reserve") or "").strip()
+    if reserve:
+        lignes.append(f"_{reserve}_")
+        lignes.append("")
+    return lignes
+
+
+def _sous_section_prochaines_obligations(section: Any) -> list[str]:
+    """Sous-section « Prochaines obligations déclaratives » — DOCX/PDF.
+
+    Restitue UNIQUEMENT ce qui est stocké dans le contenu de la note
+    (aucun recalcul). Section absente ou ``disponible`` falsy → rien.
+    """
+    if not isinstance(section, Mapping) or not section.get("disponible"):
+        return []
+    lignes: list[str] = ["## Prochaines obligations déclaratives", ""]
+
+    fenetre = section.get("fenetre_jours")
+    entete = "Échéances de l'échéancier théorique"
+    if fenetre is not None:
+        entete += f" sur les {fenetre} prochains jours"
+    date_txt = _fmt_date_jjmmaaaa(section.get("aujourd_hui"))
+    if date_txt:
+        entete += f" (à compter du {date_txt})"
+    lignes.append(entete + " :")
+    lignes.append("")
+
+    obligations = sorted(
+        (
+            o
+            for o in (section.get("obligations") or [])
+            if isinstance(o, Mapping)
+        ),
+        key=lambda o: str(o.get("date_limite") or ""),
+    )
+    if obligations:
+        for o in obligations:
+            date_lim = _fmt_date_jjmmaaaa(o.get("date_limite")) or "—"
+            impot = str(o.get("impot") or "—").strip() or "—"
+            obligation = str(o.get("obligation") or "—").strip() or "—"
+            statut = str(o.get("statut") or "—").strip() or "—"
+            lignes.append(
+                f"- {date_lim} — {impot} — {obligation} — {statut}"
+            )
+        lignes.append("")
+    else:
+        lignes.append("_Aucune échéance dans la fenêtre._")
+        lignes.append("")
+
+    reserve = str(section.get("reserve") or "").strip()
+    if reserve:
+        lignes.append(f"_{reserve}_")
+        lignes.append("")
     return lignes
 
 
