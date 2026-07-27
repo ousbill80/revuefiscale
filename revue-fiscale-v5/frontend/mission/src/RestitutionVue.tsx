@@ -271,6 +271,26 @@ const ROLES_VISA: Array<{ value: VisaRole; label: string }> = [
   { value: "associe", label: "Associé" },
 ];
 
+/* Programme de travail — diligences standard par phase, avancement %. */
+type DiligenceProgramme = {
+  code: string;
+  libelle: string;
+  fait: boolean;
+  fait_par: string | null;
+  fait_le: string | null;
+};
+
+type ProgrammeEtat = {
+  phases: Array<{
+    phase: TempsPhase;
+    diligences: DiligenceProgramme[];
+    faites: number;
+    total: number;
+    avancement_pct: string;
+  }>;
+  synthese: { faites: number; total: number; avancement_pct: string };
+};
+
 /* Comparatif déterministe entre deux exécutions d'une mission. */
 type ComparatifItem = {
   regle_id: string;
@@ -603,6 +623,10 @@ export function RestitutionVue({
   const [visasEtat, setVisasEtat] = useState<VisasEtat | null>(null);
   const [visasErr, setVisasErr] = useState<string | null>(null);
   const [visaBusy, setVisaBusy] = useState<string | null>(null);
+  const [progOuvert, setProgOuvert] = useState(false);
+  const [progEtat, setProgEtat] = useState<ProgrammeEtat | null>(null);
+  const [progErr, setProgErr] = useState<string | null>(null);
+  const [progBusy, setProgBusy] = useState<string | null>(null);
   const [ctrlClotureOuvert, setCtrlClotureOuvert] = useState(false);
   const [ctrlCloture, setCtrlCloture] = useState<ControleClotureOut | null>(
     null,
@@ -1293,6 +1317,42 @@ export function RestitutionVue({
       );
     } finally {
       setTempsSupprId(null);
+    }
+  }
+
+  async function chargerProgramme(): Promise<void> {
+    if (!jeton || !r.mission_id) return;
+    try {
+      const out = await api<ProgrammeEtat>(
+        `/api/v1/missions/${r.mission_id}/programme`,
+        { jeton },
+      );
+      setProgEtat(out ?? null);
+      setProgErr(null);
+    } catch (e) {
+      setProgEtat(null);
+      setProgErr(
+        e instanceof Error ? e.message : "programme de travail indisponible",
+      );
+    }
+  }
+
+  async function cocherDiligence(code: string, fait: boolean): Promise<void> {
+    if (!jeton || !r.mission_id || progBusy !== null) return;
+    setProgBusy(code);
+    setProgErr(null);
+    try {
+      await api<{ diligence: DiligenceProgramme }>(
+        `/api/v1/missions/${r.mission_id}/programme/${code}`,
+        { jeton, method: "PUT", json: { fait } },
+      );
+      await chargerProgramme();
+    } catch (e) {
+      setProgErr(
+        e instanceof Error ? e.message : "mise à jour de la diligence impossible",
+      );
+    } finally {
+      setProgBusy(null);
     }
   }
 
@@ -2009,6 +2069,20 @@ export function RestitutionVue({
               aria-expanded={tempsOuvert}
             >
               Temps passés
+            </button>
+          </Tooltip>
+          <Tooltip label="Programme de travail standard : diligences par phase que le collaborateur coche au fil de l'exécution — avancement par phase et global. Complète les visas de supervision.">
+            <button
+              type="button"
+              className="btn btn-ghost btn-sm rest-programme-btn"
+              onClick={() => {
+                setProgOuvert((o) => !o);
+                if (!progOuvert) void chargerProgramme();
+              }}
+              disabled={!jeton}
+              aria-expanded={progOuvert}
+            >
+              Programme
             </button>
           </Tooltip>
           <Tooltip label="Visas de supervision par phase : le préparateur atteste son travail, le réviseur revoit, l'associé signe — dans cet ordre. Registre formel exigé par les normes d'exercice professionnel.">
@@ -2842,6 +2916,85 @@ export function RestitutionVue({
               </p>
             )}
           </div>
+        </section>
+      )}
+
+      {progOuvert && (
+        <section
+          className="rest-suivi rest-programme"
+          aria-label="Programme de travail"
+        >
+          <div className="rest-suivi-head">
+            <h3 className="rest-suivi-titre label-with-tip">
+              Programme de travail
+              <InfoTip
+                label="Diligences standard par phase, cochées au fil de l'exécution — l'avancement par phase éclaire les visas de supervision."
+                ariaLabel="Aide : programme de travail"
+              />
+            </h3>
+            <div className="rest-suivi-outils">
+              {progEtat && (
+                <span className="muted">
+                  {progEtat.synthese.faites}/{progEtat.synthese.total}{" "}
+                  diligences · {progEtat.synthese.avancement_pct}%
+                </span>
+              )}
+              <button
+                type="button"
+                className="btn btn-ghost btn-sm"
+                onClick={() => setProgOuvert(false)}
+              >
+                Fermer
+              </button>
+            </div>
+          </div>
+          {progErr && (
+            <p className="rest-lettre-err" role="alert">
+              {progErr}
+            </p>
+          )}
+          {progEtat && (
+            <ul className="rest-suivi-items rest-programme-items">
+              {progEtat.phases.map((ph) => (
+                <li key={ph.phase} className="rest-suivi-item">
+                  <div className="rest-suivi-libelle">
+                    <span className="rest-suivi-cle">
+                      {libellePhaseTemps(ph.phase)}
+                      <span className="muted">
+                        {" "}
+                        — {ph.faites}/{ph.total} · {ph.avancement_pct}%
+                      </span>
+                    </span>
+                    <ul className="rest-programme-diligences">
+                      {ph.diligences.map((d) => (
+                        <li key={d.code} className="rest-programme-diligence">
+                          <label>
+                            <input
+                              type="checkbox"
+                              checked={d.fait}
+                              disabled={estLecteur || progBusy !== null}
+                              onChange={() =>
+                                void cocherDiligence(d.code, !d.fait)
+                              }
+                            />{" "}
+                            <span className="muted">{d.code}</span>{" "}
+                            {d.libelle}
+                            {d.fait && d.fait_par && d.fait_le && (
+                              <span className="muted">
+                                {" "}
+                                — fait par {d.fait_par} le{" "}
+                                {d.fait_le.slice(0, 10)}
+                              </span>
+                            )}
+                          </label>
+                        </li>
+                      ))}
+                    </ul>
+                  </div>
+                </li>
+              ))}
+            </ul>
+          )}
         </section>
       )}
 

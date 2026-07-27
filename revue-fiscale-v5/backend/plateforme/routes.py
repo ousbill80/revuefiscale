@@ -1123,6 +1123,78 @@ def api_etat_visas_mission(
         raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail=str(e)) from e
 
 
+@router.get("/missions/{mission_id}/programme")
+def api_etat_programme_mission(
+    mission_id: int,
+    utilisateur: UtilisateurDep,
+    session: Annotated[Session, Depends(session_abonne)],
+) -> dict:
+    """Programme de travail : diligences par phase, avancement % et global."""
+    from backend.plateforme.programme_travail import (
+        ErreurProgrammeIntrouvable,
+        etat_programme,
+    )
+
+    exiger_capacite(utilisateur, "lire")
+    try:
+        return etat_programme(session, utilisateur.tenant_id, mission_id)
+    except ErreurProgrammeIntrouvable as e:
+        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail=str(e)) from e
+
+
+class DiligenceMissionIn(BaseModel):
+    """Coche/décoche d'une diligence — fait_par = email connecté."""
+
+    fait: bool
+
+
+@router.put("/missions/{mission_id}/programme/{code}")
+def api_cocher_diligence_mission(
+    mission_id: int,
+    code: str,
+    corps: DiligenceMissionIn,
+    utilisateur: UtilisateurDep,
+    session: Annotated[Session, Depends(session_abonne)],
+) -> dict:
+    """Coche ou décoche une diligence du programme de travail standard."""
+    from backend.moteur.journal import append_journal
+    from backend.plateforme.programme_travail import (
+        ErreurProgrammeIntrouvable,
+        ErreurProgrammeTravail,
+        cocher_diligence,
+    )
+
+    exiger_capacite(utilisateur, "executer_mission")
+    try:
+        diligence = cocher_diligence(
+            session,
+            utilisateur.tenant_id,
+            mission_id,
+            code=code,
+            fait=corps.fait,
+            fait_par=utilisateur.email,
+        )
+    except ErreurProgrammeIntrouvable as e:
+        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail=str(e)) from e
+    except ErreurProgrammeTravail as e:
+        raise HTTPException(
+            status_code=status.HTTP_422_UNPROCESSABLE_ENTITY, detail=str(e)
+        ) from e
+    append_journal(
+        session,
+        tenant_id=utilisateur.tenant_id,
+        mission_id=mission_id,
+        acteur=utilisateur.email,
+        action="coche_diligence_programme",
+        charge_utile={
+            "phase": diligence["phase"],
+            "code": diligence["code"],
+            "fait": diligence["fait"],
+        },
+    )
+    return {"diligence": diligence}
+
+
 @router.patch("/missions/{mission_id}/cadrage", response_model=MissionOut)
 def api_patcher_cadrage_mission(
     mission_id: int,
