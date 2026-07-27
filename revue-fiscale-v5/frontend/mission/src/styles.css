@@ -11092,3 +11092,35 @@ tr.row-active td {
     white-space: normal;
   }
 }
+
+/* ---- Fiche client — obligations à venir (agenda cabinet filtré client) ---- */
+/* Réutilise le langage agenda2- (lignes, badges, note) ; le préfixe
+   fiche2-echeances- porte le conteneur et les éléments propres à la fiche. */
+.fiche2-echeances {
+  display: grid;
+  gap: 0.55rem;
+  /* Cible du chip « Prochaine échéance » — compense le bandeau sticky. */
+  scroll-margin-top: 7.5rem;
+}
+
+.fiche2-echeances-head {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 0.35rem 0.75rem;
+}
+
+.fiche2-echeances-hint {
+  font-size: 0.72rem;
+  color: var(--muted, #64748b);
+  white-space: nowrap;
+}
+
+.fiche2-echeances-date {
+  flex: none;
+  font-size: 0.76rem;
+  font-weight: 800;
+  font-variant-numeric: tabular-nums;
+  color: var(--accent-deep, #115e59);
+}

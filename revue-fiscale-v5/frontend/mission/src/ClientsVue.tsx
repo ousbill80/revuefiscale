@@ -26,6 +26,7 @@ import {
   type IdentiteLegale,
 } from "./legalite";
 import { api } from "./api";
+import { LIBELLES_IMPOT } from "./impotLabels";
 import { PROCESS_TIPS } from "./processTips";
 import {
   PiecesContribuablePanel,
@@ -101,6 +102,32 @@ const ECHEANCE_BADGES: Record<
 function formaterDateEcheance(iso: string): string {
   const m = /^(\d{4})-(\d{2})-(\d{2})/.exec(iso || "");
   return m ? `${m[3]}/${m[2]}/${m[1]}` : iso;
+}
+
+/** ISO aaaa-mm-jj → jj/mm (chip compact du bandeau). */
+function formaterJourMois(iso: string): string {
+  const m = /^(\d{4})-(\d{2})-(\d{2})/.exec(iso || "");
+  return m ? `${m[3]}/${m[2]}` : iso;
+}
+
+/** Échéance de l'agenda fiscal cabinet (GET /cabinet/agenda-fiscal?jours=N). */
+type EcheanceAgendaCabinet = {
+  date_limite: string; // ISO aaaa-mm-jj
+  impot: string;
+  obligation: string;
+  periode: string;
+  mission_id: number;
+  client: string;
+  statut: "couverte" | "a_preparer";
+};
+
+type AgendaFiscalCabinetOut = {
+  echeances: EcheanceAgendaCabinet[];
+  note?: string;
+};
+
+function libelleImpotAgenda(code: string): string {
+  return (LIBELLES_IMPOT as Record<string, string>)[code] ?? code;
 }
 
 type Synthese = "tous" | "pm" | "pp" | "incomplets";
@@ -1521,6 +1548,40 @@ export function ClientFicheVue({
     };
   }, [clientDetail.id, jeton, ficheTab]);
 
+  // Obligations à venir — agenda fiscal cabinet (90 j) filtré sur les
+  // missions du client. Alimente le bloc de la vue d'ensemble et le chip
+  // « Prochaine échéance » du bandeau (chargé au niveau fiche).
+  const [agendaClient, setAgendaClient] =
+    useState<AgendaFiscalCabinetOut | null>(null);
+  const [agendaBusy, setAgendaBusy] = useState(false);
+  const [agendaErr, setAgendaErr] = useState<string | null>(null);
+
+  useEffect(() => {
+    let annule = false;
+    setAgendaBusy(true);
+    setAgendaErr(null);
+    void (async () => {
+      try {
+        const out = await api<AgendaFiscalCabinetOut>(
+          "/api/v1/cabinet/agenda-fiscal?jours=90",
+          { jeton },
+        );
+        if (!annule)
+          setAgendaClient(out && Array.isArray(out.echeances) ? out : null);
+      } catch {
+        if (!annule) {
+          setAgendaClient(null);
+          setAgendaErr("Échéances indisponibles pour le moment.");
+        }
+      } finally {
+        if (!annule) setAgendaBusy(false);
+      }
+    })();
+    return () => {
+      annule = true;
+    };
+  }, [clientDetail.id, jeton]);
+
   useEffect(() => {
     let annule = false;
     void (async () => {
@@ -1577,6 +1638,29 @@ export function ClientFicheVue({
   }, [missions, filtreMissions]);
 
   const nbActives = missions.filter((m) => estMissionActive(m.statut)).length;
+
+  // Échéances agenda du cabinet restreintes aux missions du client (max 8,
+  // triées par date — le backend n'inclut que les missions actives).
+  const echeancesClient = useMemo(() => {
+    const ids = new Set(missions.map((m) => m.id));
+    return (agendaClient?.echeances ?? [])
+      .filter((e) => ids.has(e.mission_id))
+      .slice()
+      .sort((a, b) => a.date_limite.localeCompare(b.date_limite))
+      .slice(0, 8);
+  }, [agendaClient, missions]);
+
+  const prochaineEcheanceClient = echeancesClient[0]?.date_limite ?? null;
+
+  /** Chip bandeau → vue d'ensemble + scroll vers le bloc des obligations. */
+  function allerAuxEcheances() {
+    changerFicheTab("overview");
+    window.requestAnimationFrame(() => {
+      document
+        .getElementById(`fiche-${clientDetail.id}-echeances`)
+        ?.scrollIntoView({ behavior: "smooth", block: "start" });
+    });
+  }
 
   // Dernier exercice revu — la plus récente année portée par une mission.
   const dernierExercice = useMemo(() => {
@@ -1856,6 +1940,20 @@ export function ClientFicheVue({
                 </span>
               </Tooltip>
             )}
+            <Tooltip label="Voir les obligations à venir (90 jours) sur les missions actives du client.">
+              <button
+                type="button"
+                className="fiche2-indic"
+                onClick={allerAuxEcheances}
+              >
+                Prochaine échéance{" "}
+                <strong>
+                  {prochaineEcheanceClient
+                    ? formaterJourMois(prochaineEcheanceClient)
+                    : "—"}
+                </strong>
+              </button>
+            </Tooltip>
             {scoreRisque && (
               <Tooltip
                 className="tip-score-risque"
@@ -1998,6 +2096,72 @@ export function ClientFicheVue({
               </p>
             </section>
           )}
+
+          <section
+            className="panel dense fiche2-echeances"
+            id={`fiche-${clientDetail.id}-echeances`}
+            aria-label="Obligations à venir sur les missions du client"
+          >
+            <div className="fiche2-echeances-head">
+              <h3 className="fiche2-titre">Obligations à venir</h3>
+              <span className="fiche2-echeances-hint">
+                90 jours · missions actives
+              </span>
+            </div>
+
+            {agendaBusy && !agendaClient && (
+              <p className="agenda2-vide">Chargement des échéances…</p>
+            )}
+            {agendaErr && !agendaBusy && (
+              <p className="agenda2-err">{agendaErr}</p>
+            )}
+
+            {agendaClient &&
+              (echeancesClient.length > 0 ? (
+                <ul className="agenda2-liste">
+                  {echeancesClient.map((e, i) => (
+                    <li key={`${e.date_limite}-${e.mission_id}-${e.impot}-${i}`}>
+                      <button
+                        type="button"
+                        className="agenda2-row"
+                        title={`Ouvrir la mission #${e.mission_id}`}
+                        onClick={() => onOuvrirMission(e.mission_id)}
+                      >
+                        <span className="fiche2-echeances-date">
+                          {formaterDateEcheance(e.date_limite)}
+                        </span>
+                        <span
+                          className="agenda2-impot"
+                          title={libelleImpotAgenda(e.impot)}
+                        >
+                          {e.impot}
+                        </span>
+                        <span className="agenda2-obligation">
+                          {e.obligation}
+                        </span>
+                        <span className="agenda2-meta">{e.periode}</span>
+                        <span
+                          className={`agenda2-badge ${
+                            e.statut === "couverte" ? "couverte" : "preparer"
+                          }`}
+                        >
+                          {e.statut === "couverte" ? "Couverte" : "À préparer"}
+                        </span>
+                      </button>
+                    </li>
+                  ))}
+                </ul>
+              ) : (
+                <p className="agenda2-vide">
+                  Aucune échéance dans les 90 prochains jours sur les missions
+                  actives.
+                </p>
+              ))}
+
+            <p className="agenda2-note" role="note">
+              Agenda consultatif — vérifier le calendrier officiel DGI.
+            </p>
+          </section>
 
           <div className="panel dense clients-fiche-panel" id="clients-fiche-edition">
             <div className="clients-fiche-section-head">
