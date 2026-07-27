@@ -10,6 +10,7 @@ from fastapi.testclient import TestClient
 from backend.plateforme.echeancier_fiscal import (
     HORIZON_JOURS_DEFAUT,
     OBLIGATIONS_PAR_REGIME,
+    construire_echeancier,
     normaliser_regime,
     prochaines_echeances,
 )
@@ -232,3 +233,186 @@ def test_endpoint_echeancier_404_cross_tenant(session):
     # Le tenant B reçoit 404 (RLS) — pas de fuite d'existence.
     r = client.get(f"/api/v1/contribuables/{cid}/echeancier", headers=h_b)
     assert r.status_code == 404, r.text
+
+
+# ── Échéancier fiscal de la mission — fonction pure ──────────────────
+
+
+def _par_impot(echeances: list[dict], impot: str) -> list[dict]:
+    return [e for e in echeances if e["impot"] == impot]
+
+
+def test_construire_echeancier_tva_12_echeances_mois_suivant():
+    """RNI : 12 TVA, chaque mois M de N dû le 15 du mois M+1."""
+    eches = construire_echeancier(2025, "reel")
+    tva = _par_impot(eches, "TVA")
+    assert len(tva) == 12
+    # TVA de janvier 2025 → date limite en février 2025 (le 15, hors DGE).
+    janvier = next(e for e in tva if e["periode"] == "janvier 2025")
+    assert janvier["date_limite"] == "2025-02-15"
+    # TVA de décembre 2025 → janvier 2026 (bascule d'année).
+    decembre = next(e for e in tva if e["periode"] == "décembre 2025")
+    assert decembre["date_limite"] == "2026-01-15"
+    for e in tva:
+        assert e["obligation"] == "Déclaration et paiement de la TVA du mois"
+        assert e["base_legale"]
+
+
+def test_construire_echeancier_jour_tva_selon_regime_et_dge():
+    """DGE le 10, réel normal le 15, réel simplifié le 20 (hypothèse)."""
+    j = lambda eches: _par_impot(eches, "TVA")[0]["date_limite"]  # noqa: E731
+    assert j(construire_echeancier(2025, "reel", dge=True)) == "2025-02-10"
+    assert j(construire_echeancier(2025, "reel")) == "2025-02-15"
+    assert j(construire_echeancier(2025, "reel_simplifie")) == "2025-02-20"
+
+
+def test_construire_echeancier_resultat_et_etats_financiers_n_plus_1():
+    """Résultat + états financiers : 30/04 N+1 — 30/05 N+1 pour la DGE."""
+    eches = construire_echeancier(2025, "reel")
+    resultat = next(
+        e
+        for e in _par_impot(eches, "IS/BIC")
+        if "résultat" in e["obligation"]
+    )
+    assert resultat["date_limite"] == "2026-04-30"
+    ef = _par_impot(eches, "États financiers")
+    assert len(ef) == 1 and ef[0]["date_limite"] == "2026-04-30"
+
+    eches_dge = construire_echeancier(2025, "reel", dge=True)
+    resultat_dge = next(
+        e
+        for e in _par_impot(eches_dge, "IS/BIC")
+        if "résultat" in e["obligation"]
+    )
+    assert resultat_dge["date_limite"] == "2026-05-30"
+
+
+def test_construire_echeancier_fractions_patente_its_irc():
+    """Jeu complet RNI : fractions BIC/IS, patente, ITS mensuel, IRC/IRCM."""
+    eches = construire_echeancier(2025, "reel")
+    fractions = [
+        e
+        for e in _par_impot(eches, "IS/BIC")
+        if "fractionné" in e["obligation"]
+    ]
+    assert [e["date_limite"] for e in fractions] == [
+        "2026-04-15",
+        "2026-06-15",
+        "2026-09-15",
+    ]
+    patente = _par_impot(eches, "Patente")
+    assert len(patente) == 1 and patente[0]["date_limite"] == "2025-03-15"
+    assert len(_par_impot(eches, "ITS")) == 12
+    irc = _par_impot(eches, "IRC/IRCM")
+    assert len(irc) == 4
+    assert all("le cas échéant" in e["obligation"] for e in irc)
+
+
+def test_construire_echeancier_structure_tri_et_regimes_simplifies():
+    """Items complets, tri par date ; TEE mensuel, IME trimestriel."""
+    eches = construire_echeancier(2025, "reel")
+    for e in eches:
+        for cle in ("impot", "obligation", "periode", "date_limite", "base_legale"):
+            assert e[cle], f"champ {cle} vide"
+    dates = [e["date_limite"] for e in eches]
+    assert dates == sorted(dates)
+    # Régime inconnu → jeu complet (prudent), jamais d'échec.
+    assert construire_echeancier(2025, "inconnu") == eches
+    # TEE : 12 déclarations simplifiées, rien d'autre.
+    tee = construire_echeancier(2025, "tee")
+    assert len(tee) == 12
+    assert {e["impot"] for e in tee} == {"Taxe de l'entreprenant"}
+    # IME : 4 déclarations trimestrielles.
+    ime = construire_echeancier(2025, "ime")
+    assert len(ime) == 4
+    assert {e["impot"] for e in ime} == {"Impôt des microentreprises"}
+    assert ime[0]["date_limite"] == "2025-04-15"
+    assert ime[-1]["date_limite"] == "2026-01-15"
+
+
+# ── Échéancier fiscal de la mission — endpoint (base requise) ────────
+
+
+@pytest.mark.db
+def test_endpoint_echeancier_mission_200_contenu(session):
+    from backend.main import app
+    from tests.plateforme.test_demande_renseignements import (
+        _assurer_version,
+        _cabinet,
+        _mission,
+    )
+    from tests.plateforme.test_demande_renseignements import (
+        _connexion as _connexion_mission,
+    )
+
+    _assurer_version(session)
+    email = _cabinet(session)
+    client = TestClient(app)
+    h, _tid = _connexion_mission(client, email)
+    mid = _mission(client, h)  # exercice 2025, profil regime « reel ».
+
+    r = client.get(f"/api/v1/missions/{mid}/echeancier-fiscal", headers=h)
+    assert r.status_code == 200, r.text
+    corps = r.json()
+    assert corps["mission_id"] == mid
+    assert corps["exercice"] == 2025
+    assert corps["regime"] == "reel"
+    assert corps["dge"] is False
+    assert corps["synthese"]["total"] == len(corps["echeances"])
+    assert corps["synthese"]["par_impot"]["TVA"] == 12
+    assert corps["synthese"]["par_impot"]["ITS"] == 12
+    tva_janvier = next(
+        e
+        for e in corps["echeances"]
+        if e["impot"] == "TVA" and e["periode"] == "janvier 2025"
+    )
+    assert tva_janvier["date_limite"] == "2025-02-15"
+    assert tva_janvier["base_legale"]
+
+
+@pytest.mark.db
+def test_endpoint_echeancier_mission_404_cross_tenant(session):
+    from backend.main import app
+    from tests.plateforme.test_demande_renseignements import (
+        _assurer_version,
+        _cabinet,
+        _mission,
+    )
+    from tests.plateforme.test_demande_renseignements import (
+        _connexion as _connexion_mission,
+    )
+
+    _assurer_version(session)
+    email_a = _cabinet(session)
+    email_b = _cabinet(session)
+    client = TestClient(app)
+    h_a, _ = _connexion_mission(client, email_a)
+    h_b, _ = _connexion_mission(client, email_b)
+    mid = _mission(client, h_a)
+
+    ok = client.get(f"/api/v1/missions/{mid}/echeancier-fiscal", headers=h_a)
+    assert ok.status_code == 200, ok.text
+    r = client.get(f"/api/v1/missions/{mid}/echeancier-fiscal", headers=h_b)
+    assert r.status_code == 404, r.text
+
+
+@pytest.mark.db
+def test_endpoint_echeancier_mission_exige_authentification(session):
+    from backend.main import app
+    from tests.plateforme.test_demande_renseignements import (
+        _assurer_version,
+        _cabinet,
+        _mission,
+    )
+    from tests.plateforme.test_demande_renseignements import (
+        _connexion as _connexion_mission,
+    )
+
+    _assurer_version(session)
+    email = _cabinet(session)
+    client = TestClient(app)
+    h, _ = _connexion_mission(client, email)
+    mid = _mission(client, h)
+
+    r = client.get(f"/api/v1/missions/{mid}/echeancier-fiscal")
+    assert r.status_code in (401, 403)

@@ -118,14 +118,26 @@ def test_zip_valide_contenu_et_sommaire(session):
         assert "14_courrier_envoi_rapport.docx" in noms
         assert z.read("14_courrier_envoi_rapport.docx")[:4] == b"PK\x03\x04"
 
+        # 15 — échéancier fiscal : toujours présent (dates déterministes),
+        # groupé par impôt avec les échéances TVA de l'exercice revu.
+        assert "15_echeancier_fiscal.txt" in noms
+        echeancier = z.read("15_echeancier_fiscal.txt").decode("utf-8")
+        assert "ÉCHÉANCIER FISCAL" in echeancier
+        assert "TVA" in echeancier
+        assert "exercice 2025" in echeancier
+
         # Sommaire : identification + pièces incluses + omissions motivées.
         sommaire = z.read("00_sommaire.txt").decode("utf-8")
         assert "DOSSIER DE TRAVAIL" in sommaire
         assert "PM Demande FICTIF" in sommaire
         assert "2025" in sommaire
-        assert "PIÈCES INCLUSES (9)" in sommaire
+        assert "PIÈCES INCLUSES (10)" in sommaire
         assert (
             "14_courrier_envoi_rapport.docx : Courrier d'envoi du rapport"
+            in sommaire
+        )
+        assert (
+            "15_echeancier_fiscal.txt : Échéancier fiscal de l'exercice revu"
             in sommaire
         )
         assert "PIÈCES OMISES (5)" in sommaire
@@ -201,10 +213,11 @@ def test_comparatif_et_provision_inclus_quand_disponibles(session):
         assert "CREDIT 1918" in provision
 
         sommaire = z.read("00_sommaire.txt").decode("utf-8")
-        assert "PIÈCES INCLUSES (11)" in sommaire
+        assert "PIÈCES INCLUSES (12)" in sommaire
         # Ni temps, ni visa, ni réponse sur cette mission → 10/11/12 omises.
         assert "PIÈCES OMISES (3)" in sommaire
         assert "14_courrier_envoi_rapport.docx" in noms
+        assert "15_echeancier_fiscal.txt" in noms
 
 
 def test_temps_visas_reponses_inclus_quand_disponibles(session):
@@ -305,7 +318,7 @@ def test_temps_visas_reponses_inclus_quand_disponibles(session):
 
         # Sommaire cohérent : 10/11/12 incluses, plus omises.
         sommaire = z.read("00_sommaire.txt").decode("utf-8")
-        assert "PIÈCES INCLUSES (12)" in sommaire
+        assert "PIÈCES INCLUSES (13)" in sommaire
         assert "PIÈCES OMISES (2)" in sommaire
         assert "10_temps_mission.csv : Feuille de temps" in sommaire
         assert "11_visas_supervision.txt : Registre des visas" in sommaire
@@ -315,6 +328,10 @@ def test_temps_visas_reponses_inclus_quand_disponibles(session):
         )
         assert (
             "14_courrier_envoi_rapport.docx : Courrier d'envoi du rapport"
+            in sommaire
+        )
+        assert (
+            "15_echeancier_fiscal.txt : Échéancier fiscal de l'exercice revu"
             in sommaire
         )
 
@@ -342,6 +359,7 @@ def test_piece_en_echec_est_omise_et_notee(session, monkeypatch):
         assert "03_rapport_restitution.pdf" in noms
         assert "06_suivi_circularisation.csv" in noms
         assert "14_courrier_envoi_rapport.docx" in noms
+        assert "15_echeancier_fiscal.txt" in noms
         sommaire = z.read("00_sommaire.txt").decode("utf-8")
         assert (
             "02_rapport_restitution.docx : OMISE — panne simulée du rendu Word"

@@ -33,6 +33,7 @@ from backend.plateforme.courrier_envoi_rapport import generer_courrier_envoi
 from backend.plateforme.demande_renseignements import (
     generer_demande_renseignements,
 )
+from backend.plateforme.echeancier_fiscal import echeancier_mission
 from backend.plateforme.lettre_mission import generer_lettre_mission
 from backend.plateforme.programme_travail import etat_programme
 from backend.plateforme.provision_risques import calculer_provision
@@ -467,6 +468,43 @@ def _piece_programme_travail(
     return "\n".join(lignes).encode("utf-8")
 
 
+def _piece_echeancier_fiscal(
+    session: Session, tenant_id: int, mission_id: int, meta: dict[str, Any]
+) -> bytes:
+    """Échéancier fiscal de l'exercice revu — toujours produit (les dates
+    se calculent quel que soit l'état de la mission)."""
+    e = echeancier_mission(session, tenant_id, mission_id)
+    lignes = [
+        "ÉCHÉANCIER FISCAL DE L'EXERCICE REVU — indicatif (pratique CGI CI)",
+        f"Mission #{e['mission_id']} — exercice {e['exercice']} — "
+        f"régime : {e['regime']}"
+        + (" — relève de la DGE" if e.get("dge") else ""),
+        "",
+    ]
+    par_impot: dict[str, list[dict[str, Any]]] = {}
+    for item in e["echeances"]:
+        par_impot.setdefault(str(item["impot"]), []).append(item)
+    for impot, items in par_impot.items():
+        lignes.append(f"{impot.upper()} ({len(items)} échéance(s))")
+        for it in items:
+            lignes.append(
+                f"  - {it['date_limite']} : {it['obligation']} "
+                f"[{it['periode']}] ({it['base_legale']})"
+            )
+        lignes.append("")
+    s = e["synthese"]
+    lignes.append(
+        f"Synthèse : {s['total']} échéance(s) — "
+        + ", ".join(f"{i} : {n}" for i, n in s["par_impot"].items())
+        + "."
+    )
+    lignes.append(
+        "Dates indicatives (hypothèses documentées) — vérifier le "
+        "calendrier officiel DGI de l'exercice."
+    )
+    return "\n".join(lignes).encode("utf-8")
+
+
 def _piece_courrier_envoi(
     session: Session, tenant_id: int, mission_id: int, meta: dict[str, Any]
 ) -> bytes:
@@ -548,6 +586,11 @@ _PIECES: Final[
         "14_courrier_envoi_rapport.docx",
         "Courrier d'envoi du rapport au client",
         _piece_courrier_envoi,
+    ),
+    (
+        "15_echeancier_fiscal.txt",
+        "Échéancier fiscal de l'exercice revu",
+        _piece_echeancier_fiscal,
     ),
 )
 

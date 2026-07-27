@@ -1591,6 +1591,49 @@ def api_controle_cloture(
         ) from e
 
 
+@router.get("/missions/{mission_id}/echeancier-fiscal")
+def api_echeancier_fiscal_mission(
+    mission_id: int,
+    utilisateur: UtilisateurDep,
+    session: Annotated[Session, Depends(session_abonne)],
+) -> dict:
+    """Échéancier fiscal de l'exercice revu — déterministe (dates CGI CI).
+
+    Calendrier des obligations déclaratives et de paiement du
+    contribuable pour l'exercice de la mission (TVA/ITS mensuels,
+    résultat et états financiers, fractions BIC/IS, patente, IRC/IRCM),
+    selon le régime du profil mission. 404 si mission hors tenant (RLS).
+    """
+    from backend.moteur.journal import append_journal
+    from backend.plateforme.echeancier_fiscal import (
+        ErreurEcheancierIntrouvable,
+        echeancier_mission,
+    )
+
+    exiger_capacite(utilisateur, "lire")
+    try:
+        echeancier = echeancier_mission(
+            session, utilisateur.tenant_id, mission_id
+        )
+    except ErreurEcheancierIntrouvable as e:
+        raise HTTPException(
+            status_code=status.HTTP_404_NOT_FOUND, detail=str(e)
+        ) from e
+    append_journal(
+        session,
+        tenant_id=utilisateur.tenant_id,
+        mission_id=mission_id,
+        acteur=utilisateur.email,
+        action="consultation_echeancier_fiscal",
+        charge_utile={
+            "exercice": echeancier["exercice"],
+            "regime": echeancier["regime"],
+            "total_echeances": echeancier["synthese"]["total"],
+        },
+    )
+    return echeancier
+
+
 # ── Conclusions (validation humaine) ───────────────────────────────
 
 

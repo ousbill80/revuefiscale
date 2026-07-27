@@ -13,12 +13,29 @@ Régimes couverts (valeurs canoniques de ``contribuable.regime_fiscal``) :
 - ``tee`` / ``tce`` (taxe de l'entreprenant) et ``ime`` (microentreprise).
 
 Régime inconnu ou vide → liste vide, sans erreur (défensif).
+
+Le module porte AUSSI l'« échéancier fiscal de la mission » : pour
+l'exercice revu, le calendrier complet des obligations déclaratives et
+de paiement du contribuable (:func:`construire_echeancier`, fonction
+pure) et sa lecture par mission sous RLS (:func:`echeancier_mission`).
+POURQUOI : dans la pratique d'un cabinet fiscaliste ivoirien, la revue
+du respect du calendrier déclaratif est un contrôle de base — le
+collaborateur confronte les dates de dépôt effectives du client aux
+dates limites de l'exercice pour repérer les déclarations tardives
+(pénalités et intérêts de retard du CGI CI). Hypothèses documentées
+sur :func:`construire_echeancier`. Déterministe, aucun appel LLM.
 """
 from __future__ import annotations
 
 import calendar
+import json
 from datetime import date, timedelta
 from typing import Any, Final
+
+from sqlalchemy import text
+from sqlalchemy.orm import Session
+
+from backend.plateforme.contexte import contexte_tenant
 
 # ── Constantes de statut ─────────────────────────────────────────────
 
@@ -253,3 +270,245 @@ def prochaines_echeances(
             )
     resultat.sort(key=lambda e: (e["date_limite"], e["code"]))
     return resultat
+
+
+# ── Échéancier fiscal de la mission (exercice revu) ──────────────────
+#
+# HYPOTHÈSES RETENUES (pratique déclarative usuelle CI, simplifiée et
+# assumée — vérifier le calendrier officiel DGI pour chaque dossier) :
+# - TVA et ITS mensuels : au plus tard le 10 du mois suivant pour les
+#   entreprises relevant de la DGE, le 15 pour le réel normal (RNI),
+#   le 20 pour le réel simplifié (RSI) ;
+# - déclaration de résultat BIC/IS et dépôt des états financiers :
+#   30 avril N+1 (30 mai N+1 pour la DGE) ;
+# - paiement fractionné BIC/IS : trois fractions en N+1 (avril, juin,
+#   septembre), même règle de jour que la TVA (10 DGE / 15 / 20) ;
+# - contribution des patentes : 15 mars de l'exercice ;
+# - IRC/IRCM : reversement des retenues, le cas échéant, au plus tard
+#   le 15 du mois suivant chaque trimestre civil.
+
+_BASE_PRATIQUE: Final[str] = "CGI CI — pratique déclarative"
+
+_MOIS_FR: Final[tuple[str, ...]] = (
+    "janvier", "février", "mars", "avril", "mai", "juin",
+    "juillet", "août", "septembre", "octobre", "novembre", "décembre",
+)
+
+
+class ErreurEcheancierIntrouvable(Exception):
+    """Mission hors périmètre du tenant — 404 côté route."""
+
+
+def _jour_mensuel(regime: str, dge: bool) -> int:
+    """Jour limite des obligations mensuelles : 10 DGE, 15 RNI, 20 RSI."""
+    if dge:
+        return 10
+    return 20 if regime == "reel_simplifie" else 15
+
+
+def _item(
+    impot: str,
+    obligation: str,
+    periode: str,
+    date_limite: date,
+    base_legale: str = _BASE_PRATIQUE,
+) -> dict[str, Any]:
+    return {
+        "impot": impot,
+        "obligation": obligation,
+        "periode": periode,
+        "date_limite": date_limite.isoformat(),
+        "base_legale": base_legale,
+    }
+
+
+def _echeances_mensuelles(
+    exercice: int, jour: int, impot: str, obligation: str
+) -> list[dict[str, Any]]:
+    """12 échéances : le mois M de l'exercice est dû le mois M+1."""
+    items: list[dict[str, Any]] = []
+    for mois in range(1, 13):
+        annee_lim, mois_lim = (
+            (exercice + 1, 1) if mois == 12 else (exercice, mois + 1)
+        )
+        items.append(
+            _item(
+                impot,
+                obligation,
+                f"{_MOIS_FR[mois - 1]} {exercice}",
+                _date_clampee(annee_lim, mois_lim, jour),
+            )
+        )
+    return items
+
+
+def construire_echeancier(
+    exercice: int, regime: str, dge: bool = False
+) -> list[dict[str, Any]]:
+    """PUR — échéancier des obligations fiscales de l'exercice revu.
+
+    Chaque item : ``{impot, obligation, periode, date_limite (ISO),
+    base_legale}``. Dates calculées via :class:`datetime.date`, jamais
+    de LLM — testable sans base. Hypothèses de dates documentées en
+    tête de section (référentiel indicatif, prudent : ``base_legale``
+    renvoie à la pratique déclarative, pas à un article précis).
+
+    Régime inconnu → traité comme réel normal (échéancier le plus
+    complet : prudent pour une revue). TEE/IME → déclarations
+    simplifiées uniquement. Trié par date limite croissante.
+    """
+    cle = normaliser_regime(regime) or "reel"
+    items: list[dict[str, Any]] = []
+
+    if cle == "tee":
+        items += _echeances_mensuelles(
+            exercice,
+            10,
+            "Taxe de l'entreprenant",
+            "Déclaration et paiement mensuels simplifiés",
+        )
+    elif cle == "ime":
+        for trimestre in range(1, 5):
+            annee_lim, mois_lim = (
+                (exercice + 1, 1)
+                if trimestre == 4
+                else (exercice, trimestre * 3 + 1)
+            )
+            items.append(
+                _item(
+                    "Impôt des microentreprises",
+                    "Déclaration et paiement trimestriels simplifiés",
+                    f"T{trimestre} {exercice}",
+                    _date_clampee(annee_lim, mois_lim, 15),
+                )
+            )
+    else:  # reel / reel_simplifie — jeu complet d'obligations.
+        jour = _jour_mensuel(cle, dge)
+        items += _echeances_mensuelles(
+            exercice,
+            jour,
+            "TVA",
+            "Déclaration et paiement de la TVA du mois",
+        )
+        items += _echeances_mensuelles(
+            exercice,
+            jour,
+            "ITS",
+            "Déclaration et reversement des ITS du mois",
+        )
+        # IRC/IRCM : reversement trimestriel des retenues, le cas échéant.
+        for trimestre in range(1, 5):
+            annee_lim, mois_lim = (
+                (exercice + 1, 1)
+                if trimestre == 4
+                else (exercice, trimestre * 3 + 1)
+            )
+            items.append(
+                _item(
+                    "IRC/IRCM",
+                    "Reversement des retenues IRC/IRCM (le cas échéant)",
+                    f"T{trimestre} {exercice}",
+                    _date_clampee(annee_lim, mois_lim, 15),
+                )
+            )
+        # Patente de l'exercice — date civile, pratique usuelle.
+        items.append(
+            _item(
+                "Patente",
+                "Déclaration et paiement de la contribution des patentes",
+                f"exercice {exercice}",
+                date(exercice, 3, 15),
+            )
+        )
+        # Résultat + états financiers : 30/04 N+1 (30/05 N+1 pour la DGE).
+        mois_annuel = 5 if dge else 4
+        date_annuelle = _date_clampee(exercice + 1, mois_annuel, 30)
+        items.append(
+            _item(
+                "IS/BIC",
+                "Déclaration annuelle de résultat (BIC/IS)",
+                f"exercice {exercice}",
+                date_annuelle,
+            )
+        )
+        items.append(
+            _item(
+                "États financiers",
+                "Dépôt des états financiers (SYSCOHADA / DGI)",
+                f"exercice {exercice}",
+                date_annuelle,
+            )
+        )
+        # Paiement fractionné BIC/IS en N+1 : avril, juin, septembre.
+        for rang, mois_fraction in enumerate((4, 6, 9), start=1):
+            items.append(
+                _item(
+                    "IS/BIC",
+                    f"Paiement fractionné de l'impôt BIC/IS ({rang}/3)",
+                    f"exercice {exercice}",
+                    _date_clampee(exercice + 1, mois_fraction, jour),
+                )
+            )
+
+    items.sort(key=lambda e: (e["date_limite"], e["impot"], e["obligation"]))
+    return items
+
+
+def _profil_mission(profil: Any) -> dict[str, Any]:
+    """Profil JSON de la mission — dict tolérant (str JSON ou None)."""
+    if isinstance(profil, str):
+        try:
+            profil = json.loads(profil)
+        except ValueError:
+            profil = {}
+    return profil if isinstance(profil, dict) else {}
+
+
+def _releve_de_la_dge(centre_impots: Any) -> bool:
+    """Vrai si le centre des impôts renvoie à la DGE (heuristique texte)."""
+    libelle = str(centre_impots or "").lower()
+    return "dge" in libelle or "grandes entreprises" in libelle
+
+
+def echeancier_mission(
+    session: Session, tenant_id: int, mission_id: int
+) -> dict[str, Any]:
+    """Échéancier fiscal de l'exercice revu par la mission (RLS stricte).
+
+    Lit l'exercice et le régime (profil JSON) de la mission, détecte la
+    DGE depuis ``contribuable.centre_impots`` (heuristique texte), puis
+    délègue à :func:`construire_echeancier` (pur). Mission hors tenant →
+    :class:`ErreurEcheancierIntrouvable` (404 côté route). Retourne
+    ``{mission_id, exercice, regime, dge, echeances, synthese: {total,
+    par_impot}}`` — se construit toujours (aucun cas d'échec métier).
+    """
+    with contexte_tenant(session, tenant_id):
+        row = session.execute(
+            text(
+                "SELECT m.exercice, m.profil, c.centre_impots "
+                "FROM mission m "
+                "JOIN contribuable c ON c.id = m.contribuable_id "
+                "WHERE m.id = :m"
+            ),
+            {"m": mission_id},
+        ).mappings().one_or_none()
+    if row is None:
+        raise ErreurEcheancierIntrouvable(f"mission {mission_id} introuvable")
+
+    exercice = int(row["exercice"])
+    profil = _profil_mission(row["profil"])
+    regime = normaliser_regime(str(profil.get("regime") or "")) or "reel"
+    dge = _releve_de_la_dge(row["centre_impots"])
+    echeances = construire_echeancier(exercice, regime, dge=dge)
+
+    par_impot: dict[str, int] = {}
+    for e in echeances:
+        par_impot[e["impot"]] = par_impot.get(e["impot"], 0) + 1
+    return {
+        "mission_id": mission_id,
+        "exercice": exercice,
+        "regime": regime,
+        "dge": dge,
+        "echeances": echeances,
+        "synthese": {"total": len(echeances), "par_impot": par_impot},
+    }
