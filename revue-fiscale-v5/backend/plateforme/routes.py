@@ -3714,3 +3714,35 @@ def api_agenda_fiscal_cabinet_csv(
             "Content-Disposition": 'attachment; filename="agenda-fiscal.csv"'
         },
     )
+
+
+@router.get("/cabinet/relances")
+def api_relances_cabinet(
+    utilisateur: UtilisateurDep,
+    session: Annotated[Session, Depends(session_abonne)],
+) -> dict:
+    """Relances à faire du cabinet — items du suivi échus, tous clients.
+
+    Vue transverse pour le fiscaliste : sur toutes les missions non
+    clôturées du tenant, les items du suivi de la demande de
+    renseignements « à relancer » (statut ``en_attente`` et date de
+    relance échue). Consultatif et déterministe — trié par date de
+    relance croissante puis client.
+    """
+    from backend.moteur.journal import append_journal
+    from backend.plateforme.relances_cabinet import relances_cabinet
+
+    exiger_capacite(utilisateur, "lire")
+    relances = relances_cabinet(session, utilisateur.tenant_id)
+    append_journal(
+        session,
+        tenant_id=utilisateur.tenant_id,
+        mission_id=None,
+        acteur=utilisateur.email,
+        action="consultation_relances_cabinet",
+        charge_utile={
+            "total": relances["total"],
+            "clients": relances["synthese"]["clients"],
+        },
+    )
+    return relances

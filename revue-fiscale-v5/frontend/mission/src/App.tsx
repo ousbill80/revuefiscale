@@ -51,6 +51,7 @@ import {
 } from "./CadrageMissionVue";
 import { CompteVue } from "./CompteVue";
 import { AgendaFiscalVue } from "./AgendaFiscalVue";
+import { RelancesCabinetVue } from "./RelancesCabinetVue";
 import { EquipeVue } from "./EquipeVue";
 import { FacturationVue } from "./FacturationVue";
 import {
@@ -4354,6 +4355,11 @@ export function App() {
               )}
 
               <AgendaFiscalVue
+                jeton={session?.jeton ?? null}
+                onOuvrirMission={(id) => void ouvrirMission(id)}
+              />
+
+              <RelancesCabinetVue
                 jeton={session?.jeton ?? null}
                 onOuvrirMission={(id) => void ouvrirMission(id)}
               />
