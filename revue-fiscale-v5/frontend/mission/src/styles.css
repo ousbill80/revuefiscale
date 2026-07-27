@@ -9681,6 +9681,14 @@ tr.row-active td {
 .rest-prescription-date { font-variant-numeric: tabular-nums; white-space: nowrap; }
 .rest-prescription-hypothese { margin: 0.55rem 0 0; font-size: 0.72rem; font-style: italic; }
 
+/* ── Civisme déclaratif — variantes du panneau Prescription ──────── */
+.civisme-stat--couverte { border-color: #bbf7d0; background: #f0fdf4; }
+.civisme-stat--couverte .rest-prescription-stat-val { color: #15803d; }
+.civisme-badge--couverte { background: #f0fdf4; color: #15803d; border-color: #bbf7d0; }
+.civisme-badge--manquante { background: #fef2f2; color: #b91c1c; border-color: #fecaca; }
+.civisme-item--couverte { border-left-color: #86efac; }
+.civisme-item--manquante { border-left-color: #fca5a5; }
+
 /* ── Pilotage — carte « Échéances déclaratives » ─────────────────── */
 .pilotage-badge { margin-left: auto; display: inline-flex; align-items: center; padding: 0.1rem 0.5rem; border: 1px solid transparent; border-radius: 999px; font-size: 0.7rem; font-weight: 800; white-space: nowrap; }
 .pilotage-badge.imminent { background: #fffbeb; color: #92400e; border-color: #fde68a; }

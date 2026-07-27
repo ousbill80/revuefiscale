@@ -137,6 +137,21 @@ def test_elements_depuis_pieces_autre_sans_mois_couvre_l_impot():
     ]
 
 
+def test_elements_depuis_pieces_autre_etats_financiers_par_tokens():
+    """Une pièce « autre » nommée « états financiers » couvre l'obligation."""
+    elements = elements_depuis_pieces(
+        [{"type_piece": "autre", "nom_fichier": "États financiers 2025.pdf"}],
+        2025,
+    )
+    assert elements == [
+        {
+            "impot": "États financiers",
+            "periode": None,
+            "source": "data room : États financiers 2025.pdf",
+        }
+    ]
+
+
 # ── Tests API (DB) ─────────────────────────────────────────────────
 
 pytestmark = pytest.mark.db

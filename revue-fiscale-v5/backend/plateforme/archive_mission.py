@@ -27,6 +27,10 @@ from typing import Any, Callable, Final
 from sqlalchemy import text
 from sqlalchemy.orm import Session
 
+from backend.plateforme.civisme_fiscal import (
+    STATUT_MANQUANTE,
+    analyse_mission as analyse_civisme_fiscal,
+)
 from backend.plateforme.comparatif_executions import comparer_executions
 from backend.plateforme.contexte import contexte_tenant
 from backend.plateforme.controle_cloture import evaluer_cloture
@@ -653,6 +657,44 @@ def _piece_prescription_risques(
     return "\n".join(lignes).encode("utf-8")
 
 
+def _piece_civisme_fiscal(
+    session: Session, tenant_id: int, mission_id: int, meta: dict[str, Any]
+) -> bytes:
+    """Civisme déclaratif — toujours produit (rapprochement déterministe
+    de l'échéancier théorique et des pièces collectées, même sans pièce).
+    ``analyse_mission`` ouvre son propre ``contexte_tenant`` : appel HORS
+    de tout autre contexte."""
+    a = analyse_civisme_fiscal(session, tenant_id, mission_id)
+    s = a["synthese"]
+    lignes = [
+        "CIVISME DÉCLARATIF — rapprochement consultatif échéancier / pièces",
+        f"Mission #{a['mission_id']} — client : "
+        f"{meta.get('contribuable_denomination') or '[non renseigné]'} — "
+        f"exercice {a['exercice']} — régime : {a['regime']} — "
+        f"analyse au {a['aujourd_hui']}",
+        "",
+        f"Taux de civisme : {s['taux_civisme']} % "
+        "(échéances couvertes / échéances exigibles)",
+        f"Échéances couvertes  : {s['couvertes']}",
+        f"Échéances en attente : {s['en_attente']}",
+        f"Échéances manquantes : {s['manquantes']}",
+        "",
+    ]
+    manquantes = [
+        r for r in a["rapprochement"] if r["statut"] == STATUT_MANQUANTE
+    ]
+    lignes.append(f"ÉCHÉANCES MANQUANTES ({len(manquantes)})")
+    for it in manquantes:
+        lignes.append(
+            f"  - {it['date_limite']} : {it['impot']} — {it['obligation']} "
+            f"[{it['periode']}]"
+        )
+    if not manquantes:
+        lignes.append("  (aucune)")
+    lignes += ["", f"* {a['note']}"]
+    return "\n".join(lignes).encode("utf-8")
+
+
 # Ordre du dossier : (nom de fichier dans le ZIP, description, constructeur).
 _PIECES: Final[
     tuple[tuple[str, str, Callable[[Session, int, int, dict[str, Any]], bytes]], ...]
@@ -746,6 +788,11 @@ _PIECES: Final[
         "18_prescription_risques.txt",
         "Analyse de prescription des risques (délai de reprise)",
         _piece_prescription_risques,
+    ),
+    (
+        "19_civisme_fiscal.txt",
+        "Civisme déclaratif (échéancier rapproché des pièces collectées)",
+        _piece_civisme_fiscal,
     ),
 )
 

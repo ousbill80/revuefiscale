@@ -25,6 +25,7 @@ import { RapportArtifact } from "./RapportArtifact";
 import { EcheancierFiscalVue } from "./EcheancierFiscalVue";
 import { PilotageVue } from "./PilotageVue";
 import { PrescriptionVue } from "./PrescriptionVue";
+import { CivismeVue } from "./CivismeVue";
 import type { AuditEntree, AuditJournal, ConclusionRestitution, Restitution } from "./types";
 
 type CollaborateurOpt = {
@@ -662,6 +663,7 @@ export function RestitutionVue({
   const [echeancierOuvert, setEcheancierOuvert] = useState(false);
   const [pilotageOuvert, setPilotageOuvert] = useState(false);
   const [prescriptionOuverte, setPrescriptionOuverte] = useState(false);
+  const [civismeOuvert, setCivismeOuvert] = useState(false);
   const [ctrlClotureOuvert, setCtrlClotureOuvert] = useState(false);
   const [ctrlCloture, setCtrlCloture] = useState<ControleClotureOut | null>(
     null,
@@ -934,6 +936,7 @@ export function RestitutionVue({
     | "temps"
     | "programme"
     | "echeancier"
+    | "civisme"
     | "prescription"
     | "visas"
     | "note"
@@ -947,6 +950,7 @@ export function RestitutionVue({
     if (sauf !== "temps") setTempsOuvert(false);
     if (sauf !== "programme") setProgOuvert(false);
     if (sauf !== "echeancier") setEcheancierOuvert(false);
+    if (sauf !== "civisme") setCivismeOuvert(false);
     if (sauf !== "prescription") setPrescriptionOuverte(false);
     if (sauf !== "visas") setVisasOuvert(false);
     if (sauf !== "note") setNoteOuverte(false);
@@ -2382,6 +2386,21 @@ export function RestitutionVue({
                 Échéancier fiscal
               </button>
             </Tooltip>
+            <Tooltip label="Civisme déclaratif : rapprochement déterministe entre l'échéancier fiscal théorique de l'exercice revu et les pièces collectées en data room — taux de civisme, échéances couvertes, en attente ou manquantes. Consultatif : à vérifier auprès du client.">
+              <button
+                type="button"
+                className={`btn btn-ghost btn-sm dossier2-action rest-civisme-btn${
+                  civismeOuvert ? " is-actif" : ""
+                }`}
+                onClick={() =>
+                  togglePanneau("civisme", civismeOuvert, setCivismeOuvert)
+                }
+                disabled={!jeton}
+                aria-expanded={civismeOuvert}
+              >
+                Civisme déclaratif
+              </button>
+            </Tooltip>
             <Tooltip label="Prescription des risques : analyse déterministe du délai de reprise de droit commun — risques prescrits à basculer, proches de prescription (<12 mois) et non prescrits, avec exposition prescrite. Consultative : l'humain décide.">
               <button
                 type="button"
@@ -3524,6 +3543,14 @@ export function RestitutionVue({
           missionId={r.mission_id}
           jeton={jeton}
           onFermer={() => setEcheancierOuvert(false)}
+        />
+      )}
+
+      {civismeOuvert && (
+        <CivismeVue
+          missionId={r.mission_id}
+          jeton={jeton}
+          onFermer={() => setCivismeOuvert(false)}
         />
       )}
 
