@@ -1664,7 +1664,7 @@ export function App() {
 
   /** Validations bloquantes du cadrage (client + exercice + engagement). */
   function validerCadrage() {
-    if (!apiMin.ok) {
+    if (contribIdExistant == null && !apiMin.ok) {
       throw new Error(
         `Identité minimale incomplète : ${apiMin.manquants.join(", ")}.`,
       );
@@ -1809,8 +1809,9 @@ export function App() {
   }
 
   /**
-   * Bouton « Créer la mission » du cadrage — contribuable + mission, puis
-   * enchaîne sur l'étape Sources existante.
+   * Bouton « Créer la mission » du cadrage — lie un client existant du
+   * portefeuille (la création de fiche se fait dans l'onglet Clients), crée
+   * la mission puis enchaîne sur l'étape Sources existante.
    */
   async function creerMissionDepuisCadrage() {
     if (!session) return;
@@ -1818,9 +1819,14 @@ export function App() {
     setMissionStatus(null);
     const jeton = session.jeton;
     try {
+      if (contribIdExistant == null) {
+        throw new Error(
+          "Aucun client lié — sélectionnez un client du portefeuille " +
+            "(la création de fiche se fait dans l'onglet Clients).",
+        );
+      }
       validerCadrage();
-      const cid = await assurerContribuable(jeton);
-      const mission = await assurerMission(jeton, cid);
+      const mission = await assurerMission(jeton, contribIdExistant);
       setMissionId(mission.id);
       setMissionStatus({
         msg: `Mission #${mission.id} créée — référentiel épinglé id=${mission.version_referentiel_id}. Déposez la source comptable.`,
@@ -4531,36 +4537,14 @@ export function App() {
                   busy={busy}
                   quotaBloque={!!quota?.bloque}
                   missionStatus={missionStatus}
+                  cabinet={session?.tenant_denomination ?? ""}
                   clients={clients}
+                  missions={missions}
                   contribIdExistant={contribIdExistant}
-                  contribNom={contribNom}
-                  setContribNom={setContribNom}
-                  contribNcc={contribNcc}
-                  setContribNcc={setContribNcc}
-                  contribForme={contribForme}
-                  setContribForme={setContribForme}
-                  contribRccm={contribRccm}
-                  setContribRccm={setContribRccm}
-                  contribDfe={contribDfe}
-                  setContribDfe={setContribDfe}
-                  contribSiege={contribSiege}
-                  setContribSiege={setContribSiege}
-                  contribCommune={contribCommune}
-                  setContribCommune={setContribCommune}
-                  contribCentreImpots={contribCentreImpots}
-                  setContribCentreImpots={setContribCentreImpots}
-                  contribCapital={contribCapital}
-                  setContribCapital={setContribCapital}
-                  contribMoisCloture={contribMoisCloture}
-                  setContribMoisCloture={setContribMoisCloture}
-                  contribActivite={contribActivite}
-                  setContribActivite={setContribActivite}
-                  contribDateImmat={contribDateImmat}
-                  setContribDateImmat={setContribDateImmat}
                   chargerContribuable={chargerContribuableDansWizard}
                   reinitialiserClient={reinitialiserClientCadrage}
-                  apiMin={apiMin}
-                  conflitFiche={conflitFiche}
+                  onAllerClients={() => void naviguer("clients")}
+                  onOuvrirMission={(id) => void ouvrirMission(id)}
                   exercice={exercice}
                   setExercice={setExercice}
                   typeEngagement={typeEngagement}
@@ -4569,7 +4553,6 @@ export function App() {
                   setRegime={setRegime}
                   forme={forme}
                   setForme={setForme}
-                  setSecteur={setSecteur}
                   exerciceFutur={exerciceFutur}
                   exercicePrescrit={exercicePrescrit}
                   prescriptionConfirmee={prescriptionConfirmee}

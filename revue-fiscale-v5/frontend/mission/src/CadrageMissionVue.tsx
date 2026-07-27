@@ -1,5 +1,7 @@
 import {
+  useEffect,
   useMemo,
+  useRef,
   useState,
   type Dispatch,
   type SetStateAction,
@@ -8,13 +10,8 @@ import { Field, SelectField } from "./Field";
 import { InfoTip, Tooltip } from "./Tooltip";
 import {
   FORMES_JURIDIQUES_PM,
-  FORMES_PERSONNE,
   MOIS_CLOTURE,
   REGIMES_FISCAUX,
-  SECTEURS_ACTIVITE,
-  composerActivite,
-  decomposerActivite,
-  type FormePersonne,
 } from "./legalite";
 import {
   CODES_IMPOT_PIVOT,
@@ -23,10 +20,12 @@ import {
   tipImpot,
 } from "./impotLabels";
 import { PROCESS_TIPS } from "./processTips";
+import { libelleStatut } from "./statuts";
 import type { ResumeRisques } from "./RegistreRisques";
 import type { Contribuable } from "./App";
+import type { MissionRow } from "./MissionsVue";
 
-/** Cartes d'engagement — langage métier de la lettre de mission. */
+/** Pills d'engagement — langage métier de la lettre de mission. */
 const ENGAGEMENTS: Array<{ value: string; titre: string; desc: string }> = [
   {
     value: "preventive",
@@ -36,17 +35,17 @@ const ENGAGEMENTS: Array<{ value: string; titre: string; desc: string }> = [
   {
     value: "cac",
     titre: "Commissariat aux comptes",
-    desc: "Volet fiscal de la certification.",
+    desc: "Volet fiscal de la certification des comptes.",
   },
   {
     value: "due_diligence",
     titre: "Due diligence",
-    desc: "Acquisition/cession : passif fiscal latent.",
+    desc: "Acquisition ou cession : évaluation du passif fiscal latent.",
   },
   {
     value: "assistance_controle",
     titre: "Assistance à contrôle",
-    desc: "Réponse à une vérification en cours.",
+    desc: "Réponse à une vérification de l'administration en cours.",
   },
   {
     value: "autre",
@@ -55,53 +54,55 @@ const ENGAGEMENTS: Array<{ value: string; titre: string; desc: string }> = [
   },
 ];
 
+/**
+ * Codes impôts non applicables selon le régime du client — filtre simple et
+ * déterministe : les régimes forfaitaires / de l'entreprenant (IME, TEE, TCE)
+ * ne rendent pas le contribuable redevable de la TVA (cotisation synthétique).
+ */
+const CODES_MASQUES_PAR_REGIME: Record<string, readonly string[]> = {
+  ime: ["TVA"],
+  tee: ["TVA"],
+  tce: ["TVA"],
+};
+
+/** Suggestions rondes du seuil de signification (FCFA). */
+const SEUILS_SUGGERES = [500_000, 1_000_000, 5_000_000] as const;
+
 function fmtFcfa(v: string): string {
   const n = Number(v.replace(/\s/g, "").replace(",", "."));
   if (!Number.isFinite(n) || n <= 0) return "";
   return `${n.toLocaleString("fr-FR")} FCFA`;
 }
 
+/**
+ * Dernier exercice clos selon le mois de clôture du client : si la clôture de
+ * l'année en cours est déjà passée, l'exercice N est clos ; sinon c'est N-1.
+ * Ex. clôture décembre + juillet 2026 → exercice 2025 suggéré.
+ */
+function exerciceSuggere(moisCloture: number, maintenant = new Date()): number {
+  const mois = maintenant.getMonth() + 1;
+  const annee = maintenant.getFullYear();
+  return mois > moisCloture ? annee : annee - 1;
+}
+
 export type CadrageMissionVueProps = {
   busy: boolean;
   quotaBloque: boolean;
   missionStatus: { msg: string; err: boolean } | null;
-  /* ------- Qui : portefeuille + fiche contribuable ------- */
+  /** Dénomination du cabinet — en-tête du document d'engagement. */
+  cabinet: string;
+  /* ------- Client : liaison au portefeuille uniquement ------- */
   clients: Contribuable[];
+  missions: MissionRow[];
   contribIdExistant: number | null;
-  contribNom: string;
-  setContribNom: (v: string) => void;
-  contribNcc: string;
-  setContribNcc: (v: string) => void;
-  contribForme: FormePersonne;
-  setContribForme: (v: FormePersonne) => void;
-  contribRccm: string;
-  setContribRccm: (v: string) => void;
-  contribDfe: string;
-  setContribDfe: (v: string) => void;
-  contribSiege: string;
-  setContribSiege: (v: string) => void;
-  contribCommune: string;
-  setContribCommune: (v: string) => void;
-  contribCentreImpots: string;
-  setContribCentreImpots: (v: string) => void;
-  contribCapital: string;
-  setContribCapital: (v: string) => void;
-  contribMoisCloture: string;
-  setContribMoisCloture: (v: string) => void;
-  contribActivite: string;
-  setContribActivite: (v: string) => void;
-  contribDateImmat: string;
-  setContribDateImmat: (v: string) => void;
   chargerContribuable: (c: Contribuable) => void;
-  /** Repart sur une fiche vierge (désélectionne le client). */
+  /** Désélectionne le client courant. */
   reinitialiserClient: () => void;
-  apiMin: { ok: boolean; manquants: string[] };
-  conflitFiche: {
-    champ: string;
-    valeur: string;
-    client: Contribuable;
-  } | null;
-  /* ------- Quoi : engagement & exercice ------- */
+  /** Navigation vers l'onglet Clients (création de fiche hors cadrage). */
+  onAllerClients: () => void;
+  /** Ouvre une mission existante (bandeau doublon). */
+  onOuvrirMission: (id: number) => void;
+  /* ------- Engagement & exercice ------- */
   exercice: number;
   setExercice: (v: number) => void;
   typeEngagement: string;
@@ -110,7 +111,6 @@ export type CadrageMissionVueProps = {
   setRegime: (v: string) => void;
   forme: string;
   setForme: (v: string) => void;
-  setSecteur: (v: string) => void;
   exerciceFutur: boolean;
   exercicePrescrit: boolean;
   prescriptionConfirmee: boolean;
@@ -122,7 +122,7 @@ export type CadrageMissionVueProps = {
     statut: string;
     mission_source_id?: number | null;
   }>;
-  /* ------- Comment : périmètre & affinage ------- */
+  /* ------- Périmètre & affinage ------- */
   perimetreImpots: string[];
   setPerimetreImpots: Dispatch<SetStateAction<string[]>>;
   seuilSignification: string;
@@ -140,18 +140,19 @@ export type CadrageMissionVueProps = {
 };
 
 /**
- * Cadrage de mission — « on ne remplit pas un formulaire, on cadre une
- * lettre de mission » : Qui / Quoi / Comment + lettre récapitulative sticky.
+ * Cadrage de mission — « document d'engagement » : à gauche des sections
+ * aérées (client lié, engagement, exercice, périmètre), à droite la lettre de
+ * mission rendue comme un document papier qui se rédige en direct.
  */
 export function CadrageMissionVue(props: CadrageMissionVueProps) {
   const {
     busy,
     quotaBloque,
     missionStatus,
+    cabinet,
     clients,
+    missions,
     contribIdExistant,
-    apiMin,
-    conflitFiche,
     exercice,
     typeEngagement,
     regime,
@@ -166,10 +167,25 @@ export function CadrageMissionVue(props: CadrageMissionVueProps) {
   } = props;
 
   const [recherche, setRecherche] = useState("");
-  const [modeCreation, setModeCreation] = useState(false);
+  const [listeOuverte, setListeOuverte] = useState(false);
+  const comboRef = useRef<HTMLDivElement | null>(null);
 
-  const anneeCourante = new Date().getFullYear();
-  const clientChoisi = contribIdExistant != null;
+  const client = useMemo(
+    () => clients.find((c) => c.id === contribIdExistant) ?? null,
+    [clients, contribIdExistant],
+  );
+
+  /* Fermeture du dropdown au clic extérieur. */
+  useEffect(() => {
+    if (!listeOuverte) return;
+    const fermer = (e: MouseEvent) => {
+      if (comboRef.current && !comboRef.current.contains(e.target as Node)) {
+        setListeOuverte(false);
+      }
+    };
+    document.addEventListener("mousedown", fermer);
+    return () => document.removeEventListener("mousedown", fermer);
+  }, [listeOuverte]);
 
   const resultats = useMemo(() => {
     const q = recherche.trim().toLowerCase();
@@ -181,241 +197,113 @@ export function CadrageMissionVue(props: CadrageMissionVueProps) {
             (c.rccm ?? "").toLowerCase().includes(q),
         )
       : clients;
-    return liste.slice(0, 12);
+    return liste.slice(0, 8);
   }, [clients, recherche]);
 
-  /** Le bloc « Qui » est acquis : client existant ou fiche neuve valide. */
-  const quiOk = contribIdExistant != null || (apiMin.ok && !conflitFiche);
-  const quoiOk = !!typeEngagement && !exerciceFutur;
+  /* ---- Exercice suggéré selon le mois de clôture du client ---- */
+  const moisCloture = client?.mois_cloture ?? 12;
+  const suggestion = exerciceSuggere(moisCloture);
+  const moisClotureLabel =
+    MOIS_CLOTURE.find((m) => m.value === String(moisCloture))?.label ??
+    `mois ${moisCloture}`;
 
+  /* À la sélection d'un client, propose automatiquement le dernier exercice clos. */
+  const dernierClientSuggere = useRef<number | null>(null);
+  useEffect(() => {
+    if (contribIdExistant == null) {
+      dernierClientSuggere.current = null;
+      return;
+    }
+    if (dernierClientSuggere.current === contribIdExistant) return;
+    dernierClientSuggere.current = contribIdExistant;
+    props.setExercice(exerciceSuggere(client?.mois_cloture ?? 12));
+    props.setPrescriptionConfirmee(false);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [contribIdExistant, client?.mois_cloture]);
+
+  /* ---- Périmètre filtré selon le régime ---- */
+  const codesMasques = CODES_MASQUES_PAR_REGIME[regime] ?? [];
+  const codesVisibles = CODES_IMPOT_PIVOT.filter(
+    (c) => !codesMasques.includes(c),
+  );
+  useEffect(() => {
+    if (codesMasques.length === 0) return;
+    props.setPerimetreImpots((prev) => {
+      const filtre = prev.filter((c) => !codesMasques.includes(c));
+      return filtre.length === prev.length ? prev : filtre;
+    });
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [regime]);
+
+  /* ---- Doublon (client, exercice) sur les missions déjà chargées ---- */
+  const missionExistante = useMemo(() => {
+    if (contribIdExistant == null) return null;
+    return (
+      missions.find(
+        (m) =>
+          m.contribuable_id === contribIdExistant &&
+          Number(m.exercice) === Number(exercice),
+      ) ?? null
+    );
+  }, [missions, contribIdExistant, exercice]);
+
+  /* ---- Complétude du cadrage ---- */
   const manquants: string[] = [];
-  if (contribIdExistant == null && !apiMin.ok) {
-    manquants.push(`client (${apiMin.manquants.join(", ")})`);
-  }
-  if (conflitFiche) {
-    manquants.push(`doublon ${conflitFiche.champ} à résoudre`);
-  }
+  if (contribIdExistant == null) manquants.push("client du portefeuille");
   if (!typeEngagement) manquants.push("type d'engagement");
   if (exerciceFutur) manquants.push("exercice clos (année achevée)");
   if (exercicePrescrit && !prescriptionConfirmee) {
     manquants.push("confirmation exercice prescrit");
   }
-  const pretACreer = manquants.length === 0 && !busy && !quotaBloque;
+  const brouillon = manquants.length > 0;
+  const pretACreer = !brouillon && !busy && !quotaBloque;
 
   const regimeLabel =
     REGIMES_FISCAUX.find((r) => r.value === regime)?.label ?? regime;
   const engagement = ENGAGEMENTS.find((e) => e.value === typeEngagement);
-  const formeAffichee = props.contribForme === "pp" ? "EI" : forme;
+  const estPP = client?.forme === "pp";
+  const formeAffichee = estPP ? "EI" : forme;
   const objectifsRemplis = objectifsLibelles
     .map((o) => o.trim())
     .filter(Boolean);
   const seuilAffiche = fmtFcfa(seuilSignification);
-  const activiteDecomposee = decomposerActivite(props.contribActivite);
+  const dateDuJour = new Date().toLocaleDateString("fr-FR", {
+    day: "numeric",
+    month: "long",
+    year: "numeric",
+  });
 
-  const renderFicheClient = () => (
-    <div className="cadrage-fiche">
-      <div
-        className="persona-toggle"
-        role="group"
-        aria-label="Type de contribuable"
-      >
-        {FORMES_PERSONNE.map((p) => (
-          <Tooltip key={p.value} label={p.hint} side="bottom">
-            <button
-              type="button"
-              className={`persona-btn${props.contribForme === p.value ? " active" : ""}`}
-              onClick={() => {
-                props.setContribForme(p.value);
-                if (p.value === "pp") props.setForme("EI");
-                else if (forme === "EI") props.setForme("SA");
-              }}
-            >
-              <strong>{p.label}</strong>
-              <small>
-                {p.value === "pm"
-                  ? "Entreprise · RCCM + NCC"
-                  : "Individuel · fiche allégée"}
-              </small>
-            </button>
-          </Tooltip>
-        ))}
-      </div>
-      <div className="field-grid field-grid-2">
-        <Field
-          id="cadrage-nom"
-          label={
-            props.contribForme === "pm"
-              ? "Dénomination / raison sociale"
-              : "Nom du contribuable"
-          }
-          value={props.contribNom}
-          onChange={(e) => props.setContribNom(e.target.value)}
-          required
-          autoComplete="organization"
-        />
-        <Field
-          id="cadrage-ncc"
-          label="NCC"
-          value={props.contribNcc}
-          onChange={(e) => props.setContribNcc(e.target.value)}
-          required
-          spellCheck={false}
-          tip={PROCESS_TIPS.ncc}
-        />
-        {props.contribForme === "pm" && (
-          <>
-            <Field
-              id="cadrage-rccm"
-              label="RCCM"
-              value={props.contribRccm}
-              onChange={(e) => props.setContribRccm(e.target.value)}
-              required
-              spellCheck={false}
-            />
-            <Field
-              id="cadrage-dfe"
-              label="Réf. DFE (optionnel)"
-              value={props.contribDfe}
-              onChange={(e) => props.setContribDfe(e.target.value)}
-              spellCheck={false}
-              tip={PROCESS_TIPS.dfe}
-            />
-            <Field
-              id="cadrage-capital"
-              label="Capital social"
-              type="number"
-              inputMode="decimal"
-              min={0}
-              step="1"
-              value={props.contribCapital}
-              onChange={(e) => props.setContribCapital(e.target.value)}
-              required
-              trailing="XOF"
-            />
-          </>
-        )}
-        <SelectField
-          id="cadrage-cloture"
-          label="Clôture d'exercice"
-          value={props.contribMoisCloture}
-          onChange={(e) => props.setContribMoisCloture(e.target.value)}
-          options={MOIS_CLOTURE}
-          required
-        />
-        <SelectField
-          id="cadrage-secteur"
-          label="Secteur d'activité"
-          value={activiteDecomposee.secteur}
-          onChange={(e) => {
-            const next = composerActivite(
-              e.target.value,
-              activiteDecomposee.precision,
-            );
-            props.setContribActivite(next);
-            props.setSecteur(next);
-          }}
-          options={SECTEURS_ACTIVITE}
-          required
-          tip={PROCESS_TIPS.secteur}
-        />
-        <Field
-          id="cadrage-activite-prec"
-          label="Précision d'activité"
-          value={activiteDecomposee.precision}
-          onChange={(e) => {
-            const next = composerActivite(
-              activiteDecomposee.secteur,
-              e.target.value,
-            );
-            props.setContribActivite(next);
-            props.setSecteur(next);
-          }}
-        />
-        <Field
-          id="cadrage-immat"
-          label="Date d'immatriculation"
-          type="date"
-          value={props.contribDateImmat}
-          onChange={(e) => props.setContribDateImmat(e.target.value)}
-        />
-        <Field
-          id="cadrage-commune"
-          label="Ville / commune"
-          value={props.contribCommune}
-          onChange={(e) => props.setContribCommune(e.target.value)}
-          required
-          tip={PROCESS_TIPS.siegeEffectif}
-        />
-        <Field
-          id="cadrage-siege"
-          label="Adresse / quartier"
-          value={props.contribSiege}
-          onChange={(e) => props.setContribSiege(e.target.value)}
-          required={props.contribForme === "pm"}
-        />
-        <Field
-          id="cadrage-centre"
-          label="Centre des impôts"
-          value={props.contribCentreImpots}
-          onChange={(e) => props.setContribCentreImpots(e.target.value)}
-          required
-          tip={PROCESS_TIPS.centreImpots}
-        />
-      </div>
-      {conflitFiche && (
-        <div className="conflit-fiche" role="alert">
-          <p className="conflit-fiche-titre">
-            Cette entreprise existe déjà : «{" "}
-            {conflitFiche.client.denomination} » (#{conflitFiche.client.id})
-          </p>
-          <p className="conflit-fiche-detail">
-            Le {conflitFiche.champ} « {conflitFiche.valeur} » est déjà
-            rattaché à cette fiche de votre portefeuille — utilisez la fiche
-            existante, le cadrage saisi est conservé.
-          </p>
-          <button
-            type="button"
-            className="btn btn-primary btn-sm"
-            onClick={() => {
-              props.chargerContribuable(conflitFiche.client);
-              setModeCreation(false);
-            }}
-          >
-            Utiliser la fiche existante
-          </button>
-        </div>
-      )}
-    </div>
-  );
+  const anneesProposees = [suggestion, suggestion - 1, suggestion - 2];
 
   return (
-    <div className="cadrage">
-      <div className="cadrage-main">
-        {/* ------------------------------------------------ Bloc 1 — Qui */}
-        <section className="cadrage-bloc" aria-labelledby="cadrage-qui">
-          <header className="cadrage-bloc-head">
-            <span className="cadrage-bloc-n" aria-hidden="true">
-              1
-            </span>
-            <div>
-              <h3 id="cadrage-qui">Qui — le client</h3>
-              <p>
-                La mission commence par le contribuable : cherchez-le dans le
-                portefeuille ou créez sa fiche.
-              </p>
-            </div>
-          </header>
+    <div className="cadrage2">
+      {/* ================================================= Formulaire */}
+      <div className="cadrage2-form">
+        {/* ---------------------------------------------------- Client */}
+        <section className="cadrage2-section" aria-labelledby="cadrage2-client">
+          <h3 className="cadrage2-titre" id="cadrage2-client">
+            Le client
+          </h3>
+          <p className="cadrage2-note">
+            La mission est rattachée à un contribuable du portefeuille.
+          </p>
 
-          {clientChoisi ? (
-            <div className="cadrage-client-resume" role="status">
-              <div>
-                <strong>{props.contribNom || "—"}</strong>
+          {client ? (
+            <div className="cadrage2-client-carte" role="status">
+              <span className="cadrage2-client-initiale" aria-hidden="true">
+                {client.denomination.trim().charAt(0).toUpperCase() || "?"}
+              </span>
+              <div className="cadrage2-client-infos">
+                <strong>{client.denomination}</strong>
                 <span>
-                  {props.contribForme.toUpperCase()}
-                  {props.contribNcc.trim()
-                    ? ` · NCC ${props.contribNcc.trim()}`
-                    : ""}
-                  {` · ${regimeLabel} · ${formeAffichee}`}
+                  {estPP ? "Personne physique" : "Personne morale"}
+                  {client.ncc ? ` · NCC ${client.ncc}` : ""}
+                  {client.rccm ? ` · RCCM ${client.rccm}` : ""}
+                </span>
+                <span>
+                  {regimeLabel}
+                  {client.commune ? ` · ${client.commune}` : ""}
+                  {` · clôture ${moisClotureLabel.toLowerCase()}`}
                 </span>
               </div>
               <button
@@ -423,104 +311,111 @@ export function CadrageMissionVue(props: CadrageMissionVueProps) {
                 className="btn btn-ghost btn-sm"
                 onClick={() => {
                   props.reinitialiserClient();
-                  setModeCreation(false);
                   setRecherche("");
+                  setListeOuverte(false);
                 }}
               >
                 Changer
               </button>
             </div>
           ) : (
-            <>
-              {clients.length > 0 && !modeCreation && (
-                <>
-                  <input
-                    type="search"
-                    className="field-input cadrage-search"
-                    placeholder="Rechercher un contribuable — nom, NCC, RCCM…"
-                    aria-label="Rechercher un contribuable"
-                    value={recherche}
-                    onChange={(e) => setRecherche(e.target.value)}
-                  />
-                  <div className="cadrage-clients" role="list">
-                    {resultats.map((c) => (
-                      <button
-                        key={c.id}
-                        type="button"
-                        role="listitem"
-                        className="cadrage-client-card"
-                        onClick={() => {
-                          props.chargerContribuable(c);
-                          setModeCreation(false);
-                        }}
-                      >
-                        <strong>{c.denomination}</strong>
-                        <span>
-                          {(c.forme || "pm").toUpperCase()}
-                          {c.ncc ? ` · NCC ${c.ncc}` : ""}
-                          {c.regime_fiscal
+            <div className="cadrage2-combo" ref={comboRef}>
+              <input
+                type="search"
+                className="cadrage2-combo-input"
+                role="combobox"
+                aria-expanded={listeOuverte}
+                aria-controls="cadrage2-combo-liste"
+                aria-label="Rechercher un client du portefeuille"
+                placeholder="Rechercher un client — nom, NCC, RCCM…"
+                value={recherche}
+                onChange={(e) => {
+                  setRecherche(e.target.value);
+                  setListeOuverte(true);
+                }}
+                onFocus={() => setListeOuverte(true)}
+                onKeyDown={(e) => {
+                  if (e.key === "Escape") setListeOuverte(false);
+                }}
+              />
+              {listeOuverte && (
+                <div
+                  className="cadrage2-combo-liste"
+                  id="cadrage2-combo-liste"
+                  role="listbox"
+                  aria-label="Clients du portefeuille"
+                >
+                  {resultats.map((c) => (
+                    <button
+                      key={c.id}
+                      type="button"
+                      role="option"
+                      aria-selected={false}
+                      className="cadrage2-combo-item"
+                      onClick={() => {
+                        props.chargerContribuable(c);
+                        setListeOuverte(false);
+                        setRecherche("");
+                      }}
+                    >
+                      <strong>{c.denomination}</strong>
+                      <span>
+                        {(c.forme === "pp" ? "PP" : "PM") +
+                          (c.ncc ? ` · NCC ${c.ncc}` : "") +
+                          (c.regime_fiscal
                             ? ` · ${
                                 REGIMES_FISCAUX.find(
                                   (r) => r.value === c.regime_fiscal,
                                 )?.label ?? c.regime_fiscal
                               }`
-                            : ""}
-                          {c.forme_juridique ? ` · ${c.forme_juridique}` : ""}
-                        </span>
-                      </button>
-                    ))}
-                    {resultats.length === 0 && (
-                      <p className="empty-state">
-                        Aucun contribuable ne correspond à « {recherche} ».
-                      </p>
-                    )}
-                  </div>
-                </>
+                            : "")}
+                      </span>
+                    </button>
+                  ))}
+                  {resultats.length === 0 && (
+                    <p className="cadrage2-combo-vide">
+                      {clients.length === 0
+                        ? "Portefeuille vide — créez d'abord un client."
+                        : `Aucun client ne correspond à « ${recherche} ».`}
+                    </p>
+                  )}
+                </div>
               )}
-              <button
-                type="button"
-                className="linkish cadrage-creer-lien"
-                onClick={() => {
-                  if (!modeCreation) props.reinitialiserClient();
-                  setModeCreation(!modeCreation);
-                }}
-              >
-                {modeCreation
-                  ? "← Revenir à la recherche"
-                  : "Créer un nouveau client"}
-              </button>
-              {(modeCreation || clients.length === 0) && renderFicheClient()}
-            </>
+            </div>
           )}
+
+          <p className="cadrage2-lien-clients">
+            Client absent du portefeuille ?{" "}
+            <button
+              type="button"
+              className="linkish"
+              onClick={props.onAllerClients}
+            >
+              Créez-le dans l&apos;onglet Clients
+            </button>
+          </p>
         </section>
 
-        {/* ----------------------------------------------- Bloc 2 — Quoi */}
+        {/* ------------------------------------------------ Engagement */}
         <section
-          className={`cadrage-bloc${quiOk ? "" : " is-locked"}`}
-          aria-labelledby="cadrage-quoi"
-          aria-disabled={!quiOk}
+          className={`cadrage2-section${client ? "" : " is-locked"}`}
+          aria-labelledby="cadrage2-engagement"
+          aria-disabled={!client}
         >
-          <header className="cadrage-bloc-head">
-            <span className="cadrage-bloc-n" aria-hidden="true">
-              2
-            </span>
-            <div>
-              <h3 id="cadrage-quoi" className="label-with-tip">
-                Quoi — l&apos;engagement
-                <InfoTip
-                  label={PROCESS_TIPS.typeEngagement}
-                  ariaLabel="Aide : type d'engagement"
-                />
-              </h3>
-              <p>
-                Ce que le cabinet s&apos;engage à faire — figé dès le passage
-                de la mission en cours.
-              </p>
-            </div>
-          </header>
+          <h3 className="cadrage2-titre label-with-tip" id="cadrage2-engagement">
+            L&apos;engagement
+            <InfoTip
+              label={PROCESS_TIPS.typeEngagement}
+              ariaLabel="Aide : type d'engagement"
+            />
+          </h3>
+          <p className="cadrage2-note">
+            Ce que le cabinet s&apos;engage à faire — figé dès le passage de la
+            mission en cours.
+          </p>
 
           <div
-            className="engagement-cards"
+            className="cadrage2-pills"
             role="radiogroup"
             aria-label="Type d'engagement"
           >
@@ -532,45 +427,54 @@ export function CadrageMissionVue(props: CadrageMissionVueProps) {
                   type="button"
                   role="radio"
                   aria-checked={on}
-                  className={`engagement-card${on ? " is-on" : ""}`}
+                  title={e.desc}
+                  className={`cadrage2-pill${on ? " is-on" : ""}`}
                   onClick={() => props.setTypeEngagement(e.value)}
                 >
-                  <strong>{e.titre}</strong>
-                  <span>{e.desc}</span>
+                  {e.titre}
                 </button>
               );
             })}
           </div>
+          {engagement ? (
+            <p className="cadrage2-pill-desc" role="status">
+              {engagement.desc}
+            </p>
+          ) : (
+            <p className="cadrage2-pill-desc is-vide">
+              Choix obligatoire — survolez une pill pour sa description.
+            </p>
+          )}
 
-          <div className="cadrage-exercice">
-            <p className="label-with-tip cadrage-sous-titre">
+          <div className="cadrage2-exercice">
+            <p className="cadrage2-sous-titre label-with-tip">
               Exercice contrôlé
               <InfoTip
                 label={PROCESS_TIPS.exercice}
                 ariaLabel="Aide : exercice"
               />
             </p>
-            <div className="cadrage-exercice-row">
-              {[1, 2, 3].map((delta) => {
-                const annee = anneeCourante - delta;
+            <div className="cadrage2-exercice-row">
+              {anneesProposees.map((annee) => {
+                const suggere = annee === suggestion;
                 return (
                   <button
                     key={annee}
                     type="button"
-                    className={`exercice-btn${exercice === annee ? " is-on" : ""}`}
+                    className={`cadrage2-annee${exercice === annee ? " is-on" : ""}`}
                     onClick={() => {
                       props.setExercice(annee);
                       props.setPrescriptionConfirmee(false);
                     }}
                   >
                     {annee}
-                    <small>N-{delta}</small>
+                    {suggere && <small>suggéré</small>}
                   </button>
                 );
               })}
               <input
                 type="number"
-                className="field-input exercice-libre"
+                className="cadrage2-annee-libre"
                 aria-label="Exercice — saisie libre"
                 value={exercice}
                 onChange={(e) => {
@@ -579,6 +483,12 @@ export function CadrageMissionVue(props: CadrageMissionVueProps) {
                 }}
               />
             </div>
+            {client && (
+              <p className="cadrage2-note">
+                Clôture {moisClotureLabel.toLowerCase()} — dernier exercice clos
+                : {suggestion}.
+              </p>
+            )}
             {exerciceFutur && (
               <p className="status err" role="alert">
                 L&apos;exercice {exercice} n&apos;est pas encore clos — une
@@ -586,7 +496,7 @@ export function CadrageMissionVue(props: CadrageMissionVueProps) {
               </p>
             )}
             {exercicePrescrit && (
-              <label className="check check-card exercice-prescrit">
+              <label className="check check-card cadrage2-prescrit">
                 <input
                   type="checkbox"
                   checked={prescriptionConfirmee}
@@ -600,15 +510,36 @@ export function CadrageMissionVue(props: CadrageMissionVueProps) {
                     s. LPF)
                   </strong>
                   <small>
-                    Confirmez que la revue est volontaire (contentieux,
-                    contrôle en cours…).
+                    Confirmez que la revue est volontaire (contentieux, contrôle
+                    en cours…).
                   </small>
                 </span>
               </label>
             )}
           </div>
 
-          <div className="field-grid field-grid-2 cadrage-profil">
+          {missionExistante && (
+            <div className="cadrage2-doublon" role="alert">
+              <p>
+                <strong>
+                  Mission déjà ouverte pour ce client sur l&apos;exercice{" "}
+                  {exercice}
+                </strong>{" "}
+                — #{missionExistante.id} ·{" "}
+                {libelleStatut(missionExistante.statut)}. La création sera
+                refusée (doublon).
+              </p>
+              <button
+                type="button"
+                className="btn btn-ghost btn-sm"
+                onClick={() => props.onOuvrirMission(missionExistante.id)}
+              >
+                Ouvrir la mission existante
+              </button>
+            </div>
+          )}
+
+          <div className="field-grid field-grid-2 cadrage2-profil">
             <SelectField
               id="cadrage-regime"
               label="Régime fiscal"
@@ -622,7 +553,14 @@ export function CadrageMissionVue(props: CadrageMissionVueProps) {
               tip={PROCESS_TIPS.regime}
               hint="Prérempli depuis la fiche client — modifiable."
             />
-            {props.contribForme === "pm" ? (
+            {estPP ? (
+              <div className="field">
+                <p className="field-hint cadrage2-forme-pp">
+                  Personne physique — forme juridique EI (entreprise
+                  individuelle).
+                </p>
+              </div>
+            ) : (
               <SelectField
                 id="cadrage-forme-jur"
                 label="Forme juridique"
@@ -633,13 +571,6 @@ export function CadrageMissionVue(props: CadrageMissionVueProps) {
                 tip={PROCESS_TIPS.formeJuridique}
                 hint="Prérempli depuis la fiche client — modifiable."
               />
-            ) : (
-              <div className="field">
-                <p className="field-hint cadrage-forme-pp">
-                  Personne physique — forme juridique EI (entreprise
-                  individuelle).
-                </p>
-              </div>
             )}
           </div>
 
@@ -694,37 +625,30 @@ export function CadrageMissionVue(props: CadrageMissionVueProps) {
           ) : null}
         </section>
 
-        {/* -------------------------------------------- Bloc 3 — Comment */}
+        {/* ------------------------------------------------- Périmètre */}
         <section
-          className={`cadrage-bloc${quiOk && quoiOk ? "" : " is-locked"}`}
-          aria-labelledby="cadrage-comment"
-          aria-disabled={!(quiOk && quoiOk)}
+          className={`cadrage2-section${client && typeEngagement ? "" : " is-locked"}`}
+          aria-labelledby="cadrage2-perimetre"
+          aria-disabled={!(client && typeEngagement)}
         >
-          <header className="cadrage-bloc-head">
-            <span className="cadrage-bloc-n" aria-hidden="true">
-              3
-            </span>
-            <div>
-              <h3 id="cadrage-comment" className="label-with-tip">
-                Comment — le périmètre
-                <InfoTip
-                  label={PROCESS_TIPS.perimetreImpots}
-                  ariaLabel="Aide : périmètre impôts"
-                />
-              </h3>
-              <p>
-                Par défaut, revue complète : tous les impôts du référentiel.
-                Activez des chips pour restreindre le périmètre.
-              </p>
-            </div>
-          </header>
+          <h3 className="cadrage2-titre label-with-tip" id="cadrage2-perimetre">
+            Le périmètre
+            <InfoTip
+              label={PROCESS_TIPS.perimetreImpots}
+              ariaLabel="Aide : périmètre impôts"
+            />
+          </h3>
+          <p className="cadrage2-note">
+            Par défaut, revue complète : tous les impôts du référentiel.
+            Activez des chips pour restreindre le périmètre.
+          </p>
 
           <div
             className="impot-chips"
             role="group"
             aria-label="Codes impôts du périmètre"
           >
-            {CODES_IMPOT_PIVOT.map((code) => {
+            {codesVisibles.map((code) => {
               const checked = perimetreImpots.includes(code);
               return (
                 <Tooltip key={code} label={tipImpot(code)} side="bottom">
@@ -746,11 +670,18 @@ export function CadrageMissionVue(props: CadrageMissionVueProps) {
               );
             })}
           </div>
+          {codesMasques.length > 0 && (
+            <p className="cadrage2-note cadrage2-filtre-note" role="status">
+              {codesMasques.join(", ")} masqué
+              {codesMasques.length > 1 ? "s" : ""} — non applicable au régime{" "}
+              {regimeLabel.toLowerCase()} (cotisation synthétique, hors champ
+              TVA).
+            </p>
+          )}
           <p className="field-hint">
             {perimetreImpots.length > 0 ? (
               <>
-                Revue <strong>partielle</strong> —{" "}
-                {perimetreImpots.join(", ")}.
+                Revue <strong>partielle</strong> — {perimetreImpots.join(", ")}.
               </>
             ) : (
               "Aucune chip active = revue complète."
@@ -771,32 +702,49 @@ export function CadrageMissionVue(props: CadrageMissionVueProps) {
             />
           </p>
 
-          <details className="cadrage-affiner">
+          <div className="cadrage2-seuil">
+            <Field
+              id="cadrage-seuil"
+              label="Seuil de signification (FCFA)"
+              type="number"
+              min={0}
+              step="1"
+              value={seuilSignification}
+              onChange={(e) => props.setSeuilSignification(e.target.value)}
+              tip={PROCESS_TIPS.seuilSignification}
+              hint="Matérialité cabinet — optionnel."
+            />
+            <div
+              className="cadrage2-seuil-suggestions"
+              role="group"
+              aria-label="Suggestions de seuil"
+            >
+              {SEUILS_SUGGERES.map((s) => (
+                <button
+                  key={s}
+                  type="button"
+                  className={`cadrage2-seuil-btn${
+                    Number(seuilSignification) === s ? " is-on" : ""
+                  }`}
+                  onClick={() => props.setSeuilSignification(String(s))}
+                >
+                  {s.toLocaleString("fr-FR")}
+                </button>
+              ))}
+            </div>
+          </div>
+
+          <details className="cadrage2-affiner">
             <summary>Affiner le cadrage (optionnel)</summary>
-            <div className="cadrage-affiner-corps">
-              <div className="field-grid field-grid-2">
-                <Field
-                  id="cadrage-seuil"
-                  label="Seuil de signification (FCFA)"
-                  type="number"
-                  min={0}
-                  step="1"
-                  value={seuilSignification}
-                  onChange={(e) =>
-                    props.setSeuilSignification(e.target.value)
-                  }
-                  tip={PROCESS_TIPS.seuilSignification}
-                  hint="Matérialité cabinet — optionnel."
-                />
-                <Field
-                  id="cadrage-type-entite"
-                  label="Type d'entité"
-                  value={props.typeEntite}
-                  onChange={(e) => props.setTypeEntite(e.target.value)}
-                  tip={PROCESS_TIPS.typeEntite}
-                  hint="Optionnel — précise le profil pour le moteur."
-                />
-              </div>
+            <div className="cadrage2-affiner-corps">
+              <Field
+                id="cadrage-type-entite"
+                label="Type d'entité"
+                value={props.typeEntite}
+                onChange={(e) => props.setTypeEntite(e.target.value)}
+                tip={PROCESS_TIPS.typeEntite}
+                hint="Optionnel — précise le profil pour le moteur."
+              />
               <label className="check check-card">
                 <input
                   type="checkbox"
@@ -896,115 +844,159 @@ export function CadrageMissionVue(props: CadrageMissionVueProps) {
         </section>
       </div>
 
-      {/* ------------------------------- Panneau latéral — lettre vivante */}
-      <aside className="lettre-panel" aria-label="Lettre de mission — récapitulatif">
-        <p className="lettre-kicker">Lettre de mission</p>
-        <div className="lettre-corps">
-          <p className={`lettre-ligne${props.contribNom.trim() ? " ok" : ""}`}>
-            <span className="lettre-k">Client</span>
-            {props.contribNom.trim() ? (
-              <>
-                {props.contribNom.trim()}
-                {props.contribNcc.trim()
-                  ? ` (NCC ${props.contribNcc.trim()})`
-                  : ""}
-                , {formeAffichee} au régime {regimeLabel.toLowerCase()}
-                {props.contribCommune.trim()
-                  ? `, ${props.contribCommune.trim()}`
-                  : ""}
-                .
-              </>
-            ) : (
-              <em>à désigner…</em>
-            )}
-          </p>
-          <p className={`lettre-ligne${!exerciceFutur ? " ok" : ""}`}>
-            <span className="lettre-k">Exercice</span>
-            {exerciceFutur ? (
-              <em>exercice {exercice} non clos — à corriger…</em>
-            ) : (
-              <>
-                Exercice {exercice}
-                {exercicePrescrit
-                  ? prescriptionConfirmee
-                    ? " (prescrit — revue volontaire confirmée)"
-                    : " (a priori prescrit — à confirmer)"
-                  : ""}
-                .
-              </>
-            )}
-          </p>
-          <p className={`lettre-ligne${engagement ? " ok" : ""}`}>
-            <span className="lettre-k">Engagement</span>
-            {engagement ? (
-              <>
-                {engagement.titre} — {engagement.desc}
-              </>
-            ) : (
-              <em>à choisir…</em>
-            )}
-          </p>
-          <p className="lettre-ligne ok">
-            <span className="lettre-k">Périmètre</span>
-            {perimetreImpots.length > 0
-              ? `Revue partielle limitée à : ${perimetreImpots.join(", ")}.`
-              : "Revue complète — tous les impôts du référentiel."}
-          </p>
-          {seuilAffiche && (
-            <p className="lettre-ligne ok">
-              <span className="lettre-k">Seuil</span>
-              Seuil de signification : {seuilAffiche}.
-            </p>
+      {/* ============================================ Document — lettre */}
+      <aside
+        className="cadrage2-doc-col"
+        aria-label="Lettre de mission — document d'engagement"
+      >
+        <article className={`cadrage2-doc${brouillon ? " is-brouillon" : ""}`}>
+          {brouillon && (
+            <span className="cadrage2-filigrane" aria-hidden="true">
+              Brouillon
+            </span>
           )}
-          {objectifsRemplis.length > 0 && (
-            <p className="lettre-ligne ok">
-              <span className="lettre-k">Objectifs</span>
-              {objectifsRemplis.join(" · ")}
+          <header className="cadrage2-doc-head">
+            <p className="cadrage2-doc-cabinet">{cabinet || "Cabinet"}</p>
+            <p className="cadrage2-doc-type">Lettre de mission</p>
+            <p className="cadrage2-doc-date">
+              Abidjan, le {dateDuJour}
             </p>
-          )}
-          {exclusionsDeclarees.trim() && (
-            <p className="lettre-ligne ok">
-              <span className="lettre-k">Exclusions</span>
-              {exclusionsDeclarees.trim()}
-            </p>
-          )}
-          {props.crossBorder && (
-            <p className="lettre-ligne ok">
-              <span className="lettre-k">Cross-border</span>
-              Contrôles des flux internationaux activés.
-            </p>
-          )}
-        </div>
+          </header>
 
-        {quotaBloque && (
-          <p className="status err" role="alert">
-            Quota missions atteint — la création est bloquée.
-          </p>
-        )}
-        {missionStatus?.err && (
-          <p className="status err" role="alert">
-            {missionStatus.msg}
-          </p>
-        )}
-        {missionStatus && !missionStatus.err && (
-          <p className="status" role="status">
-            {missionStatus.msg}
-          </p>
-        )}
+          <div className="cadrage2-doc-corps">
+            <p>
+              Le cabinet <strong>{cabinet || "—"}</strong> est engagé par{" "}
+              {client ? (
+                <>
+                  <strong>{client.denomination}</strong>
+                  {client.ncc ? (
+                    <>
+                      {" "}
+                      (NCC <strong>{client.ncc}</strong>)
+                    </>
+                  ) : null}
+                  , {formeAffichee} relevant du régime{" "}
+                  <strong>{regimeLabel.toLowerCase()}</strong>
+                  {client.commune ? (
+                    <>
+                      , sise à <strong>{client.commune}</strong>
+                    </>
+                  ) : null}
+                  ,
+                </>
+              ) : (
+                <em className="cadrage2-doc-blanc">
+                  [client à lier au cadrage]
+                </em>
+              )}{" "}
+              pour la réalisation d&apos;une mission de{" "}
+              {engagement ? (
+                <strong>{engagement.titre.toLowerCase()}</strong>
+              ) : (
+                <em className="cadrage2-doc-blanc">
+                  [type d&apos;engagement à choisir]
+                </em>
+              )}
+              .
+            </p>
+            <p>
+              La mission porte sur l&apos;exercice clos{" "}
+              {exerciceFutur ? (
+                <em className="cadrage2-doc-blanc">
+                  [exercice {exercice} non clos — à corriger]
+                </em>
+              ) : (
+                <>
+                  <strong>{exercice}</strong>
+                  {exercicePrescrit &&
+                    (prescriptionConfirmee
+                      ? ", exercice en principe prescrit — revue volontaire confirmée par le cabinet"
+                      : ", exercice en principe prescrit — confirmation requise")}
+                </>
+              )}
+              .
+            </p>
+            <p>
+              {perimetreImpots.length > 0 ? (
+                <>
+                  Le périmètre des travaux est limité aux impôts suivants :{" "}
+                  <strong>{perimetreImpots.join(", ")}</strong>.
+                </>
+              ) : (
+                <>
+                  Les travaux couvrent l&apos;ensemble des impôts du
+                  référentiel — <strong>revue complète</strong>.
+                </>
+              )}
+              {codesMasques.length > 0 && (
+                <>
+                  {" "}
+                  La {codesMasques.join(", ")} est hors champ compte tenu du
+                  régime du client.
+                </>
+              )}
+            </p>
+            {seuilAffiche && (
+              <p>
+                Le seuil de signification retenu est fixé à{" "}
+                <strong>{seuilAffiche}</strong>.
+              </p>
+            )}
+            {objectifsRemplis.length > 0 && (
+              <p>
+                Les objectifs convenus sont les suivants :{" "}
+                <strong>{objectifsRemplis.join(" ; ")}</strong>.
+              </p>
+            )}
+            {exclusionsDeclarees.trim() && (
+              <p>
+                Sont expressément exclus des travaux :{" "}
+                <strong>{exclusionsDeclarees.trim()}</strong>.
+              </p>
+            )}
+            {props.crossBorder && (
+              <p>
+                Les contrôles portant sur les{" "}
+                <strong>opérations cross-border</strong> (flux internationaux)
+                sont inclus dans la mission.
+              </p>
+            )}
+          </div>
 
-        <button
-          type="button"
-          className="btn btn-primary lettre-creer"
-          disabled={!pretACreer}
-          onClick={props.onCreerMission}
-        >
-          {busy ? "Création…" : "Créer la mission"}
-        </button>
-        {manquants.length > 0 && (
-          <p className="lettre-manque" role="status">
-            Manque : {manquants.join(" · ")}.
-          </p>
-        )}
+          <footer className="cadrage2-doc-pied">
+            {quotaBloque && (
+              <p className="status err" role="alert">
+                Quota missions atteint — la création est bloquée.
+              </p>
+            )}
+            {missionStatus && (
+              <p
+                className={`status${missionStatus.err ? " err" : ""}`}
+                role={missionStatus.err ? "alert" : "status"}
+              >
+                {missionStatus.msg}
+              </p>
+            )}
+            <div className="cadrage2-signature">
+              <p className="cadrage2-signature-lieu">
+                Fait pour valoir engagement de mission
+              </p>
+              <button
+                type="button"
+                className="btn btn-primary cadrage2-creer"
+                disabled={!pretACreer}
+                onClick={props.onCreerMission}
+              >
+                {busy ? "Création…" : "Créer la mission"}
+              </button>
+              {manquants.length > 0 && (
+                <p className="cadrage2-manque" role="status">
+                  Manque : {manquants.join(" · ")}.
+                </p>
+              )}
+            </div>
+          </footer>
+        </article>
       </aside>
     </div>
   );

@@ -9529,187 +9529,305 @@ tr.row-active td {
 .rest-visas-role { display: flex; flex-wrap: wrap; align-items: center; gap: 0.35rem; font-size: 0.8rem; color: var(--ink, #0f172a); }
 
 /* =============================================================
-   Cadrage mission — « on cadre une lettre de mission »
-   Page fluide Qui / Quoi / Comment + lettre récapitulative sticky.
+   Cadrage mission v2 — « document d'engagement »
+   Formulaire aéré sans cartes à gauche, lettre de mission rendue
+   comme un vrai document papier à droite (ombre profonde,
+   filigrane BROUILLON, bloc signature).
    ============================================================= */
-.cadrage {
+.cadrage2 {
   display: grid;
-  grid-template-columns: minmax(0, 1fr) 21rem;
-  gap: 1rem;
+  grid-template-columns: minmax(0, 1fr) minmax(22rem, 26rem);
+  gap: 2rem;
   align-items: start;
+  padding: 1.25rem 1.25rem 2.5rem;
+  margin: -0.5rem;
+  border-radius: var(--radius-lg);
+  background: linear-gradient(
+    180deg,
+    color-mix(in srgb, var(--accent-soft) 45%, var(--bg)),
+    var(--bg) 22rem
+  );
   animation: fadein 0.3s ease both;
 }
 
-.cadrage-main {
+.cadrage2-form {
   display: flex;
   flex-direction: column;
-  gap: 0.85rem;
+  gap: 2.25rem;
   min-width: 0;
+  padding-top: 0.35rem;
 }
 
-.cadrage-bloc {
-  background: var(--surface-solid);
-  border: 1px solid var(--line);
-  border-radius: var(--radius);
-  padding: 0.85rem 0.95rem 1rem;
-  box-shadow: var(--shadow-xs);
+.cadrage2-section {
   transition: opacity 0.15s ease;
 }
 
-.cadrage-bloc.is-locked {
-  opacity: 0.45;
+.cadrage2-section.is-locked {
+  opacity: 0.4;
   pointer-events: none;
   user-select: none;
 }
 
-.cadrage-bloc-head {
+/* Titres de section — petites capitales + trait d'accent. */
+.cadrage2-titre {
   display: flex;
-  gap: 0.65rem;
-  align-items: flex-start;
-  margin-bottom: 0.75rem;
+  align-items: center;
+  gap: 0.6rem;
+  margin: 0 0 0.3rem;
+  font-size: 0.78rem;
+  font-weight: 800;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--accent-deep);
 }
 
-.cadrage-bloc-n {
+.cadrage2-titre::before {
+  content: "";
   flex: 0 0 auto;
-  width: 1.5rem;
-  height: 1.5rem;
+  width: 1.6rem;
+  height: 3px;
+  border-radius: 2px;
+  background: var(--accent);
+}
+
+.cadrage2-note {
+  margin: 0 0 0.85rem;
+  font-size: 0.8rem;
+  line-height: 1.5;
+  color: var(--muted);
+}
+
+.cadrage2-sous-titre {
+  margin: 0 0 0.4rem;
+  font-size: 0.72rem;
+  font-weight: 700;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--ink-soft);
+}
+
+/* --- Combobox client : recherche → dropdown → carte compacte --- */
+.cadrage2-combo {
+  position: relative;
+  max-width: 34rem;
+}
+
+.cadrage2-combo-input {
+  width: 100%;
+  padding: 0.85rem 1rem;
+  font: inherit;
+  font-size: 1rem;
+  color: var(--ink);
+  background: var(--surface-solid);
+  border: 1px solid var(--line);
+  border-radius: var(--radius-lg);
+  box-shadow: var(--shadow-xs);
+  transition:
+    border-color 0.12s ease,
+    box-shadow 0.12s ease;
+}
+
+.cadrage2-combo-input:focus {
+  outline: none;
+  border-color: var(--accent);
+  box-shadow: 0 0 0 3px var(--accent-ring);
+}
+
+.cadrage2-combo-liste {
+  position: absolute;
+  z-index: 30;
+  top: calc(100% + 0.35rem);
+  left: 0;
+  right: 0;
+  max-height: 19rem;
+  overflow-y: auto;
+  background: var(--surface-solid);
+  border: 1px solid var(--line);
+  border-radius: var(--radius-lg);
+  box-shadow: var(--shadow-md);
+  padding: 0.3rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.1rem;
+}
+
+.cadrage2-combo-item {
+  appearance: none;
+  display: flex;
+  flex-direction: column;
+  gap: 0.1rem;
+  width: 100%;
+  padding: 0.5rem 0.65rem;
+  border: 0;
+  border-radius: var(--radius);
+  background: transparent;
+  font: inherit;
+  text-align: left;
+  cursor: pointer;
+}
+
+.cadrage2-combo-item:hover,
+.cadrage2-combo-item:focus-visible {
+  background: var(--accent-soft);
+  outline: none;
+}
+
+.cadrage2-combo-item strong {
+  font-size: 0.88rem;
+  color: var(--ink);
+}
+
+.cadrage2-combo-item span {
+  font-size: 0.72rem;
+  font-weight: 550;
+  color: var(--muted);
+}
+
+.cadrage2-combo-vide {
+  margin: 0;
+  padding: 0.65rem 0.75rem;
+  font-size: 0.8rem;
+  color: var(--muted);
+}
+
+.cadrage2-client-carte {
+  display: flex;
+  align-items: center;
+  gap: 0.85rem;
+  max-width: 34rem;
+  padding: 0.8rem 1rem;
+  background: var(--surface-solid);
+  border: 1px solid color-mix(in srgb, var(--accent) 45%, var(--line));
+  border-left: 4px solid var(--accent);
+  border-radius: var(--radius-lg);
+  box-shadow: var(--shadow-sm);
+}
+
+.cadrage2-client-initiale {
+  flex: 0 0 auto;
+  width: 2.4rem;
+  height: 2.4rem;
   display: inline-flex;
   align-items: center;
   justify-content: center;
   border-radius: 50%;
   background: var(--accent-soft);
-  border: 1px solid var(--accent);
   color: var(--accent-deep);
-  font-size: 0.75rem;
-  font-weight: 700;
+  font-weight: 800;
+  font-size: 1rem;
 }
 
-.cadrage-bloc-head h3 {
-  margin: 0;
-  font-size: 0.95rem;
-  color: var(--ink);
-}
-
-.cadrage-bloc-head p {
-  margin: 0.15rem 0 0;
-  font-size: 0.78rem;
-  color: var(--muted);
-}
-
-.cadrage-sous-titre {
-  font-size: 0.85rem;
-  font-weight: 600;
-  color: var(--ink-soft);
-  margin: 0 0 0.35rem;
-}
-
-/* --- Bloc Qui : recherche + cartes clients --- */
-.cadrage-search {
-  width: 100%;
-  margin-bottom: 0.6rem;
-}
-
-.cadrage-clients {
-  display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(13rem, 1fr));
-  gap: 0.45rem;
-}
-
-.cadrage-client-card {
-  appearance: none;
+.cadrage2-client-infos {
+  min-width: 0;
+  flex: 1 1 auto;
   display: flex;
   flex-direction: column;
-  gap: 0.15rem;
-  padding: 0.55rem 0.7rem;
-  border: 1px solid var(--line);
-  border-radius: var(--radius);
-  background: var(--surface);
-  font: inherit;
-  text-align: left;
-  cursor: pointer;
-  transition:
-    border-color 0.12s ease,
-    background 0.12s ease,
-    box-shadow 0.12s ease;
+  gap: 0.1rem;
 }
 
-.cadrage-client-card:hover {
-  border-color: color-mix(in srgb, var(--accent) 35%, var(--line));
-  background: var(--accent-soft);
-}
-
-.cadrage-client-card:focus-visible {
-  outline: 2px solid var(--accent);
-  outline-offset: 1px;
-}
-
-.cadrage-client-card strong {
-  font-size: 0.82rem;
+.cadrage2-client-infos strong {
+  font-size: 1rem;
   color: var(--ink);
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
 }
 
-.cadrage-client-card span {
-  font-size: 0.7rem;
+.cadrage2-client-infos span {
+  font-size: 0.74rem;
   font-weight: 550;
   color: var(--muted);
 }
 
-.cadrage-client-resume {
+.cadrage2-lien-clients {
+  margin: 0.75rem 0 0;
+  font-size: 0.78rem;
+  color: var(--muted);
+}
+
+/* --- Engagement : rangée compacte de pills --- */
+.cadrage2-pills {
   display: flex;
-  align-items: center;
-  justify-content: space-between;
-  gap: 0.75rem;
-  padding: 0.6rem 0.75rem;
-  border: 1px solid var(--accent);
-  border-radius: var(--radius);
-  background: var(--accent-soft);
+  flex-wrap: wrap;
+  gap: 0.45rem;
 }
 
-.cadrage-client-resume strong {
-  display: block;
-  font-size: 0.86rem;
-  color: var(--accent-deep);
+.cadrage2-pill {
+  appearance: none;
+  padding: 0.45rem 0.95rem;
+  border: 1px solid var(--line);
+  border-radius: 999px;
+  background: var(--surface-solid);
+  font: inherit;
+  font-size: 0.84rem;
+  font-weight: 650;
+  color: var(--ink-soft);
+  cursor: pointer;
+  transition:
+    border-color 0.12s ease,
+    background 0.12s ease,
+    color 0.12s ease,
+    box-shadow 0.12s ease;
 }
 
-.cadrage-client-resume span {
-  display: block;
-  font-size: 0.72rem;
+.cadrage2-pill:hover {
+  border-color: color-mix(in srgb, var(--accent) 45%, var(--line));
+}
+
+.cadrage2-pill:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 1px;
+}
+
+.cadrage2-pill.is-on {
+  border-color: var(--accent-deep);
+  background: var(--accent-deep);
+  color: #fff;
+  box-shadow: 0 0 0 3px var(--accent-ring);
+}
+
+.cadrage2-pill-desc {
+  margin: 0.5rem 0 0;
+  font-size: 0.78rem;
+  line-height: 1.5;
   color: var(--ink-soft);
 }
 
-.cadrage-creer-lien {
-  margin-top: 0.7rem;
-  display: inline-block;
+.cadrage2-pill-desc.is-vide {
+  color: var(--muted);
+  font-style: italic;
 }
 
-.cadrage-fiche {
-  margin-top: 0.75rem;
-  padding-top: 0.75rem;
-  border-top: 1px dashed var(--line);
+/* --- Exercice : années + suggestion clôture --- */
+.cadrage2-exercice {
+  margin-top: 1.35rem;
 }
 
-/* --- Bloc Quoi : cartes engagement + exercice rapide --- */
-.engagement-cards {
-  display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(13.5rem, 1fr));
-  gap: 0.5rem;
-  margin-bottom: 0.9rem;
-}
-
-.engagement-card {
-  appearance: none;
+.cadrage2-exercice-row {
   display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+  align-items: stretch;
+  margin-bottom: 0.4rem;
+}
+
+.cadrage2-annee {
+  appearance: none;
+  position: relative;
+  display: inline-flex;
   flex-direction: column;
-  gap: 0.2rem;
-  padding: 0.6rem 0.75rem;
+  align-items: center;
+  justify-content: center;
+  gap: 0.05rem;
+  min-width: 5rem;
+  padding: 0.5rem 1rem;
   border: 1px solid var(--line);
   border-radius: var(--radius);
-  background: var(--surface);
+  background: var(--surface-solid);
   font: inherit;
-  text-align: left;
+  font-weight: 750;
+  font-size: 1rem;
+  color: var(--ink-soft);
   cursor: pointer;
   transition:
     border-color 0.12s ease,
@@ -9717,205 +9835,309 @@ tr.row-active td {
     box-shadow 0.12s ease;
 }
 
-.engagement-card:hover {
-  border-color: color-mix(in srgb, var(--accent) 35%, var(--line));
-}
-
-.engagement-card:focus-visible {
-  outline: 2px solid var(--accent);
-  outline-offset: 1px;
-}
-
-.engagement-card.is-on {
-  border-color: var(--accent);
-  background: var(--accent-soft);
-  box-shadow: 0 0 0 2px var(--accent-ring);
-}
-
-.engagement-card strong {
-  font-size: 0.82rem;
-  color: var(--ink);
-}
-
-.engagement-card.is-on strong {
-  color: var(--accent-deep);
-}
-
-.engagement-card span {
-  font-size: 0.72rem;
-  line-height: 1.35;
-  color: var(--muted);
-}
-
-.cadrage-exercice {
-  margin: 0.35rem 0 0.9rem;
-}
-
-.cadrage-exercice-row {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 0.45rem;
-  align-items: stretch;
-}
-
-.exercice-btn {
-  appearance: none;
-  display: inline-flex;
-  flex-direction: column;
-  align-items: center;
-  gap: 0;
-  padding: 0.4rem 0.9rem;
-  border: 1px solid var(--line);
-  border-radius: var(--radius-sm);
-  background: var(--surface);
-  font: inherit;
-  font-weight: 700;
-  font-size: 0.85rem;
-  color: var(--ink-soft);
-  cursor: pointer;
-  transition:
-    border-color 0.12s ease,
-    background 0.12s ease;
-}
-
-.exercice-btn small {
-  font-size: 0.62rem;
-  font-weight: 550;
-  color: var(--muted);
-}
-
-.exercice-btn:hover {
-  border-color: color-mix(in srgb, var(--accent) 35%, var(--line));
-}
-
-.exercice-btn.is-on {
-  border-color: var(--accent);
-  background: var(--accent-soft);
-  color: var(--accent-deep);
-}
-
-.exercice-btn.is-on small {
-  color: var(--accent-deep);
-}
-
-.exercice-libre {
-  width: 6.5rem;
-  text-align: center;
-}
-
-.cadrage-profil {
-  margin-top: 0.35rem;
-}
-
-.cadrage-forme-pp {
-  margin-top: 0.9rem;
-}
-
-/* --- Bloc Comment : affinage replié --- */
-.cadrage-affiner {
-  margin-top: 0.9rem;
-  border-top: 1px solid var(--line);
-  padding-top: 0.7rem;
-}
-
-.cadrage-affiner summary {
-  cursor: pointer;
-  font-size: 0.82rem;
-  font-weight: 600;
-  color: var(--accent-deep);
-  list-style-position: inside;
-}
-
-.cadrage-affiner summary:focus-visible {
-  outline: 2px solid var(--accent);
-  outline-offset: 1px;
-}
-
-.cadrage-affiner-corps {
-  margin-top: 0.75rem;
-  display: flex;
-  flex-direction: column;
-  gap: 0.75rem;
-}
-
-/* --- Lettre de mission sticky --- */
-.lettre-panel {
-  position: sticky;
-  top: 0.75rem;
-  background: var(--surface-solid);
-  border: 1px solid var(--line);
-  border-radius: var(--radius-lg);
-  padding: 0.85rem 0.95rem 1rem;
-  box-shadow: var(--shadow-xs);
-}
-
-.lettre-kicker {
-  margin: 0 0 0.6rem;
-  font-size: 0.68rem;
+.cadrage2-annee small {
+  font-size: 0.6rem;
   font-weight: 700;
   letter-spacing: 0.08em;
   text-transform: uppercase;
   color: var(--accent-deep);
 }
 
-.lettre-corps {
+.cadrage2-annee:hover {
+  border-color: color-mix(in srgb, var(--accent) 45%, var(--line));
+}
+
+.cadrage2-annee:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 1px;
+}
+
+.cadrage2-annee.is-on {
+  border-color: var(--accent-deep);
+  background: var(--accent-soft);
+  color: var(--accent-deep);
+  box-shadow: 0 0 0 3px var(--accent-ring);
+}
+
+.cadrage2-annee-libre {
+  width: 7rem;
+  padding: 0.5rem 0.6rem;
+  text-align: center;
+  font: inherit;
+  font-weight: 700;
+  font-size: 1rem;
+  color: var(--ink);
+  background: var(--surface-solid);
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+}
+
+.cadrage2-annee-libre:focus {
+  outline: none;
+  border-color: var(--accent);
+  box-shadow: 0 0 0 3px var(--accent-ring);
+}
+
+.cadrage2-prescrit {
+  margin-top: 0.6rem;
+}
+
+/* --- Doublon (client, exercice) — bandeau avant soumission --- */
+.cadrage2-doublon {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.6rem;
+  margin-top: 1rem;
+  padding: 0.7rem 0.9rem;
+  border: 1px solid color-mix(in srgb, var(--amber) 40%, transparent);
+  border-left: 4px solid var(--amber);
+  border-radius: var(--radius);
+  background: var(--amber-soft);
+}
+
+.cadrage2-doublon p {
+  margin: 0;
+  flex: 1 1 16rem;
+  font-size: 0.8rem;
+  line-height: 1.5;
+  color: var(--ink);
+}
+
+.cadrage2-doublon strong {
+  color: var(--amber);
+}
+
+.cadrage2-profil {
+  margin-top: 1.35rem;
+  max-width: 40rem;
+}
+
+.cadrage2-forme-pp {
+  margin-top: 0.9rem;
+}
+
+.cadrage2-filtre-note {
+  margin-top: 0.5rem;
+  color: var(--accent-deep);
+}
+
+/* --- Seuil de signification : champ + suggestions cliquables --- */
+.cadrage2-seuil {
+  margin-top: 1.1rem;
+  max-width: 26rem;
+}
+
+.cadrage2-seuil-suggestions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.4rem;
+  margin-top: 0.45rem;
+}
+
+.cadrage2-seuil-btn {
+  appearance: none;
+  padding: 0.3rem 0.75rem;
+  border: 1px dashed color-mix(in srgb, var(--accent) 45%, var(--line));
+  border-radius: 999px;
+  background: transparent;
+  font: inherit;
+  font-size: 0.76rem;
+  font-weight: 650;
+  color: var(--accent-deep);
+  cursor: pointer;
+  transition:
+    background 0.12s ease,
+    border-color 0.12s ease;
+}
+
+.cadrage2-seuil-btn:hover {
+  background: var(--accent-soft);
+}
+
+.cadrage2-seuil-btn.is-on {
+  border-style: solid;
+  border-color: var(--accent-deep);
+  background: var(--accent-soft);
+}
+
+/* --- Affinage replié --- */
+.cadrage2-affiner {
+  margin-top: 1.1rem;
+}
+
+.cadrage2-affiner summary {
+  cursor: pointer;
+  font-size: 0.82rem;
+  font-weight: 650;
+  color: var(--accent-deep);
+  list-style-position: inside;
+}
+
+.cadrage2-affiner summary:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 1px;
+}
+
+.cadrage2-affiner-corps {
+  margin-top: 0.85rem;
   display: flex;
   flex-direction: column;
-  gap: 0.55rem;
-  padding-bottom: 0.75rem;
-  border-bottom: 1px dashed var(--line);
-  margin-bottom: 0.75rem;
+  gap: 0.85rem;
+  max-width: 40rem;
 }
 
-.lettre-ligne {
+/* --- Document papier : lettre de mission --- */
+.cadrage2-doc-col {
+  position: sticky;
+  top: 0.75rem;
+  min-width: 0;
+}
+
+.cadrage2-doc {
+  position: relative;
+  overflow: hidden;
+  background: #fff;
+  border: 1px solid color-mix(in srgb, var(--line) 70%, transparent);
+  border-radius: 4px;
+  padding: 1.9rem 1.8rem 1.5rem;
+  box-shadow:
+    0 1px 2px rgba(15, 23, 42, 0.08),
+    0 12px 32px rgba(15, 23, 42, 0.16),
+    0 28px 64px rgba(15, 23, 42, 0.12);
+}
+
+.cadrage2-doc.is-brouillon {
+  box-shadow:
+    0 1px 2px rgba(15, 23, 42, 0.06),
+    0 12px 32px rgba(15, 23, 42, 0.1);
+}
+
+.cadrage2-filigrane {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  pointer-events: none;
+  font-family: var(--font-brand);
+  font-size: 3.4rem;
+  font-weight: 800;
+  letter-spacing: 0.28em;
+  text-transform: uppercase;
+  color: rgba(15, 23, 42, 0.05);
+  transform: rotate(-24deg);
+  user-select: none;
+}
+
+.cadrage2-doc-head {
+  position: relative;
+  padding-bottom: 0.9rem;
+  margin-bottom: 1.1rem;
+  border-bottom: 2px solid var(--accent-deep);
+}
+
+.cadrage2-doc-cabinet {
   margin: 0;
-  font-size: 0.78rem;
-  line-height: 1.45;
-  color: var(--muted);
+  font-family: var(--font-brand);
+  font-size: 1.05rem;
+  font-weight: 800;
+  color: var(--accent-deep);
+  letter-spacing: 0.01em;
 }
 
-.lettre-ligne.ok {
-  color: var(--ink-soft);
-}
-
-.lettre-ligne em {
-  color: var(--muted);
-}
-
-.lettre-k {
-  display: block;
-  font-size: 0.62rem;
-  font-weight: 700;
-  letter-spacing: 0.06em;
+.cadrage2-doc-type {
+  margin: 0.15rem 0 0;
+  font-size: 0.66rem;
+  font-weight: 750;
+  letter-spacing: 0.22em;
   text-transform: uppercase;
   color: var(--muted);
 }
 
-.lettre-ligne.ok .lettre-k {
-  color: var(--accent-deep);
+.cadrage2-doc-date {
+  margin: 0.55rem 0 0;
+  font-size: 0.76rem;
+  font-style: italic;
+  color: var(--muted);
 }
 
-.lettre-creer {
+.cadrage2-doc-corps {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+}
+
+.cadrage2-doc-corps p {
+  margin: 0;
+  font-size: 0.83rem;
+  line-height: 1.65;
+  color: var(--ink-soft);
+  text-align: justify;
+  hyphens: auto;
+}
+
+.cadrage2-doc-corps strong {
+  color: var(--ink);
+}
+
+.cadrage2-doc-blanc {
+  color: var(--muted);
+  border-bottom: 1px dotted var(--muted-soft);
+}
+
+/* --- Pied de document : bloc signature --- */
+.cadrage2-doc-pied {
+  position: relative;
+  margin-top: 1.4rem;
+}
+
+.cadrage2-doc-pied .status {
+  margin: 0 0 0.6rem;
+}
+
+.cadrage2-signature {
+  padding-top: 0.9rem;
+  border-top: 1px dashed var(--line);
+  display: flex;
+  flex-direction: column;
+  gap: 0.55rem;
+}
+
+.cadrage2-signature-lieu {
+  margin: 0;
+  font-size: 0.74rem;
+  font-style: italic;
+  color: var(--muted);
+}
+
+.cadrage2-creer {
   width: 100%;
   justify-content: center;
+  padding-top: 0.7rem;
+  padding-bottom: 0.7rem;
+  font-size: 0.92rem;
 }
 
-.lettre-manque {
-  margin: 0.5rem 0 0;
+.cadrage2-manque {
+  margin: 0;
   font-size: 0.72rem;
   color: var(--muted);
 }
 
-.lettre-panel .status {
-  margin: 0 0 0.6rem;
-}
-
 @media (max-width: 1100px) {
-  .cadrage {
+  .cadrage2 {
     grid-template-columns: minmax(0, 1fr);
+    gap: 1.5rem;
+    padding: 1rem 0.85rem 2rem;
   }
 
-  .lettre-panel {
+  .cadrage2-doc-col {
     position: static;
+  }
+
+  .cadrage2-doc {
+    max-width: 40rem;
   }
 }
