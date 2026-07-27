@@ -2168,7 +2168,9 @@ textarea {
   display: flex;
   flex-direction: column;
   gap: 0.75rem;
-  max-width: 920px;
+  width: 100%;
+  max-width: 1280px;
+  margin: 0 auto;
 }
 
 .wizard-head {
@@ -3777,6 +3779,19 @@ textarea {
   color: var(--teal-deep);
   background: color-mix(in srgb, #ffffff 65%, var(--teal-soft));
   white-space: nowrap;
+}
+
+/* Chip indicateur cliquable (ex. « Sources : n » → ouvre la data room) :
+   même apparence que le chip statique, curseur pointer. */
+.dossier2-indic--btn {
+  font: inherit;
+  font-size: 0.68rem;
+  font-weight: 700;
+  cursor: pointer;
+}
+.dossier2-indic--btn:disabled {
+  cursor: default;
+  opacity: 0.6;
 }
 
 .dossier2-indic.is-alerte {
@@ -9749,6 +9764,18 @@ tr.row-active td {
 .civisme-badge--manquante { background: #fef2f2; color: #b91c1c; border-color: #fecaca; }
 .civisme-item--couverte { border-left-color: #86efac; }
 .civisme-item--manquante { border-left-color: #fca5a5; }
+
+/* ── Plan d'actions post-revue — variantes du panneau Prescription ── */
+.planactions-stat--haute { border-color: #fecaca; background: #fef2f2; }
+.planactions-stat--haute .rest-prescription-stat-val { color: #b91c1c; }
+.planactions-stat--moyenne { border-color: #fde68a; background: #fffbeb; }
+.planactions-stat--moyenne .rest-prescription-stat-val { color: #92400e; }
+.planactions-badge--haute { background: #fef2f2; color: #b91c1c; border-color: #fecaca; }
+.planactions-badge--moyenne { background: #fffbeb; color: #92400e; border-color: #fde68a; }
+.planactions-item--haute { border-left-color: #fca5a5; }
+.planactions-item--moyenne { border-left-color: #fcd34d; }
+.planactions-action { font-weight: 700; }
+.planactions-motifs { margin-top: 0.15rem; font-size: 0.72rem; }
 
 /* ── Pilotage — carte « Échéances déclaratives » ─────────────────── */
 .pilotage-badge { margin-left: auto; display: inline-flex; align-items: center; padding: 0.1rem 0.5rem; border: 1px solid transparent; border-radius: 999px; font-size: 0.7rem; font-weight: 800; white-space: nowrap; }

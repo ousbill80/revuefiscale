@@ -26,6 +26,7 @@ import { EcheancierFiscalVue } from "./EcheancierFiscalVue";
 import { PilotageVue } from "./PilotageVue";
 import { PrescriptionVue } from "./PrescriptionVue";
 import { CivismeVue } from "./CivismeVue";
+import { PlanActionsVue } from "./PlanActionsVue";
 import type { AuditEntree, AuditJournal, ConclusionRestitution, Restitution } from "./types";
 
 type CollaborateurOpt = {
@@ -664,6 +665,7 @@ export function RestitutionVue({
   const [pilotageOuvert, setPilotageOuvert] = useState(false);
   const [prescriptionOuverte, setPrescriptionOuverte] = useState(false);
   const [civismeOuvert, setCivismeOuvert] = useState(false);
+  const [planActionsOuvert, setPlanActionsOuvert] = useState(false);
   const [ctrlClotureOuvert, setCtrlClotureOuvert] = useState(false);
   const [ctrlCloture, setCtrlCloture] = useState<ControleClotureOut | null>(
     null,
@@ -938,6 +940,7 @@ export function RestitutionVue({
     | "echeancier"
     | "civisme"
     | "prescription"
+    | "plan_actions"
     | "visas"
     | "note"
     | "comparatif"
@@ -952,6 +955,7 @@ export function RestitutionVue({
     if (sauf !== "echeancier") setEcheancierOuvert(false);
     if (sauf !== "civisme") setCivismeOuvert(false);
     if (sauf !== "prescription") setPrescriptionOuverte(false);
+    if (sauf !== "plan_actions") setPlanActionsOuvert(false);
     if (sauf !== "visas") setVisasOuvert(false);
     if (sauf !== "note") setNoteOuverte(false);
     if (sauf !== "comparatif") setComparatifOuvert(false);
@@ -2214,7 +2218,20 @@ export function RestitutionVue({
               Exécution #{r.execution_id}
             </span>
           )}
-          <span className="dossier2-indic">Sources : {pieces.length}</span>
+          <button
+            type="button"
+            className="dossier2-indic dossier2-indic--btn"
+            onClick={() =>
+              togglePanneau("sources", sourcesOuvert, setSourcesOuvert, () =>
+                void rechargerPiecesMission(),
+              )
+            }
+            disabled={!jeton}
+            aria-expanded={sourcesOuvert}
+            title="Ouvrir les sources & la data room de la mission"
+          >
+            Sources : {pieces.length}
+          </button>
           {progEtat && (
             <span className="dossier2-indic">
               Programme {progEtat.synthese.faites}/{progEtat.synthese.total}
@@ -2418,6 +2435,25 @@ export function RestitutionVue({
                 aria-expanded={prescriptionOuverte}
               >
                 Prescription
+              </button>
+            </Tooltip>
+            <Tooltip label="Plan d'actions post-revue : une action suggérée par risque non clos du client — déclaration rectificative, provision à documenter, justificatif à collecter ou point à discuter, avec priorité et motifs. Consultatif : le fiscaliste apprécie, le client décide.">
+              <button
+                type="button"
+                className={`btn btn-ghost btn-sm dossier2-action rest-planactions-btn${
+                  planActionsOuvert ? " is-actif" : ""
+                }`}
+                onClick={() =>
+                  togglePanneau(
+                    "plan_actions",
+                    planActionsOuvert,
+                    setPlanActionsOuvert,
+                  )
+                }
+                disabled={!jeton}
+                aria-expanded={planActionsOuvert}
+              >
+                Plan d'actions
               </button>
             </Tooltip>
             <Tooltip label="Demande de renseignements et de documents au client — questions de la revue analytique et pièces manquantes, numérotées pour réponse">
@@ -3559,6 +3595,14 @@ export function RestitutionVue({
           missionId={r.mission_id}
           jeton={jeton}
           onFermer={() => setPrescriptionOuverte(false)}
+        />
+      )}
+
+      {planActionsOuvert && (
+        <PlanActionsVue
+          missionId={r.mission_id}
+          jeton={jeton}
+          onFermer={() => setPlanActionsOuvert(false)}
         />
       )}
 
