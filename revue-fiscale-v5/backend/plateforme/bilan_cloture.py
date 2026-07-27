@@ -4,7 +4,8 @@ POURQUOI : avant de clôturer, le fiscaliste veut voir D'UN COUP D'ŒIL ce
 qui reste en suspens sur la mission — sans réinstruire chaque module.
 Ce bilan agrège des signaux DÉJÀ définis ailleurs (visas de supervision,
 temps saisis, circularisation de la demande de renseignements, note de
-synthèse, data room, risques ouverts) et les restitue en points « ok »
+synthèse, data room, risques ouverts, décisions du plan d'actions) et
+les restitue en points « ok »
 ou « attention ». Il ne réimplémente aucune règle métier : il réutilise
 les définitions exactes des modules existants (mêmes requêtes, mêmes
 fonctions de synthèse).
@@ -69,7 +70,12 @@ def construire_bilan(signaux: dict[str, Any]) -> dict[str, Any]:
     - ``note_synthese_disponible`` : au moins une version « disponible » ;
     - ``nb_pieces`` : pièces de la data room (``piece_mission``) ;
     - ``risques_ouverts`` : risques du contribuable au statut non clos
-      (:data:`backend.plateforme.risques.STATUTS_NON_CLOS`).
+      (:data:`backend.plateforme.risques.STATUTS_NON_CLOS`) ;
+    - ``plan_actions_disponible`` / ``plan_total_actions`` /
+      ``plan_sans_decision`` : synthèse des décisions du plan d'actions
+      (:func:`backend.plateforme.plan_actions.analyse_mission`) — signal
+      OPTIONNEL : absent (analyse indisponible), le point « Plan
+      d'actions » n'apparaît pas (échec silencieux, jamais bloquant).
 
     Retourne ``{points, synthese, note}`` — ``synthese.pret`` est vrai
     quand AUCUN point n'est en attention (simple lecture d'ensemble,
@@ -139,6 +145,25 @@ def construire_bilan(signaux: dict[str, Any]) -> dict[str, Any]:
             risques_ouverts > 0,
         ),
     ]
+    # Point « Plan d'actions » — seulement si le signal est disponible
+    # (analyse plan_actions réussie) : échec silencieux → point absent.
+    if bool(signaux.get("plan_actions_disponible")):
+        plan_total = int(signaux.get("plan_total_actions") or 0)
+        plan_sans_decision = int(signaux.get("plan_sans_decision") or 0)
+        if plan_total == 0:
+            libelle = "Plan d'actions vide — aucune action à décider"
+        elif plan_sans_decision == 0:
+            libelle = (
+                f"Plan d'actions : {plan_total} action(s), toutes décidées"
+            )
+        else:
+            libelle = (
+                f"Plan d'actions : {plan_sans_decision} action(s) "
+                "sans décision"
+            )
+        points.append(
+            _point("plan_actions", libelle, plan_sans_decision > 0)
+        )
     points_ok = sum(1 for p in points if p["statut"] == STATUT_OK)
     points_attention = len(points) - points_ok
     return {
@@ -220,6 +245,27 @@ def bilan_mission(
     temps = recap_temps(session, tenant_id, mission_id)
     circularisation = synthese(session, tenant_id, mission_id)
 
+    # Plan d'actions — décisions retenue / écartée / faite (analyse
+    # consultative). Échec silencieux : le point est simplement absent.
+    plan_signaux: dict[str, Any] = {}
+    try:
+        from backend.plateforme.plan_actions import (
+            ErreurPlanActions,
+            analyse_mission as analyse_plan_mission,
+        )
+
+        plan_act = analyse_plan_mission(session, tenant_id, mission_id)
+        decisions = plan_act["synthese"]["decisions"]
+        plan_signaux = {
+            "plan_actions_disponible": True,
+            "plan_total_actions": int(
+                plan_act["synthese"]["total_actions"]
+            ),
+            "plan_sans_decision": int(decisions["sans_decision"]),
+        }
+    except ErreurPlanActions:
+        plan_signaux = {}
+
     restitution = next(
         (p for p in visas["phases"] if p["phase"] == "restitution"), None
     )
@@ -239,6 +285,7 @@ def bilan_mission(
         "note_synthese_disponible": nb_notes > 0,
         "nb_pieces": nb_pieces,
         "risques_ouverts": risques_ouverts,
+        **plan_signaux,
     }
     bilan = construire_bilan(signaux)
     return {

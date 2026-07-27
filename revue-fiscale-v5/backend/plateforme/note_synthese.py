@@ -242,8 +242,10 @@ def section_plan_actions(analyse: dict[str, Any] | None) -> dict[str, Any]:
     analyse_mission` (compteurs par priorité, exposition totale) et les
     actions de priorité haute (complétées par les moyennes si moins de
     ``ACTIONS_NOTE_MAX`` hautes — le plan est déjà trié haute → basse),
-    avec la réserve consultative (``reserve``). Analyse indisponible →
-    ``{"disponible": False}`` : la note n'échoue jamais.
+    avec la réserve consultative (``reserve``). Les décisions humaines
+    du plan (retenue / écartée / faite) sont recopiées : ``decision``
+    par action et compteurs ``decisions`` de la synthèse. Analyse
+    indisponible → ``{"disponible": False}`` : la note n'échoue jamais.
     """
     if not isinstance(analyse, dict) or not isinstance(
         analyse.get("synthese"), dict
@@ -268,6 +270,10 @@ def section_plan_actions(analyse: dict[str, Any] | None) -> dict[str, Any]:
             "priorite": str(a.get("priorite") or ""),
             "exposition": a.get("exposition"),
             "date_prescription": a.get("date_prescription"),
+            # Décision humaine (retenue / ecartee / faite) fusionnée par
+            # analyse_mission — null tant que le fiscaliste n'a pas
+            # tranché.
+            "decision": a.get("decision"),
         }
         for a in retenues
     ]
@@ -276,6 +282,9 @@ def section_plan_actions(analyse: dict[str, Any] | None) -> dict[str, Any]:
         "total_actions": synthese.get("total_actions"),
         "par_priorite": synthese.get("par_priorite"),
         "exposition_totale": synthese.get("exposition_totale"),
+        # Compteurs de décisions {retenues, ecartees, faites,
+        # sans_decision} — recopiés tels quels (déterministe).
+        "decisions": synthese.get("decisions"),
         "actions": actions,
         "reserve": analyse.get("note"),
     }

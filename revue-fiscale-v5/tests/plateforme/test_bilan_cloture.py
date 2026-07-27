@@ -86,6 +86,59 @@ def test_construire_bilan_partiel_signal_ok_reste_ok():
     assert s["pret"] is (s["points_attention"] == 0)
 
 
+def test_construire_bilan_plan_actions_absent_sans_signal():
+    # Signal plan d'actions indisponible → point absent (échec silencieux).
+    bilan = construire_bilan(_signaux_tous_ok())
+    assert "plan_actions" not in {p["code"] for p in bilan["points"]}
+
+
+def test_construire_bilan_plan_actions_ok_vide_ou_tout_decide():
+    # Plan vide → ok.
+    bilan = construire_bilan(
+        _signaux_tous_ok()
+        | {
+            "plan_actions_disponible": True,
+            "plan_total_actions": 0,
+            "plan_sans_decision": 0,
+        }
+    )
+    par_code = {p["code"]: p for p in bilan["points"]}
+    assert par_code["plan_actions"]["statut"] == "ok"
+    assert "vide" in par_code["plan_actions"]["libelle"]
+    assert bilan["synthese"]["pret"] is True
+
+    # Toutes les actions décidées → ok.
+    bilan = construire_bilan(
+        _signaux_tous_ok()
+        | {
+            "plan_actions_disponible": True,
+            "plan_total_actions": 3,
+            "plan_sans_decision": 0,
+        }
+    )
+    par_code = {p["code"]: p for p in bilan["points"]}
+    assert par_code["plan_actions"]["statut"] == "ok"
+    assert "3 action(s), toutes décidées" in par_code["plan_actions"]["libelle"]
+    assert bilan["synthese"]["pret"] is True
+
+
+def test_construire_bilan_plan_actions_attention_sans_decision():
+    bilan = construire_bilan(
+        _signaux_tous_ok()
+        | {
+            "plan_actions_disponible": True,
+            "plan_total_actions": 4,
+            "plan_sans_decision": 2,
+        }
+    )
+    par_code = {p["code"]: p for p in bilan["points"]}
+    assert par_code["plan_actions"]["statut"] == "attention"
+    assert "2 action(s) sans décision" in par_code["plan_actions"]["libelle"]
+    s = bilan["synthese"]
+    assert s["points_attention"] == 1
+    assert s["pret"] is False
+
+
 # ── Tests API (DB) ─────────────────────────────────────────────────
 
 pytestmark = pytest.mark.db
@@ -191,6 +244,9 @@ def test_api_bilan_mission_reelle_coherence(session):
     # Pièce déposée → data room ok ; aucun risque saisi → ok.
     assert par_code["data_room"]["statut"] == "ok"
     assert par_code["risques_ouverts"]["statut"] == "ok"
+    # Aucun risque → plan d'actions vide → ok.
+    assert par_code["plan_actions"]["statut"] == "ok"
+    assert "vide" in par_code["plan_actions"]["libelle"]
 
     s = corps["synthese"]
     assert s["points_ok"] == sum(
@@ -200,6 +256,44 @@ def test_api_bilan_mission_reelle_coherence(session):
         1 for p in corps["points"] if p["statut"] == "attention"
     )
     assert s["pret"] is False  # Des points d'attention subsistent.
+
+
+def test_bilan_plan_actions_attention_puis_ok_apres_decision(session):
+    """Risque non clos sans décision → attention ; décision posée → ok."""
+    from backend.plateforme.bilan_cloture import bilan_mission
+    from backend.plateforme.plan_actions import decider_action
+
+    tid, mid, _email = _mission_en_cours(session)
+    with contexte_tenant(session, tid):
+        cid = session.execute(
+            text("SELECT contribuable_id FROM mission WHERE id = :m"),
+            {"m": mid},
+        ).scalar_one()
+        rid = int(
+            session.execute(
+                text(
+                    "INSERT INTO risque (tenant_id, contribuable_id, "
+                    "impot, libelle, montant_estime, probabilite, statut, "
+                    "exercice_origine) VALUES (:t, :c, 'TVA', "
+                    "'Risque bilan plan FICTIF', '1000000', 'possible', "
+                    "'ouvert', 2025) RETURNING id"
+                ),
+                {"t": tid, "c": int(cid)},
+            ).scalar_one()
+        )
+
+    bilan = bilan_mission(session, tid, mid)
+    par_code = {p["code"]: p for p in bilan["points"]}
+    assert par_code["plan_actions"]["statut"] == "attention"
+    assert "1 action(s) sans décision" in par_code["plan_actions"]["libelle"]
+
+    decider_action(session, tid, mid, f"risque:{rid}", "faite")
+    bilan = bilan_mission(session, tid, mid)
+    par_code = {p["code"]: p for p in bilan["points"]}
+    assert par_code["plan_actions"]["statut"] == "ok"
+    assert "1 action(s), toutes décidées" in par_code["plan_actions"]["libelle"]
+    # Le risque reste ouvert : ce point-là demeure en attention.
+    assert par_code["risques_ouverts"]["statut"] == "attention"
 
 
 def test_api_bilan_mission_cloturee_renvoye_quand_meme(session):

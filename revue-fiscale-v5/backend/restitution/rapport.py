@@ -338,6 +338,13 @@ _LIBELLES_PRIORITE = {
     "basse": "BASSE",
 }
 
+# Décision humaine sur une action du plan (suivi_plan_actions).
+_LIBELLES_DECISION = {
+    "retenue": "retenue",
+    "ecartee": "écartée",
+    "faite": "faite",
+}
+
 
 def _sous_section_plan_actions(section: Any) -> list[str]:
     """Sous-section « Plan d'actions proposé » de la note — DOCX/PDF.
@@ -367,6 +374,20 @@ def _sous_section_plan_actions(section: Any) -> list[str]:
         lignes.append(
             f"- **Exposition totale** : {_fmt_fcfa_entier(exposition)}"
         )
+    # Synthèse des décisions du plan — affichée seulement si au moins
+    # une décision a été prise (notes anciennes sans la clé : rien).
+    decisions = section.get("decisions")
+    if isinstance(decisions, Mapping):
+        retenues = int(decisions.get("retenues") or 0)
+        ecartees = int(decisions.get("ecartees") or 0)
+        faites = int(decisions.get("faites") or 0)
+        sans = int(decisions.get("sans_decision") or 0)
+        if retenues + ecartees + faites > 0:
+            lignes.append(
+                f"- **Décisions** : {retenues} retenue(s), "
+                f"{ecartees} écartée(s), {faites} faite(s), "
+                f"{sans} sans décision"
+            )
     lignes.append("")
 
     actions = [
@@ -382,6 +403,13 @@ def _sous_section_plan_actions(section: Any) -> list[str]:
             action = str(a.get("action") or "—").strip() or "—"
             motif = str(a.get("libelle_risque") or "").strip()
             suffixe = f" — {motif}" if motif else ""
+            # Décision humaine sur l'action, si elle existe (sinon rien
+            # — comportement inchangé pour les notes sans décision).
+            decision = _LIBELLES_DECISION.get(
+                str(a.get("decision") or "").strip().lower()
+            )
+            if decision:
+                suffixe += f" — {decision}"
             lignes.append(f"- [{priorite}] {action}{suffixe}")
         lignes.append("")
 

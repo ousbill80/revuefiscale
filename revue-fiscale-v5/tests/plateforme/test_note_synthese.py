@@ -314,6 +314,42 @@ def test_section_plan_actions_hautes_puis_moyennes():
     assert out["reserve"] == analyse["note"]
 
 
+def test_section_plan_actions_sans_decision_champs_null():
+    analyse = _analyse_plan([_risque(1, "probable", "6000000")])
+    out = section_plan_actions(analyse)
+    # Aucune décision prise : decision null par action, compteurs à zéro.
+    assert out["actions"][0]["decision"] is None
+    assert out["decisions"] == {
+        "retenues": 0,
+        "ecartees": 0,
+        "faites": 0,
+        "sans_decision": 1,
+    }
+
+
+def test_section_plan_actions_decisions_recopiees():
+    from backend.plateforme.plan_actions import synthese_plan
+
+    analyse = _analyse_plan(
+        [
+            _risque(1, "probable", "6000000"),  # haute
+            _risque(2, "possible", "1000000"),  # moyenne
+        ]
+    )
+    # Décision humaine fusionnée (comme le fait analyse_mission).
+    analyse["plan"][0]["decision"] = "retenue"
+    analyse["synthese"] = synthese_plan(analyse["plan"])
+    out = section_plan_actions(analyse)
+    assert out["actions"][0]["decision"] == "retenue"
+    assert out["actions"][1]["decision"] is None
+    assert out["decisions"] == {
+        "retenues": 1,
+        "ecartees": 0,
+        "faites": 0,
+        "sans_decision": 1,
+    }
+
+
 def test_section_plan_actions_plafonnee_aux_hautes():
     analyse = _analyse_plan(
         [

@@ -509,6 +509,61 @@ def test_docx_note_avec_sections_deterministes():
     )
 
 
+def test_docx_note_plan_actions_sans_decision_rien_de_plus():
+    """Aucune décision (note sans clés decision/decisions) → rendu inchangé."""
+    passage, score, meta, conclusions, _, _ = _donnees_communes()
+    docx = rendre_rapport_docx(
+        meta=meta,
+        passage=passage,
+        conclusions=conclusions,
+        score=score,
+        extrait_audit=[],
+        note_synthese=_note_avec_sections_deterministes(),
+    )
+    textes = _texte_docx(docx)
+    assert "Plan d'actions proposé" in textes
+    assert "Décisions :" not in textes
+    assert "— retenue" not in textes
+    assert "— écartée" not in textes
+    assert "— faite" not in textes
+
+
+def test_docx_note_plan_actions_avec_decisions():
+    """Décision affichée par action + ligne de synthèse des décisions."""
+    passage, score, meta, conclusions, _, _ = _donnees_communes()
+    note = _note_avec_sections_deterministes()
+    plan = note["contenu"]["plan_actions"]
+    plan["actions"][0]["decision"] = "retenue"
+    plan["actions"][1]["decision"] = "ecartee"
+    plan["decisions"] = {
+        "retenues": 1,
+        "ecartees": 1,
+        "faites": 0,
+        "sans_decision": 1,
+    }
+    docx = rendre_rapport_docx(
+        meta=meta,
+        passage=passage,
+        conclusions=conclusions,
+        score=score,
+        extrait_audit=[],
+        note_synthese=note,
+    )
+    textes = _texte_docx(docx)
+    assert (
+        "[HAUTE] Déposer une déclaration rectificative TVA — "
+        "TVA déductible non justifiée — retenue" in textes
+    )
+    assert (
+        "[MOYENNE] Réintégrer les dons au résultat fiscal — "
+        "Dons non déductibles — écartée" in textes
+    )
+    assert (
+        "Décisions : 1 retenue(s), 1 écartée(s), 0 faite(s), "
+        "1 sans décision" in textes
+    )
+
+
 def test_docx_note_ancienne_sans_sections_deterministes():
     """Note ancienne (sans les clés) ou disponible=False → aucun titre, aucune erreur."""
     passage, score, meta, conclusions, _, _ = _donnees_communes()
