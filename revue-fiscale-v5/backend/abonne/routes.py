@@ -80,6 +80,7 @@ from backend.abonne.service import (
     revoquer_invitation,
 )
 from backend.plateforme.dependances import SessionDep, UtilisateurDep, session_abonne
+from backend.plateforme.plan_actions import actions_retenues_contribuable
 from backend.plateforme.quotas import lire_quota_periode
 from backend.plateforme.rbac import exiger_capacite
 
@@ -200,7 +201,7 @@ def api_lister_contribuables(
 @router.get("/contribuables/{contribuable_id}")
 def api_lire_contribuable(
     contribuable_id: int,
-    _utilisateur: UtilisateurDep,
+    utilisateur: UtilisateurDep,
     session: Annotated[Session, Depends(session_abonne)],
 ) -> dict:
     try:
@@ -212,7 +213,18 @@ def api_lire_contribuable(
     # à relancer sur les missions non clôturées (même définition que le
     # tableau de bord cabinet) — chip du bandeau de la fiche client.
     suivi = compteurs_suivi_renseignements(session, contribuable_id)
-    return {**fiche, "missions": missions, "nb_missions": len(missions), **suivi}
+    # Plan d'actions : décisions « retenue » pas encore « faites », toutes
+    # missions du client — bloc « Actions retenues en cours » de la fiche.
+    actions_retenues = actions_retenues_contribuable(
+        session, utilisateur.tenant_id, contribuable_id
+    )
+    return {
+        **fiche,
+        "missions": missions,
+        "nb_missions": len(missions),
+        **suivi,
+        "actions_retenues": actions_retenues,
+    }
 
 
 @router.patch("/contribuables/{contribuable_id}")

@@ -304,6 +304,123 @@ def test_api_404_cross_tenant(session):
     assert r.status_code == 404, r.text
 
 
+# ── Actions retenues en cours (fiche client) ───────────────────────
+
+
+def _decider(session, tid: int, mid: int, rid: int, decision: str, note=None):
+    from backend.plateforme.plan_actions import decider_action
+
+    decider_action(session, tid, mid, f"risque:{rid}", decision, note=note)
+
+
+def test_actions_retenues_contribuable_filtre_decisions(session):
+    """Retenue listée ; faite et écartée exclues ; note et tri exposés."""
+    from backend.plateforme.plan_actions import actions_retenues_contribuable
+
+    tid, mid, cid, _email = _mission_en_cours(session)
+    r1 = _creer_risque(session, tid, cid, montant="150000")
+    r2 = _creer_risque(session, tid, cid)
+    r3 = _creer_risque(session, tid, cid)
+    _decider(session, tid, mid, r1, "retenue", note="à régulariser")
+    _decider(session, tid, mid, r2, "faite")
+    _decider(session, tid, mid, r3, "ecartee")
+
+    out = actions_retenues_contribuable(session, tid, cid)
+    assert out["synthese"]["total"] == 1
+    assert len(out["items"]) == 1
+    item = out["items"][0]
+    assert item["cle_action"] == f"risque:{r1}"
+    assert item["mission_id"] == mid
+    assert item["exercice"] == 2025
+    assert item["impot"] == "TVA"
+    assert item["exposition"] == "150000.00"
+    assert item["decision_note"] == "à régulariser"
+    assert item["risque_clos"] is False
+    assert item["maj_le"] is not None
+
+    # Une action retenue puis marquée « faite » disparaît (UPSERT).
+    _decider(session, tid, mid, r1, "faite")
+    out2 = actions_retenues_contribuable(session, tid, cid)
+    assert out2["synthese"]["total"] == 0
+    assert out2["items"] == []
+
+
+def test_actions_retenues_risque_clos_reste_liste_avec_mention(session):
+    from backend.plateforme.plan_actions import actions_retenues_contribuable
+
+    tid, mid, cid, _email = _mission_en_cours(session)
+    rid = _creer_risque(session, tid, cid, montant="2000000")
+    _decider(session, tid, mid, rid, "retenue")
+    with contexte_tenant(session, tid):
+        session.execute(
+            text("UPDATE risque SET statut = 'resolu' WHERE id = :r"),
+            {"r": rid},
+        )
+
+    out = actions_retenues_contribuable(session, tid, cid)
+    assert out["synthese"]["total"] == 1
+    assert out["items"][0]["cle_action"] == f"risque:{rid}"
+    assert out["items"][0]["risque_clos"] is True
+    # Le libellé du risque reste joint même clos.
+    assert out["items"][0]["libelle_risque"].startswith("Risque suivi")
+
+
+def test_actions_retenues_cross_contribuable_exclues(session):
+    """Les décisions d'un autre contribuable du même tenant sont exclues."""
+    from backend.plateforme.missions import creer_mission
+    from backend.plateforme.plan_actions import actions_retenues_contribuable
+
+    tid, mid, cid, _email = _mission_en_cours(session)
+    rid = _creer_risque(session, tid, cid)
+    _decider(session, tid, mid, rid, "retenue")
+
+    with contexte_tenant(session, tid):
+        cid_b = session.execute(
+            text(
+                "INSERT INTO contribuable (tenant_id, denomination, forme) "
+                "VALUES (:t, 'PM Suivi Plan B FICTIF', 'pm') RETURNING id"
+            ),
+            {"t": tid},
+        ).scalar_one()
+        mid_b = creer_mission(
+            session,
+            tid,
+            contribuable_id=int(cid_b),
+            exercice=2025,
+            profil={"regime": "reel", "forme_juridique": "SA"},
+        )
+        session.execute(
+            text("UPDATE mission SET statut = 'en_cours' WHERE id = :m"),
+            {"m": mid_b},
+        )
+    rid_b = _creer_risque(session, tid, int(cid_b))
+    _decider(session, tid, int(mid_b), rid_b, "retenue")
+
+    out = actions_retenues_contribuable(session, tid, cid)
+    assert out["synthese"]["total"] == 1
+    assert [i["cle_action"] for i in out["items"]] == [f"risque:{rid}"]
+    out_b = actions_retenues_contribuable(session, tid, int(cid_b))
+    assert out_b["synthese"]["total"] == 1
+    assert [i["cle_action"] for i in out_b["items"]] == [f"risque:{rid_b}"]
+
+
+def test_api_fiche_contribuable_expose_actions_retenues(session):
+    tid, mid, cid, email = _mission_en_cours(session)
+    rid = _creer_risque(session, tid, cid, montant="500000")
+    _decider(session, tid, mid, rid, "retenue", note="provision à passer")
+    session.commit()
+
+    client, h = _client_connecte(email)
+    r = client.get(f"/api/v1/contribuables/{cid}", headers=h)
+    assert r.status_code == 200, r.text
+    bloc = r.json()["actions_retenues"]
+    assert bloc["synthese"]["total"] == 1
+    assert bloc["items"][0]["cle_action"] == f"risque:{rid}"
+    assert bloc["items"][0]["exposition"] == "500000.00"
+    assert bloc["items"][0]["decision_note"] == "provision à passer"
+    assert bloc["items"][0]["mission_id"] == mid
+
+
 def test_api_401_sans_jeton(session):
     from fastapi.testclient import TestClient
 

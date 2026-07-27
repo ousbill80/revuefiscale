@@ -98,6 +98,9 @@ DECISIONS: Final[tuple[str, ...]] = (
 # Préfixe de la clé stable d'une action dérivée d'un risque.
 PREFIXE_CLE_RISQUE: Final[str] = "risque:"
 
+# Plafond d'items du bloc « Actions retenues en cours » de la fiche client.
+PLAFOND_ACTIONS_RETENUES_FICHE: Final[int] = 20
+
 MENTION_NOTE: Final[str] = (
     "Plan d'actions consultatif dérivé de façon déterministe des risques "
     "non clos du client — chaque action est une suggestion : le "
@@ -368,6 +371,86 @@ def analyse_mission(
         "synthese": synthese_plan(plan),
         "note": MENTION_NOTE,
     }
+
+
+# ── Actions retenues en cours d'un contribuable (fiche client) ───────
+
+
+def actions_retenues_contribuable(
+    session: Session, tenant_id: int, contribuable_id: int
+) -> dict[str, Any]:
+    """Actions « retenues » non encore « faites » du client (lecture, RLS).
+
+    Bloc de la fiche client : décisions ``retenue`` persistées dans
+    ``suivi_plan_actions`` sur TOUTES les missions du contribuable
+    (clôturées incluses — la décision reste à mettre en œuvre). Une
+    décision ultérieure (« faite » / « écartée ») remplace la ligne
+    (UPSERT) : seul l'état courant ``retenue`` est listé. Le risque
+    d'origine est rejoint via ``cle_action`` (``risque:{id}``) ; s'il a
+    été clos depuis, l'action reste listée avec ``risque_clos = true``.
+
+    Retour : ``{items, synthese: {total}}`` — items triés par ``maj_le``
+    décroissant, plafonnés à :data:`PLAFOND_ACTIONS_RETENUES_FICHE` ;
+    ``total`` compte l'ensemble sans plafond. Lecture seule.
+    """
+    with contexte_tenant(session, tenant_id):
+        total = session.execute(
+            text(
+                "SELECT COUNT(*) FROM suivi_plan_actions s "
+                "JOIN mission m ON m.id = s.mission_id "
+                "WHERE m.contribuable_id = :c AND s.decision = :d"
+            ),
+            {"c": contribuable_id, "d": DECISION_RETENUE},
+        ).scalar_one()
+        rows = session.execute(
+            text(
+                "SELECT s.mission_id, m.exercice, s.cle_action, s.note, "
+                "s.maj_le, r.libelle, r.impot, "
+                "r.statut AS statut_risque, r.montant_estime, "
+                "r.penalites_estimees "
+                "FROM suivi_plan_actions s "
+                "JOIN mission m ON m.id = s.mission_id "
+                "LEFT JOIN risque r "
+                "ON s.cle_action = :prefixe || r.id::text "
+                "AND r.contribuable_id = m.contribuable_id "
+                "WHERE m.contribuable_id = :c AND s.decision = :d "
+                "ORDER BY s.maj_le DESC, s.id DESC LIMIT :lim"
+            ),
+            {
+                "c": contribuable_id,
+                "d": DECISION_RETENUE,
+                "prefixe": PREFIXE_CLE_RISQUE,
+                "lim": PLAFOND_ACTIONS_RETENUES_FICHE,
+            },
+        ).mappings().all()
+
+    items: list[dict[str, Any]] = []
+    for r in rows:
+        statut = (
+            str(r["statut_risque"]).lower()
+            if r["statut_risque"] is not None
+            else None
+        )
+        exposition = _exposition(dict(r))
+        maj = r["maj_le"]
+        items.append(
+            {
+                "mission_id": int(r["mission_id"]),
+                "exercice": int(r["exercice"]),
+                "cle_action": str(r["cle_action"]),
+                "libelle_risque": str(r["libelle"] or ""),
+                "impot": str(r["impot"] or "").upper(),
+                "exposition": (
+                    str(exposition) if exposition is not None else None
+                ),
+                # Risque clos (ou purgé) depuis la décision — l'action
+                # retenue reste affichée avec mention.
+                "risque_clos": statut is None or statut not in STATUTS_NON_CLOS,
+                "decision_note": (r["note"] or None) or None,
+                "maj_le": maj.isoformat() if maj is not None else None,
+            }
+        )
+    return {"items": items, "synthese": {"total": int(total)}}
 
 
 # ── Décision humaine sur une action (écriture explicite) ─────────────

@@ -756,12 +756,32 @@ function doublonIdentifiants(
   return null;
 }
 
+/** Action du plan marquée « retenue » et pas encore « faite ». */
+type ActionRetenueRow = {
+  mission_id: number;
+  exercice: number;
+  cle_action: string;
+  libelle_risque: string;
+  impot: string;
+  /** Exposition (montant + pénalités) en FCFA — null si non chiffrée. */
+  exposition: string | null;
+  /** Risque clos (ou purgé) depuis la décision — mention affichée. */
+  risque_clos: boolean;
+  decision_note: string | null;
+  maj_le: string | null;
+};
+
 type ClientDetail = ClientRow & {
   missions: MissionRow[];
   nb_missions: number;
   /** Suivi demande de renseignements — missions non clôturées du client. */
   items_en_attente?: number;
   items_a_relancer?: number;
+  /** Actions retenues en cours (plan d'actions) — toutes missions. */
+  actions_retenues?: {
+    items: ActionRetenueRow[];
+    synthese: { total: number };
+  };
 };
 
 type IdentiteFormProps = {
@@ -1648,6 +1668,12 @@ export function ClientFicheVue({
   const itemsEnAttente = clientDetail.items_en_attente ?? 0;
   const itemsARelancer = clientDetail.items_a_relancer ?? 0;
 
+  // Actions du plan d'actions marquées « retenue » et pas encore
+  // « faites » — toutes missions du client (fournies par la fiche).
+  const actionsRetenues = clientDetail.actions_retenues?.items ?? [];
+  const totalActionsRetenues =
+    clientDetail.actions_retenues?.synthese?.total ?? 0;
+
   // Échéances agenda du cabinet restreintes aux missions du client (max 8,
   // triées par date — le backend n'inclut que les missions actives).
   const echeancesClient = useMemo(() => {
@@ -2191,6 +2217,61 @@ export function ClientFicheVue({
               Agenda consultatif — vérifier le calendrier officiel DGI.
             </p>
           </section>
+
+          {totalActionsRetenues > 0 && (
+            <section
+              className="panel dense fiche2-echeances"
+              id={`fiche-${clientDetail.id}-actions-retenues`}
+              aria-label="Actions retenues en cours sur les missions du client"
+            >
+              <div className="fiche2-echeances-head">
+                <h3 className="fiche2-titre">Actions retenues en cours</h3>
+                <span className="fiche2-echeances-hint">
+                  {totalActionsRetenues} à mettre en œuvre · toutes missions
+                  {totalActionsRetenues > actionsRetenues.length
+                    ? ` · ${actionsRetenues.length} affichées`
+                    : ""}
+                </span>
+              </div>
+              <ul className="agenda2-liste">
+                {actionsRetenues.map((a) => (
+                  <li key={`${a.mission_id}-${a.cle_action}`}>
+                    <button
+                      type="button"
+                      className="agenda2-row"
+                      title={`Ouvrir la mission #${a.mission_id}`}
+                      onClick={() => onOuvrirMission(a.mission_id)}
+                    >
+                      <span
+                        className="agenda2-impot"
+                        title={libelleImpotAgenda(a.impot)}
+                      >
+                        {a.impot || "—"}
+                      </span>
+                      <span className="agenda2-obligation">
+                        {a.libelle_risque || a.cle_action}
+                        {a.risque_clos ? " (risque clos depuis)" : ""}
+                      </span>
+                      <span className="agenda2-meta">
+                        Exercice {a.exercice}
+                        {a.exposition != null
+                          ? ` · ${Number(a.exposition).toLocaleString("fr-FR")} FCFA`
+                          : ""}
+                        {a.decision_note?.trim()
+                          ? ` · ${a.decision_note.trim()}`
+                          : ""}
+                      </span>
+                      <span className="agenda2-badge preparer">Retenue</span>
+                    </button>
+                  </li>
+                ))}
+              </ul>
+              <p className="agenda2-note" role="note">
+                Suivi consultatif du plan d'actions — décisions du cabinet, le
+                client reste seul décideur de la mise en œuvre.
+              </p>
+            </section>
+          )}
 
           <div className="panel dense clients-fiche-panel" id="clients-fiche-edition">
             <div className="clients-fiche-section-head">
