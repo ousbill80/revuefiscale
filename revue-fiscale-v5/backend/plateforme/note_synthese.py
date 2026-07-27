@@ -7,6 +7,20 @@ analytique) et recommandations prioritaires. Traçabilité stricte : chaque
 constat cite la règle (``regle_id``) dont il provient ; tout constat dont
 la règle est inconnue du contexte fourni est RETIRÉ. Jamais appliquée
 automatiquement — l'humain signe.
+
+La note embarque aussi deux sections DÉTERMINISTES (jamais rédigées par
+le LLM, recopiées telles quelles depuis les analyses consultatives) :
+
+- « Civisme déclaratif » (:mod:`backend.plateforme.civisme_fiscal`) :
+  taux de civisme, compteurs et échéances manquantes notables, avec la
+  réserve consultative (rapprochement pièces de data room — pas les
+  déclarations déposées) ;
+- « Plan d'actions suggéré » (:mod:`backend.plateforme.plan_actions`) :
+  compteurs par priorité, exposition totale et actions prioritaires,
+  avec la réserve consultative.
+
+Si une analyse échoue, la note n'échoue PAS : la section est marquée
+``{"disponible": False}`` — même convention que ``revue_analytique``.
 """
 from __future__ import annotations
 
@@ -35,13 +49,19 @@ STATUTS_CONSTAT: Final[frozenset[str]] = frozenset(
 )
 # Anti-rafale : une génération en_cours plus récente que ce délai bloque.
 EN_COURS_BLOQUANT_MINUTES: Final[int] = 10
+# Sections déterministes : listes bornées pour rester un executive summary.
+ECHEANCES_MANQUANTES_MAX: Final[int] = 10
+ACTIONS_NOTE_MAX: Final[int] = 10
 
 _PROMPT_NOTE = """Tu es un assistant de rédaction pour un cabinet de revue
 fiscale en Côte d'Ivoire. On te fournit le dossier chiffré d'une mission :
 identification, constats issus des règles du référentiel (chacun porte un
 "regle_id"), exposition du registre des risques, contrôles de fiabilité de
-la source (FEC) et revue analytique N/N-1 si disponible. Rédige la NOTE DE
-SYNTHÈSE de mission destinée à l'associé signataire.
+la source (FEC), revue analytique N/N-1, civisme déclaratif et plan
+d'actions suggéré si disponibles. Rédige la NOTE DE SYNTHÈSE de mission
+destinée à l'associé signataire. Le civisme déclaratif et le plan
+d'actions sont restitués tels quels par ailleurs : tu peux t'en inspirer
+pour les points d'attention et recommandations, sans recalculer.
 
 Règles strictes :
 - N'utilise QUE les données fournies. Si une information manque, n'en
@@ -162,6 +182,91 @@ def _dec_str(v: Any) -> str | None:
         return str(v)
 
 
+def section_civisme(analyse: dict[str, Any] | None) -> dict[str, Any]:
+    """PUR — section « Civisme déclaratif » de la note (déterministe).
+
+    Recopie la synthèse de :func:`backend.plateforme.civisme_fiscal.
+    analyse_mission` (taux de civisme, compteurs) et les échéances
+    manquantes les plus proches (bornées à ``ECHEANCES_MANQUANTES_MAX``,
+    ordre de l'échéancier conservé — dates limites croissantes), avec la
+    réserve consultative (``reserve``). Analyse indisponible (None ou
+    structure inattendue) → ``{"disponible": False}`` : la note n'échoue
+    jamais à cause d'une analyse annexe.
+    """
+    if not isinstance(analyse, dict) or not isinstance(
+        analyse.get("synthese"), dict
+    ):
+        return {"disponible": False}
+    synthese = analyse["synthese"]
+    manquantes = [
+        {
+            "impot": str(e.get("impot") or ""),
+            "obligation": str(e.get("obligation") or ""),
+            "periode": str(e.get("periode") or ""),
+            "date_limite": str(e.get("date_limite") or ""),
+        }
+        for e in analyse.get("rapprochement") or []
+        if isinstance(e, dict) and str(e.get("statut") or "") == "manquante"
+    ]
+    return {
+        "disponible": True,
+        "exercice": analyse.get("exercice"),
+        "regime": analyse.get("regime"),
+        "taux_civisme": synthese.get("taux_civisme"),
+        "couvertes": synthese.get("couvertes"),
+        "en_attente": synthese.get("en_attente"),
+        "manquantes": synthese.get("manquantes"),
+        "echeances_manquantes": manquantes[:ECHEANCES_MANQUANTES_MAX],
+        "reserve": analyse.get("note"),
+    }
+
+
+def section_plan_actions(analyse: dict[str, Any] | None) -> dict[str, Any]:
+    """PUR — section « Plan d'actions suggéré » de la note (déterministe).
+
+    Recopie la synthèse de :func:`backend.plateforme.plan_actions.
+    analyse_mission` (compteurs par priorité, exposition totale) et les
+    actions de priorité haute (complétées par les moyennes si moins de
+    ``ACTIONS_NOTE_MAX`` hautes — le plan est déjà trié haute → basse),
+    avec la réserve consultative (``reserve``). Analyse indisponible →
+    ``{"disponible": False}`` : la note n'échoue jamais.
+    """
+    if not isinstance(analyse, dict) or not isinstance(
+        analyse.get("synthese"), dict
+    ):
+        return {"disponible": False}
+    synthese = analyse["synthese"]
+    plan = [a for a in analyse.get("plan") or [] if isinstance(a, dict)]
+    retenues = [
+        a for a in plan if str(a.get("priorite") or "") == "haute"
+    ][:ACTIONS_NOTE_MAX]
+    if len(retenues) < ACTIONS_NOTE_MAX:
+        retenues += [
+            a for a in plan if str(a.get("priorite") or "") == "moyenne"
+        ][: ACTIONS_NOTE_MAX - len(retenues)]
+    actions = [
+        {
+            "risque_id": a.get("risque_id"),
+            "libelle_risque": str(a.get("libelle_risque") or ""),
+            "impot": str(a.get("impot") or ""),
+            "type_action": a.get("type_action"),
+            "action": str(a.get("action") or ""),
+            "priorite": str(a.get("priorite") or ""),
+            "exposition": a.get("exposition"),
+            "date_prescription": a.get("date_prescription"),
+        }
+        for a in retenues
+    ]
+    return {
+        "disponible": True,
+        "total_actions": synthese.get("total_actions"),
+        "par_priorite": synthese.get("par_priorite"),
+        "exposition_totale": synthese.get("exposition_totale"),
+        "actions": actions,
+        "reserve": analyse.get("note"),
+    }
+
+
 def construire_contexte(
     session: Session, tenant_id: int, mission_id: int
 ) -> dict[str, Any]:
@@ -209,6 +314,28 @@ def construire_contexte(
         revue = revue_analytique_mission(session, tenant_id, mission_id)
     except ErreurRevueAnalytique:
         revue = None
+
+    # Analyses consultatives annexes : chacune ouvre son propre
+    # contexte_tenant (appel HORS de tout autre with) et son échec
+    # n'empêche JAMAIS la note — section {"disponible": False}.
+    try:
+        from backend.plateforme.civisme_fiscal import (
+            ErreurCivismeFiscal,
+            analyse_mission as analyse_civisme_mission,
+        )
+
+        civisme = analyse_civisme_mission(session, tenant_id, mission_id)
+    except ErreurCivismeFiscal:
+        civisme = None
+    try:
+        from backend.plateforme.plan_actions import (
+            ErreurPlanActions,
+            analyse_mission as analyse_plan_mission,
+        )
+
+        plan_act = analyse_plan_mission(session, tenant_id, mission_id)
+    except ErreurPlanActions:
+        plan_act = None
 
     risques = [
         r
@@ -322,6 +449,8 @@ def construire_contexte(
             "alertes": alertes_fec,
         },
         "revue_analytique": revue_ctx,
+        "civisme_declaratif": section_civisme(civisme),
+        "plan_actions": section_plan_actions(plan_act),
     }
 
 
@@ -466,6 +595,14 @@ def generer_note(
     try:
         brut, provider_id = _appeler_llm_note(contexte)
         contenu = normaliser_contenu_note(brut, regles_du_contexte(contexte))
+        # Sections déterministes recopiées du contexte — JAMAIS rédigées
+        # par le LLM (chiffres exacts des analyses consultatives).
+        contenu["civisme_declaratif"] = contexte.get(
+            "civisme_declaratif"
+        ) or {"disponible": False}
+        contenu["plan_actions"] = contexte.get("plan_actions") or {
+            "disponible": False
+        }
     except ErreurNoteSynthese as e:
         with contexte_tenant(session, tenant_id):
             row = session.execute(
