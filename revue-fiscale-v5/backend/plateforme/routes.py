@@ -936,6 +936,122 @@ def api_recap_temps_mission(
         ) from e
 
 
+class VisaMissionIn(BaseModel):
+    """Pose d'un visa de supervision (phase, rôle) — vise_par = email connecté."""
+
+    phase: str = Field(min_length=1, max_length=50)
+    role: str = Field(min_length=1, max_length=50)
+    commentaire: str | None = Field(default=None, max_length=2000)
+
+
+@router.post("/missions/{mission_id}/visas")
+def api_poser_visa_mission(
+    mission_id: int,
+    corps: VisaMissionIn,
+    utilisateur: UtilisateurDep,
+    session: Annotated[Session, Depends(session_abonne)],
+) -> dict:
+    """Pose un visa de supervision sur une phase (ordre hiérarchique contrôlé)."""
+    from backend.moteur.journal import append_journal
+    from backend.plateforme.visas_mission import (
+        ErreurVisaIntrouvable,
+        ErreurVisaMission,
+        poser_visa,
+    )
+
+    exiger_capacite(utilisateur, "executer_mission")
+    try:
+        visa = poser_visa(
+            session,
+            utilisateur.tenant_id,
+            mission_id,
+            phase=corps.phase,
+            role=corps.role,
+            vise_par=utilisateur.email,
+            commentaire=corps.commentaire,
+        )
+    except ErreurVisaIntrouvable as e:
+        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail=str(e)) from e
+    except ErreurVisaMission as e:
+        raise HTTPException(
+            status_code=status.HTTP_422_UNPROCESSABLE_ENTITY, detail=str(e)
+        ) from e
+    append_journal(
+        session,
+        tenant_id=utilisateur.tenant_id,
+        mission_id=mission_id,
+        acteur=utilisateur.email,
+        action="pose_visa_mission",
+        charge_utile={
+            "phase": visa["phase"],
+            "role": visa["role"],
+            "commentaire_renseigne": bool(visa["commentaire"]),
+        },
+    )
+    return {"visa": visa}
+
+
+@router.delete("/missions/{mission_id}/visas/{phase}/{role}")
+def api_revoquer_visa_mission(
+    mission_id: int,
+    phase: str,
+    role: str,
+    utilisateur: UtilisateurDep,
+    session: Annotated[Session, Depends(session_abonne)],
+) -> dict:
+    """Révoque un visa — refusé si un visa de rang supérieur est présent."""
+    from backend.moteur.journal import append_journal
+    from backend.plateforme.visas_mission import (
+        ErreurVisaIntrouvable,
+        ErreurVisaMission,
+        revoquer_visa,
+    )
+
+    exiger_capacite(utilisateur, "executer_mission")
+    try:
+        visa = revoquer_visa(
+            session, utilisateur.tenant_id, mission_id, phase=phase, role=role
+        )
+    except ErreurVisaIntrouvable as e:
+        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail=str(e)) from e
+    except ErreurVisaMission as e:
+        raise HTTPException(
+            status_code=status.HTTP_422_UNPROCESSABLE_ENTITY, detail=str(e)
+        ) from e
+    append_journal(
+        session,
+        tenant_id=utilisateur.tenant_id,
+        mission_id=mission_id,
+        acteur=utilisateur.email,
+        action="revocation_visa_mission",
+        charge_utile={
+            "phase": visa["phase"],
+            "role": visa["role"],
+            "vise_par": visa["vise_par"],
+        },
+    )
+    return {"visa": visa}
+
+
+@router.get("/missions/{mission_id}/visas")
+def api_etat_visas_mission(
+    mission_id: int,
+    utilisateur: UtilisateurDep,
+    session: Annotated[Session, Depends(session_abonne)],
+) -> dict:
+    """Registre des visas de supervision : phases, visas posés, complétude."""
+    from backend.plateforme.visas_mission import (
+        ErreurVisaIntrouvable,
+        etat_visas,
+    )
+
+    exiger_capacite(utilisateur, "lire")
+    try:
+        return etat_visas(session, utilisateur.tenant_id, mission_id)
+    except ErreurVisaIntrouvable as e:
+        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail=str(e)) from e
+
+
 @router.patch("/missions/{mission_id}/cadrage", response_model=MissionOut)
 def api_patcher_cadrage_mission(
     mission_id: int,

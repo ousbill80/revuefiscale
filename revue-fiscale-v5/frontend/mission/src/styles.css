@@ -9454,3 +9454,7 @@ tr.row-active td {
 .rest-reponse-champ input { padding: 0.3rem 0.45rem; border: 1px solid var(--line, #e5e7eb); border-radius: 7px; background: var(--surface, #fff); font-size: 0.78rem; color: var(--ink, #0f172a); font-family: inherit; resize: vertical; }
 .rest-reponse-actions { display: flex; flex-wrap: wrap; align-items: center; gap: 0.5rem; }
 .rest-reponse-aide { font-size: 0.72rem; }
+
+/* Visas de supervision — grille phases × rôles (préparateur, réviseur, associé). */
+.rest-visas-roles { display: grid; gap: 0.3rem; width: 100%; margin-top: 0.15rem; }
+.rest-visas-role { display: flex; flex-wrap: wrap; align-items: center; gap: 0.35rem; font-size: 0.8rem; color: var(--ink, #0f172a); }

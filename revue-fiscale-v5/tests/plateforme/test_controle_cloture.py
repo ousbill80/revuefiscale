@@ -170,6 +170,21 @@ def _note_disponible(session, tenant_id: int, mission_id: int) -> None:
         )
 
 
+def _viser_restitution(session, tenant_id: int, mission_id: int) -> None:
+    """Pose les trois visas (préparateur → réviseur → associé) sur restitution."""
+    from backend.plateforme.visas_mission import ORDRE_ROLES, poser_visa
+
+    for role in ORDRE_ROLES:
+        poser_visa(
+            session,
+            tenant_id,
+            mission_id,
+            phase="restitution",
+            role=role,
+            vise_par=f"{role}@test.ci",
+        )
+
+
 def _points_par_code(resultat: dict) -> dict[str, dict]:
     return {p["code"]: p for p in resultat["points"]}
 
@@ -211,10 +226,11 @@ def test_tout_traite_tous_les_points_ok(session):
     _creer_conclusion(session, tid, mid, statut="conforme")
     _creer_risque(session, tid, cid, montant=1_000_000, statut="accepte")
     _note_disponible(session, tid, mid)
+    _viser_restitution(session, tid, mid)
 
     r = evaluer_cloture(session, tid, mid)
-    assert [p["statut"] for p in r["points"]] == ["ok"] * 5
-    assert r["synthese"] == {"ok": 5, "attention": 0, "bloquant": 0}
+    assert [p["statut"] for p in r["points"]] == ["ok"] * 6
+    assert r["synthese"] == {"ok": 6, "attention": 0, "bloquant": 0}
     assert r["cloture_recommandee"] is True
 
 
@@ -325,6 +341,7 @@ def test_api_cloture_enrichie_du_controle(session):
         "note_synthese_presente",
         "reponses_client",
         "pieces_justificatives",
+        "visas_supervision",
     }
 
     clot = client.patch(

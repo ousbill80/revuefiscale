@@ -239,6 +239,28 @@ function libellePhaseTemps(phase: string): string {
   return PHASES_TEMPS.find((p) => p.value === phase)?.label ?? phase;
 }
 
+/* Visas de supervision — préparateur, réviseur, associé, par phase. */
+type VisaRole = "preparateur" | "reviseur" | "associe";
+type VisaPhase = "cadrage" | "collecte" | "controles" | "restitution";
+
+type VisaMission = {
+  role: VisaRole;
+  vise_par: string;
+  vise_le: string;
+  commentaire: string | null;
+};
+
+type VisasEtat = {
+  phases: Array<{ phase: VisaPhase; visas: VisaMission[]; complet: boolean }>;
+  synthese: { phases_completes: number; total_visas: number };
+};
+
+const ROLES_VISA: Array<{ value: VisaRole; label: string }> = [
+  { value: "preparateur", label: "Préparateur" },
+  { value: "reviseur", label: "Réviseur" },
+  { value: "associe", label: "Associé" },
+];
+
 /* Comparatif déterministe entre deux exécutions d'une mission. */
 type ComparatifItem = {
   regle_id: string;
@@ -562,6 +584,10 @@ export function RestitutionVue({
   );
   const [tempsHeures, setTempsHeures] = useState("");
   const [tempsNote, setTempsNote] = useState("");
+  const [visasOuvert, setVisasOuvert] = useState(false);
+  const [visasEtat, setVisasEtat] = useState<VisasEtat | null>(null);
+  const [visasErr, setVisasErr] = useState<string | null>(null);
+  const [visaBusy, setVisaBusy] = useState<string | null>(null);
   const [ctrlClotureOuvert, setCtrlClotureOuvert] = useState(false);
   const [ctrlCloture, setCtrlCloture] = useState<ControleClotureOut | null>(
     null,
@@ -1193,6 +1219,64 @@ export function RestitutionVue({
       );
     } finally {
       setTempsSupprId(null);
+    }
+  }
+
+  async function chargerVisas(): Promise<void> {
+    if (!jeton || !r.mission_id) return;
+    try {
+      const out = await api<VisasEtat>(
+        `/api/v1/missions/${r.mission_id}/visas`,
+        { jeton },
+      );
+      setVisasEtat(out ?? null);
+      setVisasErr(null);
+    } catch (e) {
+      setVisasEtat(null);
+      setVisasErr(
+        e instanceof Error ? e.message : "visas de supervision indisponibles",
+      );
+    }
+  }
+
+  async function poserVisa(phase: VisaPhase, role: VisaRole): Promise<void> {
+    if (!jeton || !r.mission_id || visaBusy !== null) return;
+    setVisaBusy(`${phase}/${role}`);
+    setVisasErr(null);
+    try {
+      await api<{ visa: VisaMission }>(
+        `/api/v1/missions/${r.mission_id}/visas`,
+        { jeton, method: "POST", json: { phase, role } },
+      );
+      await chargerVisas();
+    } catch (e) {
+      setVisasErr(
+        e instanceof Error ? e.message : "pose du visa impossible",
+      );
+    } finally {
+      setVisaBusy(null);
+    }
+  }
+
+  async function revoquerVisa(
+    phase: VisaPhase,
+    role: VisaRole,
+  ): Promise<void> {
+    if (!jeton || !r.mission_id || visaBusy !== null) return;
+    setVisaBusy(`${phase}/${role}`);
+    setVisasErr(null);
+    try {
+      await api<{ visa: VisaMission }>(
+        `/api/v1/missions/${r.mission_id}/visas/${phase}/${role}`,
+        { jeton, method: "DELETE" },
+      );
+      await chargerVisas();
+    } catch (e) {
+      setVisasErr(
+        e instanceof Error ? e.message : "révocation du visa impossible",
+      );
+    } finally {
+      setVisaBusy(null);
     }
   }
 
@@ -1851,6 +1935,20 @@ export function RestitutionVue({
               aria-expanded={tempsOuvert}
             >
               Temps passés
+            </button>
+          </Tooltip>
+          <Tooltip label="Visas de supervision par phase : le préparateur atteste son travail, le réviseur revoit, l'associé signe — dans cet ordre. Registre formel exigé par les normes d'exercice professionnel.">
+            <button
+              type="button"
+              className="btn btn-ghost btn-sm rest-visas-btn"
+              onClick={() => {
+                setVisasOuvert((o) => !o);
+                if (!visasOuvert) void chargerVisas();
+              }}
+              disabled={!jeton}
+              aria-expanded={visasOuvert}
+            >
+              Visas
             </button>
           </Tooltip>
           <Tooltip label="Note de synthèse de mission (executive summary IA) pour l'associé signataire — versionnée, chaque constat cite sa règle. Consultative : l'humain valide.">
@@ -2593,6 +2691,121 @@ export function RestitutionVue({
                   .join(" · ")}
               </p>
             </>
+          )}
+        </section>
+      )}
+
+      {visasOuvert && (
+        <section
+          className="rest-suivi rest-visas"
+          aria-label="Visas de supervision"
+        >
+          <div className="rest-suivi-head">
+            <h3 className="rest-suivi-titre label-with-tip">
+              Visas de supervision
+              <InfoTip
+                label="Un visa par phase et par rôle, dans l'ordre : préparateur, puis réviseur, puis associé. La révocation suit l'ordre inverse (le rang supérieur d'abord)."
+                ariaLabel="Aide : visas de supervision"
+              />
+            </h3>
+            <div className="rest-suivi-outils">
+              {visasEtat && (
+                <span className="muted">
+                  {visasEtat.synthese.phases_completes}/
+                  {visasEtat.phases.length} phases complètes ·{" "}
+                  {visasEtat.synthese.total_visas} visas
+                </span>
+              )}
+              <button
+                type="button"
+                className="btn btn-ghost btn-sm"
+                onClick={() => setVisasOuvert(false)}
+              >
+                Fermer
+              </button>
+            </div>
+          </div>
+          {visasErr && (
+            <p className="rest-lettre-err" role="alert">
+              {visasErr}
+            </p>
+          )}
+          {visasEtat && (
+            <ul className="rest-suivi-items rest-visas-items">
+              {visasEtat.phases.map((ph) => {
+                const parRole = new Map(
+                  ph.visas.map((v) => [v.role, v]),
+                );
+                return (
+                  <li key={ph.phase} className="rest-suivi-item">
+                    <div className="rest-suivi-libelle">
+                      <span className="rest-suivi-cle">
+                        {libellePhaseTemps(ph.phase)}
+                        {ph.complet && (
+                          <span className="muted"> — complète</span>
+                        )}
+                      </span>
+                      <div className="rest-visas-roles">
+                        {ROLES_VISA.map((rl) => {
+                          const visa = parRole.get(rl.value);
+                          const cle = `${ph.phase}/${rl.value}`;
+                          return (
+                            <span
+                              key={rl.value}
+                              className="rest-visas-role"
+                            >
+                              {rl.label} :{" "}
+                              {visa ? (
+                                <>
+                                  visé par {visa.vise_par} le{" "}
+                                  {visa.vise_le.slice(0, 10)}
+                                  {visa.commentaire && (
+                                    <span className="muted">
+                                      {" "}
+                                      — {visa.commentaire}
+                                    </span>
+                                  )}
+                                  {!estLecteur && (
+                                    <button
+                                      type="button"
+                                      className="btn btn-ghost btn-sm"
+                                      disabled={visaBusy !== null}
+                                      onClick={() =>
+                                        void revoquerVisa(
+                                          ph.phase,
+                                          rl.value,
+                                        )
+                                      }
+                                    >
+                                      {visaBusy === cle
+                                        ? "Révocation…"
+                                        : "Révoquer"}
+                                    </button>
+                                  )}
+                                </>
+                              ) : estLecteur ? (
+                                <span className="muted">non visé</span>
+                              ) : (
+                                <button
+                                  type="button"
+                                  className="btn btn-ghost btn-sm"
+                                  disabled={visaBusy !== null}
+                                  onClick={() =>
+                                    void poserVisa(ph.phase, rl.value)
+                                  }
+                                >
+                                  {visaBusy === cle ? "Visa…" : "Viser"}
+                                </button>
+                              )}
+                            </span>
+                          );
+                        })}
+                      </div>
+                    </div>
+                  </li>
+                );
+              })}
+            </ul>
           )}
         </section>
       )}

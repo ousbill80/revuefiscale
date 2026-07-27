@@ -279,6 +279,49 @@ def _point_pieces_justificatives(
     )
 
 
+def _point_visas_supervision(
+    session: Session, mission_id: int
+) -> dict[str, str]:
+    """Visas de supervision de la phase restitution — consultatif.
+
+    OK si les trois rangs (préparateur, réviseur, associé) ont visé la
+    phase restitution ; attention sinon, en listant les rôles manquants.
+    Jamais bloquant : la supervision reste un jugement humain.
+    """
+    from backend.plateforme.visas_mission import ORDRE_ROLES
+
+    libelle = "Visas de supervision"
+    presents = {
+        str(r)
+        for r in session.execute(
+            text(
+                "SELECT role FROM visa_mission "
+                "WHERE mission_id = :m AND phase = 'restitution'"
+            ),
+            {"m": mission_id},
+        ).scalars()
+    }
+    manquants = [r for r in ORDRE_ROLES if r not in presents]
+    if not manquants:
+        return _point(
+            "visas_supervision",
+            libelle,
+            STATUT_OK,
+            "Phase restitution visée aux trois rangs : préparateur, "
+            "réviseur et associé.",
+        )
+    return _point(
+        "visas_supervision",
+        libelle,
+        STATUT_ATTENTION,
+        "Phase restitution incomplètement visée — rôle"
+        f"{'s' if len(manquants) > 1 else ''} manquant"
+        f"{'s' if len(manquants) > 1 else ''} : "
+        + ", ".join(manquants)
+        + ".",
+    )
+
+
 def evaluer_cloture(
     session: Session, tenant_id: int, mission_id: int
 ) -> dict[str, Any]:
@@ -306,6 +349,7 @@ def evaluer_cloture(
             _point_note_synthese(session, mission_id),
             _point_reponses_client(session, exec_id),
             _point_pieces_justificatives(session, contribuable_id),
+            _point_visas_supervision(session, mission_id),
         ]
 
     synthese = {
