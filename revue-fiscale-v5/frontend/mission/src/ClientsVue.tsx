@@ -36,6 +36,7 @@ import { HistoriqueContribuablePanel } from "./HistoriqueContribuable";
 import {
   RegistreRisquesVue,
   tipInterpretationScoreRisque,
+  type ResumeRisques,
   type ScoreRisque as ScoreRisqueContribuable,
 } from "./RegistreRisques";
 import {
@@ -1467,9 +1468,12 @@ export function ClientFicheVue({
   const formeNorm = formePersonne(clientDetail.forme);
   const formeLbl = libelleFormeCourte(formeNorm);
 
-  // Compteurs pièces / risques (informative — masqués si l'API échoue).
+  // Compteurs pièces / risques (informatifs — masqués si l'API échoue).
+  // Chargés au niveau fiche : alimentent le bandeau sticky et la synthèse Risques.
   const [nbPieces, setNbPieces] = useState<number | null>(null);
-  const [nbRisques, setNbRisques] = useState<number | null>(null);
+  const [resumeRisques, setResumeRisques] = useState<ResumeRisques | null>(
+    null,
+  );
   // Score registre (déterministe, API existante) — header fiche.
   const [scoreRisque, setScoreRisque] =
     useState<ScoreRisqueContribuable | null>(null);
@@ -1518,7 +1522,6 @@ export function ClientFicheVue({
   }, [clientDetail.id, jeton, ficheTab]);
 
   useEffect(() => {
-    if (ficheTab !== "overview") return;
     let annule = false;
     void (async () => {
       try {
@@ -1533,12 +1536,14 @@ export function ClientFicheVue({
     })();
     void (async () => {
       try {
-        const risques = await api<unknown[]>(
-          `/api/v1/contribuables/${clientDetail.id}/risques`,
+        const resume = await api<ResumeRisques>(
+          `/api/v1/contribuables/${clientDetail.id}/risques/resume`,
           { jeton },
         );
         if (!annule)
-          setNbRisques(Array.isArray(risques) ? risques.length : null);
+          setResumeRisques(
+            resume && typeof resume.total === "number" ? resume : null,
+          );
       } catch {
         /* compteur indisponible */
       }
@@ -1546,7 +1551,7 @@ export function ClientFicheVue({
     return () => {
       annule = true;
     };
-  }, [clientDetail.id, jeton, ficheTab]);
+  }, [clientDetail.id, jeton]);
 
   // Alerte douce : TEE (régime de l'entreprenant) atypique pour une personne morale.
   const alerteRegimeTee =
@@ -1572,6 +1577,15 @@ export function ClientFicheVue({
   }, [missions, filtreMissions]);
 
   const nbActives = missions.filter((m) => estMissionActive(m.statut)).length;
+
+  // Dernier exercice revu — la plus récente année portée par une mission.
+  const dernierExercice = useMemo(() => {
+    let max = 0;
+    for (const m of missions) {
+      if (typeof m.exercice === "number" && m.exercice > max) max = m.exercice;
+    }
+    return max > 0 ? max : null;
+  }, [missions]);
 
   const peutEditer = !estLecteur && modeEdition;
 
@@ -1649,134 +1663,110 @@ export function ClientFicheVue({
     </div>
   );
 
+  /** Ligne clé-valeur d'un bloc de la vue d'ensemble (fiche2). */
+  function propFiche(
+    label: string,
+    valeur: string,
+    opts: { cle?: string; remplie?: boolean; decisif?: boolean } = {},
+  ) {
+    const remplie = opts.remplie ?? valeur.trim().length > 0;
+    const manquant = opts.cle ? valeurResumeManquante(opts.cle, remplie) : false;
+    return (
+      <div
+        className={[
+          manquant ? "is-manquant" : "",
+          opts.decisif ? "fiche2-prop-cle" : "",
+        ]
+          .filter(Boolean)
+          .join(" ") || undefined}
+      >
+        <dt>{label}</dt>
+        <dd>{remplie ? valeur : "À compléter"}</dd>
+      </div>
+    );
+  }
+
   const resumeIdentite = (
     <>
-      <dl className="clients-identite-resume" aria-label="Résumé d’identité">
-        <div>
-          <dt>Type</dt>
-          <dd>
-            <span className={`clients-badge clients-badge-${formeNorm}`}>
-              {formeLbl}
-            </span>
-            {clientDetail.forme_juridique
-              ? ` ${clientDetail.forme_juridique}`
-              : ""}
-          </dd>
-        </div>
-        <div
-          className={
-            valeurResumeManquante("ncc", !!clientDetail.ncc?.trim())
-              ? "is-manquant"
-              : undefined
-          }
-        >
-          <dt>NCC</dt>
-          <dd>{clientDetail.ncc?.trim() || "À compléter"}</dd>
-        </div>
-        {formeNorm === "pm" && (
-          <div
-            className={
-              valeurResumeManquante("rccm", !!clientDetail.rccm?.trim())
-                ? "is-manquant"
-                : undefined
-            }
-          >
-            <dt>RCCM</dt>
-            <dd>{clientDetail.rccm?.trim() || "À compléter"}</dd>
-          </div>
-        )}
-        <div
-          className={
-            valeurResumeManquante(
-              "regime_fiscal",
-              !!clientDetail.regime_fiscal?.trim(),
-            )
-              ? "is-manquant"
-              : undefined
-          }
-        >
-          <dt>Régime</dt>
-          <dd>
-            {clientDetail.regime_fiscal?.trim()
-              ? libelleRegime(clientDetail.regime_fiscal)
-              : "À compléter"}
-          </dd>
-        </div>
-        {formeNorm === "pm" && (
-          <div
-            className={
-              valeurResumeManquante(
-                "capital_social",
+      <div className="fiche2-blocs" aria-label="Résumé d’identité">
+        <section className="fiche2-bloc" aria-label="Identité légale">
+          <p className="fiche2-bloc-titre">Identité légale</p>
+          <dl className="fiche2-props">
+            <div>
+              <dt>Type</dt>
+              <dd>
+                <span className={`clients-badge clients-badge-${formeNorm}`}>
+                  {formeLbl}
+                </span>
+                {clientDetail.forme_juridique
+                  ? ` ${clientDetail.forme_juridique}`
+                  : ""}
+              </dd>
+            </div>
+            {propFiche("NCC", clientDetail.ncc?.trim() || "", { cle: "ncc" })}
+            {formeNorm === "pm" &&
+              propFiche("RCCM", clientDetail.rccm?.trim() || "", {
+                cle: "rccm",
+              })}
+            {formeNorm === "pm" &&
+              propFiche(
+                "Capital",
                 clientDetail.capital_social != null &&
-                  clientDetail.capital_social !== "",
-              )
-                ? "is-manquant"
-                : undefined
-            }
-          >
-            <dt>Capital</dt>
-            <dd>
-              {clientDetail.capital_social != null &&
-              clientDetail.capital_social !== ""
-                ? `${Number(clientDetail.capital_social).toLocaleString("fr-FR")} XOF`
-                : "À compléter"}
-            </dd>
-          </div>
-        )}
-        <div>
-          <dt>Clôture</dt>
-          <dd>{libelleMoisCloture(clientDetail.mois_cloture ?? 12)}</dd>
-        </div>
-        <div
-          className={
-            valeurResumeManquante(
-              "activite_principale",
-              !!clientDetail.activite_principale?.trim(),
-            )
-              ? "is-manquant"
-              : undefined
-          }
-        >
-          <dt>Secteur / activité</dt>
-          <dd>{secteurAffiche || "À compléter"}</dd>
-        </div>
-        <div
-          className={
-            valeurResumeManquante("commune", !!clientDetail.commune?.trim())
-              ? "is-manquant"
-              : undefined
-          }
-        >
-          <dt>Commune</dt>
-          <dd>{clientDetail.commune?.trim() || "À compléter"}</dd>
-        </div>
-        <div
-          className={
-            valeurResumeManquante(
-              "siege_social",
-              !!clientDetail.siege_social?.trim(),
-            )
-              ? "is-manquant"
-              : undefined
-          }
-        >
-          <dt>Adresse</dt>
-          <dd>{clientDetail.siege_social?.trim() || "À compléter"}</dd>
-        </div>
-        <div
-          className={
-            valeurResumeManquante(
-              "centre_impots",
-              !!clientDetail.centre_impots?.trim(),
-            )
-              ? "is-manquant"
-              : undefined
-          }
-        >
-          <dt>Centre des impôts</dt>
-          <dd>{clientDetail.centre_impots?.trim() || "À compléter"}</dd>
-        </div>
-      </dl>
+                  clientDetail.capital_social !== ""
+                  ? `${Number(clientDetail.capital_social).toLocaleString("fr-FR")} XOF`
+                  : "",
+                {
+                  cle: "capital_social",
+                  remplie:
+                    clientDetail.capital_social != null &&
+                    clientDetail.capital_social !== "",
+                },
+              )}
+            {propFiche(
+              "Immatriculation",
+              formaterDateCourte(clientDetail.date_immatriculation),
+            )}
+          </dl>
+        </section>
+
+        <section className="fiche2-bloc" aria-label="Coordonnées fiscales">
+          <p className="fiche2-bloc-titre">Coordonnées fiscales</p>
+          <dl className="fiche2-props">
+            {propFiche(
+              "Centre des impôts",
+              clientDetail.centre_impots?.trim() || "",
+              { cle: "centre_impots", decisif: true },
+            )}
+            {propFiche("Commune", clientDetail.commune?.trim() || "", {
+              cle: "commune",
+            })}
+            {propFiche("Adresse", clientDetail.siege_social?.trim() || "", {
+              cle: "siege_social",
+            })}
+          </dl>
+        </section>
+
+        <section className="fiche2-bloc" aria-label="Paramètres fiscaux">
+          <p className="fiche2-bloc-titre">Paramètres</p>
+          <dl className="fiche2-props">
+            {propFiche(
+              "Régime fiscal",
+              clientDetail.regime_fiscal?.trim()
+                ? libelleRegime(clientDetail.regime_fiscal)
+                : "",
+              { cle: "regime_fiscal", decisif: true },
+            )}
+            {propFiche(
+              "Clôture d’exercice",
+              libelleMoisCloture(clientDetail.mois_cloture ?? 12),
+              { decisif: true },
+            )}
+            {propFiche("Secteur / activité", secteurAffiche, {
+              cle: "activite_principale",
+            })}
+          </dl>
+        </section>
+      </div>
       {alerteRegimeTee && (
         <p className="field-averti-msg clients-fiche-averti" role="note">
           Régime TEE inhabituel pour une{" "}
@@ -1784,107 +1774,160 @@ export function ClientFicheVue({
           régime déclaré.
         </p>
       )}
+      {(traceQui || traceQuand) && (
+        <p className="fiche2-audit" aria-label="Traçabilité de création">
+          Créé
+          {traceQui ? ` par ${traceQui}` : ""}
+          {traceQuand ? ` · ${traceQuand}` : ""}
+          <span className="fiche2-audit-tz"> (heure Abidjan)</span>
+        </p>
+      )}
     </>
   );
 
   return (
     <div className="page clients-fiche">
-      <header className="page-head clients-head">
-        <div>
-          <p className="page-eyebrow">Portefeuille · Fiche #{clientDetail.id}</p>
-          <h2 className="section-title">{clientDetail.denomination}</h2>
-          <p className="section-sub">
-            {formeLbl}
-            {clientDetail.forme_juridique
-              ? ` · ${clientDetail.forme_juridique}`
-              : ""}
-            {clientDetail.ncc ? ` · NCC ${clientDetail.ncc}` : ""}
-            {" · "}
-            {clientDetail.nb_missions} mission
-            {clientDetail.nb_missions !== 1 ? "s" : ""}
-          </p>
-          {(traceQui || traceQuand) && (
-            <p className="clients-fiche-audit" aria-label="Traçabilité de création">
-              Créé
-              {traceQui ? ` par ${traceQui}` : ""}
-              {traceQuand ? ` · ${traceQuand}` : ""}
-              <span className="clients-fiche-audit-tz"> (heure Abidjan)</span>
-            </p>
-          )}
-        </div>
-        {scoreRisque && (
-          <Tooltip
-            className="tip-score-risque"
-            label={tipInterpretationScoreRisque(scoreRisque)}
-          >
-            <button
-              type="button"
-              className={`clients-head-score niveau-${scoreRisque.niveau}`}
-              aria-label={
-                scoreRisque.plage
-                  ? `Score risque ${scoreRisque.score} sur 100 — ${scoreRisque.libelle_niveau} (${scoreRisque.plage})`
-                  : `Score risque ${scoreRisque.score} sur 100 — ${scoreRisque.libelle_niveau}`
-              }
-              onClick={() => changerFicheTab("risques")}
-            >
-              <span className="clients-head-score-kicker">Score</span>
-              <strong className="clients-head-score-valeur">
-                {scoreRisque.score}
-                <span aria-hidden="true">/100</span>
-              </strong>
-              <span
-                className={`clients-head-score-badge niveau-${scoreRisque.niveau}`}
-              >
-                {scoreRisque.libelle_niveau}
-              </span>
-            </button>
-          </Tooltip>
-        )}
-        <div className="page-actions">
-          <Tooltip label="Retour au portefeuille clients.">
-            <button type="button" className="btn btn-ghost" onClick={onRetour}>
-              Retour liste
-            </button>
-          </Tooltip>
-          {!estLecteur && (
-            <Tooltip label="Lancer une mission préremplie avec cette fiche.">
-              <button
-                type="button"
-                className="btn btn-primary"
-                onClick={onNouvelleMission}
-              >
-                Nouvelle mission
-              </button>
-            </Tooltip>
-          )}
-        </div>
-      </header>
-
-      <div
-        className="tabs clients-fiche-tabs"
-        role="tablist"
-        aria-label="Sections de la fiche client"
-      >
-        {FICHE_TABS.map(({ id, label }) => (
-          <button
-            key={id}
-            type="button"
-            id={`fiche-${clientDetail.id}-tab-${id}`}
-            className={`tab${ficheTab === id ? " active" : ""}`}
-            role="tab"
-            aria-selected={ficheTab === id}
-            aria-controls={`fiche-${clientDetail.id}-panel-${id}`}
-            tabIndex={ficheTab === id ? 0 : -1}
-            onClick={() => changerFicheTab(id)}
-          >
-            {label}
-            {id === "missions" && clientDetail.nb_missions > 0 ? (
-              <span className="clients-fiche-tab-count" aria-hidden="true">
-                {clientDetail.nb_missions}
+      <div className="fiche2-sticky">
+        <header className="fiche2-bandeau" aria-label="Synthèse du client">
+          <div className="fiche2-bandeau-id">
+            <span className="fiche2-mark" aria-hidden="true" />
+            <h2 className="fiche2-nom">{clientDetail.denomination}</h2>
+            <span className={`clients-badge clients-badge-${formeNorm}`}>
+              {formeLbl}
+            </span>
+            {clientDetail.forme_juridique?.trim() ? (
+              <span className="fiche2-badge">
+                {clientDetail.forme_juridique.trim()}
               </span>
             ) : null}
-          </button>
-        ))}
+            {clientDetail.regime_fiscal?.trim() ? (
+              <span className="fiche2-badge">
+                {libelleRegime(clientDetail.regime_fiscal)}
+              </span>
+            ) : null}
+            <span className="fiche2-bandeau-meta">
+              {clientDetail.ncc?.trim()
+                ? `NCC ${clientDetail.ncc.trim()}`
+                : `Fiche #${clientDetail.id}`}
+            </span>
+          </div>
+
+          <div
+            className="fiche2-bandeau-indics"
+            role="group"
+            aria-label="Indicateurs du client"
+          >
+            <Tooltip label="Voir les missions du contribuable.">
+              <button
+                type="button"
+                className="fiche2-indic"
+                onClick={() => changerFicheTab("missions")}
+              >
+                <strong>{clientDetail.nb_missions}</strong>
+                mission{clientDetail.nb_missions !== 1 ? "s" : ""}
+                {nbActives > 0 ? ` · ${nbActives} en cours` : ""}
+              </button>
+            </Tooltip>
+            <Tooltip label="Ouvrir le registre des risques.">
+              <button
+                type="button"
+                className={`fiche2-indic${(resumeRisques?.ouverts ?? 0) > 0 ? " is-alerte" : ""}`}
+                onClick={() => changerFicheTab("risques")}
+              >
+                <strong>{resumeRisques ? resumeRisques.ouverts : "—"}</strong>
+                risque{(resumeRisques?.ouverts ?? 0) !== 1 ? "s" : ""} ouvert
+                {(resumeRisques?.ouverts ?? 0) !== 1 ? "s" : ""}
+              </button>
+            </Tooltip>
+            <Tooltip label="Ouvrir la Data Room (pièces, mémoire, timeline).">
+              <button
+                type="button"
+                className="fiche2-indic"
+                onClick={() => changerFicheTab("dataroom")}
+              >
+                <strong>{nbPieces ?? "—"}</strong>
+                pièce{(nbPieces ?? 0) !== 1 ? "s" : ""}
+              </button>
+            </Tooltip>
+            {dernierExercice != null && (
+              <Tooltip label="Exercice le plus récent couvert par une mission.">
+                <span className="fiche2-indic fiche2-indic-passif">
+                  Dernier exercice <strong>{dernierExercice}</strong>
+                </span>
+              </Tooltip>
+            )}
+            {scoreRisque && (
+              <Tooltip
+                className="tip-score-risque"
+                label={tipInterpretationScoreRisque(scoreRisque)}
+              >
+                <button
+                  type="button"
+                  className={`fiche2-indic fiche2-indic-score niveau-${scoreRisque.niveau}`}
+                  aria-label={
+                    scoreRisque.plage
+                      ? `Score risque ${scoreRisque.score} sur 100 — ${scoreRisque.libelle_niveau} (${scoreRisque.plage})`
+                      : `Score risque ${scoreRisque.score} sur 100 — ${scoreRisque.libelle_niveau}`
+                  }
+                  onClick={() => changerFicheTab("risques")}
+                >
+                  Score <strong>{scoreRisque.score}/100</strong>
+                  {` · ${scoreRisque.libelle_niveau}`}
+                </button>
+              </Tooltip>
+            )}
+          </div>
+
+          <div className="fiche2-bandeau-actions">
+            <Tooltip label="Retour au portefeuille clients.">
+              <button
+                type="button"
+                className="btn btn-ghost btn-sm"
+                onClick={onRetour}
+              >
+                Retour liste
+              </button>
+            </Tooltip>
+            {!estLecteur && (
+              <Tooltip label="Lancer une mission préremplie avec cette fiche.">
+                <button
+                  type="button"
+                  className="btn btn-primary btn-sm"
+                  onClick={onNouvelleMission}
+                >
+                  Nouvelle mission
+                </button>
+              </Tooltip>
+            )}
+          </div>
+        </header>
+
+        <div
+          className="tabs clients-fiche-tabs"
+          role="tablist"
+          aria-label="Sections de la fiche client"
+        >
+          {FICHE_TABS.map(({ id, label }) => (
+            <button
+              key={id}
+              type="button"
+              id={`fiche-${clientDetail.id}-tab-${id}`}
+              className={`tab${ficheTab === id ? " active" : ""}`}
+              role="tab"
+              aria-selected={ficheTab === id}
+              aria-controls={`fiche-${clientDetail.id}-panel-${id}`}
+              tabIndex={ficheTab === id ? 0 : -1}
+              onClick={() => changerFicheTab(id)}
+            >
+              {label}
+              {id === "missions" && clientDetail.nb_missions > 0 ? (
+                <span className="clients-fiche-tab-count" aria-hidden="true">
+                  {clientDetail.nb_missions}
+                </span>
+              ) : null}
+            </button>
+          ))}
+        </div>
       </div>
 
       {ficheTab === "overview" && (
@@ -1895,49 +1938,6 @@ export function ClientFicheVue({
           aria-labelledby={`fiche-${clientDetail.id}-tab-overview`}
         >
           {barreCompletude}
-
-          <div
-            className="clients-fiche-compteurs"
-            role="group"
-            aria-label="Raccourcis vers les sections de la fiche"
-          >
-            <Tooltip label="Voir les missions du contribuable.">
-              <button
-                type="button"
-                className="clients-fiche-compteur"
-                onClick={() => changerFicheTab("missions")}
-              >
-                <strong>{clientDetail.nb_missions}</strong>
-                <span>
-                  mission{clientDetail.nb_missions !== 1 ? "s" : ""}
-                </span>
-              </button>
-            </Tooltip>
-            <Tooltip label="Aller aux pièces du contribuable (upload, extraction).">
-              <button
-                type="button"
-                className="clients-fiche-compteur"
-                onClick={() =>
-                  document
-                    .getElementById(`fiche-${clientDetail.id}-panel-pieces`)
-                    ?.scrollIntoView({ behavior: "smooth", block: "start" })
-                }
-              >
-                <strong>{nbPieces ?? "—"}</strong>
-                <span>pièce{(nbPieces ?? 0) !== 1 ? "s" : ""}</span>
-              </button>
-            </Tooltip>
-            <Tooltip label="Voir le registre des risques.">
-              <button
-                type="button"
-                className="clients-fiche-compteur"
-                onClick={() => changerFicheTab("risques")}
-              >
-                <strong>{nbRisques ?? "—"}</strong>
-                <span>risque{(nbRisques ?? 0) !== 1 ? "s" : ""}</span>
-              </button>
-            </Tooltip>
-          </div>
 
           {echeancier && (
             <section
@@ -2105,6 +2105,40 @@ export function ClientFicheVue({
           role="tabpanel"
           aria-labelledby={`fiche-${clientDetail.id}-tab-risques`}
         >
+          <div className="fiche2-sec-head">
+            <h3 className="fiche2-titre">Registre des risques</h3>
+          </div>
+          {resumeRisques && resumeRisques.total > 0 && (
+            <div
+              className="fiche2-risques-synthese"
+              role="group"
+              aria-label="Synthèse du registre des risques"
+            >
+              <span
+                className={`fiche2-synthese-item${resumeRisques.ouverts > 0 ? " is-alerte" : ""}`}
+              >
+                <strong>{resumeRisques.ouverts}</strong>
+                ouvert{resumeRisques.ouverts !== 1 ? "s" : ""}
+              </span>
+              <span className="fiche2-synthese-item is-ok">
+                <strong>{resumeRisques.traites}</strong>
+                traité{resumeRisques.traites !== 1 ? "s" : ""}
+              </span>
+              <span
+                className={`fiche2-synthese-item${resumeRisques.actions_en_retard > 0 ? " is-alerte" : ""}`}
+              >
+                <strong>{resumeRisques.actions_en_retard}</strong>
+                action{resumeRisques.actions_en_retard !== 1 ? "s" : ""} en
+                retard
+              </span>
+              {resumeRisques.acceptes_client > 0 && (
+                <span className="fiche2-synthese-item">
+                  <strong>{resumeRisques.acceptes_client}</strong>
+                  accepté{resumeRisques.acceptes_client !== 1 ? "s" : ""} client
+                </span>
+              )}
+            </div>
+          )}
           <RegistreRisquesVue
             jeton={jeton}
             contribuableId={clientDetail.id}
@@ -2120,6 +2154,9 @@ export function ClientFicheVue({
           role="tabpanel"
           aria-labelledby={`fiche-${clientDetail.id}-tab-historique`}
         >
+          <div className="fiche2-sec-head">
+            <h3 className="fiche2-titre">Historique du contribuable</h3>
+          </div>
           <HistoriqueContribuablePanel
             jeton={jeton}
             contribuableId={clientDetail.id}
@@ -2135,6 +2172,9 @@ export function ClientFicheVue({
           role="tabpanel"
           aria-labelledby={`fiche-${clientDetail.id}-tab-dataroom`}
         >
+          <div className="fiche2-sec-head">
+            <h3 className="fiche2-titre">Data Room</h3>
+          </div>
           <DataRoomPanel
             jeton={jeton}
             contribuableId={clientDetail.id}
@@ -2150,11 +2190,9 @@ export function ClientFicheVue({
           role="tabpanel"
           aria-labelledby={`fiche-${clientDetail.id}-tab-missions`}
         >
-          <div className="clients-fiche-missions-head">
+          <div className="fiche2-sec-head">
             <div>
-              <h3 className="section-title clients-fiche-missions-title">
-                Missions du contribuable
-              </h3>
+              <h3 className="fiche2-titre">Missions du contribuable</h3>
               <p className="clients-panel-hint">
                 {clientDetail.nb_missions} mission
                 {clientDetail.nb_missions !== 1 ? "s" : ""}
@@ -2163,7 +2201,7 @@ export function ClientFicheVue({
                   : ""}
               </p>
             </div>
-            <div className="clients-fiche-missions-actions">
+            <div className="fiche2-sec-actions">
               {missions.length > 0 && (
                 <div
                   className="clients-missions-filtres"
@@ -2203,7 +2241,7 @@ export function ClientFicheVue({
 
           <div className="panel dense clients-panel">
             {missionsFiltrees.length > 0 ? (
-              <ul className="clients-missions-list">
+              <ul className="fiche2-missions">
                 {missionsFiltrees.map((m) => (
                   <li key={m.id}>
                     <Tooltip
@@ -2212,21 +2250,32 @@ export function ClientFicheVue({
                     >
                       <button
                         type="button"
-                        className="clients-mission-row"
+                        className="fiche2-mission-carte"
                         onClick={() => onOuvrirMission(m.id)}
                       >
-                        <span className="clients-mission-id">#{m.id}</span>
-                        <span className="clients-mission-ex">
-                          Exercice {m.exercice}
-                          <span className="clients-mission-date">
-                            {formaterDateCourte(m.cree_le)}
+                        <span className="fiche2-mission-haut">
+                          <span className="fiche2-mission-id">#{m.id}</span>
+                          <span className={`badge statut-${m.statut}`}>
+                            {libelleStatut(m.statut)}
                           </span>
                         </span>
-                        <span className={`badge statut-${m.statut}`}>
-                          {libelleStatut(m.statut)}
+                        <span className="fiche2-mission-badges">
+                          <span className="fiche2-badge fiche2-badge-exercice">
+                            Exercice {m.exercice}
+                          </span>
+                          {m.type_engagement_libelle?.trim() ? (
+                            <span className="fiche2-badge">
+                              {m.type_engagement_libelle.trim()}
+                            </span>
+                          ) : null}
                         </span>
-                        <span className="clients-mission-open">
-                          Ouvrir <span aria-hidden="true">→</span>
+                        <span className="fiche2-mission-pied">
+                          <span className="fiche2-mission-date">
+                            {formaterDateCourte(m.cree_le)}
+                          </span>
+                          <span className="fiche2-mission-ouvrir">
+                            Ouvrir <span aria-hidden="true">→</span>
+                          </span>
                         </span>
                       </button>
                     </Tooltip>
