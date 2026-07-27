@@ -12,7 +12,7 @@ from __future__ import annotations
 import io
 import re
 import unicodedata
-from datetime import date
+from datetime import date, timedelta
 from typing import Any, Final
 
 from docx import Document
@@ -31,6 +31,9 @@ from backend.plateforme.suivi_renseignements import (
 )
 
 DELAI_RELANCE_JOURS: Final = 8
+
+#: Délai de réponse « sous quinzaine » du courrier texte (jours calendaires).
+DELAI_QUINZAINE_JOURS: Final = 15
 
 MENTION_COURRIER_TXT: Final = (
     "Courrier généré automatiquement à partir de la demande de "
@@ -262,10 +265,16 @@ def construire_courrier(contexte: dict[str, Any]) -> str:
     """PUR — courrier de relance en texte brut, entièrement déterministe.
 
     ``contexte`` : {cabinet, contribuable, exercice, aujourd_hui (date),
-    items ([{libelle, date_relance?}])}. Items numérotés 1., 2., … avec
-    date de demande/relance « JJ/MM/AAAA » si disponible. Sans item :
-    courrier signalant qu'aucune relance n'est nécessaire. La date du
-    jour vient du paramètre ``aujourd_hui`` (aucun ``date.today()`` ici).
+    items ([{libelle, date_relance?, nb_relances?, derniere_relance_le?}])}.
+    Items numérotés 1., 2., … avec date de demande/relance « JJ/MM/AAAA »
+    si disponible. Historique de circularisation (migration 042) : rang de
+    relance global = max(nb_relances des items ouverts) + 1 ; à partir du
+    2e rang l'objet devient « 2e relance — … » et une phrase rappelle la
+    dernière relance ; chaque item déjà relancé porte « (déjà relancé
+    N fois) ». Clôture courtoise « sous quinzaine » (date limite =
+    ``aujourd_hui`` + 15 jours calendaires). Sans item : courrier
+    signalant qu'aucune relance n'est nécessaire. La date du jour vient
+    du paramètre ``aujourd_hui`` (aucun ``date.today()`` ici).
     """
     cabinet = _champ(contexte.get("cabinet"))
     contribuable = _champ(contexte.get("contribuable"))
@@ -273,19 +282,45 @@ def construire_courrier(contexte: dict[str, Any]) -> str:
     jour: date = contexte["aujourd_hui"]
     items: list[dict[str, Any]] = list(contexte.get("items") or [])
 
+    # Rang de relance global : max(nb_relances des items ouverts) + 1.
+    rang = max(
+        (int(it.get("nb_relances") or 0) for it in items), default=0
+    ) + 1
+    # Date de la dernière relance passée = max des derniere_relance_le
+    # non nulles (comparaison ISO = comparaison chronologique).
+    derniere_relance = _date_fr(
+        max(
+            (
+                str(it.get("derniere_relance_le") or "").strip()
+                for it in items
+                if str(it.get("derniere_relance_le") or "").strip()
+            ),
+            default="",
+        )
+        or None
+    )
+    objet = "Relance" if rang < 2 else f"{rang}e relance"
+
     lignes: list[str] = [
         cabinet.upper(),
         f"Le {jour.strftime('%d/%m/%Y')}",
         "",
         f"À l'attention de la Direction de {contribuable}",
         "",
-        "Objet : Relance — pièces et renseignements en attente "
+        f"Objet : {objet} — pièces et renseignements en attente "
         f"(mission {exercice})",
         "",
         "Madame, Monsieur,",
         "",
     ]
     if items:
+        if rang >= 2 and derniere_relance:
+            lignes += [
+                f"Nous vous avons déjà relancés le {derniere_relance}. "
+                "Sauf erreur ou omission de notre part, les éléments "
+                "rappelés ci-dessous demeurent toutefois en attente.",
+                "",
+            ]
         lignes += [
             "Dans le cadre de notre mission de revue fiscale de "
             f"l'exercice {exercice}, les éléments suivants, demandés dans "
@@ -297,11 +332,21 @@ def construire_courrier(contexte: dict[str, Any]) -> str:
             libelle = str(it.get("libelle") or "").strip() or A_COMPLETER
             date_demande = _date_fr(it.get("date_relance"))
             suffixe = f" (demande du {date_demande})" if date_demande else ""
+            nb = int(it.get("nb_relances") or 0)
+            if nb >= 1:
+                suffixe += f" (déjà relancé {nb} fois)"
             lignes.append(f"{numero}. {libelle}{suffixe}")
+        date_limite = (jour + timedelta(days=DELAI_QUINZAINE_JOURS)).strftime(
+            "%d/%m/%Y"
+        )
         lignes += [
             "",
             "Nous vous remercions de bien vouloir nous faire parvenir ces "
             "éléments dans les meilleurs délais.",
+            "",
+            "Nous vous saurions gré de nous répondre sous quinzaine, soit "
+            f"au plus tard le {date_limite} (15 jours calendaires à "
+            "compter de la date du présent courrier).",
         ]
     else:
         lignes.append(

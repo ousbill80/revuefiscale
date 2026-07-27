@@ -206,9 +206,17 @@ def test_construire_courrier_contenu_et_numerotation():
         "Objet : Relance — pièces et renseignements en attente "
         "(mission 2025)" in courrier
     )
+    # 1er courrier (aucune relance passée) : objet SANS rang de relance.
+    assert "2e relance" not in courrier
+    assert "Nous vous avons déjà relancés" not in courrier
+    assert "déjà relancé" not in courrier
     assert "1. Balance générale N (demande du 10/07/2026)" in courrier
     assert "2. Grand livre auxiliaire" in courrier
     assert "2. Grand livre auxiliaire (demande" not in courrier
+    # Clôture « sous quinzaine » : 27/07/2026 + 15 jours = 11/08/2026.
+    assert "sous quinzaine" in courrier
+    assert "au plus tard le 11/08/2026" in courrier
+    assert "15 jours calendaires" in courrier
     assert "Madame, Monsieur," in courrier
     assert "salutations distinguées" in courrier
     assert MENTION_COURRIER_TXT in courrier
@@ -242,6 +250,81 @@ def test_construire_courrier_zero_item():
     assert "Le 05/01/2026" in courrier
     assert "aucune relance n'est nécessaire" in courrier
     assert "1." not in courrier
+    # Sans item ouvert : pas de délai « sous quinzaine » ni de rang.
+    assert "sous quinzaine" not in courrier
+    assert "2e relance" not in courrier
+
+
+def test_construire_courrier_deuxieme_relance():
+    """nb_relances=1 partout → objet « 2e relance », rappel daté, suffixes."""
+    from backend.plateforme.courrier_relance import construire_courrier
+
+    courrier = construire_courrier(
+        {
+            "cabinet": "Cabinet X",
+            "contribuable": "Client Y",
+            "exercice": 2025,
+            "aujourd_hui": date(2026, 7, 27),
+            "items": [
+                {
+                    "libelle": "Balance générale N",
+                    "nb_relances": 1,
+                    "derniere_relance_le": "2026-07-10",
+                },
+                {
+                    "libelle": "Grand livre auxiliaire",
+                    "nb_relances": 1,
+                    "derniere_relance_le": "2026-07-15",
+                },
+            ],
+        }
+    )
+    assert (
+        "Objet : 2e relance — pièces et renseignements en attente "
+        "(mission 2025)" in courrier
+    )
+    # Rappel de la DERNIÈRE relance = max des derniere_relance_le.
+    assert "Nous vous avons déjà relancés le 15/07/2026." in courrier
+    assert "1. Balance générale N (déjà relancé 1 fois)" in courrier
+    assert "2. Grand livre auxiliaire (déjà relancé 1 fois)" in courrier
+    # Clôture « sous quinzaine » toujours présente.
+    assert "au plus tard le 11/08/2026" in courrier
+    # Ton courtois : pas d'objet « Relance — » de premier rang.
+    assert "Objet : Relance —" not in courrier
+
+
+def test_construire_courrier_nb_relances_heterogenes():
+    """Rang global = max(nb_relances) + 1, suffixe seulement si relancé."""
+    from backend.plateforme.courrier_relance import construire_courrier
+
+    courrier = construire_courrier(
+        {
+            "cabinet": "Cabinet X",
+            "contribuable": "Client Y",
+            "exercice": 2025,
+            "aujourd_hui": date(2026, 7, 27),
+            "items": [
+                {"libelle": "Attestation de régularité", "nb_relances": 0},
+                {
+                    "libelle": "Balance générale N",
+                    "nb_relances": 2,
+                    "derniere_relance_le": "2026-07-20",
+                },
+                {
+                    "libelle": "Grand livre auxiliaire",
+                    "nb_relances": 1,
+                    "derniere_relance_le": "2026-07-05",
+                },
+            ],
+        }
+    )
+    assert "Objet : 3e relance —" in courrier
+    assert "Nous vous avons déjà relancés le 20/07/2026." in courrier
+    # Suffixe DISCRET par item, uniquement s'il a déjà été relancé.
+    assert "1. Attestation de régularité" in courrier
+    assert "1. Attestation de régularité (déjà relancé" not in courrier
+    assert "2. Balance générale N (déjà relancé 2 fois)" in courrier
+    assert "3. Grand livre auxiliaire (déjà relancé 1 fois)" in courrier
 
 
 # ── Courrier texte — tests API ───────────────────────────────────────
