@@ -936,6 +936,77 @@ def api_recap_temps_mission(
         ) from e
 
 
+class RentabiliteMissionIn(BaseModel):
+    """Paramètres de rentabilité : honoraires convenus et taux horaire.
+
+    Champ absent ou ``null`` = paramètre effacé (retour à « non convenu »).
+    """
+
+    honoraires: float | None = None
+    taux_horaire: float | None = None
+
+
+@router.put("/missions/{mission_id}/rentabilite")
+def api_definir_rentabilite_mission(
+    mission_id: int,
+    corps: RentabiliteMissionIn,
+    utilisateur: UtilisateurDep,
+    session: Annotated[Session, Depends(session_abonne)],
+) -> dict:
+    """Définit honoraires et taux horaire, retourne la rentabilité à jour."""
+    from backend.moteur.journal import append_journal
+    from backend.plateforme.rentabilite_mission import (
+        ErreurRentabilite,
+        ErreurRentabiliteIntrouvable,
+        definir_parametres,
+        rentabilite_mission,
+    )
+
+    exiger_capacite(utilisateur, "executer_mission")
+    try:
+        parametres = definir_parametres(
+            session,
+            utilisateur.tenant_id,
+            mission_id,
+            honoraires=corps.honoraires,
+            taux_horaire=corps.taux_horaire,
+        )
+    except ErreurRentabiliteIntrouvable as e:
+        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail=str(e)) from e
+    except ErreurRentabilite as e:
+        raise HTTPException(
+            status_code=status.HTTP_422_UNPROCESSABLE_ENTITY, detail=str(e)
+        ) from e
+    append_journal(
+        session,
+        tenant_id=utilisateur.tenant_id,
+        mission_id=mission_id,
+        acteur=utilisateur.email,
+        action="definition_parametres_rentabilite",
+        charge_utile=parametres,
+    )
+    return rentabilite_mission(session, utilisateur.tenant_id, mission_id)
+
+
+@router.get("/missions/{mission_id}/rentabilite")
+def api_rentabilite_mission(
+    mission_id: int,
+    utilisateur: UtilisateurDep,
+    session: Annotated[Session, Depends(session_abonne)],
+) -> dict:
+    """Rentabilité de la mission : honoraires, taux, coût, marge, taux %."""
+    from backend.plateforme.rentabilite_mission import (
+        ErreurRentabiliteIntrouvable,
+        rentabilite_mission,
+    )
+
+    exiger_capacite(utilisateur, "lire")
+    try:
+        return rentabilite_mission(session, utilisateur.tenant_id, mission_id)
+    except ErreurRentabiliteIntrouvable as e:
+        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail=str(e)) from e
+
+
 class VisaMissionIn(BaseModel):
     """Pose d'un visa de supervision (phase, rôle) — vise_par = email connecté."""
 

@@ -227,6 +227,16 @@ type TempsRecap = {
   valorisation: string | null;
 };
 
+/* Rentabilité : honoraires convenus, taux horaire, marge estimée. */
+type RentabiliteMission = {
+  honoraires: string | null;
+  taux_horaire: string | null;
+  total_heures: string;
+  cout_estime: string | null;
+  marge_estimee: string | null;
+  taux_marge_pct: string | null;
+};
+
 const PHASES_TEMPS: Array<{ value: TempsPhase; label: string }> = [
   { value: "cadrage", label: "Cadrage" },
   { value: "collecte", label: "Collecte" },
@@ -584,6 +594,11 @@ export function RestitutionVue({
   );
   const [tempsHeures, setTempsHeures] = useState("");
   const [tempsNote, setTempsNote] = useState("");
+  const [renta, setRenta] = useState<RentabiliteMission | null>(null);
+  const [rentaHonoraires, setRentaHonoraires] = useState("");
+  const [rentaTaux, setRentaTaux] = useState("");
+  const [rentaBusy, setRentaBusy] = useState(false);
+  const [rentaErr, setRentaErr] = useState<string | null>(null);
   const [visasOuvert, setVisasOuvert] = useState(false);
   const [visasEtat, setVisasEtat] = useState<VisasEtat | null>(null);
   const [visasErr, setVisasErr] = useState<string | null>(null);
@@ -1165,6 +1180,65 @@ export function RestitutionVue({
       setTempsErr(
         e instanceof Error ? e.message : "temps passés indisponibles",
       );
+    }
+    await chargerRentabilite();
+  }
+
+  async function chargerRentabilite(): Promise<void> {
+    if (!jeton || !r.mission_id) return;
+    try {
+      const out = await api<RentabiliteMission>(
+        `/api/v1/missions/${r.mission_id}/rentabilite`,
+        { jeton },
+      );
+      setRenta(out ?? null);
+      setRentaHonoraires(out?.honoraires ?? "");
+      setRentaTaux(out?.taux_horaire ?? "");
+      setRentaErr(null);
+    } catch (e) {
+      setRenta(null);
+      setRentaErr(
+        e instanceof Error ? e.message : "rentabilité indisponible",
+      );
+    }
+  }
+
+  async function enregistrerRentabilite(): Promise<void> {
+    if (!jeton || !r.mission_id || rentaBusy) return;
+    const versNombre = (brut: string): number | null => {
+      const t = brut.trim().replace(",", ".");
+      if (!t) return null;
+      const n = Number(t);
+      return Number.isFinite(n) ? n : Number.NaN;
+    };
+    const honoraires = versNombre(rentaHonoraires);
+    const taux = versNombre(rentaTaux);
+    if (Number.isNaN(honoraires) || Number.isNaN(taux)) {
+      setRentaErr("Montants invalides : nombres positifs attendus (FCFA).");
+      return;
+    }
+    setRentaBusy(true);
+    setRentaErr(null);
+    try {
+      const out = await api<RentabiliteMission>(
+        `/api/v1/missions/${r.mission_id}/rentabilite`,
+        {
+          jeton,
+          method: "PUT",
+          json: { honoraires, taux_horaire: taux },
+        },
+      );
+      setRenta(out ?? null);
+      setRentaHonoraires(out?.honoraires ?? "");
+      setRentaTaux(out?.taux_horaire ?? "");
+    } catch (e) {
+      setRentaErr(
+        e instanceof Error
+          ? e.message
+          : "enregistrement de la rentabilité impossible",
+      );
+    } finally {
+      setRentaBusy(false);
     }
   }
 
@@ -2692,6 +2766,82 @@ export function RestitutionVue({
               </p>
             </>
           )}
+          <div className="rest-temps-renta">
+            <h4 className="rest-suivi-titre label-with-tip">
+              Rentabilité
+              <InfoTip
+                label="Honoraires forfaitaires convenus pour la mission et taux horaire standard du cabinet. Marge estimée = honoraires − (heures saisies × taux horaire)."
+                ariaLabel="Aide : rentabilité"
+              />
+            </h4>
+            {rentaErr && (
+              <p className="rest-lettre-err" role="alert">
+                {rentaErr}
+              </p>
+            )}
+            {!estLecteur && (
+              <div className="rest-suivi-controles rest-temps-form">
+                <label className="rest-suivi-champ">
+                  Honoraires convenus (FCFA){" "}
+                  <input
+                    type="number"
+                    min={0}
+                    step={1000}
+                    placeholder="ex : 5000000"
+                    value={rentaHonoraires}
+                    disabled={rentaBusy}
+                    onChange={(e) => setRentaHonoraires(e.target.value)}
+                  />
+                </label>
+                <label className="rest-suivi-champ">
+                  Taux horaire (FCFA){" "}
+                  <input
+                    type="number"
+                    min={0}
+                    step={1000}
+                    placeholder="ex : 40000"
+                    value={rentaTaux}
+                    disabled={rentaBusy}
+                    onChange={(e) => setRentaTaux(e.target.value)}
+                  />
+                </label>
+                <button
+                  type="button"
+                  className="btn btn-primary btn-sm"
+                  disabled={rentaBusy}
+                  onClick={() => void enregistrerRentabilite()}
+                >
+                  {rentaBusy ? "Enregistrement…" : "Enregistrer"}
+                </button>
+              </div>
+            )}
+            {renta && (
+              <p className="muted">
+                {renta.cout_estime !== null && (
+                  <>Coût estimé : {renta.cout_estime} FCFA</>
+                )}
+                {renta.marge_estimee !== null && (
+                  <>
+                    {" · "}Marge estimée :{" "}
+                    <span
+                      className={`badge rest-comparatif-badge ${
+                        renta.marge_estimee.startsWith("-")
+                          ? "degradation"
+                          : "amelioration"
+                      }`}
+                    >
+                      {renta.marge_estimee} FCFA
+                      {renta.taux_marge_pct !== null &&
+                        ` (${renta.taux_marge_pct} %)`}
+                    </span>
+                  </>
+                )}
+                {renta.cout_estime === null &&
+                  renta.marge_estimee === null &&
+                  "Renseignez le taux horaire (et les honoraires) pour estimer coût et marge."}
+              </p>
+            )}
+          </div>
         </section>
       )}
 

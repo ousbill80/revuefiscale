@@ -9435,6 +9435,8 @@ tr.row-active td {
 .rest-suivi-outils { display: inline-flex; flex-wrap: wrap; align-items: center; gap: 0.5rem; font-size: 0.78rem; }
 .rest-suivi-compteur { display: inline-flex; align-items: center; padding: 0.1rem 0.5rem; border: 1px solid var(--line, #e5e7eb); border-radius: 999px; font-size: 0.72rem; font-weight: 700; color: var(--ink-soft, #475569); background: var(--surface, #fff); }
 .rest-suivi-compteur.relance { border-color: #b45309; color: #92400e; background: #fffbeb; }
+.rest-temps-renta { margin-top: 0.75rem; padding-top: 0.6rem; border-top: 1px solid var(--line-soft, #f1f5f9); display: grid; gap: 0.45rem; }
+.rest-temps-renta .rest-suivi-titre { font-size: 0.86rem; }
 .rest-suivi-items { list-style: none; margin: 0; padding: 0; display: grid; gap: 0.45rem; }
 .rest-suivi-item { display: grid; gap: 0.35rem 0.6rem; padding: 0.5rem 0.65rem; border: 1px solid var(--line-soft, #f1f5f9); border-radius: 8px; background: var(--surface, #fff); font-size: 0.83rem; }
 .rest-suivi-item.recu { border-left: 3px solid #16a34a; }
