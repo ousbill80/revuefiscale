@@ -2198,6 +2198,47 @@ def api_civisme_fiscal_mission(
     return analyse
 
 
+@router.get("/missions/{mission_id}/chronologie")
+def api_chronologie_mission(
+    mission_id: int,
+    utilisateur: UtilisateurDep,
+    session: Annotated[Session, Depends(session_abonne)],
+) -> dict:
+    """Chronologie de la mission — qui a fait quoi et quand.
+
+    Restitution consultative du journal d'audit de la mission en
+    libellés français (dépôts de pièces, changements de statut,
+    décisions, relances, exports…), ordre antichronologique, plafonnée
+    aux événements les plus récents. La consultation est journalisée
+    mais exclue de l'affichage (pas d'auto-pollution). 404 si mission
+    hors tenant (RLS).
+    """
+    from backend.moteur.journal import append_journal
+    from backend.plateforme.chronologie_mission import (
+        ErreurChronologieMission,
+        chronologie_mission,
+    )
+
+    exiger_capacite(utilisateur, "lire")
+    try:
+        chronologie = chronologie_mission(
+            session, utilisateur.tenant_id, mission_id
+        )
+    except ErreurChronologieMission as e:
+        raise HTTPException(
+            status_code=status.HTTP_404_NOT_FOUND, detail=str(e)
+        ) from e
+    append_journal(
+        session,
+        tenant_id=utilisateur.tenant_id,
+        mission_id=mission_id,
+        acteur=utilisateur.email,
+        action="consultation_chronologie_mission",
+        charge_utile={"total_affiche": chronologie["total_affiche"]},
+    )
+    return chronologie
+
+
 @router.get("/missions/{mission_id}/plan-actions")
 def api_plan_actions_mission(
     mission_id: int,

@@ -11682,3 +11682,57 @@ tr.row-active td {
   font-size: 0.76rem;
   font-style: italic;
 }
+
+/* ── Chronologie de la mission (journal d'audit lisible) ─────────── */
+
+.chronomission-liste {
+  list-style: none;
+  margin: 0.6rem 0 0;
+  padding: 0;
+  display: grid;
+  gap: 0.3rem;
+}
+
+.chronomission-item {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  gap: 0.35rem 0.75rem;
+  font-size: 0.8rem;
+  padding: 0.2rem 0;
+  border-bottom: 1px solid
+    color-mix(in srgb, var(--muted, #64748b) 15%, transparent);
+}
+
+.chronomission-item:last-child {
+  border-bottom: none;
+}
+
+.chronomission-date {
+  flex: none;
+  font-variant-numeric: tabular-nums;
+  font-size: 0.76rem;
+  color: var(--muted, #64748b);
+  min-width: 8.5rem;
+}
+
+.chronomission-acteur {
+  flex: none;
+  font-size: 0.76rem;
+  color: var(--muted, #64748b);
+  max-width: 16rem;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.chronomission-libelle {
+  flex: 1 1 12rem;
+  min-width: 10rem;
+}
+
+.chronomission-note {
+  margin: 0.6rem 0 0;
+  font-size: 0.76rem;
+  font-style: italic;
+}

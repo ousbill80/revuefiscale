@@ -28,6 +28,7 @@ import { PrescriptionVue } from "./PrescriptionVue";
 import { CivismeVue } from "./CivismeVue";
 import { PlanActionsVue } from "./PlanActionsVue";
 import { BilanClotureVue } from "./BilanClotureVue";
+import { ChronologieMissionVue } from "./ChronologieMissionVue";
 import type { AuditEntree, AuditJournal, ConclusionRestitution, Restitution } from "./types";
 
 type CollaborateurOpt = {
@@ -681,6 +682,7 @@ export function RestitutionVue({
   const [civismeOuvert, setCivismeOuvert] = useState(false);
   const [planActionsOuvert, setPlanActionsOuvert] = useState(false);
   const [bilanClotureOuvert, setBilanClotureOuvert] = useState(false);
+  const [chronologieOuverte, setChronologieOuverte] = useState(false);
   const [ctrlClotureOuvert, setCtrlClotureOuvert] = useState(false);
   const [ctrlCloture, setCtrlCloture] = useState<ControleClotureOut | null>(
     null,
@@ -960,6 +962,7 @@ export function RestitutionVue({
     | "note"
     | "comparatif"
     | "bilan_cloture"
+    | "chronologie"
     | "ctrlCloture";
 
   function fermerPanneaux(sauf?: PanneauId) {
@@ -976,6 +979,7 @@ export function RestitutionVue({
     if (sauf !== "note") setNoteOuverte(false);
     if (sauf !== "comparatif") setComparatifOuvert(false);
     if (sauf !== "bilan_cloture") setBilanClotureOuvert(false);
+    if (sauf !== "chronologie") setChronologieOuverte(false);
     if (sauf !== "ctrlCloture" && ctrlClotureOuvert) {
       setCtrlClotureOuvert(false);
       setCtrlCloture(null);
@@ -2766,6 +2770,25 @@ export function RestitutionVue({
                     Bilan de clôture
                   </button>
                 </Tooltip>
+                <Tooltip label="Chronologie consultative de la mission issue du journal d'audit : qui a fait quoi et quand (dépôts de pièces, statuts, décisions, relances, exports…).">
+                  <button
+                    type="button"
+                    className={`btn btn-ghost btn-sm dossier2-action${
+                      chronologieOuverte ? " is-actif" : ""
+                    }`}
+                    disabled={busy}
+                    aria-expanded={chronologieOuverte}
+                    onClick={() =>
+                      togglePanneau(
+                        "chronologie",
+                        chronologieOuverte,
+                        setChronologieOuverte,
+                      )
+                    }
+                  >
+                    Chronologie
+                  </button>
+                </Tooltip>
                 {onLienClient && (
                   <Tooltip label={PROCESS_TIPS.lienClient}>
                     <button
@@ -3964,6 +3987,14 @@ export function RestitutionVue({
           missionId={r.mission_id}
           jeton={jeton}
           onFermer={() => setBilanClotureOuvert(false)}
+        />
+      )}
+
+      {chronologieOuverte && (
+        <ChronologieMissionVue
+          missionId={r.mission_id}
+          jeton={jeton}
+          onFermer={() => setChronologieOuverte(false)}
         />
       )}
 
