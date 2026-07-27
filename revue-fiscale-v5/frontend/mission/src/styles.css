@@ -9372,6 +9372,29 @@ tr.row-active td {
 .rest-echeancier-table tbody tr:last-child td { border-bottom: none; }
 .rest-echeancier-date { font-weight: 700; font-variant-numeric: tabular-nums; white-space: nowrap; }
 
+/* ── Restitution — panneau « Prescription des risques » ──────────── */
+.rest-prescription-synthese { display: flex; flex-wrap: wrap; gap: 0.5rem; margin: 0 0 0.75rem; }
+.rest-prescription-stat { flex: 1 1 10rem; display: flex; flex-direction: column; gap: 0.15rem; padding: 0.5rem 0.65rem; border: 1px solid var(--line-soft, #f1f5f9); border-radius: 8px; background: var(--surface, #fff); }
+.rest-prescription-stat-val { font-size: 0.95rem; font-weight: 800; font-variant-numeric: tabular-nums; color: var(--ink, #0f172a); }
+.rest-prescription-stat-lbl { font-size: 0.7rem; text-transform: uppercase; letter-spacing: 0.03em; color: var(--muted, #64748b); }
+.rest-prescription-stat--prescrit { border-color: #fecaca; background: #fef2f2; }
+.rest-prescription-stat--prescrit .rest-prescription-stat-val { color: #b91c1c; }
+.rest-prescription-stat--proche { border-color: #fde68a; background: #fffbeb; }
+.rest-prescription-stat--proche .rest-prescription-stat-val { color: #92400e; }
+.rest-prescription-groupe { margin: 0 0 0.7rem; }
+.rest-prescription-groupe-titre { display: flex; align-items: center; gap: 0.4rem; margin: 0 0 0.4rem; font-size: 0.82rem; font-weight: 800; color: var(--ink, #0f172a); }
+.rest-prescription-groupe--non-prescrit .rest-prescription-groupe-titre { font-weight: 600; color: var(--muted, #64748b); }
+.rest-prescription-badge { display: inline-flex; align-items: center; justify-content: center; min-width: 1.35rem; padding: 0.05rem 0.4rem; border: 1px solid var(--line, #e5e7eb); border-radius: 999px; font-size: 0.7rem; font-weight: 800; background: var(--surface-soft, #f1f5f9); color: var(--ink, #0f172a); }
+.rest-prescription-badge--prescrit { background: #fef2f2; color: #b91c1c; border-color: #fecaca; }
+.rest-prescription-badge--proche { background: #fffbeb; color: #92400e; border-color: #fde68a; }
+.rest-prescription-item { border-left: 3px solid var(--line-soft, #f1f5f9); }
+.rest-prescription-groupe--prescrit .rest-prescription-item { border-left-color: #fca5a5; }
+.rest-prescription-groupe--proche .rest-prescription-item { border-left-color: #fcd34d; }
+.rest-prescription-libelle { overflow-wrap: anywhere; }
+.rest-prescription-meta { display: flex; flex-wrap: wrap; gap: 0.3rem 0.9rem; font-size: 0.76rem; }
+.rest-prescription-date { font-variant-numeric: tabular-nums; white-space: nowrap; }
+.rest-prescription-hypothese { margin: 0.55rem 0 0; font-size: 0.72rem; font-style: italic; }
+
 /* ── Pilotage — carte « Échéances déclaratives » ─────────────────── */
 .pilotage-badge { margin-left: auto; display: inline-flex; align-items: center; padding: 0.1rem 0.5rem; border: 1px solid transparent; border-radius: 999px; font-size: 0.7rem; font-weight: 800; white-space: nowrap; }
 .pilotage-badge.imminent { background: #fffbeb; color: #92400e; border-color: #fde68a; }

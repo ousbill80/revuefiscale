@@ -24,6 +24,7 @@ import {
 import { RapportArtifact } from "./RapportArtifact";
 import { EcheancierFiscalVue } from "./EcheancierFiscalVue";
 import { PilotageVue } from "./PilotageVue";
+import { PrescriptionVue } from "./PrescriptionVue";
 import type { AuditEntree, AuditJournal, ConclusionRestitution, Restitution } from "./types";
 
 type CollaborateurOpt = {
@@ -635,6 +636,7 @@ export function RestitutionVue({
   const [progBusy, setProgBusy] = useState<string | null>(null);
   const [echeancierOuvert, setEcheancierOuvert] = useState(false);
   const [pilotageOuvert, setPilotageOuvert] = useState(false);
+  const [prescriptionOuverte, setPrescriptionOuverte] = useState(false);
   const [ctrlClotureOuvert, setCtrlClotureOuvert] = useState(false);
   const [ctrlCloture, setCtrlCloture] = useState<ControleClotureOut | null>(
     null,
@@ -2201,6 +2203,17 @@ export function RestitutionVue({
               Échéancier fiscal
             </button>
           </Tooltip>
+          <Tooltip label="Prescription des risques : analyse déterministe du délai de reprise de droit commun — risques prescrits à basculer, proches de prescription (<12 mois) et non prescrits, avec exposition prescrite. Consultative : l'humain décide.">
+            <button
+              type="button"
+              className="btn btn-ghost btn-sm rest-prescription-btn"
+              onClick={() => setPrescriptionOuverte((o) => !o)}
+              disabled={!jeton}
+              aria-expanded={prescriptionOuverte}
+            >
+              Prescription
+            </button>
+          </Tooltip>
           <Tooltip label="Visas de supervision par phase : le préparateur atteste son travail, le réviseur revoit, l'associé signe — dans cet ordre. Registre formel exigé par les normes d'exercice professionnel.">
             <button
               type="button"
@@ -3127,6 +3140,14 @@ export function RestitutionVue({
           missionId={r.mission_id}
           jeton={jeton}
           onFermer={() => setEcheancierOuvert(false)}
+        />
+      )}
+
+      {prescriptionOuverte && (
+        <PrescriptionVue
+          missionId={r.mission_id}
+          jeton={jeton}
+          onFermer={() => setPrescriptionOuverte(false)}
         />
       )}
 
