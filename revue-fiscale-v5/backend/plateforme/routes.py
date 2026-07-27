@@ -1674,6 +1674,52 @@ def api_echeancier_fiscal_mission(
     return echeancier
 
 
+@router.get("/missions/{mission_id}/pilotage")
+def api_pilotage_mission(
+    mission_id: int,
+    utilisateur: UtilisateurDep,
+    session: Annotated[Session, Depends(session_abonne)],
+) -> dict:
+    """Pilotage de mission — synthèse transverse (lecture seule).
+
+    Agrège en un appel les synthèses des modules existants : avancement
+    du programme de travail, contrôle de pré-clôture, temps passés,
+    rentabilité, visas et conclusions de la dernière exécution — la
+    lecture d'ensemble du chef de mission. 404 si mission hors tenant.
+    """
+    from backend.moteur.journal import append_journal
+    from backend.plateforme.pilotage_mission import (
+        ErreurPilotageMission,
+        pilotage_mission,
+    )
+
+    exiger_capacite(utilisateur, "lire")
+    try:
+        pilotage = pilotage_mission(
+            session, utilisateur.tenant_id, mission_id
+        )
+    except ErreurPilotageMission as e:
+        raise HTTPException(
+            status_code=status.HTTP_404_NOT_FOUND, detail=str(e)
+        ) from e
+    append_journal(
+        session,
+        tenant_id=utilisateur.tenant_id,
+        mission_id=mission_id,
+        acteur=utilisateur.email,
+        action="consultation_pilotage_mission",
+        charge_utile={
+            "avancement_pct": pilotage["programme"]["synthese"][
+                "avancement_pct"
+            ],
+            "cloture_recommandee": pilotage["controle_cloture"][
+                "cloture_recommandee"
+            ],
+        },
+    )
+    return pilotage
+
+
 # ── Conclusions (validation humaine) ───────────────────────────────
 
 

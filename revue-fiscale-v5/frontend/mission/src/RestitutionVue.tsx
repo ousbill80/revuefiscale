@@ -23,6 +23,7 @@ import {
 } from "./risqueTraitement";
 import { RapportArtifact } from "./RapportArtifact";
 import { EcheancierFiscalVue } from "./EcheancierFiscalVue";
+import { PilotageVue } from "./PilotageVue";
 import type { AuditEntree, AuditJournal, ConclusionRestitution, Restitution } from "./types";
 
 type CollaborateurOpt = {
@@ -631,6 +632,7 @@ export function RestitutionVue({
   const [progErr, setProgErr] = useState<string | null>(null);
   const [progBusy, setProgBusy] = useState<string | null>(null);
   const [echeancierOuvert, setEcheancierOuvert] = useState(false);
+  const [pilotageOuvert, setPilotageOuvert] = useState(false);
   const [ctrlClotureOuvert, setCtrlClotureOuvert] = useState(false);
   const [ctrlCloture, setCtrlCloture] = useState<ControleClotureOut | null>(
     null,
@@ -2077,6 +2079,17 @@ export function RestitutionVue({
               {demandeErr}
             </span>
           )}
+          <Tooltip label="Pilotage de mission : synthèse transverse en un coup d'œil — avancement du programme, contrôle de pré-clôture, temps passés, rentabilité, visas et conclusions de la dernière exécution.">
+            <button
+              type="button"
+              className="btn btn-ghost btn-sm rest-pilotage-btn"
+              onClick={() => setPilotageOuvert((o) => !o)}
+              disabled={!jeton}
+              aria-expanded={pilotageOuvert}
+            >
+              Pilotage
+            </button>
+          </Tooltip>
           {suivi && suivi.synthese.total > 0 && (
             <Tooltip label="Suivi des réponses client à la demande de renseignements : marquez chaque item reçu / sans objet, planifiez les relances.">
               <button
@@ -3054,6 +3067,14 @@ export function RestitutionVue({
             </ul>
           )}
         </section>
+      )}
+
+      {pilotageOuvert && (
+        <PilotageVue
+          missionId={r.mission_id}
+          jeton={jeton}
+          onFermer={() => setPilotageOuvert(false)}
+        />
       )}
 
       {echeancierOuvert && (
