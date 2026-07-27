@@ -71,6 +71,12 @@ _IMPOT_PAR_TOKEN: Final[dict[str, str]] = {
     "bic": "IS/BIC",
     "is": "IS/BIC",
     "resultat": "IS/BIC",
+    "tee": "Taxe de l'entreprenant",
+    "tce": "Taxe de l'entreprenant",
+    "entreprenant": "Taxe de l'entreprenant",
+    "ime": "Impôt des microentreprises",
+    "microentreprise": "Impôt des microentreprises",
+    "microentreprises": "Impôt des microentreprises",
 }
 
 

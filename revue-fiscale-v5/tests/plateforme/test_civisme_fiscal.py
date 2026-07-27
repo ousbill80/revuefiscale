@@ -107,6 +107,23 @@ def test_elements_depuis_pieces_correspondance_deterministe():
     assert "Déclaration TVA janvier 2025.pdf" in elements[1]["source"]
 
 
+def test_elements_depuis_pieces_regimes_forfaitaires():
+    elements = elements_depuis_pieces(
+        [
+            {
+                "type_piece": "autre",
+                "nom_fichier": "declaration_tee_janvier_2025.csv",
+            },
+            {"type_piece": "autre", "nom_fichier": "ime_trimestre_1.pdf"},
+        ],
+        2025,
+    )
+    assert elements[0]["impot"] == "Taxe de l'entreprenant"
+    assert elements[0]["periode"] == "janvier 2025"
+    assert elements[1]["impot"] == "Impôt des microentreprises"
+    assert elements[1]["periode"] is None
+
+
 def test_elements_depuis_pieces_autre_sans_mois_couvre_l_impot():
     elements = elements_depuis_pieces(
         [{"type_piece": "autre", "nom_fichier": "patente_2025.pdf"}], 2025
