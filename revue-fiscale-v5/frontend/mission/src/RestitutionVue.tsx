@@ -588,6 +588,8 @@ export function RestitutionVue({
   const [dossierErr, setDossierErr] = useState<string | null>(null);
   const [courrierEnvoiBusy, setCourrierEnvoiBusy] = useState(false);
   const [courrierEnvoiErr, setCourrierEnvoiErr] = useState<string | null>(null);
+  const [affirmationBusy, setAffirmationBusy] = useState(false);
+  const [affirmationErr, setAffirmationErr] = useState<string | null>(null);
   const [comparatifOuvert, setComparatifOuvert] = useState(false);
   const [comparatif, setComparatif] = useState<ComparatifOut | null>(null);
   const [comparatifErr, setComparatifErr] = useState<string | null>(null);
@@ -1044,6 +1046,34 @@ export function RestitutionVue({
       );
     } finally {
       setCourrierEnvoiBusy(false);
+    }
+  }
+
+  async function telechargerLettreAffirmation() {
+    if (!jeton || !r.mission_id || affirmationBusy) return;
+    setAffirmationBusy(true);
+    setAffirmationErr(null);
+    try {
+      const denom = (
+        r.identification?.contribuable_denomination || "client"
+      )
+        .normalize("NFKD")
+        .replace(/[\u0300-\u036f]/g, "")
+        .replace(/[^A-Za-z0-9]+/g, "_")
+        .replace(/^_+|_+$/g, "")
+        .toUpperCase() || "CLIENT";
+      const exo = r.identification?.exercice ?? "exercice";
+      await telecharger(
+        `/api/v1/missions/${r.mission_id}/lettre-affirmation.docx`,
+        jeton,
+        `lettre_affirmation_${denom}_${exo}.docx`,
+      );
+    } catch (e) {
+      setAffirmationErr(
+        e instanceof Error ? e.message : "téléchargement impossible",
+      );
+    } finally {
+      setAffirmationBusy(false);
     }
   }
 
@@ -2062,6 +2092,21 @@ export function RestitutionVue({
           {courrierEnvoiErr && (
             <span className="rest-lettre-err" role="alert">
               {courrierEnvoiErr}
+            </span>
+          )}
+          <Tooltip label="Lettre d'affirmation de la direction (.docx) — à en-tête du client, adressée au cabinet : la direction confirme l'exhaustivité des informations transmises (comptabilité/FEC, déclarations, litiges et contrôles en cours, passifs fiscaux, réponses). À faire signer par le représentant légal avant la clôture.">
+            <button
+              type="button"
+              className="btn btn-ghost btn-sm rest-affirmation-btn"
+              onClick={() => void telechargerLettreAffirmation()}
+              disabled={affirmationBusy || !jeton}
+            >
+              {affirmationBusy ? "Lettre…" : "Lettre d'affirmation"}
+            </button>
+          </Tooltip>
+          {affirmationErr && (
+            <span className="rest-lettre-err" role="alert">
+              {affirmationErr}
             </span>
           )}
           <Tooltip label="Demande de renseignements et de documents au client — questions de la revue analytique et pièces manquantes, numérotées pour réponse">

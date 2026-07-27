@@ -35,6 +35,7 @@ from backend.plateforme.demande_renseignements import (
     generer_demande_renseignements,
 )
 from backend.plateforme.echeancier_fiscal import echeancier_mission
+from backend.plateforme.lettre_affirmation import generer_lettre_affirmation
 from backend.plateforme.lettre_mission import generer_lettre_mission
 from backend.plateforme.programme_travail import etat_programme
 from backend.plateforme.provision_risques import calculer_provision
@@ -515,6 +516,15 @@ def _piece_courrier_envoi(
     return generer_courrier_envoi(session, tenant_id, mission_id)
 
 
+def _piece_lettre_affirmation(
+    session: Session, tenant_id: int, mission_id: int, meta: dict[str, Any]
+) -> bytes:
+    """Lettre d'affirmation de la direction — toujours produite (les
+    compteurs de risques/anomalies valent 0 sans exécution ni risque)."""
+    contenu, _nom = generer_lettre_affirmation(session, tenant_id, mission_id)
+    return contenu
+
+
 def _piece_rentabilite(
     session: Session, tenant_id: int, mission_id: int, meta: dict[str, Any]
 ) -> bytes:
@@ -675,6 +685,11 @@ _PIECES: Final[
         "16_rentabilite_mission.txt",
         "Rentabilité de la mission (honoraires, temps valorisé, marge)",
         _piece_rentabilite,
+    ),
+    (
+        "17_lettre_affirmation.docx",
+        "Lettre d'affirmation de la direction (à faire signer)",
+        _piece_lettre_affirmation,
     ),
 )
 

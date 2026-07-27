@@ -657,6 +657,49 @@ def api_courrier_envoi_docx(
     )
 
 
+@router.get("/missions/{mission_id}/lettre-affirmation.docx")
+def api_lettre_affirmation_docx(
+    mission_id: int,
+    utilisateur: UtilisateurDep,
+    session: Annotated[Session, Depends(session_abonne)],
+) -> Response:
+    """Lettre d'affirmation de la direction .docx — à en-tête du client.
+
+    Toujours produite (les compteurs de risques/anomalies valent 0 sans
+    exécution ni risque) : seule une mission hors tenant (RLS) → 404.
+    """
+    from backend.moteur.journal import append_journal
+    from backend.plateforme.lettre_affirmation import (
+        ErreurLettreAffirmationIntrouvable,
+        generer_lettre_affirmation_complete,
+    )
+
+    exiger_capacite(utilisateur, "lire")
+    try:
+        contenu, nom_fichier, stats = generer_lettre_affirmation_complete(
+            session, utilisateur.tenant_id, mission_id
+        )
+    except ErreurLettreAffirmationIntrouvable as e:
+        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail=str(e)) from e
+    append_journal(
+        session,
+        tenant_id=utilisateur.tenant_id,
+        mission_id=mission_id,
+        acteur=utilisateur.email,
+        action="telechargement_lettre_affirmation",
+        charge_utile=dict(stats),
+    )
+    return Response(
+        content=contenu,
+        media_type=(
+            "application/vnd.openxmlformats-officedocument.wordprocessingml.document"
+        ),
+        headers={
+            "Content-Disposition": f'attachment; filename="{nom_fichier}"'
+        },
+    )
+
+
 @router.get("/missions/{mission_id}/dossier-travail.zip")
 def api_dossier_travail_zip(
     mission_id: int,
