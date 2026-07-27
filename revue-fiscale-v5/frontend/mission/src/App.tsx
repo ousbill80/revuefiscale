@@ -50,6 +50,7 @@ import {
   type CabinetProfil,
 } from "./CadrageMissionVue";
 import { CompteVue } from "./CompteVue";
+import { AgendaFiscalVue } from "./AgendaFiscalVue";
 import { EquipeVue } from "./EquipeVue";
 import { FacturationVue } from "./FacturationVue";
 import {
@@ -4348,6 +4349,11 @@ export function App() {
                   ))}
                 </div>
               )}
+
+              <AgendaFiscalVue
+                jeton={session?.jeton ?? null}
+                onOuvrirMission={(id) => void ouvrirMission(id)}
+              />
 
               <div className="dash-split">
                 <section className="panel dense list-panel">
