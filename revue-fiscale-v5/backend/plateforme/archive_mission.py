@@ -26,12 +26,14 @@ from typing import Any, Callable, Final
 from sqlalchemy import text
 from sqlalchemy.orm import Session
 
+from backend.plateforme.comparatif_executions import comparer_executions
 from backend.plateforme.contexte import contexte_tenant
 from backend.plateforme.controle_cloture import evaluer_cloture
 from backend.plateforme.demande_renseignements import (
     generer_demande_renseignements,
 )
 from backend.plateforme.lettre_mission import generer_lettre_mission
+from backend.plateforme.provision_risques import calculer_provision
 from backend.plateforme.rapport_risques import exporter_rapport_risques_pdf
 from backend.plateforme.suivi_renseignements import (
     lister_items,
@@ -244,6 +246,100 @@ def _piece_controle_cloture(
     return "\n".join(lignes).encode("utf-8")
 
 
+_LIBELLES_CATEGORIES_COMPARATIF: Final[tuple[tuple[str, str], ...]] = (
+    ("ameliorations", "AMÉLIORATIONS"),
+    ("degradations", "DÉGRADATIONS"),
+    ("inchanges_a_risque", "INCHANGÉS À RISQUE"),
+    ("nouveaux", "NOUVELLES RÈGLES"),
+    ("disparus", "RÈGLES DISPARUES"),
+)
+
+
+def _piece_comparatif_executions(
+    session: Session, tenant_id: int, mission_id: int, meta: dict[str, Any]
+) -> bytes:
+    c = comparer_executions(session, tenant_id, mission_id)
+    ea, eb = c["execution_a"], c["execution_b"]
+    lignes = [
+        "COMPARATIF DES DEUX DERNIÈRES EXÉCUTIONS — déterministe",
+        f"Mission #{mission_id} — exécution #{ea['id']}"
+        + (f" ({ea['date']})" if ea.get("date") else "")
+        + f" → exécution #{eb['id']}"
+        + (f" ({eb['date']})" if eb.get("date") else ""),
+        "",
+    ]
+    for cle, libelle in _LIBELLES_CATEGORIES_COMPARATIF:
+        items = c.get(cle, [])
+        lignes.append(f"{libelle} ({len(items)})")
+        for it in items:
+            transition = f"{it.get('avant') or '—'} → {it.get('apres') or '—'}"
+            montants = ""
+            if it.get("montant_avant") is not None or it.get("montant_apres") is not None:
+                montants = (
+                    f" | montant : {it.get('montant_avant') or '—'}"
+                    f" → {it.get('montant_apres') or '—'}"
+                )
+            lignes.append(f"  - {it['regle_id']} : {transition}{montants}")
+        if not items:
+            lignes.append("  (aucune)")
+        lignes.append("")
+    s = c.get("synthese", {})
+    lignes.append(
+        "Synthèse : "
+        f"{s.get('ameliorations', 0)} amélioration(s), "
+        f"{s.get('degradations', 0)} dégradation(s), "
+        f"{s.get('inchanges_a_risque', 0)} inchangé(s) à risque, "
+        f"{s.get('nouveaux', 0)} nouvelle(s), {s.get('disparus', 0)} disparue(s)."
+    )
+    lignes.append(
+        "Delta montant des anomalies : "
+        f"{s.get('delta_montant_anomalies', '0')} FCFA."
+    )
+    return "\n".join(lignes).encode("utf-8")
+
+
+def _piece_provision_risques(
+    session: Session, tenant_id: int, mission_id: int, meta: dict[str, Any]
+) -> bytes:
+    p = calculer_provision(session, tenant_id, int(meta["contribuable_id"]))
+    if not p["lignes"] and not p["passifs_eventuels"]:
+        raise ErreurArchiveMission(
+            "aucun risque ouvert à provisionner ni passif éventuel"
+        )
+    lignes = [
+        "PROVISION POUR RISQUES FISCAUX — proposition indicative (SYSCOHADA)",
+        f"Client : {meta.get('contribuable_denomination') or '[non renseigné]'}",
+        "",
+        f"RISQUES PROVISIONNABLES ({len(p['lignes'])})",
+    ]
+    for li in p["lignes"]:
+        lignes.append(
+            f"  - #{li['risque_id']} {li['titre']} ({li['impot']}, "
+            f"exercice {li['exercice']}) : droit simple {li['base_droit_simple']}"
+            f" + pénalités/intérêts {li['penalites_interets']}"
+            f" = {li['montant_provisionnable']} FCFA"
+        )
+    if not p["lignes"]:
+        lignes.append("  (aucun)")
+    lignes += ["", f"Total provision proposée : {p['total_provision']} FCFA", ""]
+    lignes.append(f"PASSIFS ÉVENTUELS ({len(p['passifs_eventuels'])})")
+    for pe in p["passifs_eventuels"]:
+        lignes.append(
+            f"  - #{pe['risque_id']} {pe['titre']} : {pe['montant_estime']} FCFA"
+        )
+    if not p["passifs_eventuels"]:
+        lignes.append("  (aucun)")
+    e = p["ecriture_proposee"]
+    lignes += ["", f"ÉCRITURE PROPOSÉE — {e['libelle']}"]
+    for le in e["lignes"]:
+        lignes.append(
+            f"  {le['sens'].upper():6} {le['compte']} {le['intitule']} : "
+            f"{le['montant']} FCFA"
+        )
+    lignes += [""] + [f"* {h}" for h in p.get("hypotheses", [])]
+    return "\n".join(lignes).encode("utf-8")
+
+
 # Ordre du dossier : (nom de fichier dans le ZIP, description, constructeur).
 _PIECES: Final[
     tuple[tuple[str, str, Callable[[Session, int, int, dict[str, Any]], bytes]], ...]
@@ -282,6 +378,16 @@ _PIECES: Final[
         "07_controle_cloture.txt",
         "Contrôle qualité de pré-clôture",
         _piece_controle_cloture,
+    ),
+    (
+        "08_comparatif_executions.txt",
+        "Comparatif des deux dernières exécutions",
+        _piece_comparatif_executions,
+    ),
+    (
+        "09_provision_risques.txt",
+        "Provision pour risques fiscaux proposée (indicatif)",
+        _piece_provision_risques,
     ),
 )
 

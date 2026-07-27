@@ -16,6 +16,7 @@ from fastapi.testclient import TestClient  # noqa: E402
 
 from backend.main import app  # noqa: E402
 from backend.plateforme import archive_mission  # noqa: E402
+from backend.plateforme.contexte import contexte_tenant  # noqa: E402
 from tests.plateforme.test_demande_renseignements import (  # noqa: E402
     _assurer_version,
     _cabinet,
@@ -92,14 +93,79 @@ def test_zip_valide_contenu_et_sommaire(session):
         assert "CONTRÔLE QUALITÉ DE PRÉ-CLÔTURE" in ctrl
         assert "Clôture recommandée" in ctrl
 
-        # Sommaire : identification + pièces incluses, aucune omise.
+        # Une seule exécution et aucun risque : 08 et 09 sont omises.
+        assert "08_comparatif_executions.txt" not in noms
+        assert "09_provision_risques.txt" not in noms
+
+        # Sommaire : identification + pièces incluses + omissions motivées.
         sommaire = z.read("00_sommaire.txt").decode("utf-8")
         assert "DOSSIER DE TRAVAIL" in sommaire
         assert "PM Demande FICTIF" in sommaire
         assert "2025" in sommaire
         assert "PIÈCES INCLUSES (7)" in sommaire
-        assert "PIÈCES OMISES (0)" in sommaire
+        assert "PIÈCES OMISES (2)" in sommaire
+        assert "08_comparatif_executions.txt : OMISE" in sommaire
+        assert "09_provision_risques.txt : OMISE" in sommaire
         assert "Généré le" in sommaire
+
+
+def test_comparatif_et_provision_inclus_quand_disponibles(session):
+    """Deux exécutions + un risque ouvert probable → pièces 08 et 09."""
+    _assurer_version(session)
+    email = _cabinet(session)
+    client = TestClient(app)
+    h, tid = _connexion(client, email)
+    mid = _mission(client, h)
+    suffixe = uuid.uuid4().hex[:6].upper()
+    _preparer(session, tid, mid, suffixe)
+    # Seconde exécution (règles différentes → nouveaux/disparus).
+    _conclusions_non_verifiables(
+        session,
+        tid,
+        mid,
+        [(f"TVA-05-DED-{suffixe}", "Déductions de TVA à justifier")],
+    )
+    with contexte_tenant(session, tid):
+        cid = session.execute(
+            text("SELECT contribuable_id FROM mission WHERE id = :m"),
+            {"m": mid},
+        ).scalar_one()
+        session.execute(
+            text(
+                "INSERT INTO risque (tenant_id, contribuable_id, impot, "
+                "libelle, montant_estime, statut, probabilite, "
+                "exercice_origine) "
+                "VALUES (:t, :c, 'TVA', 'TVA collectée non déclarée', "
+                "1000000, 'ouvert', 'probable', 2024)"
+            ),
+            {"t": tid, "c": cid},
+        )
+    session.commit()
+
+    resp = _telecharger_zip(client, h, mid)
+    with zipfile.ZipFile(io.BytesIO(resp.content)) as z:
+        noms = set(z.namelist())
+        assert "08_comparatif_executions.txt" in noms
+        assert "09_provision_risques.txt" in noms
+
+        comparatif = z.read("08_comparatif_executions.txt").decode("utf-8")
+        assert "COMPARATIF DES DEUX DERNIÈRES EXÉCUTIONS" in comparatif
+        assert f"TVA-05-DED-{suffixe}" in comparatif
+        assert f"OBL-36-ETII-{suffixe}" in comparatif
+        assert "RÈGLES DISPARUES" in comparatif
+        assert "Synthèse :" in comparatif
+        assert "Delta montant des anomalies" in comparatif
+
+        provision = z.read("09_provision_risques.txt").decode("utf-8")
+        assert "PROVISION POUR RISQUES FISCAUX" in provision
+        assert "TVA collectée non déclarée" in provision
+        assert "Total provision proposée" in provision
+        assert "DEBIT  6911" in provision
+        assert "CREDIT 1918" in provision
+
+        sommaire = z.read("00_sommaire.txt").decode("utf-8")
+        assert "PIÈCES INCLUSES (9)" in sommaire
+        assert "PIÈCES OMISES (0)" in sommaire
 
 
 def test_piece_en_echec_est_omise_et_notee(session, monkeypatch):
@@ -129,7 +195,8 @@ def test_piece_en_echec_est_omise_et_notee(session, monkeypatch):
             "02_rapport_restitution.docx : OMISE — panne simulée du rendu Word"
             in sommaire
         )
-        assert "PIÈCES OMISES (1)" in sommaire
+        # Panne Word + 08 (une seule exécution) + 09 (aucun risque).
+        assert "PIÈCES OMISES (3)" in sommaire
 
 
 def test_dossier_cross_tenant_404(session):
