@@ -165,12 +165,23 @@ def test_zip_valide_contenu_et_sommaire(session):
         assert "Aucun risque ouvert — rien à planifier." in plan
         assert "consultatif" in plan
 
+        # 21 — courrier de relance : toujours présent (items du suivi en
+        # attente sur cette mission → liste numérotée), mention de relecture.
+        assert "21_courrier_relance.txt" in noms
+        relance = z.read("21_courrier_relance.txt").decode("utf-8")
+        assert "Objet : Relance — pièces et renseignements en attente" in relance
+        assert "Madame, Monsieur," in relance
+        assert "demeurent en attente" in relance
+        assert "1. " in relance
+        assert "aucune relance n'est nécessaire" not in relance
+        assert "Courrier généré automatiquement" in relance
+
         # Sommaire : identification + pièces incluses + omissions motivées.
         sommaire = z.read("00_sommaire.txt").decode("utf-8")
         assert "DOSSIER DE TRAVAIL" in sommaire
         assert "PM Demande FICTIF" in sommaire
         assert "2025" in sommaire
-        assert "PIÈCES INCLUSES (14)" in sommaire
+        assert "PIÈCES INCLUSES (15)" in sommaire
         assert (
             "14_courrier_envoi_rapport.docx : Courrier d'envoi du rapport"
             in sommaire
@@ -194,6 +205,10 @@ def test_zip_valide_contenu_et_sommaire(session):
         assert (
             "20_plan_actions.txt : Plan d'actions post-revue "
             "(suggestions par risque non clos)" in sommaire
+        )
+        assert (
+            "21_courrier_relance.txt : Courrier de relance des éléments "
+            "en attente (circularisation)" in sommaire
         )
         # 16 — rentabilité : omise sans honoraires ni taux horaire saisis.
         assert "16_rentabilite_mission.txt" not in noms
@@ -295,7 +310,7 @@ def test_comparatif_et_provision_inclus_quand_disponibles(session):
         assert "consultatif" in plan
 
         sommaire = z.read("00_sommaire.txt").decode("utf-8")
-        assert "PIÈCES INCLUSES (16)" in sommaire
+        assert "PIÈCES INCLUSES (17)" in sommaire
         # Ni temps, ni visa, ni réponse, ni paramètre de rentabilité sur
         # cette mission → 10/11/12/16 omises.
         assert "PIÈCES OMISES (4)" in sommaire
@@ -305,6 +320,7 @@ def test_comparatif_et_provision_inclus_quand_disponibles(session):
         assert "18_prescription_risques.txt" in noms
         assert "19_civisme_fiscal.txt" in noms
         assert "20_plan_actions.txt" in noms
+        assert "21_courrier_relance.txt" in noms
 
 
 def test_temps_visas_reponses_inclus_quand_disponibles(session):
@@ -425,7 +441,7 @@ def test_temps_visas_reponses_inclus_quand_disponibles(session):
 
         # Sommaire cohérent : 10/11/12/16 incluses, plus omises.
         sommaire = z.read("00_sommaire.txt").decode("utf-8")
-        assert "PIÈCES INCLUSES (18)" in sommaire
+        assert "PIÈCES INCLUSES (19)" in sommaire
         assert "PIÈCES OMISES (2)" in sommaire
         assert (
             "16_rentabilite_mission.txt : Rentabilité de la mission"
@@ -480,6 +496,7 @@ def test_piece_en_echec_est_omise_et_notee(session, monkeypatch):
         assert "18_prescription_risques.txt" in noms
         assert "19_civisme_fiscal.txt" in noms
         assert "20_plan_actions.txt" in noms
+        assert "21_courrier_relance.txt" in noms
         sommaire = z.read("00_sommaire.txt").decode("utf-8")
         assert (
             "02_rapport_restitution.docx : OMISE — panne simulée du rendu Word"

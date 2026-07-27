@@ -35,6 +35,7 @@ from backend.plateforme.comparatif_executions import comparer_executions
 from backend.plateforme.contexte import contexte_tenant
 from backend.plateforme.controle_cloture import evaluer_cloture
 from backend.plateforme.courrier_envoi_rapport import generer_courrier_envoi
+from backend.plateforme.courrier_relance import courrier_mission
 from backend.plateforme.demande_renseignements import (
     generer_demande_renseignements,
 )
@@ -744,6 +745,17 @@ def _piece_plan_actions(
     return "\n".join(lignes).encode("utf-8")
 
 
+def _piece_courrier_relance(
+    session: Session, tenant_id: int, mission_id: int, meta: dict[str, Any]
+) -> bytes:
+    """Courrier de relance texte — toujours produit (sans item ouvert, le
+    courrier indique qu'aucune relance n'est nécessaire).
+    ``courrier_mission`` ouvre son propre ``contexte_tenant`` : appel
+    HORS de tout autre contexte."""
+    c = courrier_mission(session, tenant_id, mission_id)
+    return str(c["courrier"]).encode("utf-8")
+
+
 # Ordre du dossier : (nom de fichier dans le ZIP, description, constructeur).
 _PIECES: Final[
     tuple[tuple[str, str, Callable[[Session, int, int, dict[str, Any]], bytes]], ...]
@@ -847,6 +859,11 @@ _PIECES: Final[
         "20_plan_actions.txt",
         "Plan d'actions post-revue (suggestions par risque non clos)",
         _piece_plan_actions,
+    ),
+    (
+        "21_courrier_relance.txt",
+        "Courrier de relance des éléments en attente (circularisation)",
+        _piece_courrier_relance,
     ),
 )
 

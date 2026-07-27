@@ -20,6 +20,8 @@ pures + lecture seule sous RLS.
 """
 from __future__ import annotations
 
+import csv
+import io
 import unicodedata
 from datetime import date, timedelta
 from typing import Any, Final
@@ -283,6 +285,47 @@ def generer_ics(echeances: list[dict[str, Any]], aujourd_hui: date) -> str:
     for ligne in lignes:
         pliees.extend(_plier_ligne_ics(ligne))
     return _ICS_FIN_LIGNE.join(pliees) + _ICS_FIN_LIGNE
+
+
+# ── Export CSV (Excel FR, séparateur « ; ») ──────────────────────────
+
+# En-tête du CSV de l'agenda — délimiteur « ; » (usage cabinet / Excel FR).
+ENTETE_AGENDA_CSV: Final[tuple[str, ...]] = (
+    "date_limite",
+    "impot",
+    "obligation",
+    "periode",
+    "client",
+    "mission",
+    "statut",
+)
+
+
+def generer_csv(agenda: dict) -> str:
+    """PUR — CSV « ; » des échéances de l'agenda (Excel FR).
+
+    Une ligne par échéance de ``agenda["echeances"]``, dans l'ordre trié
+    de l'agenda (date limite puis client, impôt, obligation). Échappement
+    CSV par le module stdlib : valeurs entre guillemets (doublés) si
+    elles contiennent « ; », un guillemet ou un retour à la ligne. Le BOM
+    UTF-8 est ajouté côté route, pas ici. Agenda vide → en-tête seul.
+    """
+    buf = io.StringIO()
+    w = csv.writer(buf, delimiter=";", lineterminator="\n")
+    w.writerow(ENTETE_AGENDA_CSV)
+    for e in list(agenda.get("echeances") or []):
+        w.writerow(
+            [
+                str(e.get("date_limite") or ""),
+                str(e.get("impot") or ""),
+                str(e.get("obligation") or ""),
+                str(e.get("periode") or ""),
+                str(e.get("client") or ""),
+                str(e.get("mission_id") or ""),
+                str(e.get("statut") or ""),
+            ]
+        )
+    return buf.getvalue()
 
 
 # ── Lecture cabinet (RLS) ────────────────────────────────────────────

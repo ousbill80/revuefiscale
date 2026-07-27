@@ -69,6 +69,7 @@ export function AgendaFiscalVue({ jeton, onOuvrirMission }: Props) {
   const [busy, setBusy] = useState(false);
   const [err, setErr] = useState<string | null>(null);
   const [exportBusy, setExportBusy] = useState(false);
+  const [exportCsvBusy, setExportCsvBusy] = useState(false);
 
   async function exporterIcs() {
     if (!jeton || exportBusy) return;
@@ -84,6 +85,23 @@ export function AgendaFiscalVue({ jeton, onOuvrirMission }: Props) {
       setErr("Export du calendrier impossible pour le moment.");
     } finally {
       setExportBusy(false);
+    }
+  }
+
+  async function exporterCsv() {
+    if (!jeton || exportCsvBusy) return;
+    setExportCsvBusy(true);
+    setErr(null);
+    try {
+      await telecharger(
+        `/api/v1/cabinet/agenda-fiscal.csv?jours=${jours}`,
+        jeton,
+        "agenda-fiscal.csv",
+      );
+    } catch {
+      setErr("Export du tableur impossible pour le moment.");
+    } finally {
+      setExportCsvBusy(false);
     }
   }
 
@@ -152,6 +170,15 @@ export function AgendaFiscalVue({ jeton, onOuvrirMission }: Props) {
             onClick={() => void exporterIcs()}
           >
             {exportBusy ? "Export…" : "Exporter (.ics)"}
+          </button>
+          <button
+            type="button"
+            className="agenda2-pastille"
+            title={`Télécharger les échéances (${jours} jours) au format CSV (Excel)`}
+            disabled={exportCsvBusy || !agenda?.echeances.length}
+            onClick={() => void exporterCsv()}
+          >
+            {exportCsvBusy ? "Export…" : "Exporter (.csv)"}
           </button>
         </div>
       </div>

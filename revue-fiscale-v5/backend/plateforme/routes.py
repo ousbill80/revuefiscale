@@ -3571,3 +3571,42 @@ def api_agenda_fiscal_cabinet_ics(
             "Content-Disposition": 'attachment; filename="agenda-fiscal.ics"'
         },
     )
+
+
+@router.get("/cabinet/agenda-fiscal.csv")
+def api_agenda_fiscal_cabinet_csv(
+    utilisateur: UtilisateurDep,
+    session: Annotated[Session, Depends(session_abonne)],
+    jours: Annotated[int, Query(ge=1, le=90)] = 30,
+) -> Response:
+    """Export CSV (Excel FR, séparateur « ; ») de l'agenda fiscal.
+
+    Mêmes échéances que ``GET /cabinet/agenda-fiscal`` (fenêtre
+    ``jours``, 1 à 90, défaut 30) au format ``text/csv`` : une ligne
+    par échéance, encodage UTF-8 précédé d'un BOM pour une ouverture
+    directe dans Excel. Déterministe — même tri que l'agenda.
+    """
+    from backend.moteur.journal import append_journal
+    from backend.plateforme.agenda_cabinet import agenda_cabinet, generer_csv
+
+    exiger_capacite(utilisateur, "lire")
+    agenda = agenda_cabinet(session, utilisateur.tenant_id, jours=jours)
+    contenu = "\ufeff" + generer_csv(agenda)
+    append_journal(
+        session,
+        tenant_id=utilisateur.tenant_id,
+        mission_id=None,
+        acteur=utilisateur.email,
+        action="consultation_agenda_cabinet_csv",
+        charge_utile={
+            "jours": agenda["jours"],
+            "total": agenda["synthese"]["total"],
+        },
+    )
+    return Response(
+        content=contenu,
+        media_type="text/csv; charset=utf-8",
+        headers={
+            "Content-Disposition": 'attachment; filename="agenda-fiscal.csv"'
+        },
+    )

@@ -9,6 +9,7 @@ import pytest
 from backend.plateforme.agenda_cabinet import (
     construire_agenda,
     echeances_dans_fenetre,
+    generer_csv,
     generer_ics,
     synthese_agenda,
 )
@@ -235,6 +236,66 @@ def test_ics_summary_format():
     )
 
 
+# ── Tests purs — export CSV ────────────────────────────────────────
+
+
+def test_csv_entetes_et_lignes_dans_l_ordre_de_l_agenda():
+    agenda = {
+        "echeances": [
+            _echeance_ics(),
+            _echeance_ics(
+                date_limite="2025-06-20",
+                impot="ITS",
+                obligation="Déclaration ITS",
+                statut="couverte",
+            ),
+        ]
+    }
+    csv_txt = generer_csv(agenda)
+    lignes = csv_txt.splitlines()
+    assert lignes[0] == "date_limite;impot;obligation;periode;client;mission;statut"
+    assert lignes[1] == (
+        "2025-06-15;TVA;Déclaration mensuelle de TVA;mai 2025;"
+        "SA Alpha FICTIVE;7;a_preparer"
+    )
+    assert lignes[2] == (
+        "2025-06-20;ITS;Déclaration ITS;mai 2025;SA Alpha FICTIVE;7;couverte"
+    )
+    # Ordre de l'agenda conservé (le tri est fait en amont).
+    assert [l.split(";")[0] for l in lignes[1:]] == ["2025-06-15", "2025-06-20"]
+
+
+def test_csv_echappement_point_virgule_guillemets_retour_ligne():
+    agenda = {
+        "echeances": [
+            _echeance_ics(
+                client='SARL "Un; Deux" FICTIVE',
+                obligation="Déclaration ; dépôt\npaiement",
+            )
+        ]
+    }
+    csv_txt = generer_csv(agenda)
+    # Valeurs à risque entre guillemets, guillemets internes doublés.
+    assert '"SARL ""Un; Deux"" FICTIVE"' in csv_txt
+    assert '"Déclaration ; dépôt\npaiement"' in csv_txt
+    # Relecture par le module csv : les valeurs sont restituées intactes.
+    import csv as _csv
+    import io as _io
+
+    lignes = list(_csv.reader(_io.StringIO(csv_txt), delimiter=";"))
+    assert lignes[1][4] == 'SARL "Un; Deux" FICTIVE'
+    assert lignes[1][2] == "Déclaration ; dépôt\npaiement"
+
+
+def test_csv_vide_en_tete_seul():
+    assert generer_csv({"echeances": []}) == (
+        "date_limite;impot;obligation;periode;client;mission;statut\n"
+    )
+    assert generer_csv({}) == (
+        "date_limite;impot;obligation;periode;client;mission;statut\n"
+    )
+
+
 # ── Tests API (DB) ─────────────────────────────────────────────────
 
 pytestmark = pytest.mark.db
@@ -423,4 +484,54 @@ def test_api_agenda_ics_401_sans_jeton(session):
 
     client = TestClient(app)
     r = client.get("/api/v1/cabinet/agenda-fiscal.ics")
+    assert r.status_code == 401, r.text
+
+
+def test_api_agenda_csv_export(session):
+    tid, email = _cabinet(session, "agenda.csv")
+    mid = _mission_en_cours(session, tid, date.today().year)
+    session.commit()
+
+    client, h = _client_connecte(email)
+    r = client.get("/api/v1/cabinet/agenda-fiscal.csv?jours=90", headers=h)
+    assert r.status_code == 200, r.text
+    assert r.headers["content-type"].startswith("text/csv")
+    assert "charset=utf-8" in r.headers["content-type"]
+    assert (
+        r.headers["content-disposition"]
+        == 'attachment; filename="agenda-fiscal.csv"'
+    )
+    # BOM UTF-8 en tête (ouverture directe dans Excel FR).
+    assert r.content[:3] == b"\xef\xbb\xbf"
+    corps = r.content.decode("utf-8-sig")
+    lignes = corps.splitlines()
+    assert lignes[0] == "date_limite;impot;obligation;periode;client;mission;statut"
+    # Au moins une échéance (obligations mensuelles du régime réel sur
+    # 90 jours) et les lignes référencent bien la mission créée.
+    assert len(lignes) >= 2
+    assert all(l.split(";")[5] == str(mid) for l in lignes[1:])
+    assert all("PM Agenda FICTIF" in l for l in lignes[1:])
+
+    # Cohérence avec l'agenda JSON : autant de lignes que d'échéances.
+    rj = client.get("/api/v1/cabinet/agenda-fiscal?jours=90", headers=h)
+    assert rj.status_code == 200
+    assert len(lignes) - 1 == len(rj.json()["echeances"])
+
+
+def test_api_agenda_csv_jours_hors_bornes_422(session):
+    tid, email = _cabinet(session, "agenda.csv.bornes")
+    session.commit()
+    client, h = _client_connecte(email)
+    assert client.get(
+        "/api/v1/cabinet/agenda-fiscal.csv?jours=120", headers=h
+    ).status_code == 422
+
+
+def test_api_agenda_csv_401_sans_jeton(session):
+    from fastapi.testclient import TestClient
+
+    from backend.main import app
+
+    client = TestClient(app)
+    r = client.get("/api/v1/cabinet/agenda-fiscal.csv")
     assert r.status_code == 401, r.text
