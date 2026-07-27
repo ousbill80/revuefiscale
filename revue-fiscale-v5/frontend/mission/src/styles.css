@@ -9333,6 +9333,14 @@ tr.row-active td {
 .echeancier-vide { padding: 0.5rem 0.6rem; border: 1px dashed var(--line, #e5e7eb); border-radius: 8px; font-size: 0.78rem; color: var(--muted, #64748b); }
 .echeancier-note { margin: 0.55rem 0 0; font-size: 0.72rem; font-style: italic; color: var(--muted, #64748b); }
 
+/* ── Restitution — panneau « Échéancier fiscal » de la mission ───── */
+.rest-echeancier-synthese { margin: 0 0 0.55rem; font-size: 0.8rem; }
+.rest-echeancier-table { width: 100%; border-collapse: collapse; margin: 0.35rem 0 0.2rem; font-size: 0.8rem; }
+.rest-echeancier-table th, .rest-echeancier-table td { padding: 0.3rem 0.45rem; border-bottom: 1px solid var(--line-soft, #f1f5f9); text-align: left; vertical-align: baseline; }
+.rest-echeancier-table th { font-size: 0.72rem; text-transform: uppercase; letter-spacing: 0.03em; color: var(--muted, #64748b); }
+.rest-echeancier-table tbody tr:last-child td { border-bottom: none; }
+.rest-echeancier-date { font-weight: 700; font-variant-numeric: tabular-nums; white-space: nowrap; }
+
 /* ── Pilotage — carte « Échéances déclaratives » ─────────────────── */
 .pilotage-badge { margin-left: auto; display: inline-flex; align-items: center; padding: 0.1rem 0.5rem; border: 1px solid transparent; border-radius: 999px; font-size: 0.7rem; font-weight: 800; white-space: nowrap; }
 .pilotage-badge.imminent { background: #fffbeb; color: #92400e; border-color: #fde68a; }

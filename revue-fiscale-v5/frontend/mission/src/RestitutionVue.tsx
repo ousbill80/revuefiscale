@@ -22,6 +22,7 @@ import {
   type TraitementRisque,
 } from "./risqueTraitement";
 import { RapportArtifact } from "./RapportArtifact";
+import { EcheancierFiscalVue } from "./EcheancierFiscalVue";
 import type { AuditEntree, AuditJournal, ConclusionRestitution, Restitution } from "./types";
 
 type CollaborateurOpt = {
@@ -629,6 +630,7 @@ export function RestitutionVue({
   const [progEtat, setProgEtat] = useState<ProgrammeEtat | null>(null);
   const [progErr, setProgErr] = useState<string | null>(null);
   const [progBusy, setProgBusy] = useState<string | null>(null);
+  const [echeancierOuvert, setEcheancierOuvert] = useState(false);
   const [ctrlClotureOuvert, setCtrlClotureOuvert] = useState(false);
   const [ctrlCloture, setCtrlCloture] = useState<ControleClotureOut | null>(
     null,
@@ -2130,6 +2132,17 @@ export function RestitutionVue({
               Programme
             </button>
           </Tooltip>
+          <Tooltip label="Échéancier fiscal de l'exercice revu : calendrier déterministe des obligations déclaratives et de paiement selon le régime du profil mission — dates indicatives, sans calcul d'impôt.">
+            <button
+              type="button"
+              className="btn btn-ghost btn-sm rest-echeancier-btn"
+              onClick={() => setEcheancierOuvert((o) => !o)}
+              disabled={!jeton}
+              aria-expanded={echeancierOuvert}
+            >
+              Échéancier fiscal
+            </button>
+          </Tooltip>
           <Tooltip label="Visas de supervision par phase : le préparateur atteste son travail, le réviseur revoit, l'associé signe — dans cet ordre. Registre formel exigé par les normes d'exercice professionnel.">
             <button
               type="button"
@@ -3041,6 +3054,14 @@ export function RestitutionVue({
             </ul>
           )}
         </section>
+      )}
+
+      {echeancierOuvert && (
+        <EcheancierFiscalVue
+          missionId={r.mission_id}
+          jeton={jeton}
+          onFermer={() => setEcheancierOuvert(false)}
+        />
       )}
 
       {visasOuvert && (
