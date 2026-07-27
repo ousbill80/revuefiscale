@@ -298,3 +298,146 @@ def test_api_401_sans_jeton(session):
         json={"date_relance": datetime.date.today().isoformat()},
     )
     assert r2.status_code == 401, r2.text
+
+
+# ── Marquage groupé : POST /suivi-renseignements/relances-effectuees ──
+
+
+def _url_groupe(mid: int) -> str:
+    return f"/api/v1/missions/{mid}/suivi-renseignements/relances-effectuees"
+
+
+def test_api_relances_groupees_ok(session):
+    _tid, mid, email = _mission_en_cours(session)
+    session.commit()
+
+    client, h = _client_connecte(email)
+    _preparer_item_planifie(client, h, mid)
+    items = client.get(
+        f"/api/v1/missions/{mid}/suivi-renseignements", headers=h
+    ).json()["items"]
+    planifies = [
+        i for i in items if i["statut"] == "en_attente" and i["date_relance"]
+    ]
+    assert len(planifies) >= 2, "il faut plusieurs items planifiés"
+
+    # Un item planifié perd sa date (PATCH) : il sera ignoré par le groupé.
+    # (clé sans « / » : un slash décodé casserait le routage du PATCH)
+    sans_date = next(i for i in planifies if "/" not in i["cle_item"])
+    planifies_touchees = [
+        i for i in planifies if i["cle_item"] != sans_date["cle_item"]
+    ]
+    p = client.patch(
+        f"/api/v1/missions/{mid}/suivi-renseignements/{sans_date['cle_item']}",
+        headers=h,
+        json={"statut": "en_attente", "date_relance": None},
+    )
+    assert p.status_code == 200, p.text
+
+    r = client.post(_url_groupe(mid), headers=h)
+    assert r.status_code == 200, r.text
+    out = r.json()
+    assert out["effectuees"] == len(planifies) - 1
+    assert out["ignorees"] >= 1
+
+    apres = client.get(
+        f"/api/v1/missions/{mid}/suivi-renseignements", headers=h
+    ).json()["items"]
+    par_cle = {i["cle_item"]: i for i in apres}
+    aujourd_hui = datetime.date.today().isoformat()
+    for it in planifies_touchees:
+        maj = par_cle[it["cle_item"]]
+        assert maj["statut"] == "en_attente"
+        assert maj["date_relance"] is None
+        assert maj["derniere_relance_le"] == aujourd_hui
+        assert maj["nb_relances"] == 1
+    # L'item sans date n'a pas été touché.
+    ignore = par_cle[sans_date["cle_item"]]
+    assert ignore["nb_relances"] == 0
+    assert ignore["derniere_relance_le"] is None
+
+    # Second appel : plus rien de planifié → 200 avec effectuees = 0.
+    r2 = client.post(_url_groupe(mid), headers=h)
+    assert r2.status_code == 200, r2.text
+    assert r2.json()["effectuees"] == 0
+
+
+def test_api_relances_groupees_zero_item_planifie(session):
+    _tid, mid, email = _mission_en_cours(session)
+    session.commit()
+
+    client, h = _client_connecte(email)
+    # Items persistés « en_attente » mais aucune relance planifiée.
+    c = client.post(
+        f"/api/v1/missions/{mid}/suivi-renseignements/depuis-civisme",
+        headers=h,
+    )
+    assert c.status_code == 200, c.text
+    assert c.json()["crees"] > 0
+
+    r = client.post(_url_groupe(mid), headers=h)
+    assert r.status_code == 200, r.text
+    out = r.json()
+    assert out["effectuees"] == 0
+    assert out["ignorees"] > 0
+
+
+def test_api_relances_groupees_409_mission_cloturee(session):
+    tid, mid, email = _mission_en_cours(session)
+    session.commit()
+
+    client, h = _client_connecte(email)
+    _preparer_item_planifie(client, h, mid)
+
+    with contexte_tenant(session, tid):
+        session.execute(
+            text("UPDATE mission SET statut = 'cloturee' WHERE id = :m"),
+            {"m": mid},
+        )
+    session.commit()
+
+    r = client.post(_url_groupe(mid), headers=h)
+    assert r.status_code == 409, r.text
+    assert "clôturée" in r.json()["detail"]
+
+
+def test_api_relances_groupees_404_cross_tenant(session):
+    _tid_a, mid_a, email_a = _mission_en_cours(session)
+    session.commit()
+    client_a, h_a = _client_connecte(email_a)
+    _preparer_item_planifie(client_a, h_a, mid_a)
+
+    _assurer_version(session)
+    email_b = f"relgrp.b.{uuid.uuid4().hex[:8]}@demo.local"
+    provisionner_cabinet(
+        session,
+        denomination=f"Cab RelGrp B {email_b}",
+        type_tenant="cabinet",
+        palier="standard",
+        email_admin=email_b,
+        mot_de_passe_admin="admin-admin1",
+        creer_demo=False,
+    )
+    session.commit()
+
+    client_b, h_b = _client_connecte(email_b)
+    r = client_b.post(_url_groupe(mid_a), headers=h_b)
+    assert r.status_code == 404, r.text
+
+    # Les items du tenant A restent intacts.
+    apres = client_a.get(
+        f"/api/v1/missions/{mid_a}/suivi-renseignements", headers=h_a
+    ).json()["items"]
+    assert any(
+        i["statut"] == "en_attente" and i["date_relance"] for i in apres
+    )
+
+
+def test_api_relances_groupees_401_sans_jeton(session):
+    from fastapi.testclient import TestClient
+
+    from backend.main import app
+
+    client = TestClient(app)
+    r = client.post(_url_groupe(1))
+    assert r.status_code == 401, r.text

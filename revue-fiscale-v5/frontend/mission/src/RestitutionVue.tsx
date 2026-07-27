@@ -645,6 +645,7 @@ export function RestitutionVue({
     planifiees: number;
     deja_planifiees: number;
   } | null>(null);
+  const [relancesFaitesBusy, setRelancesFaitesBusy] = useState(false);
   const [tempsOuvert, setTempsOuvert] = useState(false);
   const [tempsRecap, setTempsRecap] = useState<TempsRecap | null>(null);
   const [tempsErr, setTempsErr] = useState<string | null>(null);
@@ -1386,6 +1387,34 @@ export function RestitutionVue({
       );
     } finally {
       setPlanifBusy(false);
+    }
+  }
+
+  async function marquerRelancesFaites(): Promise<void> {
+    if (!jeton || !r.mission_id || relancesFaitesBusy) return;
+    setRelancesFaitesBusy(true);
+    setSuiviErr(null);
+    setRelanceItemMsg(null);
+    try {
+      const out = await api<{ effectuees: number; ignorees: number }>(
+        `/api/v1/missions/${r.mission_id}/suivi-renseignements/relances-effectuees`,
+        { jeton, method: "POST" },
+      );
+      const n = out?.effectuees ?? 0;
+      setRelanceItemMsg(
+        n > 0
+          ? `${n} relance${n > 1 ? "s" : ""} marquée${n > 1 ? "s" : ""} faite${n > 1 ? "s" : ""} — dates planifiées effacées (re-planifiez pour la prochaine échéance)`
+          : "Aucune relance planifiée à marquer",
+      );
+      await chargerSuivi();
+    } catch (e) {
+      setSuiviErr(
+        e instanceof Error
+          ? e.message
+          : "marquage groupé des relances impossible",
+      );
+    } finally {
+      setRelancesFaitesBusy(false);
     }
   }
 
@@ -3093,6 +3122,28 @@ export function RestitutionVue({
                   </button>
                 </Tooltip>
               )}
+              {suivi &&
+                suivi.items.some(
+                  (it) => it.statut === "en_attente" && it.date_relance,
+                ) && (
+                  <Tooltip label="Après envoi du courrier : marque en un clic toutes les relances planifiées comme effectuées (trace la date, incrémente le compteur, efface les dates planifiées) — réversible en re-planifiant">
+                    <button
+                      type="button"
+                      className="btn btn-ghost btn-sm rest-relance-btn"
+                      onClick={() => void marquerRelancesFaites()}
+                      disabled={
+                        estLecteur ||
+                        estCloturee ||
+                        relancesFaitesBusy ||
+                        !jeton
+                      }
+                    >
+                      {relancesFaitesBusy
+                        ? "Marquage…"
+                        : "Marquer les relances faites"}
+                    </button>
+                  </Tooltip>
+                )}
               {relanceErr && (
                 <span className="rest-lettre-err" role="alert">
                   {relanceErr}

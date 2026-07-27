@@ -1008,6 +1008,51 @@ def api_planifier_relances(
     return resultat
 
 
+# Route littérale déclarée AVANT la route paramétrée
+# /{cle_item}/relance-effectuee (ordre de résolution FastAPI).
+@router.post("/missions/{mission_id}/suivi-renseignements/relances-effectuees")
+def api_relances_effectuees_groupees(
+    mission_id: int,
+    utilisateur: UtilisateurDep,
+    session: Annotated[Session, Depends(session_abonne)],
+) -> dict:
+    """Marque en un clic toutes les relances planifiées comme effectuées.
+
+    Déclenchée par un clic explicite du fiscaliste après envoi du
+    courrier de relance : trace la date de dernière relance, incrémente
+    les compteurs et efface les dates planifiées de tous les items
+    « en_attente » avec date. Aucun item planifié → 200 avec
+    ``effectuees = 0`` ; mission clôturée → 409 ; hors tenant → 404 (RLS).
+    """
+    from backend.moteur.journal import append_journal
+    from backend.plateforme.suivi_renseignements import (
+        ErreurSuiviIntrouvable,
+        ErreurSuiviMissionCloturee,
+        relances_effectuees_groupees,
+    )
+
+    exiger_capacite(utilisateur, "executer_mission")
+    try:
+        resultat = relances_effectuees_groupees(
+            session, utilisateur.tenant_id, mission_id
+        )
+    except ErreurSuiviIntrouvable as e:
+        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail=str(e)) from e
+    except ErreurSuiviMissionCloturee as e:
+        raise HTTPException(
+            status_code=status.HTTP_409_CONFLICT, detail=str(e)
+        ) from e
+    append_journal(
+        session,
+        tenant_id=utilisateur.tenant_id,
+        mission_id=mission_id,
+        acteur=utilisateur.email,
+        action="relances_effectuees_groupees",
+        charge_utile=dict(resultat),
+    )
+    return resultat
+
+
 @router.post(
     "/missions/{mission_id}/suivi-renseignements/{cle_item}/relance-effectuee"
 )

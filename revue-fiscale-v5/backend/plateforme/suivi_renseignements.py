@@ -432,6 +432,65 @@ def reporter_relance(
     return _fusionner([item], {cle_item: dict(row)})[0]
 
 
+def relances_effectuees_groupees(
+    session: Session,
+    tenant_id: int,
+    mission_id: int,
+    *,
+    aujourd_hui: date | None = None,
+) -> dict[str, int]:
+    """Marque en un clic TOUTES les relances planifiées comme effectuées.
+
+    Applique la logique unitaire de :func:`relance_effectuee` à tous les
+    items persistés au statut ``en_attente`` ayant une ``date_relance``
+    (les relances « planifiées ») : trace ``derniere_relance_le``
+    (aujourd'hui), incrémente ``nb_relances`` et efface ``date_relance``.
+    Les items ``en_attente`` sans date sont ignorés (rien de planifié).
+    Déclenché par un clic explicite du fiscaliste après envoi du
+    courrier de relance. Mission hors tenant →
+    :class:`ErreurSuiviIntrouvable` (404) ; mission clôturée →
+    :class:`ErreurSuiviMissionCloturee` (409). Aucun item planifié
+    n'est PAS une erreur : ``{effectuees: 0, ...}``.
+
+    Retourne ``{effectuees, ignorees}``.
+    """
+    jour = aujourd_hui or date.today()
+    with contexte_tenant(session, tenant_id):
+        statut_mission = session.execute(
+            text("SELECT statut FROM mission WHERE id = :m"),
+            {"m": mission_id},
+        ).scalar_one_or_none()
+        if statut_mission is None:
+            raise ErreurSuiviIntrouvable(f"mission {mission_id} introuvable")
+        if str(statut_mission).lower() == "cloturee":
+            raise ErreurSuiviMissionCloturee(
+                f"mission {mission_id} clôturée — réouvrez-la avant de "
+                "gérer les relances"
+            )
+        effectuees = session.execute(
+            text(
+                "UPDATE suivi_demande_renseignements SET "
+                "date_relance = NULL, "
+                "derniere_relance_le = :j, "
+                "nb_relances = nb_relances + 1, "
+                "maj_le = now() "
+                "WHERE mission_id = :m AND statut = :s "
+                "AND date_relance IS NOT NULL"
+            ),
+            {"j": jour, "m": mission_id, "s": STATUT_DEFAUT},
+        ).rowcount
+        ignorees = session.execute(
+            text(
+                "SELECT count(*) FROM suivi_demande_renseignements "
+                "WHERE mission_id = :m AND statut = :s "
+                "AND date_relance IS NULL"
+            ),
+            {"m": mission_id, "s": STATUT_DEFAUT},
+        ).scalar_one()
+    # Pas de commit ici : get_session committe en fin de requête.
+    return {"effectuees": int(effectuees or 0), "ignorees": int(ignorees)}
+
+
 def synthese_depuis_items(items: list[dict[str, Any]]) -> dict[str, int]:
     """Compteurs {total, en_attente, recu, sans_objet, a_relancer}."""
     aujourd_hui = date.today().isoformat()
