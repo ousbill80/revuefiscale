@@ -7582,7 +7582,7 @@ h2.section-title {
 }
 
 .clients-fiche-tabs {
-  grid-template-columns: repeat(4, 1fr);
+  grid-template-columns: repeat(5, 1fr);
   position: sticky;
   top: calc(var(--topbar-h) + var(--safe-top));
   z-index: 25;
@@ -7596,6 +7596,37 @@ h2.section-title {
   align-items: center;
   justify-content: center;
   gap: 0.4rem;
+  position: relative;
+  border: 1px solid transparent;
+}
+
+.clients-fiche-tabs .tab:hover:not(.active) {
+  background: var(--surface-solid);
+  border-color: var(--line-soft);
+  color: var(--ink-soft);
+  box-shadow: var(--shadow-xs);
+}
+
+.clients-fiche-tabs .tab.active {
+  border-color: var(--line);
+  color: var(--accent-deep);
+}
+
+.clients-fiche-tabs .tab.active::after {
+  content: "";
+  position: absolute;
+  left: 22%;
+  right: 22%;
+  bottom: 3px;
+  height: 2px;
+  border-radius: 999px;
+  background: var(--accent-deep);
+}
+
+@media (max-width: 760px) {
+  .clients-fiche-tabs {
+    grid-template-columns: repeat(3, 1fr);
+  }
 }
 
 .clients-fiche-tab-count {
