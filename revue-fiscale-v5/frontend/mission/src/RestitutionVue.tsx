@@ -201,6 +201,44 @@ type ReponseClient = {
   statut_derniere_execution: string | null;
 };
 
+/* Temps passés par mission — pilotage de la rentabilité cabinet. */
+type TempsPhase =
+  | "cadrage"
+  | "collecte"
+  | "controles"
+  | "restitution"
+  | "suivi";
+
+type TempsEntree = {
+  id: number;
+  collaborateur: string;
+  phase: TempsPhase;
+  date_jour: string;
+  heures: string;
+  note: string | null;
+  saisi_le: string;
+};
+
+type TempsRecap = {
+  entrees: TempsEntree[];
+  total_heures: string;
+  par_phase: Record<string, string>;
+  par_collaborateur: Record<string, string>;
+  valorisation: string | null;
+};
+
+const PHASES_TEMPS: Array<{ value: TempsPhase; label: string }> = [
+  { value: "cadrage", label: "Cadrage" },
+  { value: "collecte", label: "Collecte" },
+  { value: "controles", label: "Contrôles" },
+  { value: "restitution", label: "Restitution" },
+  { value: "suivi", label: "Suivi" },
+];
+
+function libellePhaseTemps(phase: string): string {
+  return PHASES_TEMPS.find((p) => p.value === phase)?.label ?? phase;
+}
+
 /* Comparatif déterministe entre deux exécutions d'une mission. */
 type ComparatifItem = {
   regle_id: string;
@@ -513,6 +551,17 @@ export function RestitutionVue({
   const [reponseErr, setReponseErr] = useState<string | null>(null);
   const [relanceBusy, setRelanceBusy] = useState(false);
   const [relanceErr, setRelanceErr] = useState<string | null>(null);
+  const [tempsOuvert, setTempsOuvert] = useState(false);
+  const [tempsRecap, setTempsRecap] = useState<TempsRecap | null>(null);
+  const [tempsErr, setTempsErr] = useState<string | null>(null);
+  const [tempsBusy, setTempsBusy] = useState(false);
+  const [tempsSupprId, setTempsSupprId] = useState<number | null>(null);
+  const [tempsPhase, setTempsPhase] = useState<TempsPhase>("controles");
+  const [tempsDate, setTempsDate] = useState(() =>
+    new Date().toISOString().slice(0, 10),
+  );
+  const [tempsHeures, setTempsHeures] = useState("");
+  const [tempsNote, setTempsNote] = useState("");
   const [ctrlClotureOuvert, setCtrlClotureOuvert] = useState(false);
   const [ctrlCloture, setCtrlCloture] = useState<ControleClotureOut | null>(
     null,
@@ -1073,6 +1122,77 @@ export function RestitutionVue({
       );
     } finally {
       setReponseBusy(false);
+    }
+  }
+
+  async function chargerTemps(): Promise<void> {
+    if (!jeton || !r.mission_id) return;
+    try {
+      const out = await api<TempsRecap>(
+        `/api/v1/missions/${r.mission_id}/temps`,
+        { jeton },
+      );
+      setTempsRecap(out ?? null);
+      setTempsErr(null);
+    } catch (e) {
+      setTempsRecap(null);
+      setTempsErr(
+        e instanceof Error ? e.message : "temps passés indisponibles",
+      );
+    }
+  }
+
+  async function saisirTemps(): Promise<void> {
+    if (!jeton || !r.mission_id || tempsBusy) return;
+    const heures = Number(tempsHeures.replace(",", "."));
+    if (!tempsHeures.trim() || !Number.isFinite(heures)) {
+      setTempsErr("Heures obligatoires (nombre entre 0 et 24).");
+      return;
+    }
+    setTempsBusy(true);
+    setTempsErr(null);
+    try {
+      await api<{ entree: TempsEntree }>(
+        `/api/v1/missions/${r.mission_id}/temps`,
+        {
+          jeton,
+          method: "POST",
+          json: {
+            phase: tempsPhase,
+            date_jour: tempsDate,
+            heures,
+            note: tempsNote.trim() || null,
+          },
+        },
+      );
+      setTempsHeures("");
+      setTempsNote("");
+      await chargerTemps();
+    } catch (e) {
+      setTempsErr(
+        e instanceof Error ? e.message : "saisie du temps impossible",
+      );
+    } finally {
+      setTempsBusy(false);
+    }
+  }
+
+  async function supprimerTemps(tempsId: number): Promise<void> {
+    if (!jeton || !r.mission_id || tempsSupprId !== null) return;
+    setTempsSupprId(tempsId);
+    setTempsErr(null);
+    try {
+      await api<{ entree: TempsEntree }>(
+        `/api/v1/missions/${r.mission_id}/temps/${tempsId}`,
+        { jeton, method: "DELETE" },
+      );
+      await chargerTemps();
+    } catch (e) {
+      setTempsErr(
+        e instanceof Error ? e.message : "suppression du temps impossible",
+      );
+    } finally {
+      setTempsSupprId(null);
     }
   }
 
@@ -1719,6 +1839,20 @@ export function RestitutionVue({
               </button>
             </Tooltip>
           )}
+          <Tooltip label="Temps passés sur la mission : chaque collaborateur saisit ses heures par phase et par jour — total, répartition et valorisation pour piloter la rentabilité.">
+            <button
+              type="button"
+              className="btn btn-ghost btn-sm rest-temps-btn"
+              onClick={() => {
+                setTempsOuvert((o) => !o);
+                if (!tempsOuvert) void chargerTemps();
+              }}
+              disabled={!jeton}
+              aria-expanded={tempsOuvert}
+            >
+              Temps passés
+            </button>
+          </Tooltip>
           <Tooltip label="Note de synthèse de mission (executive summary IA) pour l'associé signataire — versionnée, chaque constat cite sa règle. Consultative : l'humain valide.">
             <button
               type="button"
@@ -2313,6 +2447,152 @@ export function RestitutionVue({
                 );
               })}
             </ul>
+          )}
+        </section>
+      )}
+
+      {tempsOuvert && (
+        <section className="rest-suivi rest-temps" aria-label="Temps passés">
+          <div className="rest-suivi-head">
+            <h3 className="rest-suivi-titre label-with-tip">
+              Temps passés
+              <InfoTip
+                label="Saisie des heures par phase et par jour, par collaborateur. Le récapitulatif (total, répartition par phase et par collaborateur) sert au pilotage de la rentabilité de la mission."
+                ariaLabel="Aide : temps passés"
+              />
+            </h3>
+            <div className="rest-suivi-outils">
+              {tempsRecap && (
+                <span className="muted">
+                  Total : {tempsRecap.total_heures} h
+                  {Object.entries(tempsRecap.par_phase).length > 0 &&
+                    " · " +
+                      PHASES_TEMPS.filter(
+                        (p) => tempsRecap.par_phase[p.value],
+                      )
+                        .map(
+                          (p) =>
+                            `${p.label} ${tempsRecap.par_phase[p.value]} h`,
+                        )
+                        .join(" · ")}
+                </span>
+              )}
+              <button
+                type="button"
+                className="btn btn-ghost btn-sm"
+                onClick={() => setTempsOuvert(false)}
+              >
+                Fermer
+              </button>
+            </div>
+          </div>
+          {tempsErr && (
+            <p className="rest-lettre-err" role="alert">
+              {tempsErr}
+            </p>
+          )}
+          {!estLecteur && (
+            <div className="rest-suivi-controles rest-temps-form">
+              <label className="rest-suivi-champ">
+                Phase{" "}
+                <select
+                  value={tempsPhase}
+                  disabled={tempsBusy}
+                  onChange={(e) =>
+                    setTempsPhase(e.target.value as TempsPhase)
+                  }
+                >
+                  {PHASES_TEMPS.map((p) => (
+                    <option key={p.value} value={p.value}>
+                      {p.label}
+                    </option>
+                  ))}
+                </select>
+              </label>
+              <label className="rest-suivi-champ">
+                Date{" "}
+                <input
+                  type="date"
+                  value={tempsDate}
+                  disabled={tempsBusy}
+                  onChange={(e) => setTempsDate(e.target.value)}
+                />
+              </label>
+              <label className="rest-suivi-champ">
+                Heures{" "}
+                <input
+                  type="number"
+                  min={0.25}
+                  max={24}
+                  step={0.25}
+                  placeholder="ex : 3.5"
+                  value={tempsHeures}
+                  disabled={tempsBusy}
+                  onChange={(e) => setTempsHeures(e.target.value)}
+                />
+              </label>
+              <label className="rest-suivi-champ rest-suivi-note">
+                Note{" "}
+                <input
+                  type="text"
+                  placeholder="ex : pointage des factures fournisseurs…"
+                  value={tempsNote}
+                  disabled={tempsBusy}
+                  onChange={(e) => setTempsNote(e.target.value)}
+                />
+              </label>
+              <button
+                type="button"
+                className="btn btn-primary btn-sm"
+                disabled={tempsBusy || !tempsHeures.trim() || !tempsDate}
+                onClick={() => void saisirTemps()}
+              >
+                {tempsBusy ? "Saisie…" : "Ajouter"}
+              </button>
+            </div>
+          )}
+          {tempsRecap && tempsRecap.entrees.length === 0 && (
+            <p className="muted">
+              Aucun temps saisi sur cette mission pour l'instant.
+            </p>
+          )}
+          {tempsRecap && tempsRecap.entrees.length > 0 && (
+            <>
+              <ul className="rest-suivi-items rest-temps-items">
+                {tempsRecap.entrees.map((e) => (
+                  <li key={e.id} className="rest-suivi-item">
+                    <div className="rest-suivi-libelle">
+                      <span className="rest-suivi-cle">{e.date_jour}</span>
+                      {libellePhaseTemps(e.phase)} · {e.heures} h ·{" "}
+                      {e.collaborateur}
+                      {e.note && (
+                        <span className="muted"> — {e.note}</span>
+                      )}
+                    </div>
+                    {!estLecteur && (
+                      <div className="rest-suivi-controles">
+                        <button
+                          type="button"
+                          className="btn btn-ghost btn-sm"
+                          disabled={tempsSupprId !== null}
+                          onClick={() => void supprimerTemps(e.id)}
+                        >
+                          {tempsSupprId === e.id
+                            ? "Suppression…"
+                            : "Supprimer"}
+                        </button>
+                      </div>
+                    )}
+                  </li>
+                ))}
+              </ul>
+              <p className="muted rest-temps-collabs">
+                Par collaborateur :{" "}
+                {Object.entries(tempsRecap.par_collaborateur)
+                  .map(([c, hres]) => `${c} ${hres} h`)
+                  .join(" · ")}
+              </p>
+            </>
           )}
         </section>
       )}

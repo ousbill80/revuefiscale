@@ -812,6 +812,130 @@ def api_lister_reponses_client(
     return {"reponses": reponses}
 
 
+class TempsMissionIn(BaseModel):
+    """Saisie d'une entrée de temps passé sur la mission."""
+
+    collaborateur: str | None = Field(default=None, max_length=200)
+    phase: str = Field(min_length=1, max_length=50)
+    date_jour: datetime.date
+    heures: float
+    note: str | None = Field(default=None, max_length=2000)
+
+
+@router.post("/missions/{mission_id}/temps")
+def api_saisir_temps_mission(
+    mission_id: int,
+    corps: TempsMissionIn,
+    utilisateur: UtilisateurDep,
+    session: Annotated[Session, Depends(session_abonne)],
+) -> dict:
+    """Saisit un temps passé (phase, date, heures) — pilotage rentabilité."""
+    from backend.moteur.journal import append_journal
+    from backend.plateforme.temps_mission import (
+        ErreurTempsIntrouvable,
+        ErreurTempsMission,
+        saisir_temps,
+    )
+
+    exiger_capacite(utilisateur, "executer_mission")
+    try:
+        entree = saisir_temps(
+            session,
+            utilisateur.tenant_id,
+            mission_id,
+            collaborateur=(corps.collaborateur or utilisateur.email),
+            phase=corps.phase,
+            date_jour=corps.date_jour,
+            heures=corps.heures,
+            note=corps.note,
+        )
+    except ErreurTempsIntrouvable as e:
+        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail=str(e)) from e
+    except ErreurTempsMission as e:
+        raise HTTPException(
+            status_code=status.HTTP_422_UNPROCESSABLE_ENTITY, detail=str(e)
+        ) from e
+    append_journal(
+        session,
+        tenant_id=utilisateur.tenant_id,
+        mission_id=mission_id,
+        acteur=utilisateur.email,
+        action="saisie_temps_mission",
+        charge_utile={
+            "temps_id": entree["id"],
+            "collaborateur": entree["collaborateur"],
+            "phase": entree["phase"],
+            "date_jour": entree["date_jour"],
+            "heures": entree["heures"],
+        },
+    )
+    return {"entree": entree}
+
+
+@router.delete("/missions/{mission_id}/temps/{temps_id}")
+def api_supprimer_temps_mission(
+    mission_id: int,
+    temps_id: int,
+    utilisateur: UtilisateurDep,
+    session: Annotated[Session, Depends(session_abonne)],
+) -> dict:
+    """Supprime une entrée de temps saisie par erreur."""
+    from backend.moteur.journal import append_journal
+    from backend.plateforme.temps_mission import (
+        ErreurTempsIntrouvable,
+        supprimer_temps,
+    )
+
+    exiger_capacite(utilisateur, "executer_mission")
+    try:
+        entree = supprimer_temps(
+            session, utilisateur.tenant_id, mission_id, temps_id
+        )
+    except ErreurTempsIntrouvable as e:
+        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail=str(e)) from e
+    append_journal(
+        session,
+        tenant_id=utilisateur.tenant_id,
+        mission_id=mission_id,
+        acteur=utilisateur.email,
+        action="suppression_temps_mission",
+        charge_utile={
+            "temps_id": entree["id"],
+            "collaborateur": entree["collaborateur"],
+            "phase": entree["phase"],
+            "heures": entree["heures"],
+        },
+    )
+    return {"entree": entree}
+
+
+@router.get("/missions/{mission_id}/temps")
+def api_recap_temps_mission(
+    mission_id: int,
+    utilisateur: UtilisateurDep,
+    session: Annotated[Session, Depends(session_abonne)],
+    taux_horaire: float | None = None,
+) -> dict:
+    """Récap des temps : entrées, total, par phase/collaborateur, valorisation."""
+    from backend.plateforme.temps_mission import (
+        ErreurTempsIntrouvable,
+        ErreurTempsMission,
+        recap_temps,
+    )
+
+    exiger_capacite(utilisateur, "lire")
+    try:
+        return recap_temps(
+            session, utilisateur.tenant_id, mission_id, taux_horaire
+        )
+    except ErreurTempsIntrouvable as e:
+        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail=str(e)) from e
+    except ErreurTempsMission as e:
+        raise HTTPException(
+            status_code=status.HTTP_422_UNPROCESSABLE_ENTITY, detail=str(e)
+        ) from e
+
+
 @router.patch("/missions/{mission_id}/cadrage", response_model=MissionOut)
 def api_patcher_cadrage_mission(
     mission_id: int,
