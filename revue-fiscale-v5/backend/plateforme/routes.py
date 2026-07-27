@@ -9,6 +9,7 @@ from fastapi import (
     Depends,
     File,
     HTTPException,
+    Query,
     Response,
     UploadFile,
     status,
@@ -3372,3 +3373,37 @@ def api_supervision_cabinet(
 
     exiger_capacite(utilisateur, "lire")
     return construire_supervision(session, utilisateur.tenant_id)
+
+
+@router.get("/cabinet/agenda-fiscal")
+def api_agenda_fiscal_cabinet(
+    utilisateur: UtilisateurDep,
+    session: Annotated[Session, Depends(session_abonne)],
+    jours: Annotated[int, Query(ge=1, le=90)] = 30,
+) -> dict:
+    """Agenda fiscal du cabinet — échéances à venir des missions actives.
+
+    Vue transverse pour le fiscaliste : sur toutes les missions non
+    clôturées du tenant, les échéances fiscales dont la date limite
+    tombe dans la fenêtre à venir (``jours``, 1 à 90, défaut 30),
+    marquées « couverte » (une pièce de la data room correspond) ou
+    « à préparer ». Consultatif et déterministe — trié par date limite.
+    """
+    from backend.moteur.journal import append_journal
+    from backend.plateforme.agenda_cabinet import agenda_cabinet
+
+    exiger_capacite(utilisateur, "lire")
+    agenda = agenda_cabinet(session, utilisateur.tenant_id, jours=jours)
+    append_journal(
+        session,
+        tenant_id=utilisateur.tenant_id,
+        mission_id=None,
+        acteur=utilisateur.email,
+        action="consultation_agenda_cabinet",
+        charge_utile={
+            "jours": agenda["jours"],
+            "total": agenda["synthese"]["total"],
+            "a_preparer": agenda["synthese"]["a_preparer"],
+        },
+    )
+    return agenda
