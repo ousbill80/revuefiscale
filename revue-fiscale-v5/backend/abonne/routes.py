@@ -66,6 +66,7 @@ from backend.abonne.service import (
     ErreurAbonne,
     ErreurDoublonContribuable,
     accepter_invitation,
+    compteurs_suivi_renseignements,
     creer_invitation,
     creer_lien_acces,
     lire_contribuable,
@@ -207,7 +208,11 @@ def api_lire_contribuable(
     except ErreurAbonne as e:
         raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail=str(e)) from e
     missions = lister_missions(session, contribuable_id=contribuable_id)
-    return {**fiche, "missions": missions, "nb_missions": len(missions)}
+    # Suivi opérationnel : items de demande de renseignements en attente /
+    # à relancer sur les missions non clôturées (même définition que le
+    # tableau de bord cabinet) — chip du bandeau de la fiche client.
+    suivi = compteurs_suivi_renseignements(session, contribuable_id)
+    return {**fiche, "missions": missions, "nb_missions": len(missions), **suivi}
 
 
 @router.patch("/contribuables/{contribuable_id}")

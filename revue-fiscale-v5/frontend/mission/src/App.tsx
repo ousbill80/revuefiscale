@@ -279,6 +279,9 @@ export type Contribuable = {
 type ContribuableDetail = Contribuable & {
   missions: MissionRow[];
   nb_missions: number;
+  /** Suivi demande de renseignements — missions non clôturées du client. */
+  items_en_attente?: number;
+  items_a_relancer?: number;
 };
 
 type QuotaResume = {

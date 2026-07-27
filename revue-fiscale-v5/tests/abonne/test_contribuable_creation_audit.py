@@ -116,3 +116,120 @@ def test_creation_contribuable_audit_api(session):
             {"cid": str(body["id"])},
         ).scalar_one()
         assert int(n) >= 1
+
+
+def _mission(session, tid: int, cid: int, statut: str = "en_cours") -> int:
+    from backend.plateforme.contexte import contexte_tenant
+
+    with contexte_tenant(session, tid):
+        return session.execute(
+            text(
+                "INSERT INTO mission (tenant_id, contribuable_id, exercice, "
+                "statut) VALUES (:t, :c, 2024, :s) RETURNING id"
+            ),
+            {"t": tid, "c": cid, "s": statut},
+        ).scalar_one()
+
+
+def _suivi(
+    session,
+    tid: int,
+    mid: int,
+    cle: str,
+    statut: str,
+    date_relance: str | None = None,
+) -> None:
+    from backend.plateforme.contexte import contexte_tenant
+
+    with contexte_tenant(session, tid):
+        session.execute(
+            text(
+                "INSERT INTO suivi_demande_renseignements "
+                "(tenant_id, mission_id, cle_item, libelle, statut, "
+                "date_relance) VALUES (:t, :m, :c, :c, :s, :d)"
+            ),
+            {"t": tid, "m": mid, "c": cle, "s": statut, "d": date_relance},
+        )
+
+
+def test_fiche_contribuable_compteurs_suivi_renseignements(session):
+    """Fiche client : items en attente / à relancer (missions non clôturées).
+
+    Même définition que le tableau de bord cabinet : ``a_relancer`` =
+    ``en_attente`` avec ``date_relance <= CURRENT_DATE`` ; les missions
+    clôturées sont exclues de l'agrégat.
+    """
+    table = session.execute(
+        text(
+            "SELECT COUNT(*) FROM information_schema.tables "
+            "WHERE table_name = 'suivi_demande_renseignements'"
+        )
+    ).scalar_one()
+    if int(table) < 1:
+        pytest.skip("migration suivi_demande_renseignements non appliquée")
+
+    if derniere_version_publiee(session) is None:
+        from backend.editorial.publication import creer_version_brouillon, publier_version
+
+        lib = f"v-suivi-{uuid.uuid4().hex[:6]}"
+        creer_version_brouillon(session, lib, note="suivi")
+        publier_version(session, lib, "suivi@test.ci")
+
+    email = f"suivi.{uuid.uuid4().hex[:8]}@demo.local"
+    r_prov = provisionner_cabinet(
+        session,
+        denomination=f"Cabinet Suivi {email}",
+        type_tenant="cabinet",
+        palier="standard",
+        email_admin=email,
+        mot_de_passe_admin="suivi-suivi1",
+        creer_demo=False,
+    )
+    session.commit()
+    tid = r_prov.tenant_id
+
+    client = TestClient(app)
+    login = client.post(
+        "/api/v1/auth/connexion",
+        json={"email": email, "mot_de_passe": "suivi-suivi1"},
+    )
+    assert login.status_code == 200, login.text
+    h = {"Authorization": f"Bearer {login.json()['jeton']}"}
+
+    suffix = uuid.uuid4().hex[:8]
+    r = client.post(
+        "/api/v1/contribuables",
+        headers=h,
+        json={
+            "denomination": f"Suivi Fiche {suffix}",
+            "ncc": f"CI-SUIVI-{suffix}",
+            "forme": "pm",
+            "rccm": f"RCCM-SUIVI-{suffix}",
+            "regime_fiscal": "reel",
+            "forme_juridique": "SA",
+        },
+    )
+    assert r.status_code == 200, r.text
+    cid = int(r.json()["id"])
+
+    # Fiche sans mission : compteurs présents et à zéro.
+    det0 = client.get(f"/api/v1/contribuables/{cid}", headers=h)
+    assert det0.status_code == 200, det0.text
+    assert det0.json()["items_en_attente"] == 0
+    assert det0.json()["items_a_relancer"] == 0
+
+    mid = _mission(session, tid, cid)
+    # 2 en attente (1 relance échue, 1 relance future), 1 reçu.
+    _suivi(session, tid, mid, "analytique:7011", "en_attente", "2020-01-15")
+    _suivi(session, tid, mid, "analytique:6222", "en_attente", "2999-12-31")
+    _suivi(session, tid, mid, "analytique:6011", "recu")
+    # Mission clôturée : items EXCLUS de l'agrégat.
+    mid_clot = _mission(session, tid, cid, statut="cloturee")
+    _suivi(session, tid, mid_clot, "analytique:7012", "en_attente", "2020-01-15")
+    session.commit()
+
+    det = client.get(f"/api/v1/contribuables/{cid}", headers=h)
+    assert det.status_code == 200, det.text
+    fiche = det.json()
+    assert fiche["items_en_attente"] == 2
+    assert fiche["items_a_relancer"] == 1

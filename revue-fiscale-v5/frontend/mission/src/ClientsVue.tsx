@@ -759,6 +759,9 @@ function doublonIdentifiants(
 type ClientDetail = ClientRow & {
   missions: MissionRow[];
   nb_missions: number;
+  /** Suivi demande de renseignements — missions non clôturées du client. */
+  items_en_attente?: number;
+  items_a_relancer?: number;
 };
 
 type IdentiteFormProps = {
@@ -1639,6 +1642,12 @@ export function ClientFicheVue({
 
   const nbActives = missions.filter((m) => estMissionActive(m.statut)).length;
 
+  // Suivi de la demande de renseignements (missions non clôturées) —
+  // compteurs fournis par la fiche (même définition que le tableau de
+  // bord cabinet : à relancer = en attente avec relance échue).
+  const itemsEnAttente = clientDetail.items_en_attente ?? 0;
+  const itemsARelancer = clientDetail.items_a_relancer ?? 0;
+
   // Échéances agenda du cabinet restreintes aux missions du client (max 8,
   // triées par date — le backend n'inclut que les missions actives).
   const echeancesClient = useMemo(() => {
@@ -1954,6 +1963,18 @@ export function ClientFicheVue({
                 </strong>
               </button>
             </Tooltip>
+            {itemsEnAttente + itemsARelancer > 0 && (
+              <Tooltip label="Items de la demande de renseignements en attente sur les missions non clôturées du client — voir l’onglet Missions.">
+                <button
+                  type="button"
+                  className={`fiche2-indic${itemsARelancer > 0 ? " is-alerte" : ""}`}
+                  onClick={() => changerFicheTab("missions")}
+                >
+                  <strong>{itemsEnAttente}</strong>
+                  en attente · {itemsARelancer} à relancer
+                </button>
+              </Tooltip>
+            )}
             {scoreRisque && (
               <Tooltip
                 className="tip-score-risque"

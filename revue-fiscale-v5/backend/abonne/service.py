@@ -267,6 +267,37 @@ def lister_missions(
     return out
 
 
+def compteurs_suivi_renseignements(
+    session: Session, contribuable_id: int
+) -> dict[str, int]:
+    """Compteurs de suivi de la demande de renseignements du client.
+
+    Agrégat sur les missions NON clôturées du contribuable — même
+    définition que le tableau de bord cabinet (``pilotage.py``) :
+    ``items_en_attente`` = items persistés au statut ``en_attente`` ;
+    ``items_a_relancer`` = ``en_attente`` avec ``date_relance`` non nulle
+    et ``date_relance <= CURRENT_DATE``. Contexte tenant posé par
+    l'appelant (``session_abonne``) — RLS.
+    """
+    row = session.execute(
+        text(
+            "SELECT "
+            "COUNT(*) FILTER (WHERE s.statut = 'en_attente') AS en_attente, "
+            "COUNT(*) FILTER (WHERE s.statut = 'en_attente' "
+            "  AND s.date_relance IS NOT NULL "
+            "  AND s.date_relance <= CURRENT_DATE) AS a_relancer "
+            "FROM suivi_demande_renseignements s "
+            "JOIN mission m ON m.id = s.mission_id "
+            "WHERE m.contribuable_id = :cid AND m.statut <> 'cloturee'"
+        ),
+        {"cid": contribuable_id},
+    ).mappings().one()
+    return {
+        "items_en_attente": int(row["en_attente"] or 0),
+        "items_a_relancer": int(row["a_relancer"] or 0),
+    }
+
+
 def lister_utilisateurs(session: Session) -> list[dict[str, Any]]:
     rows = session.execute(
         text(
