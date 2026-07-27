@@ -8,7 +8,7 @@ constat cite la règle (``regle_id``) dont il provient ; tout constat dont
 la règle est inconnue du contexte fourni est RETIRÉ. Jamais appliquée
 automatiquement — l'humain signe.
 
-La note embarque aussi deux sections DÉTERMINISTES (jamais rédigées par
+La note embarque aussi trois sections DÉTERMINISTES (jamais rédigées par
 le LLM, recopiées telles quelles depuis les analyses consultatives) :
 
 - « Civisme déclaratif » (:mod:`backend.plateforme.civisme_fiscal`) :
@@ -17,7 +17,11 @@ le LLM, recopiées telles quelles depuis les analyses consultatives) :
   déclarations déposées) ;
 - « Plan d'actions suggéré » (:mod:`backend.plateforme.plan_actions`) :
   compteurs par priorité, exposition totale et actions prioritaires,
-  avec la réserve consultative.
+  avec la réserve consultative ;
+- « Prochaines obligations déclaratives » : échéances de l'échéancier
+  théorique dont la date limite tombe dans la fenêtre à venir (90 jours
+  par défaut), avec leur statut de rapprochement, pour que la
+  restitution au client intègre les échéances à venir du dossier.
 
 Si une analyse échoue, la note n'échoue PAS : la section est marquée
 ``{"disponible": False}`` — même convention que ``revue_analytique``.
@@ -52,6 +56,16 @@ EN_COURS_BLOQUANT_MINUTES: Final[int] = 10
 # Sections déterministes : listes bornées pour rester un executive summary.
 ECHEANCES_MANQUANTES_MAX: Final[int] = 10
 ACTIONS_NOTE_MAX: Final[int] = 10
+OBLIGATIONS_NOTE_MAX: Final[int] = 10
+# Fenêtre à venir de la section « Prochaines obligations déclaratives ».
+FENETRE_OBLIGATIONS_JOURS: Final[int] = 90
+
+MENTION_PROCHAINES_OBLIGATIONS: Final[str] = (
+    "Rappel consultatif des échéances déclaratives à venir — échéancier "
+    "théorique de l'exercice revu (référentiel indicatif, vérifier le "
+    "calendrier officiel DGI) rapproché des pièces de la data room de "
+    "mission. À vérifier par le fiscaliste avant toute conclusion."
+)
 
 _PROMPT_NOTE = """Tu es un assistant de rédaction pour un cabinet de revue
 fiscale en Côte d'Ivoire. On te fournit le dossier chiffré d'une mission :
@@ -267,6 +281,66 @@ def section_plan_actions(analyse: dict[str, Any] | None) -> dict[str, Any]:
     }
 
 
+def section_prochaines_obligations(
+    session: Session,
+    tenant_id: int,
+    mission_id: int,
+    aujourd_hui: "date | None" = None,
+    jours: int = FENETRE_OBLIGATIONS_JOURS,
+) -> dict[str, Any]:
+    """Section « Prochaines obligations déclaratives » (déterministe).
+
+    Réutilise l'analyse de civisme fiscal (:func:`backend.plateforme.
+    civisme_fiscal.analyse_mission` — elle contient déjà le rapprochement
+    complet échéancier théorique / pièces de la data room, avec statuts)
+    puis retient les échéances dont la date limite tombe dans la fenêtre
+    ``[aujourd_hui, aujourd_hui + jours]`` (bornes incluses — une
+    échéance du jour même est encore actionnable), triées par date
+    limite croissante et bornées à ``OBLIGATIONS_NOTE_MAX``, avec la
+    réserve consultative. L'analyse ouvre son propre ``contexte_tenant``
+    (appel HORS de tout autre with). Échec quelconque (mission hors
+    tenant, analyse indisponible…) → ``{"disponible": False}`` : la note
+    n'échoue jamais à cause d'une analyse annexe.
+    """
+    from datetime import date, timedelta
+
+    try:
+        from backend.plateforme import civisme_fiscal
+
+        jour = aujourd_hui or date.today()
+        analyse = civisme_fiscal.analyse_mission(
+            session, tenant_id, mission_id, aujourd_hui=jour
+        )
+        fenetre = max(0, int(jours))
+        fin = jour + timedelta(days=fenetre)
+        obligations = sorted(
+            (
+                {
+                    "date_limite": str(e.get("date_limite") or ""),
+                    "impot": str(e.get("impot") or ""),
+                    "obligation": str(e.get("obligation") or ""),
+                    "periode": str(e.get("periode") or ""),
+                    "statut": str(e.get("statut") or ""),
+                }
+                for e in analyse.get("rapprochement") or []
+                if isinstance(e, dict)
+                and jour
+                <= date.fromisoformat(str(e.get("date_limite")))
+                <= fin
+            ),
+            key=lambda e: (e["date_limite"], e["impot"], e["obligation"]),
+        )
+    except Exception:  # noqa: BLE001 — section annexe, jamais bloquante
+        return {"disponible": False}
+    return {
+        "disponible": True,
+        "fenetre_jours": fenetre,
+        "aujourd_hui": jour.isoformat(),
+        "obligations": obligations[:OBLIGATIONS_NOTE_MAX],
+        "reserve": MENTION_PROCHAINES_OBLIGATIONS,
+    }
+
+
 def construire_contexte(
     session: Session, tenant_id: int, mission_id: int
 ) -> dict[str, Any]:
@@ -451,6 +525,9 @@ def construire_contexte(
         "revue_analytique": revue_ctx,
         "civisme_declaratif": section_civisme(civisme),
         "plan_actions": section_plan_actions(plan_act),
+        "prochaines_obligations": section_prochaines_obligations(
+            session, tenant_id, mission_id
+        ),
     }
 
 
@@ -603,6 +680,9 @@ def generer_note(
         contenu["plan_actions"] = contexte.get("plan_actions") or {
             "disponible": False
         }
+        contenu["prochaines_obligations"] = contexte.get(
+            "prochaines_obligations"
+        ) or {"disponible": False}
     except ErreurNoteSynthese as e:
         with contexte_tenant(session, tenant_id):
             row = session.execute(

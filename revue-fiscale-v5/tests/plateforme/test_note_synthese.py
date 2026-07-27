@@ -663,3 +663,132 @@ def test_note_survit_a_l_echec_des_analyses(session, monkeypatch):
     assert r.json()["statut"] == "disponible"
     assert contenu["civisme_declaratif"] == {"disponible": False}
     assert contenu["plan_actions"] == {"disponible": False}
+    # L'analyse civisme alimente aussi les prochaines obligations.
+    assert contenu["prochaines_obligations"] == {"disponible": False}
+
+
+# ── Section « Prochaines obligations déclaratives » ────────────────
+
+
+def test_section_prochaines_obligations_fenetre_tri_statuts(session):
+    """Cas nominal : fenêtre, tri par date, statuts, plafond à 10."""
+    from datetime import date
+
+    from backend.plateforme.contexte import contexte_tenant
+    from backend.plateforme.note_synthese import (
+        OBLIGATIONS_NOTE_MAX,
+        section_prochaines_obligations,
+    )
+
+    _assurer_version(session)
+    email = _cabinet(session)
+    client = TestClient(app)
+    h = _connexion(client, email)
+    tenant_id = _tenant_id(client, email)
+    mid = _mission(client, h)
+
+    with contexte_tenant(session, tenant_id):
+        # Pièce « autre » couvrant la TVA de mai 2025 (nom de fichier).
+        session.execute(
+            text(
+                "INSERT INTO piece_mission (tenant_id, mission_id, "
+                "type_piece, role, nom_fichier, chemin_stockage) "
+                "VALUES (:t, :m, 'autre', 'annexe', "
+                "'declaration_tva_mai_2025.pdf', :c)"
+            ),
+            {"t": tenant_id, "m": mid, "c": f"tests/note/{uuid.uuid4().hex}"},
+        )
+    session.commit()
+
+    out = section_prochaines_obligations(
+        session, tenant_id, mid, aujourd_hui=date(2025, 6, 1), jours=90
+    )
+    assert out["disponible"] is True
+    assert out["fenetre_jours"] == 90
+    assert out["aujourd_hui"] == "2025-06-01"
+    obligations = out["obligations"]
+    # Fenêtre [01/06, 30/08/2025] (régime réel, hors DGE) : TVA + ITS
+    # de mai/juin/juillet (limites 15/06, 15/07, 15/08) + IRC/IRCM T2
+    # (15/07) = 7 échéances.
+    assert len(obligations) == 7
+    dates = [o["date_limite"] for o in obligations]
+    assert dates == sorted(dates)  # tri par date limite croissante
+    assert obligations[0] == {
+        "date_limite": "2025-06-15",
+        "impot": "ITS",
+        "obligation": "Déclaration et reversement des ITS du mois",
+        "periode": "mai 2025",
+        "statut": "en_attente",
+    }
+    # La pièce « declaration_tva_mai_2025.pdf » couvre la TVA de mai.
+    tva_mai = next(
+        o
+        for o in obligations
+        if o["impot"] == "TVA" and o["periode"] == "mai 2025"
+    )
+    assert tva_mai["statut"] == "couverte"
+    assert tva_mai["date_limite"] == "2025-06-15"
+    autres = [o for o in obligations if o is not tva_mai]
+    assert all(o["statut"] == "en_attente" for o in autres)
+    assert "consultatif" in out["reserve"]
+
+    # Fenêtre large : plus d'échéances que le plafond → borné à 10,
+    # toujours triées par date.
+    large = section_prochaines_obligations(
+        session, tenant_id, mid, aujourd_hui=date(2025, 6, 1), jours=200
+    )
+    assert large["disponible"] is True
+    assert large["fenetre_jours"] == 200
+    assert len(large["obligations"]) == OBLIGATIONS_NOTE_MAX
+    dates_larges = [o["date_limite"] for o in large["obligations"]]
+    assert dates_larges == sorted(dates_larges)
+
+
+def test_section_prochaines_obligations_mission_introuvable(session):
+    """Mission hors périmètre → section non bloquante, jamais d'erreur."""
+    from backend.plateforme.note_synthese import (
+        section_prochaines_obligations,
+    )
+
+    _assurer_version(session)
+    email = _cabinet(session)
+    client = TestClient(app)
+    _connexion(client, email)
+    tenant_id = _tenant_id(client, email)
+
+    out = section_prochaines_obligations(session, tenant_id, 99999999)
+    assert out == {"disponible": False}
+
+
+def test_prochaines_obligations_dans_contexte_et_note(session, monkeypatch):
+    """La clé figure dans le contexte ET dans le contenu de la note."""
+    from backend.plateforme.note_synthese import construire_contexte
+
+    _assurer_version(session)
+    email = _cabinet(session)
+    client = TestClient(app)
+    h = _connexion(client, email)
+    tenant_id = _tenant_id(client, email)
+    mid = _mission(client, h)
+
+    ctx = construire_contexte(session, tenant_id, mid)
+    po = ctx["prochaines_obligations"]
+    assert po["disponible"] is True
+    assert po["fenetre_jours"] == 90
+    assert isinstance(po["obligations"], list)
+    assert len(po["obligations"]) <= 10
+    assert all(
+        set(o)
+        == {"date_limite", "impot", "obligation", "periode", "statut"}
+        for o in po["obligations"]
+    )
+    assert "consultatif" in po["reserve"]
+
+    _mock_llm(monkeypatch, {"contexte": "Revue 2025."})
+    r = client.post(f"/api/v1/missions/{mid}/note-synthese", headers=h)
+    assert r.status_code == 201, r.text
+    contenu = r.json()["contenu"]
+    # Section déterministe recopiée telle quelle dans le contenu stocké.
+    assert contenu["prochaines_obligations"]["disponible"] is True
+    assert contenu["prochaines_obligations"]["fenetre_jours"] == 90
+    assert contenu["prochaines_obligations"]["reserve"] == po["reserve"]
