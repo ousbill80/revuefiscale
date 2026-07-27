@@ -40,6 +40,47 @@ type PilotageOut = {
   } | null;
 };
 
+/** Synthèse du civisme déclaratif (GET /missions/{id}/civisme-fiscal). */
+type CivismeSyntheseOut = {
+  synthese: {
+    couvertes: number;
+    en_attente: number;
+    manquantes: number;
+    taux_civisme: string;
+  };
+};
+
+/** Synthèse du plan d'actions (GET /missions/{id}/plan-actions). */
+type PlanActionsSyntheseOut = {
+  synthese: {
+    total_actions: number;
+    par_priorite: { haute: number; moyenne: number; basse: number };
+    exposition_totale: string;
+  };
+};
+
+/** Taux str Decimal (« 83.33 ») → « 83,33 % » (fr-FR). */
+function fmtTauxPct(v: string | null | undefined): string {
+  if (v == null || v === "") return "—";
+  const n = Number(v);
+  if (Number.isNaN(n)) return String(v);
+  return (
+    n.toLocaleString("fr-FR", {
+      minimumFractionDigits: 0,
+      maximumFractionDigits: 2,
+    }) + " %"
+  );
+}
+
+/** Seuils de couleur du taux de civisme : ≥ 80 % vert, ≥ 50 % orange, sinon rouge. */
+function classeTauxCivisme(v: string): "vert" | "orange" | "rouge" {
+  const n = Number(v);
+  if (Number.isNaN(n)) return "rouge";
+  if (n >= 80) return "vert";
+  if (n >= 50) return "orange";
+  return "rouge";
+}
+
 const LIBELLES_STATUT_CONCLUSION: Record<string, string> = {
   conforme: "Conformes",
   anomalie: "Anomalies",
@@ -56,12 +97,19 @@ type Props = {
   missionId: number;
   jeton?: string | null;
   onFermer: () => void;
+  /** Ouvre le panneau détaillé correspondant (poste de travail exclusif). */
+  onOuvrirPanneau?: (id: "civisme" | "plan_actions") => void;
 };
 
-export function PilotageVue({ missionId, jeton, onFermer }: Props) {
+export function PilotageVue({ missionId, jeton, onFermer, onOuvrirPanneau }: Props) {
   const [etat, setEtat] = useState<PilotageOut | null>(null);
   const [err, setErr] = useState<string | null>(null);
   const [busy, setBusy] = useState(false);
+  const [civisme, setCivisme] = useState<CivismeSyntheseOut | null>(null);
+  const [civismeErr, setCivismeErr] = useState(false);
+  const [plan, setPlan] = useState<PlanActionsSyntheseOut | null>(null);
+  const [planErr, setPlanErr] = useState(false);
+  const [analysesBusy, setAnalysesBusy] = useState(false);
 
   useEffect(() => {
     if (!jeton || !missionId) return;
@@ -85,6 +133,45 @@ export function PilotageVue({ missionId, jeton, onFermer }: Props) {
       } finally {
         if (!annule) setBusy(false);
       }
+    })();
+    return () => {
+      annule = true;
+    };
+  }, [jeton, missionId]);
+
+  /* Cartes-indicateurs « Analyses » : civisme déclaratif + plan d'actions,
+     chargés en parallèle — l'échec d'un endpoint n'affecte pas l'autre. */
+  useEffect(() => {
+    if (!jeton || !missionId) return;
+    let annule = false;
+    setAnalysesBusy(true);
+    setCivismeErr(false);
+    setPlanErr(false);
+    void (async () => {
+      const [resCivisme, resPlan] = await Promise.allSettled([
+        api<CivismeSyntheseOut>(
+          `/api/v1/missions/${missionId}/civisme-fiscal`,
+          { jeton },
+        ),
+        api<PlanActionsSyntheseOut>(
+          `/api/v1/missions/${missionId}/plan-actions`,
+          { jeton },
+        ),
+      ]);
+      if (annule) return;
+      if (resCivisme.status === "fulfilled" && resCivisme.value) {
+        setCivisme(resCivisme.value);
+      } else {
+        setCivisme(null);
+        setCivismeErr(true);
+      }
+      if (resPlan.status === "fulfilled" && resPlan.value) {
+        setPlan(resPlan.value);
+      } else {
+        setPlan(null);
+        setPlanErr(true);
+      }
+      setAnalysesBusy(false);
     })();
     return () => {
       annule = true;
@@ -119,6 +206,84 @@ export function PilotageVue({ missionId, jeton, onFermer }: Props) {
           Pilotage indisponible : {err}
         </p>
       )}
+
+      <div className="pilotage2-analyses" role="group" aria-label="Analyses">
+        <button
+          type="button"
+          className={`pilotage2-carte${
+            civisme
+              ? ` pilotage2-carte--${classeTauxCivisme(
+                  civisme.synthese.taux_civisme,
+                )}`
+              : ""
+          }`}
+          onClick={() => onOuvrirPanneau?.("civisme")}
+          aria-label="Ouvrir le panneau Civisme déclaratif"
+        >
+          <span className="pilotage2-carte-titre">Civisme déclaratif</span>
+          {civisme ? (
+            <>
+              <span className="pilotage2-carte-val">
+                {fmtTauxPct(civisme.synthese.taux_civisme)}
+              </span>
+              <span className="pilotage2-carte-detail">
+                {civisme.synthese.manquantes > 0 ? (
+                  <span className="pilotage2-carte-alerte">
+                    {civisme.synthese.manquantes} manquante
+                    {civisme.synthese.manquantes > 1 ? "s" : ""}
+                  </span>
+                ) : (
+                  "Aucune échéance manquante"
+                )}
+              </span>
+            </>
+          ) : (
+            <span className="pilotage2-carte-detail muted">
+              {analysesBusy
+                ? "Analyse en cours…"
+                : civismeErr
+                  ? "Indisponible"
+                  : "—"}
+            </span>
+          )}
+        </button>
+        <button
+          type="button"
+          className="pilotage2-carte"
+          onClick={() => onOuvrirPanneau?.("plan_actions")}
+          aria-label="Ouvrir le panneau Plan d'actions post-revue"
+        >
+          <span className="pilotage2-carte-titre">Actions suggérées</span>
+          {plan ? (
+            <>
+              <span className="pilotage2-carte-val">
+                {plan.synthese.total_actions}
+              </span>
+              <span className="pilotage2-carte-detail">
+                {plan.synthese.par_priorite.haute > 0 ? (
+                  <span className="pilotage2-carte-alerte">
+                    {plan.synthese.par_priorite.haute} haute
+                    {plan.synthese.par_priorite.haute > 1 ? "s" : ""} priorité
+                  </span>
+                ) : (
+                  "Aucune priorité haute"
+                )}
+                {" · exposition "}
+                {fmtMontant(plan.synthese.exposition_totale)} FCFA
+              </span>
+            </>
+          ) : (
+            <span className="pilotage2-carte-detail muted">
+              {analysesBusy
+                ? "Analyse en cours…"
+                : planErr
+                  ? "Indisponible"
+                  : "—"}
+            </span>
+          )}
+        </button>
+      </div>
+
       {etat && (
         <ul className="rest-suivi-items rest-pilotage-items">
           <li className="rest-suivi-item">

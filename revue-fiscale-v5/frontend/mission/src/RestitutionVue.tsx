@@ -3571,6 +3571,17 @@ export function RestitutionVue({
           missionId={r.mission_id}
           jeton={jeton}
           onFermer={() => setPilotageOuvert(false)}
+          onOuvrirPanneau={(id) => {
+            if (id === "civisme") {
+              togglePanneau("civisme", civismeOuvert, setCivismeOuvert);
+            } else {
+              togglePanneau(
+                "plan_actions",
+                planActionsOuvert,
+                setPlanActionsOuvert,
+              );
+            }
+          }}
         />
       )}
 
