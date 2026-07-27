@@ -627,6 +627,8 @@ export function RestitutionVue({
   const [courrierEnvoiErr, setCourrierEnvoiErr] = useState<string | null>(null);
   const [affirmationBusy, setAffirmationBusy] = useState(false);
   const [affirmationErr, setAffirmationErr] = useState<string | null>(null);
+  const [ordreJourBusy, setOrdreJourBusy] = useState(false);
+  const [ordreJourErr, setOrdreJourErr] = useState<string | null>(null);
   const [comparatifOuvert, setComparatifOuvert] = useState(false);
   const [comparatif, setComparatif] = useState<ComparatifOut | null>(null);
   const [comparatifErr, setComparatifErr] = useState<string | null>(null);
@@ -1235,6 +1237,25 @@ export function RestitutionVue({
       );
     } finally {
       setCourrierEnvoiBusy(false);
+    }
+  }
+
+  async function telechargerOrdreDuJour() {
+    if (!jeton || !r.mission_id || ordreJourBusy) return;
+    setOrdreJourBusy(true);
+    setOrdreJourErr(null);
+    try {
+      await telecharger(
+        `/api/v1/missions/${r.mission_id}/ordre-du-jour.txt`,
+        jeton,
+        "ordre_du_jour.txt",
+      );
+    } catch (e) {
+      setOrdreJourErr(
+        e instanceof Error ? e.message : "téléchargement impossible",
+      );
+    } finally {
+      setOrdreJourBusy(false);
     }
   }
 
@@ -2736,6 +2757,21 @@ export function RestitutionVue({
             {affirmationErr && (
               <span className="rest-lettre-err" role="alert">
                 {affirmationErr}
+              </span>
+            )}
+            <Tooltip label="Ordre du jour de la réunion de restitution (.txt) — document de travail interne préparatoire : périmètre de la mission, synthèse des risques, décisions du plan d'actions, civisme déclaratif, prochaines échéances. Consultatif, à adapter avant la réunion.">
+              <button
+                type="button"
+                className="btn btn-ghost btn-sm dossier2-action rest-ordre-jour-btn"
+                onClick={() => void telechargerOrdreDuJour()}
+                disabled={ordreJourBusy || !jeton}
+              >
+                {ordreJourBusy ? "Ordre du jour…" : "Ordre du jour"}
+              </button>
+            </Tooltip>
+            {ordreJourErr && (
+              <span className="rest-lettre-err" role="alert">
+                {ordreJourErr}
               </span>
             )}
             <Tooltip label={PROCESS_TIPS.audit}>

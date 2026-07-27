@@ -695,6 +695,49 @@ def api_courrier_relance_txt(
     )
 
 
+@router.get("/missions/{mission_id}/ordre-du-jour.txt")
+def api_ordre_du_jour_txt(
+    mission_id: int,
+    utilisateur: UtilisateurDep,
+    session: Annotated[Session, Depends(session_abonne)],
+) -> Response:
+    """Ordre du jour de la réunion de restitution (.txt, UTF-8).
+
+    Document de travail interne préparatoire, déterministe et
+    consultatif — 404 si mission hors tenant (RLS).
+    """
+    from backend.moteur.journal import append_journal
+    from backend.plateforme.ordre_du_jour import (
+        ErreurOrdreDuJourIntrouvable,
+        ordre_du_jour_mission,
+    )
+
+    exiger_capacite(utilisateur, "lire")
+    try:
+        resultat = ordre_du_jour_mission(
+            session, utilisateur.tenant_id, mission_id
+        )
+    except ErreurOrdreDuJourIntrouvable as e:
+        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail=str(e)) from e
+    append_journal(
+        session,
+        tenant_id=utilisateur.tenant_id,
+        mission_id=mission_id,
+        acteur=utilisateur.email,
+        action="telechargement_ordre_du_jour",
+        charge_utile={"nb_risques": resultat["nb_risques"]},
+    )
+    return Response(
+        content=resultat["ordre_du_jour"],
+        media_type="text/plain; charset=utf-8",
+        headers={
+            "Content-Disposition": (
+                'attachment; filename="ordre_du_jour.txt"'
+            )
+        },
+    )
+
+
 @router.get("/missions/{mission_id}/courrier-envoi.docx")
 def api_courrier_envoi_docx(
     mission_id: int,

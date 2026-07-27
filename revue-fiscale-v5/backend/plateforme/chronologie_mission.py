@@ -94,6 +94,9 @@ LIBELLES_ACTIONS: Final[dict[str, str]] = {
         "Téléchargement du courrier d'envoi du rapport"
     ),
     "telechargement_courrier_relance": "Téléchargement du courrier de relance",
+    "telechargement_ordre_du_jour": (
+        "Téléchargement de l'ordre du jour de restitution"
+    ),
     "export_rentabilite_csv": "Export CSV de la rentabilité",
     "definition_parametres_rentabilite": (
         "Définition des paramètres de rentabilité"
