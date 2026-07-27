@@ -261,6 +261,16 @@ type RentabiliteMission = {
   cout_estime: string | null;
   marge_estimee: string | null;
   taux_marge_pct: string | null;
+  pourcentage_consomme: string | null;
+  seuil: "ok" | "vigilance" | "depassement" | null;
+  note: string;
+  heures_par_intervenant: Record<string, string>;
+};
+
+const LIBELLES_SEUIL_RENTA: Record<string, string> = {
+  ok: "budget tenu",
+  vigilance: "vigilance",
+  depassement: "dépassement",
 };
 
 const PHASES_TEMPS: Array<{ value: TempsPhase; label: string }> = [
@@ -3713,30 +3723,49 @@ export function RestitutionVue({
               </div>
             )}
             {renta && (
-              <p className="muted">
-                {renta.cout_estime !== null && (
-                  <>Coût estimé : {renta.cout_estime} FCFA</>
-                )}
-                {renta.marge_estimee !== null && (
-                  <>
-                    {" · "}Marge estimée :{" "}
-                    <span
-                      className={`badge rest-comparatif-badge ${
-                        renta.marge_estimee.startsWith("-")
-                          ? "degradation"
-                          : "amelioration"
-                      }`}
-                    >
-                      {renta.marge_estimee} FCFA
-                      {renta.taux_marge_pct !== null &&
-                        ` (${renta.taux_marge_pct} %)`}
-                    </span>
-                  </>
-                )}
-                {renta.cout_estime === null &&
-                  renta.marge_estimee === null &&
-                  "Renseignez le taux horaire (et les honoraires) pour estimer coût et marge."}
-              </p>
+              <div className="renta-synthese">
+                <p className="muted renta-synthese-ligne">
+                  Heures totales : {renta.total_heures} h
+                  {renta.honoraires !== null && (
+                    <> · Honoraires convenus : {renta.honoraires} FCFA</>
+                  )}
+                  {renta.cout_estime !== null && (
+                    <> · Coût estimé : {renta.cout_estime} FCFA</>
+                  )}
+                  {renta.marge_estimee !== null && (
+                    <>
+                      {" · "}Marge estimée :{" "}
+                      <span
+                        className={`badge rest-comparatif-badge ${
+                          renta.marge_estimee.startsWith("-")
+                            ? "degradation"
+                            : "amelioration"
+                        }`}
+                      >
+                        {renta.marge_estimee} FCFA
+                        {renta.taux_marge_pct !== null &&
+                          ` (${renta.taux_marge_pct} %)`}
+                      </span>
+                    </>
+                  )}
+                  {renta.pourcentage_consomme !== null &&
+                    renta.seuil !== null && (
+                      <>
+                        {" · "}
+                        <span
+                          className={`renta-synthese-pastille renta-synthese-pastille--${renta.seuil}`}
+                        >
+                          {renta.pourcentage_consomme} % consommé (
+                          {LIBELLES_SEUIL_RENTA[renta.seuil] ?? renta.seuil})
+                        </span>
+                      </>
+                    )}
+                  {renta.cout_estime === null &&
+                    renta.marge_estimee === null &&
+                    " — Renseignez le taux horaire (et les honoraires) pour estimer coût et marge."}
+                </p>
+                <p className="muted renta-synthese-note">{renta.note}</p>
+              </div>
             )}
           </div>
         </section>

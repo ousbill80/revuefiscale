@@ -9919,6 +9919,16 @@ tr.row-active td {
 .rest-suivi-compteur.relance { border-color: #b45309; color: #92400e; background: #fffbeb; }
 .rest-temps-renta { margin-top: 0.75rem; padding-top: 0.6rem; border-top: 1px solid var(--line-soft, #f1f5f9); display: grid; gap: 0.45rem; }
 .rest-temps-renta .rest-suivi-titre { font-size: 0.86rem; }
+
+/* Rentabilité — synthèse consultative : % d'honoraires consommé + pastille seuil. */
+.renta-synthese { display: grid; gap: 0.3rem; }
+.renta-synthese-ligne { margin: 0; }
+.renta-synthese-pastille { display: inline-flex; align-items: center; gap: 0.3rem; padding: 0.08rem 0.5rem; border-radius: 999px; font-size: 0.74rem; font-weight: 700; border: 1px solid transparent; }
+.renta-synthese-pastille::before { content: ""; width: 0.5rem; height: 0.5rem; border-radius: 50%; background: currentColor; }
+.renta-synthese-pastille--ok { color: #166534; background: #f0fdf4; border-color: #bbf7d0; }
+.renta-synthese-pastille--vigilance { color: #92400e; background: #fffbeb; border-color: #fde68a; }
+.renta-synthese-pastille--depassement { color: #991b1b; background: #fef2f2; border-color: #fecaca; }
+.renta-synthese-note { margin: 0; font-style: italic; font-size: 0.74rem; }
 .rest-suivi-items { list-style: none; margin: 0; padding: 0; display: grid; gap: 0.45rem; }
 .rest-suivi-item { display: grid; gap: 0.35rem 0.6rem; padding: 0.5rem 0.65rem; border: 1px solid var(--line-soft, #f1f5f9); border-radius: 8px; background: var(--surface, #fff); font-size: 0.83rem; }
 .rest-suivi-item.recu { border-left: 3px solid #16a34a; }

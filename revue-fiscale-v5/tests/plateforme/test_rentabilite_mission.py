@@ -83,6 +83,8 @@ def test_parametres_partiels(session):
     # Aucun paramètre : total d'heures seul, tout le reste null.
     vide = client.get(f"/api/v1/missions/{mid}/rentabilite", headers=h)
     assert vide.status_code == 200, vide.text
+    from backend.plateforme.rentabilite_mission import NOTE_RENTABILITE
+
     assert vide.json() == {
         "honoraires": None,
         "taux_horaire": None,
@@ -90,6 +92,10 @@ def test_parametres_partiels(session):
         "cout_estime": None,
         "marge_estimee": None,
         "taux_marge_pct": None,
+        "pourcentage_consomme": None,
+        "seuil": None,
+        "note": NOTE_RENTABILITE,
+        "heures_par_intervenant": {email: "2"},
     }
 
     # Taux seul : coût calculé, marge null (pas d'honoraires).
@@ -289,6 +295,8 @@ def test_calculer_rentabilite_fonction_pure():
         calculer_rentabilite,
     )
 
+    from backend.plateforme.rentabilite_mission import NOTE_RENTABILITE
+
     # Cas nominal — Decimal exact, arrondi commercial à une décimale.
     out = calculer_rentabilite("800000", "40000", "10.5")
     assert out == {
@@ -298,6 +306,9 @@ def test_calculer_rentabilite_fonction_pure():
         "cout_estime": "420000",
         "marge_estimee": "380000",
         "taux_marge_pct": "47.5",  # 380000/800000×100 = 47.5 exact
+        "pourcentage_consomme": "52.5",  # 420000/800000×100
+        "seuil": "ok",  # < 80 % du budget consommé
+        "note": NOTE_RENTABILITE,
     }
 
     # Tiers périodique : 1/3 → 33.3 (une décimale, ROUND_HALF_UP).
@@ -320,3 +331,141 @@ def test_calculer_rentabilite_fonction_pure():
         calculer_rentabilite("-1", None, "0")
     with pytest.raises(ErreurRentabilite):
         calculer_rentabilite(None, "abc", "0")
+
+
+def test_seuil_consommation_fonction_pure():
+    """Seuils consultatifs : < 80 ok, 80-100 vigilance, > 100 dépassement."""
+    from decimal import Decimal
+
+    from backend.plateforme.rentabilite_mission import seuil_consommation
+
+    assert seuil_consommation(None) is None
+    assert seuil_consommation(Decimal("0")) == "ok"
+    assert seuil_consommation(Decimal("79.9")) == "ok"
+    # Bornes : 80 et 100 inclus dans « vigilance ».
+    assert seuil_consommation(Decimal("80")) == "vigilance"
+    assert seuil_consommation(Decimal("100")) == "vigilance"
+    assert seuil_consommation(Decimal("100.1")) == "depassement"
+    assert seuil_consommation(Decimal("150")) == "depassement"
+
+
+def test_totaux_heures_par_intervenant_fonction_pure():
+    from backend.plateforme.rentabilite_mission import (
+        totaux_heures_par_intervenant,
+    )
+
+    assert totaux_heures_par_intervenant([]) == {}
+    entrees = [
+        {"collaborateur": "a.kone@cab.ci", "heures": "2.5"},
+        {"collaborateur": "b.diallo@cab.ci", "heures": "4"},
+        {"collaborateur": "a.kone@cab.ci", "heures": "1.5"},
+    ]
+    out = totaux_heures_par_intervenant(entrees)
+    # Cumul Decimal exact, tri heures décroissantes puis alphabétique.
+    assert out == {"a.kone@cab.ci": "4", "b.diallo@cab.ci": "4"}
+    assert list(out) == ["a.kone@cab.ci", "b.diallo@cab.ci"]
+
+
+def test_pourcentage_consomme_et_seuils_purs():
+    """% consommé = coût/honoraires ; le seuil suit les bornes 80/100."""
+    from backend.plateforme.rentabilite_mission import calculer_rentabilite
+
+    # 79.9 % → ok.
+    ok = calculer_rentabilite("1000", "79.9", "10")
+    assert ok["pourcentage_consomme"] == "79.9"
+    assert ok["seuil"] == "ok"
+    # Exactement 80 % → vigilance.
+    vig = calculer_rentabilite("1000", "80", "10")
+    assert vig["pourcentage_consomme"] == "80.0"
+    assert vig["seuil"] == "vigilance"
+    # Exactement 100 % → vigilance encore.
+    lim = calculer_rentabilite("1000", "100", "10")
+    assert lim["pourcentage_consomme"] == "100.0"
+    assert lim["seuil"] == "vigilance"
+    # > 100 % → dépassement (marge négative).
+    dep = calculer_rentabilite("1000", "150", "10")
+    assert dep["pourcentage_consomme"] == "150.0"
+    assert dep["seuil"] == "depassement"
+    assert dep["marge_estimee"] == "-500"
+    # Honoraires à zéro : division impossible → pas de %, pas de seuil.
+    zero = calculer_rentabilite("0", "40000", "2")
+    assert zero["pourcentage_consomme"] is None
+    assert zero["seuil"] is None
+    # Sans temps saisi : 0 % consommé, budget tenu.
+    sans_temps = calculer_rentabilite("800000", "40000", "0")
+    assert sans_temps["pourcentage_consomme"] == "0.0"
+    assert sans_temps["seuil"] == "ok"
+
+
+def test_api_rentabilite_seuils_et_intervenants(session):
+    """API : % consommé, seuil, heures par intervenant, note consultative."""
+    _assurer_version(session)
+    email = _cabinet(session)
+    client = TestClient(app)
+    h, _ = _connexion(client, email)
+    mid = _mission(client, h)
+
+    assert _saisir(client, h, mid, phase="controles",
+                   date_jour="2026-07-10", heures=6,
+                   collaborateur="a.kone@cab.ci").status_code == 200
+    assert _saisir(client, h, mid, phase="restitution",
+                   date_jour="2026-07-15", heures=4).status_code == 200
+    # 10 h × 45 000 = 450 000 sur 500 000 d'honoraires → 90 % vigilance.
+    r = _definir(client, h, mid, honoraires=500000, taux_horaire=45000)
+    assert r.status_code == 200, r.text
+    out = r.json()
+    assert out["pourcentage_consomme"] == "90.0"
+    assert out["seuil"] == "vigilance"
+    assert out["heures_par_intervenant"] == {
+        "a.kone@cab.ci": "6",
+        email: "4",
+    }
+    assert "consultatif" in out["note"]
+    assert "facturation" in out["note"]
+
+    # Honoraires abaissés : 450 000 / 400 000 → 112.5 % dépassement.
+    dep = _definir(client, h, mid, honoraires=400000, taux_horaire=45000)
+    assert dep.status_code == 200, dep.text
+    assert dep.json()["pourcentage_consomme"] == "112.5"
+    assert dep.json()["seuil"] == "depassement"
+
+
+def test_api_rentabilite_sans_temps(session):
+    """Mission sans temps saisi : 0 h, 0 % consommé, aucun intervenant."""
+    _assurer_version(session)
+    email = _cabinet(session)
+    client = TestClient(app)
+    h, _ = _connexion(client, email)
+    mid = _mission(client, h)
+
+    assert _definir(
+        client, h, mid, honoraires=800000, taux_horaire=40000
+    ).status_code == 200
+    out = client.get(f"/api/v1/missions/{mid}/rentabilite", headers=h).json()
+    assert out["total_heures"] == "0"
+    assert out["cout_estime"] == "0"
+    assert out["pourcentage_consomme"] == "0.0"
+    assert out["seuil"] == "ok"
+    assert out["heures_par_intervenant"] == {}
+
+
+def test_consultation_journalisee_dans_chronologie(session):
+    """Le GET rentabilité laisse une trace lisible dans la chronologie."""
+    _assurer_version(session)
+    email = _cabinet(session)
+    client = TestClient(app)
+    h, _ = _connexion(client, email)
+    mid = _mission(client, h)
+
+    assert client.get(
+        f"/api/v1/missions/{mid}/rentabilite", headers=h
+    ).status_code == 200
+    chrono = client.get(f"/api/v1/missions/{mid}/chronologie", headers=h)
+    assert chrono.status_code == 200, chrono.text
+    evenements = chrono.json()["evenements"]
+    evt = next(
+        e for e in evenements
+        if e["action"] == "consultation_rentabilite_mission"
+    )
+    assert evt["acteur"] == email
+    assert evt["libelle"] == "Consultation de la rentabilité de la mission"

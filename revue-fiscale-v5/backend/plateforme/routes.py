@@ -1428,6 +1428,7 @@ def api_rentabilite_mission(
     session: Annotated[Session, Depends(session_abonne)],
 ) -> dict:
     """Rentabilité de la mission : honoraires, taux, coût, marge, taux %."""
+    from backend.moteur.journal import append_journal
     from backend.plateforme.rentabilite_mission import (
         ErreurRentabiliteIntrouvable,
         rentabilite_mission,
@@ -1435,9 +1436,23 @@ def api_rentabilite_mission(
 
     exiger_capacite(utilisateur, "lire")
     try:
-        return rentabilite_mission(session, utilisateur.tenant_id, mission_id)
+        rentabilite = rentabilite_mission(
+            session, utilisateur.tenant_id, mission_id
+        )
     except ErreurRentabiliteIntrouvable as e:
         raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail=str(e)) from e
+    append_journal(
+        session,
+        tenant_id=utilisateur.tenant_id,
+        mission_id=mission_id,
+        acteur=utilisateur.email,
+        action="consultation_rentabilite_mission",
+        charge_utile={
+            "total_heures": rentabilite["total_heures"],
+            "seuil": rentabilite["seuil"],
+        },
+    )
+    return rentabilite
 
 
 @router.get("/missions/{mission_id}/rentabilite.csv")

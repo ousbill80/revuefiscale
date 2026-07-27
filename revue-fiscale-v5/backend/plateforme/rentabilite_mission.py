@@ -24,6 +24,55 @@ from sqlalchemy.orm import Session
 
 from backend.plateforme.contexte import contexte_tenant
 
+# Note consultative — TOUJOURS présente dans la charge utile : la
+# rentabilité est un indicateur interne de pilotage, pas un document
+# opposable ni une base de facturation.
+NOTE_RENTABILITE: Final = (
+    "Indicateur interne de pilotage du cabinet, fourni à titre "
+    "consultatif : il ne préjuge ni de la facturation ni des honoraires "
+    "convenus avec le client."
+)
+
+# Seuils consultatifs sur le pourcentage d'honoraires consommé par le
+# temps valorisé : < 80 % ok, 80-100 % vigilance, > 100 % dépassement.
+SEUIL_VIGILANCE_PCT: Final = Decimal("80")
+SEUIL_DEPASSEMENT_PCT: Final = Decimal("100")
+
+
+def seuil_consommation(pourcentage: Decimal | None) -> str | None:
+    """PUR — seuil consultatif du budget d'honoraires consommé.
+
+    ``None`` (pourcentage incalculable) → ``None`` ; sinon « ok »
+    (< 80 %), « vigilance » (80-100 % inclus) ou « depassement »
+    (> 100 %).
+    """
+    if pourcentage is None:
+        return None
+    if pourcentage < SEUIL_VIGILANCE_PCT:
+        return "ok"
+    if pourcentage <= SEUIL_DEPASSEMENT_PCT:
+        return "vigilance"
+    return "depassement"
+
+
+def totaux_heures_par_intervenant(
+    entrees: list[dict[str, Any]],
+) -> dict[str, str]:
+    """PUR — cumul d'heures par intervenant, ordre d'heures décroissant.
+
+    ``entrees`` : dictionnaires portant ``collaborateur`` et ``heures``
+    (str Decimal). Retourne {intervenant: heures str} — à volume égal,
+    ordre alphabétique (stable, déterministe).
+    """
+    totaux: dict[str, Decimal] = {}
+    for e in entrees:
+        nom = str(e["collaborateur"])
+        totaux[nom] = totaux.get(nom, Decimal("0")) + Decimal(
+            str(e["heures"])
+        )
+    tri = sorted(totaux.items(), key=lambda kv: (-kv[1], kv[0]))
+    return {nom: _fmt(h) for nom, h in tri}
+
 
 def _fmt(d: Decimal) -> str:
     """Décimal → texte stable, sans notation scientifique ni zéros finaux."""
@@ -68,7 +117,12 @@ def calculer_rentabilite(
     - ``marge_estimee`` : honoraires − coût — ``null`` si l'un des deux
       paramètres manque (on ne fait pas croire à une marge sans base) ;
     - ``taux_marge_pct`` : marge / honoraires × 100, arrondi commercial à
-      une décimale — ``null`` si honoraires absents ou nuls (division).
+      une décimale — ``null`` si honoraires absents ou nuls (division) ;
+    - ``pourcentage_consomme`` : coût / honoraires × 100 (une décimale) —
+      part du budget d'honoraires consommée par le temps valorisé ;
+    - ``seuil`` : lecture consultative du pourcentage consommé
+      (:func:`seuil_consommation`) ;
+    - ``note`` : mention consultative, toujours présente.
     """
     h = _valider_montant(honoraires, "honoraires")
     t = _valider_montant(taux_horaire, "taux horaire")
@@ -79,8 +133,12 @@ def calculer_rentabilite(
         None if (h is None or cout is None) else h - cout
     )
     taux_pct: Decimal | None = None
-    if marge is not None and h is not None and h > 0:
-        taux_pct = (marge / h * Decimal("100")).quantize(
+    consomme: Decimal | None = None
+    if cout is not None and h is not None and h > 0:
+        taux_pct = ((h - cout) / h * Decimal("100")).quantize(
+            Decimal("0.1"), rounding=ROUND_HALF_UP
+        )
+        consomme = (cout / h * Decimal("100")).quantize(
             Decimal("0.1"), rounding=ROUND_HALF_UP
         )
     return {
@@ -90,6 +148,11 @@ def calculer_rentabilite(
         "cout_estime": None if cout is None else _fmt(cout),
         "marge_estimee": None if marge is None else _fmt(marge),
         "taux_marge_pct": None if taux_pct is None else format(taux_pct, "f"),
+        "pourcentage_consomme": (
+            None if consomme is None else format(consomme, "f")
+        ),
+        "seuil": seuil_consommation(consomme),
+        "note": NOTE_RENTABILITE,
     }
 
 
@@ -139,9 +202,10 @@ def rentabilite_mission(
 ) -> dict[str, Any]:
     """Rentabilité de la mission : paramètres, coût, marge, taux de marge.
 
-    Lit sous RLS les paramètres de la mission et le cumul d'heures
-    saisies (``temps_mission``), puis délègue le calcul à la fonction
-    pure :func:`calculer_rentabilite`. Mission hors périmètre du tenant
+    Lit sous RLS les paramètres de la mission et les temps saisis
+    (``temps_mission``), puis délègue le calcul aux fonctions pures
+    :func:`calculer_rentabilite` et :func:`totaux_heures_par_intervenant`
+    (clé ``heures_par_intervenant``). Mission hors périmètre du tenant
     → :class:`ErreurRentabiliteIntrouvable` (404).
     """
     with contexte_tenant(session, tenant_id):
@@ -155,15 +219,26 @@ def rentabilite_mission(
             ),
             {"m": mission_id},
         ).mappings().one_or_none()
+        entrees = session.execute(
+            text(
+                "SELECT collaborateur, heures FROM temps_mission "
+                "WHERE mission_id = :m ORDER BY id"
+            ),
+            {"m": mission_id},
+        ).mappings().all()
     if row is None:
         raise ErreurRentabiliteIntrouvable(
             f"mission {mission_id} introuvable"
         )
-    return calculer_rentabilite(
+    resultat = calculer_rentabilite(
         honoraires=row["honoraires"],
         taux_horaire=row["taux_horaire"],
         total_heures=row["total_heures"],
     )
+    resultat["heures_par_intervenant"] = totaux_heures_par_intervenant(
+        [dict(e) for e in entrees]
+    )
+    return resultat
 
 
 # En-tête du CSV de rentabilité — délimiteur « ; » (usage cabinet / Excel FR).

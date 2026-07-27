@@ -109,6 +109,9 @@ LIBELLES_ACTIONS: Final[dict[str, str]] = {
     ),
     "consultation_plan_actions": "Consultation du plan d'actions",
     "consultation_pilotage_mission": "Consultation du pilotage de la mission",
+    "consultation_rentabilite_mission": (
+        "Consultation de la rentabilité de la mission"
+    ),
     "consultation_bilan_cloture": "Consultation du bilan de clôture",
     "consultation_comparaison_exercices": (
         "Consultation de la comparaison d'exercices"
