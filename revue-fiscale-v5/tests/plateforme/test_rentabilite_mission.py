@@ -449,6 +449,263 @@ def test_api_rentabilite_sans_temps(session):
     assert out["heures_par_intervenant"] == {}
 
 
+# ── Suivi budgétaire des missions (tableau de bord cabinet) ─────────
+
+
+def _item_cab(
+    pct: str | None,
+    seuil: str | None,
+    client: str = "SA Alpha FICTIVE",
+    mission_id: int = 1,
+) -> dict:
+    return {
+        "mission_id": mission_id,
+        "client": client,
+        "exercice": 2025,
+        "total_heures": "10",
+        "honoraires": "800000",
+        "cout_estime": "400000",
+        "pourcentage_consomme": pct,
+        "seuil": seuil,
+    }
+
+
+def test_item_rentabilite_cabinet_pur():
+    """Item cabinet calculé depuis les agrégats SQL (Decimal exact)."""
+    from backend.plateforme.rentabilite_mission import (
+        item_rentabilite_cabinet,
+    )
+
+    it = item_rentabilite_cabinet(
+        {
+            "mission_id": 7,
+            "client": "SA Alpha FICTIVE",
+            "exercice": 2025,
+            "honoraires": "400000",
+            "taux_horaire": "45000",
+            "total_heures": "10",
+        }
+    )
+    # 10 h × 45 000 = 450 000 / 400 000 → 112.5 % dépassement.
+    assert it == {
+        "mission_id": 7,
+        "client": "SA Alpha FICTIVE",
+        "exercice": 2025,
+        "total_heures": "10",
+        "honoraires": "400000",
+        "cout_estime": "450000",
+        "pourcentage_consomme": "112.5",
+        "seuil": "depassement",
+    }
+
+
+def test_tri_rentabilite_cabinet_pur():
+    """Dépassements d'abord, puis % décroissant, puis client, mission."""
+    from backend.plateforme.rentabilite_mission import (
+        trier_rentabilite_cabinet,
+    )
+
+    items = [
+        _item_cab("85.0", "vigilance", client="SARL Zêta FICTIVE",
+                  mission_id=5),
+        _item_cab("110.0", "depassement", client="SA Alpha FICTIVE",
+                  mission_id=2),
+        _item_cab("98.0", "vigilance", client="SA Alpha FICTIVE",
+                  mission_id=3),
+        _item_cab("150.5", "depassement", client="SARL Zêta FICTIVE",
+                  mission_id=4),
+        # Égalité de % : ordre alphabétique client puis mission.
+        _item_cab("98.0", "vigilance", client="SA Alpha FICTIVE",
+                  mission_id=1),
+    ]
+    tries = trier_rentabilite_cabinet(items)
+    assert [
+        (i["pourcentage_consomme"], i["mission_id"]) for i in tries
+    ] == [
+        ("150.5", 4),
+        ("110.0", 2),
+        ("98.0", 1),
+        ("98.0", 3),
+        ("85.0", 5),
+    ]
+
+
+def test_synthese_rentabilite_cabinet_pur():
+    """Compteurs suivies / vigilance / dépassement — « ok » compté."""
+    from backend.plateforme.rentabilite_mission import (
+        PLAFOND_ITEMS_CABINET,
+        synthese_rentabilite_cabinet,
+    )
+
+    items = [
+        _item_cab("50.0", "ok"),
+        _item_cab("90.0", "vigilance"),
+        _item_cab("95.0", "vigilance"),
+        _item_cab("120.0", "depassement"),
+    ]
+    assert synthese_rentabilite_cabinet(items) == {
+        "missions_suivies": 4,
+        "en_vigilance": 2,
+        "en_depassement": 1,
+    }
+    assert synthese_rentabilite_cabinet([]) == {
+        "missions_suivies": 0,
+        "en_vigilance": 0,
+        "en_depassement": 0,
+    }
+    # Liste opérationnelle plafonnée (la synthèse reste exhaustive).
+    assert PLAFOND_ITEMS_CABINET == 50
+
+
+def _mission_client(client, h, denomination: str, ncc: str) -> int:
+    """Mission API sur un contribuable dédié (dénomination distincte)."""
+    c = client.post(
+        "/api/v1/contribuables",
+        headers=h,
+        json={
+            "denomination": denomination,
+            "ncc": ncc,
+            "forme": "pm",
+            "rccm": f"CI-RCCM-{ncc}",
+            "regime_fiscal": "reel",
+            "forme_juridique": "SA",
+            "siege_social": "Abidjan Plateau",
+        },
+    )
+    assert c.status_code == 200, c.text
+    m = client.post(
+        "/api/v1/missions",
+        headers=h,
+        json={
+            "contribuable_id": c.json()["id"],
+            "type_engagement": "preventive",
+            "exercice": 2025,
+            "profil": {"regime": "reel", "forme_juridique": "SA"},
+        },
+    )
+    assert m.status_code == 200, m.text
+    return int(m.json()["id"])
+
+
+def test_api_rentabilite_cabinet_filtrage_et_tri(session):
+    """Seules vigilance et dépassement listées ; clôturées exclues."""
+    _assurer_version(session)
+    email = _cabinet(session)
+    client = TestClient(app)
+    h, _tid = _connexion(client, email)
+
+    # Dépassement : 10 h × 45 000 = 450 000 / 400 000 → 112.5 %.
+    mid_dep = _mission_client(client, h, "SARL Dep FICTIVE", "CI-RENT-01")
+    assert _saisir(client, h, mid_dep, heures=10).status_code == 200
+    assert _definir(
+        client, h, mid_dep, honoraires=400000, taux_horaire=45000
+    ).status_code == 200
+
+    # Vigilance : 10 h × 45 000 = 450 000 / 500 000 → 90 %.
+    mid_vig = _mission_client(client, h, "SA Vig FICTIVE", "CI-RENT-02")
+    assert _saisir(client, h, mid_vig, heures=10).status_code == 200
+    assert _definir(
+        client, h, mid_vig, honoraires=500000, taux_horaire=45000
+    ).status_code == 200
+
+    # Ok : 2 h × 40 000 = 80 000 / 800 000 → 10 % (synthèse seulement).
+    mid_ok = _mission_client(client, h, "SA Ok FICTIVE", "CI-RENT-03")
+    assert _saisir(client, h, mid_ok, heures=2).status_code == 200
+    assert _definir(
+        client, h, mid_ok, honoraires=800000, taux_horaire=40000
+    ).status_code == 200
+
+    # Non paramétrée : ni suivie ni listée.
+    mid_sans = _mission_client(client, h, "SA Sans FICTIVE", "CI-RENT-04")
+    assert _saisir(client, h, mid_sans, heures=20).status_code == 200
+
+    # Clôturée en dépassement : exclue du suivi.
+    mid_clot = _mission_client(client, h, "SA Clot FICTIVE", "CI-RENT-05")
+    assert _saisir(client, h, mid_clot, heures=20).status_code == 200
+    assert _definir(
+        client, h, mid_clot, honoraires=100000, taux_horaire=45000
+    ).status_code == 200
+    for statut in ("en_cours", "cloturee"):
+        r = client.patch(
+            f"/api/v1/missions/{mid_clot}/statut",
+            headers=h,
+            json={"statut": statut},
+        )
+        assert r.status_code == 200, r.text
+
+    r = client.get("/api/v1/cabinet/rentabilite", headers=h)
+    assert r.status_code == 200, r.text
+    corps = r.json()
+    # Synthèse : 3 missions suivies (dep, vig, ok) — sans param ni clôturée.
+    assert corps["synthese"] == {
+        "missions_suivies": 3,
+        "en_vigilance": 1,
+        "en_depassement": 1,
+    }
+    # Items : dépassement d'abord, puis vigilance ; « ok » absente.
+    assert [
+        (i["mission_id"], i["seuil"], i["pourcentage_consomme"])
+        for i in corps["items"]
+    ] == [
+        (mid_dep, "depassement", "112.5"),
+        (mid_vig, "vigilance", "90.0"),
+    ]
+    premier = corps["items"][0]
+    assert premier["client"] == "SARL Dep FICTIVE"
+    assert premier["exercice"] == 2025
+    assert premier["total_heures"] == "10"
+    assert premier["honoraires"] == "400000"
+    assert premier["cout_estime"] == "450000"
+    assert "consultatif" in corps["note"]
+
+
+def test_api_rentabilite_cabinet_tenant_vide(session):
+    """Cabinet sans mission paramétrée : synthèse à zéro, liste vide."""
+    _assurer_version(session)
+    email = _cabinet(session)
+    client = TestClient(app)
+    h, _ = _connexion(client, email)
+
+    r = client.get("/api/v1/cabinet/rentabilite", headers=h)
+    assert r.status_code == 200, r.text
+    corps = r.json()
+    assert corps["items"] == []
+    assert corps["synthese"] == {
+        "missions_suivies": 0,
+        "en_vigilance": 0,
+        "en_depassement": 0,
+    }
+    assert "note" in corps
+
+
+def test_api_rentabilite_cabinet_isolation_tenants(session):
+    """Le cabinet B ne voit pas les dépassements du cabinet A (RLS)."""
+    _assurer_version(session)
+    email_a = _cabinet(session)
+    email_b = _cabinet(session)
+    client = TestClient(app)
+    h_a, _ = _connexion(client, email_a)
+    mid = _mission(client, h_a)
+    assert _saisir(client, h_a, mid, heures=10).status_code == 200
+    assert _definir(
+        client, h_a, mid, honoraires=100000, taux_horaire=45000
+    ).status_code == 200
+
+    h_b, _ = _connexion(client, email_b)
+    corps = client.get("/api/v1/cabinet/rentabilite", headers=h_b).json()
+    assert corps["items"] == []
+    assert corps["synthese"]["missions_suivies"] == 0
+    # Le tenant légitime voit bien son dépassement.
+    corps_a = client.get("/api/v1/cabinet/rentabilite", headers=h_a).json()
+    assert corps_a["synthese"]["en_depassement"] == 1
+    assert corps_a["items"][0]["mission_id"] == mid
+
+
+def test_api_rentabilite_cabinet_401_sans_jeton(session):
+    client = TestClient(app)
+    assert client.get("/api/v1/cabinet/rentabilite").status_code in (401, 403)
+
+
 def test_consultation_journalisee_dans_chronologie(session):
     """Le GET rentabilité laisse une trace lisible dans la chronologie."""
     _assurer_version(session)

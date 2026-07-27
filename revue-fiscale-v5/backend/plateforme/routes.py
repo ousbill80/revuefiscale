@@ -4204,3 +4204,37 @@ def api_actions_retenues_cabinet_csv(
             )
         },
     )
+
+
+@router.get("/cabinet/rentabilite")
+def api_rentabilite_cabinet(
+    utilisateur: UtilisateurDep,
+    session: Annotated[Session, Depends(session_abonne)],
+) -> dict:
+    """Suivi budgétaire des missions du cabinet — budgets sous tension.
+
+    Vue transverse pour le pilotage économique : missions non clôturées
+    dont honoraires et taux horaire sont renseignés, avec le pourcentage
+    d'honoraires consommé par le temps valorisé. Seules les missions en
+    « vigilance » (80-100 %) ou en « dépassement » (> 100 %) ressortent
+    en liste ; la synthèse compte toutes les missions suivies.
+    Consultatif et déterministe.
+    """
+    from backend.moteur.journal import append_journal
+    from backend.plateforme.rentabilite_mission import rentabilite_cabinet
+
+    exiger_capacite(utilisateur, "lire")
+    suivi = rentabilite_cabinet(session, utilisateur.tenant_id)
+    append_journal(
+        session,
+        tenant_id=utilisateur.tenant_id,
+        mission_id=None,
+        acteur=utilisateur.email,
+        action="consultation_rentabilite_cabinet",
+        charge_utile={
+            "missions_suivies": suivi["synthese"]["missions_suivies"],
+            "en_vigilance": suivi["synthese"]["en_vigilance"],
+            "en_depassement": suivi["synthese"]["en_depassement"],
+        },
+    )
+    return suivi

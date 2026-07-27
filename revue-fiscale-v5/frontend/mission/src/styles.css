@@ -11456,6 +11456,158 @@ tr.row-active td {
   }
 }
 
+/* ── Suivi budgétaire des missions (tableau de bord cabinet) ────────── */
+.rentacab-zone {
+  margin: 1rem 0 0.5rem;
+}
+.rentacab-head {
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
+  gap: 0.6rem;
+  flex-wrap: wrap;
+  margin-bottom: 0.6rem;
+}
+.rentacab-title {
+  margin: 0;
+  font-size: 1rem;
+  font-weight: 800;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  color: var(--ink, #0f172a);
+}
+.rentacab-title::before {
+  content: "— ";
+  color: var(--accent, #0f766e);
+}
+.rentacab-sub {
+  margin: 0.15rem 0 0;
+  font-size: 0.78rem;
+  color: var(--muted, #64748b);
+}
+.rentacab-card {
+  display: flex;
+  flex-direction: column;
+  gap: 0.6rem;
+  min-width: 0;
+}
+.rentacab-synthese {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.4rem;
+}
+.rentacab-chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.3rem;
+  padding: 0.2rem 0.55rem;
+  border: 1px solid var(--line, #e5e7eb);
+  border-radius: 999px;
+  font-size: 0.74rem;
+  color: var(--ink-soft, #1e293b);
+  background: #fff;
+}
+.rentacab-chip.vigilance {
+  background: #fff7ed;
+  color: #9a3412;
+  border-color: #fed7aa;
+}
+.rentacab-chip.depassement {
+  background: #fef2f2;
+  color: #991b1b;
+  border-color: #fecaca;
+}
+.rentacab-liste {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  display: flex;
+  flex-direction: column;
+  gap: 0.3rem;
+}
+.rentacab-row {
+  flex: 1 1 auto;
+  width: 100%;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.4rem 0.6rem;
+  border: 1px solid var(--line, #e5e7eb);
+  border-radius: 8px;
+  background: #fff;
+  text-align: left;
+  cursor: pointer;
+  min-width: 0;
+}
+.rentacab-row:hover {
+  border-color: var(--accent, #0f766e);
+  background: var(--accent-soft, #ecfdf8);
+}
+.rentacab-libelle {
+  font-size: 0.8rem;
+  font-weight: 600;
+  color: var(--ink, #0f172a);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+.rentacab-meta {
+  font-size: 0.74rem;
+  color: var(--muted, #64748b);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+/* Pastille « X % consommé » — orange (vigilance) ou rouge (dépassement). */
+.rentacab-badge {
+  margin-left: auto;
+  flex: none;
+  display: inline-flex;
+  align-items: center;
+  padding: 0.15rem 0.5rem;
+  border-radius: 999px;
+  font-size: 0.72rem;
+  font-weight: 700;
+  white-space: nowrap;
+}
+.rentacab-badge.vigilance {
+  background: #fff7ed;
+  color: #9a3412;
+  border: 1px solid #fed7aa;
+}
+.rentacab-badge.depassement {
+  background: #fef2f2;
+  color: #991b1b;
+  border: 1px solid #fecaca;
+}
+.rentacab-vide {
+  margin: 0;
+  padding: 0.5rem 0.6rem;
+  border: 1px dashed var(--line, #e5e7eb);
+  border-radius: 8px;
+  font-size: 0.78rem;
+  color: var(--muted, #64748b);
+}
+.rentacab-err {
+  margin: 0;
+  font-size: 0.78rem;
+  color: #b91c1c;
+}
+.rentacab-note {
+  margin: 0;
+  font-size: 0.72rem;
+  font-style: italic;
+  color: var(--muted, #64748b);
+}
+@media (max-width: 720px) {
+  .rentacab-row {
+    flex-wrap: wrap;
+  }
+  .rentacab-meta {
+    white-space: normal;
+  }
+}
+
 /* ---- Fiche client — obligations à venir (agenda cabinet filtré client) ---- */
 /* Réutilise le langage agenda2- (lignes, badges, note) ; le préfixe
    fiche2-echeances- porte le conteneur et les éléments propres à la fiche. */

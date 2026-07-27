@@ -241,6 +241,130 @@ def rentabilite_mission(
     return resultat
 
 
+# ── Suivi budgétaire des missions (tableau de bord cabinet) ──────────
+
+# Plafond d'items retournés — liste opérationnelle, pas un export.
+PLAFOND_ITEMS_CABINET: Final = 50
+
+# Note consultative du bloc cabinet — TOUJOURS présente.
+NOTE_RENTABILITE_CABINET: Final = (
+    "Suivi consultatif du budget temps des missions en cours : le "
+    "pourcentage d'honoraires consommé est un indicateur interne de "
+    "pilotage du cabinet, il ne préjuge ni de la facturation ni des "
+    "honoraires convenus avec chaque client."
+)
+
+# Ordre d'affichage des seuils sous tension : dépassement avant vigilance.
+_RANG_SEUIL: Final = {"depassement": 0, "vigilance": 1}
+
+
+def item_rentabilite_cabinet(agregat: dict[str, Any]) -> dict[str, Any]:
+    """PUR — item de suivi budgétaire d'une mission depuis ses agrégats.
+
+    ``agregat`` : ``mission_id``, ``client``, ``exercice``,
+    ``honoraires``, ``taux_horaire``, ``total_heures``. Délègue le
+    calcul à :func:`calculer_rentabilite` et ne conserve que les champs
+    du bloc cabinet (dont ``pourcentage_consomme`` et ``seuil``).
+    """
+    r = calculer_rentabilite(
+        honoraires=agregat["honoraires"],
+        taux_horaire=agregat["taux_horaire"],
+        total_heures=agregat["total_heures"],
+    )
+    return {
+        "mission_id": int(agregat["mission_id"]),
+        "client": str(agregat.get("client") or ""),
+        "exercice": int(agregat["exercice"]),
+        "total_heures": r["total_heures"],
+        "honoraires": r["honoraires"],
+        "cout_estime": r["cout_estime"],
+        "pourcentage_consomme": r["pourcentage_consomme"],
+        "seuil": r["seuil"],
+    }
+
+
+def trier_rentabilite_cabinet(
+    items: list[dict[str, Any]],
+) -> list[dict[str, Any]]:
+    """PUR — dépassements d'abord, puis pourcentage consommé décroissant.
+
+    À pourcentage égal, ordre alphabétique des clients puis mission —
+    tri stable et déterministe. Les items sans pourcentage (théoriques
+    ici) vont en queue.
+    """
+    def _cle(i: dict[str, Any]) -> tuple:
+        brut = i.get("pourcentage_consomme")
+        pct = Decimal(str(brut)) if brut not in (None, "") else None
+        return (
+            _RANG_SEUIL.get(str(i.get("seuil")), 9),
+            (1, Decimal("0")) if pct is None else (0, -pct),
+            str(i.get("client") or ""),
+            int(i.get("mission_id") or 0),
+        )
+
+    return sorted(items, key=_cle)
+
+
+def synthese_rentabilite_cabinet(
+    items: list[dict[str, Any]],
+) -> dict[str, int]:
+    """PUR — compteurs : missions suivies, en vigilance, en dépassement.
+
+    ``missions_suivies`` compte TOUTES les missions paramétrées (y
+    compris « ok ») ; seules vigilance et dépassement ressortent en
+    liste.
+    """
+    seuils = [str(i.get("seuil")) for i in items]
+    return {
+        "missions_suivies": len(items),
+        "en_vigilance": seuils.count("vigilance"),
+        "en_depassement": seuils.count("depassement"),
+    }
+
+
+def rentabilite_cabinet(session: Session, tenant_id: int) -> dict[str, Any]:
+    """Suivi budgétaire des missions du cabinet (lecture, RLS).
+
+    Missions NON clôturées dont honoraires ET taux horaire sont
+    renseignés, avec le total d'heures saisies (une seule requête SQL,
+    agrégat ``SUM``). Les items ne retiennent que les missions sous
+    tension (« vigilance » 80-100 %, « dépassement » > 100 %), triées
+    dépassement d'abord puis pourcentage décroissant, plafonnées à
+    :data:`PLAFOND_ITEMS_CABINET` ; la synthèse compte toutes les
+    missions suivies. Se construit toujours (tenant vide → liste vide).
+    """
+    from backend.plateforme.missions import STATUT_CLOTUREE
+
+    with contexte_tenant(session, tenant_id):
+        rows = session.execute(
+            text(
+                "SELECT m.id AS mission_id, m.exercice, m.honoraires, "
+                "m.taux_horaire, c.denomination AS client, "
+                "COALESCE(SUM(t.heures), 0) AS total_heures "
+                "FROM mission m "
+                "JOIN contribuable c ON c.id = m.contribuable_id "
+                "LEFT JOIN temps_mission t ON t.mission_id = m.id "
+                "WHERE m.statut <> :clot "
+                "AND m.honoraires IS NOT NULL "
+                "AND m.taux_horaire IS NOT NULL "
+                "GROUP BY m.id, m.exercice, m.honoraires, m.taux_horaire, "
+                "c.denomination "
+                "ORDER BY c.denomination, m.id"
+            ),
+            {"clot": STATUT_CLOTUREE},
+        ).mappings().all()
+
+    suivies = [item_rentabilite_cabinet(dict(r)) for r in rows]
+    sous_tension = trier_rentabilite_cabinet(
+        [i for i in suivies if i["seuil"] in ("vigilance", "depassement")]
+    )
+    return {
+        "items": sous_tension[:PLAFOND_ITEMS_CABINET],
+        "synthese": synthese_rentabilite_cabinet(suivies),
+        "note": NOTE_RENTABILITE_CABINET,
+    }
+
+
 # En-tête du CSV de rentabilité — délimiteur « ; » (usage cabinet / Excel FR).
 ENTETE_RENTABILITE_CSV: Final = ("rubrique", "cle", "heures", "montant_fcfa")
 
