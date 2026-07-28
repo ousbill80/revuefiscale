@@ -6756,6 +6756,42 @@ def api_export_calendrier_csv(
     )
 
 
+@router.get("/cabinet/portefeuille-declaratif")
+def api_portefeuille_declaratif_cabinet(
+    utilisateur: UtilisateurDep,
+    session: Annotated[Session, Depends(session_abonne)],
+) -> dict:
+    """Suivi déclaratif du portefeuille — complétude consolidée.
+
+    Pour chaque mission non clôturée, l'état de complétude
+    déclarative (périodes saisies / attendues TVA et impôts sur
+    salaires) déjà calculé par la vue mission — consolidé pour voir
+    d'un coup d'œil où prioriser la collecte des pièces. Lecture
+    seule sous RLS, consultatif, aucun email — une mission en échec
+    est restituée « indisponible », jamais bloquante.
+    """
+    from backend.moteur.journal import append_journal
+    from backend.plateforme.portefeuille_declaratif import (
+        portefeuille_declaratif_cabinet,
+    )
+
+    exiger_capacite(utilisateur, "lire")
+    vue = portefeuille_declaratif_cabinet(session, utilisateur.tenant_id)
+    append_journal(
+        session,
+        tenant_id=utilisateur.tenant_id,
+        mission_id=None,
+        acteur=utilisateur.email,
+        action="consultation_portefeuille_declaratif",
+        charge_utile={
+            "nb_missions": vue["synthese"]["nb_missions"],
+            "nb_a_completer": vue["synthese"]["nb_a_completer"],
+            "nb_indisponibles": vue["synthese"]["nb_indisponibles"],
+        },
+    )
+    return vue
+
+
 @router.get("/moi/tableau")
 def api_mon_tableau(
     utilisateur: UtilisateurDep,
