@@ -2,6 +2,25 @@ import os
 
 import pytest
 
+# Les tests ne doivent JAMAIS envoyer de vrais emails : une clé Resend
+# présente dans .env transformerait chaque test d'invitation en envoi
+# réel vers des adresses fictives (bounces, réputation du domaine).
+os.environ["RESEND_API_KEY"] = ""
+
+
+@pytest.fixture(autouse=True)
+def _resend_neutralise():
+    try:
+        from backend import config as _cfg
+    except ImportError:  # pragma: no cover
+        yield
+        return
+    ancienne = _cfg.config.resend_api_key
+    _cfg.config.resend_api_key = ""
+    yield
+    _cfg.config.resend_api_key = ancienne
+
+
 URL = os.getenv(
     "DATABASE_URL",
     "postgresql+psycopg://app_revue:changeme@localhost:5433/revue_fiscale",
