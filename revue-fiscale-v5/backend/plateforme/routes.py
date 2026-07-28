@@ -6637,6 +6637,42 @@ def api_export_alertes_csv(
     return _export_centre_alertes(utilisateur, session, "csv")
 
 
+@router.get("/cabinet/calendrier")
+def api_calendrier_cabinet(
+    utilisateur: UtilisateurDep,
+    session: Annotated[Session, Depends(session_abonne)],
+    horizon_mois: Annotated[int, Query(ge=1, le=12)] = 3,
+) -> dict:
+    """Calendrier fiscal du cabinet — consolidation mensuelle consultative.
+
+    Mois par mois sur l'horizon demandé (1 à 12 mois, défaut 3), les
+    échéances fiscales des missions en cours et les points convenus
+    datés encore à faire — pour planifier la charge du cabinet sans
+    ouvrir chaque mission. Lecture seule sous RLS, aucun email — une
+    source en échec est simplement ignorée, jamais bloquante.
+    """
+    from backend.moteur.journal import append_journal
+    from backend.plateforme.calendrier_cabinet import calendrier_cabinet
+
+    exiger_capacite(utilisateur, "lire")
+    vue = calendrier_cabinet(
+        session, utilisateur.tenant_id, horizon_mois=horizon_mois
+    )
+    append_journal(
+        session,
+        tenant_id=utilisateur.tenant_id,
+        mission_id=None,
+        acteur=utilisateur.email,
+        action="consultation_calendrier_cabinet",
+        charge_utile={
+            "horizon_mois": vue["horizon_mois"],
+            "nb_total": vue["compteurs"]["nb_total"],
+            "sources_en_echec": vue["sources_en_echec"],
+        },
+    )
+    return vue
+
+
 @router.get("/moi/tableau")
 def api_mon_tableau(
     utilisateur: UtilisateurDep,

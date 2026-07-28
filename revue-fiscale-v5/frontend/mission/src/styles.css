@@ -13955,3 +13955,42 @@ tr.row-active td {
   font-style: italic;
   color: var(--muted, #64748b);
 }
+
+/* ── Calendrier fiscal du cabinet (réutilise les styles ctrale-*) ── */
+.calcab-horizon {
+  font-size: 0.72rem;
+  color: var(--muted, #64748b);
+  display: inline-flex;
+  align-items: center;
+  gap: 0.3rem;
+}
+.calcab-horizon select {
+  font: inherit;
+  font-size: 0.72rem;
+  padding: 0.15rem 0.3rem;
+  border: 1px solid var(--line, #e5e7eb);
+  border-radius: 6px;
+  background: #fff;
+}
+.calcab-mois {
+  display: grid;
+  gap: 0.3rem;
+}
+.calcab-mois-titre {
+  margin: 0.2rem 0 0;
+  font-size: 0.8rem;
+  color: var(--ink-soft, #1e293b);
+  border-bottom: 1px solid var(--line, #e5e7eb);
+  padding-bottom: 0.2rem;
+}
+.calcab-badge-depassee {
+  display: inline-flex;
+  align-items: center;
+  padding: 0.1rem 0.5rem;
+  border-radius: 999px;
+  font-size: 0.66rem;
+  white-space: nowrap;
+  background: #fffbeb;
+  color: #b45309;
+  border: 1px solid #fde68a;
+}
