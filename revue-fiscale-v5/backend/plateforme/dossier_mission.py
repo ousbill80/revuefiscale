@@ -22,8 +22,9 @@ sérialisés en str (Decimal) par les modules réutilisés.
 """
 from __future__ import annotations
 
-from datetime import datetime, timezone
-from typing import Any, Callable, Final
+from collections.abc import Callable
+from datetime import UTC, datetime
+from typing import Any, Final
 
 from sqlalchemy import text
 from sqlalchemy.orm import Session
@@ -47,6 +48,7 @@ BLOCS_DOSSIER: Final[tuple[str, ...]] = (
     "materialite",
     "acomptes",
     "rapprochement_salaires",
+    "patente",
 )
 
 MENTION_NOTE: Final[str] = (
@@ -92,7 +94,7 @@ def assembler_dossier(
             1 for v in normalises.values() if v is not None
         ),
         "genere_le": genere_le
-        or datetime.now(timezone.utc).replace(microsecond=0).isoformat(),
+        or datetime.now(UTC).replace(microsecond=0).isoformat(),
         "note": MENTION_NOTE,
     }
 
@@ -396,6 +398,36 @@ def _bloc_rapprochement_salaires(
     }
 
 
+def _bloc_patente(
+    session: Session, tenant_id: int, mission_id: int
+) -> dict[str, Any]:
+    """Patente estimée — synthèse de l'estimation consultative.
+
+    Projection SYNTHÉTIQUE de
+    :func:`backend.plateforme.patente.vue_patente_mission` (même
+    pattern que :func:`_bloc_acomptes`) : statut, estimation totale
+    partielle (droit sur le chiffre d'affaires seul) et plancher —
+    ni le détail des comptes 70x ni les références CGI, restitués
+    par l'écran dédié. Aucun recalcul ici.
+    """
+    from backend.plateforme.patente import vue_patente_mission
+
+    p = vue_patente_mission(session, tenant_id, mission_id)
+    s = p.get("synthese") or {}
+    return {
+        "synthese": {
+            "statut": s.get("statut"),
+            "libelle_statut": s.get("libelle_statut"),
+            "nb_comptes_ca": s.get("nb_comptes_ca"),
+        },
+        "estimation_totale_partielle": p.get(
+            "estimation_totale_partielle"
+        ),
+        "plancher_applique": p.get("plancher_applique"),
+        "note": p.get("note"),
+    }
+
+
 #: Blocs facultatifs : (clé, constructeur) — chacun est TOLÉRANT.
 _BLOCS_FACULTATIFS: Final[
     tuple[tuple[str, Callable[[Session, int, int], dict[str, Any] | None]], ...]
@@ -411,6 +443,7 @@ _BLOCS_FACULTATIFS: Final[
     ("materialite", _bloc_materialite),
     ("acomptes", _bloc_acomptes),
     ("rapprochement_salaires", _bloc_rapprochement_salaires),
+    ("patente", _bloc_patente),
 )
 
 

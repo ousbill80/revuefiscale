@@ -184,6 +184,17 @@ type RapprochementSalairesDossier = {
   note: string | null;
 };
 
+type PatenteDossier = {
+  synthese: {
+    statut: string | null;
+    libelle_statut: string | null;
+    nb_comptes_ca: number | null;
+  } | null;
+  estimation_totale_partielle: string | null;
+  plancher_applique: boolean | null;
+  note: string | null;
+};
+
 type DossierOut = {
   identite: IdentiteDossier | null;
   risques: RisquesDossier | null;
@@ -197,6 +208,7 @@ type DossierOut = {
   materialite: MaterialiteDossier | null;
   acomptes: AcomptesDossier | null;
   rapprochement_salaires: RapprochementSalairesDossier | null;
+  patente: PatenteDossier | null;
   blocs_disponibles: number;
   genere_le: string;
   note: string;
@@ -254,6 +266,13 @@ const STATUTS_SALAIRES_FR: Record<string, string> = {
   indisponible: "Indisponible (déclarations ou balance manquantes)",
   coherent: "Cohérent au seuil de signification",
   ecarts_a_expliquer: "Écarts à expliquer",
+};
+
+const STATUTS_PATENTE_FR: Record<string, string> = {
+  indisponible:
+    "Estimation indisponible — importez la balance (comptes 70x)",
+  estimation_partielle:
+    "Estimation partielle (droit sur le chiffre d'affaires seul)",
 };
 
 const STATUTS_MATERIALITE_FR: Record<string, string> = {
@@ -823,6 +842,36 @@ export function DossierMissionVue({ missionId, jeton }: Props) {
                       (e) => e.commentaire,
                     )?.commentaire
                   }
+                </p>
+              )}
+            </section>
+          )}
+
+          {dossier.patente != null && (
+            <section className="dossier-section">
+              <h3 className="dossier-section-titre">
+                Contribution des patentes estimée
+              </h3>
+              <p>
+                Statut :{" "}
+                {dossier.patente.synthese?.statut
+                  ? (STATUTS_PATENTE_FR[dossier.patente.synthese.statut] ??
+                    dossier.patente.synthese.libelle_statut ??
+                    dossier.patente.synthese.statut)
+                  : "—"}{" "}
+                — {dossier.patente.synthese?.nb_comptes_ca ?? 0} compte(s)
+                70x lu(s) en balance.
+              </p>
+              {dossier.patente.synthese?.statut === "estimation_partielle" && (
+                <p>
+                  Estimation totale partielle (droit sur le chiffre
+                  d'affaires seul) :{" "}
+                  {formatMontant(dossier.patente.estimation_totale_partielle)}
+                  {dossier.patente.plancher_applique
+                    ? " — plancher de 300 000 FCFA appliqué"
+                    : ""}
+                  . Le droit sur la valeur locative n'est pas calculable
+                  depuis la balance.
                 </p>
               )}
             </section>
