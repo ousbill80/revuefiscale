@@ -1320,9 +1320,13 @@ body {
   display: flex;
   flex-direction: column;
   gap: 0.85rem;
-  position: relative;
+  /* Collante sous la topbar : la navigation reste visible sur les vues longues. */
+  position: sticky;
+  top: calc(var(--topbar-h) + var(--safe-top));
+  height: calc(100dvh - var(--topbar-h) - var(--safe-top));
   border-right: 1px solid rgba(255, 255, 255, 0.06);
-  overflow: hidden;
+  overflow-x: hidden;
+  overflow-y: auto;
   transition: padding 0.22s ease;
 }
 
@@ -1817,6 +1821,7 @@ body {
     top: 0;
     left: 0;
     bottom: 0;
+    height: auto;
     width: min(300px, 88vw);
     z-index: 60;
     transform: translateX(-105%);
