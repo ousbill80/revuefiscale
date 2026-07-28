@@ -254,6 +254,16 @@ type RetenueHonorairesDossier = {
   note: string | null;
 };
 
+type QualiteBalanceDossier = {
+  statut: string | null;
+  equilibree: boolean | null;
+  ecart_equilibre: string | null;
+  nb_sens_inhabituels: number | null;
+  nb_comptes_hors_plan: number | null;
+  nb_observations: number | null;
+  note: string | null;
+};
+
 type DeficitsReportablesDossier = {
   statut: string | null;
   nb_exercices: number | null;
@@ -297,6 +307,7 @@ type DossierOut = {
   deficits_reportables: DeficitsReportablesDossier | null;
   rapprochement_acomptes: RapprochementAcomptesDossier | null;
   retenue_honoraires: RetenueHonorairesDossier | null;
+  qualite_balance: QualiteBalanceDossier | null;
   blocs_disponibles: number;
   genere_le: string;
   note: string;
@@ -409,6 +420,15 @@ const STATUTS_RETENUE_HONORAIRES_FR: Record<string, string> = {
     "Vue indisponible — importez la balance (comptes 632x « rémunérations d'intermédiaires et de conseils »)",
   a_qualifier:
     "Retenue théorique maximale indicative — régime des prestataires à qualifier par l'humain",
+};
+
+const STATUTS_QUALITE_BALANCE_FR: Record<string, string> = {
+  indisponible:
+    "Vue indisponible — importez la balance pour contrôler sa qualité",
+  equilibree_sans_observation:
+    "Balance équilibrée, aucune observation — l'humain reste juge de la fiabilité",
+  observations_a_examiner:
+    "Observations à examiner — chacune peut être justifiée, l'humain conclut",
 };
 
 const STATUTS_DEFICITS_REPORTABLES_FR: Record<string, string> = {
@@ -1257,6 +1277,45 @@ export function DossierMissionVue({ missionId, jeton }: Props) {
                   l'humain qualifie les prestataires, les justificatifs
                   de retenue et quittances font foi. Un écart s'explique,
                   il ne se conclut pas.
+                </p>
+              )}
+            </section>
+          )}
+
+          {dossier.qualite_balance != null && (
+            <section className="dossier-section">
+              <h3 className="dossier-section-titre">
+                Contrôle qualité de la balance importée
+              </h3>
+              <p>
+                Statut :{" "}
+                {dossier.qualite_balance.statut
+                  ? (STATUTS_QUALITE_BALANCE_FR[
+                      dossier.qualite_balance.statut
+                    ] ?? dossier.qualite_balance.statut)
+                  : "—"}
+                .
+              </p>
+              {dossier.qualite_balance.statut !== "indisponible" && (
+                <p>
+                  Équilibre débits/crédits :{" "}
+                  {dossier.qualite_balance.equilibree
+                    ? "équilibrée"
+                    : `écart de ${formatMontant(
+                        dossier.qualite_balance.ecart_equilibre,
+                      )} — à examiner`}
+                  {" — "}soldes de sens inhabituel :{" "}
+                  {dossier.qualite_balance.nb_sens_inhabituels ?? "—"} —
+                  comptes hors plan :{" "}
+                  {dossier.qualite_balance.nb_comptes_hors_plan ?? "—"}.
+                </p>
+              )}
+              {(dossier.qualite_balance.nb_observations ?? 0) > 0 && (
+                <p className="dossier-note">
+                  Ces observations orientent la revue — un sens
+                  inhabituel peut être justifié (découvert bancaire,
+                  avoirs, acomptes fournisseurs…) : le détail
+                  s'examine dans la vue dédiée, seul l'humain conclut.
                 </p>
               )}
             </section>

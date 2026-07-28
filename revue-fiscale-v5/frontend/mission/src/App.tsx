@@ -85,6 +85,7 @@ import { ResultatFiscalVue } from "./ResultatFiscalVue";
 import { PatenteVue } from "./PatenteVue";
 import { ChargeFiscaleVue } from "./ChargeFiscaleVue";
 import { PanoramaConformiteVue } from "./PanoramaConformiteVue";
+import { QualiteBalanceVue } from "./QualiteBalanceVue";
 import { MaterialiteVue } from "./MaterialiteVue";
 import { ProgrammeProposeVue } from "./ProgrammeProposeVue";
 import { RestitutionVue } from "./RestitutionVue";
@@ -6102,6 +6103,19 @@ export function App() {
                           chaque volet s'apprécie dans sa vue
                           détaillée, l'humain décide. */}
                       <PanoramaConformiteVue
+                        missionId={restitution.mission_id}
+                        jeton={session?.jeton}
+                      />
+                      {/* Contrôle qualité de la balance importée :
+                          fiabilité de la matière première avant les
+                          vues fiscales détaillées — équilibre
+                          débits/crédits, soldes de sens inhabituel
+                          sur les classes sensibles (caisse, banques,
+                          fournisseurs, clients, amortissements,
+                          capital) et comptes hors plan ; chaque
+                          observation peut être justifiée, seul
+                          l'humain conclut. */}
+                      <QualiteBalanceVue
                         missionId={restitution.mission_id}
                         jeton={session?.jeton}
                       />

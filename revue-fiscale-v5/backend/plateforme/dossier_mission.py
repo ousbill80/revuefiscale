@@ -56,6 +56,7 @@ BLOCS_DOSSIER: Final[tuple[str, ...]] = (
     "deficits_reportables",
     "rapprochement_acomptes",
     "retenue_honoraires",
+    "qualite_balance",
 )
 
 MENTION_NOTE: Final[str] = (
@@ -654,6 +655,40 @@ def _bloc_retenue_honoraires(
     }
 
 
+def _bloc_qualite_balance(
+    session: Session, tenant_id: int, mission_id: int
+) -> dict[str, Any]:
+    """Contrôle qualité de la balance — synthèse de la vue consultative.
+
+    Projection SYNTHÉTIQUE (tolérante) de
+    :func:`backend.plateforme.qualite_balance.vue_qualite_balance_mission`
+    (même pattern que :func:`_bloc_retenue_honoraires`) : statut,
+    équilibre global (écart), nombre d'observations par contrôle —
+    ni le détail des observations ni les libellés de comptes,
+    restitués par l'écran dédié. Aucun recalcul ici.
+    """
+    from backend.plateforme.qualite_balance import (
+        vue_qualite_balance_mission,
+    )
+
+    r = vue_qualite_balance_mission(session, tenant_id, mission_id)
+    equilibre = r.get("equilibre") or {}
+    synthese = r.get("synthese") or {}
+    return {
+        "statut": r.get("statut"),
+        "equilibree": equilibre.get("equilibree"),
+        "ecart_equilibre": equilibre.get("ecart"),
+        "nb_sens_inhabituels": (r.get("sens_inhabituels") or {}).get(
+            "nb_total"
+        ),
+        "nb_comptes_hors_plan": (r.get("comptes_hors_plan") or {}).get(
+            "nb_total"
+        ),
+        "nb_observations": synthese.get("nb_observations"),
+        "note": r.get("note"),
+    }
+
+
 #: Blocs facultatifs : (clé, constructeur) — chacun est TOLÉRANT.
 _BLOCS_FACULTATIFS: Final[
     tuple[tuple[str, Callable[[Session, int, int], dict[str, Any] | None]], ...]
@@ -677,6 +712,7 @@ _BLOCS_FACULTATIFS: Final[
     ("deficits_reportables", _bloc_deficits_reportables),
     ("rapprochement_acomptes", _bloc_rapprochement_acomptes),
     ("retenue_honoraires", _bloc_retenue_honoraires),
+    ("qualite_balance", _bloc_qualite_balance),
 )
 
 

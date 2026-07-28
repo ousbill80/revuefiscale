@@ -4828,6 +4828,55 @@ def api_retenue_honoraires_mission(
     return vue
 
 
+@router.get("/missions/{mission_id}/qualite-balance")
+def api_qualite_balance_mission(
+    mission_id: int,
+    utilisateur: UtilisateurDep,
+    session: Annotated[Session, Depends(session_abonne)],
+) -> dict:
+    """Contrôle qualité de la balance importée — vue consultative.
+
+    Restitue trois contrôles déterministes de fiabilité de la matière
+    première : équilibre global (total débits / total crédits, écart
+    en montant), soldes de sens inhabituel sur les classes sensibles
+    SYSCOHADA (caisse 57x, banques 52x, fournisseurs 401x, clients
+    411x, amortissements 28x, capital 101x) et numéros de compte hors
+    plan. Observations plafonnées par contrôle, jamais accusatoires —
+    un sens inhabituel peut être justifié, seul l'humain conclut.
+    Lecture seule ; se construit toujours (disponible=false sans
+    balance). 404 si mission hors tenant (RLS).
+    """
+    from backend.moteur.journal import append_journal
+    from backend.plateforme.qualite_balance import (
+        ACTION_CONSULTATION,
+        ErreurQualiteBalanceIntrouvable,
+        vue_qualite_balance_mission,
+    )
+
+    exiger_capacite(utilisateur, "lire")
+    try:
+        vue = vue_qualite_balance_mission(
+            session, utilisateur.tenant_id, mission_id
+        )
+    except ErreurQualiteBalanceIntrouvable as e:
+        raise HTTPException(
+            status_code=status.HTTP_404_NOT_FOUND, detail=str(e)
+        ) from e
+    append_journal(
+        session,
+        tenant_id=utilisateur.tenant_id,
+        mission_id=mission_id,
+        acteur=utilisateur.email,
+        action=ACTION_CONSULTATION,
+        charge_utile={
+            "statut": vue["statut"],
+            "ecart_equilibre": vue["equilibre"]["ecart"],
+            "nb_observations": vue["synthese"]["nb_observations"],
+        },
+    )
+    return vue
+
+
 @router.get("/missions/{mission_id}/deficits-reportables")
 def api_deficits_reportables_mission(
     mission_id: int,
