@@ -4746,6 +4746,54 @@ def api_saisir_declaration_salaires(
         ) from e
 
 
+@router.get("/missions/{mission_id}/completude-declarative")
+def api_completude_declarative_mission(
+    mission_id: int,
+    utilisateur: UtilisateurDep,
+    session: Annotated[Session, Depends(session_abonne)],
+) -> dict:
+    """Complétude déclarative mensuelle de l'exercice — lecture seule.
+
+    Compare, par impôt mensuel (TVA, impôts sur salaires), les
+    périodes AAAA-MM échues de l'exercice aux déclarations saisies
+    (declaration_tva, declaration_salaires) et signale les périodes
+    manquantes. Vue strictement consultative : la saisie dans l'outil
+    ne prouve pas le dépôt à la DGI — l'humain vérifie les quittances.
+    Se construit toujours (clés stables, tolérance par bloc). 404 si
+    mission hors tenant (RLS).
+    """
+    from backend.moteur.journal import append_journal
+    from backend.plateforme.completude_declarative import (
+        ACTION_CONSULTATION,
+        ErreurCompletudeDeclarativeIntrouvable,
+        completude_declarative_mission,
+    )
+
+    exiger_capacite(utilisateur, "lire")
+    try:
+        vue = completude_declarative_mission(
+            session, utilisateur.tenant_id, mission_id
+        )
+    except ErreurCompletudeDeclarativeIntrouvable as e:
+        raise HTTPException(
+            status_code=status.HTTP_404_NOT_FOUND, detail=str(e)
+        ) from e
+    append_journal(
+        session,
+        tenant_id=utilisateur.tenant_id,
+        mission_id=mission_id,
+        acteur=utilisateur.email,
+        action=ACTION_CONSULTATION,
+        charge_utile={
+            "statut_global": vue["synthese"]["statut_global"],
+            "nb_manquantes_total": (
+                vue["synthese"]["nb_manquantes_total"]
+            ),
+        },
+    )
+    return vue
+
+
 @router.get("/missions/{mission_id}/acomptes")
 def api_acomptes_mission(
     mission_id: int,

@@ -72,6 +72,7 @@ import { PROCESS_TIPS } from "./processTips";
 import { PointsAnterieursVue } from "./PointsAnterieursVue";
 import { ControlesFiscauxVue } from "./ControlesFiscauxVue";
 import { RapprochementTvaVue } from "./RapprochementTvaVue";
+import { CompletudeDeclarativeVue } from "./CompletudeDeclarativeVue";
 import { DeductibiliteVue } from "./DeductibiliteVue";
 import { RapprochementSalairesVue } from "./RapprochementSalairesVue";
 import { AcomptesVue } from "./AcomptesVue";
@@ -6116,6 +6117,15 @@ export function App() {
                         missionId={restitution.mission_id}
                         jeton={session?.jeton}
                         estLecteur={estLecteur}
+                      />
+                      {/* Complétude déclarative mensuelle : périodes
+                          échues de l'exercice sans déclaration saisie
+                          (TVA, impôts sur salaires) — consultatif, la
+                          saisie ne prouve pas le dépôt à la DGI,
+                          l'humain vérifie les quittances. */}
+                      <CompletudeDeclarativeVue
+                        missionId={restitution.mission_id}
+                        jeton={session?.jeton}
                       />
                       {/* Revue consultative de déductibilité des
                           charges (classe 6 de la balance) : points de
