@@ -76,6 +76,7 @@ import { DeductibiliteVue } from "./DeductibiliteVue";
 import { RapprochementSalairesVue } from "./RapprochementSalairesVue";
 import { AcomptesVue } from "./AcomptesVue";
 import { ResultatFiscalVue } from "./ResultatFiscalVue";
+import { PatenteVue } from "./PatenteVue";
 import { MaterialiteVue } from "./MaterialiteVue";
 import { ProgrammeProposeVue } from "./ProgrammeProposeVue";
 import { RestitutionVue } from "./RestitutionVue";
@@ -6155,6 +6156,17 @@ export function App() {
                         missionId={restitution.mission_id}
                         jeton={session?.jeton}
                         estLecteur={estLecteur}
+                      />
+                      {/* Estimation consultative de la contribution
+                          des patentes : droit sur le CA approché à
+                          0,5 % des comptes 70x (plancher 300 000
+                          FCFA, plafond indicatif) ; le droit sur la
+                          valeur locative n'est pas calculable depuis
+                          la balance — estimation partielle, lecture
+                          seule, l'humain décide. */}
+                      <PatenteVue
+                        missionId={restitution.mission_id}
+                        jeton={session?.jeton}
                       />
                       {/* Suivi consultatif des contrôles fiscaux et
                           contentieux — délais de riposte LPF calculés,

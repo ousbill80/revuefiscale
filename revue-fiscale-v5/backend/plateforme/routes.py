@@ -4956,6 +4956,54 @@ def api_reprendre_is_du_estime(
         ) from e
 
 
+@router.get("/missions/{mission_id}/patente")
+def api_patente_mission(
+    mission_id: int,
+    utilisateur: UtilisateurDep,
+    session: Annotated[Session, Depends(session_abonne)],
+) -> dict:
+    """Estimation consultative de la contribution des patentes.
+
+    Droit sur le chiffre d'affaires approché à 0,5 % du CA (comptes
+    70x de la balance), borné par le plancher de 300 000 FCFA et un
+    plafond indicatif ; le droit sur la valeur locative n'est pas
+    calculable depuis la balance et n'est jamais estimé (motif
+    restitué) — estimation partielle, strictement consultative,
+    l'humain décide. Se construit toujours (disponible=false sans
+    comptes 70x). Lecture seule, aucune écriture. 404 si mission
+    hors tenant (RLS).
+    """
+    from backend.moteur.journal import append_journal
+    from backend.plateforme.patente import (
+        ACTION_CONSULTATION,
+        ErreurPatenteIntrouvable,
+        vue_patente_mission,
+    )
+
+    exiger_capacite(utilisateur, "lire")
+    try:
+        vue = vue_patente_mission(
+            session, utilisateur.tenant_id, mission_id
+        )
+    except ErreurPatenteIntrouvable as e:
+        raise HTTPException(
+            status_code=status.HTTP_404_NOT_FOUND, detail=str(e)
+        ) from e
+    append_journal(
+        session,
+        tenant_id=utilisateur.tenant_id,
+        mission_id=mission_id,
+        acteur=utilisateur.email,
+        action=ACTION_CONSULTATION,
+        charge_utile={
+            "statut": vue["synthese"]["statut"],
+            "nb_comptes_ca": vue["synthese"]["nb_comptes_ca"],
+            "plancher_applique": vue["synthese"]["plancher_applique"],
+        },
+    )
+    return vue
+
+
 @router.get("/missions/{mission_id}/materialite")
 def api_materialite_mission(
     mission_id: int,
