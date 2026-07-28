@@ -66,6 +66,9 @@ body {
   margin: 0;
   width: 100%;
   min-height: 100dvh;
+  /* Les bulles d'infobulle (position absolue, cachées) débordaient à
+     droite sur mobile et créaient un défilement horizontal de page. */
+  overflow-x: clip;
   font-family: var(--font-ui);
   color: var(--ink);
   background: var(--bg);
@@ -854,8 +857,10 @@ body {
 
 .label-with-tip {
   display: inline-flex;
+  flex-wrap: wrap;
   align-items: center;
   gap: 0.35rem;
+  min-width: 0;
 }
 
 .rest-ref-pin .tip-info,
@@ -1220,6 +1225,9 @@ body {
   align-items: center;
   justify-content: space-between;
   gap: 0.75rem;
+  /* min-width 0 : sans lui, le min-content de la topbar étire la
+     colonne de grille au-delà du viewport mobile (défilement horizontal). */
+  min-width: 0;
   padding: var(--safe-top) max(1rem, var(--safe-right)) 0
     max(0.85rem, var(--safe-left));
   background: var(--surface-solid);
@@ -1273,7 +1281,11 @@ body {
   display: flex;
   align-items: center;
   gap: 0.4rem;
-  flex-shrink: 0;
+  min-width: 0;
+}
+
+.topbar-actions .chip {
+  min-width: 0;
 }
 
 .chip {
@@ -6644,6 +6656,11 @@ h2.section-title {
   }
   .wizard-head {
     align-items: flex-start;
+  }
+  /* Petit écran : la pastille « Cabinet » est redondante avec le logo
+     et écrasait le chip tenant (« Cab… »). */
+  .topbar-left .surface-pill {
+    display: none;
   }
   .chip {
     max-width: 7.5rem;
