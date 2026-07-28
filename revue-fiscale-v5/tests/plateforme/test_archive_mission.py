@@ -17,6 +17,7 @@ from fastapi.testclient import TestClient  # noqa: E402
 
 from backend.main import app  # noqa: E402
 from backend.plateforme import archive_mission  # noqa: E402
+from backend.plateforme.compte_rendu import enregistrer_compte_rendu  # noqa: E402
 from backend.plateforme.contexte import contexte_tenant  # noqa: E402
 from backend.plateforme.reponses_client import enregistrer_reponse  # noqa: E402
 from backend.plateforme.temps_mission import saisir_temps  # noqa: E402
@@ -194,12 +195,29 @@ def test_zip_valide_contenu_et_sommaire(session):
             "fiscaliste." in bilan
         )
 
+        # 23 — ordre du jour de restitution : toujours présent (sections
+        # « à compléter en séance » sans données), mention consultative.
+        assert "23_ordre_du_jour.txt" in noms
+        odj = z.read("23_ordre_du_jour.txt").decode("utf-8")
+        assert "ORDRE DU JOUR — RÉUNION DE RESTITUTION" in odj
+        assert "PM Demande FICTIF" in odj
+        assert "exercice 2025" in odj
+        assert "1. Introduction et rappel du périmètre de la mission" in odj
+        assert "6. Questions diverses" in odj
+        assert (
+            "Document de travail interne préparatoire à la réunion de "
+            "restitution — consultatif" in odj
+        )
+
+        # 24 — compte-rendu de réunion : absent (aucun consigné).
+        assert "24_compte_rendu_reunion.txt" not in noms
+
         # Sommaire : identification + pièces incluses + omissions motivées.
         sommaire = z.read("00_sommaire.txt").decode("utf-8")
         assert "DOSSIER DE TRAVAIL" in sommaire
         assert "PM Demande FICTIF" in sommaire
         assert "2025" in sommaire
-        assert "PIÈCES INCLUSES (16)" in sommaire
+        assert "PIÈCES INCLUSES (17)" in sommaire
         assert (
             "14_courrier_envoi_rapport.docx : Courrier d'envoi du rapport"
             in sommaire
@@ -232,10 +250,18 @@ def test_zip_valide_contenu_et_sommaire(session):
             "22_bilan_cloture.txt : Bilan de pré-clôture "
             "(points ok / attention, consultatif)" in sommaire
         )
+        assert (
+            "23_ordre_du_jour.txt : Ordre du jour de la réunion de "
+            "restitution" in sommaire
+        )
         # 16 — rentabilité : omise sans honoraires ni taux horaire saisis.
         assert "16_rentabilite_mission.txt" not in noms
 
-        assert "PIÈCES OMISES (6)" in sommaire
+        assert "PIÈCES OMISES (7)" in sommaire
+        assert (
+            "24_compte_rendu_reunion.txt : OMISE — aucun compte-rendu de "
+            "réunion consigné sur la mission" in sommaire
+        )
         assert "08_comparatif_executions.txt : OMISE" in sommaire
         assert "09_provision_risques.txt : OMISE" in sommaire
         assert (
@@ -339,10 +365,10 @@ def test_comparatif_et_provision_inclus_quand_disponibles(session):
         assert "prêt à clôturer : non" in bilan
 
         sommaire = z.read("00_sommaire.txt").decode("utf-8")
-        assert "PIÈCES INCLUSES (18)" in sommaire
-        # Ni temps, ni visa, ni réponse, ni paramètre de rentabilité sur
-        # cette mission → 10/11/12/16 omises.
-        assert "PIÈCES OMISES (4)" in sommaire
+        assert "PIÈCES INCLUSES (19)" in sommaire
+        # Ni temps, ni visa, ni réponse, ni paramètre de rentabilité, ni
+        # compte-rendu sur cette mission → 10/11/12/16/24 omises.
+        assert "PIÈCES OMISES (5)" in sommaire
         assert "14_courrier_envoi_rapport.docx" in noms
         assert "15_echeancier_fiscal.txt" in noms
         assert "17_lettre_affirmation.docx" in noms
@@ -399,6 +425,15 @@ def test_temps_visas_reponses_inclus_quand_disponibles(session):
         contenu="État intragroupe transmis en PJ.",
         pieces_recues="etat_intragroupe_2025.pdf",
         saisie_par=email,
+    )
+    # Compte-rendu de réunion consigné → pièce 24 incluse.
+    enregistrer_compte_rendu(
+        session,
+        tid,
+        mid,
+        date_reunion="2025-03-12",
+        participants="Awa Koné (cabinet)\nM. Yao (client)",
+        points_convenus="Régularisation TVA avant le 15/04.\nLettre d'affirmation à signer.",
     )
     session.commit()
     # Paramètres de rentabilité convenus → pièce 16 incluse.
@@ -478,10 +513,31 @@ def test_temps_visas_reponses_inclus_quand_disponibles(session):
         assert "Synthèse :" in bilan
         assert "Bilan consultatif" in bilan
 
-        # Sommaire cohérent : 10/11/12/16 incluses, plus omises.
+        # 24 — compte-rendu de réunion consigné : présent, mis en forme
+        # (date JJ/MM/AAAA, participants, points convenus, mention).
+        assert "24_compte_rendu_reunion.txt" in noms
+        cr = z.read("24_compte_rendu_reunion.txt").decode("utf-8")
+        assert "COMPTE-RENDU DE LA RÉUNION DE RESTITUTION" in cr
+        assert f"Mission #{mid} — réunion du 12/03/2025" in cr
+        assert "PARTICIPANTS" in cr
+        assert "  Awa Koné (cabinet)" in cr
+        assert "  M. Yao (client)" in cr
+        assert "POINTS CONVENUS" in cr
+        assert "  Régularisation TVA avant le 15/04." in cr
+        assert "  Lettre d'affirmation à signer." in cr
+        assert (
+            "Compte-rendu consigné par le fiscaliste — document "
+            "consultatif : il ne constitue pas un avis fiscal." in cr
+        )
+
+        # Sommaire cohérent : 10/11/12/16/24 incluses, plus omises.
         sommaire = z.read("00_sommaire.txt").decode("utf-8")
-        assert "PIÈCES INCLUSES (20)" in sommaire
+        assert "PIÈCES INCLUSES (22)" in sommaire
         assert "PIÈCES OMISES (2)" in sommaire
+        assert (
+            "24_compte_rendu_reunion.txt : Compte-rendu de la réunion de "
+            "restitution (saisie du fiscaliste)" in sommaire
+        )
         assert (
             "16_rentabilite_mission.txt : Rentabilité de la mission"
             in sommaire
@@ -537,6 +593,7 @@ def test_piece_en_echec_est_omise_et_notee(session, monkeypatch):
         assert "20_plan_actions.txt" in noms
         assert "21_courrier_relance.txt" in noms
         assert "22_bilan_cloture.txt" in noms
+        assert "23_ordre_du_jour.txt" in noms
         sommaire = z.read("00_sommaire.txt").decode("utf-8")
         assert (
             "02_rapport_restitution.docx : OMISE — panne simulée du rendu Word"
@@ -544,8 +601,9 @@ def test_piece_en_echec_est_omise_et_notee(session, monkeypatch):
         )
         # Panne Word + 08 (une seule exécution) + 09 (aucun risque)
         # + 10/11/12 (ni temps, ni visa, ni réponse)
-        # + 16 (paramètres de rentabilité non renseignés).
-        assert "PIÈCES OMISES (7)" in sommaire
+        # + 16 (paramètres de rentabilité non renseignés)
+        # + 24 (aucun compte-rendu de réunion consigné).
+        assert "PIÈCES OMISES (8)" in sommaire
 
 
 def test_dossier_cross_tenant_404(session):
@@ -572,3 +630,39 @@ def test_dossier_exige_authentification(session):
 
     resp = client.get(f"/api/v1/missions/{mid}/dossier-travail.zip")
     assert resp.status_code in (401, 403)
+
+
+# ── Mise en forme pure du compte-rendu (sans DB) ─────────────────────
+
+
+def test_mise_en_forme_compte_rendu_pure():
+    """PUR — date JJ/MM/AAAA, sections, mention consultative."""
+    texte = archive_mission.mettre_en_forme_compte_rendu(
+        {
+            "date_reunion": "2025-06-30",
+            "participants": "Awa Koné\nM. Yao",
+            "points_convenus": "Régulariser la TVA.\nSigner la lettre.",
+        },
+        1023,
+    )
+    lignes = texte.splitlines()
+    assert lignes[0] == "COMPTE-RENDU DE LA RÉUNION DE RESTITUTION"
+    assert lignes[1] == "Mission #1023 — réunion du 30/06/2025"
+    assert "PARTICIPANTS" in lignes
+    assert "  Awa Koné" in lignes
+    assert "  M. Yao" in lignes
+    assert "POINTS CONVENUS" in lignes
+    assert "  Régulariser la TVA." in lignes
+    assert "  Signer la lettre." in lignes
+    assert lignes[-1] == archive_mission.MENTION_COMPTE_RENDU
+    assert "consultatif" in archive_mission.MENTION_COMPTE_RENDU
+
+
+def test_mise_en_forme_compte_rendu_champs_vides():
+    """PUR — champs vides ou date invalide : jamais d'exception."""
+    texte = archive_mission.mettre_en_forme_compte_rendu(
+        {"date_reunion": "", "participants": "", "points_convenus": ""}, 7
+    )
+    assert "réunion du [non renseignée]" in texte
+    assert texte.count("  [non renseignés]") == 2
+    assert archive_mission.MENTION_COMPTE_RENDU in texte

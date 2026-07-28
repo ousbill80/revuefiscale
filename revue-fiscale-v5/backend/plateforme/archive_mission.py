@@ -20,7 +20,7 @@ import io
 import re
 import unicodedata
 import zipfile
-from datetime import datetime, timezone
+from datetime import date, datetime, timezone
 from decimal import Decimal
 from typing import Any, Callable, Final
 
@@ -33,6 +33,7 @@ from backend.plateforme.civisme_fiscal import (
 )
 from backend.plateforme.bilan_cloture import bilan_mission
 from backend.plateforme.comparatif_executions import comparer_executions
+from backend.plateforme.compte_rendu import lire_compte_rendu
 from backend.plateforme.contexte import contexte_tenant
 from backend.plateforme.controle_cloture import evaluer_cloture
 from backend.plateforme.courrier_envoi_rapport import generer_courrier_envoi
@@ -45,6 +46,7 @@ from backend.plateforme.plan_actions import (
     analyse_mission as analyse_plan_actions,
 )
 from backend.plateforme.lettre_affirmation import generer_lettre_affirmation
+from backend.plateforme.ordre_du_jour import ordre_du_jour_mission
 from backend.plateforme.lettre_mission import generer_lettre_mission
 from backend.plateforme.prescription_risques import (
     analyse_mission as analyse_prescription_risques,
@@ -788,6 +790,74 @@ def _piece_bilan_cloture(
     return "\n".join(lignes).encode("utf-8")
 
 
+#: Mention consultative portée au pied du compte-rendu mis en forme.
+MENTION_COMPTE_RENDU: Final[str] = (
+    "Compte-rendu consigné par le fiscaliste — document consultatif : "
+    "il ne constitue pas un avis fiscal."
+)
+
+
+def mettre_en_forme_compte_rendu(
+    compte_rendu: dict[str, Any], mission_id: int
+) -> str:
+    """PUR — compte-rendu de réunion → texte simple archivable.
+
+    ``compte_rendu`` : charge de
+    :func:`backend.plateforme.compte_rendu.lire_compte_rendu`
+    (``date_reunion`` ISO, ``participants``, ``points_convenus``). Date
+    rendue en JJ/MM/AAAA, mention consultative en pied — aucune lecture
+    DB ici (testable sans base).
+    """
+    brut = str(compte_rendu.get("date_reunion") or "").strip()
+    try:
+        date_fr = date.fromisoformat(brut[:10]).strftime("%d/%m/%Y")
+    except ValueError:
+        date_fr = brut or "[non renseignée]"
+    participants = str(compte_rendu.get("participants") or "").strip()
+    points = str(compte_rendu.get("points_convenus") or "").strip()
+    lignes = [
+        "COMPTE-RENDU DE LA RÉUNION DE RESTITUTION",
+        f"Mission #{mission_id} — réunion du {date_fr}",
+        "",
+        "PARTICIPANTS",
+    ]
+    lignes += [
+        f"  {ligne.strip()}" for ligne in participants.splitlines() if ligne.strip()
+    ] or ["  [non renseignés]"]
+    lignes += ["", "POINTS CONVENUS"]
+    lignes += [
+        f"  {ligne.strip()}" for ligne in points.splitlines() if ligne.strip()
+    ] or ["  [non renseignés]"]
+    lignes += ["", MENTION_COMPTE_RENDU]
+    return "\n".join(lignes)
+
+
+def _piece_ordre_du_jour(
+    session: Session, tenant_id: int, mission_id: int, meta: dict[str, Any]
+) -> bytes:
+    """Ordre du jour de la réunion de restitution — toujours produit
+    (sections « à compléter en séance » sans données).
+    ``ordre_du_jour_mission`` ouvre son propre ``contexte_tenant`` :
+    appel HORS de tout autre contexte."""
+    o = ordre_du_jour_mission(session, tenant_id, mission_id)
+    return str(o["ordre_du_jour"]).encode("utf-8")
+
+
+def _piece_compte_rendu_reunion(
+    session: Session, tenant_id: int, mission_id: int, meta: dict[str, Any]
+) -> bytes:
+    """Compte-rendu de la réunion de restitution — OMIS si aucun
+    compte-rendu n'est consigné (saisie humaine facultative).
+    ``lire_compte_rendu`` ouvre son propre ``contexte_tenant`` : appel
+    HORS de tout autre contexte."""
+    cr = lire_compte_rendu(session, tenant_id, mission_id)
+    if cr is None:
+        raise ErreurArchiveMission(
+            "aucun compte-rendu de réunion consigné sur la mission"
+        )
+    return mettre_en_forme_compte_rendu(cr, mission_id).encode("utf-8")
+
+
 # Ordre du dossier : (nom de fichier dans le ZIP, description, constructeur).
 _PIECES: Final[
     tuple[tuple[str, str, Callable[[Session, int, int, dict[str, Any]], bytes]], ...]
@@ -901,6 +971,16 @@ _PIECES: Final[
         "22_bilan_cloture.txt",
         "Bilan de pré-clôture (points ok / attention, consultatif)",
         _piece_bilan_cloture,
+    ),
+    (
+        "23_ordre_du_jour.txt",
+        "Ordre du jour de la réunion de restitution",
+        _piece_ordre_du_jour,
+    ),
+    (
+        "24_compte_rendu_reunion.txt",
+        "Compte-rendu de la réunion de restitution (saisie du fiscaliste)",
+        _piece_compte_rendu_reunion,
     ),
 )
 
