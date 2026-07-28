@@ -37,6 +37,7 @@ const LIBELLES_TYPE: Record<string, string> = {
   echeance_fiscale: "Échéance fiscale",
   budget_temps: "Budget temps",
   delai_lpf: "Délai LPF",
+  completude_declarative: "Complétude déclarative",
 };
 
 const LIBELLES_GRAVITE: Record<Gravite, string> = {

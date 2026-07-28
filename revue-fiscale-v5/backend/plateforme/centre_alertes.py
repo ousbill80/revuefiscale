@@ -13,8 +13,10 @@ alimente déjà son endpoint dédié —
 anciens > 30 j), :mod:`backend.plateforme.echeances_cabinet` (dates
 limites des 30 prochains jours),
 :mod:`backend.plateforme.rentabilite_mission` (budget temps en
-vigilance / dépassement) et :mod:`backend.plateforme.controles_fiscaux`
-(délais de riposte LPF proches ou dépassés). Aucun calcul métier n'est
+vigilance / dépassement), :mod:`backend.plateforme.controles_fiscaux`
+(délais de riposte LPF proches ou dépassés) et
+:mod:`backend.plateforme.completude_declarative` (périodes mensuelles
+échues sans déclaration saisie). Aucun calcul métier n'est
 dupliqué : seules des fonctions PURES de conversion, tri, plafond et
 synthèse s'ajoutent ici.
 
@@ -48,6 +50,7 @@ TYPES_ALERTE: Final[tuple[str, ...]] = (
     "echeance_fiscale",
     "budget_temps",
     "delai_lpf",
+    "completude_declarative",
 )
 
 # Plafond d'alertes restituées — vue de pilotage, pas un export.
@@ -56,12 +59,17 @@ PLAFOND_ALERTES: Final[int] = 100
 # Plafond d'événements de contrôle fiscal examinés (coût borné).
 PLAFOND_EVENEMENTS_LPF: Final[int] = 200
 
+# Plafond de missions examinées pour la complétude déclarative
+# (chaque mission déclenche une lecture — coût borné).
+PLAFOND_MISSIONS_COMPLETUDE: Final[int] = 200
+
 MENTION_NOTE: Final[str] = (
     "Centre d'alertes consultatif du cabinet — agrégation déterministe "
     "des signaux déjà calculés par les tableaux de bord existants : "
     "points convenus en retard ou anciens, échéances fiscales des 30 "
     "prochains jours, budget temps en vigilance ou dépassement, délais "
-    "de riposte LPF proches ou dépassés. Aucune alerte n'est envoyée "
+    "de riposte LPF proches ou dépassés, périodes mensuelles échues "
+    "sans déclaration saisie. Aucune alerte n'est envoyée "
     "par email : tout reste dans l'application. Ces signaux éclairent "
     "la priorisation — le fiscaliste apprécie et décide, rien n'est "
     "automatique."
@@ -335,6 +343,75 @@ def alertes_depuis_lpf(
     return alertes
 
 
+def alertes_depuis_completude(
+    vues: list[dict[str, Any]],
+) -> list[dict[str, Any]]:
+    """PUR — complétudes déclaratives lacunaires → alertes.
+
+    ``vues`` : entrées ``{client, mission_id, completude}`` où
+    ``completude`` est la vue déjà construite par
+    :func:`backend.plateforme.completude_declarative.completude_declarative_mission`
+    (aucun recalcul ici). Statut global « aucune_saisie » (aucune
+    période couverte alors que des périodes sont échues) → critique,
+    « lacunaire » → vigilance ; complet, sans période échue ou vue
+    indisponible → rien.
+    """
+    from backend.plateforme.completude_declarative import (
+        STATUT_AUCUNE_SAISIE,
+        STATUT_LACUNAIRE,
+    )
+
+    noms_courts = {"tva": "TVA", "salaires": "impôts sur salaires"}
+    alertes: list[dict[str, Any]] = []
+    for m in vues:
+        vue = m.get("completude") or {}
+        if not vue.get("disponible"):
+            continue
+        statut = str(
+            (vue.get("synthese") or {}).get("statut_global") or ""
+        )
+        if statut not in (STATUT_LACUNAIRE, STATUT_AUCUNE_SAISIE):
+            continue
+        exercice = vue.get("exercice")
+        details: list[str] = []
+        for cle in sorted(vue.get("impots") or {}):
+            bloc = (vue.get("impots") or {}).get(cle) or {}
+            if not bloc.get("disponible"):
+                continue
+            nb = int(bloc.get("nb_manquantes") or 0)
+            if nb <= 0:
+                continue
+            s = "s" if nb > 1 else ""
+            details.append(
+                f"{noms_courts.get(cle, cle)} : {nb} période{s} "
+                f"manquante{s}"
+            )
+        detail = (
+            "aucune déclaration mensuelle saisie"
+            if statut == STATUT_AUCUNE_SAISIE
+            else "complétude déclarative lacunaire"
+        )
+        libelle = f"{detail} — exercice {exercice}"
+        if details:
+            libelle += f" ({', '.join(details)})"
+        alertes.append(
+            {
+                "type": "completude_declarative",
+                "gravite": (
+                    "critique"
+                    if statut == STATUT_AUCUNE_SAISIE
+                    else "vigilance"
+                ),
+                "client": m.get("client"),
+                "mission_id": m.get("mission_id"),
+                "libelle": libelle,
+                "echeance": None,
+                "lien": "completude_declarative",
+            }
+        )
+    return alertes
+
+
 # ── Sources (chacune réutilise un module existant, RLS) ──────────────
 
 
@@ -432,6 +509,56 @@ def _source_lpf(
     return alertes_depuis_lpf(chronologies)
 
 
+def _source_completude(
+    session: Session, tenant_id: int, jour: date
+) -> list[dict[str, Any]]:
+    """Complétude déclarative des missions — module completude_declarative.
+
+    Missions non clôturées du tenant (plafonnées à
+    :data:`PLAFOND_MISSIONS_COMPLETUDE`) : pour chacune, la vue est
+    celle DÉJÀ construite par
+    :func:`backend.plateforme.completude_declarative.completude_declarative_mission`
+    (aucun recalcul des périodes ici). Une mission disparue entre les
+    deux lectures est simplement omise.
+    """
+    from backend.plateforme.completude_declarative import (
+        ErreurCompletudeDeclarativeIntrouvable,
+        completude_declarative_mission,
+    )
+    from backend.plateforme.missions import STATUT_CLOTUREE
+
+    with contexte_tenant(session, tenant_id):
+        rows = session.execute(
+            text(
+                "SELECT m.id AS mission_id, "
+                "c.denomination AS client "
+                "FROM mission m "
+                "JOIN contribuable c ON c.id = m.contribuable_id "
+                "WHERE m.statut <> :clos "
+                "ORDER BY c.denomination, m.id "
+                "LIMIT :lim"
+            ),
+            {"clos": STATUT_CLOTUREE, "lim": PLAFOND_MISSIONS_COMPLETUDE},
+        ).mappings().all()
+
+    vues: list[dict[str, Any]] = []
+    for r in rows:
+        try:
+            vue = completude_declarative_mission(
+                session, tenant_id, int(r["mission_id"])
+            )
+        except ErreurCompletudeDeclarativeIntrouvable:
+            continue
+        vues.append(
+            {
+                "client": str(r["client"] or ""),
+                "mission_id": int(r["mission_id"]),
+                "completude": vue,
+            }
+        )
+    return alertes_depuis_completude(vues)
+
+
 #: Sources agrégées : (nom, constructeur) — chacune est TOLÉRANTE.
 _SOURCES: Final[
     tuple[
@@ -443,6 +570,7 @@ _SOURCES: Final[
     ("echeances_fiscales", _source_echeances),
     ("budget_temps", _source_budget),
     ("delais_lpf", _source_lpf),
+    ("completude_declarative", _source_completude),
 )
 
 
