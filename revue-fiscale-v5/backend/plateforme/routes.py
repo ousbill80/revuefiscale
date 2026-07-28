@@ -2743,6 +2743,55 @@ def api_dossier_mission(
     return dossier
 
 
+@router.get("/missions/{mission_id}/charge-fiscale")
+def api_charge_fiscale_mission(
+    mission_id: int,
+    utilisateur: UtilisateurDep,
+    session: Annotated[Session, Depends(session_abonne)],
+) -> dict:
+    """Panorama consultatif de la charge fiscale estimée (lecture seule).
+
+    Agrégat des estimations DÉJÀ calculées par les modules existants
+    (IS théorique, patente partielle, impôts sur salaires déclarés,
+    TVA nette déclarée présentée séparément, position d'acomptes) —
+    aucun recalcul. Chaque composante est tolérante : un sous-module
+    en échec vaut disponible=false, jamais bloquant. Total de charge
+    propre PARTIEL, hors TVA (collectée) et hors acomptes (position).
+    404 si mission hors tenant (RLS). L'humain décide.
+    """
+    from backend.moteur.journal import append_journal
+    from backend.plateforme.charge_fiscale import (
+        ErreurChargeFiscaleIntrouvable,
+        charge_fiscale_mission,
+    )
+
+    exiger_capacite(utilisateur, "lire")
+    try:
+        panorama = charge_fiscale_mission(
+            session, utilisateur.tenant_id, mission_id
+        )
+    except ErreurChargeFiscaleIntrouvable as e:
+        raise HTTPException(
+            status_code=status.HTTP_404_NOT_FOUND, detail=str(e)
+        ) from e
+    append_journal(
+        session,
+        tenant_id=utilisateur.tenant_id,
+        mission_id=mission_id,
+        acteur=utilisateur.email,
+        action="consultation_charge_fiscale",
+        charge_utile={
+            "total_charge_propre_estimee": panorama[
+                "total_charge_propre_estimee"
+            ],
+            "composantes_indisponibles": panorama[
+                "composantes_indisponibles"
+            ],
+        },
+    )
+    return panorama
+
+
 @router.get("/missions/{mission_id}/fil-conducteur")
 def api_fil_conducteur_mission(
     mission_id: int,

@@ -77,6 +77,7 @@ import { RapprochementSalairesVue } from "./RapprochementSalairesVue";
 import { AcomptesVue } from "./AcomptesVue";
 import { ResultatFiscalVue } from "./ResultatFiscalVue";
 import { PatenteVue } from "./PatenteVue";
+import { ChargeFiscaleVue } from "./ChargeFiscaleVue";
 import { MaterialiteVue } from "./MaterialiteVue";
 import { ProgrammeProposeVue } from "./ProgrammeProposeVue";
 import { RestitutionVue } from "./RestitutionVue";
@@ -6165,6 +6166,17 @@ export function App() {
                           la balance — estimation partielle, lecture
                           seule, l'humain décide. */}
                       <PatenteVue
+                        missionId={restitution.mission_id}
+                        jeton={session?.jeton}
+                      />
+                      {/* Panorama consultatif de la charge fiscale
+                          estimée : agrégat des estimations déjà
+                          calculées par les écrans ci-dessus (IS
+                          théorique, patente partielle, impôts sur
+                          salaires et TVA déclarés, position
+                          d'acomptes) — aucun recalcul, total partiel
+                          hors TVA collectée, l'humain décide. */}
+                      <ChargeFiscaleVue
                         missionId={restitution.mission_id}
                         jeton={session?.jeton}
                       />
