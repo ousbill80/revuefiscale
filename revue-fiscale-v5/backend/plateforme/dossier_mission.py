@@ -54,6 +54,7 @@ BLOCS_DOSSIER: Final[tuple[str, ...]] = (
     "coherence_ca",
     "retenue_loyers",
     "deficits_reportables",
+    "rapprochement_acomptes",
 )
 
 MENTION_NOTE: Final[str] = (
@@ -587,6 +588,41 @@ def _bloc_deficits_reportables(
     }
 
 
+def _bloc_rapprochement_acomptes(
+    session: Session, tenant_id: int, mission_id: int
+) -> dict[str, Any]:
+    """Rapprochement acomptes / IS théorique — synthèse consultative.
+
+    Projection SYNTHÉTIQUE (tolérante) de
+    :func:`backend.plateforme.rapprochement_acomptes.vue_rapprochement_acomptes_mission`
+    (même pattern que :func:`_bloc_deficits_reportables`) : statut, IS
+    théorique repris, total des acomptes saisis, solde indicatif de
+    liquidation (approximation assumée) et non-calculabilité du
+    minimum de perception — ni le détail des versements ni les
+    références, restitués par l'écran dédié. Aucun recalcul ici.
+    """
+    from backend.plateforme.rapprochement_acomptes import (
+        vue_rapprochement_acomptes_mission,
+    )
+
+    r = vue_rapprochement_acomptes_mission(session, tenant_id, mission_id)
+    s = r.get("synthese") or {}
+    solde = r.get("solde_indicatif") or {}
+    return {
+        "statut": r.get("statut"),
+        "is_theorique": r.get("is_theorique"),
+        "total_acomptes_saisis": s.get("total_acomptes_saisis"),
+        "nb_versements": s.get("nb_versements"),
+        "solde_indicatif": solde.get("montant"),
+        "solde_signe": solde.get("solde_signe"),
+        "approximation": r.get("approximation"),
+        "minimum_perception_calculable": (
+            r.get("minimum_perception") or {}
+        ).get("calculable"),
+        "note": r.get("note"),
+    }
+
+
 #: Blocs facultatifs : (clé, constructeur) — chacun est TOLÉRANT.
 _BLOCS_FACULTATIFS: Final[
     tuple[tuple[str, Callable[[Session, int, int], dict[str, Any] | None]], ...]
@@ -608,6 +644,7 @@ _BLOCS_FACULTATIFS: Final[
     ("coherence_ca", _bloc_coherence_ca),
     ("retenue_loyers", _bloc_retenue_loyers),
     ("deficits_reportables", _bloc_deficits_reportables),
+    ("rapprochement_acomptes", _bloc_rapprochement_acomptes),
 )
 
 

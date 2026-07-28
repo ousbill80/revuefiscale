@@ -255,6 +255,18 @@ type DeficitsReportablesDossier = {
   note: string | null;
 };
 
+type RapprochementAcomptesDossier = {
+  statut: string | null;
+  is_theorique: string | null;
+  total_acomptes_saisis: string | null;
+  nb_versements: number | null;
+  solde_indicatif: string | null;
+  solde_signe: string | null;
+  approximation: boolean | null;
+  minimum_perception_calculable: boolean | null;
+  note: string | null;
+};
+
 type DossierOut = {
   identite: IdentiteDossier | null;
   risques: RisquesDossier | null;
@@ -274,6 +286,7 @@ type DossierOut = {
   coherence_ca: CoherenceCaDossier | null;
   retenue_loyers: RetenueLoyersDossier | null;
   deficits_reportables: DeficitsReportablesDossier | null;
+  rapprochement_acomptes: RapprochementAcomptesDossier | null;
   blocs_disponibles: number;
   genere_le: string;
   note: string;
@@ -388,6 +401,17 @@ const STATUTS_DEFICITS_REPORTABLES_FR: Record<string, string> = {
     "Aucun déficit constaté sur les exercices suivis (résultats fiscaux théoriques)",
   deficits_a_suivre:
     "Déficits à suivre — l'humain rapproche les liasses déposées",
+};
+
+const STATUTS_RAPPROCHEMENT_ACOMPTES_FR: Record<string, string> = {
+  indisponible:
+    "Rapprochement indisponible — l'IS théorique du tableau de passage ne se chiffre pas",
+  solde_a_payer_indicatif:
+    "Reste à payer indicatif — à rapprocher des quittances",
+  excedent_indicatif:
+    "Crédit d'impôt indicatif / excédent à faire valoir — à rapprocher des quittances",
+  equilibre_indicatif:
+    "Position équilibrée indicative — acomptes saisis égaux à l'IS théorique",
 };
 
 const STATUTS_MATERIALITE_FR: Record<string, string> = {
@@ -1231,6 +1255,56 @@ export function DossierMissionVue({ missionId, jeton }: Props) {
                   les liasses déposées ne sont pas connues de l'outil,
                   seules les liasses font foi. Le délai de report dépend
                   du CGI applicable : l'humain vérifie et décide.
+                </p>
+              )}
+            </section>
+          )}
+
+          {dossier.rapprochement_acomptes != null && (
+            <section className="dossier-section">
+              <h3 className="dossier-section-titre">
+                Rapprochement acomptes / IS théorique
+              </h3>
+              <p>
+                Statut :{" "}
+                {dossier.rapprochement_acomptes.statut
+                  ? (STATUTS_RAPPROCHEMENT_ACOMPTES_FR[
+                      dossier.rapprochement_acomptes.statut
+                    ] ?? dossier.rapprochement_acomptes.statut)
+                  : "—"}
+                .
+              </p>
+              {dossier.rapprochement_acomptes.statut !== "indisponible" && (
+                <p>
+                  IS théorique repris du tableau de passage :{" "}
+                  {formatMontant(
+                    dossier.rapprochement_acomptes.is_theorique,
+                  )}{" "}
+                  — acomptes saisis (
+                  {dossier.rapprochement_acomptes.nb_versements ?? 0}{" "}
+                  versement
+                  {(dossier.rapprochement_acomptes.nb_versements ?? 0) > 1
+                    ? "s"
+                    : ""}
+                  ) :{" "}
+                  {formatMontant(
+                    dossier.rapprochement_acomptes.total_acomptes_saisis,
+                  )}{" "}
+                  — solde indicatif de liquidation :{" "}
+                  {formatMontant(
+                    dossier.rapprochement_acomptes.solde_indicatif,
+                  )}
+                  .
+                </p>
+              )}
+              {dossier.rapprochement_acomptes.approximation && (
+                <p className="dossier-note">
+                  Approximation assumée : l'outil ne connaît que les
+                  acomptes saisis — les quittances font foi des
+                  versements réellement effectués. Le minimum de
+                  perception n'est pas calculé : le solde indicatif
+                  s'explique et se rapproche, il ne se conclut pas —
+                  l'humain liquide et décide.
                 </p>
               )}
             </section>

@@ -4784,6 +4784,56 @@ def api_deficits_reportables_mission(
     return vue
 
 
+@router.get("/missions/{mission_id}/rapprochement-acomptes")
+def api_rapprochement_acomptes_mission(
+    mission_id: int,
+    utilisateur: UtilisateurDep,
+    session: Annotated[Session, Depends(session_abonne)],
+) -> dict:
+    """Rapprochement acomptes IS versés / IS théorique — consultatif.
+
+    Rapproche le total des acomptes SAISIS dans l'outil (quittances du
+    client) de l'IS THÉORIQUE du tableau de passage (aucun recalcul)
+    et restitue le solde indicatif de liquidation : reste à payer ou
+    crédit d'impôt indicatif / excédent à faire valoir — approximation
+    assumée, seules les quittances font foi. Le minimum de perception
+    n'est jamais calculé (motif restitué). Lecture seule ; se
+    construit toujours (disponible=false si l'IS théorique ne se
+    chiffre pas). 404 si mission hors tenant (RLS).
+    """
+    from backend.moteur.journal import append_journal
+    from backend.plateforme.rapprochement_acomptes import (
+        ACTION_CONSULTATION,
+        ErreurRapprochementAcomptesIntrouvable,
+        vue_rapprochement_acomptes_mission,
+    )
+
+    exiger_capacite(utilisateur, "lire")
+    try:
+        vue = vue_rapprochement_acomptes_mission(
+            session, utilisateur.tenant_id, mission_id
+        )
+    except ErreurRapprochementAcomptesIntrouvable as e:
+        raise HTTPException(
+            status_code=status.HTTP_404_NOT_FOUND, detail=str(e)
+        ) from e
+    append_journal(
+        session,
+        tenant_id=utilisateur.tenant_id,
+        mission_id=mission_id,
+        acteur=utilisateur.email,
+        action=ACTION_CONSULTATION,
+        charge_utile={
+            "statut": vue["statut"],
+            "is_theorique": vue["is_theorique"],
+            "total_acomptes_saisis": vue["synthese"][
+                "total_acomptes_saisis"
+            ],
+        },
+    )
+    return vue
+
+
 @router.get("/missions/{mission_id}/rapprochement-salaires")
 def api_rapprochement_salaires_mission(
     mission_id: int,

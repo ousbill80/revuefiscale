@@ -76,6 +76,7 @@ import { CompletudeDeclarativeVue } from "./CompletudeDeclarativeVue";
 import { CoherenceCaVue } from "./CoherenceCaVue";
 import { RetenueLoyersVue } from "./RetenueLoyersVue";
 import { DeficitsReportablesVue } from "./DeficitsReportablesVue";
+import { RapprochementAcomptesVue } from "./RapprochementAcomptesVue";
 import { DeductibiliteVue } from "./DeductibiliteVue";
 import { RapprochementSalairesVue } from "./RapprochementSalairesVue";
 import { AcomptesVue } from "./AcomptesVue";
@@ -6158,6 +6159,17 @@ export function App() {
                           les liasses font foi, l'humain rapproche
                           et décide. */}
                       <DeficitsReportablesVue
+                        missionId={restitution.mission_id}
+                        jeton={session?.jeton}
+                      />
+                      {/* Rapprochement acomptes IS / IS théorique :
+                          l'IS théorique du tableau de passage (aucun
+                          recalcul) rapproché des acomptes saisis —
+                          solde indicatif de liquidation (reste à
+                          payer ou crédit d'impôt indicatif),
+                          approximation assumée : les quittances font
+                          foi, l'humain liquide et décide. */}
+                      <RapprochementAcomptesVue
                         missionId={restitution.mission_id}
                         jeton={session?.jeton}
                       />
