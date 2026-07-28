@@ -83,6 +83,69 @@ type DelaisDossier = {
   note: string | null;
 };
 
+type RapprochementTvaDossier = {
+  synthese: {
+    statut: string;
+    nb_periodes_declarees: number;
+    nb_comptes_tva_balance: number;
+    nb_ecarts_significatifs: number;
+  } | null;
+  seuil_signification: string | null;
+  ecarts_significatifs: {
+    nature: string | null;
+    libelle: string | null;
+    declare: string | null;
+    comptabilise: string | null;
+    ecart: string | null;
+  }[];
+  note: string | null;
+};
+
+type ControlesFiscauxDossier = {
+  synthese: {
+    statut: string;
+    nb_evenements: number;
+    nb_echeances_proches: number;
+    nb_echeances_depassees: number;
+    montant_total_en_jeu: string;
+    dernier_evenement: {
+      type_evenement: string;
+      libelle: string;
+      date_evenement: string;
+    } | null;
+  } | null;
+  echeances_a_surveiller: {
+    libelle: string | null;
+    date_evenement: string | null;
+    echeance: string | null;
+    statut: string | null;
+    jours_restants: number | null;
+  }[];
+  note: string | null;
+};
+
+type MaterialiteDossier = {
+  synthese: {
+    statut: string;
+    nb_comptes_balance: number;
+    nb_comptes_cibles: number;
+    taux_couverture_global: string;
+  } | null;
+  seuil_retenu: {
+    seuil_retenu: string;
+    source: string;
+    referentiel: string;
+    commentaire: string;
+    decide_par: string;
+  } | null;
+  couverture: {
+    masse_totale: string | null;
+    masse_ciblee: string | null;
+    taux_global: string | null;
+  } | null;
+  note: string | null;
+};
+
 type DossierOut = {
   identite: IdentiteDossier | null;
   risques: RisquesDossier | null;
@@ -91,6 +154,9 @@ type DossierOut = {
   points_convenus: PointsConvenusDossier | null;
   compte_rendu: CompteRenduDossier | null;
   delais: DelaisDossier | null;
+  rapprochement_tva: RapprochementTvaDossier | null;
+  controles_fiscaux: ControlesFiscauxDossier | null;
+  materialite: MaterialiteDossier | null;
   blocs_disponibles: number;
   genere_le: string;
   note: string;
@@ -117,6 +183,30 @@ const PRIORITES_FR: Record<string, string> = {
   haute: "Haute",
   moyenne: "Moyenne",
   basse: "Basse",
+};
+
+const STATUTS_TVA_FR: Record<string, string> = {
+  indisponible: "Indisponible (déclarations ou balance manquantes)",
+  coherent: "Cohérent au seuil de signification",
+  ecarts_a_expliquer: "Écarts à expliquer",
+};
+
+const STATUTS_CONTROLES_FR: Record<string, string> = {
+  aucun_evenement: "Aucun événement consigné",
+  a_jour: "À jour",
+  echeances_proches: "Échéances proches",
+  echeances_depassees: "Échéances dépassées",
+};
+
+const STATUTS_ECHEANCE_FR: Record<string, string> = {
+  proche: "Proche",
+  depassee: "Dépassée",
+};
+
+const STATUTS_MATERIALITE_FR: Record<string, string> = {
+  indisponible: "Indisponible (balance non importée)",
+  seuil_a_retenir: "Seuil à retenir",
+  travaux_cibles: "Travaux ciblés",
 };
 
 /** ISO « AAAA-MM-JJ… » → « JJ/MM/AAAA » — fallback brut. */
@@ -438,6 +528,156 @@ export function DossierMissionVue({ missionId, jeton }: Props) {
               </>
             )}
           </section>
+
+          {dossier.rapprochement_tva != null && (
+            <section className="dossier-section">
+              <h3 className="dossier-section-titre">Rapprochement TVA</h3>
+              <p>
+                Statut :{" "}
+                {dossier.rapprochement_tva.synthese
+                  ? (STATUTS_TVA_FR[
+                      dossier.rapprochement_tva.synthese.statut
+                    ] ?? dossier.rapprochement_tva.synthese.statut)
+                  : "—"}{" "}
+                — {dossier.rapprochement_tva.synthese
+                  ?.nb_periodes_declarees ?? 0}{" "}
+                période(s) déclarée(s),{" "}
+                {dossier.rapprochement_tva.synthese
+                  ?.nb_ecarts_significatifs ?? 0}{" "}
+                écart(s) significatif(s) (seuil :{" "}
+                {formatMontant(dossier.rapprochement_tva.seuil_signification)}
+                ).
+              </p>
+              {dossier.rapprochement_tva.ecarts_significatifs.length > 0 && (
+                <table className="dossier-table">
+                  <thead>
+                    <tr>
+                      <th>Nature</th>
+                      <th>Déclaré</th>
+                      <th>Comptabilisé</th>
+                      <th>Écart</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {dossier.rapprochement_tva.ecarts_significatifs.map(
+                      (e, i) => (
+                        <tr key={e.nature ?? i}>
+                          <td>{e.libelle ?? e.nature ?? "—"}</td>
+                          <td>{formatMontant(e.declare)}</td>
+                          <td>{formatMontant(e.comptabilise)}</td>
+                          <td>{formatMontant(e.ecart)}</td>
+                        </tr>
+                      ),
+                    )}
+                  </tbody>
+                </table>
+              )}
+            </section>
+          )}
+
+          {dossier.controles_fiscaux != null && (
+            <section className="dossier-section">
+              <h3 className="dossier-section-titre">
+                Contrôles fiscaux et contentieux
+              </h3>
+              <p>
+                Statut :{" "}
+                {dossier.controles_fiscaux.synthese
+                  ? (STATUTS_CONTROLES_FR[
+                      dossier.controles_fiscaux.synthese.statut
+                    ] ?? dossier.controles_fiscaux.synthese.statut)
+                  : "—"}{" "}
+                — {dossier.controles_fiscaux.synthese?.nb_evenements ?? 0}{" "}
+                événement(s) consigné(s), montant total en jeu :{" "}
+                {formatMontant(
+                  dossier.controles_fiscaux.synthese?.montant_total_en_jeu ??
+                    null,
+                )}
+                .
+              </p>
+              {dossier.controles_fiscaux.synthese?.dernier_evenement && (
+                <p>
+                  Dernier acte :{" "}
+                  {dossier.controles_fiscaux.synthese.dernier_evenement
+                    .libelle}{" "}
+                  du{" "}
+                  {formatDate(
+                    dossier.controles_fiscaux.synthese.dernier_evenement
+                      .date_evenement,
+                  )}
+                  .
+                </p>
+              )}
+              {dossier.controles_fiscaux.echeances_a_surveiller.length >
+                0 && (
+                <table className="dossier-table">
+                  <thead>
+                    <tr>
+                      <th>Acte</th>
+                      <th>Date de l'acte</th>
+                      <th>Échéance de riposte</th>
+                      <th>Statut</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {dossier.controles_fiscaux.echeances_a_surveiller.map(
+                      (e, i) => (
+                        <tr key={i}>
+                          <td>{e.libelle ?? "—"}</td>
+                          <td>
+                            {e.date_evenement
+                              ? formatDate(e.date_evenement)
+                              : "—"}
+                          </td>
+                          <td>{e.echeance ? formatDate(e.echeance) : "—"}</td>
+                          <td>
+                            {e.statut
+                              ? (STATUTS_ECHEANCE_FR[e.statut] ?? e.statut)
+                              : "—"}
+                            {e.jours_restants != null
+                              ? ` (${e.jours_restants} jour(s))`
+                              : ""}
+                          </td>
+                        </tr>
+                      ),
+                    )}
+                  </tbody>
+                </table>
+              )}
+            </section>
+          )}
+
+          {dossier.materialite != null && (
+            <section className="dossier-section">
+              <h3 className="dossier-section-titre">
+                Seuil de matérialité et ciblage des travaux
+              </h3>
+              <p>
+                Statut :{" "}
+                {dossier.materialite.synthese
+                  ? (STATUTS_MATERIALITE_FR[
+                      dossier.materialite.synthese.statut
+                    ] ?? dossier.materialite.synthese.statut)
+                  : "—"}{" "}
+                — seuil retenu :{" "}
+                {dossier.materialite.seuil_retenu
+                  ? formatMontant(
+                      dossier.materialite.seuil_retenu.seuil_retenu,
+                    )
+                  : "aucun"}
+                .
+              </p>
+              {dossier.materialite.synthese && (
+                <p>
+                  {dossier.materialite.synthese.nb_comptes_cibles} compte(s)
+                  ciblé(s) sur{" "}
+                  {dossier.materialite.synthese.nb_comptes_balance} en balance
+                  — couverture globale des masses :{" "}
+                  {dossier.materialite.couverture?.taux_global ?? "—"} %.
+                </p>
+              )}
+            </section>
+          )}
 
           <footer className="dossier-pied">
             <p className="dossier-note">{dossier.note}</p>

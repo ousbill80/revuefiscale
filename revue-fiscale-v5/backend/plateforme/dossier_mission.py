@@ -42,6 +42,9 @@ BLOCS_DOSSIER: Final[tuple[str, ...]] = (
     "points_convenus",
     "compte_rendu",
     "delais",
+    "rapprochement_tva",
+    "controles_fiscaux",
+    "materialite",
 )
 
 MENTION_NOTE: Final[str] = (
@@ -243,6 +246,97 @@ def _bloc_delais(
     }
 
 
+def _bloc_rapprochement_tva(
+    session: Session, tenant_id: int, mission_id: int
+) -> dict[str, Any]:
+    """Rapprochement TVA — synthèse + écarts significatifs seulement.
+
+    Projection SYNTHÉTIQUE de
+    :func:`backend.plateforme.rapprochement_tva.rapprochement_tva_mission`
+    (comme :func:`_bloc_risques`) : le détail des déclarations par
+    période et des comptes de balance reste sur l'écran dédié.
+    """
+    from backend.plateforme.rapprochement_tva import (
+        rapprochement_tva_mission,
+    )
+
+    r = rapprochement_tva_mission(session, tenant_id, mission_id)
+    return {
+        "synthese": r.get("synthese"),
+        "seuil_signification": r.get("seuil_signification"),
+        "ecarts_significatifs": [
+            {
+                "nature": e.get("nature"),
+                "libelle": e.get("libelle"),
+                "declare": e.get("declare"),
+                "comptabilise": e.get("comptabilise"),
+                "ecart": e.get("ecart"),
+            }
+            for e in r.get("ecarts") or []
+            if e.get("significatif")
+        ],
+        "note": r.get("note"),
+    }
+
+
+def _bloc_controles_fiscaux(
+    session: Session, tenant_id: int, mission_id: int
+) -> dict[str, Any]:
+    """Contrôles fiscaux — synthèse + échéances proches ou dépassées.
+
+    Projection SYNTHÉTIQUE de
+    :func:`backend.plateforme.controles_fiscaux.controles_mission` :
+    seules les échéances de riposte à surveiller sont reprises, la
+    chronologie complète reste sur l'écran dédié.
+    """
+    from backend.plateforme.controles_fiscaux import controles_mission
+
+    c = controles_mission(session, tenant_id, mission_id)
+    return {
+        "synthese": c.get("synthese"),
+        "echeances_a_surveiller": [
+            {
+                "libelle": e.get("libelle"),
+                "date_evenement": e.get("date_evenement"),
+                "echeance": (e.get("delai_riposte") or {}).get("echeance"),
+                "statut": (e.get("echeance") or {}).get("statut"),
+                "jours_restants": (e.get("echeance") or {}).get(
+                    "jours_restants"
+                ),
+            }
+            for e in c.get("evenements") or []
+            if (e.get("echeance") or {}).get("statut")
+            in ("proche", "depassee")
+        ],
+        "note": c.get("note"),
+    }
+
+
+def _bloc_materialite(
+    session: Session, tenant_id: int, mission_id: int
+) -> dict[str, Any]:
+    """Matérialité — seuil retenu, synthèse et couverture globale.
+
+    Projection SYNTHÉTIQUE de
+    :func:`backend.plateforme.materialite.materialite_mission` : ni les
+    propositions ni le détail des comptes ciblés (écran dédié).
+    """
+    from backend.plateforme.materialite import materialite_mission
+
+    m = materialite_mission(session, tenant_id, mission_id)
+    couverture = m.get("couverture") or {}
+    return {
+        "synthese": m.get("synthese"),
+        "seuil_retenu": m.get("seuil_retenu"),
+        "couverture": {
+            "masse_totale": couverture.get("masse_totale"),
+            "masse_ciblee": couverture.get("masse_ciblee"),
+            "taux_global": couverture.get("taux_global"),
+        },
+        "note": m.get("note"),
+    }
+
+
 #: Blocs facultatifs : (clé, constructeur) — chacun est TOLÉRANT.
 _BLOCS_FACULTATIFS: Final[
     tuple[tuple[str, Callable[[Session, int, int], dict[str, Any] | None]], ...]
@@ -253,6 +347,9 @@ _BLOCS_FACULTATIFS: Final[
     ("points_convenus", _bloc_points_convenus),
     ("compte_rendu", _bloc_compte_rendu),
     ("delais", _bloc_delais),
+    ("rapprochement_tva", _bloc_rapprochement_tva),
+    ("controles_fiscaux", _bloc_controles_fiscaux),
+    ("materialite", _bloc_materialite),
 )
 
 
