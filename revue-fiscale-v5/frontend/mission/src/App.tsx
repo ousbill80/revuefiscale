@@ -72,6 +72,7 @@ import { PROCESS_TIPS } from "./processTips";
 import { PointsAnterieursVue } from "./PointsAnterieursVue";
 import { ControlesFiscauxVue } from "./ControlesFiscauxVue";
 import { RapprochementTvaVue } from "./RapprochementTvaVue";
+import { DeductibiliteVue } from "./DeductibiliteVue";
 import { RapprochementSalairesVue } from "./RapprochementSalairesVue";
 import { AcomptesVue } from "./AcomptesVue";
 import { MaterialiteVue } from "./MaterialiteVue";
@@ -6103,6 +6104,16 @@ export function App() {
                         missionId={restitution.mission_id}
                         jeton={session?.jeton}
                         estLecteur={estLecteur}
+                      />
+                      {/* Revue consultative de déductibilité des
+                          charges (classe 6 de la balance) : points de
+                          vigilance de réintégration IS selon un
+                          référentiel déterministe du CGI ivoirien —
+                          aucun calcul automatique, les soldes restent
+                          à apprécier par le fiscaliste. */}
+                      <DeductibiliteVue
+                        missionId={restitution.mission_id}
+                        jeton={session?.jeton}
                       />
                       {/* Rapprochement consultatif des impôts sur
                           salaires déclarés / masse salariale

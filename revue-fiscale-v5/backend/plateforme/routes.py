@@ -4860,6 +4860,54 @@ def api_retenir_seuil_materialite(
         ) from e
 
 
+@router.get("/missions/{mission_id}/deductibilite")
+def api_deductibilite_mission(
+    mission_id: int,
+    utilisateur: UtilisateurDep,
+    session: Annotated[Session, Depends(session_abonne)],
+) -> dict:
+    """Revue de déductibilité des charges — lecture seule.
+
+    Balaye les comptes de charges (classe 6) de la balance et signale
+    les points de vigilance de réintégration fiscale IS selon un
+    référentiel déterministe (CGI ivoirien, art. 18 notamment) :
+    amendes non déductibles, cadeaux et dons plafonnés, frais de
+    siège, intérêts de comptes courants d'associés, provisions…
+    AUCUN calcul de réintégration automatique — les soldes signalés
+    restent à apprécier par le fiscaliste. Vue strictement
+    consultative ; se construit toujours (disponible=false sans
+    balance). 404 si mission hors tenant (RLS).
+    """
+    from backend.moteur.journal import append_journal
+    from backend.plateforme.deductibilite import (
+        ACTION_CONSULTATION,
+        ErreurDeductibiliteIntrouvable,
+        deductibilite_mission,
+    )
+
+    exiger_capacite(utilisateur, "lire")
+    try:
+        vue = deductibilite_mission(
+            session, utilisateur.tenant_id, mission_id
+        )
+    except ErreurDeductibiliteIntrouvable as e:
+        raise HTTPException(
+            status_code=status.HTTP_404_NOT_FOUND, detail=str(e)
+        ) from e
+    append_journal(
+        session,
+        tenant_id=utilisateur.tenant_id,
+        mission_id=mission_id,
+        acteur=utilisateur.email,
+        action=ACTION_CONSULTATION,
+        charge_utile={
+            "statut": vue["synthese"]["statut"],
+            "nb_points": vue["synthese"]["nb_points"],
+        },
+    )
+    return vue
+
+
 @router.get("/missions/{mission_id}/programme-propose")
 def api_programme_propose_mission(
     mission_id: int,
