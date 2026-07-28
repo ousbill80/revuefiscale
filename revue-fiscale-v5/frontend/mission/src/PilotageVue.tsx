@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { api, fmtMontant } from "./api";
+import { api, fmtMontant, fmtPct } from "./api";
 import { InfoTip } from "./Tooltip";
 
 /** Pilotage de mission (GET /missions/{id}/pilotage) — synthèses agrégées. */
@@ -291,7 +291,7 @@ export function PilotageVue({ missionId, jeton, onFermer, onOuvrirPanneau }: Pro
               <span className="rest-suivi-cle">Programme de travail</span>
               <span>
                 {etat.programme.synthese.faites}/{etat.programme.synthese.total}{" "}
-                diligences faites ({etat.programme.synthese.avancement_pct} %)
+                diligences faites ({fmtPct(etat.programme.synthese.avancement_pct)} %)
               </span>
               <span className="muted">
                 {etat.programme.phases
@@ -341,7 +341,7 @@ export function PilotageVue({ missionId, jeton, onFermer, onOuvrirPanneau }: Pro
                         )} FCFA`
                       : "Marge non calculable"}
                     {etat.rentabilite.taux_marge_pct !== null
-                      ? ` (${etat.rentabilite.taux_marge_pct} %)`
+                      ? ` (${fmtPct(etat.rentabilite.taux_marge_pct)} %)`
                       : ""}
                   </span>
                   <span className="muted">

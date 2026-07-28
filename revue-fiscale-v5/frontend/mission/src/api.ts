@@ -142,6 +142,11 @@ export async function apiBlob(
   return { blob, contentType: res.headers.get("content-type") };
 }
 
+/** Pourcentage API (chaîne à point décimal) rendu en notation française. */
+export function fmtPct(v: string): string {
+  return v.replace(".", ",");
+}
+
 export function fmtMontant(v: string | number): string {
   try {
     return new Intl.NumberFormat("fr-FR").format(Number(v));

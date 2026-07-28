@@ -1,5 +1,5 @@
 import { useEffect, useMemo, useRef, useState } from "react";
-import { api, apiUpload, fmtMontant, telecharger } from "./api";
+import { api, apiUpload, fmtMontant, fmtPct, telecharger } from "./api";
 import {
   CODES_IMPOT_PIVOT,
   PERIMETRE_DONS_HINT,
@@ -3894,7 +3894,7 @@ export function RestitutionVue({
                       >
                         {renta.marge_estimee} FCFA
                         {renta.taux_marge_pct !== null &&
-                          ` (${renta.taux_marge_pct} %)`}
+                          ` (${fmtPct(renta.taux_marge_pct)} %)`}
                       </span>
                     </>
                   )}
@@ -4045,7 +4045,7 @@ export function RestitutionVue({
               {progEtat && (
                 <span className="muted">
                   {progEtat.synthese.faites}/{progEtat.synthese.total}{" "}
-                  diligences · {progEtat.synthese.avancement_pct}%
+                  diligences · {fmtPct(progEtat.synthese.avancement_pct)}%
                 </span>
               )}
               <button
@@ -4071,7 +4071,7 @@ export function RestitutionVue({
                       {libellePhaseTemps(ph.phase)}
                       <span className="muted">
                         {" "}
-                        — {ph.faites}/{ph.total} · {ph.avancement_pct}%
+                        — {ph.faites}/{ph.total} · {fmtPct(ph.avancement_pct)}%
                       </span>
                     </span>
                     <ul className="rest-programme-diligences">

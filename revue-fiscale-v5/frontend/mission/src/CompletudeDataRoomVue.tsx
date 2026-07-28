@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { api } from "./api";
+import { api, fmtPct } from "./api";
 import { InfoTip } from "./Tooltip";
 
 /** Complétude du socle documentaire (GET /missions/{id}/completude-data-room).
@@ -79,7 +79,7 @@ export function CompletudeDataRoomVue({ missionId, jeton, version }: Props) {
             s.essentielles_manquantes > 0 ? " compdr-taux-attention" : ""
           }`}
         >
-          {s.taux_completude} % des pièces essentielles
+          {fmtPct(s.taux_completude)} % des pièces essentielles
         </span>
       </div>
       <ul className="compdr-liste">

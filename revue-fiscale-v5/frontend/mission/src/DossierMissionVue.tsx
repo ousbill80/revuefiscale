@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { api } from "./api";
+import { api, fmtPct } from "./api";
 
 /** Dossier de synthèse imprimable (GET /missions/{id}/dossier).
  *
@@ -497,7 +497,7 @@ export function DossierMissionVue({ missionId, jeton }: Props) {
               <>
                 <p>
                   Taux de complétude :{" "}
-                  {dossier.completude.synthese?.taux_completude ?? "—"} % (
+                  {fmtPct(dossier.completude.synthese?.taux_completude ?? "—")} % (
                   {dossier.completude.synthese?.presentes ?? 0}/
                   {dossier.completude.synthese?.attendues ?? 0} pièce(s)
                   attendues présentes).
