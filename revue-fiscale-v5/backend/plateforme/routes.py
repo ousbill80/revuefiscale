@@ -4641,6 +4641,53 @@ def api_saisir_declaration_tva(
         ) from e
 
 
+@router.get("/missions/{mission_id}/coherence-ca")
+def api_coherence_ca_mission(
+    mission_id: int,
+    utilisateur: UtilisateurDep,
+    session: Annotated[Session, Depends(session_abonne)],
+) -> dict:
+    """Cohérence CA comptable / CA reconstitué depuis la TVA déclarée.
+
+    Croisement classique de la DGI, offert au réviseur en consultatif :
+    CA des comptes 70x de la balance vs TVA collectée déclarée ÷ taux
+    normal 18 % (approximation assumée — exonérations, taux réduits et
+    hors champ ignorés). Un écart au-delà du seuil est « à expliquer »,
+    jamais une conclusion. Lecture seule ; se construit toujours
+    (disponible=false sans balance ou sans déclaration TVA). 404 si
+    mission hors tenant (RLS).
+    """
+    from backend.moteur.journal import append_journal
+    from backend.plateforme.coherence_ca import (
+        ACTION_CONSULTATION,
+        ErreurCoherenceCaIntrouvable,
+        coherence_ca_mission,
+    )
+
+    exiger_capacite(utilisateur, "lire")
+    try:
+        vue = coherence_ca_mission(
+            session, utilisateur.tenant_id, mission_id
+        )
+    except ErreurCoherenceCaIntrouvable as e:
+        raise HTTPException(
+            status_code=status.HTTP_404_NOT_FOUND, detail=str(e)
+        ) from e
+    append_journal(
+        session,
+        tenant_id=utilisateur.tenant_id,
+        mission_id=mission_id,
+        acteur=utilisateur.email,
+        action=ACTION_CONSULTATION,
+        charge_utile={
+            "statut": vue["statut"],
+            "nb_declarations": vue["nb_declarations"],
+            "ecart_relatif_pct": vue["ecart_relatif_pct"],
+        },
+    )
+    return vue
+
+
 @router.get("/missions/{mission_id}/rapprochement-salaires")
 def api_rapprochement_salaires_mission(
     mission_id: int,

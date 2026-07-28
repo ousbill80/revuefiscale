@@ -73,6 +73,7 @@ import { PointsAnterieursVue } from "./PointsAnterieursVue";
 import { ControlesFiscauxVue } from "./ControlesFiscauxVue";
 import { RapprochementTvaVue } from "./RapprochementTvaVue";
 import { CompletudeDeclarativeVue } from "./CompletudeDeclarativeVue";
+import { CoherenceCaVue } from "./CoherenceCaVue";
 import { DeductibiliteVue } from "./DeductibiliteVue";
 import { RapprochementSalairesVue } from "./RapprochementSalairesVue";
 import { AcomptesVue } from "./AcomptesVue";
@@ -6124,6 +6125,16 @@ export function App() {
                           saisie ne prouve pas le dépôt à la DGI,
                           l'humain vérifie les quittances. */}
                       <CompletudeDeclarativeVue
+                        missionId={restitution.mission_id}
+                        jeton={session?.jeton}
+                      />
+                      {/* Croisement consultatif CA comptable (70x) /
+                          CA reconstitué depuis la TVA collectée
+                          déclarée ÷ 18 % — le contrôle classique de
+                          la DGI, offert au réviseur avant
+                          l'administration. Approximation assumée,
+                          écart « à expliquer », l'humain décide. */}
+                      <CoherenceCaVue
                         missionId={restitution.mission_id}
                         jeton={session?.jeton}
                       />
