@@ -4758,6 +4758,160 @@ def api_saisir_acompte(
         ) from e
 
 
+@router.get("/missions/{mission_id}/resultat-fiscal")
+def api_resultat_fiscal_mission(
+    mission_id: int,
+    utilisateur: UtilisateurDep,
+    session: Annotated[Session, Depends(session_abonne)],
+) -> dict:
+    """Tableau de passage résultat comptable → résultat fiscal.
+
+    Résultat comptable calculé de la balance (classes 6/7, HAO 8x
+    inclus si présents), retraitements saisis par le fiscaliste
+    (réintégrations, déductions, référence CGI facultative), report
+    déficitaire imputé dans la limite du bénéfice, IS théorique au
+    taux normal 25 % et signal consultatif d'impôt minimum
+    forfaitaire — vue strictement consultative, l'humain décide. Se
+    construit toujours (disponible=false sans balance). 404 si
+    mission hors tenant (RLS).
+    """
+    from backend.moteur.journal import append_journal
+    from backend.plateforme.resultat_fiscal import (
+        ACTION_CONSULTATION,
+        ErreurResultatFiscalIntrouvable,
+        vue_resultat_fiscal_mission,
+    )
+
+    exiger_capacite(utilisateur, "lire")
+    try:
+        vue = vue_resultat_fiscal_mission(
+            session, utilisateur.tenant_id, mission_id
+        )
+    except ErreurResultatFiscalIntrouvable as e:
+        raise HTTPException(
+            status_code=status.HTTP_404_NOT_FOUND, detail=str(e)
+        ) from e
+    append_journal(
+        session,
+        tenant_id=utilisateur.tenant_id,
+        mission_id=mission_id,
+        acteur=utilisateur.email,
+        action=ACTION_CONSULTATION,
+        charge_utile={
+            "statut": vue["synthese"]["statut"],
+            "nb_retraitements": vue["synthese"]["nb_retraitements"],
+            "imf_possible": vue["synthese"]["imf_possible"],
+        },
+    )
+    return vue
+
+
+class RetraitementFiscalIn(BaseModel):
+    """Saisie du tableau de passage — trois gestes exclusifs.
+
+    ``supprimer_id`` présent : supprime la ligne de retraitement
+    (choix documenté : suppression par id, plus simple qu'un upsert
+    car les libellés sont libres et non uniques). Sinon ``sens`` :
+    ``reintegration``/``deduction`` AJOUTE une ligne (libellé requis,
+    référence CGI facultative) ou ``report_deficitaire`` REMPLACE le
+    report antérieur de la mission. Montants FCFA ≥ 0 (le sens porte
+    le signe).
+    """
+
+    supprimer_id: int | None = None
+    sens: str | None = None
+    libelle: str | None = None
+    montant: str | float | int | None = None
+    reference_cgi: str | None = None
+
+
+@router.post("/missions/{mission_id}/retraitements")
+def api_saisir_retraitement(
+    mission_id: int,
+    corps: RetraitementFiscalIn,
+    utilisateur: UtilisateurDep,
+    session: Annotated[Session, Depends(session_abonne)],
+) -> dict:
+    """Ajoute/supprime un retraitement ou saisit le report — clic humain.
+
+    Sens, libellé (pour un retraitement) et montant ≥ 0 requis (422
+    sinon) ; mission ou ligne hors tenant → 404 (RLS). Alimente le
+    tableau de passage consultatif.
+    """
+    from backend.plateforme.resultat_fiscal import (
+        ErreurResultatFiscalIntrouvable,
+        ErreurResultatFiscalInvalide,
+        saisir_retraitement,
+        supprimer_retraitement,
+    )
+
+    exiger_capacite(utilisateur, "executer_mission")
+    try:
+        if corps.supprimer_id is not None:
+            return supprimer_retraitement(
+                session,
+                utilisateur.tenant_id,
+                mission_id,
+                corps.supprimer_id,
+                acteur=utilisateur.email,
+            )
+        return saisir_retraitement(
+            session,
+            utilisateur.tenant_id,
+            mission_id,
+            corps.sens,
+            corps.montant,
+            acteur=utilisateur.email,
+            libelle=corps.libelle,
+            reference_cgi=corps.reference_cgi,
+        )
+    except ErreurResultatFiscalIntrouvable as e:
+        raise HTTPException(
+            status_code=status.HTTP_404_NOT_FOUND, detail=str(e)
+        ) from e
+    except ErreurResultatFiscalInvalide as e:
+        raise HTTPException(
+            status_code=status.HTTP_422_UNPROCESSABLE_ENTITY, detail=str(e)
+        ) from e
+
+
+@router.post("/missions/{mission_id}/resultat-fiscal/reprendre-is-du")
+def api_reprendre_is_du_estime(
+    mission_id: int,
+    utilisateur: UtilisateurDep,
+    session: Annotated[Session, Depends(session_abonne)],
+) -> dict:
+    """Reprend l'IS théorique comme IS dû estimé — clic explicite.
+
+    Écrit l'IS théorique du tableau de passage dans
+    ``is_du_estime_mission`` en réutilisant la saisie du module
+    acomptes (même upsert, même journal). 422 si le passage est
+    indisponible (pas de balance) ; mission hors tenant → 404 (RLS).
+    """
+    from backend.plateforme.resultat_fiscal import (
+        ErreurResultatFiscalIntrouvable,
+        ErreurResultatFiscalInvalide,
+        reprendre_is_du_estime,
+    )
+
+    exiger_capacite(utilisateur, "executer_mission")
+    try:
+        return reprendre_is_du_estime(
+            session,
+            utilisateur.tenant_id,
+            mission_id,
+            acteur=utilisateur.email,
+        )
+    except ErreurResultatFiscalIntrouvable as e:
+        raise HTTPException(
+            status_code=status.HTTP_404_NOT_FOUND, detail=str(e)
+        ) from e
+    except ErreurResultatFiscalInvalide as e:
+        raise HTTPException(
+            status_code=status.HTTP_422_UNPROCESSABLE_ENTITY, detail=str(e)
+        ) from e
+
+
 @router.get("/missions/{mission_id}/materialite")
 def api_materialite_mission(
     mission_id: int,

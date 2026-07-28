@@ -75,6 +75,7 @@ import { RapprochementTvaVue } from "./RapprochementTvaVue";
 import { DeductibiliteVue } from "./DeductibiliteVue";
 import { RapprochementSalairesVue } from "./RapprochementSalairesVue";
 import { AcomptesVue } from "./AcomptesVue";
+import { ResultatFiscalVue } from "./ResultatFiscalVue";
 import { MaterialiteVue } from "./MaterialiteVue";
 import { ProgrammeProposeVue } from "./ProgrammeProposeVue";
 import { RestitutionVue } from "./RestitutionVue";
@@ -6131,6 +6132,17 @@ export function App() {
                           441x/444x informatifs) — la saisie reste un
                           clic explicite du fiscaliste. */}
                       <AcomptesVue
+                        missionId={restitution.mission_id}
+                        jeton={session?.jeton}
+                        estLecteur={estLecteur}
+                      />
+                      {/* Tableau de passage consultatif résultat
+                          comptable → résultat fiscal (retraitements
+                          saisis, report déficitaire plafonné au
+                          bénéfice, IS théorique 25 %, signal IMF
+                          indicatif) — la reprise comme IS dû estimé
+                          reste un clic explicite du fiscaliste. */}
+                      <ResultatFiscalVue
                         missionId={restitution.mission_id}
                         jeton={session?.jeton}
                         estLecteur={estLecteur}
