@@ -52,6 +52,28 @@ type Props = {
   jeton?: string | null;
 };
 
+/** Périodes AAAA-MM triées condensées en plages contiguës (« 2023-01 → 2023-04, 2023-06 »). */
+function condenserPeriodes(periodes: string[]): string {
+  const rang = (p: string): number => {
+    const [a, m] = p.split("-").map(Number);
+    return a * 12 + m;
+  };
+  const plages: string[] = [];
+  let debut = "";
+  let fin = "";
+  for (const p of periodes) {
+    if (debut && rang(p) === rang(fin) + 1) {
+      fin = p;
+    } else {
+      if (debut) plages.push(debut === fin ? debut : `${debut} → ${fin}`);
+      debut = p;
+      fin = p;
+    }
+  }
+  if (debut) plages.push(debut === fin ? debut : `${debut} → ${fin}`);
+  return plages.join(", ");
+}
+
 const STATUT_LABELS: Record<string, string> = {
   complet: "Complet",
   lacunaire: "Lacunaire",
@@ -147,7 +169,7 @@ export function CompletudeDeclarativeVue({ missionId, jeton }: Props) {
                   {b.nb_manquantes === 0 ? (
                     <span className="muted">—</span>
                   ) : (
-                    b.manquantes.join(", ")
+                    condenserPeriodes(b.manquantes)
                   )}
                 </td>
               </tr>
