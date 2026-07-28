@@ -11796,6 +11796,159 @@ tr.row-active td {
   }
 }
 
+/* ── Échéances fiscales à venir (tableau de bord cabinet) ────────────
+   Dates limites indicatives des 30 prochains jours pour les missions
+   en cours — badge rouge quand l'échéance tombe dans la semaine. */
+.echcab-zone {
+  margin: 1rem 0 0.5rem;
+}
+.echcab-head {
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
+  gap: 0.6rem;
+  flex-wrap: wrap;
+  margin-bottom: 0.6rem;
+}
+.echcab-title {
+  margin: 0;
+  font-size: 1rem;
+  font-weight: 800;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  color: var(--ink, #0f172a);
+}
+.echcab-title::before {
+  content: "— ";
+  color: var(--accent, #0f766e);
+}
+.echcab-sub {
+  margin: 0.15rem 0 0;
+  font-size: 0.78rem;
+  color: var(--muted, #64748b);
+}
+.echcab-card {
+  display: flex;
+  flex-direction: column;
+  gap: 0.6rem;
+  min-width: 0;
+}
+.echcab-synthese {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.4rem;
+}
+.echcab-chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.3rem;
+  padding: 0.2rem 0.55rem;
+  border: 1px solid var(--line, #e5e7eb);
+  border-radius: 999px;
+  font-size: 0.74rem;
+  color: var(--ink-soft, #1e293b);
+  background: #fff;
+}
+.echcab-chip.urgente {
+  background: #fef2f2;
+  color: #b91c1c;
+  border-color: #fecaca;
+}
+.echcab-liste {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  display: flex;
+  flex-direction: column;
+  gap: 0.3rem;
+}
+.echcab-row {
+  flex: 1 1 auto;
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: stretch;
+  gap: 0.25rem;
+  padding: 0.4rem 0.6rem;
+  border: 1px solid var(--line, #e5e7eb);
+  border-radius: 8px;
+  background: #fff;
+  text-align: left;
+  cursor: pointer;
+  min-width: 0;
+}
+.echcab-row:hover {
+  border-color: var(--accent, #0f766e);
+  background: var(--accent-soft, #ecfdf8);
+}
+.echcab-ligne {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  min-width: 0;
+}
+/* Badge date limite + jours restants — rouge si ≤ 7 jours. */
+.echcab-badge {
+  flex: none;
+  display: inline-flex;
+  align-items: center;
+  padding: 0.15rem 0.5rem;
+  border-radius: 999px;
+  font-size: 0.72rem;
+  font-weight: 700;
+  white-space: nowrap;
+  background: #f8fafc;
+  color: var(--ink-soft, #1e293b);
+  border: 1px solid var(--line, #e5e7eb);
+}
+.echcab-badge.urgente {
+  background: #fef2f2;
+  color: #b91c1c;
+  border-color: #fecaca;
+}
+.echcab-libelle {
+  font-size: 0.8rem;
+  font-weight: 600;
+  color: var(--ink, #0f172a);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+.echcab-meta {
+  font-size: 0.74rem;
+  color: var(--muted, #64748b);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+.echcab-vide {
+  margin: 0;
+  padding: 0.5rem 0.6rem;
+  border: 1px dashed var(--line, #e5e7eb);
+  border-radius: 8px;
+  font-size: 0.78rem;
+  color: var(--muted, #64748b);
+}
+.echcab-err {
+  margin: 0;
+  font-size: 0.78rem;
+  color: #b91c1c;
+}
+.echcab-note {
+  margin: 0;
+  font-size: 0.72rem;
+  font-style: italic;
+  color: var(--muted, #64748b);
+}
+@media (max-width: 720px) {
+  .echcab-ligne {
+    flex-wrap: wrap;
+  }
+  .echcab-meta {
+    white-space: normal;
+  }
+}
+
 /* ---- Fiche client — obligations à venir (agenda cabinet filtré client) ---- */
 /* Réutilise le langage agenda2- (lignes, badges, note) ; le préfixe
    fiche2-echeances- porte le conteneur et les éléments propres à la fiche. */

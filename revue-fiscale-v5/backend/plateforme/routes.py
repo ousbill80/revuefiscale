@@ -4445,3 +4445,35 @@ def api_preparation_cloture_cabinet(
         },
     )
     return preparation
+
+
+@router.get("/cabinet/echeances")
+def api_echeances_cabinet(
+    utilisateur: UtilisateurDep,
+    session: Annotated[Session, Depends(session_abonne)],
+) -> dict:
+    """Échéances fiscales à venir (30 jours) des missions en cours.
+
+    Vue transverse pour le cabinet : les dates limites indicatives des
+    30 prochains jours, tous clients en mission confondus, d'après
+    l'échéancier fiscal de chaque exercice revu. Consultatif et
+    déterministe — vérifier le calendrier officiel de la DGI.
+    """
+    from backend.moteur.journal import append_journal
+    from backend.plateforme.echeances_cabinet import echeances_cabinet
+
+    exiger_capacite(utilisateur, "lire")
+    vue = echeances_cabinet(session, utilisateur.tenant_id)
+    append_journal(
+        session,
+        tenant_id=utilisateur.tenant_id,
+        mission_id=None,
+        acteur=utilisateur.email,
+        action="consultation_echeances_cabinet",
+        charge_utile={
+            "total": vue["synthese"]["total"],
+            "cette_semaine": vue["synthese"]["cette_semaine"],
+            "clients": vue["synthese"]["clients"],
+        },
+    )
+    return vue
