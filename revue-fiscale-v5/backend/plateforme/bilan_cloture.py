@@ -18,6 +18,7 @@ pures + lecture seule sous RLS via ``contexte_tenant``.
 """
 from __future__ import annotations
 
+from datetime import date
 from decimal import Decimal
 from typing import Any, Final
 
@@ -76,6 +77,12 @@ def construire_bilan(signaux: dict[str, Any]) -> dict[str, Any]:
       (:func:`backend.plateforme.plan_actions.analyse_mission`) — signal
       OPTIONNEL : absent (analyse indisponible), le point « Plan
       d'actions » n'apparaît pas (échec silencieux, jamais bloquant) ;
+    - ``compte_rendu_disponible`` / ``compte_rendu_date`` : compte-rendu
+      de la réunion de restitution
+      (:func:`backend.plateforme.compte_rendu.lire_compte_rendu` — date
+      ISO ou None si aucun compte-rendu consigné) — signal OPTIONNEL :
+      absent (lecture indisponible), le point « Compte-rendu » n'apparaît
+      pas (échec silencieux, jamais bloquant) ;
     - ``comparaison_disponible`` / ``comparaison_tendance`` /
       ``comparaison_delta_exposition`` : évolution N vs N-1 du
       contribuable (:func:`backend.plateforme.comparaison_exercices.
@@ -170,6 +177,31 @@ def construire_bilan(signaux: dict[str, Any]) -> dict[str, Any]:
         points.append(
             _point("plan_actions", libelle, plan_sans_decision > 0)
         )
+    # Point « Compte-rendu de réunion » — seulement si le signal est
+    # disponible (lecture réussie) : échec silencieux → point absent.
+    if bool(signaux.get("compte_rendu_disponible")):
+        brut = str(signaux.get("compte_rendu_date") or "").strip()
+        if brut:
+            try:
+                jour_fr = date.fromisoformat(brut[:10]).strftime("%d/%m/%Y")
+            except ValueError:
+                jour_fr = brut
+            points.append(
+                _point(
+                    "compte_rendu_reunion",
+                    "Compte-rendu de réunion de restitution consigné "
+                    f"({jour_fr})",
+                    False,
+                )
+            )
+        else:
+            points.append(
+                _point(
+                    "compte_rendu_reunion",
+                    "Aucun compte-rendu de réunion consigné",
+                    True,
+                )
+            )
     # Point « Évolution N/N-1 » — seulement si la comparaison
     # inter-exercices du contribuable est disponible (deux exercices
     # revus) : échec silencieux → point absent, jamais bloquant.
@@ -293,6 +325,25 @@ def bilan_mission(
     except ErreurPlanActions:
         plan_signaux = {}
 
+    # Compte-rendu de la réunion de restitution — date consignée ou
+    # None. Échec silencieux : le point est simplement absent.
+    compte_rendu_signaux: dict[str, Any] = {}
+    try:
+        from backend.plateforme.compte_rendu import (
+            ErreurCompteRendu,
+            lire_compte_rendu,
+        )
+
+        cr = lire_compte_rendu(session, tenant_id, mission_id)
+        compte_rendu_signaux = {
+            "compte_rendu_disponible": True,
+            "compte_rendu_date": (
+                cr["date_reunion"] if cr is not None else None
+            ),
+        }
+    except ErreurCompteRendu:
+        compte_rendu_signaux = {}
+
     # Évolution N vs N-1 du contribuable — comparaison inter-exercices
     # (ouvre son propre contexte_tenant : appel HORS de tout with).
     # Échec ou comparaison indisponible : le point est simplement absent.
@@ -339,6 +390,7 @@ def bilan_mission(
         "nb_pieces": nb_pieces,
         "risques_ouverts": risques_ouverts,
         **plan_signaux,
+        **compte_rendu_signaux,
         **comparaison_signaux,
     }
     bilan = construire_bilan(signaux)

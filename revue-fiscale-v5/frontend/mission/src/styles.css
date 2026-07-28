@@ -9866,6 +9866,26 @@ tr.row-active td {
 .rest-note-liste { list-style: disc; margin: 0; padding: 0 0 0 1.1rem; display: grid; gap: 0.25rem; font-size: 0.83rem; color: var(--ink, #0f172a); }
 .rest-note-mention { margin: 0; font-size: 0.72rem; font-style: italic; color: var(--muted, #64748b); }
 
+/* ── Restitution — compte-rendu de la réunion de restitution ── */
+.rest-cr-btn { white-space: nowrap; }
+.rest-cr-btn:disabled { opacity: 0.6; cursor: default; }
+.rest-cr { margin: 0.75rem 0 1rem; padding: 0.85rem 1rem; border: 1px solid var(--line, #e5e7eb); border-radius: 10px; background: var(--surface-soft, #f8fafc); }
+.rest-cr-head { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 0.6rem; margin-bottom: 0.55rem; }
+.rest-cr-titre { margin: 0; font-size: 0.95rem; font-weight: 800; color: var(--ink, #0f172a); }
+.rest-cr-existant { margin: 0 0 0.55rem; padding: 0.5rem 0.7rem; border: 1px solid #a7f3d0; border-radius: 8px; font-size: 0.8rem; color: #047857; background: #ecfdf5; }
+.rest-cr-vide { margin: 0 0 0.55rem; padding: 0.6rem 0.75rem; border: 1px dashed var(--line, #e5e7eb); border-radius: 8px; font-size: 0.8rem; color: var(--muted, #64748b); background: var(--surface, #fff); }
+.rest-cr-form { display: grid; gap: 0.6rem; }
+.rest-cr-champ { display: grid; gap: 0.3rem; font-size: 0.78rem; font-weight: 700; color: var(--ink-soft, #475569); }
+.rest-cr-champ input,
+.rest-cr-champ textarea { padding: 0.45rem 0.6rem; border: 1px solid var(--line, #e5e7eb); border-radius: 8px; background: var(--surface, #fff); font: inherit; font-size: 0.85rem; font-weight: 400; color: var(--ink, #0f172a); resize: vertical; }
+.rest-cr-champ input:focus,
+.rest-cr-champ textarea:focus { outline: 2px solid color-mix(in srgb, var(--accent, #0f766e) 45%, transparent); outline-offset: 1px; }
+.rest-cr-enregistrer { justify-self: start; border: 1px solid var(--accent, #0f766e); background: var(--accent, #0f766e); color: #fff; font-weight: 700; }
+.rest-cr-enregistrer:hover:not(:disabled) { background: var(--accent-deep, #115e59); }
+.rest-cr-enregistrer:disabled { opacity: 0.65; cursor: default; }
+.rest-cr-erreur { margin: 0.55rem 0 0; padding: 0.55rem 0.7rem; border: 1px solid color-mix(in srgb, #b91c1c 35%, transparent); border-radius: 8px; font-size: 0.8rem; color: #991b1b; background: #fef2f2; }
+.rest-cr-ok { margin: 0.55rem 0 0; padding: 0.5rem 0.7rem; border: 1px solid #a7f3d0; border-radius: 8px; font-size: 0.8rem; color: #047857; background: #ecfdf5; }
+
 /* ── Commentaire IA de revue analytique (réutilise rest-note-*) ── */
 .rest-comana { margin: 0.6rem 0 0.85rem; }
 .rest-comana-explication { align-items: flex-start; }

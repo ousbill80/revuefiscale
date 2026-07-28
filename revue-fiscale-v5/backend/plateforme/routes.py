@@ -738,6 +738,97 @@ def api_ordre_du_jour_txt(
     )
 
 
+@router.get("/missions/{mission_id}/compte-rendu")
+def api_lire_compte_rendu(
+    mission_id: int,
+    utilisateur: UtilisateurDep,
+    session: Annotated[Session, Depends(session_abonne)],
+) -> dict:
+    """Compte-rendu de la réunion de restitution — lecture seule.
+
+    ``compte_rendu`` est null tant qu'aucun compte-rendu n'a été
+    consigné par le fiscaliste. 404 si mission hors tenant (RLS).
+    """
+    from backend.plateforme.compte_rendu import (
+        ErreurCompteRenduIntrouvable,
+        lire_compte_rendu,
+    )
+
+    exiger_capacite(utilisateur, "lire")
+    try:
+        compte_rendu = lire_compte_rendu(
+            session, utilisateur.tenant_id, mission_id
+        )
+    except ErreurCompteRenduIntrouvable as e:
+        raise HTTPException(
+            status_code=status.HTTP_404_NOT_FOUND, detail=str(e)
+        ) from e
+    return {"mission_id": mission_id, "compte_rendu": compte_rendu}
+
+
+class CompteRenduIn(BaseModel):
+    """Saisie du compte-rendu de réunion de restitution."""
+
+    date_reunion: str
+    participants: str
+    points_convenus: str
+
+
+@router.post("/missions/{mission_id}/compte-rendu")
+def api_enregistrer_compte_rendu(
+    mission_id: int,
+    corps: CompteRenduIn,
+    utilisateur: UtilisateurDep,
+    session: Annotated[Session, Depends(session_abonne)],
+) -> dict:
+    """Consigne le compte-rendu de la réunion de restitution (UPSERT).
+
+    Saisie HUMAINE enregistrée sur clic explicite du fiscaliste — un
+    seul compte-rendu par mission, un nouvel enregistrement remplace le
+    précédent. Date future ou champ vide → 422 ; mission hors tenant →
+    404 (RLS) ; mission clôturée → 409.
+    """
+    from backend.moteur.journal import append_journal
+    from backend.plateforme.compte_rendu import (
+        ErreurCompteRenduIntrouvable,
+        ErreurCompteRenduInvalide,
+        ErreurCompteRenduMissionCloturee,
+        enregistrer_compte_rendu,
+    )
+
+    exiger_capacite(utilisateur, "executer_mission")
+    try:
+        compte_rendu = enregistrer_compte_rendu(
+            session,
+            utilisateur.tenant_id,
+            mission_id,
+            corps.date_reunion,
+            corps.participants,
+            corps.points_convenus,
+        )
+    except ErreurCompteRenduIntrouvable as e:
+        raise HTTPException(
+            status_code=status.HTTP_404_NOT_FOUND, detail=str(e)
+        ) from e
+    except ErreurCompteRenduMissionCloturee as e:
+        raise HTTPException(
+            status_code=status.HTTP_409_CONFLICT, detail=str(e)
+        ) from e
+    except ErreurCompteRenduInvalide as e:
+        raise HTTPException(
+            status_code=status.HTTP_422_UNPROCESSABLE_ENTITY, detail=str(e)
+        ) from e
+    append_journal(
+        session,
+        tenant_id=utilisateur.tenant_id,
+        mission_id=mission_id,
+        acteur=utilisateur.email,
+        action="enregistrement_compte_rendu",
+        charge_utile={"date_reunion": compte_rendu["date_reunion"]},
+    )
+    return {"mission_id": mission_id, "compte_rendu": compte_rendu}
+
+
 @router.get("/missions/{mission_id}/courrier-envoi.docx")
 def api_courrier_envoi_docx(
     mission_id: int,

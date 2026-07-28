@@ -97,6 +97,9 @@ LIBELLES_ACTIONS: Final[dict[str, str]] = {
     "telechargement_ordre_du_jour": (
         "Téléchargement de l'ordre du jour de restitution"
     ),
+    "enregistrement_compte_rendu": (
+        "Enregistrement du compte-rendu de réunion de restitution"
+    ),
     "export_rentabilite_csv": "Export CSV de la rentabilité",
     "definition_parametres_rentabilite": (
         "Définition des paramètres de rentabilité"

@@ -59,6 +59,14 @@ const TYPES_ENGAGEMENT = [
   { value: "assistance_controle", label: "Assistance à contrôle" },
 ] as const;
 
+/** Compte-rendu de la réunion de restitution (un seul par mission). */
+type CompteRenduReunion = {
+  date_reunion: string;
+  participants: string;
+  points_convenus: string;
+  maj_le: string | null;
+};
+
 type PieceMissionOpt = {
   id: number;
   nom_fichier: string;
@@ -476,6 +484,14 @@ function libelleActionAudit(action: string): string {
   return m[action] ?? action;
 }
 
+/** « JJ/MM/AAAA » depuis une date ISO — la chaîne brute si invalide. */
+function fmtDateFr(iso: string | null | undefined): string {
+  if (!iso) return "—";
+  const d = new Date(`${iso.slice(0, 10)}T00:00:00`);
+  if (Number.isNaN(d.getTime())) return iso;
+  return d.toLocaleDateString("fr-FR");
+}
+
 function fmtHorodatage(iso: string | null | undefined): string {
   if (!iso) return "—";
   const d = new Date(iso);
@@ -629,6 +645,16 @@ export function RestitutionVue({
   const [affirmationErr, setAffirmationErr] = useState<string | null>(null);
   const [ordreJourBusy, setOrdreJourBusy] = useState(false);
   const [ordreJourErr, setOrdreJourErr] = useState<string | null>(null);
+  const [crOuvert, setCrOuvert] = useState(false);
+  const [crExistant, setCrExistant] = useState<CompteRenduReunion | null>(
+    null,
+  );
+  const [crDate, setCrDate] = useState("");
+  const [crParticipants, setCrParticipants] = useState("");
+  const [crPoints, setCrPoints] = useState("");
+  const [crBusy, setCrBusy] = useState(false);
+  const [crErr, setCrErr] = useState<string | null>(null);
+  const [crMsg, setCrMsg] = useState<string | null>(null);
   const [comparatifOuvert, setComparatifOuvert] = useState(false);
   const [comparatif, setComparatif] = useState<ComparatifOut | null>(null);
   const [comparatifErr, setComparatifErr] = useState<string | null>(null);
@@ -972,6 +998,7 @@ export function RestitutionVue({
     | "plan_actions"
     | "visas"
     | "note"
+    | "compte_rendu"
     | "comparatif"
     | "bilan_cloture"
     | "chronologie"
@@ -989,6 +1016,7 @@ export function RestitutionVue({
     if (sauf !== "plan_actions") setPlanActionsOuvert(false);
     if (sauf !== "visas") setVisasOuvert(false);
     if (sauf !== "note") setNoteOuverte(false);
+    if (sauf !== "compte_rendu") setCrOuvert(false);
     if (sauf !== "comparatif") setComparatifOuvert(false);
     if (sauf !== "bilan_cloture") setBilanClotureOuvert(false);
     if (sauf !== "chronologie") setChronologieOuverte(false);
@@ -1256,6 +1284,55 @@ export function RestitutionVue({
       );
     } finally {
       setOrdreJourBusy(false);
+    }
+  }
+
+  /** Charge le compte-rendu existant à l'ouverture du panneau. */
+  async function chargerCompteRendu() {
+    if (!jeton || !r.mission_id) return;
+    setCrErr(null);
+    setCrMsg(null);
+    try {
+      const out = await api<{
+        compte_rendu: CompteRenduReunion | null;
+      }>(`/api/v1/missions/${r.mission_id}/compte-rendu`, { jeton });
+      setCrExistant(out.compte_rendu);
+      if (out.compte_rendu) {
+        setCrDate(out.compte_rendu.date_reunion);
+        setCrParticipants(out.compte_rendu.participants);
+        setCrPoints(out.compte_rendu.points_convenus);
+      }
+    } catch (e) {
+      setCrErr(e instanceof Error ? e.message : "lecture impossible");
+    }
+  }
+
+  /** Enregistre le compte-rendu — clic explicite du fiscaliste (upsert). */
+  async function enregistrerCompteRendu() {
+    if (!jeton || !r.mission_id || crBusy) return;
+    setCrBusy(true);
+    setCrErr(null);
+    setCrMsg(null);
+    try {
+      const out = await api<{
+        compte_rendu: CompteRenduReunion;
+      }>(`/api/v1/missions/${r.mission_id}/compte-rendu`, {
+        method: "POST",
+        jeton,
+        json: {
+          date_reunion: crDate,
+          participants: crParticipants,
+          points_convenus: crPoints,
+        },
+      });
+      setCrExistant(out.compte_rendu);
+      setCrMsg("Compte-rendu enregistré.");
+    } catch (e) {
+      setCrErr(
+        e instanceof Error ? e.message : "enregistrement impossible",
+      );
+    } finally {
+      setCrBusy(false);
     }
   }
 
@@ -2774,6 +2851,23 @@ export function RestitutionVue({
                 {ordreJourErr}
               </span>
             )}
+            <Tooltip label="Compte-rendu de la réunion de restitution : date, participants et points convenus avec le client — consigné par le fiscaliste après la réunion (un seul par mission, l'enregistrement remplace le précédent).">
+              <button
+                type="button"
+                className={`btn btn-ghost btn-sm dossier2-action rest-cr-btn${
+                  crOuvert ? " is-actif" : ""
+                }`}
+                onClick={() =>
+                  togglePanneau("compte_rendu", crOuvert, setCrOuvert, () =>
+                    void chargerCompteRendu(),
+                  )
+                }
+                disabled={!jeton}
+                aria-expanded={crOuvert}
+              >
+                Compte-rendu
+              </button>
+            </Tooltip>
             <Tooltip label={PROCESS_TIPS.audit}>
               <button
                 type="button"
@@ -4175,6 +4269,98 @@ export function RestitutionVue({
               })}
             </ul>
           )}
+        </section>
+      )}
+
+      {crOuvert && (
+        <section
+          className="rest-cr"
+          aria-label="Compte-rendu de la réunion de restitution"
+        >
+          <div className="rest-cr-head">
+            <h3 className="rest-cr-titre label-with-tip">
+              Compte-rendu de réunion
+              <InfoTip
+                label="Consigne la réunion de restitution tenue avec le client : date (jamais future), participants et points convenus. Saisie humaine traçable — un seul compte-rendu par mission, « Enregistrer » remplace le précédent."
+                ariaLabel="Aide : compte-rendu de réunion"
+              />
+            </h3>
+            <button
+              type="button"
+              className="btn btn-ghost btn-sm"
+              onClick={() => setCrOuvert(false)}
+            >
+              Fermer
+            </button>
+          </div>
+          {crExistant && (
+            <p className="rest-cr-existant">
+              Compte-rendu consigné — réunion du{" "}
+              {fmtDateFr(crExistant.date_reunion)}
+              {crExistant.maj_le
+                ? ` (enregistré le ${fmtHorodatage(crExistant.maj_le)})`
+                : ""}
+              .
+            </p>
+          )}
+          {!crExistant && !crErr && (
+            <p className="rest-cr-vide">
+              Aucun compte-rendu consigné pour cette mission.
+            </p>
+          )}
+          <div className="rest-cr-form">
+            <label className="rest-cr-champ">
+              Date de la réunion
+              <input
+                type="date"
+                value={crDate}
+                onChange={(e) => setCrDate(e.target.value)}
+                disabled={crBusy || estLecteur}
+              />
+            </label>
+            <label className="rest-cr-champ">
+              Participants
+              <textarea
+                rows={2}
+                value={crParticipants}
+                onChange={(e) => setCrParticipants(e.target.value)}
+                placeholder="Ex. : M. X (gérant), Mme Y (DAF), cabinet — associé et chef de mission"
+                disabled={crBusy || estLecteur}
+              />
+            </label>
+            <label className="rest-cr-champ">
+              Points convenus
+              <textarea
+                rows={4}
+                value={crPoints}
+                onChange={(e) => setCrPoints(e.target.value)}
+                placeholder="Ex. : régularisation TVA avant le 15, pièces à transmettre, prochaine échéance…"
+                disabled={crBusy || estLecteur}
+              />
+            </label>
+            {!estLecteur && (
+              <button
+                type="button"
+                className="btn btn-sm rest-cr-enregistrer"
+                onClick={() => void enregistrerCompteRendu()}
+                disabled={
+                  crBusy ||
+                  !jeton ||
+                  !crDate ||
+                  !crParticipants.trim() ||
+                  !crPoints.trim()
+                }
+              >
+                {crBusy ? "Enregistrement…" : "Enregistrer le compte-rendu"}
+              </button>
+            )}
+          </div>
+          {crErr && (
+            <p className="rest-cr-erreur" role="alert">
+              {crErr}
+            </p>
+          )}
+          {crMsg && <p className="rest-cr-ok">{crMsg}</p>}
         </section>
       )}
 
