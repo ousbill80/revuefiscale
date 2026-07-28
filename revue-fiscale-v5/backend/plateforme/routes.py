@@ -2347,6 +2347,51 @@ def api_civisme_fiscal_mission(
     return analyse
 
 
+@router.get("/missions/{mission_id}/completude-data-room")
+def api_completude_data_room_mission(
+    mission_id: int,
+    utilisateur: UtilisateurDep,
+    session: Annotated[Session, Depends(session_abonne)],
+) -> dict:
+    """Complétude du socle documentaire de la data room de la mission.
+
+    Rapprochement déterministe entre le référentiel des pièces
+    comptables de base attendues (selon le régime de la mission) et les
+    pièces déposées en data room. Consultatif : « manquante » signifie
+    seulement qu'aucune pièce du type attendu n'a été déposée. 404 si
+    mission hors tenant (RLS).
+    """
+    from backend.moteur.journal import append_journal
+    from backend.plateforme.completude_data_room import (
+        ErreurCompletudeDataRoom,
+        completude_data_room,
+    )
+
+    exiger_capacite(utilisateur, "lire")
+    try:
+        completude = completude_data_room(
+            session, utilisateur.tenant_id, mission_id
+        )
+    except ErreurCompletudeDataRoom as e:
+        raise HTTPException(
+            status_code=status.HTTP_404_NOT_FOUND, detail=str(e)
+        ) from e
+    append_journal(
+        session,
+        tenant_id=utilisateur.tenant_id,
+        mission_id=mission_id,
+        acteur=utilisateur.email,
+        action="consultation_completude_data_room",
+        charge_utile={
+            "taux_completude": completude["synthese"]["taux_completude"],
+            "essentielles_manquantes": completude["synthese"][
+                "essentielles_manquantes"
+            ],
+        },
+    )
+    return completude
+
+
 @router.get("/missions/{mission_id}/chronologie")
 def api_chronologie_mission(
     mission_id: int,

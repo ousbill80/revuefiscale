@@ -56,6 +56,7 @@ import { RelancesCabinetVue } from "./RelancesCabinetVue";
 import { ActionsCabinetVue } from "./ActionsCabinetVue";
 import { RentabiliteCabinetVue } from "./RentabiliteCabinetVue";
 import { ClotureCabinetVue } from "./ClotureCabinetVue";
+import { CompletudeDataRoomVue } from "./CompletudeDataRoomVue";
 import { EquipeVue } from "./EquipeVue";
 import { FacturationVue } from "./FacturationVue";
 import {
@@ -5046,6 +5047,13 @@ export function App() {
                               sources à tout moment, ici ou depuis le poste de
                               travail.
                             </p>
+                          )}
+                          {missionId != null && (
+                            <CompletudeDataRoomVue
+                              missionId={missionId}
+                              jeton={session?.jeton}
+                              version={piecesMission.length}
+                            />
                           )}
                         </>
                       )}

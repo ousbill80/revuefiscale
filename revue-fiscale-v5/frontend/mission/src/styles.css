@@ -12295,3 +12295,88 @@ tr.row-active td {
   font-size: 0.76rem;
   font-style: italic;
 }
+
+/* ── Complétude du socle documentaire (data room mission) ─────────── */
+
+.compdr {
+  margin-top: 0.9rem;
+  padding: 0.75rem 0.9rem;
+  border: 1px solid var(--border, #e2e8f0);
+  border-radius: 10px;
+  background: var(--panel, #fff);
+}
+
+.compdr-head {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 0.75rem;
+  flex-wrap: wrap;
+}
+
+.compdr-titre {
+  margin: 0;
+  font-size: 0.86rem;
+}
+
+.compdr-taux {
+  font-size: 0.8rem;
+  font-weight: 600;
+  color: var(--ok, #15803d);
+}
+
+.compdr-taux-attention {
+  color: var(--warn, #b45309);
+}
+
+.compdr-liste {
+  list-style: none;
+  margin: 0.55rem 0 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 0.3rem;
+}
+
+.compdr-item {
+  display: flex;
+  align-items: baseline;
+  gap: 0.5rem;
+  font-size: 0.82rem;
+  flex-wrap: wrap;
+}
+
+.compdr-marque {
+  width: 1rem;
+  text-align: center;
+  color: var(--ok, #15803d);
+  font-weight: 700;
+}
+
+.compdr-manquante .compdr-marque {
+  color: var(--muted, #64748b);
+}
+
+.compdr-manquante .compdr-libelle {
+  color: var(--muted, #64748b);
+}
+
+.compdr-badge-essentielle {
+  margin-left: 0.45rem;
+  padding: 0.05rem 0.45rem;
+  border-radius: 999px;
+  font-size: 0.68rem;
+  font-weight: 600;
+  background: #fef3c7;
+  color: #b45309;
+}
+
+.compdr-exemples {
+  font-size: 0.74rem;
+}
+
+.compdr-note {
+  margin: 0.6rem 0 0;
+  font-size: 0.76rem;
+  font-style: italic;
+}
