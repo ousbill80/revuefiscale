@@ -3524,6 +3524,53 @@ def api_historique_pluriannuel_contribuable(
     return historique
 
 
+@router.get("/contribuables/{contribuable_id}/fiche")
+def api_fiche_client(
+    contribuable_id: int,
+    utilisateur: UtilisateurDep,
+    session: Annotated[Session, Depends(session_abonne)],
+) -> dict:
+    """Fiche client consolidée — tout ce que le cabinet sait déjà.
+
+    Pour un contribuable : missions par exercice avec statuts, points
+    convenus encore ouverts, évolution de la charge fiscale déjà
+    calculée (dernier exercice disponible) et signaux du centre
+    d'alertes le concernant. AUCUN recalcul — pure consolidation,
+    chaque volet tolérant (``volets_en_echec``). Consultatif et
+    déterministe. 404 si fiche hors tenant (RLS).
+    """
+    from backend.moteur.journal import append_journal
+    from backend.plateforme.fiche_client import (
+        ErreurFicheClient,
+        fiche_client,
+    )
+
+    exiger_capacite(utilisateur, "lire")
+    try:
+        fiche = fiche_client(
+            session, utilisateur.tenant_id, contribuable_id
+        )
+    except ErreurFicheClient as e:
+        raise HTTPException(
+            status_code=status.HTTP_404_NOT_FOUND, detail=str(e)
+        ) from e
+    append_journal(
+        session,
+        tenant_id=utilisateur.tenant_id,
+        mission_id=None,
+        acteur=utilisateur.email,
+        action="consultation_fiche_client",
+        charge_utile={
+            "contribuable_id": contribuable_id,
+            "nb_missions": fiche["synthese"]["nb_missions"],
+            "nb_points_ouverts": fiche["synthese"]["nb_points_ouverts"],
+            "nb_alertes": fiche["synthese"]["nb_alertes"],
+            "volets_en_echec": fiche["volets_en_echec"],
+        },
+    )
+    return fiche
+
+
 @router.get("/contribuables/{contribuable_id}/comparaison-exercices")
 def api_comparaison_exercices_contribuable(
     contribuable_id: int,

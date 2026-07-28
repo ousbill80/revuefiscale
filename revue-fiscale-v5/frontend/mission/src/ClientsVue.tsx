@@ -34,6 +34,7 @@ import {
 } from "./PiecesContribuable";
 import { DataRoomPanel } from "./DataRoomPanel";
 import { HistoriqueContribuablePanel } from "./HistoriqueContribuable";
+import { FicheClientVue } from "./FicheClientVue";
 import {
   RegistreRisquesVue,
   tipInterpretationScoreRisque,
@@ -1532,10 +1533,17 @@ type FicheProps = {
 };
 
 type FiltreMissionsFiche = "toutes" | "actives" | "cloturees";
-type FicheTab = "overview" | "risques" | "missions" | "historique" | "dataroom";
+type FicheTab =
+  | "overview"
+  | "synthese"
+  | "risques"
+  | "missions"
+  | "historique"
+  | "dataroom";
 
 const FICHE_TABS: ReadonlyArray<{ id: FicheTab; label: string }> = [
   { id: "overview", label: "Vue d’ensemble" },
+  { id: "synthese", label: "Synthèse" },
   { id: "risques", label: "Risques" },
   { id: "missions", label: "Missions" },
   { id: "historique", label: "Historique" },
@@ -1548,11 +1556,12 @@ function hashFicheTab(clientId: number, tab: FicheTab): string {
 
 function tabDepuisHash(clientId: number): FicheTab {
   const m = new RegExp(
-    `^#fiche-${clientId}-(overview|identite|pieces|risques|missions|historique|dataroom)$`,
+    `^#fiche-${clientId}-(overview|synthese|identite|pieces|risques|missions|historique|dataroom)$`,
   ).exec(window.location.hash || "");
   const brut = m?.[1];
   // Rétro-compat : identité et pièces vivent dans la vue d'ensemble.
   if (
+    brut === "synthese" ||
     brut === "risques" ||
     brut === "missions" ||
     brut === "historique" ||
@@ -2828,6 +2837,24 @@ export function ClientFicheVue({
             jeton={jeton}
             contribuableId={clientDetail.id}
             estLecteur={estLecteur}
+          />
+        </div>
+      )}
+
+      {ficheTab === "synthese" && (
+        <div
+          className="clients-fiche-tab-panel"
+          id={`fiche-${clientDetail.id}-panel-synthese`}
+          role="tabpanel"
+          aria-labelledby={`fiche-${clientDetail.id}-tab-synthese`}
+        >
+          <div className="fiche2-sec-head">
+            <h3 className="fiche2-titre">Synthèse consolidée du client</h3>
+          </div>
+          <FicheClientVue
+            jeton={jeton}
+            contribuableId={clientDetail.id}
+            onOuvrirMission={onOuvrirMission}
           />
         </div>
       )}
