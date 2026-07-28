@@ -45,6 +45,8 @@ BLOCS_DOSSIER: Final[tuple[str, ...]] = (
     "rapprochement_tva",
     "controles_fiscaux",
     "materialite",
+    "acomptes",
+    "rapprochement_salaires",
 )
 
 MENTION_NOTE: Final[str] = (
@@ -337,6 +339,63 @@ def _bloc_materialite(
     }
 
 
+def _bloc_acomptes(
+    session: Session, tenant_id: int, mission_id: int
+) -> dict[str, Any]:
+    """Acomptes IS — position de solde projetée et totaux versés.
+
+    Projection SYNTHÉTIQUE de
+    :func:`backend.plateforme.acomptes.vue_acomptes_mission` (comme
+    :func:`_bloc_rapprochement_tva`) : ni le détail des versements ni
+    les comptes de balance — l'écran dédié les restitue.
+    """
+    from backend.plateforme.acomptes import vue_acomptes_mission
+
+    a = vue_acomptes_mission(session, tenant_id, mission_id)
+    return {
+        "synthese": a.get("synthese"),
+        "position": a.get("position"),
+        "totaux_verses": a.get("totaux_verses"),
+        "is_du_estime": a.get("is_du_estime"),
+        "note": a.get("note"),
+    }
+
+
+def _bloc_rapprochement_salaires(
+    session: Session, tenant_id: int, mission_id: int
+) -> dict[str, Any]:
+    """Rapprochement salaires — synthèse + écarts significatifs seulement.
+
+    Projection SYNTHÉTIQUE de
+    :func:`backend.plateforme.rapprochement_salaires.rapprochement_salaires_mission`
+    (même pattern que :func:`_bloc_rapprochement_tva`) : le détail des
+    déclarations par période et des comptes de balance reste sur
+    l'écran dédié.
+    """
+    from backend.plateforme.rapprochement_salaires import (
+        rapprochement_salaires_mission,
+    )
+
+    r = rapprochement_salaires_mission(session, tenant_id, mission_id)
+    return {
+        "synthese": r.get("synthese"),
+        "seuil_signification": r.get("seuil_signification"),
+        "ecarts_significatifs": [
+            {
+                "nature": e.get("nature"),
+                "libelle": e.get("libelle"),
+                "declare": e.get("declare"),
+                "comptabilise": e.get("comptabilise"),
+                "ecart": e.get("ecart"),
+                "commentaire": e.get("commentaire"),
+            }
+            for e in r.get("ecarts") or []
+            if e.get("significatif")
+        ],
+        "note": r.get("note"),
+    }
+
+
 #: Blocs facultatifs : (clé, constructeur) — chacun est TOLÉRANT.
 _BLOCS_FACULTATIFS: Final[
     tuple[tuple[str, Callable[[Session, int, int], dict[str, Any] | None]], ...]
@@ -350,6 +409,8 @@ _BLOCS_FACULTATIFS: Final[
     ("rapprochement_tva", _bloc_rapprochement_tva),
     ("controles_fiscaux", _bloc_controles_fiscaux),
     ("materialite", _bloc_materialite),
+    ("acomptes", _bloc_acomptes),
+    ("rapprochement_salaires", _bloc_rapprochement_salaires),
 )
 
 

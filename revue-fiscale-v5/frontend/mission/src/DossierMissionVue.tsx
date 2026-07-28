@@ -146,6 +146,44 @@ type MaterialiteDossier = {
   note: string | null;
 };
 
+type AcomptesDossier = {
+  synthese: {
+    statut: string;
+    nb_versements: number;
+    nb_comptes_impot_balance: number;
+    solde_important: boolean;
+  } | null;
+  position: {
+    statut: string;
+    libelle: string;
+    montant: string;
+    solde_signe: string;
+    solde_important: boolean;
+  } | null;
+  totaux_verses: Record<string, string> | null;
+  is_du_estime: string | null;
+  note: string | null;
+};
+
+type RapprochementSalairesDossier = {
+  synthese: {
+    statut: string;
+    nb_periodes_declarees: number;
+    nb_comptes_66_balance: number;
+    nb_ecarts_significatifs: number;
+  } | null;
+  seuil_signification: string | null;
+  ecarts_significatifs: {
+    nature: string | null;
+    libelle: string | null;
+    declare: string | null;
+    comptabilise: string | null;
+    ecart: string | null;
+    commentaire: string | null;
+  }[];
+  note: string | null;
+};
+
 type DossierOut = {
   identite: IdentiteDossier | null;
   risques: RisquesDossier | null;
@@ -157,6 +195,8 @@ type DossierOut = {
   rapprochement_tva: RapprochementTvaDossier | null;
   controles_fiscaux: ControlesFiscauxDossier | null;
   materialite: MaterialiteDossier | null;
+  acomptes: AcomptesDossier | null;
+  rapprochement_salaires: RapprochementSalairesDossier | null;
   blocs_disponibles: number;
   genere_le: string;
   note: string;
@@ -201,6 +241,19 @@ const STATUTS_CONTROLES_FR: Record<string, string> = {
 const STATUTS_ECHEANCE_FR: Record<string, string> = {
   proche: "Proche",
   depassee: "Dépassée",
+};
+
+const STATUTS_ACOMPTES_FR: Record<string, string> = {
+  indisponible: "Indisponible (IS dû estimé non saisi)",
+  solde_a_payer: "Solde d'IS à payer",
+  credit_a_reporter: "Crédit d'impôt à reporter",
+  equilibre: "Position équilibrée",
+};
+
+const STATUTS_SALAIRES_FR: Record<string, string> = {
+  indisponible: "Indisponible (déclarations ou balance manquantes)",
+  coherent: "Cohérent au seuil de signification",
+  ecarts_a_expliquer: "Écarts à expliquer",
 };
 
 const STATUTS_MATERIALITE_FR: Record<string, string> = {
@@ -674,6 +727,102 @@ export function DossierMissionVue({ missionId, jeton }: Props) {
                   {dossier.materialite.synthese.nb_comptes_balance} en balance
                   — couverture globale des masses :{" "}
                   {dossier.materialite.couverture?.taux_global ?? "—"} %.
+                </p>
+              )}
+            </section>
+          )}
+
+          {dossier.acomptes != null && (
+            <section className="dossier-section">
+              <h3 className="dossier-section-titre">
+                Acomptes IS et position de solde
+              </h3>
+              <p>
+                Position :{" "}
+                {dossier.acomptes.position
+                  ? (STATUTS_ACOMPTES_FR[dossier.acomptes.position.statut] ??
+                    dossier.acomptes.position.libelle)
+                  : "—"}
+                {dossier.acomptes.position &&
+                dossier.acomptes.position.statut !== "indisponible"
+                  ? ` : ${formatMontant(dossier.acomptes.position.montant)}`
+                  : ""}
+                {dossier.acomptes.position?.solde_important
+                  ? " (solde important)"
+                  : ""}
+                {" — "}
+                {dossier.acomptes.synthese?.nb_versements ?? 0} versement(s)
+                saisi(s).
+              </p>
+              <p>
+                Total versé :{" "}
+                {formatMontant(dossier.acomptes.totaux_verses?.total ?? null)}{" "}
+                — IS dû estimé :{" "}
+                {dossier.acomptes.is_du_estime != null
+                  ? formatMontant(dossier.acomptes.is_du_estime)
+                  : "non saisi"}
+                .
+              </p>
+            </section>
+          )}
+
+          {dossier.rapprochement_salaires != null && (
+            <section className="dossier-section">
+              <h3 className="dossier-section-titre">
+                Rapprochement des impôts sur salaires
+              </h3>
+              <p>
+                Statut :{" "}
+                {dossier.rapprochement_salaires.synthese
+                  ? (STATUTS_SALAIRES_FR[
+                      dossier.rapprochement_salaires.synthese.statut
+                    ] ?? dossier.rapprochement_salaires.synthese.statut)
+                  : "—"}{" "}
+                — {dossier.rapprochement_salaires.synthese
+                  ?.nb_periodes_declarees ?? 0}{" "}
+                période(s) déclarée(s),{" "}
+                {dossier.rapprochement_salaires.synthese
+                  ?.nb_ecarts_significatifs ?? 0}{" "}
+                écart(s) significatif(s) (seuil :{" "}
+                {formatMontant(
+                  dossier.rapprochement_salaires.seuil_signification,
+                )}
+                ).
+              </p>
+              {dossier.rapprochement_salaires.ecarts_significatifs.length >
+                0 && (
+                <table className="dossier-table">
+                  <thead>
+                    <tr>
+                      <th>Nature</th>
+                      <th>Déclaré</th>
+                      <th>Comptabilisé</th>
+                      <th>Écart</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {dossier.rapprochement_salaires.ecarts_significatifs.map(
+                      (e, i) => (
+                        <tr key={e.nature ?? i}>
+                          <td>{e.libelle ?? e.nature ?? "—"}</td>
+                          <td>{formatMontant(e.declare)}</td>
+                          <td>{formatMontant(e.comptabilise)}</td>
+                          <td>{formatMontant(e.ecart)}</td>
+                        </tr>
+                      ),
+                    )}
+                  </tbody>
+                </table>
+              )}
+              {dossier.rapprochement_salaires.ecarts_significatifs.some(
+                (e) => e.commentaire,
+              ) && (
+                <p className="dossier-note">
+                  {
+                    dossier.rapprochement_salaires.ecarts_significatifs.find(
+                      (e) => e.commentaire,
+                    )?.commentaire
+                  }
                 </p>
               )}
             </section>
