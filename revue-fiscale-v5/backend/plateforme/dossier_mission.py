@@ -57,6 +57,7 @@ BLOCS_DOSSIER: Final[tuple[str, ...]] = (
     "rapprochement_acomptes",
     "retenue_honoraires",
     "qualite_balance",
+    "evolution_charge_fiscale",
 )
 
 MENTION_NOTE: Final[str] = (
@@ -689,6 +690,40 @@ def _bloc_qualite_balance(
     }
 
 
+def _bloc_evolution_charge_fiscale(
+    session: Session, tenant_id: int, mission_id: int
+) -> dict[str, Any]:
+    """Évolution pluriannuelle de la charge fiscale — synthèse.
+
+    Projection SYNTHÉTIQUE (tolérante) de
+    :func:`backend.plateforme.evolution_charge_fiscale.vue_evolution_charge_fiscale_mission`
+    (même pattern que :func:`_bloc_deficits_reportables`) : statut,
+    nombre d'exercices suivis et disponibles, nombre de variations et
+    sens de la DERNIÈRE variation du total — ni le tableau pluriannuel
+    détaillé ni les références, restitués par l'écran dédié. Aucun
+    recalcul ici.
+    """
+    from backend.plateforme.evolution_charge_fiscale import (
+        vue_evolution_charge_fiscale_mission,
+    )
+
+    e = vue_evolution_charge_fiscale_mission(session, tenant_id, mission_id)
+    s = e.get("synthese") or {}
+    variations = e.get("variations") or []
+    derniere = (variations[-1].get("total") or {}) if variations else {}
+    return {
+        "statut": e.get("statut"),
+        "nb_exercices": s.get("nb_exercices"),
+        "nb_exercices_disponibles": s.get("nb_exercices_disponibles"),
+        "nb_variations": s.get("nb_variations"),
+        "derniere_variation_sens": derniere.get("sens"),
+        "derniere_variation_relative_pct": derniere.get(
+            "variation_relative_pct"
+        ),
+        "note": e.get("note"),
+    }
+
+
 #: Blocs facultatifs : (clé, constructeur) — chacun est TOLÉRANT.
 _BLOCS_FACULTATIFS: Final[
     tuple[tuple[str, Callable[[Session, int, int], dict[str, Any] | None]], ...]
@@ -713,6 +748,7 @@ _BLOCS_FACULTATIFS: Final[
     ("rapprochement_acomptes", _bloc_rapprochement_acomptes),
     ("retenue_honoraires", _bloc_retenue_honoraires),
     ("qualite_balance", _bloc_qualite_balance),
+    ("evolution_charge_fiscale", _bloc_evolution_charge_fiscale),
 )
 
 

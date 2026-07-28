@@ -84,6 +84,7 @@ import { AcomptesVue } from "./AcomptesVue";
 import { ResultatFiscalVue } from "./ResultatFiscalVue";
 import { PatenteVue } from "./PatenteVue";
 import { ChargeFiscaleVue } from "./ChargeFiscaleVue";
+import { EvolutionChargeFiscaleVue } from "./EvolutionChargeFiscaleVue";
 import { PanoramaConformiteVue } from "./PanoramaConformiteVue";
 import { QualiteBalanceVue } from "./QualiteBalanceVue";
 import { MaterialiteVue } from "./MaterialiteVue";
@@ -6272,6 +6273,18 @@ export function App() {
                           d'acomptes) — aucun recalcul, total partiel
                           hors TVA collectée, l'humain décide. */}
                       <ChargeFiscaleVue
+                        missionId={restitution.mission_id}
+                        jeton={session?.jeton}
+                      />
+                      {/* Évolution pluriannuelle consultative de la
+                          charge fiscale : panorama de chaque exercice
+                          revu du client repris tel quel (aucun
+                          recalcul) et variations entre exercices
+                          consécutifs disponibles — les variations
+                          s'expliquent (activité, taux, assiettes,
+                          exonérations), les liasses font foi,
+                          l'humain analyse. */}
+                      <EvolutionChargeFiscaleVue
                         missionId={restitution.mission_id}
                         jeton={session?.jeton}
                       />

@@ -4926,6 +4926,55 @@ def api_deficits_reportables_mission(
     return vue
 
 
+@router.get("/missions/{mission_id}/evolution-charge-fiscale")
+def api_evolution_charge_fiscale_mission(
+    mission_id: int,
+    utilisateur: UtilisateurDep,
+    session: Annotated[Session, Depends(session_abonne)],
+) -> dict:
+    """Évolution pluriannuelle de la charge fiscale — vue consultative.
+
+    Assemble, pour le client de la mission, le panorama de charge
+    fiscale de chaque exercice revu (module existant, aucun recalcul)
+    et les variations entre exercices consécutifs disponibles
+    (variation absolue et relative, sens descriptif hausse / baisse /
+    stable). Les variations s'expliquent (activité, taux, assiettes,
+    exonérations) — vue indicative fondée sur les charges THÉORIQUES
+    estimées, les liasses font foi ; l'humain analyse. Lecture seule ;
+    se construit toujours (disponible=false avec moins de deux
+    exercices disponibles). 404 si mission hors tenant (RLS).
+    """
+    from backend.moteur.journal import append_journal
+    from backend.plateforme.evolution_charge_fiscale import (
+        ACTION_CONSULTATION,
+        ErreurEvolutionChargeFiscaleIntrouvable,
+        vue_evolution_charge_fiscale_mission,
+    )
+
+    exiger_capacite(utilisateur, "lire")
+    try:
+        vue = vue_evolution_charge_fiscale_mission(
+            session, utilisateur.tenant_id, mission_id
+        )
+    except ErreurEvolutionChargeFiscaleIntrouvable as e:
+        raise HTTPException(
+            status_code=status.HTTP_404_NOT_FOUND, detail=str(e)
+        ) from e
+    append_journal(
+        session,
+        tenant_id=utilisateur.tenant_id,
+        mission_id=mission_id,
+        acteur=utilisateur.email,
+        action=ACTION_CONSULTATION,
+        charge_utile={
+            "statut": vue["statut"],
+            "nb_exercices": vue["synthese"]["nb_exercices"],
+            "nb_variations": vue["synthese"]["nb_variations"],
+        },
+    )
+    return vue
+
+
 @router.get("/missions/{mission_id}/rapprochement-acomptes")
 def api_rapprochement_acomptes_mission(
     mission_id: int,

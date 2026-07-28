@@ -274,6 +274,16 @@ type DeficitsReportablesDossier = {
   note: string | null;
 };
 
+type EvolutionChargeFiscaleDossier = {
+  statut: string | null;
+  nb_exercices: number | null;
+  nb_exercices_disponibles: number | null;
+  nb_variations: number | null;
+  derniere_variation_sens: string | null;
+  derniere_variation_relative_pct: string | null;
+  note: string | null;
+};
+
 type RapprochementAcomptesDossier = {
   statut: string | null;
   is_theorique: string | null;
@@ -308,6 +318,7 @@ type DossierOut = {
   rapprochement_acomptes: RapprochementAcomptesDossier | null;
   retenue_honoraires: RetenueHonorairesDossier | null;
   qualite_balance: QualiteBalanceDossier | null;
+  evolution_charge_fiscale: EvolutionChargeFiscaleDossier | null;
   blocs_disponibles: number;
   genere_le: string;
   note: string;
@@ -449,6 +460,19 @@ const STATUTS_RAPPROCHEMENT_ACOMPTES_FR: Record<string, string> = {
     "Crédit d'impôt indicatif / excédent à faire valoir — à rapprocher des quittances",
   equilibre_indicatif:
     "Position équilibrée indicative — acomptes saisis égaux à l'IS théorique",
+};
+
+const STATUTS_EVOLUTION_CHARGE_FISCALE_FR: Record<string, string> = {
+  indisponible:
+    "Évolution indisponible — moins de deux exercices du client portent un panorama de charge fiscale estimée",
+  evolution_disponible:
+    "Évolution disponible — les variations s'expliquent (activité, taux, assiettes, exonérations), l'humain analyse",
+};
+
+const SENS_VARIATION_FR: Record<string, string> = {
+  hausse: "hausse",
+  baisse: "baisse",
+  stable: "stable",
 };
 
 const STATUTS_MATERIALITE_FR: Record<string, string> = {
@@ -1422,6 +1446,72 @@ export function DossierMissionVue({ missionId, jeton }: Props) {
                   l'humain liquide et décide.
                 </p>
               )}
+            </section>
+          )}
+
+          {dossier.evolution_charge_fiscale != null && (
+            <section className="dossier-section">
+              <h3 className="dossier-section-titre">
+                Évolution de la charge fiscale (pluriannuelle)
+              </h3>
+              <p>
+                Statut :{" "}
+                {dossier.evolution_charge_fiscale.statut
+                  ? (STATUTS_EVOLUTION_CHARGE_FISCALE_FR[
+                      dossier.evolution_charge_fiscale.statut
+                    ] ?? dossier.evolution_charge_fiscale.statut)
+                  : "—"}
+                .
+              </p>
+              {dossier.evolution_charge_fiscale.statut !==
+                "indisponible" && (
+                <p>
+                  {dossier.evolution_charge_fiscale
+                    .nb_exercices_disponibles ?? 0}{" "}
+                  exercices disponibles sur{" "}
+                  {dossier.evolution_charge_fiscale.nb_exercices ?? 0}{" "}
+                  suivis —{" "}
+                  {dossier.evolution_charge_fiscale.nb_variations ?? 0}{" "}
+                  variation
+                  {(dossier.evolution_charge_fiscale.nb_variations ?? 0) >
+                  1
+                    ? "s"
+                    : ""}{" "}
+                  à expliquer
+                  {dossier.evolution_charge_fiscale
+                    .derniere_variation_sens != null && (
+                    <>
+                      {" "}
+                      — dernière variation de la charge propre :{" "}
+                      {SENS_VARIATION_FR[
+                        dossier.evolution_charge_fiscale
+                          .derniere_variation_sens
+                      ] ??
+                        dossier.evolution_charge_fiscale
+                          .derniere_variation_sens}
+                      {dossier.evolution_charge_fiscale
+                        .derniere_variation_relative_pct != null && (
+                        <>
+                          {" "}
+                          (
+                          {fmtPct(
+                            dossier.evolution_charge_fiscale
+                              .derniere_variation_relative_pct,
+                          )}{" "}
+                          %)
+                        </>
+                      )}
+                    </>
+                  )}
+                  .
+                </p>
+              )}
+              <p className="dossier-note">
+                Vue indicative fondée sur les charges THÉORIQUES
+                estimées — les variations s'expliquent (activité, taux,
+                assiettes, exonérations), les liasses font foi, l'humain
+                analyse.
+              </p>
             </section>
           )}
 
