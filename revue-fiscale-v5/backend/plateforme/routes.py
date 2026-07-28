@@ -6563,6 +6563,80 @@ def api_centre_alertes_cabinet(
     return vue
 
 
+def _export_centre_alertes(
+    utilisateur, session: Session, format_export: str
+) -> Response:
+    """Export téléchargeable du centre d'alertes — même assemblage.
+
+    Réutilise :func:`centre_alertes_cabinet` (AUCUN recalcul
+    divergent avec GET /cabinet/alertes) puis rend le corps en texte
+    français lisible ou en CSV point-virgule — diffusion interne
+    (réunion hebdomadaire du cabinet), jamais un envoi d'email.
+    """
+    from backend.moteur.journal import append_journal
+    from backend.plateforme.centre_alertes import centre_alertes_cabinet
+    from backend.plateforme.export_alertes import (
+        rendre_alertes_csv,
+        rendre_alertes_texte,
+    )
+
+    exiger_capacite(utilisateur, "lire")
+    vue = centre_alertes_cabinet(session, utilisateur.tenant_id)
+    if format_export == "csv":
+        contenu = rendre_alertes_csv(vue)
+        media_type = "text/csv; charset=utf-8"
+    else:
+        contenu = rendre_alertes_texte(vue)
+        media_type = "text/plain; charset=utf-8"
+    append_journal(
+        session,
+        tenant_id=utilisateur.tenant_id,
+        mission_id=None,
+        acteur=utilisateur.email,
+        action="export_alertes",
+        charge_utile={
+            "format": format_export,
+            "total": vue["synthese"]["total"],
+            "par_gravite": vue["synthese"]["par_gravite"],
+            "sources_en_echec": vue["sources_en_echec"],
+        },
+    )
+    nom = f"alertes-cabinet-{vue['aujourd_hui']}.{format_export}"
+    return Response(
+        content=contenu,
+        media_type=media_type,
+        headers={
+            "Content-Disposition": f'attachment; filename="{nom}"'
+        },
+    )
+
+
+@router.get("/cabinet/alertes.txt")
+def api_export_alertes_txt(
+    utilisateur: UtilisateurDep,
+    session: Annotated[Session, Depends(session_abonne)],
+) -> Response:
+    """Centre d'alertes du cabinet en texte français (.txt, UTF-8).
+
+    Support de la réunion hebdomadaire — mêmes alertes que
+    GET /cabinet/alertes, consultatif, aucun email.
+    """
+    return _export_centre_alertes(utilisateur, session, "txt")
+
+
+@router.get("/cabinet/alertes.csv")
+def api_export_alertes_csv(
+    utilisateur: UtilisateurDep,
+    session: Annotated[Session, Depends(session_abonne)],
+) -> Response:
+    """Centre d'alertes du cabinet en CSV point-virgule (Excel FR).
+
+    Mêmes alertes que GET /cabinet/alertes — BOM UTF-8, échappement
+    stdlib, consultatif, aucun email.
+    """
+    return _export_centre_alertes(utilisateur, session, "csv")
+
+
 @router.get("/moi/tableau")
 def api_mon_tableau(
     utilisateur: UtilisateurDep,

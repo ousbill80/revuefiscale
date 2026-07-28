@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { api } from "./api";
+import { api, telecharger } from "./api";
 
 /** Centre d'alertes du cabinet (GET /api/v1/cabinet/alertes). */
 type Gravite = "critique" | "vigilance" | "info";
@@ -60,6 +60,29 @@ export function CentreAlertesVue({ jeton, onOuvrirMission }: Props) {
   const [vue, setVue] = useState<CentreAlertesOut | null>(null);
   const [busy, setBusy] = useState(false);
   const [err, setErr] = useState<string | null>(null);
+  const [exportBusy, setExportBusy] = useState(false);
+  const [exportErr, setExportErr] = useState<string | null>(null);
+
+  /** Télécharge le centre d'alertes (.txt ou .csv) — diffusion interne. */
+  async function telechargerExport(format: "txt" | "csv") {
+    if (!jeton || exportBusy) return;
+    setExportBusy(true);
+    setExportErr(null);
+    try {
+      const jour = vue?.aujourd_hui ?? new Date().toISOString().slice(0, 10);
+      await telecharger(
+        `/api/v1/cabinet/alertes.${format}`,
+        jeton,
+        `alertes-cabinet-${jour}.${format}`,
+      );
+    } catch (e) {
+      setExportErr(
+        e instanceof Error ? e.message : "téléchargement impossible",
+      );
+    } finally {
+      setExportBusy(false);
+    }
+  }
 
   useEffect(() => {
     if (!jeton) return;
@@ -97,6 +120,29 @@ export function CentreAlertesVue({ jeton, onOuvrirMission }: Props) {
             délais LPF — rien ne part par email, tout reste ici.
           </p>
         </div>
+        {vue && (
+          <div className="ctrale-exports">
+            <button
+              type="button"
+              className="btn btn-ghost btn-sm"
+              onClick={() => void telechargerExport("txt")}
+              disabled={exportBusy}
+              title="Version texte lisible pour la réunion du cabinet"
+            >
+              Télécharger (.txt)
+            </button>
+            <button
+              type="button"
+              className="btn btn-ghost btn-sm"
+              onClick={() => void telechargerExport("csv")}
+              disabled={exportBusy}
+              title="Version tableur (CSV point-virgule, Excel)"
+            >
+              Télécharger (.csv)
+            </button>
+            {exportErr && <span className="ctrale-err">{exportErr}</span>}
+          </div>
+        )}
       </div>
 
       <article className="panel dense ctrale-card">

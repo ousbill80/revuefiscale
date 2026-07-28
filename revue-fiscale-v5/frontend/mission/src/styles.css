@@ -13820,6 +13820,12 @@ tr.row-active td {
   gap: 0.75rem;
   margin-bottom: 0.5rem;
 }
+.ctrale-exports {
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+  flex-shrink: 0;
+}
 .ctrale-title {
   margin: 0;
   font-size: 0.95rem;
