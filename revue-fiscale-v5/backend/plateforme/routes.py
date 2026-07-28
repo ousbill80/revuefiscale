@@ -7025,3 +7025,87 @@ def api_journal_cabinet(
         action=action,
         acteur=acteur,
     )
+
+
+def _export_journal_cabinet(
+    utilisateur,
+    session: Session,
+    action: str | None,
+    acteur: str | None,
+    format_export: str,
+) -> Response:
+    """Export téléchargeable du journal d'activité — même lecture.
+
+    Réutilise la lecture de :func:`journal_cabinet` (AUCUNE requête
+    divergente avec GET /cabinet/journal, mêmes filtres action et
+    acteur, plafond raisonnable d'entrées) puis rend le corps en
+    texte français lisible ou en CSV point-virgule — traçabilité
+    interne (contrôle interne, supervision), jamais un envoi d'email.
+    Même capacité admin que la consultation ; COHÉRENT avec elle,
+    l'export N'EST PAS journalisé (pas de bruit auto-référentiel).
+    """
+    from datetime import date as _date
+
+    from backend.plateforme.export_journal_cabinet import (
+        journal_pour_export,
+        rendre_journal_csv,
+        rendre_journal_texte,
+    )
+
+    exiger_capacite(
+        utilisateur,
+        "gerer_equipe",
+        detail="seul un admin peut exporter le journal du cabinet",
+    )
+    corps = journal_pour_export(
+        session, utilisateur.tenant_id, action=action, acteur=acteur
+    )
+    jour = _date.today().isoformat()
+    if format_export == "csv":
+        contenu = rendre_journal_csv(corps)
+        media_type = "text/csv; charset=utf-8"
+    else:
+        contenu = rendre_journal_texte(corps, aujourd_hui=jour)
+        media_type = "text/plain; charset=utf-8"
+    nom = f"journal-cabinet-{jour}.{format_export}"
+    return Response(
+        content=contenu,
+        media_type=media_type,
+        headers={
+            "Content-Disposition": f'attachment; filename="{nom}"'
+        },
+    )
+
+
+@router.get("/cabinet/journal.txt")
+def api_export_journal_txt(
+    utilisateur: UtilisateurDep,
+    session: Annotated[Session, Depends(session_abonne)],
+    action: Annotated[str | None, Query(max_length=200)] = None,
+    acteur: Annotated[str | None, Query(max_length=200)] = None,
+) -> Response:
+    """Journal d'activité du cabinet en texte français (.txt, UTF-8).
+
+    Support de traçabilité (contrôle interne, supervision) — même
+    lecture que GET /cabinet/journal, admin, consultatif, aucun email.
+    """
+    return _export_journal_cabinet(
+        utilisateur, session, action, acteur, "txt"
+    )
+
+
+@router.get("/cabinet/journal.csv")
+def api_export_journal_csv(
+    utilisateur: UtilisateurDep,
+    session: Annotated[Session, Depends(session_abonne)],
+    action: Annotated[str | None, Query(max_length=200)] = None,
+    acteur: Annotated[str | None, Query(max_length=200)] = None,
+) -> Response:
+    """Journal d'activité du cabinet en CSV point-virgule (Excel FR).
+
+    Même lecture que GET /cabinet/journal — BOM UTF-8, échappement
+    stdlib, admin, consultatif, aucun email.
+    """
+    return _export_journal_cabinet(
+        utilisateur, session, action, acteur, "csv"
+    )
