@@ -40,6 +40,7 @@ const LIBELLES_TYPE: Record<string, string> = {
   completude_declarative: "Complétude déclarative",
   coherence_ca: "Cohérence du chiffre d'affaires",
   deficits_reportables: "Déficits reportables",
+  rapprochement_acomptes: "Rapprochement des acomptes IS",
 };
 
 const LIBELLES_GRAVITE: Record<Gravite, string> = {

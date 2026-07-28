@@ -21,6 +21,9 @@ vigilance / dépassement), :mod:`backend.plateforme.controles_fiscaux`
 comptable et CA reconstitué depuis la TVA) et
 :mod:`backend.plateforme.deficits_reportables` (déficits fiscaux
 théoriques à suivre — point de suivi informatif, jamais un
+manquement) et :mod:`backend.plateforme.rapprochement_acomptes`
+(solde d'IS indicatif ou excédent d'acomptes indicatif — point de
+préparation de la liquidation, approximation assumée, jamais un
 manquement). Aucun calcul métier n'est
 dupliqué : seules des fonctions PURES de conversion, tri, plafond et
 synthèse s'ajoutent ici.
@@ -59,6 +62,7 @@ TYPES_ALERTE: Final[tuple[str, ...]] = (
     "completude_declarative",
     "coherence_ca",
     "deficits_reportables",
+    "rapprochement_acomptes",
 )
 
 # Plafond d'alertes restituées — vue de pilotage, pas un export.
@@ -79,6 +83,10 @@ PLAFOND_MISSIONS_COHERENCE_CA: Final[int] = 200
 # (chaque mission déclenche une lecture — coût borné).
 PLAFOND_MISSIONS_DEFICITS: Final[int] = 200
 
+# Plafond de missions examinées pour le rapprochement des acomptes IS
+# (chaque mission déclenche une lecture — coût borné).
+PLAFOND_MISSIONS_RAPPROCHEMENT_ACOMPTES: Final[int] = 200
+
 MENTION_NOTE: Final[str] = (
     "Centre d'alertes consultatif du cabinet — agrégation déterministe "
     "des signaux déjà calculés par les tableaux de bord existants : "
@@ -89,7 +97,9 @@ MENTION_NOTE: Final[str] = (
     "d'affaires comptable et chiffre d'affaires reconstitué depuis la "
     "TVA déclarée, déficits fiscaux théoriques à suivre (cumul "
     "indicatif à imputation théorique maximale — les liasses déposées "
-    "font foi). Aucune alerte n'est envoyée "
+    "font foi), soldes d'IS indicatifs et excédents d'acomptes "
+    "indicatifs à préparer (approximation sur les acomptes saisis — "
+    "les quittances font foi). Aucune alerte n'est envoyée "
     "par email : tout reste dans l'application. Ces signaux éclairent "
     "la priorisation — le fiscaliste apprécie et décide, rien n'est "
     "automatique."
@@ -537,6 +547,71 @@ def alertes_depuis_deficits_reportables(
     return alertes
 
 
+def alertes_depuis_rapprochement_acomptes(
+    vues: list[dict[str, Any]],
+) -> list[dict[str, Any]]:
+    """PUR — soldes IS indicatifs → alertes rapprochement_acomptes.
+
+    ``vues`` : entrées ``{client, mission_id, rapprochement}`` où
+    ``rapprochement`` est la vue déjà construite par
+    :func:`backend.plateforme.rapprochement_acomptes.vue_rapprochement_acomptes_mission`
+    (aucun recalcul ici). Statut « solde_a_payer_indicatif » ou
+    « excedent_indicatif » → info — JAMAIS critique ni vigilance :
+    c'est un point de PRÉPARATION de la liquidation, pas un
+    manquement ; le solde est une approximation assumée sur les
+    acomptes saisis, seules les quittances font foi. Équilibre
+    indicatif ou vue indisponible → rien.
+    """
+    from backend.plateforme.rapprochement_acomptes import (
+        STATUT_EXCEDENT,
+        STATUT_SOLDE_A_PAYER,
+    )
+
+    alertes: list[dict[str, Any]] = []
+    for m in vues:
+        vue = m.get("rapprochement") or {}
+        if not vue.get("disponible"):
+            continue
+        statut = str(vue.get("statut") or "")
+        if statut not in (STATUT_SOLDE_A_PAYER, STATUT_EXCEDENT):
+            continue
+        exercice = vue.get("exercice")
+        montant = (vue.get("solde_indicatif") or {}).get("montant")
+        if statut == STATUT_SOLDE_A_PAYER:
+            libelle = (
+                "solde d'IS indicatif à préparer — "
+                f"exercice {exercice}"
+            )
+            if montant not in (None, ""):
+                libelle += f", solde indicatif {montant} FCFA"
+        else:
+            libelle = (
+                "excédent d'acomptes indicatif à faire valoir — "
+                f"exercice {exercice}"
+            )
+            if montant not in (None, ""):
+                libelle += f", excédent indicatif {montant} FCFA"
+        libelle += (
+            " — approximation sur acomptes saisis, "
+            "les quittances font foi"
+        )
+        alertes.append(
+            {
+                "type": "rapprochement_acomptes",
+                # JAMAIS critique ni vigilance — point de préparation
+                # de la liquidation, approximation assumée : l'humain
+                # rapproche les quittances, liquide et décide.
+                "gravite": "info",
+                "client": m.get("client"),
+                "mission_id": m.get("mission_id"),
+                "libelle": libelle,
+                "echeance": None,
+                "lien": "rapprochement_acomptes",
+            }
+        )
+    return alertes
+
+
 # ── Sources (chacune réutilise un module existant, RLS) ──────────────
 
 
@@ -786,6 +861,57 @@ def _source_deficits_reportables(
     return alertes_depuis_deficits_reportables(vues)
 
 
+def _source_rapprochement_acomptes(
+    session: Session, tenant_id: int, jour: date
+) -> list[dict[str, Any]]:
+    """Rapprochement des acomptes IS — module rapprochement_acomptes.
+
+    Missions non clôturées du tenant (plafonnées à
+    :data:`PLAFOND_MISSIONS_RAPPROCHEMENT_ACOMPTES`) : pour chacune,
+    la vue est celle DÉJÀ construite par
+    :func:`backend.plateforme.rapprochement_acomptes.vue_rapprochement_acomptes_mission`
+    (aucun recalcul du rapprochement ici). Une mission disparue entre
+    les deux lectures est simplement omise.
+    """
+    from backend.plateforme.missions import STATUT_CLOTUREE
+    from backend.plateforme.rapprochement_acomptes import (
+        ErreurRapprochementAcomptesIntrouvable,
+        vue_rapprochement_acomptes_mission,
+    )
+
+    with contexte_tenant(session, tenant_id):
+        rows = session.execute(
+            text(
+                "SELECT m.id AS mission_id, "
+                "c.denomination AS client "
+                "FROM mission m "
+                "JOIN contribuable c ON c.id = m.contribuable_id "
+                "WHERE m.statut <> :clos "
+                "ORDER BY c.denomination, m.id "
+                "LIMIT :lim"
+            ),
+            {"clos": STATUT_CLOTUREE,
+             "lim": PLAFOND_MISSIONS_RAPPROCHEMENT_ACOMPTES},
+        ).mappings().all()
+
+    vues: list[dict[str, Any]] = []
+    for r in rows:
+        try:
+            vue = vue_rapprochement_acomptes_mission(
+                session, tenant_id, int(r["mission_id"])
+            )
+        except ErreurRapprochementAcomptesIntrouvable:
+            continue
+        vues.append(
+            {
+                "client": str(r["client"] or ""),
+                "mission_id": int(r["mission_id"]),
+                "rapprochement": vue,
+            }
+        )
+    return alertes_depuis_rapprochement_acomptes(vues)
+
+
 #: Sources agrégées : (nom, constructeur) — chacune est TOLÉRANTE.
 _SOURCES: Final[
     tuple[
@@ -800,6 +926,7 @@ _SOURCES: Final[
     ("completude_declarative", _source_completude),
     ("coherence_ca", _source_coherence_ca),
     ("deficits_reportables", _source_deficits_reportables),
+    ("rapprochement_acomptes", _source_rapprochement_acomptes),
 )
 
 
