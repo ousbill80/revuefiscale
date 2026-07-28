@@ -2388,6 +2388,45 @@ def api_chronologie_mission(
     return chronologie
 
 
+@router.get("/missions/{mission_id}/delais")
+def api_delais_mission(
+    mission_id: int,
+    utilisateur: UtilisateurDep,
+    session: Annotated[Session, Depends(session_abonne)],
+) -> dict:
+    """Délais de traitement par étape — où le temps se perd.
+
+    Vue consultative déduite du journal d'audit de la mission : jalons
+    datés (création, premier dépôt de pièce, demande de renseignements,
+    premières constatations, premier visa, restitution) et durées en
+    jours entre jalons consécutifs. La consultation est journalisée
+    mais exclue du calcul (pas d'auto-pollution). 404 si mission hors
+    tenant (RLS).
+    """
+    from backend.moteur.journal import append_journal
+    from backend.plateforme.delais_mission import (
+        ErreurDelaisMission,
+        delais_mission,
+    )
+
+    exiger_capacite(utilisateur, "lire")
+    try:
+        delais = delais_mission(session, utilisateur.tenant_id, mission_id)
+    except ErreurDelaisMission as e:
+        raise HTTPException(
+            status_code=status.HTTP_404_NOT_FOUND, detail=str(e)
+        ) from e
+    append_journal(
+        session,
+        tenant_id=utilisateur.tenant_id,
+        mission_id=mission_id,
+        acteur=utilisateur.email,
+        action="consultation_delais_mission",
+        charge_utile={"duree_totale_jours": delais["duree_totale_jours"]},
+    )
+    return delais
+
+
 @router.get("/missions/{mission_id}/plan-actions")
 def api_plan_actions_mission(
     mission_id: int,

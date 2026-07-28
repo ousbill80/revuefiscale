@@ -29,6 +29,7 @@ import { CivismeVue } from "./CivismeVue";
 import { PlanActionsVue } from "./PlanActionsVue";
 import { BilanClotureVue } from "./BilanClotureVue";
 import { ChronologieMissionVue } from "./ChronologieMissionVue";
+import { DelaisMissionVue } from "./DelaisMissionVue";
 import type { AuditEntree, AuditJournal, ConclusionRestitution, Restitution } from "./types";
 
 type CollaborateurOpt = {
@@ -716,6 +717,7 @@ export function RestitutionVue({
   const [progBusy, setProgBusy] = useState<string | null>(null);
   const [echeancierOuvert, setEcheancierOuvert] = useState(false);
   const [pilotageOuvert, setPilotageOuvert] = useState(false);
+  const [delaisOuvert, setDelaisOuvert] = useState(false);
   const [prescriptionOuverte, setPrescriptionOuverte] = useState(false);
   const [civismeOuvert, setCivismeOuvert] = useState(false);
   const [planActionsOuvert, setPlanActionsOuvert] = useState(false);
@@ -989,6 +991,7 @@ export function RestitutionVue({
   type PanneauId =
     | "sources"
     | "pilotage"
+    | "delais"
     | "suivi"
     | "temps"
     | "programme"
@@ -1007,6 +1010,7 @@ export function RestitutionVue({
   function fermerPanneaux(sauf?: PanneauId) {
     if (sauf !== "sources") setSourcesOuvert(false);
     if (sauf !== "pilotage") setPilotageOuvert(false);
+    if (sauf !== "delais") setDelaisOuvert(false);
     if (sauf !== "suivi") setSuiviOuvert(false);
     if (sauf !== "temps") setTempsOuvert(false);
     if (sauf !== "programme") setProgOuvert(false);
@@ -2635,6 +2639,21 @@ export function RestitutionVue({
                 Pilotage
               </button>
             </Tooltip>
+            <Tooltip label="Délais de traitement par étape : jalons datés de la mission (création, premier dépôt de pièce, demande, premières constatations, premier visa, restitution) et durées en jours entre étapes, déduits du journal d'audit. Consultatif : où le temps se perd.">
+              <button
+                type="button"
+                className={`btn btn-ghost btn-sm dossier2-action rest-delais-btn${
+                  delaisOuvert ? " is-actif" : ""
+                }`}
+                onClick={() =>
+                  togglePanneau("delais", delaisOuvert, setDelaisOuvert)
+                }
+                disabled={!jeton}
+                aria-expanded={delaisOuvert}
+              >
+                Délais
+              </button>
+            </Tooltip>
             <Tooltip label="Échéancier fiscal de l'exercice revu : calendrier déterministe des obligations déclaratives et de paiement selon le régime du profil mission — dates indicatives, sans calcul d'impôt.">
               <button
                 type="button"
@@ -4154,6 +4173,14 @@ export function RestitutionVue({
           missionId={r.mission_id}
           jeton={jeton}
           onFermer={() => setChronologieOuverte(false)}
+        />
+      )}
+
+      {delaisOuvert && (
+        <DelaisMissionVue
+          missionId={r.mission_id}
+          jeton={jeton}
+          onFermer={() => setDelaisOuvert(false)}
         />
       )}
 
