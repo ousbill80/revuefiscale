@@ -4735,6 +4735,54 @@ def api_retenue_loyers_mission(
     return vue
 
 
+@router.get("/missions/{mission_id}/retenue-honoraires")
+def api_retenue_honoraires_mission(
+    mission_id: int,
+    utilisateur: UtilisateurDep,
+    session: Annotated[Session, Depends(session_abonne)],
+) -> dict:
+    """Retenue à la source sur honoraires — vue consultative (balance).
+
+    Lit les rémunérations d'intermédiaires et de conseils (comptes
+    632x) de la balance importée et restitue la retenue théorique
+    MAXIMALE indicative au taux courant de 7,5 % — le régime du
+    prestataire (résident ou non, immatriculé ou non) conditionne la
+    retenue réelle et n'est pas connu de la balance : la répartition
+    est restituée non calculable, seul l'humain qualifie. Lecture
+    seule ; se construit toujours (disponible=false sans balance).
+    404 si mission hors tenant (RLS).
+    """
+    from backend.moteur.journal import append_journal
+    from backend.plateforme.retenue_honoraires import (
+        ACTION_CONSULTATION,
+        ErreurRetenueHonorairesIntrouvable,
+        vue_retenue_honoraires_mission,
+    )
+
+    exiger_capacite(utilisateur, "lire")
+    try:
+        vue = vue_retenue_honoraires_mission(
+            session, utilisateur.tenant_id, mission_id
+        )
+    except ErreurRetenueHonorairesIntrouvable as e:
+        raise HTTPException(
+            status_code=status.HTTP_404_NOT_FOUND, detail=str(e)
+        ) from e
+    append_journal(
+        session,
+        tenant_id=utilisateur.tenant_id,
+        mission_id=mission_id,
+        acteur=utilisateur.email,
+        action=ACTION_CONSULTATION,
+        charge_utile={
+            "statut": vue["statut"],
+            "honoraires_bruts": vue["honoraires_bruts"],
+            "retenue_theorique_max": vue["retenue_theorique_max"],
+        },
+    )
+    return vue
+
+
 @router.get("/missions/{mission_id}/deficits-reportables")
 def api_deficits_reportables_mission(
     mission_id: int,

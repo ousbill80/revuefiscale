@@ -75,6 +75,7 @@ import { RapprochementTvaVue } from "./RapprochementTvaVue";
 import { CompletudeDeclarativeVue } from "./CompletudeDeclarativeVue";
 import { CoherenceCaVue } from "./CoherenceCaVue";
 import { RetenueLoyersVue } from "./RetenueLoyersVue";
+import { RetenueHonorairesVue } from "./RetenueHonorairesVue";
 import { DeficitsReportablesVue } from "./DeficitsReportablesVue";
 import { RapprochementAcomptesVue } from "./RapprochementAcomptesVue";
 import { DeductibiliteVue } from "./DeductibiliteVue";
@@ -6148,6 +6149,18 @@ export function App() {
                           régime) n'est pas connue de la balance,
                           seul l'humain qualifie et décide. */}
                       <RetenueLoyersVue
+                        missionId={restitution.mission_id}
+                        jeton={session?.jeton}
+                      />
+                      {/* Retenue à la source sur honoraires :
+                          rémunérations d'intermédiaires et de
+                          conseils (comptes 632x de la balance) et
+                          retenue théorique maximale indicative à
+                          7,5 % — le régime du prestataire (résident
+                          ou non, immatriculé ou non) n'est pas connu
+                          de la balance, seul l'humain qualifie et
+                          décide. */}
+                      <RetenueHonorairesVue
                         missionId={restitution.mission_id}
                         jeton={session?.jeton}
                       />

@@ -245,6 +245,15 @@ type RetenueLoyersDossier = {
   note: string | null;
 };
 
+type RetenueHonorairesDossier = {
+  statut: string | null;
+  honoraires_bruts: string | null;
+  taux_indicatif: string | null;
+  retenue_theorique_max: string | null;
+  repartition_calculable: boolean | null;
+  note: string | null;
+};
+
 type DeficitsReportablesDossier = {
   statut: string | null;
   nb_exercices: number | null;
@@ -287,6 +296,7 @@ type DossierOut = {
   retenue_loyers: RetenueLoyersDossier | null;
   deficits_reportables: DeficitsReportablesDossier | null;
   rapprochement_acomptes: RapprochementAcomptesDossier | null;
+  retenue_honoraires: RetenueHonorairesDossier | null;
   blocs_disponibles: number;
   genere_le: string;
   note: string;
@@ -392,6 +402,13 @@ const STATUTS_RETENUE_LOYERS_FR: Record<string, string> = {
     "Vue indisponible — importez la balance (comptes 622x « locations et charges locatives »)",
   a_qualifier:
     "Retenue théorique maximale indicative — qualité des bailleurs à qualifier par l'humain",
+};
+
+const STATUTS_RETENUE_HONORAIRES_FR: Record<string, string> = {
+  indisponible:
+    "Vue indisponible — importez la balance (comptes 632x « rémunérations d'intermédiaires et de conseils »)",
+  a_qualifier:
+    "Retenue théorique maximale indicative — régime des prestataires à qualifier par l'humain",
 };
 
 const STATUTS_DEFICITS_REPORTABLES_FR: Record<string, string> = {
@@ -1201,6 +1218,45 @@ export function DossierMissionVue({ missionId, jeton }: Props) {
                   balance : la répartition n'est pas calculée — seul
                   l'humain qualifie les bailleurs. Un écart s'explique, il
                   ne se conclut pas.
+                </p>
+              )}
+            </section>
+          )}
+
+          {dossier.retenue_honoraires != null && (
+            <section className="dossier-section">
+              <h3 className="dossier-section-titre">
+                Retenue à la source sur honoraires
+              </h3>
+              <p>
+                Statut :{" "}
+                {dossier.retenue_honoraires.statut
+                  ? (STATUTS_RETENUE_HONORAIRES_FR[
+                      dossier.retenue_honoraires.statut
+                    ] ?? dossier.retenue_honoraires.statut)
+                  : "—"}
+                .
+              </p>
+              {dossier.retenue_honoraires.statut !== "indisponible" && (
+                <p>
+                  Honoraires bruts (comptes 632x) :{" "}
+                  {formatMontant(dossier.retenue_honoraires.honoraires_bruts)}{" "}
+                  — retenue théorique maximale indicative (7,5 %) :{" "}
+                  {formatMontant(
+                    dossier.retenue_honoraires.retenue_theorique_max,
+                  )}
+                  .
+                </p>
+              )}
+              {dossier.retenue_honoraires.repartition_calculable ===
+                false && (
+                <p className="dossier-note">
+                  Le régime du prestataire (résident ou non, immatriculé
+                  ou non) conditionne la retenue et n'est pas connu de la
+                  balance : la répartition n'est pas calculée — seul
+                  l'humain qualifie les prestataires, les justificatifs
+                  de retenue et quittances font foi. Un écart s'explique,
+                  il ne se conclut pas.
                 </p>
               )}
             </section>

@@ -55,6 +55,7 @@ BLOCS_DOSSIER: Final[tuple[str, ...]] = (
     "retenue_loyers",
     "deficits_reportables",
     "rapprochement_acomptes",
+    "retenue_honoraires",
 )
 
 MENTION_NOTE: Final[str] = (
@@ -623,6 +624,36 @@ def _bloc_rapprochement_acomptes(
     }
 
 
+def _bloc_retenue_honoraires(
+    session: Session, tenant_id: int, mission_id: int
+) -> dict[str, Any]:
+    """Retenue sur honoraires — synthèse de la vue consultative.
+
+    Projection SYNTHÉTIQUE (tolérante) de
+    :func:`backend.plateforme.retenue_honoraires.vue_retenue_honoraires_mission`
+    (même pattern que :func:`_bloc_retenue_loyers`) : statut,
+    honoraires bruts (comptes 632x), retenue théorique maximale
+    indicative et non-calculabilité de la répartition par
+    prestataire — ni le détail des comptes 632x ni les références,
+    restitués par l'écran dédié. Aucun recalcul ici.
+    """
+    from backend.plateforme.retenue_honoraires import (
+        vue_retenue_honoraires_mission,
+    )
+
+    r = vue_retenue_honoraires_mission(session, tenant_id, mission_id)
+    return {
+        "statut": r.get("statut"),
+        "honoraires_bruts": r.get("honoraires_bruts"),
+        "taux_indicatif": r.get("taux_indicatif"),
+        "retenue_theorique_max": r.get("retenue_theorique_max"),
+        "repartition_calculable": (
+            r.get("repartition_par_prestataire") or {}
+        ).get("calculable"),
+        "note": r.get("note"),
+    }
+
+
 #: Blocs facultatifs : (clé, constructeur) — chacun est TOLÉRANT.
 _BLOCS_FACULTATIFS: Final[
     tuple[tuple[str, Callable[[Session, int, int], dict[str, Any] | None]], ...]
@@ -645,6 +676,7 @@ _BLOCS_FACULTATIFS: Final[
     ("retenue_loyers", _bloc_retenue_loyers),
     ("deficits_reportables", _bloc_deficits_reportables),
     ("rapprochement_acomptes", _bloc_rapprochement_acomptes),
+    ("retenue_honoraires", _bloc_retenue_honoraires),
 )
 
 
