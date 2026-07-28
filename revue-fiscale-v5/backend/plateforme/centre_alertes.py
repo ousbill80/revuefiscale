@@ -24,7 +24,10 @@ théoriques à suivre — point de suivi informatif, jamais un
 manquement) et :mod:`backend.plateforme.rapprochement_acomptes`
 (solde d'IS indicatif ou excédent d'acomptes indicatif — point de
 préparation de la liquidation, approximation assumée, jamais un
-manquement). Aucun calcul métier n'est
+manquement) et :mod:`backend.plateforme.qualite_balance`
+(observations de qualité de la balance importée — balance
+déséquilibrée, sens inhabituels, comptes hors plan — à examiner,
+jamais une conclusion). Aucun calcul métier n'est
 dupliqué : seules des fonctions PURES de conversion, tri, plafond et
 synthèse s'ajoutent ici.
 
@@ -63,6 +66,7 @@ TYPES_ALERTE: Final[tuple[str, ...]] = (
     "coherence_ca",
     "deficits_reportables",
     "rapprochement_acomptes",
+    "qualite_balance",
 )
 
 # Plafond d'alertes restituées — vue de pilotage, pas un export.
@@ -87,6 +91,10 @@ PLAFOND_MISSIONS_DEFICITS: Final[int] = 200
 # (chaque mission déclenche une lecture — coût borné).
 PLAFOND_MISSIONS_RAPPROCHEMENT_ACOMPTES: Final[int] = 200
 
+# Plafond de missions examinées pour la qualité de la balance
+# (chaque mission déclenche une lecture — coût borné).
+PLAFOND_MISSIONS_QUALITE_BALANCE: Final[int] = 200
+
 MENTION_NOTE: Final[str] = (
     "Centre d'alertes consultatif du cabinet — agrégation déterministe "
     "des signaux déjà calculés par les tableaux de bord existants : "
@@ -99,7 +107,10 @@ MENTION_NOTE: Final[str] = (
     "indicatif à imputation théorique maximale — les liasses déposées "
     "font foi), soldes d'IS indicatifs et excédents d'acomptes "
     "indicatifs à préparer (approximation sur les acomptes saisis — "
-    "les quittances font foi). Aucune alerte n'est envoyée "
+    "les quittances font foi), observations de qualité de la balance "
+    "importée à examiner (équilibre global, sens inhabituels, comptes "
+    "hors plan — chaque observation peut être justifiée, seul l'humain "
+    "conclut). Aucune alerte n'est envoyée "
     "par email : tout reste dans l'application. Ces signaux éclairent "
     "la priorisation — le fiscaliste apprécie et décide, rien n'est "
     "automatique."
@@ -612,6 +623,70 @@ def alertes_depuis_rapprochement_acomptes(
     return alertes
 
 
+def alertes_depuis_qualite_balance(
+    vues: list[dict[str, Any]],
+) -> list[dict[str, Any]]:
+    """PUR — observations de balance → alertes qualite_balance.
+
+    ``vues`` : entrées ``{client, mission_id, qualite}`` où ``qualite``
+    est la vue déjà construite par
+    :func:`backend.plateforme.qualite_balance.vue_qualite_balance_mission`
+    (aucun recalcul ici). Statut « observations_a_examiner » →
+    vigilance si la balance est DÉSÉQUILIBRÉE (la matière première de
+    toute la revue est douteuse), info sinon (sens inhabituels ou
+    comptes hors plan seulement) — JAMAIS critique : chaque
+    observation peut être justifiée (découvert bancaire, avoirs,
+    convention interne…), seul l'humain examine et conclut. Balance
+    sans observation ou vue indisponible → rien.
+    """
+    from backend.plateforme.qualite_balance import STATUT_OBSERVATIONS
+
+    alertes: list[dict[str, Any]] = []
+    for m in vues:
+        vue = m.get("qualite") or {}
+        if not vue.get("disponible"):
+            continue
+        if str(vue.get("statut") or "") != STATUT_OBSERVATIONS:
+            continue
+        exercice = vue.get("exercice")
+        equilibre = vue.get("equilibre") or {}
+        desequilibree = not bool(equilibre.get("equilibree"))
+        if desequilibree:
+            ecart = equilibre.get("ecart")
+            libelle = (
+                "balance déséquilibrée — "
+                f"exercice {exercice}"
+            )
+            if ecart not in (None, ""):
+                libelle += f", écart {ecart} FCFA"
+            libelle += " — à examiner avant toute revue"
+        else:
+            nb = int(
+                (vue.get("synthese") or {}).get("nb_observations") or 0
+            )
+            s = "s" if nb > 1 else ""
+            libelle = (
+                f"{nb} observation{s} de qualité de balance à "
+                f"examiner — exercice {exercice} "
+                "(sens inhabituels, comptes hors plan)"
+            )
+        alertes.append(
+            {
+                "type": "qualite_balance",
+                # JAMAIS critique — observations consultatives, chacune
+                # peut être justifiée : l'humain examine et conclut.
+                # Vigilance seulement si la balance est déséquilibrée.
+                "gravite": "vigilance" if desequilibree else "info",
+                "client": m.get("client"),
+                "mission_id": m.get("mission_id"),
+                "libelle": libelle,
+                "echeance": None,
+                "lien": "qualite_balance",
+            }
+        )
+    return alertes
+
+
 # ── Sources (chacune réutilise un module existant, RLS) ──────────────
 
 
@@ -912,6 +987,57 @@ def _source_rapprochement_acomptes(
     return alertes_depuis_rapprochement_acomptes(vues)
 
 
+def _source_qualite_balance(
+    session: Session, tenant_id: int, jour: date
+) -> list[dict[str, Any]]:
+    """Qualité de la balance des missions — module qualite_balance.
+
+    Missions non clôturées du tenant (plafonnées à
+    :data:`PLAFOND_MISSIONS_QUALITE_BALANCE`) : pour chacune, la vue
+    est celle DÉJÀ construite par
+    :func:`backend.plateforme.qualite_balance.vue_qualite_balance_mission`
+    (aucun recalcul des contrôles ici). Une mission disparue entre
+    les deux lectures est simplement omise.
+    """
+    from backend.plateforme.missions import STATUT_CLOTUREE
+    from backend.plateforme.qualite_balance import (
+        ErreurQualiteBalanceIntrouvable,
+        vue_qualite_balance_mission,
+    )
+
+    with contexte_tenant(session, tenant_id):
+        rows = session.execute(
+            text(
+                "SELECT m.id AS mission_id, "
+                "c.denomination AS client "
+                "FROM mission m "
+                "JOIN contribuable c ON c.id = m.contribuable_id "
+                "WHERE m.statut <> :clos "
+                "ORDER BY c.denomination, m.id "
+                "LIMIT :lim"
+            ),
+            {"clos": STATUT_CLOTUREE,
+             "lim": PLAFOND_MISSIONS_QUALITE_BALANCE},
+        ).mappings().all()
+
+    vues: list[dict[str, Any]] = []
+    for r in rows:
+        try:
+            vue = vue_qualite_balance_mission(
+                session, tenant_id, int(r["mission_id"])
+            )
+        except ErreurQualiteBalanceIntrouvable:
+            continue
+        vues.append(
+            {
+                "client": str(r["client"] or ""),
+                "mission_id": int(r["mission_id"]),
+                "qualite": vue,
+            }
+        )
+    return alertes_depuis_qualite_balance(vues)
+
+
 #: Sources agrégées : (nom, constructeur) — chacune est TOLÉRANTE.
 _SOURCES: Final[
     tuple[
@@ -927,6 +1053,7 @@ _SOURCES: Final[
     ("coherence_ca", _source_coherence_ca),
     ("deficits_reportables", _source_deficits_reportables),
     ("rapprochement_acomptes", _source_rapprochement_acomptes),
+    ("qualite_balance", _source_qualite_balance),
 )
 
 

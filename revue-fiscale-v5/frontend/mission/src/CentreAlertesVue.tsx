@@ -41,6 +41,7 @@ const LIBELLES_TYPE: Record<string, string> = {
   coherence_ca: "Cohérence du chiffre d'affaires",
   deficits_reportables: "Déficits reportables",
   rapprochement_acomptes: "Rapprochement des acomptes IS",
+  qualite_balance: "Qualité de balance",
 };
 
 const LIBELLES_GRAVITE: Record<Gravite, string> = {
