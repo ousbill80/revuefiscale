@@ -5074,3 +5074,85 @@ def api_points_convenus_cabinet_csv(
         media_type="text/csv; charset=utf-8",
         headers={"Content-Disposition": f'attachment; filename="{nom}"'},
     )
+
+
+class ResponsableMissionIn(BaseModel):
+    """Email d'un utilisateur actif du tenant — null pour désaffecter."""
+
+    email: str | None = None
+
+
+@router.post("/missions/{mission_id}/responsable")
+def api_affecter_responsable_mission(
+    mission_id: int,
+    corps: ResponsableMissionIn,
+    utilisateur: UtilisateurDep,
+    session: Annotated[Session, Depends(session_abonne)],
+) -> dict:
+    """Affecte (ou désaffecte : email null) le responsable de la mission.
+
+    Écriture sur clic explicite, journalisée
+    (``affectation_responsable_mission`` avec de/à). L'email doit être
+    celui d'un utilisateur ACTIF du cabinet — sinon 422.
+    """
+    from backend.plateforme.responsable_mission import (
+        ErreurMissionIntrouvable,
+        ErreurResponsable,
+        affecter_responsable,
+    )
+
+    exiger_capacite(utilisateur, "executer_mission")
+    try:
+        return affecter_responsable(
+            session,
+            utilisateur.tenant_id,
+            mission_id,
+            corps.email,
+            utilisateur.email,
+        )
+    except ErreurMissionIntrouvable as e:
+        raise HTTPException(
+            status_code=status.HTTP_404_NOT_FOUND, detail=str(e)
+        ) from e
+    except ErreurResponsable as e:
+        raise HTTPException(
+            status_code=status.HTTP_422_UNPROCESSABLE_ENTITY, detail=str(e)
+        ) from e
+
+
+@router.get("/missions/{mission_id}/responsable")
+def api_lire_responsable_mission(
+    mission_id: int,
+    utilisateur: UtilisateurDep,
+    session: Annotated[Session, Depends(session_abonne)],
+) -> dict:
+    """Responsable courant de la mission — lecture seule (RLS)."""
+    from backend.plateforme.responsable_mission import (
+        ErreurMissionIntrouvable,
+        lire_responsable,
+    )
+
+    exiger_capacite(utilisateur, "lire")
+    try:
+        return lire_responsable(session, utilisateur.tenant_id, mission_id)
+    except ErreurMissionIntrouvable as e:
+        raise HTTPException(
+            status_code=status.HTTP_404_NOT_FOUND, detail=str(e)
+        ) from e
+
+
+@router.get("/cabinet/charge")
+def api_charge_cabinet(
+    utilisateur: UtilisateurDep,
+    session: Annotated[Session, Depends(session_abonne)],
+) -> dict:
+    """Répartition des missions non clôturées par responsable.
+
+    Vue consultative pour l'associé : qui porte combien de missions
+    (en cours / cadrage), missions « non affecté » incluses. Lecture
+    seule sous RLS — l'affectation se décide mission par mission.
+    """
+    from backend.plateforme.responsable_mission import charge_cabinet
+
+    exiger_capacite(utilisateur, "lire")
+    return charge_cabinet(session, utilisateur.tenant_id)

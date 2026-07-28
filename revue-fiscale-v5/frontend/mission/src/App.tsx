@@ -497,6 +497,277 @@ function lireAuthDeepLink(): { tab: AuthTab; inviteToken: string } {
   return { tab: "conn", inviteToken: "" };
 }
 
+/** Responsable de mission (POST /missions/{id}/responsable). */
+type ResponsableMissionOut = {
+  mission_id: number;
+  responsable_email: string | null;
+};
+
+function ResponsableMissionVue({
+  missionId,
+  jeton,
+  estLecteur,
+}: {
+  missionId: number;
+  jeton?: string | null;
+  estLecteur: boolean;
+}) {
+  const [courant, setCourant] = useState<string | null>(null);
+  const [choix, setChoix] = useState("");
+  const [membres, setMembres] = useState<
+    Array<{ id: number; email: string; actif: boolean }>
+  >([]);
+  const [busy, setBusy] = useState(false);
+  const [msg, setMsg] = useState<{ txt: string; err: boolean } | null>(null);
+
+  useEffect(() => {
+    if (!jeton) return;
+    let annule = false;
+    void (async () => {
+      try {
+        const r = await api<ResponsableMissionOut>(
+          `/api/v1/missions/${missionId}/responsable`,
+          { jeton },
+        );
+        if (!annule) {
+          setCourant(r.responsable_email);
+          setChoix(r.responsable_email ?? "");
+        }
+      } catch {
+        /* mission sans responsable ou migration absente — non bloquant */
+      }
+      try {
+        const us = await api<
+          Array<{ id: number; email: string; actif: boolean }>
+        >("/api/v1/collaborateurs", { jeton });
+        if (!annule) setMembres(us);
+      } catch {
+        /* lecteur (403) — retombe sur la saisie libre de l'email */
+      }
+    })();
+    return () => {
+      annule = true;
+    };
+  }, [jeton, missionId]);
+
+  async function affecter(email: string | null) {
+    if (!jeton || busy) return;
+    setBusy(true);
+    setMsg(null);
+    try {
+      const r = await api<
+        ResponsableMissionOut & { precedent: string | null }
+      >(`/api/v1/missions/${missionId}/responsable`, {
+        method: "POST",
+        jeton,
+        json: { email },
+      });
+      setCourant(r.responsable_email);
+      setChoix(r.responsable_email ?? "");
+      setMsg({
+        txt: r.responsable_email
+          ? `Responsable affecté : ${r.responsable_email}.`
+          : "Mission désaffectée — plus de responsable.",
+        err: false,
+      });
+    } catch (e) {
+      setMsg({
+        txt:
+          e instanceof ApiError
+            ? e.message
+            : "Affectation impossible pour le moment.",
+        err: true,
+      });
+    } finally {
+      setBusy(false);
+    }
+  }
+
+  return (
+    <section className="panel dense resp-zone" aria-label="Responsable de mission">
+      <div className="resp-head">
+        <h3 className="resp-title">Responsable de mission</h3>
+        <p className="resp-sub">
+          {courant ? (
+            <>
+              Actuellement : <strong>{courant}</strong>
+            </>
+          ) : (
+            "Aucun responsable affecté pour l'instant."
+          )}
+        </p>
+      </div>
+      {!estLecteur && (
+        <div className="resp-form">
+          {membres.length > 0 ? (
+            <select
+              className="resp-select"
+              value={choix}
+              disabled={busy}
+              aria-label="Choisir le responsable de la mission"
+              onChange={(e) => setChoix(e.target.value)}
+            >
+              <option value="">— Non affecté —</option>
+              {membres.map((m) => (
+                <option key={m.id} value={m.email}>
+                  {m.email}
+                </option>
+              ))}
+            </select>
+          ) : (
+            <input
+              type="email"
+              className="resp-input"
+              placeholder="prenom.nom@cabinet.ci"
+              value={choix}
+              disabled={busy}
+              aria-label="Email du responsable de la mission"
+              onChange={(e) => setChoix(e.target.value)}
+            />
+          )}
+          <button
+            type="button"
+            className="btn btn-primary btn-sm resp-btn"
+            disabled={busy || (choix.trim() || null) === courant}
+            onClick={() => void affecter(choix.trim() || null)}
+          >
+            {busy ? "Affectation…" : "Affecter"}
+          </button>
+        </div>
+      )}
+      {msg && (
+        <p className={`status resp-status${msg.err ? " err" : ""}`} role="status">
+          {msg.txt}
+        </p>
+      )}
+    </section>
+  );
+}
+
+/** Charge du cabinet (GET /cabinet/charge) — consultatif. */
+type ChargeCabinetOut = {
+  items: Array<{
+    responsable: string;
+    nb_missions: number;
+    nb_en_cours: number;
+    nb_cadrage: number;
+  }>;
+  synthese: {
+    missions_actives: number;
+    responsables: number;
+    non_affectees: number;
+  };
+  note: string;
+};
+
+function ChargeCabinetVue({ jeton }: { jeton?: string | null }) {
+  const [vue, setVue] = useState<ChargeCabinetOut | null>(null);
+  const [busy, setBusy] = useState(false);
+  const [err, setErr] = useState<string | null>(null);
+
+  useEffect(() => {
+    if (!jeton) return;
+    let annule = false;
+    setBusy(true);
+    setErr(null);
+    void (async () => {
+      try {
+        const out = await api<ChargeCabinetOut>("/api/v1/cabinet/charge", {
+          jeton,
+        });
+        if (!annule) setVue(out ?? null);
+      } catch {
+        if (!annule) {
+          setVue(null);
+          setErr("Charge du cabinet indisponible pour le moment.");
+        }
+      } finally {
+        if (!annule) setBusy(false);
+      }
+    })();
+    return () => {
+      annule = true;
+    };
+  }, [jeton]);
+
+  return (
+    <section className="chargecab-zone" aria-label="Charge du cabinet">
+      <div className="chargecab-head">
+        <div>
+          <h3 className="chargecab-title">Charge du cabinet</h3>
+          <p className="chargecab-sub">
+            Répartition des missions non clôturées par responsable — pour
+            équilibrer la charge entre collaborateurs.
+          </p>
+        </div>
+      </div>
+      <article className="panel dense chargecab-card">
+        {busy && !vue && (
+          <p className="chargecab-vide">Chargement de la charge du cabinet…</p>
+        )}
+        {err && !busy && <p className="chargecab-err">{err}</p>}
+        {vue && (
+          <>
+            <div className="chargecab-synthese">
+              <span className="chargecab-chip">
+                <strong>{vue.synthese.missions_actives}</strong> mission
+                {vue.synthese.missions_actives > 1 ? "s" : ""} active
+                {vue.synthese.missions_actives > 1 ? "s" : ""}
+              </span>
+              <span className="chargecab-chip">
+                <strong>{vue.synthese.responsables}</strong> responsable
+                {vue.synthese.responsables > 1 ? "s" : ""}
+              </span>
+              {vue.synthese.non_affectees > 0 && (
+                <span className="chargecab-chip ancienne">
+                  <strong>{vue.synthese.non_affectees}</strong> non affectée
+                  {vue.synthese.non_affectees > 1 ? "s" : ""}
+                </span>
+              )}
+            </div>
+            {!vue.items.length && (
+              <p className="chargecab-vide">
+                Aucune mission active : la charge du cabinet est vide.
+              </p>
+            )}
+            {vue.items.length > 0 && (
+              <div className="balance-table-wrap">
+                <table className="balance-table chargecab-table">
+                  <thead>
+                    <tr>
+                      <th>Responsable</th>
+                      <th>Missions</th>
+                      <th>En cours</th>
+                      <th>Cadrage</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {vue.items.map((it) => (
+                      <tr key={it.responsable}>
+                        <td>
+                          {it.responsable === "non affecté" ? (
+                            <em>{it.responsable}</em>
+                          ) : (
+                            it.responsable
+                          )}
+                        </td>
+                        <td className="num">{it.nb_missions}</td>
+                        <td className="num">{it.nb_en_cours}</td>
+                        <td className="num">{it.nb_cadrage}</td>
+                      </tr>
+                    ))}
+                  </tbody>
+                </table>
+              </div>
+            )}
+            {vue.note && <p className="chargecab-note">{vue.note}</p>}
+          </>
+        )}
+      </article>
+    </section>
+  );
+}
+
 export function App() {
   const mobile = useMobile();
   const [session, setSession] = useState<SessionAuth | null>(lireSessionStockee);
@@ -4436,6 +4707,8 @@ export function App() {
                 onOuvrirMission={(id) => void ouvrirMission(id)}
               />
 
+              <ChargeCabinetVue jeton={session?.jeton ?? null} />
+
               <div className="dash-split">
                 <section className="panel dense list-panel">
                   <div className="panel-head">
@@ -5733,6 +6006,11 @@ export function App() {
                   <>
                     {restitution ? (
                       <>
+                      <ResponsableMissionVue
+                        missionId={restitution.mission_id}
+                        jeton={session?.jeton ?? null}
+                        estLecteur={estLecteur}
+                      />
                       <RestitutionVue
                         restitution={restitution}
                         jeton={session?.jeton}
