@@ -5156,3 +5156,22 @@ def api_charge_cabinet(
 
     exiger_capacite(utilisateur, "lire")
     return charge_cabinet(session, utilisateur.tenant_id)
+
+
+@router.get("/moi/tableau")
+def api_mon_tableau(
+    utilisateur: UtilisateurDep,
+    session: Annotated[Session, Depends(session_abonne)],
+) -> dict:
+    """« Mon tableau de bord » — les priorités du jour du collaborateur.
+
+    Ses missions non clôturées (``responsable_email`` = email du JETON
+    de l'utilisateur connecté — jamais un paramètre), les points
+    convenus « à faire » de ces missions et les échéances fiscales des
+    30 prochains jours de ses missions en cours. Vue strictement
+    consultative, lecture seule sous RLS.
+    """
+    from backend.plateforme.mon_tableau import mon_tableau
+
+    exiger_capacite(utilisateur, "lire")
+    return mon_tableau(session, utilisateur.tenant_id, utilisateur.email)

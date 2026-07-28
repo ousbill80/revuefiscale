@@ -13341,3 +13341,141 @@ tr.row-active td {
     display: none;
   }
 }
+
+/* ── Mon tableau de bord (bloc personnel du collaborateur) ───────────
+   Ses missions, ses points à traiter et ses échéances 30 j — affiché
+   en tête du dashboard seulement s'il a au moins une mission. */
+.montab-zone {
+  margin: 1rem 0 0.5rem;
+}
+.montab-head {
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
+  gap: 0.6rem;
+  flex-wrap: wrap;
+  margin-bottom: 0.6rem;
+}
+.montab-title {
+  margin: 0;
+  font-size: 1rem;
+  font-weight: 800;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  color: var(--ink, #0f172a);
+}
+.montab-title::before {
+  content: "— ";
+  color: var(--accent, #0f766e);
+}
+.montab-sub {
+  margin: 0.15rem 0 0;
+  font-size: 0.78rem;
+  color: var(--muted, #64748b);
+}
+.montab-card {
+  display: flex;
+  flex-direction: column;
+  gap: 0.6rem;
+  min-width: 0;
+}
+.montab-grille {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 0.8rem;
+}
+.montab-col {
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 0.4rem;
+}
+.montab-soustitre {
+  margin: 0;
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+  font-size: 0.78rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.03em;
+  color: var(--ink-soft, #1e293b);
+}
+.montab-liste {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  display: flex;
+  flex-direction: column;
+  gap: 0.3rem;
+}
+.montab-row {
+  flex: 1 1 auto;
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: stretch;
+  gap: 0.2rem;
+  padding: 0.35rem 0.55rem;
+  border: 1px solid var(--line, #e5e7eb);
+  border-radius: 8px;
+  background: #fff;
+  text-align: left;
+  cursor: pointer;
+  min-width: 0;
+}
+.montab-row:hover {
+  border-color: var(--accent, #0f766e);
+  background: var(--accent-soft, #ecfdf8);
+}
+.montab-libelle {
+  display: flex;
+  align-items: center;
+  gap: 0.35rem;
+  font-size: 0.8rem;
+  font-weight: 600;
+  color: var(--ink, #0f172a);
+  min-width: 0;
+}
+.montab-meta {
+  font-size: 0.72rem;
+  color: var(--muted, #64748b);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+/* Badge compact — rouge (« retard » / ≤ 7 jours), neutre sinon. */
+.montab-badge {
+  flex: none;
+  display: inline-flex;
+  align-items: center;
+  padding: 0.1rem 0.45rem;
+  border-radius: 999px;
+  font-size: 0.68rem;
+  font-weight: 700;
+  white-space: nowrap;
+  background: #f8fafc;
+  color: var(--ink-soft, #1e293b);
+  border: 1px solid var(--line, #e5e7eb);
+}
+.montab-badge.retard {
+  background: #fef2f2;
+  color: #b91c1c;
+  border-color: #fecaca;
+}
+.montab-vide {
+  margin: 0;
+  font-size: 0.76rem;
+  color: var(--muted, #64748b);
+}
+.montab-note {
+  margin: 0;
+  font-size: 0.7rem;
+  color: var(--muted, #64748b);
+  font-style: italic;
+}
+@media (max-width: 900px) {
+  .montab-grille {
+    grid-template-columns: 1fr;
+  }
+}
