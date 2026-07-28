@@ -11631,6 +11631,143 @@ tr.row-active td {
   }
 }
 
+/* ── Délais moyens de traitement (tableau de bord cabinet) ───────────
+   Moyennes par transition du processus — la plus lente mise en
+   évidence sobre (fond ambré discret). */
+.delaiscab-zone {
+  margin: 1rem 0 0.5rem;
+}
+.delaiscab-head {
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
+  gap: 0.75rem;
+  flex-wrap: wrap;
+  margin-bottom: 0.6rem;
+}
+.delaiscab-title {
+  margin: 0;
+  font-size: 1rem;
+  font-weight: 800;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  color: var(--ink, #0f172a);
+}
+.delaiscab-title::before {
+  content: "— ";
+  color: var(--accent, #0f766e);
+}
+.delaiscab-sub {
+  margin: 0.15rem 0 0;
+  font-size: 0.78rem;
+  color: var(--muted, #64748b);
+}
+.delaiscab-card {
+  display: flex;
+  flex-direction: column;
+  gap: 0.6rem;
+  min-width: 0;
+}
+.delaiscab-synthese {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.4rem;
+}
+.delaiscab-chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.3rem;
+  padding: 0.2rem 0.55rem;
+  border: 1px solid var(--line, #e5e7eb);
+  border-radius: 999px;
+  font-size: 0.74rem;
+  color: var(--ink-soft, #1e293b);
+  background: #fff;
+}
+.delaiscab-liste {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  display: flex;
+  flex-direction: column;
+  gap: 0.3rem;
+}
+.delaiscab-row {
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+  padding: 0.4rem 0.6rem;
+  border: 1px solid var(--line, #e5e7eb);
+  border-radius: 8px;
+  background: #fff;
+  min-width: 0;
+}
+/* Transition la plus lente — mise en évidence sobre. */
+.delaiscab-row.lente {
+  background: #fffbeb;
+  border-color: #fde68a;
+}
+.delaiscab-libelle {
+  font-size: 0.8rem;
+  font-weight: 600;
+  color: var(--ink, #0f172a);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+.delaiscab-meta {
+  font-size: 0.74rem;
+  color: var(--muted, #64748b);
+  white-space: nowrap;
+}
+.delaiscab-badge {
+  margin-left: auto;
+  flex: none;
+  display: inline-flex;
+  align-items: center;
+  padding: 0.15rem 0.55rem;
+  border: 1px solid var(--line, #e5e7eb);
+  border-radius: 999px;
+  font-size: 0.72rem;
+  font-weight: 700;
+  color: var(--ink-soft, #1e293b);
+  background: #fff;
+  white-space: nowrap;
+}
+.delaiscab-badge.lente {
+  background: #fef3c7;
+  color: #92400e;
+  border-color: #fde68a;
+}
+.delaiscab-vide {
+  margin: 0;
+  padding: 0.5rem 0.6rem;
+  border: 1px dashed var(--line, #e5e7eb);
+  border-radius: 8px;
+  font-size: 0.78rem;
+  color: var(--muted, #64748b);
+}
+.delaiscab-err {
+  margin: 0;
+  font-size: 0.78rem;
+  color: #b91c1c;
+}
+.delaiscab-note {
+  margin: 0;
+  font-size: 0.72rem;
+  font-style: italic;
+  color: var(--muted, #64748b);
+}
+@media (max-width: 720px) {
+  .delaiscab-row {
+    flex-wrap: wrap;
+  }
+  .delaiscab-meta,
+  .delaiscab-libelle {
+    white-space: normal;
+  }
+}
+
 /* ── Clôture des missions (tableau de bord cabinet) ──────────────────
    Préparation à la clôture des missions en cours : synthèse du bilan
    de pré-clôture — vert « prête », orange « points d'attention ». */

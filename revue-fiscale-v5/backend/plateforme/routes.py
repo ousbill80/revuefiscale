@@ -4458,6 +4458,45 @@ def api_rentabilite_cabinet(
     return suivi
 
 
+@router.get("/cabinet/delais")
+def api_delais_cabinet(
+    utilisateur: UtilisateurDep,
+    session: Annotated[Session, Depends(session_abonne)],
+) -> dict:
+    """Délais moyens de traitement du cabinet — où le processus traîne.
+
+    Vue transverse consultative : sur les missions du tenant (plafond),
+    moyenne des durées observées pour chaque transition canonique du
+    processus (création → dépôt de pièce → demande de renseignements →
+    constatations → visa → restitution), durée totale moyenne et
+    transition la plus lente. Une transition n'est comptée pour une
+    mission que si ses deux étapes consécutives sont datées au journal.
+    Déterministe — l'humain interprète.
+    """
+    from backend.moteur.journal import append_journal
+    from backend.plateforme.delais_cabinet import delais_cabinet
+
+    exiger_capacite(utilisateur, "lire")
+    delais = delais_cabinet(session, utilisateur.tenant_id)
+    plus_lente = delais["transition_la_plus_lente"]
+    append_journal(
+        session,
+        tenant_id=utilisateur.tenant_id,
+        mission_id=None,
+        acteur=utilisateur.email,
+        action="consultation_delais_cabinet",
+        charge_utile={
+            "nb_missions": delais["nb_missions"],
+            "transition_la_plus_lente": (
+                f"{plus_lente['de']}->{plus_lente['a']}"
+                if plus_lente
+                else None
+            ),
+        },
+    )
+    return delais
+
+
 @router.get("/cabinet/preparation-cloture")
 def api_preparation_cloture_cabinet(
     utilisateur: UtilisateurDep,
