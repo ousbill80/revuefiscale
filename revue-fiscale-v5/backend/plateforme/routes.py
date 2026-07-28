@@ -4735,6 +4735,55 @@ def api_retenue_loyers_mission(
     return vue
 
 
+@router.get("/missions/{mission_id}/deficits-reportables")
+def api_deficits_reportables_mission(
+    mission_id: int,
+    utilisateur: UtilisateurDep,
+    session: Annotated[Session, Depends(session_abonne)],
+) -> dict:
+    """Suivi pluriannuel des déficits reportables — vue consultative.
+
+    Assemble, pour le client de la mission, le résultat fiscal
+    théorique de chaque exercice revu (tableau de passage existant,
+    aucun recalcul), les déficits constatés et un cumul INDICATIF à
+    imputation théorique maximale — approximation assumée : les
+    imputations réellement pratiquées dans les liasses ne sont pas
+    connues, seul l'humain rapproche. Le délai de report n'est jamais
+    chiffré (CGI applicable à vérifier). Lecture seule ; se construit
+    toujours (disponible=false sans historique chiffrable). 404 si
+    mission hors tenant (RLS).
+    """
+    from backend.moteur.journal import append_journal
+    from backend.plateforme.deficits_reportables import (
+        ACTION_CONSULTATION,
+        ErreurDeficitsReportablesIntrouvable,
+        vue_deficits_reportables_mission,
+    )
+
+    exiger_capacite(utilisateur, "lire")
+    try:
+        vue = vue_deficits_reportables_mission(
+            session, utilisateur.tenant_id, mission_id
+        )
+    except ErreurDeficitsReportablesIntrouvable as e:
+        raise HTTPException(
+            status_code=status.HTTP_404_NOT_FOUND, detail=str(e)
+        ) from e
+    append_journal(
+        session,
+        tenant_id=utilisateur.tenant_id,
+        mission_id=mission_id,
+        acteur=utilisateur.email,
+        action=ACTION_CONSULTATION,
+        charge_utile={
+            "statut": vue["statut"],
+            "nb_exercices": vue["synthese"]["nb_exercices"],
+            "cumul_indicatif_final": vue["cumul_indicatif_final"],
+        },
+    )
+    return vue
+
+
 @router.get("/missions/{mission_id}/rapprochement-salaires")
 def api_rapprochement_salaires_mission(
     mission_id: int,

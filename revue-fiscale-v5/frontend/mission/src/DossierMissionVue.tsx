@@ -245,6 +245,16 @@ type RetenueLoyersDossier = {
   note: string | null;
 };
 
+type DeficitsReportablesDossier = {
+  statut: string | null;
+  nb_exercices: number | null;
+  nb_deficits_constates: number | null;
+  cumul_indicatif_final: string | null;
+  approximation: boolean | null;
+  imputation_reelle_calculable: boolean | null;
+  note: string | null;
+};
+
 type DossierOut = {
   identite: IdentiteDossier | null;
   risques: RisquesDossier | null;
@@ -263,6 +273,7 @@ type DossierOut = {
   completude_declarative: CompletudeDeclarativeDossier | null;
   coherence_ca: CoherenceCaDossier | null;
   retenue_loyers: RetenueLoyersDossier | null;
+  deficits_reportables: DeficitsReportablesDossier | null;
   blocs_disponibles: number;
   genere_le: string;
   note: string;
@@ -368,6 +379,15 @@ const STATUTS_RETENUE_LOYERS_FR: Record<string, string> = {
     "Vue indisponible — importez la balance (comptes 622x « locations et charges locatives »)",
   a_qualifier:
     "Retenue théorique maximale indicative — qualité des bailleurs à qualifier par l'humain",
+};
+
+const STATUTS_DEFICITS_REPORTABLES_FR: Record<string, string> = {
+  indisponible:
+    "Suivi indisponible — aucun exercice du client ne porte de résultat fiscal théorique chiffrable",
+  aucun_deficit:
+    "Aucun déficit constaté sur les exercices suivis (résultats fiscaux théoriques)",
+  deficits_a_suivre:
+    "Déficits à suivre — l'humain rapproche les liasses déposées",
 };
 
 const STATUTS_MATERIALITE_FR: Record<string, string> = {
@@ -1157,6 +1177,60 @@ export function DossierMissionVue({ missionId, jeton }: Props) {
                   balance : la répartition n'est pas calculée — seul
                   l'humain qualifie les bailleurs. Un écart s'explique, il
                   ne se conclut pas.
+                </p>
+              )}
+            </section>
+          )}
+
+          {dossier.deficits_reportables != null && (
+            <section className="dossier-section">
+              <h3 className="dossier-section-titre">
+                Déficits reportables (suivi pluriannuel)
+              </h3>
+              <p>
+                Statut :{" "}
+                {dossier.deficits_reportables.statut
+                  ? (STATUTS_DEFICITS_REPORTABLES_FR[
+                      dossier.deficits_reportables.statut
+                    ] ?? dossier.deficits_reportables.statut)
+                  : "—"}
+                .
+              </p>
+              {dossier.deficits_reportables.statut !== "indisponible" && (
+                <p>
+                  {dossier.deficits_reportables.nb_exercices ?? 0} exercice
+                  {(dossier.deficits_reportables.nb_exercices ?? 0) > 1
+                    ? "s"
+                    : ""}{" "}
+                  suivi
+                  {(dossier.deficits_reportables.nb_exercices ?? 0) > 1
+                    ? "s"
+                    : ""}{" "}
+                  — {dossier.deficits_reportables.nb_deficits_constates ?? 0}{" "}
+                  déficit
+                  {(dossier.deficits_reportables.nb_deficits_constates ??
+                    0) > 1
+                    ? "s"
+                    : ""}{" "}
+                  constaté
+                  {(dossier.deficits_reportables.nb_deficits_constates ??
+                    0) > 1
+                    ? "s"
+                    : ""}{" "}
+                  — cumul indicatif des déficits non imputés :{" "}
+                  {formatMontant(
+                    dossier.deficits_reportables.cumul_indicatif_final,
+                  )}
+                  .
+                </p>
+              )}
+              {dossier.deficits_reportables.approximation && (
+                <p className="dossier-note">
+                  Approximation assumée : cumul à imputation théorique
+                  maximale — les imputations réellement pratiquées dans
+                  les liasses déposées ne sont pas connues de l'outil,
+                  seules les liasses font foi. Le délai de report dépend
+                  du CGI applicable : l'humain vérifie et décide.
                 </p>
               )}
             </section>

@@ -53,6 +53,7 @@ BLOCS_DOSSIER: Final[tuple[str, ...]] = (
     "completude_declarative",
     "coherence_ca",
     "retenue_loyers",
+    "deficits_reportables",
 )
 
 MENTION_NOTE: Final[str] = (
@@ -554,6 +555,38 @@ def _bloc_retenue_loyers(
     }
 
 
+def _bloc_deficits_reportables(
+    session: Session, tenant_id: int, mission_id: int
+) -> dict[str, Any]:
+    """Déficits reportables — synthèse du suivi pluriannuel consultatif.
+
+    Projection SYNTHÉTIQUE (tolérante) de
+    :func:`backend.plateforme.deficits_reportables.vue_deficits_reportables_mission`
+    (même pattern que :func:`_bloc_retenue_loyers`) : statut, nombre
+    d'exercices suivis, déficits constatés, cumul indicatif final
+    (approximation assumée) et non-calculabilité de l'imputation
+    réelle — ni le tableau pluriannuel détaillé ni les références,
+    restitués par l'écran dédié. Aucun recalcul ici.
+    """
+    from backend.plateforme.deficits_reportables import (
+        vue_deficits_reportables_mission,
+    )
+
+    d = vue_deficits_reportables_mission(session, tenant_id, mission_id)
+    s = d.get("synthese") or {}
+    return {
+        "statut": d.get("statut"),
+        "nb_exercices": s.get("nb_exercices"),
+        "nb_deficits_constates": s.get("nb_deficits_constates"),
+        "cumul_indicatif_final": d.get("cumul_indicatif_final"),
+        "approximation": d.get("approximation"),
+        "imputation_reelle_calculable": (
+            d.get("imputation_reelle") or {}
+        ).get("calculable"),
+        "note": d.get("note"),
+    }
+
+
 #: Blocs facultatifs : (clé, constructeur) — chacun est TOLÉRANT.
 _BLOCS_FACULTATIFS: Final[
     tuple[tuple[str, Callable[[Session, int, int], dict[str, Any] | None]], ...]
@@ -574,6 +607,7 @@ _BLOCS_FACULTATIFS: Final[
     ("completude_declarative", _bloc_completude_declarative),
     ("coherence_ca", _bloc_coherence_ca),
     ("retenue_loyers", _bloc_retenue_loyers),
+    ("deficits_reportables", _bloc_deficits_reportables),
 )
 
 

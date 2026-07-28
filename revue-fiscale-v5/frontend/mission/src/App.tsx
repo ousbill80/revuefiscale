@@ -75,6 +75,7 @@ import { RapprochementTvaVue } from "./RapprochementTvaVue";
 import { CompletudeDeclarativeVue } from "./CompletudeDeclarativeVue";
 import { CoherenceCaVue } from "./CoherenceCaVue";
 import { RetenueLoyersVue } from "./RetenueLoyersVue";
+import { DeficitsReportablesVue } from "./DeficitsReportablesVue";
 import { DeductibiliteVue } from "./DeductibiliteVue";
 import { RapprochementSalairesVue } from "./RapprochementSalairesVue";
 import { AcomptesVue } from "./AcomptesVue";
@@ -6146,6 +6147,17 @@ export function App() {
                           régime) n'est pas connue de la balance,
                           seul l'humain qualifie et décide. */}
                       <RetenueLoyersVue
+                        missionId={restitution.mission_id}
+                        jeton={session?.jeton}
+                      />
+                      {/* Suivi pluriannuel des déficits reportables :
+                          résultat fiscal théorique par exercice revu
+                          du client (tableau de passage existant) et
+                          cumul indicatif à imputation théorique
+                          maximale — approximation assumée, seules
+                          les liasses font foi, l'humain rapproche
+                          et décide. */}
+                      <DeficitsReportablesVue
                         missionId={restitution.mission_id}
                         jeton={session?.jeton}
                       />
