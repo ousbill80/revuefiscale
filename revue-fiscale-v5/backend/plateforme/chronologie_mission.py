@@ -47,6 +47,9 @@ LIBELLES_ACTIONS: Final[dict[str, str]] = {
     "cadrage_mission": "Cadrage de la mission",
     "objectifs_mission": "Définition des objectifs de la mission",
     "changement_statut": "Changement de statut de la mission",
+    "reconduction_mission": (
+        "Reconduction de la mission sur l'exercice suivant"
+    ),
     "creation_contribuable": "Création du contribuable",
     # Data room et sources
     "depot_piece_contribuable": "Dépôt d'une pièce en data room",

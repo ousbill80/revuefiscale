@@ -8189,6 +8189,8 @@ button.fiche2-indic.is-alerte:focus-visible {
 
 .fiche2-missions > li {
   display: flex;
+  flex-direction: column;
+  gap: 0.4rem;
   min-width: 0;
 }
 
@@ -12516,4 +12518,55 @@ tr.row-active td {
   margin: 0.6rem 0 0;
   font-size: 0.76rem;
   font-style: italic;
+}
+
+/* ── Reconduction d'une mission clôturée sur l'exercice N+1 ─────────── */
+
+.recond-btn {
+  appearance: none;
+  align-self: flex-start;
+  padding: 0.3rem 0.65rem;
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  background: var(--surface-solid, #fff);
+  font: inherit;
+  font-size: 0.78rem;
+  font-weight: 600;
+  color: var(--accent, #1d4ed8);
+  cursor: pointer;
+  transition:
+    border-color 0.15s ease,
+    box-shadow 0.15s ease;
+}
+
+.recond-btn:hover:not(:disabled),
+.recond-btn:focus-visible {
+  border-color: var(--accent);
+  box-shadow: 0 0 0 1px color-mix(in srgb, var(--accent) 25%, transparent);
+  outline: none;
+}
+
+.recond-btn:disabled {
+  opacity: 0.6;
+  cursor: default;
+}
+
+.recond-msg {
+  margin: 0 0 0.6rem;
+  padding: 0.45rem 0.65rem;
+  border: 1px solid #bbf7d0;
+  border-radius: 8px;
+  background: #f0fdf4;
+  color: #166534;
+  font-size: 0.8rem;
+}
+
+.recond-err {
+  margin: 0 0 0.6rem;
+  padding: 0.45rem 0.65rem;
+  border: 1px solid #fecaca;
+  border-radius: 8px;
+  background: #fef2f2;
+  color: #b91c1c;
+  font-size: 0.8rem;
 }

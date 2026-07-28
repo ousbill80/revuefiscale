@@ -25,7 +25,7 @@ import {
   type FormePersonne,
   type IdentiteLegale,
 } from "./legalite";
-import { api } from "./api";
+import { api, ApiError } from "./api";
 import { LIBELLES_IMPOT } from "./impotLabels";
 import { PROCESS_TIPS } from "./processTips";
 import {
@@ -1567,6 +1567,48 @@ export function ClientFicheVue({
       setActionFaiteBusy(null);
     }
   }
+
+  // Reconduction d'une mission clôturée sur N+1 — clic explicite + confirmation.
+  const [recondBusy, setRecondBusy] = useState<number | null>(null);
+  const [recondMsg, setRecondMsg] = useState<string | null>(null);
+  const [recondErr, setRecondErr] = useState<string | null>(null);
+
+  /** Reconduit la mission clôturée sur l'exercice suivant (POST explicite). */
+  async function reconduireMission(m: MissionRow) {
+    if (!jeton || recondBusy !== null) return;
+    const ok = window.confirm(
+      `Reconduire la mission #${m.id} sur l'exercice ${m.exercice + 1} ? ` +
+        "Une nouvelle mission sera créée pour ce client — profil repris, " +
+        "honoraires repris à titre indicatif (modifiables ensuite).",
+    );
+    if (!ok) return;
+    setRecondBusy(m.id);
+    setRecondMsg(null);
+    setRecondErr(null);
+    try {
+      const r = await api<{
+        mission_id: number;
+        nouvelle_mission_id: number;
+        exercice: number;
+        note: string;
+      }>(`/api/v1/missions/${m.id}/reconduire`, { method: "POST", jeton });
+      setRecondMsg(
+        `Mission reconduite : nouvelle mission #${r.nouvelle_mission_id} ` +
+          `créée sur l'exercice ${r.exercice} — ${r.note}.`,
+      );
+      onRafraichir?.();
+    } catch (e) {
+      if (e instanceof ApiError && e.status === 409) {
+        setRecondErr(`Reconduction impossible : ${e.message}`);
+      } else {
+        setRecondErr(
+          e instanceof Error ? e.message : "Reconduction impossible.",
+        );
+      }
+    } finally {
+      setRecondBusy(null);
+    }
+  }
   const [ficheTab, setFicheTab] = useState<FicheTab>(() =>
     tabDepuisHash(clientDetail.id),
   );
@@ -2744,6 +2786,17 @@ export function ClientFicheVue({
             </div>
           </div>
 
+          {recondMsg && (
+            <p className="recond-msg" role="status">
+              {recondMsg}
+            </p>
+          )}
+          {recondErr && (
+            <p className="recond-err" role="alert">
+              {recondErr}
+            </p>
+          )}
+
           <div className="panel dense clients-panel">
             {missionsFiltrees.length > 0 ? (
               <ul className="fiche2-missions">
@@ -2784,6 +2837,27 @@ export function ClientFicheVue({
                         </span>
                       </button>
                     </Tooltip>
+                    {!estLecteur && m.statut === "cloturee" && (
+                      <Tooltip
+                        label={
+                          "Créer la mission de l'exercice suivant pour ce " +
+                          "client — profil et honoraires repris à titre " +
+                          "indicatif."
+                        }
+                        side="bottom"
+                      >
+                        <button
+                          type="button"
+                          className="recond-btn"
+                          disabled={recondBusy !== null}
+                          onClick={() => void reconduireMission(m)}
+                        >
+                          {recondBusy === m.id
+                            ? "Reconduction…"
+                            : "Reconduire sur N+1"}
+                        </button>
+                      </Tooltip>
+                    )}
                   </li>
                 ))}
               </ul>

@@ -2144,6 +2144,64 @@ def api_changer_statut_mission(
     return MissionStatutOut(**r, controle_cloture=controle)
 
 
+class ReconductionOut(BaseModel):
+    """Résultat de la reconduction d'une mission sur l'exercice N+1."""
+
+    mission_id: int
+    nouvelle_mission_id: int
+    exercice: int
+    note: str
+
+
+@router.post("/missions/{mission_id}/reconduire", response_model=ReconductionOut)
+def api_reconduire_mission(
+    mission_id: int,
+    utilisateur: UtilisateurDep,
+    session: Annotated[Session, Depends(session_abonne)],
+) -> ReconductionOut:
+    """Reconduit une mission CLÔTURÉE sur l'exercice suivant (N+1).
+
+    Continuité du dossier client : même contribuable, profil repris,
+    honoraires et taux horaire repris à titre indicatif (modifiables
+    ensuite). Écriture sur clic explicite du fiscaliste — 404 hors
+    tenant, 409 si la source n'est pas clôturée ou si une mission
+    existe déjà sur N+1.
+    """
+    from backend.plateforme.missions import ErreurMission, QuotaEpuise
+    from backend.plateforme.reconduction_mission import (
+        ErreurReconduction,
+        ErreurReconductionConflit,
+        ErreurReconductionIntrouvable,
+        reconduire_mission,
+    )
+
+    exiger_capacite(utilisateur, "creer_mission")
+    try:
+        r = reconduire_mission(
+            session,
+            utilisateur.tenant_id,
+            mission_id,
+            acteur=utilisateur.email,
+        )
+    except ErreurReconductionIntrouvable as e:
+        raise HTTPException(
+            status_code=status.HTTP_404_NOT_FOUND, detail=str(e)
+        ) from e
+    except ErreurReconductionConflit as e:
+        raise HTTPException(
+            status_code=status.HTTP_409_CONFLICT, detail=str(e)
+        ) from e
+    except QuotaEpuise as e:
+        raise HTTPException(
+            status_code=status.HTTP_403_FORBIDDEN, detail=str(e)
+        ) from e
+    except (ErreurReconduction, ErreurMission) as e:
+        raise HTTPException(
+            status_code=status.HTTP_400_BAD_REQUEST, detail=str(e)
+        ) from e
+    return ReconductionOut(**r)
+
+
 @router.get("/missions/{mission_id}/controle-cloture")
 def api_controle_cloture(
     mission_id: int,
