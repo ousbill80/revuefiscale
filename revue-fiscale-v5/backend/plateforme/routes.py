@@ -6896,6 +6896,85 @@ def api_portefeuille_declaratif_cabinet(
     return vue
 
 
+def _export_portefeuille_declaratif(
+    utilisateur, session: Session, format_export: str
+) -> Response:
+    """Export téléchargeable du portefeuille déclaratif — même assemblage.
+
+    Réutilise :func:`portefeuille_declaratif_cabinet` (AUCUN recalcul
+    divergent avec GET /cabinet/portefeuille-declaratif) puis rend le
+    corps en texte français lisible ou en CSV point-virgule — support
+    de relance des clients par les collaborateurs (diffusion interne),
+    jamais un envoi d'email.
+    """
+    from backend.moteur.journal import append_journal
+    from backend.plateforme.export_portefeuille import (
+        rendre_portefeuille_csv,
+        rendre_portefeuille_texte,
+    )
+    from backend.plateforme.portefeuille_declaratif import (
+        portefeuille_declaratif_cabinet,
+    )
+
+    exiger_capacite(utilisateur, "lire")
+    vue = portefeuille_declaratif_cabinet(session, utilisateur.tenant_id)
+    if format_export == "csv":
+        contenu = rendre_portefeuille_csv(vue)
+        media_type = "text/csv; charset=utf-8"
+    else:
+        contenu = rendre_portefeuille_texte(vue)
+        media_type = "text/plain; charset=utf-8"
+    append_journal(
+        session,
+        tenant_id=utilisateur.tenant_id,
+        mission_id=None,
+        acteur=utilisateur.email,
+        action="export_portefeuille_declaratif",
+        charge_utile={
+            "format": format_export,
+            "nb_missions": vue["synthese"]["nb_missions"],
+            "nb_a_completer": vue["synthese"]["nb_a_completer"],
+            "nb_indisponibles": vue["synthese"]["nb_indisponibles"],
+        },
+    )
+    nom = (
+        f"portefeuille-declaratif-{vue['aujourd_hui']}.{format_export}"
+    )
+    return Response(
+        content=contenu,
+        media_type=media_type,
+        headers={
+            "Content-Disposition": f'attachment; filename="{nom}"'
+        },
+    )
+
+
+@router.get("/cabinet/portefeuille-declaratif.txt")
+def api_export_portefeuille_declaratif_txt(
+    utilisateur: UtilisateurDep,
+    session: Annotated[Session, Depends(session_abonne)],
+) -> Response:
+    """Portefeuille déclaratif en texte français (.txt, UTF-8).
+
+    Support de relance des clients — mêmes données que
+    GET /cabinet/portefeuille-declaratif, consultatif, aucun email.
+    """
+    return _export_portefeuille_declaratif(utilisateur, session, "txt")
+
+
+@router.get("/cabinet/portefeuille-declaratif.csv")
+def api_export_portefeuille_declaratif_csv(
+    utilisateur: UtilisateurDep,
+    session: Annotated[Session, Depends(session_abonne)],
+) -> Response:
+    """Portefeuille déclaratif en CSV point-virgule (Excel FR).
+
+    Mêmes données que GET /cabinet/portefeuille-declaratif — BOM
+    UTF-8, échappement stdlib, consultatif, aucun email.
+    """
+    return _export_portefeuille_declaratif(utilisateur, session, "csv")
+
+
 @router.get("/cabinet/brief.txt")
 def api_export_brief_cabinet(
     utilisateur: UtilisateurDep,

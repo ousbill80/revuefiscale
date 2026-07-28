@@ -201,6 +201,9 @@ LIBELLES_ACTION: Final[dict[str, str]] = {
     "export_alertes": "Export des alertes du cabinet",
     "export_calendrier": "Export du calendrier fiscal",
     "export_brief": "Export du brief du cabinet",
+    "export_portefeuille_declaratif": (
+        "Export du portefeuille déclaratif"
+    ),
     "export_rentabilite_csv": "Export de la rentabilité (CSV)",
 }
 
