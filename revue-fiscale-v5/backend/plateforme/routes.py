@@ -2705,6 +2705,44 @@ def api_delais_mission(
     return delais
 
 
+@router.get("/missions/{mission_id}/dossier")
+def api_dossier_mission(
+    mission_id: int,
+    utilisateur: UtilisateurDep,
+    session: Annotated[Session, Depends(session_abonne)],
+) -> dict:
+    """Dossier de synthèse imprimable de la mission (lecture seule).
+
+    Agrégat consultatif des blocs existants — identité, synthèse des
+    risques (exposition), civisme fiscal, complétude data room, points
+    convenus, compte-rendu et délais. Chaque bloc est tolérant : un
+    sous-module en échec vaut null, jamais bloquant. 404 si mission
+    hors tenant (RLS).
+    """
+    from backend.moteur.journal import append_journal
+    from backend.plateforme.dossier_mission import (
+        ErreurDossierIntrouvable,
+        dossier_mission,
+    )
+
+    exiger_capacite(utilisateur, "lire")
+    try:
+        dossier = dossier_mission(session, utilisateur.tenant_id, mission_id)
+    except ErreurDossierIntrouvable as e:
+        raise HTTPException(
+            status_code=status.HTTP_404_NOT_FOUND, detail=str(e)
+        ) from e
+    append_journal(
+        session,
+        tenant_id=utilisateur.tenant_id,
+        mission_id=mission_id,
+        acteur=utilisateur.email,
+        action="consultation_dossier_mission",
+        charge_utile={"blocs_disponibles": dossier["blocs_disponibles"]},
+    )
+    return dossier
+
+
 @router.get("/missions/{mission_id}/plan-actions")
 def api_plan_actions_mission(
     mission_id: int,

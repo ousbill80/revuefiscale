@@ -69,6 +69,7 @@ import { PhoneField } from "./PhoneField";
 import { PROCESS_TIPS } from "./processTips";
 import { PointsAnterieursVue } from "./PointsAnterieursVue";
 import { RestitutionVue } from "./RestitutionVue";
+import { DossierMissionVue } from "./DossierMissionVue";
 import type { ResumeRisques } from "./RegistreRisques";
 import { InfoTip, Tooltip } from "./Tooltip";
 import type { AuditJournal, Restitution, SessionAuth } from "./types";
@@ -5720,6 +5721,7 @@ export function App() {
                 {step === 3 && (
                   <>
                     {restitution ? (
+                      <>
                       <RestitutionVue
                         restitution={restitution}
                         jeton={session?.jeton}
@@ -5765,6 +5767,11 @@ export function App() {
                               }
                         }
                       />
+                      <DossierMissionVue
+                        missionId={restitution.mission_id}
+                        jeton={session?.jeton}
+                      />
+                      </>
                     ) : (
                       <>
                         <h2 className="section-title wizard-panel-title">

@@ -13026,3 +13026,145 @@ tr.row-active td {
   color: #b91c1c;
   font-size: 0.8rem;
 }
+
+/* ── Dossier de synthèse imprimable de la mission ─────────────────── */
+
+.dossier-synthese {
+  margin-top: 1rem;
+}
+
+.dossier-actions {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  flex-wrap: wrap;
+}
+
+.dossier-err {
+  color: #b91c1c;
+  font-size: 0.8rem;
+}
+
+.dossier-print {
+  margin-top: 0.75rem;
+  padding: 1.25rem 1.5rem;
+  border: 1px solid var(--border, #e2e8f0);
+  border-radius: 10px;
+  background: #fff;
+  color: #111827;
+  font-size: 0.85rem;
+  line-height: 1.45;
+}
+
+.dossier-titre {
+  margin: 0 0 0.75rem;
+  font-size: 1.05rem;
+  text-transform: uppercase;
+  letter-spacing: 0.02em;
+}
+
+.dossier-section {
+  margin-top: 1.1rem;
+  break-inside: avoid;
+}
+
+.dossier-section-titre {
+  margin: 0 0 0.4rem;
+  padding-bottom: 0.2rem;
+  border-bottom: 1px solid #cbd5e1;
+  font-size: 0.9rem;
+}
+
+.dossier-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 0.82rem;
+}
+
+.dossier-table th,
+.dossier-table td {
+  padding: 0.3rem 0.5rem;
+  border: 1px solid #e2e8f0;
+  text-align: left;
+  vertical-align: top;
+}
+
+.dossier-table thead th {
+  background: #f8fafc;
+  font-weight: 600;
+}
+
+.dossier-table-identite th {
+  width: 12rem;
+  background: #f8fafc;
+  font-weight: 600;
+}
+
+.dossier-total {
+  margin: 0.4rem 0 0;
+  font-weight: 600;
+}
+
+.dossier-liste {
+  margin: 0.3rem 0 0;
+  padding-left: 1.2rem;
+}
+
+.dossier-vide {
+  margin: 0;
+  color: #64748b;
+  font-style: italic;
+}
+
+.dossier-pre {
+  margin: 0.2rem 0 0;
+  white-space: pre-wrap;
+}
+
+.dossier-pied {
+  margin-top: 1.4rem;
+  padding-top: 0.6rem;
+  border-top: 1px solid #cbd5e1;
+}
+
+.dossier-note {
+  margin: 0;
+  color: #475569;
+  font-size: 0.75rem;
+}
+
+.dossier-genere {
+  margin: 0.35rem 0 0;
+  color: #64748b;
+  font-size: 0.72rem;
+}
+
+/* Impression : la classe « impression-dossier » est posée sur <body>
+   autour de window.print() — seul le dossier (.dossier-print) sort,
+   tout le reste de l'application est masqué. */
+@media print {
+  body.impression-dossier * {
+    visibility: hidden;
+  }
+
+  body.impression-dossier .dossier-print,
+  body.impression-dossier .dossier-print * {
+    visibility: visible;
+  }
+
+  body.impression-dossier .dossier-print {
+    position: absolute;
+    inset: 0 auto auto 0;
+    width: 100%;
+    margin: 0;
+    padding: 0;
+    border: none;
+    border-radius: 0;
+    background: #fff;
+    color: #000;
+  }
+
+  body.impression-dossier .dossier-actions {
+    display: none;
+  }
+}
