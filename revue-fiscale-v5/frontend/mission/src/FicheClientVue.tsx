@@ -191,9 +191,9 @@ export function FicheClientVue({ jeton, contribuableId, onOuvrirMission }: Props
                 </span>
               )}
               <span className="ctrale-chip">
-                <strong>{fiche.synthese.nb_alertes}</strong> signal
-                {fiche.synthese.nb_alertes > 1 ? "aux" : ""} du centre
-                d'alertes
+                <strong>{fiche.synthese.nb_alertes}</strong>{" "}
+                {fiche.synthese.nb_alertes > 1 ? "signaux" : "signal"} du
+                centre d'alertes
               </span>
             </div>
 
