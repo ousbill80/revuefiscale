@@ -51,6 +51,7 @@ import {
 } from "./CadrageMissionVue";
 import { CompteVue } from "./CompteVue";
 import { AgendaFiscalVue } from "./AgendaFiscalVue";
+import { CentreAlertesVue } from "./CentreAlertesVue";
 import { EcheancesCabinetVue } from "./EcheancesCabinetVue";
 import { MonTableauVue } from "./MonTableauVue";
 import { RelancesCabinetVue } from "./RelancesCabinetVue";
@@ -4672,6 +4673,11 @@ export function App() {
                   ))}
                 </div>
               )}
+
+              <CentreAlertesVue
+                jeton={session?.jeton ?? null}
+                onOuvrirMission={(id) => void ouvrirMission(id)}
+              />
 
               <MonTableauVue
                 jeton={session?.jeton ?? null}

@@ -5447,6 +5447,40 @@ def api_charge_cabinet(
     return charge_cabinet(session, utilisateur.tenant_id)
 
 
+@router.get("/cabinet/alertes")
+def api_centre_alertes_cabinet(
+    utilisateur: UtilisateurDep,
+    session: Annotated[Session, Depends(session_abonne)],
+) -> dict:
+    """Centre d'alertes in-app du cabinet — agrégat consultatif.
+
+    Une liste unique, triée par gravité puis échéance, des signaux
+    déjà calculés par les tableaux de bord existants : points convenus
+    en retard ou anciens, échéances fiscales proches, budget temps en
+    vigilance / dépassement, délais LPF proches ou dépassés. Lecture
+    seule sous RLS, aucun email — une source en échec est simplement
+    ignorée, jamais bloquante.
+    """
+    from backend.moteur.journal import append_journal
+    from backend.plateforme.centre_alertes import centre_alertes_cabinet
+
+    exiger_capacite(utilisateur, "lire")
+    vue = centre_alertes_cabinet(session, utilisateur.tenant_id)
+    append_journal(
+        session,
+        tenant_id=utilisateur.tenant_id,
+        mission_id=None,
+        acteur=utilisateur.email,
+        action="consultation_centre_alertes_cabinet",
+        charge_utile={
+            "total": vue["synthese"]["total"],
+            "par_gravite": vue["synthese"]["par_gravite"],
+            "sources_en_echec": vue["sources_en_echec"],
+        },
+    )
+    return vue
+
+
 @router.get("/moi/tableau")
 def api_mon_tableau(
     utilisateur: UtilisateurDep,

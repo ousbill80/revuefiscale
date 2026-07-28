@@ -13786,3 +13786,144 @@ tr.row-active td {
     grid-template-columns: 1fr;
   }
 }
+
+/* ── Centre d'alertes du cabinet (CentreAlertesVue) ─────────────── */
+.ctrale-zone {
+  margin: 1rem 0 0.5rem;
+}
+.ctrale-head {
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
+  gap: 0.75rem;
+  margin-bottom: 0.5rem;
+}
+.ctrale-title {
+  margin: 0;
+  font-size: 0.95rem;
+}
+.ctrale-sub {
+  margin: 0.15rem 0 0;
+  font-size: 0.74rem;
+  color: var(--muted, #64748b);
+}
+.ctrale-card {
+  display: grid;
+  gap: 0.6rem;
+}
+.ctrale-synthese {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.4rem;
+}
+.ctrale-chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.3rem;
+  padding: 0.2rem 0.55rem;
+  border: 1px solid var(--line, #e5e7eb);
+  border-radius: 999px;
+  font-size: 0.72rem;
+  background: #f8fafc;
+  color: var(--ink-soft, #1e293b);
+}
+.ctrale-chip.critique {
+  background: #fef2f2;
+  color: #b91c1c;
+  border-color: #fecaca;
+}
+.ctrale-chip.vigilance {
+  background: #fffbeb;
+  color: #b45309;
+  border-color: #fde68a;
+}
+.ctrale-chip.type {
+  background: #f1f5f9;
+}
+.ctrale-echec {
+  margin: 0;
+  font-size: 0.72rem;
+  color: #b45309;
+}
+.ctrale-liste {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  display: grid;
+  gap: 0.3rem;
+}
+.ctrale-row {
+  width: 100%;
+  text-align: left;
+  border: 1px solid var(--line, #e5e7eb);
+  border-radius: 8px;
+  background: #fff;
+  padding: 0.4rem 0.6rem;
+  cursor: pointer;
+  font: inherit;
+}
+.ctrale-row:disabled {
+  cursor: default;
+}
+.ctrale-row:hover:not(:disabled) {
+  background: #f8fafc;
+}
+.ctrale-ligne {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  gap: 0.45rem;
+}
+.ctrale-badge {
+  display: inline-flex;
+  align-items: center;
+  padding: 0.1rem 0.5rem;
+  border-radius: 999px;
+  font-size: 0.68rem;
+  font-weight: 700;
+  white-space: nowrap;
+  background: #f8fafc;
+  color: var(--ink-soft, #1e293b);
+  border: 1px solid var(--line, #e5e7eb);
+}
+.ctrale-badge.critique {
+  background: #fef2f2;
+  color: #b91c1c;
+  border-color: #fecaca;
+}
+.ctrale-badge.vigilance {
+  background: #fffbeb;
+  color: #b45309;
+  border-color: #fde68a;
+}
+.ctrale-type {
+  font-size: 0.7rem;
+  font-weight: 600;
+  color: var(--muted, #64748b);
+  white-space: nowrap;
+}
+.ctrale-libelle {
+  font-size: 0.78rem;
+  color: var(--ink-soft, #1e293b);
+}
+.ctrale-meta {
+  font-size: 0.7rem;
+  color: var(--muted, #64748b);
+  white-space: nowrap;
+}
+.ctrale-vide {
+  margin: 0;
+  font-size: 0.76rem;
+  color: var(--muted, #64748b);
+}
+.ctrale-err {
+  margin: 0;
+  font-size: 0.76rem;
+  color: #b91c1c;
+}
+.ctrale-note {
+  margin: 0;
+  font-size: 0.7rem;
+  font-style: italic;
+  color: var(--muted, #64748b);
+}
