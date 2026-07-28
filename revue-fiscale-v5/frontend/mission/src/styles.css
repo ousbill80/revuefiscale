@@ -13168,3 +13168,176 @@ tr.row-active td {
     display: none;
   }
 }
+
+/* ── Lettre de mission imprimable (cadrage) ────────────────────────── */
+
+.lettre-mission {
+  margin-top: 1rem;
+}
+
+.lettre-actions {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  flex-wrap: wrap;
+}
+
+.lettre-err {
+  color: #b91c1c;
+  font-size: 0.8rem;
+}
+
+.lettre-print {
+  margin-top: 0.75rem;
+  padding: 1.25rem 1.5rem;
+  border: 1px solid var(--border, #e2e8f0);
+  border-radius: 10px;
+  background: #fff;
+  color: #111827;
+  font-size: 0.85rem;
+  line-height: 1.45;
+}
+
+.lettre-titre {
+  margin: 0 0 0.15rem;
+  font-size: 1.05rem;
+  text-transform: uppercase;
+  letter-spacing: 0.02em;
+}
+
+.lettre-sous-titre {
+  margin: 0 0 0.75rem;
+  color: #475569;
+  font-size: 0.85rem;
+}
+
+.lettre-section {
+  margin-top: 1.1rem;
+  break-inside: avoid;
+}
+
+.lettre-section-titre {
+  margin: 0 0 0.4rem;
+  padding-bottom: 0.2rem;
+  border-bottom: 1px solid #cbd5e1;
+  font-size: 0.9rem;
+}
+
+.lettre-texte {
+  margin: 0 0 0.4rem;
+  text-align: justify;
+}
+
+.lettre-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 0.82rem;
+}
+
+.lettre-table th,
+.lettre-table td {
+  padding: 0.3rem 0.5rem;
+  border: 1px solid #e2e8f0;
+  text-align: left;
+  vertical-align: top;
+}
+
+.lettre-table thead th {
+  background: #f8fafc;
+  font-weight: 600;
+}
+
+.lettre-table-identite th {
+  width: 12rem;
+  background: #f8fafc;
+  font-weight: 600;
+}
+
+.lettre-honoraires-montant {
+  margin: 0.2rem 0 0;
+  font-weight: 600;
+}
+
+/* Deux cadres de signature côte à côte (cabinet / client). */
+.lettre-signatures {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 1rem;
+  margin-top: 0.6rem;
+  break-inside: avoid;
+}
+
+.lettre-signature-cadre {
+  padding: 0.6rem 0.75rem;
+  border: 1px solid #94a3b8;
+  border-radius: 6px;
+}
+
+.lettre-signature-titre {
+  margin: 0;
+  font-weight: 600;
+}
+
+.lettre-signature-nom {
+  margin: 0.15rem 0 0.5rem;
+}
+
+.lettre-signature-champ {
+  margin: 0.35rem 0 0;
+  color: #475569;
+  font-size: 0.8rem;
+}
+
+.lettre-signature-zone {
+  height: 4.5rem;
+  margin-top: 0.5rem;
+  border-top: 1px dashed #cbd5e1;
+}
+
+.lettre-pied {
+  margin-top: 1.4rem;
+  padding-top: 0.6rem;
+  border-top: 1px solid #cbd5e1;
+}
+
+.lettre-note {
+  margin: 0;
+  color: #475569;
+  font-size: 0.75rem;
+}
+
+.lettre-genere {
+  margin: 0.35rem 0 0;
+  color: #64748b;
+  font-size: 0.72rem;
+}
+
+/* Impression : même mécanisme que le dossier de synthèse — la classe
+   « impression-lettre » est posée sur <body> autour de window.print(),
+   seule la lettre (.lettre-print) sort, le reste est masqué. */
+@media print {
+  body.impression-lettre * {
+    visibility: hidden;
+  }
+
+  body.impression-lettre .lettre-print,
+  body.impression-lettre .lettre-print * {
+    visibility: visible;
+  }
+
+  body.impression-lettre .lettre-print {
+    position: absolute;
+    inset: 0 auto auto 0;
+    width: 100%;
+    margin: 0;
+    padding: 0;
+    border: none;
+    border-radius: 0;
+    background: #fff;
+    color: #000;
+  }
+
+  body.impression-lettre .lettre-actions {
+    display: none;
+  }
+}

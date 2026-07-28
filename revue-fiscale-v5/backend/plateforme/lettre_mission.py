@@ -13,7 +13,7 @@ from __future__ import annotations
 import io
 import re
 import unicodedata
-from datetime import date
+from datetime import date, datetime, timezone
 from typing import Any, Final
 
 from docx import Document
@@ -341,3 +341,226 @@ def generer_lettre_mission(
         donnees["mission"].get("exercice"),
     )
     return contenu, nom
+
+
+# ═════════════════════════════════════════════════════════════════════
+# Lettre de mission IMPRIMABLE (JSON) — document contractuel de cadrage
+# ═════════════════════════════════════════════════════════════════════
+#
+# POURQUOI : au CADRAGE, avant de démarrer les travaux, le fiscaliste
+# remet au client la lettre de mission imprimée depuis le navigateur
+# (même mécanisme que le dossier de synthèse) : identification
+# cabinet/client, exercice revu, régime et principales obligations
+# déclaratives du régime (dédupliquées, SANS les dates), nature et
+# limites de la mission (revue fiscale consultative), obligations
+# réciproques, confidentialité, honoraires convenus et signatures.
+#
+# Assemblage DÉTERMINISTE et CONSULTATIF (aucun LLM) : l'identité est
+# lue par le MODULE EXISTANT du dossier de synthèse
+# (backend.plateforme.dossier_mission._bloc_identite) et les
+# obligations proviennent de l'échéancier fiscal de la mission
+# (backend.plateforme.echeancier_fiscal.echeancier_mission, qui
+# délègue à construire_echeancier). Aucun calcul n'est dupliqué.
+# AUCUNE écriture en base ici (journal de consultation côté route).
+
+#: Blocs de la lettre — clés STABLES garanties par l'assembleur.
+BLOCS_LETTRE: Final[tuple[str, ...]] = (
+    "identite",
+    "objet",
+    "perimetre",
+    "limites",
+    "obligations_reciproques",
+    "confidentialite",
+    "honoraires",
+    "signatures",
+)
+
+TEXTE_OBJET: Final[str] = (
+    "La présente lettre de mission a pour objet de définir les "
+    "conditions d'intervention du Cabinet auprès du Client pour la "
+    "réalisation d'une mission de revue fiscale consultative portant "
+    "sur l'exercice visé en tête de lettre. La revue consiste à "
+    "examiner, sur la base des pièces et informations communiquées par "
+    "le Client, le respect de ses principales obligations fiscales "
+    "déclaratives et de paiement, à identifier les zones de risque et "
+    "à restituer au Client des constats et des recommandations à "
+    "caractère strictement consultatif."
+)
+
+TEXTE_PERIMETRE: Final[str] = (
+    "Le périmètre de la revue couvre, pour le régime d'imposition du "
+    "Client, les principales obligations déclaratives et de paiement "
+    "rappelées ci-après. Cette liste, établie d'après la pratique "
+    "déclarative usuelle en Côte d'Ivoire, est indicative : le "
+    "calendrier officiel de la Direction générale des impôts prévaut "
+    "en toutes circonstances."
+)
+
+TEXTE_LIMITES: Final[str] = (
+    "La mission est exclusivement consultative. Elle ne constitue pas "
+    "un audit ni une certification des comptes ou des déclarations du "
+    "Client, ni une garantie contre un contrôle ou un redressement de "
+    "l'administration fiscale. Les constats et recommandations sont "
+    "émis au vu des seules pièces et informations communiquées par le "
+    "Client, sans vérification exhaustive de leur exactitude. Le "
+    "Cabinet ne se substitue ni au Client, qui demeure seul "
+    "responsable de ses déclarations et de ses paiements, ni à "
+    "l'administration fiscale, seule habilitée à prendre position. Le "
+    "Client reste seul décideur des suites à donner aux "
+    "recommandations."
+)
+
+TEXTE_OBLIGATIONS_RECIPROQUES: Final[str] = (
+    "Le Cabinet s'engage à exécuter la mission avec diligence et "
+    "conformément aux règles de l'art, à affecter à la mission des "
+    "intervenants disposant des compétences requises, à informer le "
+    "Client de tout point significatif relevé au cours des travaux et "
+    "à restituer ses conclusions dans les délais convenus. Le Client "
+    "s'engage à communiquer au Cabinet, de manière exhaustive et "
+    "sincère, l'ensemble des documents et informations nécessaires à "
+    "la revue, à en garantir la sincérité et à informer le Cabinet "
+    "sans délai de tout événement susceptible d'affecter le "
+    "déroulement de la mission."
+)
+
+TEXTE_CONFIDENTIALITE: Final[str] = (
+    "Le Cabinet est tenu au secret professionnel. Les documents et "
+    "informations communiqués par le Client sont traités de manière "
+    "confidentielle, ne sont utilisés que pour les besoins de la "
+    "mission et ne sont communiqués à aucun tiers sans l'accord "
+    "préalable et écrit du Client, sauf obligation légale ou "
+    "réglementaire. Cette obligation de confidentialité survit au "
+    "terme de la mission."
+)
+
+TEXTE_HONORAIRES_CONVENUS: Final[str] = (
+    "Les honoraires convenus entre les parties pour la présente "
+    "mission s'élèvent au montant indiqué ci-après, hors taxes et "
+    "hors débours éventuels, payables selon les modalités arrêtées "
+    "d'un commun accord."
+)
+
+TEXTE_HONORAIRES_A_CONVENIR: Final[str] = (
+    "Les honoraires de la présente mission seront arrêtés d'un commun "
+    "accord entre les parties et feront l'objet d'une facturation du "
+    "Cabinet, hors taxes et hors débours éventuels."
+)
+
+MENTION_SIGNATURE_CABINET: Final[str] = "Pour le Cabinet"
+MENTION_SIGNATURE_CLIENT: Final[str] = "Pour le Client"
+MENTION_LU_APPROUVE: Final[str] = (
+    "Signature précédée de la mention manuscrite « Lu et approuvé »."
+)
+
+MENTION_NOTE_LETTRE: Final[str] = (
+    "Modèle indicatif de lettre de mission, assemblé de façon "
+    "déterministe à partir des informations de cadrage saisies dans "
+    "l'application — à relire et à adapter avant remise au client : "
+    "le cabinet reste responsable de sa lettre de mission."
+)
+
+
+class ErreurLettreIntrouvable(ErreurLettreMission):
+    """Mission hors périmètre du tenant — 404 côté route."""
+
+
+def _deduire_obligations(
+    echeances: list[dict[str, Any]] | None,
+) -> list[dict[str, str]]:
+    """Couples (impôt, obligation) UNIQUES, sans dates, ordre d'apparition.
+
+    L'échéancier répète chaque obligation à chaque échéance (12 lignes
+    de TVA mensuelle…) : la lettre ne cite chaque obligation qu'une
+    seule fois. L'ordre suit la première occurrence (échéancier déjà
+    trié par date limite) — stable et déterministe.
+    """
+    vus: set[tuple[str, str]] = set()
+    obligations: list[dict[str, str]] = []
+    for e in echeances or []:
+        cle = (str(e.get("impot") or ""), str(e.get("obligation") or ""))
+        if cle in vus or cle == ("", ""):
+            continue
+        vus.add(cle)
+        obligations.append({"impot": cle[0], "obligation": cle[1]})
+    return obligations
+
+
+def assembler_lettre(
+    identite: dict[str, Any],
+    obligations: list[dict[str, Any]] | None,
+    genere_le: str | None = None,
+) -> dict[str, Any]:
+    """PUR — assemble la lettre de mission (clés stables, testable).
+
+    ``identite`` : bloc d'identité du dossier de synthèse (cabinet,
+    contribuable, exercice, régime, honoraires en str Decimal ou None) ;
+    ``obligations`` : items d'échéancier, avec ou sans doublons —
+    dédupliqués ici par couple (impôt, obligation), dates IGNORÉES ;
+    ``genere_le`` : horodatage ISO UTC (fourni pour les tests, sinon
+    maintenant). Toutes les clés de :data:`BLOCS_LETTRE` sont toujours
+    présentes, plus ``genere_le`` et ``note`` (modèle indicatif).
+    """
+    honoraires = identite.get("honoraires")
+    montant = str(honoraires) if honoraires is not None else None
+    return {
+        "identite": dict(identite),
+        "objet": TEXTE_OBJET,
+        "perimetre": {
+            "texte": TEXTE_PERIMETRE,
+            "regime": identite.get("regime"),
+            "obligations": _deduire_obligations(obligations),
+        },
+        "limites": TEXTE_LIMITES,
+        "obligations_reciproques": TEXTE_OBLIGATIONS_RECIPROQUES,
+        "confidentialite": TEXTE_CONFIDENTIALITE,
+        "honoraires": {
+            "montant": montant,
+            "texte": (
+                TEXTE_HONORAIRES_CONVENUS
+                if montant is not None
+                else TEXTE_HONORAIRES_A_CONVENIR
+            ),
+        },
+        "signatures": {
+            "cabinet": {
+                "titre": MENTION_SIGNATURE_CABINET,
+                "denomination": str(identite.get("cabinet") or ""),
+            },
+            "client": {
+                "titre": MENTION_SIGNATURE_CLIENT,
+                "denomination": str(identite.get("contribuable") or ""),
+            },
+            "mention": MENTION_LU_APPROUVE,
+        },
+        "genere_le": genere_le
+        or datetime.now(timezone.utc).replace(microsecond=0).isoformat(),
+        "note": MENTION_NOTE_LETTRE,
+    }
+
+
+def lettre_mission(
+    session: Session, tenant_id: int, mission_id: int
+) -> dict[str, Any]:
+    """Lettre de mission imprimable (LECTURE SEULE, RLS).
+
+    RÉUTILISE la lecture d'identité du dossier de synthèse
+    (:func:`backend.plateforme.dossier_mission._bloc_identite`) et
+    l'échéancier fiscal de la mission
+    (:func:`backend.plateforme.echeancier_fiscal.echeancier_mission`,
+    qui délègue à ``construire_echeancier`` — régime du profil JSON de
+    la mission, DGE détectée depuis le centre des impôts). Mission hors
+    tenant → :class:`ErreurLettreIntrouvable` (404 côté route).
+    AUCUNE écriture en base (journal de consultation côté route).
+    """
+    from backend.plateforme.dossier_mission import (
+        ErreurDossierIntrouvable,
+        _bloc_identite,
+    )
+    from backend.plateforme.echeancier_fiscal import echeancier_mission
+
+    try:
+        identite = _bloc_identite(session, tenant_id, mission_id)
+    except ErreurDossierIntrouvable as e:
+        raise ErreurLettreIntrouvable(str(e)) from e
+    echeancier = echeancier_mission(session, tenant_id, mission_id)
+    return assembler_lettre(identite, echeancier.get("echeances"))

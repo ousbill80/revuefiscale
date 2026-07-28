@@ -2743,6 +2743,47 @@ def api_dossier_mission(
     return dossier
 
 
+@router.get("/missions/{mission_id}/lettre")
+def api_lettre_mission(
+    mission_id: int,
+    utilisateur: UtilisateurDep,
+    session: Annotated[Session, Depends(session_abonne)],
+) -> dict:
+    """Lettre de mission imprimable du cadrage (lecture seule).
+
+    Document contractuel remis au client avant de démarrer : identité
+    cabinet/client, exercice et régime, principales obligations
+    déclaratives du régime (dédupliquées, sans dates), objet et limites
+    de la revue consultative, obligations réciproques, confidentialité,
+    honoraires convenus et zones de signature. Modèle indicatif —
+    aucune écriture en base hors journal. 404 si mission hors tenant.
+    """
+    from backend.moteur.journal import append_journal
+    from backend.plateforme.lettre_mission import (
+        ErreurLettreIntrouvable,
+        lettre_mission,
+    )
+
+    exiger_capacite(utilisateur, "lire")
+    try:
+        lettre = lettre_mission(session, utilisateur.tenant_id, mission_id)
+    except ErreurLettreIntrouvable as e:
+        raise HTTPException(
+            status_code=status.HTTP_404_NOT_FOUND, detail=str(e)
+        ) from e
+    append_journal(
+        session,
+        tenant_id=utilisateur.tenant_id,
+        mission_id=mission_id,
+        acteur=utilisateur.email,
+        action="consultation_lettre_mission",
+        charge_utile={
+            "obligations": len(lettre["perimetre"]["obligations"])
+        },
+    )
+    return lettre
+
+
 @router.get("/missions/{mission_id}/plan-actions")
 def api_plan_actions_mission(
     mission_id: int,

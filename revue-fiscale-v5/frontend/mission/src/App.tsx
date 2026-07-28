@@ -70,6 +70,7 @@ import { PROCESS_TIPS } from "./processTips";
 import { PointsAnterieursVue } from "./PointsAnterieursVue";
 import { RestitutionVue } from "./RestitutionVue";
 import { DossierMissionVue } from "./DossierMissionVue";
+import { LettreMissionVue } from "./LettreMissionVue";
 import type { ResumeRisques } from "./RegistreRisques";
 import { InfoTip, Tooltip } from "./Tooltip";
 import type { AuditJournal, Restitution, SessionAuth } from "./types";
@@ -4814,6 +4815,16 @@ export function App() {
                     antérieurs — affiché seulement s'il y en a. */}
                 {missionId != null && (
                   <PointsAnterieursVue
+                    missionId={missionId}
+                    jeton={session?.jeton}
+                  />
+                )}
+
+                {/* Lettre de mission : document contractuel du CADRAGE —
+                    disponible dès que la mission existe (statut cadrage),
+                    et conservée aux étapes suivantes. */}
+                {missionId != null && (
+                  <LettreMissionVue
                     missionId={missionId}
                     jeton={session?.jeton}
                   />
