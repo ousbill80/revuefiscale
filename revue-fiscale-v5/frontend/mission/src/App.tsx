@@ -53,6 +53,7 @@ import { CompteVue } from "./CompteVue";
 import { AgendaFiscalVue } from "./AgendaFiscalVue";
 import { CalendrierCabinetVue } from "./CalendrierCabinetVue";
 import { PortefeuilleDeclaratifVue } from "./PortefeuilleDeclaratifVue";
+import { BriefCabinetBouton } from "./BriefCabinetBouton";
 import { CentreAlertesVue } from "./CentreAlertesVue";
 import { EcheancesCabinetVue } from "./EcheancesCabinetVue";
 import { MonTableauVue } from "./MonTableauVue";
@@ -4692,6 +4693,8 @@ export function App() {
                   ))}
                 </div>
               )}
+
+              <BriefCabinetBouton jeton={session?.jeton ?? null} />
 
               <CentreAlertesVue
                 jeton={session?.jeton ?? null}

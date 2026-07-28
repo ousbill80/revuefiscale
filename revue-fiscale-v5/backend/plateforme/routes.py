@@ -6792,6 +6792,81 @@ def api_portefeuille_declaratif_cabinet(
     return vue
 
 
+@router.get("/cabinet/brief.txt")
+def api_export_brief_cabinet(
+    utilisateur: UtilisateurDep,
+    session: Annotated[Session, Depends(session_abonne)],
+) -> Response:
+    """Brief du cabinet en texte français (.txt, UTF-8) — réunion.
+
+    UN SEUL document pour la réunion hebdomadaire : assemble les
+    MÊMES corps que GET /cabinet/alertes, GET /cabinet/calendrier
+    (horizon 3 mois) et GET /cabinet/portefeuille-declaratif — aucun
+    recalcul divergent, aucune génération, consultatif, aucun email.
+    Chaque source est tolérée : en échec, sa section est remplacée
+    par une mention douce « section indisponible ce jour ».
+    """
+    from datetime import date as _date
+
+    from backend.moteur.journal import append_journal
+    from backend.plateforme.brief_cabinet import rendre_brief_texte
+    from backend.plateforme.calendrier_cabinet import calendrier_cabinet
+    from backend.plateforme.centre_alertes import centre_alertes_cabinet
+    from backend.plateforme.portefeuille_declaratif import (
+        portefeuille_declaratif_cabinet,
+    )
+
+    exiger_capacite(utilisateur, "lire")
+    # Tolérance PAR SOURCE : un échec ne bloque jamais le brief —
+    # la section correspondante mentionne son indisponibilité.
+    try:
+        alertes = centre_alertes_cabinet(session, utilisateur.tenant_id)
+    except Exception:  # noqa: BLE001 — source annexe tolérée
+        alertes = None
+    try:
+        calendrier = calendrier_cabinet(
+            session, utilisateur.tenant_id, horizon_mois=3
+        )
+    except Exception:  # noqa: BLE001 — source annexe tolérée
+        calendrier = None
+    try:
+        portefeuille = portefeuille_declaratif_cabinet(
+            session, utilisateur.tenant_id
+        )
+    except Exception:  # noqa: BLE001 — source annexe tolérée
+        portefeuille = None
+
+    contenu = rendre_brief_texte(alertes, calendrier, portefeuille)
+    sections_indisponibles = [
+        nom
+        for nom, corps in (
+            ("alertes", alertes),
+            ("calendrier", calendrier),
+            ("portefeuille", portefeuille),
+        )
+        if corps is None
+    ]
+    append_journal(
+        session,
+        tenant_id=utilisateur.tenant_id,
+        mission_id=None,
+        acteur=utilisateur.email,
+        action="export_brief",
+        charge_utile={
+            "format": "txt",
+            "sections_indisponibles": sections_indisponibles,
+        },
+    )
+    nom = f"brief-cabinet-{_date.today().isoformat()}.txt"
+    return Response(
+        content=contenu,
+        media_type="text/plain; charset=utf-8",
+        headers={
+            "Content-Disposition": f'attachment; filename="{nom}"'
+        },
+    )
+
+
 @router.get("/moi/tableau")
 def api_mon_tableau(
     utilisateur: UtilisateurDep,
