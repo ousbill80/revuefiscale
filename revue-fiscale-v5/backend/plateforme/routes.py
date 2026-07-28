@@ -3571,6 +3571,63 @@ def api_fiche_client(
     return fiche
 
 
+@router.get("/contribuables/{contribuable_id}/fiche.txt")
+def api_export_fiche_client_txt(
+    contribuable_id: int,
+    utilisateur: UtilisateurDep,
+    session: Annotated[Session, Depends(session_abonne)],
+) -> Response:
+    """Fiche client en texte français (.txt, UTF-8) — rendez-vous.
+
+    Document de PRÉPARATION du rendez-vous client : MÊME assemblage
+    que GET /contribuables/{id}/fiche (aucun recalcul divergent),
+    rendu texte par
+    :func:`backend.plateforme.export_fiche_client.rendre_fiche_texte`.
+    Consultatif, aucun email — 404 si contribuable hors tenant (RLS).
+    """
+    from datetime import date as _date
+
+    from backend.moteur.journal import append_journal
+    from backend.plateforme.export_fiche_client import rendre_fiche_texte
+    from backend.plateforme.fiche_client import (
+        ErreurFicheClient,
+        fiche_client,
+    )
+
+    exiger_capacite(utilisateur, "lire")
+    try:
+        fiche = fiche_client(
+            session, utilisateur.tenant_id, contribuable_id
+        )
+    except ErreurFicheClient as e:
+        raise HTTPException(
+            status_code=status.HTTP_404_NOT_FOUND, detail=str(e)
+        ) from e
+    contenu = rendre_fiche_texte(fiche)
+    append_journal(
+        session,
+        tenant_id=utilisateur.tenant_id,
+        mission_id=None,
+        acteur=utilisateur.email,
+        action="export_fiche_client",
+        charge_utile={
+            "format": "txt",
+            "contribuable_id": contribuable_id,
+            "volets_en_echec": fiche["volets_en_echec"],
+        },
+    )
+    nom = (
+        f"fiche-client-{contribuable_id}-{_date.today().isoformat()}.txt"
+    )
+    return Response(
+        content=contenu,
+        media_type="text/plain; charset=utf-8",
+        headers={
+            "Content-Disposition": f'attachment; filename="{nom}"'
+        },
+    )
+
+
 @router.get("/contribuables/{contribuable_id}/comparaison-exercices")
 def api_comparaison_exercices_contribuable(
     contribuable_id: int,

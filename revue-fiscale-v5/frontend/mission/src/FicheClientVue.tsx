@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { api } from "./api";
+import { api, telecharger } from "./api";
 import { libelleStatut } from "./statuts";
 
 /** Fiche client consolidée (GET /api/v1/contribuables/{id}/fiche). */
@@ -97,6 +97,30 @@ export function FicheClientVue({ jeton, contribuableId, onOuvrirMission }: Props
   const [fiche, setFiche] = useState<FicheClientOut | null>(null);
   const [busy, setBusy] = useState(false);
   const [err, setErr] = useState<string | null>(null);
+  const [exportBusy, setExportBusy] = useState(false);
+  const [exportErr, setExportErr] = useState<string | null>(null);
+
+  /** Télécharge la fiche (.txt) — préparation du rendez-vous client. */
+  async function telechargerFiche() {
+    if (!jeton || exportBusy) return;
+    setExportBusy(true);
+    setExportErr(null);
+    try {
+      const jour =
+        fiche?.aujourd_hui ?? new Date().toISOString().slice(0, 10);
+      await telecharger(
+        `/api/v1/contribuables/${contribuableId}/fiche.txt`,
+        jeton,
+        `fiche-client-${contribuableId}-${jour}.txt`,
+      );
+    } catch (e) {
+      setExportErr(
+        e instanceof Error ? e.message : "téléchargement impossible",
+      );
+    } finally {
+      setExportBusy(false);
+    }
+  }
 
   useEffect(() => {
     if (!jeton) return;
@@ -138,6 +162,16 @@ export function FicheClientVue({ jeton, contribuableId, onOuvrirMission }: Props
         {fiche && (
           <>
             <div className="ctrale-synthese">
+              <button
+                type="button"
+                className="btn btn-ghost btn-sm"
+                onClick={() => void telechargerFiche()}
+                disabled={exportBusy}
+                title="Version texte lisible pour préparer le rendez-vous client"
+              >
+                Télécharger (.txt)
+              </button>
+              {exportErr && <span className="ctrale-err">{exportErr}</span>}
               <span className="ctrale-chip">
                 <strong>{fiche.synthese.nb_missions}</strong> mission
                 {fiche.synthese.nb_missions > 1 ? "s" : ""}
