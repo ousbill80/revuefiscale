@@ -6931,3 +6931,40 @@ def api_mon_tableau(
 
     exiger_capacite(utilisateur, "lire")
     return mon_tableau(session, utilisateur.tenant_id, utilisateur.email)
+
+
+@router.get("/cabinet/journal")
+def api_journal_cabinet(
+    utilisateur: UtilisateurDep,
+    session: Annotated[Session, Depends(session_abonne)],
+    page: Annotated[int, Query(ge=1)] = 1,
+    taille: Annotated[int, Query(ge=1, le=100)] = 50,
+    action: Annotated[str | None, Query(max_length=200)] = None,
+    acteur: Annotated[str | None, Query(max_length=200)] = None,
+) -> dict:
+    """Journal d'activité du cabinet — consultation paginée, admin.
+
+    Traçabilité professionnelle : qui a consulté ou fait quoi, et
+    quand — toutes missions confondues, tri du plus récent au plus
+    ancien, filtres optionnels par action et par acteur (email).
+    Réservé à l'admin du cabinet (même capacité que la gestion
+    d'équipe). CHOIX DOCUMENTÉ : cette consultation N'EST PAS
+    journalisée (pas d'append_journal) — consulter le journal ne doit
+    pas remplir le journal de bruit auto-référentiel ; la vue est
+    strictement en lecture seule sous RLS.
+    """
+    from backend.plateforme.journal_cabinet import journal_cabinet
+
+    exiger_capacite(
+        utilisateur,
+        "gerer_equipe",
+        detail="seul un admin peut consulter le journal du cabinet",
+    )
+    return journal_cabinet(
+        session,
+        utilisateur.tenant_id,
+        page=page,
+        taille=taille,
+        action=action,
+        acteur=acteur,
+    )

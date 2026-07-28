@@ -65,6 +65,7 @@ import { ClotureCabinetVue } from "./ClotureCabinetVue";
 import { PointsConvenusCabinetVue } from "./PointsConvenusCabinetVue";
 import { CompletudeDataRoomVue } from "./CompletudeDataRoomVue";
 import { EquipeVue } from "./EquipeVue";
+import { JournalCabinetVue } from "./JournalCabinetVue";
 import { FacturationVue } from "./FacturationVue";
 import {
   TYPES_PIECE_CONTRIBUABLE,
@@ -288,6 +289,7 @@ type Vue =
   | "missions"
   | "nouvelle"
   | "equipe"
+  | "journal"
   | "facturation"
   | "compte";
 
@@ -3116,6 +3118,18 @@ export function App() {
       ),
     },
     {
+      id: "journal",
+      label: "Journal d'activité",
+      group: "cabinet",
+      hide: !estAdmin,
+      icon: (
+        <svg className="nav-ico" viewBox="0 0 24 24" aria-hidden="true">
+          <circle cx="12" cy="12" r="9" />
+          <path d="M12 7v5l3 3" strokeLinecap="round" />
+        </svg>
+      ),
+    },
+    {
       id: "facturation",
       label: "Facturation",
       group: "cabinet",
@@ -4986,6 +5000,10 @@ export function App() {
               onChangerRole={(id, role) => void changerRoleUtilisateur(id, role)}
               onRevoquerInvitation={(id) => void revoquerInvitation(id)}
             />
+          )}
+
+          {vue === "journal" && estAdmin && session && (
+            <JournalCabinetVue jeton={session.jeton} />
           )}
 
           {vue === "facturation" && session && (
