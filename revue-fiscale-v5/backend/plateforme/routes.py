@@ -2792,6 +2792,51 @@ def api_charge_fiscale_mission(
     return panorama
 
 
+@router.get("/missions/{mission_id}/panorama-conformite")
+def api_panorama_conformite_mission(
+    mission_id: int,
+    utilisateur: UtilisateurDep,
+    session: Annotated[Session, Depends(session_abonne)],
+) -> dict:
+    """Panorama consultatif de conformité de la mission (lecture seule).
+
+    Agrégat des STATUTS déjà produits par les vues fiscales existantes
+    (complétude déclarative, cohérence CA/TVA, retenues, déficits,
+    acomptes, patente, charge fiscale), classés en niveaux d'attention
+    — aucun score, aucun montant repris. Chaque volet est tolérant :
+    un sous-module en échec vaut indisponible, jamais bloquant. 404 si
+    mission hors tenant (RLS). Le panorama oriente la lecture, il ne
+    conclut rien : l'humain décide.
+    """
+    from backend.moteur.journal import append_journal
+    from backend.plateforme.panorama_conformite import (
+        ErreurPanoramaIntrouvable,
+        panorama_conformite_mission,
+    )
+
+    exiger_capacite(utilisateur, "lire")
+    try:
+        panorama_statuts = panorama_conformite_mission(
+            session, utilisateur.tenant_id, mission_id
+        )
+    except ErreurPanoramaIntrouvable as e:
+        raise HTTPException(
+            status_code=status.HTTP_404_NOT_FOUND, detail=str(e)
+        ) from e
+    append_journal(
+        session,
+        tenant_id=utilisateur.tenant_id,
+        mission_id=mission_id,
+        acteur=utilisateur.email,
+        action="consultation_panorama_conformite",
+        charge_utile={
+            "compteurs": panorama_statuts["compteurs"],
+            "volets_en_echec": panorama_statuts["volets_en_echec"],
+        },
+    )
+    return panorama_statuts
+
+
 @router.get("/missions/{mission_id}/fil-conducteur")
 def api_fil_conducteur_mission(
     mission_id: int,

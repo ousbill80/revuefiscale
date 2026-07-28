@@ -84,6 +84,7 @@ import { AcomptesVue } from "./AcomptesVue";
 import { ResultatFiscalVue } from "./ResultatFiscalVue";
 import { PatenteVue } from "./PatenteVue";
 import { ChargeFiscaleVue } from "./ChargeFiscaleVue";
+import { PanoramaConformiteVue } from "./PanoramaConformiteVue";
 import { MaterialiteVue } from "./MaterialiteVue";
 import { ProgrammeProposeVue } from "./ProgrammeProposeVue";
 import { RestitutionVue } from "./RestitutionVue";
@@ -6092,6 +6093,17 @@ export function App() {
                                 });
                               }
                         }
+                      />
+                      {/* Panorama consultatif de conformité :
+                          bandeau compact agrégeant les STATUTS (pas
+                          les montants) des vues fiscales ci-dessous,
+                          classés en niveaux d'attention — aucun
+                          score, le panorama oriente la lecture,
+                          chaque volet s'apprécie dans sa vue
+                          détaillée, l'humain décide. */}
+                      <PanoramaConformiteVue
+                        missionId={restitution.mission_id}
+                        jeton={session?.jeton}
                       />
                       {/* Seuil de matérialité consultatif calculé
                           depuis la balance (1 % CA, 5 % résultat,
