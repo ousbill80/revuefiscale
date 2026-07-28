@@ -67,7 +67,7 @@ def test_ecart_a_expliquer_emet_vigilance_jamais_critique():
     assert a["echeance"] is None
     assert a["lien"] == "coherence_ca"
     assert "exercice 2025" in a["libelle"]
-    assert "écart relatif 10.0 %" in a["libelle"]
+    assert "écart relatif 10,0 %" in a["libelle"]
     assert (
         "approximation mono-taux — écart à expliquer "
         "(exonérations, taux réduits, décalages)"
@@ -253,7 +253,7 @@ def test_api_ecart_emet_alerte_vigilance_structure_stable(session):
     assert a["client"] == "PM Alcca Ecart FICTIVE"
     assert a["mission_id"] == mid
     assert "exercice 2025" in a["libelle"]
-    assert "écart relatif 10.0 %" in a["libelle"]
+    assert "écart relatif 10,0 %" in a["libelle"]
     assert "approximation mono-taux" in a["libelle"]
     assert "écart à expliquer" in a["libelle"]
     assert set(a) == {

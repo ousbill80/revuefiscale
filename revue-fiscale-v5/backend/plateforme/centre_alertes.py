@@ -452,7 +452,7 @@ def alertes_depuis_coherence_ca(
             f"exercice {exercice}"
         )
         if pct not in (None, ""):
-            libelle += f", écart relatif {pct} %"
+            libelle += f", écart relatif {str(pct).replace('.', ',')} %"
         libelle += (
             " — approximation mono-taux — écart à expliquer "
             "(exonérations, taux réduits, décalages)"
