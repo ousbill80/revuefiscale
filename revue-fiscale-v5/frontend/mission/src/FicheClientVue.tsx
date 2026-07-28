@@ -32,7 +32,7 @@ type ExerciceEvolution = {
   exercice: number;
   mission_id: number;
   disponible: boolean;
-  total: string | null;
+  total_charge_propre_estimee: string | null;
 };
 
 type EvolutionFiche = {
@@ -301,7 +301,7 @@ export function FicheClientVue({ jeton, contribuableId, onOuvrirMission }: Props
                           </span>
                           <span className="ctrale-libelle">
                             Charge fiscale propre estimée :{" "}
-                            {montantFr(e.total)}
+                            {montantFr(e.total_charge_propre_estimee)}
                           </span>
                         </span>
                       </span>
