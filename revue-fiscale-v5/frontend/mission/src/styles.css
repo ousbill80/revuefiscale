@@ -12198,6 +12198,19 @@ tr.row-active td {
   color: #b91c1c;
   border-color: #fecaca;
 }
+/* Badge « en retard » — date cible convenue avec le client dépassée. */
+.pconvcab-badge-retard {
+  background: #fee2e2;
+  color: #b91c1c;
+  border-color: #fecaca;
+}
+/* Date cible affichée sur la ligne (colonne compacte). */
+.pconvcab-cible {
+  flex: none;
+  font-size: 0.72rem;
+  color: var(--muted, #64748b);
+  white-space: nowrap;
+}
 .pconvcab-libelle {
   font-size: 0.8rem;
   font-weight: 600;
@@ -12830,6 +12843,21 @@ tr.row-active td {
   color: #64748b;
 }
 
+/* Date cible convenue avec le client + badge retard (consultatif). */
+.pconv-badge-retard {
+  background: #fee2e2;
+  color: #b91c1c;
+}
+
+.pconv-cible {
+  font-size: 0.72rem;
+  white-space: nowrap;
+}
+
+.pconv-synthese-retard {
+  color: #b91c1c;
+}
+
 .pconv-actions {
   display: inline-flex;
   gap: 0.3rem;
@@ -12845,6 +12873,11 @@ tr.row-active td {
 .pconv-form input {
   flex: 1 1 16rem;
   font-size: 0.82rem;
+}
+
+/* L'input date reste compact — le libellé garde la largeur. */
+.pconv-form input.pconv-input-date {
+  flex: 0 1 auto;
 }
 
 .pconv-erreur {

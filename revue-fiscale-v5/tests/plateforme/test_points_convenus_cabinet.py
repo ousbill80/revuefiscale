@@ -96,11 +96,13 @@ def test_synthese_compteurs():
         "total": 4,
         "anciens_30j": 2,
         "clients": 2,
+        "en_retard": 0,
     }
     assert synthese_points_cabinet([]) == {
         "total": 0,
         "anciens_30j": 0,
         "clients": 0,
+        "en_retard": 0,
     }
     assert SEUIL_ANCIEN_JOURS == 30
 
@@ -110,10 +112,11 @@ def test_generer_csv_entete_et_ligne():
     lignes = generer_csv(vue).splitlines()
     assert lignes[0] == ";".join(ENTETE_POINTS_CSV)
     assert lignes[0] == (
-        "anciennete_jours;client;exercice;libelle;statut_mission;cree_le"
+        "anciennete_jours;client;exercice;libelle;date_cible;"
+        "statut_mission;cree_le"
     )
     assert lignes[1] == (
-        "40;SA Alpha FICTIVE;2025;Régulariser la TVA;en_cours;"
+        "40;SA Alpha FICTIVE;2025;Régulariser la TVA;;en_cours;"
         "2025-06-01T00:00:00+00:00"
     )
 
@@ -126,7 +129,7 @@ def test_generer_csv_vide_et_valeurs_manquantes():
     assert generer_csv({}).splitlines() == [";".join(ENTETE_POINTS_CSV)]
     # Valeurs absentes → cellules vides ; ancienneté 0 conservée.
     lignes = generer_csv({"items": [{"anciennete_jours": 0}]}).splitlines()
-    assert lignes[1] == "0;;;;;"
+    assert lignes[1] == "0;;;;;;"
 
 
 def test_generer_csv_echappe_le_point_virgule():
@@ -280,6 +283,7 @@ def test_lecture_points_a_faire_missions_eligibles(session):
         "total": 2,
         "anciens_30j": 0,
         "clients": 2,
+        "en_retard": 0,
     }
     assert "note" in out
 
@@ -314,6 +318,7 @@ def test_lecture_anciennete_et_tri_plus_ancien_d_abord(session):
         "total": 2,
         "anciens_30j": 1,
         "clients": 1,
+        "en_retard": 0,
     }
 
 
@@ -326,6 +331,7 @@ def test_lecture_tenant_vide(session):
         "total": 0,
         "anciens_30j": 0,
         "clients": 0,
+        "en_retard": 0,
     }
     assert "note" in out
 

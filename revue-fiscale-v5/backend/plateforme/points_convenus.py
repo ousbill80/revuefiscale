@@ -17,7 +17,7 @@ que sur une mission « en_cours » (restitution tenue) ou « cloturee »
 """
 from __future__ import annotations
 
-from datetime import datetime
+from datetime import date, datetime
 from typing import Any, Final
 
 from sqlalchemy import text
@@ -96,6 +96,61 @@ def valider_libelle(libelle: object) -> str:
     return texte_libelle
 
 
+def valider_date_cible(date_cible: object) -> str | None:
+    """PUR — valide la date cible optionnelle d'un point convenu.
+
+    ``None`` ou chaîne vide → ``None`` (la date cible est optionnelle) ;
+    sinon date ISO « AAAA-MM-JJ » stricte, retournée normalisée.
+    Illisible → :class:`ErreurPointConvenuInvalide` (422 côté route).
+    Aucune exigence de futur : une date déjà passée est acceptée — le
+    retard sera simplement signalé (consultatif, l'humain décide).
+    """
+    if date_cible is None:
+        return None
+    if isinstance(date_cible, date) and not isinstance(date_cible, datetime):
+        return date_cible.isoformat()
+    texte_date = str(date_cible).strip()
+    if not texte_date:
+        return None
+    # Format strict AAAA-MM-JJ (fromisoformat accepte d'autres variantes).
+    parties = texte_date.split("-")
+    if len(parties) != 3 or [len(p) for p in parties] != [4, 2, 2]:
+        raise ErreurPointConvenuInvalide(
+            f"date cible invalide « {texte_date} » — format attendu : "
+            "AAAA-MM-JJ"
+        )
+    try:
+        return date.fromisoformat(texte_date).isoformat()
+    except ValueError as e:
+        raise ErreurPointConvenuInvalide(
+            f"date cible invalide « {texte_date} » — format attendu : "
+            "AAAA-MM-JJ"
+        ) from e
+
+
+def point_en_retard(
+    statut: object, date_cible: object, aujourd_hui: date
+) -> bool:
+    """PUR — vrai si le point est « à faire » avec date cible dépassée.
+
+    Sans date cible (``None``/vide) ou statut ≠ « a_faire » → jamais en
+    retard. La date cible du jour même n'est PAS en retard (le retard
+    commence le lendemain). Date illisible → ``False`` (défensif,
+    jamais bloquant).
+    """
+    if str(statut or "").strip().lower() != STATUT_A_FAIRE:
+        return False
+    if isinstance(date_cible, date) and not isinstance(date_cible, datetime):
+        return date_cible < aujourd_hui
+    texte_date = str(date_cible or "").strip()
+    if not texte_date:
+        return False
+    try:
+        return date.fromisoformat(texte_date[:10]) < aujourd_hui
+    except ValueError:
+        return False
+
+
 def valider_transition(statut_actuel: str, statut_cible: str) -> str:
     """PUR — valide un changement de statut de point convenu.
 
@@ -133,10 +188,14 @@ def _serialiser(row: dict[str, Any]) -> dict[str, Any]:
     """PUR — ligne DB → charge JSON (horodatages ISO)."""
     cree = row.get("cree_le")
     maj = row.get("mis_a_jour_le")
+    cible = row.get("date_cible")
     return {
         "id": int(row["id"]),
         "libelle": str(row.get("libelle") or ""),
         "statut": str(row.get("statut") or STATUT_A_FAIRE),
+        "date_cible": (
+            cible.isoformat() if isinstance(cible, date) else None
+        ),
         "cree_le": (
             cree.isoformat() if isinstance(cree, datetime) else None
         ),
@@ -168,22 +227,34 @@ def lister_points_convenus(
     """Points convenus de la mission + synthèse — lecture seule, RLS.
 
     Mission hors tenant → :class:`ErreurPointConvenuIntrouvable` (404
-    côté route).
+    côté route). Chaque point porte « en_retard » (statut « a_faire »
+    ET date cible dépassée) ; la synthèse porte toujours le compteur
+    « en_retard ».
     """
     with contexte_tenant(session, tenant_id):
         _mission_ou_404(session, mission_id)
         rows = session.execute(
             text(
-                "SELECT id, libelle, statut, cree_le, mis_a_jour_le "
+                "SELECT id, libelle, statut, date_cible, cree_le, "
+                "mis_a_jour_le "
                 "FROM point_convenu WHERE mission_id = :m ORDER BY id"
             ),
             {"m": mission_id},
         ).mappings().all()
-    points = [_serialiser(dict(r)) for r in rows]
+    aujourd_hui = date.today()
+    points = []
+    for r in rows:
+        p = _serialiser(dict(r))
+        p["en_retard"] = point_en_retard(
+            p["statut"], p["date_cible"], aujourd_hui
+        )
+        points.append(p)
+    synthese = synthese_points(points)
+    synthese["en_retard"] = sum(1 for p in points if p.get("en_retard"))
     return {
         "mission_id": mission_id,
         "points": points,
-        "synthese": synthese_points(points),
+        "synthese": synthese,
         "note": NOTE_POINTS_CONVENUS,
     }
 
@@ -194,19 +265,24 @@ def creer_point_convenu(
     mission_id: int,
     libelle: object,
     acteur: str,
+    date_cible: object = None,
 ) -> dict[str, Any]:
     """Ajoute un point convenu — clic explicite du fiscaliste.
 
-    Libellé invalide → :class:`ErreurPointConvenuInvalide` (422) ;
-    mission hors tenant → :class:`ErreurPointConvenuIntrouvable` (404) ;
-    mission en cadrage → :class:`ErreurPointConvenuConflit` (409 — les
-    points convenus n'existent qu'après la restitution : mission
-    « en_cours » ou « cloturee »). Journalise
-    :data:`ACTION_CREATION`. Retourne le point créé + synthèse.
+    Libellé ou date cible invalides →
+    :class:`ErreurPointConvenuInvalide` (422) ; mission hors tenant →
+    :class:`ErreurPointConvenuIntrouvable` (404) ; mission en cadrage →
+    :class:`ErreurPointConvenuConflit` (409 — les points convenus
+    n'existent qu'après la restitution : mission « en_cours » ou
+    « cloturee »). La date cible est OPTIONNELLE (échéance convenue
+    avec le client — une date passée est acceptée, le retard sera
+    signalé à la lecture). Journalise :data:`ACTION_CREATION`.
+    Retourne le point créé + synthèse.
     """
     from backend.moteur.journal import append_journal
 
     texte_libelle = valider_libelle(libelle)
+    cible_iso = valider_date_cible(date_cible)
     with contexte_tenant(session, tenant_id):
         mission = _mission_ou_404(session, mission_id)
         statut_mission = str(mission["statut"] or "").strip().lower()
@@ -220,10 +296,17 @@ def creer_point_convenu(
         row = session.execute(
             text(
                 "INSERT INTO point_convenu (tenant_id, mission_id, "
-                "libelle) VALUES (:t, :m, :lib) "
-                "RETURNING id, libelle, statut, cree_le, mis_a_jour_le"
+                "libelle, date_cible) "
+                "VALUES (:t, :m, :lib, CAST(:dc AS DATE)) "
+                "RETURNING id, libelle, statut, date_cible, cree_le, "
+                "mis_a_jour_le"
             ),
-            {"t": tenant_id, "m": mission_id, "lib": texte_libelle},
+            {
+                "t": tenant_id,
+                "m": mission_id,
+                "lib": texte_libelle,
+                "dc": cible_iso,
+            },
         ).mappings().one()
         point = _serialiser(dict(row))
         append_journal(
@@ -235,6 +318,7 @@ def creer_point_convenu(
             charge_utile={
                 "point_convenu_id": point["id"],
                 "libelle": point["libelle"],
+                "date_cible": point["date_cible"],
             },
         )
     # Pas de commit ici : get_session committe en fin de requête.
@@ -280,7 +364,8 @@ def changer_statut_point_convenu(
             text(
                 "UPDATE point_convenu SET statut = :s, "
                 "mis_a_jour_le = now() WHERE id = :p "
-                "RETURNING id, libelle, statut, cree_le, mis_a_jour_le"
+                "RETURNING id, libelle, statut, date_cible, cree_le, "
+                "mis_a_jour_le"
             ),
             {"s": cible, "p": point_id},
         ).mappings().one()

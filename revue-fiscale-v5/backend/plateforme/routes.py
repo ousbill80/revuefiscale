@@ -857,9 +857,14 @@ def api_lister_points_convenus(
 
 
 class PointConvenuIn(BaseModel):
-    """Ajout d'un point convenu — saisie du fiscaliste."""
+    """Ajout d'un point convenu — saisie du fiscaliste.
+
+    ``date_cible`` : échéance convenue avec le client, optionnelle
+    (ISO « AAAA-MM-JJ » — 422 si illisible, date passée acceptée).
+    """
 
     libelle: str
+    date_cible: str | None = None
 
 
 @router.post("/missions/{mission_id}/points-convenus")
@@ -871,9 +876,10 @@ def api_creer_point_convenu(
 ) -> dict:
     """Ajoute un point convenu — clic explicite du fiscaliste.
 
-    Libellé vide ou > 500 caractères → 422 ; mission hors tenant → 404
-    (RLS) ; mission en cadrage → 409 (les points convenus n'existent
-    qu'après la restitution).
+    Libellé vide ou > 500 caractères, ou date cible illisible → 422 ;
+    mission hors tenant → 404 (RLS) ; mission en cadrage → 409 (les
+    points convenus n'existent qu'après la restitution). La date cible
+    est optionnelle (échéance convenue avec le client).
     """
     from backend.plateforme.points_convenus import (
         ErreurPointConvenuConflit,
@@ -890,6 +896,7 @@ def api_creer_point_convenu(
             mission_id,
             corps.libelle,
             acteur=utilisateur.email,
+            date_cible=corps.date_cible,
         )
     except ErreurPointConvenuIntrouvable as e:
         raise HTTPException(

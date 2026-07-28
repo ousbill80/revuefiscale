@@ -180,7 +180,9 @@ def test_api_creation_et_liste(session):
         "Régulariser la TVA Q4",
         "Fournir le FEC",
     ]
-    assert liste["synthese"] == {"a_faire": 2, "fait": 0, "abandonne": 0}
+    assert liste["synthese"] == {
+        "a_faire": 2, "fait": 0, "abandonne": 0, "en_retard": 0
+    }
     assert liste["mission_id"] == mid
 
 
@@ -203,7 +205,9 @@ def test_api_changement_statut_et_synthese(session):
     assert r.json()["mission_id"] == mid
 
     g = client.get(_url(mid), headers=h)
-    assert g.json()["synthese"] == {"a_faire": 0, "fait": 1, "abandonne": 0}
+    assert g.json()["synthese"] == {
+        "a_faire": 0, "fait": 1, "abandonne": 0, "en_retard": 0
+    }
 
     # Transition refusée : fait → abandonne.
     r2 = client.post(

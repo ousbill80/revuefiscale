@@ -92,7 +92,7 @@ def plafonner_points(items: list[dict[str, Any]]) -> list[dict[str, Any]]:
 
 
 def synthese_points_cabinet(items: list[dict[str, Any]]) -> dict[str, int]:
-    """PUR — compteurs : total, anciens (> 30 jours), clients."""
+    """PUR — compteurs : total, anciens (> 30 jours), clients, retards."""
     anciens = sum(
         1
         for i in items
@@ -103,6 +103,7 @@ def synthese_points_cabinet(items: list[dict[str, Any]]) -> dict[str, int]:
         "total": len(items),
         "anciens_30j": anciens,
         "clients": len(clients),
+        "en_retard": sum(1 for i in items if bool(i.get("en_retard"))),
     }
 
 
@@ -114,6 +115,7 @@ ENTETE_POINTS_CSV: Final[tuple[str, ...]] = (
     "client",
     "exercice",
     "libelle",
+    "date_cible",
     "statut_mission",
     "cree_le",
 )
@@ -126,7 +128,9 @@ def generer_csv(vue: dict) -> str:
     ancien d'abord). Échappement CSV par le module stdlib : valeurs
     entre guillemets (doublés) si elles contiennent « ; », un guillemet
     ou un retour à la ligne. Le BOM UTF-8 est ajouté côté route, pas
-    ici. Liste vide → en-tête seul.
+    ici. Liste vide → en-tête seul. La colonne « date_cible » (après
+    « libelle » — l'échéance qualifie le point) est vide si le point
+    n'en porte pas.
     """
     buf = io.StringIO()
     w = csv.writer(buf, delimiter=";", lineterminator="\n")
@@ -139,6 +143,7 @@ def generer_csv(vue: dict) -> str:
                 str(i.get("client") or ""),
                 str(i.get("exercice") or ""),
                 str(i.get("libelle") or ""),
+                str(i.get("date_cible") or ""),
                 str(i.get("statut_mission") or ""),
                 str(i.get("cree_le") or ""),
             ]
@@ -161,13 +166,17 @@ def points_convenus_cabinet(
     calculée). Se construit toujours (tenant sans point → liste vide).
     """
     from backend.plateforme.missions import STATUT_CLOTUREE, STATUT_EN_COURS
-    from backend.plateforme.points_convenus import STATUT_A_FAIRE
+    from backend.plateforme.points_convenus import (
+        STATUT_A_FAIRE,
+        point_en_retard,
+    )
 
     jour = aujourd_hui or date.today()
     with contexte_tenant(session, tenant_id):
         rows = session.execute(
             text(
-                "SELECT p.id AS point_id, p.libelle, p.cree_le, "
+                "SELECT p.id AS point_id, p.libelle, p.date_cible, "
+                "p.cree_le, "
                 "m.id AS mission_id, m.exercice, "
                 "m.statut AS statut_mission, "
                 "c.denomination AS client "
@@ -189,6 +198,7 @@ def points_convenus_cabinet(
     items: list[dict[str, Any]] = []
     for r in rows:
         cree = r["cree_le"]
+        cible = r["date_cible"]
         items.append(
             {
                 "client": str(r["client"] or ""),
@@ -197,6 +207,10 @@ def points_convenus_cabinet(
                 "statut_mission": str(r["statut_mission"] or ""),
                 "point_id": int(r["point_id"]),
                 "libelle": str(r["libelle"] or ""),
+                "date_cible": (
+                    cible.isoformat() if isinstance(cible, date) else None
+                ),
+                "en_retard": point_en_retard(STATUT_A_FAIRE, cible, jour),
                 "anciennete_jours": anciennete_jours(cree, jour),
                 "cree_le": (
                     cree.isoformat() if isinstance(cree, datetime) else None

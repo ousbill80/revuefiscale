@@ -9,6 +9,8 @@ type ItemPointConvenu = {
   statut_mission: string;
   point_id: number;
   libelle: string;
+  date_cible: string | null;
+  en_retard: boolean;
   anciennete_jours: number;
   cree_le: string | null;
 };
@@ -20,6 +22,7 @@ type PointsConvenusCabinetOut = {
     total: number;
     anciens_30j: number;
     clients: number;
+    en_retard?: number;
   };
   note: string;
 };
@@ -134,6 +137,14 @@ export function PointsConvenusCabinetVue({ jeton, onOuvrirMission }: Props) {
                 {vue.synthese.clients > 1 ? "s" : ""} concerné
                 {vue.synthese.clients > 1 ? "s" : ""}
               </span>
+              {(vue.synthese.en_retard ?? 0) > 0 && (
+                <span className="pconvcab-chip ancienne">
+                  <strong>{vue.synthese.en_retard}</strong> date
+                  {(vue.synthese.en_retard ?? 0) > 1 ? "s" : ""} cible
+                  {(vue.synthese.en_retard ?? 0) > 1 ? "s" : ""} dépassée
+                  {(vue.synthese.en_retard ?? 0) > 1 ? "s" : ""}
+                </span>
+              )}
             </div>
 
             {!vue.items.length && (
@@ -165,6 +176,16 @@ export function PointsConvenusCabinetVue({ jeton, onOuvrirMission }: Props) {
                           {it.client} · exercice {it.exercice}
                         </span>
                         <span className="pconvcab-meta">{it.libelle}</span>
+                        {it.date_cible && (
+                          <span className="pconvcab-cible">
+                            cible {it.date_cible}
+                          </span>
+                        )}
+                        {it.en_retard && (
+                          <span className="pconvcab-badge pconvcab-badge-retard">
+                            En retard
+                          </span>
+                        )}
                       </span>
                     </button>
                   </li>
