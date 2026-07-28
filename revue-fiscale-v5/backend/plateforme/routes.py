@@ -4548,6 +4548,108 @@ def api_saisir_declaration_tva(
         ) from e
 
 
+@router.get("/missions/{mission_id}/materialite")
+def api_materialite_mission(
+    mission_id: int,
+    utilisateur: UtilisateurDep,
+    session: Annotated[Session, Depends(session_abonne)],
+) -> dict:
+    """Seuil de matérialité et ciblage des travaux — lecture seule.
+
+    Propose des seuils de signification calculés depuis la balance
+    (1 % CA, 5 % résultat, 1 % total bilan) et, si un seuil a été
+    retenu par le fiscaliste, restitue les comptes dont le solde le
+    dépasse (groupés par classe SYSCOHADA, avec taux de couverture).
+    Vue strictement consultative — l'humain décide du programme de
+    travail. Se construit toujours (disponible=false sans balance).
+    404 si mission hors tenant (RLS).
+    """
+    from backend.moteur.journal import append_journal
+    from backend.plateforme.materialite import (
+        ACTION_CONSULTATION,
+        ErreurMaterialiteIntrouvable,
+        materialite_mission,
+    )
+
+    exiger_capacite(utilisateur, "lire")
+    try:
+        vue = materialite_mission(
+            session, utilisateur.tenant_id, mission_id
+        )
+    except ErreurMaterialiteIntrouvable as e:
+        raise HTTPException(
+            status_code=status.HTTP_404_NOT_FOUND, detail=str(e)
+        ) from e
+    append_journal(
+        session,
+        tenant_id=utilisateur.tenant_id,
+        mission_id=mission_id,
+        acteur=utilisateur.email,
+        action=ACTION_CONSULTATION,
+        charge_utile={
+            "statut": vue["synthese"]["statut"],
+            "nb_comptes_cibles": vue["synthese"]["nb_comptes_cibles"],
+        },
+    )
+    return vue
+
+
+class MaterialiteIn(BaseModel):
+    """Retenue du seuil de matérialité de la mission — clic humain.
+
+    ``source="proposition"`` confirme le seuil proposé du
+    ``referentiel`` (ca, resultat, bilan) ; ``source="manuel"`` fixe
+    un ``montant`` FCFA strictement positif. Re-retenir remplace la
+    décision précédente (correction humaine).
+    """
+
+    source: str
+    montant: str | float | int | None = None
+    referentiel: str | None = None
+    commentaire: str | None = None
+
+
+@router.post("/missions/{mission_id}/materialite")
+def api_retenir_seuil_materialite(
+    mission_id: int,
+    corps: MaterialiteIn,
+    utilisateur: UtilisateurDep,
+    session: Annotated[Session, Depends(session_abonne)],
+) -> dict:
+    """Retient le seuil de matérialité — clic explicite.
+
+    Source/montant/référentiel invalides ou proposition non calculable
+    → 422 ; mission hors tenant → 404 (RLS). Alimente le ciblage
+    consultatif des travaux.
+    """
+    from backend.plateforme.materialite import (
+        ErreurMaterialiteIntrouvable,
+        ErreurMaterialiteInvalide,
+        retenir_seuil,
+    )
+
+    exiger_capacite(utilisateur, "executer_mission")
+    try:
+        return retenir_seuil(
+            session,
+            utilisateur.tenant_id,
+            mission_id,
+            corps.source,
+            corps.montant,
+            corps.referentiel,
+            corps.commentaire,
+            acteur=utilisateur.email,
+        )
+    except ErreurMaterialiteIntrouvable as e:
+        raise HTTPException(
+            status_code=status.HTTP_404_NOT_FOUND, detail=str(e)
+        ) from e
+    except ErreurMaterialiteInvalide as e:
+        raise HTTPException(
+            status_code=status.HTTP_422_UNPROCESSABLE_ENTITY, detail=str(e)
+        ) from e
+
+
 class EvenementControleFiscalIn(BaseModel):
     """Consignation d'un événement de contrôle fiscal / contentieux.
 

@@ -71,6 +71,7 @@ import { PROCESS_TIPS } from "./processTips";
 import { PointsAnterieursVue } from "./PointsAnterieursVue";
 import { ControlesFiscauxVue } from "./ControlesFiscauxVue";
 import { RapprochementTvaVue } from "./RapprochementTvaVue";
+import { MaterialiteVue } from "./MaterialiteVue";
 import { RestitutionVue } from "./RestitutionVue";
 import { DossierMissionVue } from "./DossierMissionVue";
 import { LettreMissionVue } from "./LettreMissionVue";
@@ -6063,6 +6064,16 @@ export function App() {
                                 });
                               }
                         }
+                      />
+                      {/* Seuil de matérialité consultatif calculé
+                          depuis la balance (1 % CA, 5 % résultat,
+                          1 % total bilan) + ciblage des travaux — la
+                          retenue du seuil reste un clic explicite du
+                          fiscaliste. */}
+                      <MaterialiteVue
+                        missionId={restitution.mission_id}
+                        jeton={session?.jeton}
+                        estLecteur={estLecteur}
                       />
                       {/* Rapprochement consultatif TVA déclarée /
                           comptabilisée (comptes 443x/445x de la
