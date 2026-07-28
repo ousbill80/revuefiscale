@@ -4372,3 +4372,37 @@ def api_rentabilite_cabinet(
         },
     )
     return suivi
+
+
+@router.get("/cabinet/preparation-cloture")
+def api_preparation_cloture_cabinet(
+    utilisateur: UtilisateurDep,
+    session: Annotated[Session, Depends(session_abonne)],
+) -> dict:
+    """Préparation à la clôture des missions en cours du cabinet.
+
+    Vue transverse pour le fiscaliste : sur chaque mission « en_cours »
+    du tenant, la synthèse du bilan de pré-clôture (points au vert,
+    points d'attention restants, statut « prête »). Consultatif et
+    déterministe — la clôture reste un clic explicite sur la mission.
+    """
+    from backend.moteur.journal import append_journal
+    from backend.plateforme.cloture_cabinet import (
+        preparation_cloture_cabinet,
+    )
+
+    exiger_capacite(utilisateur, "lire")
+    preparation = preparation_cloture_cabinet(session, utilisateur.tenant_id)
+    append_journal(
+        session,
+        tenant_id=utilisateur.tenant_id,
+        mission_id=None,
+        acteur=utilisateur.email,
+        action="consultation_preparation_cloture_cabinet",
+        charge_utile={
+            "en_cours": preparation["synthese"]["en_cours"],
+            "pretes": preparation["synthese"]["pretes"],
+            "a_completer": preparation["synthese"]["a_completer"],
+        },
+    )
+    return preparation
