@@ -2743,6 +2743,50 @@ def api_dossier_mission(
     return dossier
 
 
+@router.get("/missions/{mission_id}/fil-conducteur")
+def api_fil_conducteur_mission(
+    mission_id: int,
+    utilisateur: UtilisateurDep,
+    session: Annotated[Session, Depends(session_abonne)],
+) -> dict:
+    """Fil conducteur de la mission (lecture seule, consultatif).
+
+    Guide pas-à-pas du process de revue : l'état de chaque étape
+    (cadrage, collecte, ciblage, revues, liquidation, restitution,
+    suivi) est dérivé de manière déterministe des modules existants.
+    Chaque source est tolérante : un sous-module en échec rend l'étape
+    « indisponible », jamais bloquante. 404 si mission hors tenant
+    (RLS). La progression suggérée n'impose rien : l'humain décide.
+    """
+    from backend.moteur.journal import append_journal
+    from backend.plateforme.fil_conducteur import (
+        ErreurFilConducteurIntrouvable,
+        fil_conducteur_mission,
+    )
+
+    exiger_capacite(utilisateur, "lire")
+    try:
+        fil = fil_conducteur_mission(
+            session, utilisateur.tenant_id, mission_id
+        )
+    except ErreurFilConducteurIntrouvable as e:
+        raise HTTPException(
+            status_code=status.HTTP_404_NOT_FOUND, detail=str(e)
+        ) from e
+    append_journal(
+        session,
+        tenant_id=utilisateur.tenant_id,
+        mission_id=mission_id,
+        acteur=utilisateur.email,
+        action="consultation_fil_conducteur",
+        charge_utile={
+            "faites": fil["synthese"]["faites"],
+            "total": fil["synthese"]["total"],
+        },
+    )
+    return fil
+
+
 @router.get("/missions/{mission_id}/lettre")
 def api_lettre_mission(
     mission_id: int,

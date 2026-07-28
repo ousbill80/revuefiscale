@@ -80,6 +80,7 @@ import { MaterialiteVue } from "./MaterialiteVue";
 import { ProgrammeProposeVue } from "./ProgrammeProposeVue";
 import { RestitutionVue } from "./RestitutionVue";
 import { DossierMissionVue } from "./DossierMissionVue";
+import { FilConducteurVue } from "./FilConducteurVue";
 import { LettreMissionVue } from "./LettreMissionVue";
 import type { ResumeRisques } from "./RegistreRisques";
 import { InfoTip, Tooltip } from "./Tooltip";
@@ -6026,6 +6027,14 @@ export function App() {
                   <>
                     {restitution ? (
                       <>
+                      {/* Fil conducteur consultatif EN TÊTE : guide
+                          pas-à-pas du process de revue, dérivé des
+                          modules existants — lecture seule, l'humain
+                          décide de l'ordre réel de ses travaux. */}
+                      <FilConducteurVue
+                        missionId={restitution.mission_id}
+                        jeton={session?.jeton}
+                      />
                       <ResponsableMissionVue
                         missionId={restitution.mission_id}
                         jeton={session?.jeton ?? null}
