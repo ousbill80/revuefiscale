@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { api } from "./api";
+import { api, telecharger } from "./api";
 
 /** Calendrier fiscal du cabinet (GET /api/v1/cabinet/calendrier). */
 type ElementCalendrier = {
@@ -53,6 +53,29 @@ export function CalendrierCabinetVue({ jeton, onOuvrirMission }: Props) {
   const [horizon, setHorizon] = useState<number>(3);
   const [busy, setBusy] = useState(false);
   const [err, setErr] = useState<string | null>(null);
+  const [exportBusy, setExportBusy] = useState(false);
+  const [exportErr, setExportErr] = useState<string | null>(null);
+
+  /** Télécharge le calendrier (.txt ou .csv) — diffusion interne. */
+  async function telechargerExport(format: "txt" | "csv") {
+    if (!jeton || exportBusy) return;
+    setExportBusy(true);
+    setExportErr(null);
+    try {
+      const jour = vue?.aujourd_hui ?? new Date().toISOString().slice(0, 10);
+      await telecharger(
+        `/api/v1/cabinet/calendrier.${format}?horizon_mois=${horizon}`,
+        jeton,
+        `calendrier-cabinet-${jour}.${format}`,
+      );
+    } catch (e) {
+      setExportErr(
+        e instanceof Error ? e.message : "téléchargement impossible",
+      );
+    } finally {
+      setExportBusy(false);
+    }
+  }
 
   useEffect(() => {
     if (!jeton) return;
@@ -109,6 +132,29 @@ export function CalendrierCabinetVue({ jeton, onOuvrirMission }: Props) {
               ))}
             </select>
           </label>
+          {vue && (
+            <>
+              <button
+                type="button"
+                className="btn btn-ghost btn-sm"
+                onClick={() => void telechargerExport("txt")}
+                disabled={exportBusy}
+                title="Version texte lisible pour la réunion du cabinet"
+              >
+                Télécharger (.txt)
+              </button>
+              <button
+                type="button"
+                className="btn btn-ghost btn-sm"
+                onClick={() => void telechargerExport("csv")}
+                disabled={exportBusy}
+                title="Version tableur (CSV point-virgule, Excel)"
+              >
+                Télécharger (.csv)
+              </button>
+              {exportErr && <span className="ctrale-err">{exportErr}</span>}
+            </>
+          )}
         </div>
       </div>
 

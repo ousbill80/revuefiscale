@@ -6673,6 +6673,89 @@ def api_calendrier_cabinet(
     return vue
 
 
+def _export_calendrier_cabinet(
+    utilisateur, session: Session, horizon_mois: int, format_export: str
+) -> Response:
+    """Export téléchargeable du calendrier fiscal — même assemblage.
+
+    Réutilise :func:`calendrier_cabinet` (AUCUN recalcul divergent
+    avec GET /cabinet/calendrier, même paramètre ``horizon_mois``)
+    puis rend le corps en texte français lisible ou en CSV
+    point-virgule — diffusion interne (réunion hebdomadaire du
+    cabinet), jamais un envoi d'email.
+    """
+    from backend.moteur.journal import append_journal
+    from backend.plateforme.calendrier_cabinet import calendrier_cabinet
+    from backend.plateforme.export_calendrier import (
+        rendre_calendrier_csv,
+        rendre_calendrier_texte,
+    )
+
+    exiger_capacite(utilisateur, "lire")
+    vue = calendrier_cabinet(
+        session, utilisateur.tenant_id, horizon_mois=horizon_mois
+    )
+    if format_export == "csv":
+        contenu = rendre_calendrier_csv(vue)
+        media_type = "text/csv; charset=utf-8"
+    else:
+        contenu = rendre_calendrier_texte(vue)
+        media_type = "text/plain; charset=utf-8"
+    append_journal(
+        session,
+        tenant_id=utilisateur.tenant_id,
+        mission_id=None,
+        acteur=utilisateur.email,
+        action="export_calendrier",
+        charge_utile={
+            "format": format_export,
+            "horizon_mois": vue["horizon_mois"],
+            "nb_total": vue["compteurs"]["nb_total"],
+            "sources_en_echec": vue["sources_en_echec"],
+        },
+    )
+    nom = f"calendrier-cabinet-{vue['aujourd_hui']}.{format_export}"
+    return Response(
+        content=contenu,
+        media_type=media_type,
+        headers={
+            "Content-Disposition": f'attachment; filename="{nom}"'
+        },
+    )
+
+
+@router.get("/cabinet/calendrier.txt")
+def api_export_calendrier_txt(
+    utilisateur: UtilisateurDep,
+    session: Annotated[Session, Depends(session_abonne)],
+    horizon_mois: Annotated[int, Query(ge=1, le=12)] = 3,
+) -> Response:
+    """Calendrier fiscal du cabinet en texte français (.txt, UTF-8).
+
+    Support de la réunion hebdomadaire — même assemblage que
+    GET /cabinet/calendrier, consultatif, aucun email.
+    """
+    return _export_calendrier_cabinet(
+        utilisateur, session, horizon_mois, "txt"
+    )
+
+
+@router.get("/cabinet/calendrier.csv")
+def api_export_calendrier_csv(
+    utilisateur: UtilisateurDep,
+    session: Annotated[Session, Depends(session_abonne)],
+    horizon_mois: Annotated[int, Query(ge=1, le=12)] = 3,
+) -> Response:
+    """Calendrier fiscal du cabinet en CSV point-virgule (Excel FR).
+
+    Même assemblage que GET /cabinet/calendrier — BOM UTF-8,
+    échappement stdlib, consultatif, aucun email.
+    """
+    return _export_calendrier_cabinet(
+        utilisateur, session, horizon_mois, "csv"
+    )
+
+
 @router.get("/moi/tableau")
 def api_mon_tableau(
     utilisateur: UtilisateurDep,
