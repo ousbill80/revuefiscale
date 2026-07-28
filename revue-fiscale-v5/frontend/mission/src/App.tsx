@@ -67,6 +67,7 @@ import {
 } from "./PiecesContribuable";
 import { PhoneField } from "./PhoneField";
 import { PROCESS_TIPS } from "./processTips";
+import { PointsAnterieursVue } from "./PointsAnterieursVue";
 import { RestitutionVue } from "./RestitutionVue";
 import type { ResumeRisques } from "./RegistreRisques";
 import { InfoTip, Tooltip } from "./Tooltip";
@@ -4806,6 +4807,16 @@ export function App() {
 
               {step > 1 && (
               <div className="panel dense wizard-panel">
+
+                {/* Rappel consultatif au démarrage / à la reprise de la
+                    mission : points « à faire » hérités des exercices
+                    antérieurs — affiché seulement s'il y en a. */}
+                {missionId != null && (
+                  <PointsAnterieursVue
+                    missionId={missionId}
+                    jeton={session?.jeton}
+                  />
+                )}
 
                 {step === 2 && (
                   <>

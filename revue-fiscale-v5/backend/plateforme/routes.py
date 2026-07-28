@@ -856,6 +856,50 @@ def api_lister_points_convenus(
         ) from e
 
 
+@router.get("/missions/{mission_id}/points-anterieurs")
+def api_points_anterieurs(
+    mission_id: int,
+    utilisateur: UtilisateurDep,
+    session: Annotated[Session, Depends(session_abonne)],
+) -> dict:
+    """Points en suspens des missions antérieures — lecture seule.
+
+    Points convenus encore « a_faire » nés des missions du même
+    contribuable sur des exercices strictement antérieurs à celui de
+    la mission courante (tri exercice croissant, plafond 50). Vue
+    strictement consultative : le traitement se saisit dans la mission
+    d'origine. 404 si mission hors tenant (RLS).
+    """
+    from backend.moteur.journal import append_journal
+    from backend.plateforme.points_anterieurs import (
+        ErreurPointsAnterieursIntrouvable,
+        points_anterieurs,
+    )
+
+    exiger_capacite(utilisateur, "lire")
+    try:
+        vue = points_anterieurs(
+            session, utilisateur.tenant_id, mission_id
+        )
+    except ErreurPointsAnterieursIntrouvable as e:
+        raise HTTPException(
+            status_code=status.HTTP_404_NOT_FOUND, detail=str(e)
+        ) from e
+    append_journal(
+        session,
+        tenant_id=utilisateur.tenant_id,
+        mission_id=mission_id,
+        acteur=utilisateur.email,
+        action="consultation_points_anterieurs",
+        charge_utile={
+            "total": vue["synthese"]["total"],
+            "en_retard": vue["synthese"]["en_retard"],
+            "missions": vue["synthese"]["missions"],
+        },
+    )
+    return vue
+
+
 class PointConvenuIn(BaseModel):
     """Ajout d'un point convenu — saisie du fiscaliste.
 

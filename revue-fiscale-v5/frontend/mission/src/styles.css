@@ -12892,6 +12892,90 @@ tr.row-active td {
   font-style: italic;
 }
 
+/* ── Points en suspens des missions antérieures (vue mission) ────────
+   Rappel consultatif au démarrage / à la reprise d'une mission :
+   points « à faire » hérités des exercices antérieurs du même client.
+   Table exercice | libellé | date cible ; teinte ambre discrète pour
+   attirer l'œil sans dramatiser. Préfixe dédié pant-. */
+.pant {
+  margin-bottom: 0.9rem;
+  padding: 0.75rem 0.9rem;
+  border: 1px solid color-mix(in srgb, #b45309 25%, transparent);
+  border-radius: 10px;
+  background: #fffbeb;
+}
+
+.pant-head {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 0.75rem;
+  flex-wrap: wrap;
+}
+
+.pant-titre {
+  margin: 0;
+  font-size: 0.86rem;
+}
+
+.pant-synthese {
+  font-size: 0.78rem;
+}
+
+.pant-synthese-retard {
+  color: #b91c1c;
+}
+
+.pant-table {
+  width: 100%;
+  margin-top: 0.55rem;
+  border-collapse: collapse;
+  font-size: 0.8rem;
+}
+
+.pant-table th,
+.pant-table td {
+  padding: 0.3rem 0.5rem;
+  text-align: left;
+  border-bottom: 1px solid color-mix(in srgb, #b45309 18%, transparent);
+}
+
+.pant-table thead th {
+  font-size: 0.72rem;
+  text-transform: uppercase;
+  letter-spacing: 0.03em;
+  color: var(--muted, #64748b);
+}
+
+.pant-exercice {
+  font-weight: 800;
+  font-variant-numeric: tabular-nums;
+  color: var(--accent-deep, #115e59);
+  white-space: nowrap;
+}
+
+.pant-cible {
+  font-variant-numeric: tabular-nums;
+  white-space: nowrap;
+}
+
+.pant-badge-retard {
+  margin-left: 0.4rem;
+  padding: 0.05rem 0.45rem;
+  border-radius: 999px;
+  font-size: 0.68rem;
+  font-weight: 600;
+  white-space: nowrap;
+  background: #fee2e2;
+  color: #b91c1c;
+}
+
+.pant-note {
+  margin: 0.6rem 0 0;
+  font-size: 0.76rem;
+  font-style: italic;
+}
+
 /* ── Reconduction d'une mission clôturée sur l'exercice N+1 ─────────── */
 
 .recond-btn {
