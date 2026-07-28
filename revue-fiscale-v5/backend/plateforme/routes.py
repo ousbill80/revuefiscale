@@ -3628,6 +3628,70 @@ def api_export_fiche_client_txt(
     )
 
 
+@router.get("/contribuables/{contribuable_id}/relance-declarative.txt")
+def api_relance_declarative_txt(
+    contribuable_id: int,
+    utilisateur: UtilisateurDep,
+    session: Annotated[Session, Depends(session_abonne)],
+) -> Response:
+    """PROJET de lettre de relance déclarative du client (.txt, UTF-8).
+
+    Courrier type DÉTERMINISTE organisant la collecte des périodes TVA
+    et impôts sur salaires manquantes (missions non clôturées) — mêmes
+    vues que le portefeuille déclaratif, aucun recalcul. PROJET à
+    relire et valider par l'expert-comptable : AUCUN envoi (ni email)
+    par l'outil. 404 si contribuable hors tenant (RLS) ; 409 si aucune
+    période manquante (rien à relancer).
+    """
+    from datetime import date as _date
+
+    from backend.moteur.journal import append_journal
+    from backend.plateforme.relance_declarative import (
+        ErreurAucunePeriodeManquante,
+        ErreurRelanceIntrouvable,
+        relance_declarative_contribuable,
+    )
+
+    exiger_capacite(utilisateur, "lire")
+    try:
+        projet = relance_declarative_contribuable(
+            session, utilisateur.tenant_id, contribuable_id
+        )
+    except ErreurRelanceIntrouvable as e:
+        raise HTTPException(
+            status_code=status.HTTP_404_NOT_FOUND, detail=str(e)
+        ) from e
+    except ErreurAucunePeriodeManquante as e:
+        raise HTTPException(
+            status_code=status.HTTP_409_CONFLICT, detail=str(e)
+        ) from e
+    append_journal(
+        session,
+        tenant_id=utilisateur.tenant_id,
+        mission_id=None,
+        acteur=utilisateur.email,
+        action="export_relance_declarative",
+        charge_utile={
+            "format": "txt",
+            "contribuable_id": contribuable_id,
+            "nb_missions_a_completer": projet[
+                "nb_missions_a_completer"
+            ],
+        },
+    )
+    nom = (
+        f"relance-declarative-{contribuable_id}-"
+        f"{_date.today().isoformat()}.txt"
+    )
+    return Response(
+        content=projet["lettre"],
+        media_type="text/plain; charset=utf-8",
+        headers={
+            "Content-Disposition": f'attachment; filename="{nom}"'
+        },
+    )
+
+
 @router.get("/contribuables/{contribuable_id}/comparaison-exercices")
 def api_comparaison_exercices_contribuable(
     contribuable_id: int,

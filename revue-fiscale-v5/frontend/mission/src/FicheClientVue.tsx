@@ -99,6 +99,8 @@ export function FicheClientVue({ jeton, contribuableId, onOuvrirMission }: Props
   const [err, setErr] = useState<string | null>(null);
   const [exportBusy, setExportBusy] = useState(false);
   const [exportErr, setExportErr] = useState<string | null>(null);
+  const [relanceBusy, setRelanceBusy] = useState(false);
+  const [relanceErr, setRelanceErr] = useState<string | null>(null);
 
   /** Télécharge la fiche (.txt) — préparation du rendez-vous client. */
   async function telechargerFiche() {
@@ -119,6 +121,30 @@ export function FicheClientVue({ jeton, contribuableId, onOuvrirMission }: Props
       );
     } finally {
       setExportBusy(false);
+    }
+  }
+
+  /** Télécharge le PROJET de relance déclarative (.txt) — jamais envoyé. */
+  async function telechargerRelance() {
+    if (!jeton || relanceBusy) return;
+    setRelanceBusy(true);
+    setRelanceErr(null);
+    try {
+      const jour =
+        fiche?.aujourd_hui ?? new Date().toISOString().slice(0, 10);
+      await telecharger(
+        `/api/v1/contribuables/${contribuableId}/relance-declarative.txt`,
+        jeton,
+        `relance-declarative-${contribuableId}-${jour}.txt`,
+      );
+    } catch (e) {
+      // 409 : aucune période manquante — le message français de l'API
+      // est affiché tel quel (rien à relancer).
+      setRelanceErr(
+        e instanceof Error ? e.message : "téléchargement impossible",
+      );
+    } finally {
+      setRelanceBusy(false);
     }
   }
 
@@ -172,6 +198,16 @@ export function FicheClientVue({ jeton, contribuableId, onOuvrirMission }: Props
                 Télécharger (.txt)
               </button>
               {exportErr && <span className="ctrale-err">{exportErr}</span>}
+              <button
+                type="button"
+                className="btn btn-ghost btn-sm"
+                onClick={() => void telechargerRelance()}
+                disabled={relanceBusy}
+                title="Projet de lettre de relance déclarative — à relire et valider par l'expert-comptable avant tout envoi"
+              >
+                Projet de relance (.txt)
+              </button>
+              {relanceErr && <span className="ctrale-err">{relanceErr}</span>}
               <span className="ctrale-chip">
                 <strong>{fiche.synthese.nb_missions}</strong> mission
                 {fiche.synthese.nb_missions > 1 ? "s" : ""}
