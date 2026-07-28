@@ -829,6 +829,130 @@ def api_enregistrer_compte_rendu(
     return {"mission_id": mission_id, "compte_rendu": compte_rendu}
 
 
+@router.get("/missions/{mission_id}/points-convenus")
+def api_lister_points_convenus(
+    mission_id: int,
+    utilisateur: UtilisateurDep,
+    session: Annotated[Session, Depends(session_abonne)],
+) -> dict:
+    """Points convenus de la restitution + synthèse — lecture seule.
+
+    Suivi consultatif des points convenus avec le client (compte-rendu
+    de réunion). 404 si mission hors tenant (RLS).
+    """
+    from backend.plateforme.points_convenus import (
+        ErreurPointConvenuIntrouvable,
+        lister_points_convenus,
+    )
+
+    exiger_capacite(utilisateur, "lire")
+    try:
+        return lister_points_convenus(
+            session, utilisateur.tenant_id, mission_id
+        )
+    except ErreurPointConvenuIntrouvable as e:
+        raise HTTPException(
+            status_code=status.HTTP_404_NOT_FOUND, detail=str(e)
+        ) from e
+
+
+class PointConvenuIn(BaseModel):
+    """Ajout d'un point convenu — saisie du fiscaliste."""
+
+    libelle: str
+
+
+@router.post("/missions/{mission_id}/points-convenus")
+def api_creer_point_convenu(
+    mission_id: int,
+    corps: PointConvenuIn,
+    utilisateur: UtilisateurDep,
+    session: Annotated[Session, Depends(session_abonne)],
+) -> dict:
+    """Ajoute un point convenu — clic explicite du fiscaliste.
+
+    Libellé vide ou > 500 caractères → 422 ; mission hors tenant → 404
+    (RLS) ; mission en cadrage → 409 (les points convenus n'existent
+    qu'après la restitution).
+    """
+    from backend.plateforme.points_convenus import (
+        ErreurPointConvenuConflit,
+        ErreurPointConvenuIntrouvable,
+        ErreurPointConvenuInvalide,
+        creer_point_convenu,
+    )
+
+    exiger_capacite(utilisateur, "executer_mission")
+    try:
+        return creer_point_convenu(
+            session,
+            utilisateur.tenant_id,
+            mission_id,
+            corps.libelle,
+            acteur=utilisateur.email,
+        )
+    except ErreurPointConvenuIntrouvable as e:
+        raise HTTPException(
+            status_code=status.HTTP_404_NOT_FOUND, detail=str(e)
+        ) from e
+    except ErreurPointConvenuConflit as e:
+        raise HTTPException(
+            status_code=status.HTTP_409_CONFLICT, detail=str(e)
+        ) from e
+    except ErreurPointConvenuInvalide as e:
+        raise HTTPException(
+            status_code=status.HTTP_422_UNPROCESSABLE_ENTITY, detail=str(e)
+        ) from e
+
+
+class PointConvenuStatutIn(BaseModel):
+    """Changement de statut d'un point convenu."""
+
+    statut: str
+
+
+@router.post("/points-convenus/{point_id}/statut")
+def api_statut_point_convenu(
+    point_id: int,
+    corps: PointConvenuStatutIn,
+    utilisateur: UtilisateurDep,
+    session: Annotated[Session, Depends(session_abonne)],
+) -> dict:
+    """Change le statut d'un point convenu — clic explicite.
+
+    Statut inconnu → 422 ; point hors tenant → 404 (RLS) ; transition
+    non autorisée (ex. fait → abandonne) → 409.
+    """
+    from backend.plateforme.points_convenus import (
+        ErreurPointConvenuConflit,
+        ErreurPointConvenuIntrouvable,
+        ErreurPointConvenuInvalide,
+        changer_statut_point_convenu,
+    )
+
+    exiger_capacite(utilisateur, "executer_mission")
+    try:
+        return changer_statut_point_convenu(
+            session,
+            utilisateur.tenant_id,
+            point_id,
+            corps.statut,
+            acteur=utilisateur.email,
+        )
+    except ErreurPointConvenuIntrouvable as e:
+        raise HTTPException(
+            status_code=status.HTTP_404_NOT_FOUND, detail=str(e)
+        ) from e
+    except ErreurPointConvenuConflit as e:
+        raise HTTPException(
+            status_code=status.HTTP_409_CONFLICT, detail=str(e)
+        ) from e
+    except ErreurPointConvenuInvalide as e:
+        raise HTTPException(
+            status_code=status.HTTP_422_UNPROCESSABLE_ENTITY, detail=str(e)
+        ) from e
+
+
 @router.get("/missions/{mission_id}/courrier-envoi.docx")
 def api_courrier_envoi_docx(
     mission_id: int,

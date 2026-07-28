@@ -30,6 +30,7 @@ import { PlanActionsVue } from "./PlanActionsVue";
 import { BilanClotureVue } from "./BilanClotureVue";
 import { ChronologieMissionVue } from "./ChronologieMissionVue";
 import { DelaisMissionVue } from "./DelaisMissionVue";
+import { PointsConvenusVue } from "./PointsConvenusVue";
 import type { AuditEntree, AuditJournal, ConclusionRestitution, Restitution } from "./types";
 
 type CollaborateurOpt = {
@@ -4388,6 +4389,11 @@ export function RestitutionVue({
             </p>
           )}
           {crMsg && <p className="rest-cr-ok">{crMsg}</p>}
+          <PointsConvenusVue
+            missionId={r.mission_id}
+            jeton={jeton}
+            estLecteur={estLecteur}
+          />
         </section>
       )}
 
