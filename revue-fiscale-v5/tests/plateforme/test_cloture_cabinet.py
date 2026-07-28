@@ -6,8 +6,10 @@ import uuid
 import pytest
 
 from backend.plateforme.cloture_cabinet import (
+    ENTETE_CLOTURE_CSV,
     PLAFOND_MISSIONS,
     PLAFOND_POINTS_ATTENTION,
+    generer_csv,
     preparation_cloture_cabinet,
     synthese_bilan,
     synthese_preparation,
@@ -113,6 +115,63 @@ def test_synthese_preparation_compteurs():
 def test_plafond_missions_constant():
     # Vue de pilotage bornée — chaque mission déclenche un bilan complet.
     assert PLAFOND_MISSIONS == 20
+
+
+def test_generer_csv_entete_et_lignes():
+    preparation = {
+        "items": [
+            {
+                **_item(True, 0, client="SA Alpha FICTIVE", mission_id=7),
+            },
+            {
+                **_item(
+                    False, 2, client="SARL Zêta FICTIVE", mission_id=9
+                ),
+                "points_attention": [
+                    "Aucun temps saisi",
+                    "2 risque(s) ouvert(s)",
+                ],
+            },
+        ]
+    }
+    lignes = generer_csv(preparation).splitlines()
+    assert lignes[0] == ";".join(ENTETE_CLOTURE_CSV)
+    assert lignes[0] == (
+        "client;exercice;statut_preparation;nb_ok;nb_attention;"
+        "points_attention"
+    )
+    assert lignes[1] == "SA Alpha FICTIVE;2025;Prête;7;0;"
+    # Points d'attention joints par « | » dans une seule cellule.
+    assert lignes[2] == (
+        "SARL Zêta FICTIVE;2025;À compléter;5;2;"
+        "Aucun temps saisi | 2 risque(s) ouvert(s)"
+    )
+
+
+def test_generer_csv_vide_et_valeurs_manquantes():
+    # Liste vide → en-tête seul.
+    assert generer_csv({"items": []}).splitlines() == [
+        ";".join(ENTETE_CLOTURE_CSV)
+    ]
+    assert generer_csv({}).splitlines() == [";".join(ENTETE_CLOTURE_CSV)]
+    # Valeurs absentes → cellules vides, statut « À compléter » par défaut.
+    lignes = generer_csv({"items": [{}]}).splitlines()
+    assert lignes[1] == ";;À compléter;;;"
+
+
+def test_generer_csv_echappe_le_point_virgule():
+    preparation = {
+        "items": [
+            {
+                **_item(False, 1, client='SA "Point;Virgule" FICTIVE'),
+                "points_attention": ["Libellé ; à échapper"],
+            }
+        ]
+    }
+    lignes = generer_csv(preparation).splitlines()
+    # Le stdlib entoure de guillemets (doublés) la valeur contenant « ; ».
+    assert '"SA ""Point;Virgule"" FICTIVE"' in lignes[1]
+    assert '"Libellé ; à échapper"' in lignes[1]
 
 
 # ── Tests DB / API ─────────────────────────────────────────────────
@@ -313,4 +372,39 @@ def test_api_401_sans_jeton(session):
 
     client = TestClient(app)
     r = client.get("/api/v1/cabinet/preparation-cloture")
+    assert r.status_code == 401, r.text
+
+
+def test_api_preparation_cloture_csv(session):
+    from datetime import date
+
+    tid, email = _cabinet(session, "cloturecab.csv")
+    _mission(session, tid, "PM CSV Clôture FICTIF")
+    session.commit()
+
+    client, h = _client_connecte(email)
+    r = client.get("/api/v1/cabinet/preparation-cloture.csv", headers=h)
+    assert r.status_code == 200, r.text
+    assert r.headers["content-type"].startswith("text/csv")
+    assert "attachment" in r.headers["content-disposition"]
+    assert (
+        f"preparation-cloture-{date.today().isoformat()}.csv"
+        in r.headers["content-disposition"]
+    )
+    # BOM UTF-8 en tête pour l'ouverture directe dans Excel.
+    assert r.text.startswith("\ufeff")
+    lignes = r.text.lstrip("\ufeff").splitlines()
+    assert lignes[0] == ";".join(ENTETE_CLOTURE_CSV)
+    # Une ligne pour la mission en cours, « À compléter » (mission nue).
+    assert len(lignes) == 2
+    assert lignes[1].startswith("PM CSV Clôture FICTIF;2025;À compléter;")
+
+
+def test_api_preparation_cloture_csv_401_sans_jeton(session):
+    from fastapi.testclient import TestClient
+
+    from backend.main import app
+
+    client = TestClient(app)
+    r = client.get("/api/v1/cabinet/preparation-cloture.csv")
     assert r.status_code == 401, r.text

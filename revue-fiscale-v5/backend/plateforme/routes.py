@@ -4492,6 +4492,48 @@ def api_preparation_cloture_cabinet(
     return preparation
 
 
+@router.get("/cabinet/preparation-cloture.csv")
+def api_preparation_cloture_cabinet_csv(
+    utilisateur: UtilisateurDep,
+    session: Annotated[Session, Depends(session_abonne)],
+) -> Response:
+    """Préparation à la clôture au format CSV Excel FR (« ; »).
+
+    Mêmes données que la route JSON, prêtes à diffuser en réunion de
+    cabinet ou à retraiter dans un tableur : BOM UTF-8 pour l'ouverture
+    directe dans Excel. Déterministe — même tri que le tableau de bord.
+    """
+    from datetime import date
+
+    from backend.moteur.journal import append_journal
+    from backend.plateforme.cloture_cabinet import (
+        generer_csv,
+        preparation_cloture_cabinet,
+    )
+
+    exiger_capacite(utilisateur, "lire")
+    preparation = preparation_cloture_cabinet(session, utilisateur.tenant_id)
+    contenu = "\ufeff" + generer_csv(preparation)
+    append_journal(
+        session,
+        tenant_id=utilisateur.tenant_id,
+        mission_id=None,
+        acteur=utilisateur.email,
+        action="consultation_preparation_cloture_cabinet_csv",
+        charge_utile={
+            "en_cours": preparation["synthese"]["en_cours"],
+            "pretes": preparation["synthese"]["pretes"],
+            "a_completer": preparation["synthese"]["a_completer"],
+        },
+    )
+    nom = f"preparation-cloture-{date.today().isoformat()}.csv"
+    return Response(
+        content=contenu,
+        media_type="text/csv; charset=utf-8",
+        headers={"Content-Disposition": f'attachment; filename="{nom}"'},
+    )
+
+
 @router.get("/cabinet/echeances")
 def api_echeances_cabinet(
     utilisateur: UtilisateurDep,
@@ -4522,3 +4564,43 @@ def api_echeances_cabinet(
         },
     )
     return vue
+
+
+@router.get("/cabinet/echeances.csv")
+def api_echeances_cabinet_csv(
+    utilisateur: UtilisateurDep,
+    session: Annotated[Session, Depends(session_abonne)],
+) -> Response:
+    """Échéances fiscales à venir au format CSV Excel FR (« ; »).
+
+    Mêmes données que la route JSON, prêtes à diffuser en réunion de
+    cabinet ou à retraiter dans un tableur : BOM UTF-8 pour l'ouverture
+    directe dans Excel. Déterministe — même tri que le tableau de bord.
+    """
+    from backend.moteur.journal import append_journal
+    from backend.plateforme.echeances_cabinet import (
+        echeances_cabinet,
+        generer_csv,
+    )
+
+    exiger_capacite(utilisateur, "lire")
+    vue = echeances_cabinet(session, utilisateur.tenant_id)
+    contenu = "\ufeff" + generer_csv(vue)
+    append_journal(
+        session,
+        tenant_id=utilisateur.tenant_id,
+        mission_id=None,
+        acteur=utilisateur.email,
+        action="consultation_echeances_cabinet_csv",
+        charge_utile={
+            "total": vue["synthese"]["total"],
+            "cette_semaine": vue["synthese"]["cette_semaine"],
+            "clients": vue["synthese"]["clients"],
+        },
+    )
+    nom = f"echeances-fiscales-{vue['aujourd_hui']}.csv"
+    return Response(
+        content=contenu,
+        media_type="text/csv; charset=utf-8",
+        headers={"Content-Disposition": f'attachment; filename="{nom}"'},
+    )

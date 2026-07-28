@@ -16,6 +16,8 @@ Fonctions pures + lecture seule sous RLS via ``contexte_tenant``.
 """
 from __future__ import annotations
 
+import csv
+import io
 from typing import Any, Final
 
 from sqlalchemy import text
@@ -93,6 +95,57 @@ def synthese_preparation(items: list[dict[str, Any]]) -> dict[str, Any]:
         "pretes": pretes,
         "a_completer": len(items) - pretes,
     }
+
+
+# ── Export CSV (Excel FR, séparateur « ; ») ──────────────────────────
+
+# En-tête du CSV de préparation à la clôture — délimiteur « ; ».
+ENTETE_CLOTURE_CSV: Final[tuple[str, ...]] = (
+    "client",
+    "exercice",
+    "statut_preparation",
+    "nb_ok",
+    "nb_attention",
+    "points_attention",
+)
+
+# Statuts en clair pour le tableur — vocabulaire du tableau de bord.
+STATUT_CSV_PRETE: Final[str] = "Prête"
+STATUT_CSV_A_COMPLETER: Final[str] = "À compléter"
+
+
+def generer_csv(preparation: dict) -> str:
+    """PUR — CSV « ; » de la préparation à la clôture (Excel FR).
+
+    Une ligne par item de ``preparation["items"]``, dans l'ordre trié
+    (prêtes d'abord, puis nb_attention croissant). ``statut_preparation``
+    en clair (« Prête » / « À compléter ») ; les points d'attention sont
+    joints par « | » dans une seule cellule. Échappement CSV par le
+    module stdlib : valeurs entre guillemets (doublés) si elles
+    contiennent « ; », un guillemet ou un retour à la ligne. Le BOM
+    UTF-8 est ajouté côté route, pas ici. Liste vide → en-tête seul.
+    """
+    buf = io.StringIO()
+    w = csv.writer(buf, delimiter=";", lineterminator="\n")
+    w.writerow(ENTETE_CLOTURE_CSV)
+    for i in list(preparation.get("items") or []):
+        nb_ok = i.get("nb_ok")
+        nb_attention = i.get("nb_attention")
+        w.writerow(
+            [
+                str(i.get("client") or ""),
+                str(i.get("exercice") or ""),
+                STATUT_CSV_PRETE
+                if bool(i.get("prete"))
+                else STATUT_CSV_A_COMPLETER,
+                str(nb_ok) if nb_ok is not None else "",
+                str(nb_attention) if nb_attention is not None else "",
+                " | ".join(
+                    str(p or "") for p in (i.get("points_attention") or [])
+                ),
+            ]
+        )
+    return buf.getvalue()
 
 
 # ── Lecture cabinet (RLS) ────────────────────────────────────────────

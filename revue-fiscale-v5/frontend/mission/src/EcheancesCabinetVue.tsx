@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { api } from "./api";
+import { api, telecharger } from "./api";
 
 /** Échéances fiscales à venir (GET /api/v1/cabinet/echeances). */
 type ItemEcheance = {
@@ -38,6 +38,24 @@ export function EcheancesCabinetVue({ jeton, onOuvrirMission }: Props) {
   const [vue, setVue] = useState<EcheancesCabinetOut | null>(null);
   const [busy, setBusy] = useState(false);
   const [err, setErr] = useState<string | null>(null);
+  const [exportCsvBusy, setExportCsvBusy] = useState(false);
+
+  async function exporterCsv() {
+    if (!jeton || exportCsvBusy) return;
+    setExportCsvBusy(true);
+    setErr(null);
+    try {
+      await telecharger(
+        "/api/v1/cabinet/echeances.csv",
+        jeton,
+        "echeances-fiscales.csv",
+      );
+    } catch {
+      setErr("Export du tableur impossible pour le moment.");
+    } finally {
+      setExportCsvBusy(false);
+    }
+  }
 
   useEffect(() => {
     if (!jeton) return;
@@ -80,6 +98,15 @@ export function EcheancesCabinetVue({ jeton, onOuvrirMission }: Props) {
             clients en mission — pour anticiper les déclarations.
           </p>
         </div>
+        <button
+          type="button"
+          className="agenda2-pastille"
+          title="Télécharger les échéances fiscales au format CSV (Excel)"
+          disabled={exportCsvBusy || !vue?.synthese.total}
+          onClick={() => void exporterCsv()}
+        >
+          {exportCsvBusy ? "Export…" : "Exporter (.csv)"}
+        </button>
       </div>
 
       <article className="panel dense echcab-card">

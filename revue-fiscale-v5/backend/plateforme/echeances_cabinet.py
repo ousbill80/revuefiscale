@@ -16,6 +16,8 @@ aucun LLM. Fonctions pures + lecture seule sous RLS via
 """
 from __future__ import annotations
 
+import csv
+import io
 from datetime import date, timedelta
 from typing import Any, Final
 
@@ -142,6 +144,48 @@ def synthese_echeances(items: list[dict[str, Any]]) -> dict[str, Any]:
         "cette_semaine": cette_semaine,
         "clients": len(clients),
     }
+
+
+# ── Export CSV (Excel FR, séparateur « ; ») ──────────────────────────
+
+# En-tête du CSV des échéances à venir — délimiteur « ; » (Excel FR).
+ENTETE_ECHEANCES_CSV: Final[tuple[str, ...]] = (
+    "date_limite",
+    "jours_restants",
+    "client",
+    "exercice",
+    "impot",
+    "obligation",
+    "periode",
+)
+
+
+def generer_csv(vue: dict) -> str:
+    """PUR — CSV « ; » des échéances fiscales à venir (Excel FR).
+
+    Une ligne par item de ``vue["items"]``, dans l'ordre trié des
+    échéances (date limite croissante puis client). Échappement CSV par
+    le module stdlib : valeurs entre guillemets (doublés) si elles
+    contiennent « ; », un guillemet ou un retour à la ligne. Le BOM
+    UTF-8 est ajouté côté route, pas ici. Liste vide → en-tête seul.
+    """
+    buf = io.StringIO()
+    w = csv.writer(buf, delimiter=";", lineterminator="\n")
+    w.writerow(ENTETE_ECHEANCES_CSV)
+    for i in list(vue.get("items") or []):
+        jours = i.get("jours_restants")
+        w.writerow(
+            [
+                str(i.get("date_limite") or ""),
+                str(jours) if jours is not None else "",
+                str(i.get("client") or ""),
+                str(i.get("exercice") or ""),
+                str(i.get("impot") or ""),
+                str(i.get("obligation") or ""),
+                str(i.get("periode") or ""),
+            ]
+        )
+    return buf.getvalue()
 
 
 # ── Lecture cabinet (RLS) ────────────────────────────────────────────

@@ -7,6 +7,7 @@ from datetime import date
 import pytest
 
 from backend.plateforme.echeances_cabinet import (
+    ENTETE_ECHEANCES_CSV,
     FENETRE_JOURS,
     PLAFOND_ITEMS,
     PLAFOND_MISSIONS,
@@ -14,6 +15,7 @@ from backend.plateforme.echeances_cabinet import (
     echeances_cabinet,
     filtrer_fenetre,
     fusionner_echeances,
+    generer_csv,
     synthese_echeances,
     trier_echeances,
 )
@@ -169,6 +171,52 @@ def test_synthese_echeances_compteurs():
 def test_plafond_missions_constant():
     # Vue de pilotage bornée — un échéancier complet par mission.
     assert PLAFOND_MISSIONS == 50
+
+
+def test_generer_csv_entete_et_ligne():
+    vue = {
+        "items": [
+            _item(
+                "2025-06-15",
+                client="SA Alpha FICTIVE",
+                jours_restants=5,
+                impot="TVA",
+            )
+        ]
+    }
+    lignes = generer_csv(vue).splitlines()
+    assert lignes[0] == ";".join(ENTETE_ECHEANCES_CSV)
+    assert lignes[0] == (
+        "date_limite;jours_restants;client;exercice;impot;"
+        "obligation;periode"
+    )
+    assert lignes[1] == (
+        "2025-06-15;5;SA Alpha FICTIVE;2025;TVA;Obligation TVA;mai 2025"
+    )
+
+
+def test_generer_csv_vide_et_valeurs_manquantes():
+    # Liste vide → en-tête seul.
+    assert generer_csv({"items": []}).splitlines() == [
+        ";".join(ENTETE_ECHEANCES_CSV)
+    ]
+    assert generer_csv({}).splitlines() == [";".join(ENTETE_ECHEANCES_CSV)]
+    # Valeurs absentes → cellules vides ; jours_restants 0 conservé.
+    lignes = generer_csv(
+        {"items": [{"date_limite": "2025-06-10", "jours_restants": 0}]}
+    ).splitlines()
+    assert lignes[1] == "2025-06-10;0;;;;;"
+
+
+def test_generer_csv_echappe_le_point_virgule():
+    vue = {
+        "items": [
+            _item("2025-06-15", client='SA "Point;Virgule" FICTIVE')
+        ]
+    }
+    lignes = generer_csv(vue).splitlines()
+    # Le stdlib entoure de guillemets (doublés) la valeur contenant « ; ».
+    assert '"SA ""Point;Virgule"" FICTIVE"' in lignes[1]
 
 
 # ── Tests DB / API ─────────────────────────────────────────────────
@@ -385,4 +433,37 @@ def test_api_401_sans_jeton(session):
 
     client = TestClient(app)
     r = client.get("/api/v1/cabinet/echeances")
+    assert r.status_code == 401, r.text
+
+
+def test_api_echeances_csv(session):
+    tid, email = _cabinet(session, "echcab.csv")
+    _mission(session, tid, "PM CSV Échéances FICTIF")
+    session.commit()
+
+    client, h = _client_connecte(email)
+    r = client.get("/api/v1/cabinet/echeances.csv", headers=h)
+    assert r.status_code == 200, r.text
+    assert r.headers["content-type"].startswith("text/csv")
+    assert "attachment" in r.headers["content-disposition"]
+    assert (
+        f"echeances-fiscales-{date.today().isoformat()}.csv"
+        in r.headers["content-disposition"]
+    )
+    # BOM UTF-8 en tête pour l'ouverture directe dans Excel.
+    assert r.text.startswith("\ufeff")
+    lignes = r.text.lstrip("\ufeff").splitlines()
+    assert lignes[0] == ";".join(ENTETE_ECHEANCES_CSV)
+    # Une ligne par item de la route JSON (mêmes données).
+    corps = client.get("/api/v1/cabinet/echeances", headers=h).json()
+    assert len(lignes) == 1 + len(corps["items"])
+
+
+def test_api_echeances_csv_401_sans_jeton(session):
+    from fastapi.testclient import TestClient
+
+    from backend.main import app
+
+    client = TestClient(app)
+    r = client.get("/api/v1/cabinet/echeances.csv")
     assert r.status_code == 401, r.text
