@@ -73,7 +73,7 @@ def test_statut_collecte_regles():
         }
     )
     assert e["statut"] == "en_cours"
-    assert "50.00" in e["detail"]
+    assert "50,00" in e["detail"]
     assert (
         statut_collecte(
             {

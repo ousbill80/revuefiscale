@@ -117,6 +117,13 @@ def _decimal(valeur: object) -> Decimal | None:
         return None
 
 
+def _pourcentage_fr(taux: Decimal | None) -> str:
+    """PUR — pourcentage en notation française (virgule décimale), « ? » si absent."""
+    if taux is None:
+        return "?"
+    return str(taux).replace(".", ",")
+
+
 def _etape(code: str, statut: str, detail: str) -> dict[str, Any]:
     """PUR — étape normalisée {code, libelle, statut, detail}."""
     libelles = dict(ETAPES_FIL)
@@ -179,7 +186,7 @@ def statut_collecte(completude: dict[str, Any] | None) -> dict[str, Any]:
     presentes = int(completude.get("presentes") or 0)
     manquantes = int(completude.get("essentielles_manquantes") or 0)
     detail = (
-        f"Complétude data room : {taux if taux is not None else '?'} % "
+        f"Complétude data room : {_pourcentage_fr(taux)} % "
         f"({manquantes} essentielle(s) manquante(s))."
     )
     if taux is not None and taux >= Decimal("100"):
