@@ -4548,6 +4548,92 @@ def api_saisir_declaration_tva(
         ) from e
 
 
+class EvenementControleFiscalIn(BaseModel):
+    """Consignation d'un événement de contrôle fiscal / contentieux.
+
+    Type du référentiel LPF, date ISO (AAAA-MM-JJ), montant en jeu
+    éventuel en FCFA (chaîne ou nombre, vide si sans objet) et
+    commentaire libre du fiscaliste.
+    """
+
+    type_evenement: str
+    date_evenement: str
+    montant_en_jeu: str | float | int | None = None
+    commentaire: str | None = None
+
+
+@router.post("/missions/{mission_id}/controles")
+def api_consigner_evenement_controle(
+    mission_id: int,
+    corps: EvenementControleFiscalIn,
+    utilisateur: UtilisateurDep,
+    session: Annotated[Session, Depends(session_abonne)],
+) -> dict:
+    """Consigne un événement de procédure fiscale — clic explicite.
+
+    Avis de vérification, notification de redressement, mise en
+    demeure, réclamation contentieuse… Le délai de riposte LPF est
+    calculé et retourné (consultatif). Type/date/montant invalides →
+    422 ; mission hors tenant → 404 (RLS).
+    """
+    from backend.plateforme.controles_fiscaux import (
+        ErreurControleFiscalIntrouvable,
+        ErreurControleFiscalInvalide,
+        consigner_evenement,
+    )
+
+    exiger_capacite(utilisateur, "executer_mission")
+    try:
+        return consigner_evenement(
+            session,
+            utilisateur.tenant_id,
+            mission_id,
+            corps.type_evenement,
+            corps.date_evenement,
+            corps.montant_en_jeu,
+            corps.commentaire,
+            acteur=utilisateur.email,
+        )
+    except ErreurControleFiscalIntrouvable as e:
+        raise HTTPException(
+            status_code=status.HTTP_404_NOT_FOUND, detail=str(e)
+        ) from e
+    except ErreurControleFiscalInvalide as e:
+        raise HTTPException(
+            status_code=status.HTTP_422_UNPROCESSABLE_ENTITY, detail=str(e)
+        ) from e
+
+
+@router.get("/missions/{mission_id}/controles")
+def api_controles_fiscaux_mission(
+    mission_id: int,
+    utilisateur: UtilisateurDep,
+    session: Annotated[Session, Depends(session_abonne)],
+) -> dict:
+    """Suivi des contrôles fiscaux et contentieux — lecture seule.
+
+    Chronologie des événements consignés, délais de riposte LPF
+    calculés (échéances proches/dépassées signalées), synthèse et
+    référentiel des types. Strictement consultatif — l'humain décide.
+    Se construit toujours (chronologie vide sans événement). 404 si
+    mission hors tenant (RLS).
+    """
+    from backend.plateforme.controles_fiscaux import (
+        ErreurControleFiscalIntrouvable,
+        controles_mission,
+    )
+
+    exiger_capacite(utilisateur, "lire")
+    try:
+        return controles_mission(
+            session, utilisateur.tenant_id, mission_id
+        )
+    except ErreurControleFiscalIntrouvable as e:
+        raise HTTPException(
+            status_code=status.HTTP_404_NOT_FOUND, detail=str(e)
+        ) from e
+
+
 @router.get("/missions/{mission_id}/controles-fec")
 def api_controles_fec_mission(
     mission_id: int,

@@ -13066,6 +13066,124 @@ tr.row-active td {
   font-style: italic;
 }
 
+/* ── Contrôles fiscaux et contentieux (délais LPF, consultatif) ─────── */
+
+.cfx-head {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 0.75rem;
+  flex-wrap: wrap;
+}
+
+.cfx-titre {
+  margin: 0;
+  font-size: 0.86rem;
+}
+
+.cfx-synthese {
+  font-size: 0.78rem;
+}
+
+.cfx-saisie {
+  display: flex;
+  align-items: flex-end;
+  gap: 0.6rem;
+  flex-wrap: wrap;
+  margin-top: 0.6rem;
+}
+
+.cfx-champ {
+  display: flex;
+  flex-direction: column;
+  gap: 0.2rem;
+  font-size: 0.74rem;
+  color: var(--muted, #64748b);
+}
+
+.cfx-champ input,
+.cfx-champ select {
+  padding: 0.3rem 0.45rem;
+  border: 1px solid color-mix(in srgb, #0f172a 18%, transparent);
+  border-radius: 8px;
+  font-size: 0.8rem;
+}
+
+.cfx-champ-commentaire {
+  flex: 1 1 14rem;
+}
+
+.cfx-aide {
+  margin: 0.35rem 0 0;
+  font-size: 0.74rem;
+  font-style: italic;
+}
+
+.cfx-table {
+  width: 100%;
+  margin-top: 0.55rem;
+  border-collapse: collapse;
+  font-size: 0.8rem;
+}
+
+.cfx-table th,
+.cfx-table td {
+  padding: 0.3rem 0.5rem;
+  text-align: left;
+  border-bottom: 1px solid color-mix(in srgb, #0f172a 12%, transparent);
+}
+
+.cfx-table thead th {
+  font-size: 0.72rem;
+  text-transform: uppercase;
+  letter-spacing: 0.03em;
+  color: var(--muted, #64748b);
+}
+
+.cfx-date,
+.cfx-montant {
+  font-variant-numeric: tabular-nums;
+  white-space: nowrap;
+}
+
+.cfx-acte {
+  font-weight: 600;
+}
+
+.cfx-commentaire {
+  font-size: 0.76rem;
+}
+
+.cfx-badge {
+  margin-left: 0.4rem;
+  padding: 0.05rem 0.45rem;
+  border-radius: 999px;
+  font-size: 0.68rem;
+  font-weight: 600;
+  white-space: nowrap;
+}
+
+.cfx-badge-depassee {
+  background: #fee2e2;
+  color: #b91c1c;
+}
+
+.cfx-badge-proche {
+  background: #fef3c7;
+  color: #b45309;
+}
+
+.cfx-badge-avenir {
+  background: #dcfce7;
+  color: #15803d;
+}
+
+.cfx-note {
+  margin: 0.6rem 0 0;
+  font-size: 0.76rem;
+  font-style: italic;
+}
+
 /* ── Reconduction d'une mission clôturée sur l'exercice N+1 ─────────── */
 
 .recond-btn {

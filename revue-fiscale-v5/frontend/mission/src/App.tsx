@@ -69,6 +69,7 @@ import {
 import { PhoneField } from "./PhoneField";
 import { PROCESS_TIPS } from "./processTips";
 import { PointsAnterieursVue } from "./PointsAnterieursVue";
+import { ControlesFiscauxVue } from "./ControlesFiscauxVue";
 import { RapprochementTvaVue } from "./RapprochementTvaVue";
 import { RestitutionVue } from "./RestitutionVue";
 import { DossierMissionVue } from "./DossierMissionVue";
@@ -6068,6 +6069,15 @@ export function App() {
                           balance) — la saisie des périodes déclarées
                           reste un clic explicite du fiscaliste. */}
                       <RapprochementTvaVue
+                        missionId={restitution.mission_id}
+                        jeton={session?.jeton}
+                        estLecteur={estLecteur}
+                      />
+                      {/* Suivi consultatif des contrôles fiscaux et
+                          contentieux — délais de riposte LPF calculés,
+                          la consignation reste un clic explicite du
+                          fiscaliste. */}
+                      <ControlesFiscauxVue
                         missionId={restitution.mission_id}
                         jeton={session?.jeton}
                         estLecteur={estLecteur}
