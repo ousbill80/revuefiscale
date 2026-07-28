@@ -50,6 +50,8 @@ BLOCS_DOSSIER: Final[tuple[str, ...]] = (
     "rapprochement_salaires",
     "patente",
     "charge_fiscale",
+    "completude_declarative",
+    "coherence_ca",
 )
 
 MENTION_NOTE: Final[str] = (
@@ -459,6 +461,68 @@ def _bloc_charge_fiscale(
     }
 
 
+def _bloc_completude_declarative(
+    session: Session, tenant_id: int, mission_id: int
+) -> dict[str, Any]:
+    """Complétude déclarative — synthèse des périodes mensuelles échues.
+
+    Projection SYNTHÉTIQUE de
+    :func:`backend.plateforme.completude_declarative.completude_declarative_mission`
+    (même pattern que :func:`_bloc_charge_fiscale`) : statut global,
+    nombre de périodes manquantes et, par impôt mensuel, statut /
+    manquantes / taux de couverture — ni le détail des périodes ni les
+    références CGI, restitués par l'écran dédié. Aucun recalcul ici.
+    """
+    from backend.plateforme.completude_declarative import (
+        completude_declarative_mission,
+    )
+
+    c = completude_declarative_mission(session, tenant_id, mission_id)
+    s = c.get("synthese") or {}
+    return {
+        "exercice": c.get("exercice"),
+        "synthese": {
+            "statut_global": s.get("statut_global"),
+            "nb_manquantes_total": s.get("nb_manquantes_total"),
+        },
+        "impots": {
+            cle: {
+                "statut": (bloc or {}).get("statut"),
+                "nb_manquantes": (bloc or {}).get("nb_manquantes"),
+                "taux_couverture": (bloc or {}).get("taux_couverture"),
+            }
+            for cle, bloc in (c.get("impots") or {}).items()
+        },
+        "note": c.get("note"),
+    }
+
+
+def _bloc_coherence_ca(
+    session: Session, tenant_id: int, mission_id: int
+) -> dict[str, Any]:
+    """Cohérence CA / TVA — croisement consultatif du chiffre d'affaires.
+
+    Projection SYNTHÉTIQUE de
+    :func:`backend.plateforme.coherence_ca.coherence_ca_mission` (même
+    pattern que :func:`_bloc_patente`) : statut, CA comptable, CA
+    reconstitué (approximation assumée au seul taux normal), écart et
+    écart relatif — ni le détail des déclarations ni les références
+    CGI, restitués par l'écran dédié. Aucun recalcul ici.
+    """
+    from backend.plateforme.coherence_ca import coherence_ca_mission
+
+    c = coherence_ca_mission(session, tenant_id, mission_id)
+    return {
+        "statut": c.get("statut"),
+        "ca_comptable": c.get("ca_comptable"),
+        "ca_reconstitue": c.get("ca_reconstitue"),
+        "ecart": c.get("ecart"),
+        "ecart_relatif_pct": c.get("ecart_relatif_pct"),
+        "approximation": c.get("approximation"),
+        "note": c.get("note"),
+    }
+
+
 #: Blocs facultatifs : (clé, constructeur) — chacun est TOLÉRANT.
 _BLOCS_FACULTATIFS: Final[
     tuple[tuple[str, Callable[[Session, int, int], dict[str, Any] | None]], ...]
@@ -476,6 +540,8 @@ _BLOCS_FACULTATIFS: Final[
     ("rapprochement_salaires", _bloc_rapprochement_salaires),
     ("patente", _bloc_patente),
     ("charge_fiscale", _bloc_charge_fiscale),
+    ("completude_declarative", _bloc_completude_declarative),
+    ("coherence_ca", _bloc_coherence_ca),
 )
 
 

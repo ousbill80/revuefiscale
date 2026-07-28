@@ -210,6 +210,32 @@ type ChargeFiscaleDossier = {
   note: string | null;
 };
 
+type ImpotCompletudeDossier = {
+  statut: string | null;
+  nb_manquantes: number | null;
+  taux_couverture: string | null;
+};
+
+type CompletudeDeclarativeDossier = {
+  exercice: number | null;
+  synthese: {
+    statut_global: string | null;
+    nb_manquantes_total: number | null;
+  } | null;
+  impots: Record<string, ImpotCompletudeDossier> | null;
+  note: string | null;
+};
+
+type CoherenceCaDossier = {
+  statut: string | null;
+  ca_comptable: string | null;
+  ca_reconstitue: string | null;
+  ecart: string | null;
+  ecart_relatif_pct: string | null;
+  approximation: boolean | null;
+  note: string | null;
+};
+
 type DossierOut = {
   identite: IdentiteDossier | null;
   risques: RisquesDossier | null;
@@ -225,6 +251,8 @@ type DossierOut = {
   rapprochement_salaires: RapprochementSalairesDossier | null;
   patente: PatenteDossier | null;
   charge_fiscale: ChargeFiscaleDossier | null;
+  completude_declarative: CompletudeDeclarativeDossier | null;
+  coherence_ca: CoherenceCaDossier | null;
   blocs_disponibles: number;
   genere_le: string;
   note: string;
@@ -304,6 +332,25 @@ const COMPOSANTES_CHARGE_FISCALE_FR: Record<string, string> = {
   salaires: "impôts sur salaires déclarés",
   tva: "TVA nette déclarée",
   acomptes: "position d'acomptes",
+};
+
+const STATUTS_COMPLETUDE_DECLARATIVE_FR: Record<string, string> = {
+  complet: "Complet — toutes les périodes échues sont couvertes",
+  lacunaire: "Lacunaire — des périodes échues sont sans déclaration saisie",
+  aucune_saisie: "Aucune saisie — aucune période échue n'est couverte",
+  sans_periode_echue: "Sans période échue sur l'exercice",
+};
+
+const LIBELLES_IMPOT_COMPLETUDE_FR: Record<string, string> = {
+  tva: "TVA (déclaration mensuelle)",
+  salaires: "Impôts sur salaires (déclaration mensuelle)",
+};
+
+const STATUTS_COHERENCE_CA_FR: Record<string, string> = {
+  indisponible:
+    "Croisement indisponible — importez la balance (comptes 70x) et saisissez au moins une déclaration de TVA",
+  coherent: "Cohérent — écart relatif dans le seuil indicatif",
+  ecart_a_expliquer: "Écart à expliquer — l'humain apprécie",
 };
 
 const STATUTS_MATERIALITE_FR: Record<string, string> = {
@@ -963,6 +1010,99 @@ export function DossierMissionVue({ missionId, jeton }: Props) {
                     .map((c) => COMPOSANTES_CHARGE_FISCALE_FR[c] ?? c)
                     .join(", ")}
                   .
+                </p>
+              )}
+            </section>
+          )}
+
+          {dossier.completude_declarative != null && (
+            <section className="dossier-section">
+              <h3 className="dossier-section-titre">
+                Complétude déclarative
+              </h3>
+              <p>
+                Statut :{" "}
+                {dossier.completude_declarative.synthese?.statut_global
+                  ? (STATUTS_COMPLETUDE_DECLARATIVE_FR[
+                      dossier.completude_declarative.synthese.statut_global
+                    ] ?? dossier.completude_declarative.synthese.statut_global)
+                  : "—"}{" "}
+                —{" "}
+                {dossier.completude_declarative.synthese
+                  ?.nb_manquantes_total ?? 0}{" "}
+                période(s) échue(s) sans déclaration saisie sur l'exercice{" "}
+                {dossier.completude_declarative.exercice ?? "—"}.
+              </p>
+              {dossier.completude_declarative.impots != null && (
+                <table className="dossier-table">
+                  <thead>
+                    <tr>
+                      <th>Impôt mensuel</th>
+                      <th>Statut</th>
+                      <th>Périodes manquantes</th>
+                      <th>Taux de couverture</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {Object.entries(
+                      dossier.completude_declarative.impots,
+                    ).map(([cle, impot]) => (
+                      <tr key={cle}>
+                        <td>{LIBELLES_IMPOT_COMPLETUDE_FR[cle] ?? cle}</td>
+                        <td>
+                          {impot.statut
+                            ? (STATUTS_COMPLETUDE_DECLARATIVE_FR[
+                                impot.statut
+                              ] ?? impot.statut)
+                            : "—"}
+                        </td>
+                        <td>{impot.nb_manquantes ?? "—"}</td>
+                        <td>
+                          {impot.taux_couverture != null
+                            ? `${fmtPct(impot.taux_couverture)} %`
+                            : "—"}
+                        </td>
+                      </tr>
+                    ))}
+                  </tbody>
+                </table>
+              )}
+              <p className="dossier-note">
+                La saisie dans l'outil ne prouve pas le dépôt effectif à la
+                DGI : seuls les quittances et accusés de dépôt font foi.
+              </p>
+            </section>
+          )}
+
+          {dossier.coherence_ca != null && (
+            <section className="dossier-section">
+              <h3 className="dossier-section-titre">Cohérence CA / TVA</h3>
+              <p>
+                Statut :{" "}
+                {dossier.coherence_ca.statut
+                  ? (STATUTS_COHERENCE_CA_FR[dossier.coherence_ca.statut] ??
+                    dossier.coherence_ca.statut)
+                  : "—"}
+                .
+              </p>
+              {dossier.coherence_ca.statut !== "indisponible" && (
+                <p>
+                  CA comptable (comptes 70x) :{" "}
+                  {formatMontant(dossier.coherence_ca.ca_comptable)} — CA
+                  reconstitué depuis la TVA collectée déclarée :{" "}
+                  {formatMontant(dossier.coherence_ca.ca_reconstitue)} —
+                  écart : {formatMontant(dossier.coherence_ca.ecart)}
+                  {dossier.coherence_ca.ecart_relatif_pct != null
+                    ? ` (${dossier.coherence_ca.ecart_relatif_pct} %)`
+                    : ""}
+                  .
+                </p>
+              )}
+              {dossier.coherence_ca.approximation && (
+                <p className="dossier-note">
+                  Approximation assumée : reconstitution au seul taux normal
+                  de 18 % — exonérations, taux réduits et opérations hors
+                  champ ignorés. Un écart s'explique, il ne se conclut pas.
                 </p>
               )}
             </section>
