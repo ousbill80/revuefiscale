@@ -69,6 +69,7 @@ import {
 import { PhoneField } from "./PhoneField";
 import { PROCESS_TIPS } from "./processTips";
 import { PointsAnterieursVue } from "./PointsAnterieursVue";
+import { RapprochementTvaVue } from "./RapprochementTvaVue";
 import { RestitutionVue } from "./RestitutionVue";
 import { DossierMissionVue } from "./DossierMissionVue";
 import { LettreMissionVue } from "./LettreMissionVue";
@@ -6061,6 +6062,15 @@ export function App() {
                                 });
                               }
                         }
+                      />
+                      {/* Rapprochement consultatif TVA déclarée /
+                          comptabilisée (comptes 443x/445x de la
+                          balance) — la saisie des périodes déclarées
+                          reste un clic explicite du fiscaliste. */}
+                      <RapprochementTvaVue
+                        missionId={restitution.mission_id}
+                        jeton={session?.jeton}
+                        estLecteur={estLecteur}
                       />
                       <DossierMissionVue
                         missionId={restitution.mission_id}

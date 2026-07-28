@@ -4447,6 +4447,107 @@ def api_revue_analytique_mission(
         ) from e
 
 
+@router.get("/missions/{mission_id}/rapprochement-tva")
+def api_rapprochement_tva_mission(
+    mission_id: int,
+    utilisateur: UtilisateurDep,
+    session: Annotated[Session, Depends(session_abonne)],
+) -> dict:
+    """Rapprochement TVA déclarée / comptabilisée — lecture seule.
+
+    Compare la TVA des déclarations saisies (declaration_tva) aux
+    comptes 443x/445x (et 444x, informatif) de la balance importée.
+    Écarts par nature en cumul annuel avec seuil de signification —
+    vue strictement consultative, l'humain décide. Se construit
+    toujours (disponible=false sans déclaration ou sans compte TVA).
+    404 si mission hors tenant (RLS).
+    """
+    from backend.moteur.journal import append_journal
+    from backend.plateforme.rapprochement_tva import (
+        ACTION_CONSULTATION,
+        ErreurRapprochementTvaIntrouvable,
+        rapprochement_tva_mission,
+    )
+
+    exiger_capacite(utilisateur, "lire")
+    try:
+        vue = rapprochement_tva_mission(
+            session, utilisateur.tenant_id, mission_id
+        )
+    except ErreurRapprochementTvaIntrouvable as e:
+        raise HTTPException(
+            status_code=status.HTTP_404_NOT_FOUND, detail=str(e)
+        ) from e
+    append_journal(
+        session,
+        tenant_id=utilisateur.tenant_id,
+        mission_id=mission_id,
+        acteur=utilisateur.email,
+        action=ACTION_CONSULTATION,
+        charge_utile={
+            "statut": vue["synthese"]["statut"],
+            "nb_periodes_declarees": (
+                vue["synthese"]["nb_periodes_declarees"]
+            ),
+            "nb_ecarts_significatifs": (
+                vue["synthese"]["nb_ecarts_significatifs"]
+            ),
+        },
+    )
+    return vue
+
+
+class DeclarationTvaIn(BaseModel):
+    """Saisie de la TVA déclarée d'une période mensuelle (AAAA-MM).
+
+    Montants en FCFA (chaînes ou nombres) — re-saisir une période déjà
+    connue remplace ses montants (correction humaine).
+    """
+
+    periode: str
+    tva_collectee: str | float | int | None = None
+    tva_deductible: str | float | int | None = None
+
+
+@router.post("/missions/{mission_id}/declarations-tva")
+def api_saisir_declaration_tva(
+    mission_id: int,
+    corps: DeclarationTvaIn,
+    utilisateur: UtilisateurDep,
+    session: Annotated[Session, Depends(session_abonne)],
+) -> dict:
+    """Saisit la TVA déclarée d'une période — clic explicite.
+
+    Période « AAAA-MM » et montants ≥ 0 requis (422 sinon) ; mission
+    hors tenant → 404 (RLS). Alimente le rapprochement TVA consultatif.
+    """
+    from backend.plateforme.rapprochement_tva import (
+        ErreurRapprochementTvaIntrouvable,
+        ErreurRapprochementTvaInvalide,
+        saisir_declaration_tva,
+    )
+
+    exiger_capacite(utilisateur, "executer_mission")
+    try:
+        return saisir_declaration_tva(
+            session,
+            utilisateur.tenant_id,
+            mission_id,
+            corps.periode,
+            corps.tva_collectee,
+            corps.tva_deductible,
+            acteur=utilisateur.email,
+        )
+    except ErreurRapprochementTvaIntrouvable as e:
+        raise HTTPException(
+            status_code=status.HTTP_404_NOT_FOUND, detail=str(e)
+        ) from e
+    except ErreurRapprochementTvaInvalide as e:
+        raise HTTPException(
+            status_code=status.HTTP_422_UNPROCESSABLE_ENTITY, detail=str(e)
+        ) from e
+
+
 @router.get("/missions/{mission_id}/controles-fec")
 def api_controles_fec_mission(
     mission_id: int,
