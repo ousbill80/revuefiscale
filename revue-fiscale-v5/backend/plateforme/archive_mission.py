@@ -48,6 +48,11 @@ from backend.plateforme.plan_actions import (
 from backend.plateforme.lettre_affirmation import generer_lettre_affirmation
 from backend.plateforme.ordre_du_jour import ordre_du_jour_mission
 from backend.plateforme.lettre_mission import generer_lettre_mission
+from backend.plateforme.missions import STATUT_CLOTUREE
+from backend.plateforme.panorama_conformite import (
+    NOTE_PANORAMA_CONFORMITE,
+    panorama_conformite_mission,
+)
 from backend.plateforme.prescription_risques import (
     analyse_mission as analyse_prescription_risques,
 )
@@ -858,6 +863,86 @@ def _piece_compte_rendu_reunion(
     return mettre_en_forme_compte_rendu(cr, mission_id).encode("utf-8")
 
 
+#: Libellés français courts des niveaux d'attention du panorama de
+#: conformité (vocabulaire fermé — aucun score, aucune conclusion).
+_LIBELLES_NIVEAUX_PANORAMA: Final[dict[str, str]] = {
+    "a_examiner": "À EXAMINER",
+    "a_qualifier": "À QUALIFIER",
+    "a_suivre": "À SUIVRE",
+    "sans_signal": "SANS SIGNAL",
+    "indisponible": "INDISPONIBLE",
+}
+
+
+def rendre_panorama_texte(panorama: dict[str, Any]) -> str:
+    """PUR — panorama de conformité → texte simple archivable.
+
+    ``panorama`` : charge de
+    :func:`backend.plateforme.panorama_conformite.panorama_conformite_mission`
+    (AUCUN recalcul ici), éventuellement enrichie d'une clé ``client``
+    par le constructeur de pièce. Tableau des volets avec libellés
+    français et niveau d'attention, compteurs par niveau, volets en
+    échec, note consultative en pied — aucune lecture DB (testable sans
+    base), défensif sur toute clé absente.
+    """
+    volets = [v for v in panorama.get("volets") or [] if isinstance(v, dict)]
+    exercice = panorama.get("exercice")
+    lignes = [
+        "PANORAMA DE CONFORMITÉ — agrégat consultatif de statuts",
+        f"Mission #{panorama.get('mission_id')} — client : "
+        f"{panorama.get('client') or '[non renseigné]'} — exercice "
+        f"{exercice if exercice is not None else '[non renseigné]'}",
+        "",
+        f"VOLETS SUIVIS ({len(volets)})",
+    ]
+    for v in volets:
+        niveau = str(v.get("niveau") or "")
+        badge = _LIBELLES_NIVEAUX_PANORAMA.get(niveau, niveau.upper())
+        ligne = f"  [{badge}] {v.get('libelle')}"
+        if v.get("statut_source"):
+            ligne += f" — statut de la vue : {v['statut_source']}"
+        lignes.append(ligne)
+    if not volets:
+        lignes.append("  (aucun)")
+
+    compteurs = panorama.get("compteurs") or {}
+    libelles_niveaux = panorama.get("libelles_niveaux") or {}
+    lignes += ["", "COMPTEURS PAR NIVEAU D'ATTENTION"]
+    for niveau, badge in _LIBELLES_NIVEAUX_PANORAMA.items():
+        libelle = libelles_niveaux.get(niveau) or badge
+        lignes.append(f"  - {libelle} : {int(compteurs.get(niveau) or 0)}")
+
+    en_echec = [str(c) for c in panorama.get("volets_en_echec") or []]
+    lignes += ["", f"VOLETS EN ÉCHEC ({len(en_echec)})"]
+    for cle in en_echec:
+        libelle = next(
+            (str(v.get("libelle")) for v in volets if v.get("volet") == cle),
+            cle,
+        )
+        lignes.append(
+            f"  - {libelle} : vue non servie "
+            "(module en échec ou données absentes)"
+        )
+    if not en_echec:
+        lignes.append("  (aucun)")
+
+    lignes += ["", f"* {panorama.get('note') or NOTE_PANORAMA_CONFORMITE}"]
+    return "\n".join(lignes)
+
+
+def _piece_panorama_conformite(
+    session: Session, tenant_id: int, mission_id: int, meta: dict[str, Any]
+) -> bytes:
+    """Panorama de conformité — synthèse des statuts agrégés par niveau
+    d'attention, figée au dossier de clôture (aucun recalcul : mêmes
+    données que l'écran). ``panorama_conformite_mission`` ouvre son
+    propre ``contexte_tenant`` : appel HORS de tout autre contexte."""
+    p = panorama_conformite_mission(session, tenant_id, mission_id)
+    donnees = dict(p)
+    donnees["client"] = meta.get("contribuable_denomination")
+    return rendre_panorama_texte(donnees).encode("utf-8")
+
+
 # Ordre du dossier : (nom de fichier dans le ZIP, description, constructeur).
 _PIECES: Final[
     tuple[tuple[str, str, Callable[[Session, int, int, dict[str, Any]], bytes]], ...]
@@ -984,6 +1069,29 @@ _PIECES: Final[
     ),
 )
 
+#: Pièce de clôture — synthèse du panorama de conformité. Ajoutée au
+#: dossier UNIQUEMENT quand la mission est clôturée (photographie des
+#: niveaux d'attention au moment de la clôture) : les dossiers de
+#: travail intermédiaires restent strictement inchangés.
+_PIECE_PANORAMA: Final[
+    tuple[str, str, Callable[[Session, int, int, dict[str, Any]], bytes]]
+] = (
+    "25_panorama_conformite.txt",
+    "Panorama de conformité (niveaux d'attention par volet, consultatif)",
+    _piece_panorama_conformite,
+)
+
+
+def _pieces_du_dossier(
+    meta: dict[str, Any],
+) -> tuple[tuple[str, str, Callable[[Session, int, int, dict[str, Any]], bytes]], ...]:
+    """Pièces à tenter pour ce dossier — mission clôturée : le panorama
+    de conformité s'y ajoute (même tolérance par pièce que les autres :
+    un échec est signalé au sommaire, jamais bloquant)."""
+    if str(meta.get("statut") or "").lower() == STATUT_CLOTUREE:
+        return _PIECES + (_PIECE_PANORAMA,)
+    return _PIECES
+
 
 def _sommaire(
     meta: dict[str, Any],
@@ -1034,7 +1142,7 @@ def construire_dossier(
     incluses: list[tuple[str, str]] = []
     omises: list[tuple[str, str]] = []
     contenus: list[tuple[str, bytes]] = []
-    for nom, description, construire in _PIECES:
+    for nom, description, construire in _pieces_du_dossier(meta):
         try:
             contenus.append((nom, construire(session, tenant_id, mission_id, meta)))
             incluses.append((nom, description))
