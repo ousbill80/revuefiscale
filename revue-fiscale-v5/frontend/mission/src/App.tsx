@@ -72,6 +72,7 @@ import { PROCESS_TIPS } from "./processTips";
 import { PointsAnterieursVue } from "./PointsAnterieursVue";
 import { ControlesFiscauxVue } from "./ControlesFiscauxVue";
 import { RapprochementTvaVue } from "./RapprochementTvaVue";
+import { RapprochementSalairesVue } from "./RapprochementSalairesVue";
 import { AcomptesVue } from "./AcomptesVue";
 import { MaterialiteVue } from "./MaterialiteVue";
 import { ProgrammeProposeVue } from "./ProgrammeProposeVue";
@@ -6099,6 +6100,16 @@ export function App() {
                           balance) — la saisie des périodes déclarées
                           reste un clic explicite du fiscaliste. */}
                       <RapprochementTvaVue
+                        missionId={restitution.mission_id}
+                        jeton={session?.jeton}
+                        estLecteur={estLecteur}
+                      />
+                      {/* Rapprochement consultatif des impôts sur
+                          salaires déclarés / masse salariale
+                          comptabilisée (comptes 66x, informatif
+                          447x/42x) — la saisie des périodes déclarées
+                          reste un clic explicite du fiscaliste. */}
+                      <RapprochementSalairesVue
                         missionId={restitution.mission_id}
                         jeton={session?.jeton}
                         estLecteur={estLecteur}

@@ -4548,6 +4548,111 @@ def api_saisir_declaration_tva(
         ) from e
 
 
+@router.get("/missions/{mission_id}/rapprochement-salaires")
+def api_rapprochement_salaires_mission(
+    mission_id: int,
+    utilisateur: UtilisateurDep,
+    session: Annotated[Session, Depends(session_abonne)],
+) -> dict:
+    """Rapprochement impôts sur salaires déclaré / comptabilisé.
+
+    Compare la masse salariale des déclarations de salaires saisies
+    (declaration_salaires) aux comptes 66x « Charges de personnel » de
+    la balance importée, en cumul annuel avec seuil de signification ;
+    comptes 447x/42x restitués à titre informatif. Vue strictement
+    consultative, l'humain décide. Se construit toujours
+    (disponible=false sans déclaration ou sans compte 66x). 404 si
+    mission hors tenant (RLS).
+    """
+    from backend.moteur.journal import append_journal
+    from backend.plateforme.rapprochement_salaires import (
+        ACTION_CONSULTATION,
+        ErreurRapprochementSalairesIntrouvable,
+        rapprochement_salaires_mission,
+    )
+
+    exiger_capacite(utilisateur, "lire")
+    try:
+        vue = rapprochement_salaires_mission(
+            session, utilisateur.tenant_id, mission_id
+        )
+    except ErreurRapprochementSalairesIntrouvable as e:
+        raise HTTPException(
+            status_code=status.HTTP_404_NOT_FOUND, detail=str(e)
+        ) from e
+    append_journal(
+        session,
+        tenant_id=utilisateur.tenant_id,
+        mission_id=mission_id,
+        acteur=utilisateur.email,
+        action=ACTION_CONSULTATION,
+        charge_utile={
+            "statut": vue["synthese"]["statut"],
+            "nb_periodes_declarees": (
+                vue["synthese"]["nb_periodes_declarees"]
+            ),
+            "nb_ecarts_significatifs": (
+                vue["synthese"]["nb_ecarts_significatifs"]
+            ),
+        },
+    )
+    return vue
+
+
+class DeclarationSalairesIn(BaseModel):
+    """Saisie d'une déclaration de salaires d'une période (AAAA-MM).
+
+    Montants en FCFA (chaînes ou nombres) — re-saisir une période déjà
+    connue remplace ses montants (correction humaine).
+    """
+
+    periode: str
+    masse_salariale_brute: str | float | int | None = None
+    its_retenu: str | float | int | None = None
+    contribution_employeur: str | float | int | None = None
+
+
+@router.post("/missions/{mission_id}/declarations-salaires")
+def api_saisir_declaration_salaires(
+    mission_id: int,
+    corps: DeclarationSalairesIn,
+    utilisateur: UtilisateurDep,
+    session: Annotated[Session, Depends(session_abonne)],
+) -> dict:
+    """Saisit la déclaration de salaires d'une période — clic explicite.
+
+    Période « AAAA-MM » et montants ≥ 0 requis (422 sinon) ; mission
+    hors tenant → 404 (RLS). Alimente le rapprochement consultatif des
+    impôts sur salaires.
+    """
+    from backend.plateforme.rapprochement_salaires import (
+        ErreurRapprochementSalairesIntrouvable,
+        ErreurRapprochementSalairesInvalide,
+        saisir_declaration_salaires,
+    )
+
+    exiger_capacite(utilisateur, "executer_mission")
+    try:
+        return saisir_declaration_salaires(
+            session,
+            utilisateur.tenant_id,
+            mission_id,
+            corps.periode,
+            corps.masse_salariale_brute,
+            corps.its_retenu,
+            corps.contribution_employeur,
+            acteur=utilisateur.email,
+        )
+    except ErreurRapprochementSalairesIntrouvable as e:
+        raise HTTPException(
+            status_code=status.HTTP_404_NOT_FOUND, detail=str(e)
+        ) from e
+    except ErreurRapprochementSalairesInvalide as e:
+        raise HTTPException(
+            status_code=status.HTTP_422_UNPROCESSABLE_ENTITY, detail=str(e)
+        ) from e
+
+
 @router.get("/missions/{mission_id}/acomptes")
 def api_acomptes_mission(
     mission_id: int,
