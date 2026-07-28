@@ -49,6 +49,7 @@ BLOCS_DOSSIER: Final[tuple[str, ...]] = (
     "acomptes",
     "rapprochement_salaires",
     "patente",
+    "charge_fiscale",
 )
 
 MENTION_NOTE: Final[str] = (
@@ -428,6 +429,36 @@ def _bloc_patente(
     }
 
 
+def _bloc_charge_fiscale(
+    session: Session, tenant_id: int, mission_id: int
+) -> dict[str, Any]:
+    """Charge fiscale estimée — synthèse du panorama consultatif.
+
+    Projection SYNTHÉTIQUE de
+    :func:`backend.plateforme.charge_fiscale.charge_fiscale_mission`
+    (même pattern que :func:`_bloc_patente`) : total de charge propre
+    PARTIEL, composantes incluses / indisponibles et synthèse — ni le
+    détail des composantes ni les références CGI, restitués par
+    l'écran dédié. Aucun recalcul ici.
+    """
+    from backend.plateforme.charge_fiscale import charge_fiscale_mission
+
+    c = charge_fiscale_mission(session, tenant_id, mission_id)
+    return {
+        "total_charge_propre_estimee": c.get(
+            "total_charge_propre_estimee"
+        ),
+        "composantes_incluses_total": list(
+            c.get("composantes_incluses_total") or []
+        ),
+        "composantes_indisponibles": list(
+            c.get("composantes_indisponibles") or []
+        ),
+        "synthese": c.get("synthese"),
+        "note": c.get("note"),
+    }
+
+
 #: Blocs facultatifs : (clé, constructeur) — chacun est TOLÉRANT.
 _BLOCS_FACULTATIFS: Final[
     tuple[tuple[str, Callable[[Session, int, int], dict[str, Any] | None]], ...]
@@ -444,6 +475,7 @@ _BLOCS_FACULTATIFS: Final[
     ("acomptes", _bloc_acomptes),
     ("rapprochement_salaires", _bloc_rapprochement_salaires),
     ("patente", _bloc_patente),
+    ("charge_fiscale", _bloc_charge_fiscale),
 )
 
 

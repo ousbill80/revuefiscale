@@ -195,6 +195,21 @@ type PatenteDossier = {
   note: string | null;
 };
 
+type ChargeFiscaleDossier = {
+  synthese: {
+    statut: string | null;
+    libelle_statut: string | null;
+    nb_composantes_disponibles: number | null;
+    nb_composantes_suivies: number | null;
+    total_partiel: boolean | null;
+    tva_nette_declaree: string | null;
+  } | null;
+  total_charge_propre_estimee: string | null;
+  composantes_incluses_total: string[];
+  composantes_indisponibles: string[];
+  note: string | null;
+};
+
 type DossierOut = {
   identite: IdentiteDossier | null;
   risques: RisquesDossier | null;
@@ -209,6 +224,7 @@ type DossierOut = {
   acomptes: AcomptesDossier | null;
   rapprochement_salaires: RapprochementSalairesDossier | null;
   patente: PatenteDossier | null;
+  charge_fiscale: ChargeFiscaleDossier | null;
   blocs_disponibles: number;
   genere_le: string;
   note: string;
@@ -273,6 +289,21 @@ const STATUTS_PATENTE_FR: Record<string, string> = {
     "Estimation indisponible — importez la balance (comptes 70x)",
   estimation_partielle:
     "Estimation partielle (droit sur le chiffre d'affaires seul)",
+};
+
+const STATUTS_CHARGE_FISCALE_FR: Record<string, string> = {
+  indisponible:
+    "Panorama indisponible — importez la balance et saisissez les déclarations",
+  partiel: "Panorama partiel — certaines composantes sont indisponibles",
+  complet: "Panorama complet — toutes les composantes suivies sont estimées",
+};
+
+const COMPOSANTES_CHARGE_FISCALE_FR: Record<string, string> = {
+  is: "IS théorique",
+  patente: "patente (partielle)",
+  salaires: "impôts sur salaires déclarés",
+  tva: "TVA nette déclarée",
+  acomptes: "position d'acomptes",
 };
 
 const STATUTS_MATERIALITE_FR: Record<string, string> = {
@@ -872,6 +903,66 @@ export function DossierMissionVue({ missionId, jeton }: Props) {
                     : ""}
                   . Le droit sur la valeur locative n'est pas calculable
                   depuis la balance.
+                </p>
+              )}
+            </section>
+          )}
+
+          {dossier.charge_fiscale != null && (
+            <section className="dossier-section">
+              <h3 className="dossier-section-titre">
+                Charge fiscale estimée
+              </h3>
+              <p>
+                Statut :{" "}
+                {dossier.charge_fiscale.synthese?.statut
+                  ? (STATUTS_CHARGE_FISCALE_FR[
+                      dossier.charge_fiscale.synthese.statut
+                    ] ??
+                    dossier.charge_fiscale.synthese.libelle_statut ??
+                    dossier.charge_fiscale.synthese.statut)
+                  : "—"}{" "}
+                —{" "}
+                {dossier.charge_fiscale.synthese
+                  ?.nb_composantes_disponibles ?? 0}
+                /
+                {dossier.charge_fiscale.synthese?.nb_composantes_suivies ??
+                  0}{" "}
+                composante(s) estimée(s).
+              </p>
+              {dossier.charge_fiscale.synthese?.statut !==
+                "indisponible" && (
+                <p>
+                  Total de charge propre estimé (partiel, hors TVA et hors
+                  position d'acomptes) :{" "}
+                  {formatMontant(
+                    dossier.charge_fiscale.total_charge_propre_estimee,
+                  )}
+                  {dossier.charge_fiscale.composantes_incluses_total
+                    .length > 0
+                    ? ` — composantes incluses : ${dossier.charge_fiscale.composantes_incluses_total
+                        .map(
+                          (c) => COMPOSANTES_CHARGE_FISCALE_FR[c] ?? c,
+                        )
+                        .join(", ")}`
+                    : ""}
+                  .
+                  {dossier.charge_fiscale.synthese?.tva_nette_declaree !=
+                  null
+                    ? ` TVA nette déclarée (présentée séparément) : ${formatMontant(
+                        dossier.charge_fiscale.synthese.tva_nette_declaree,
+                      )}.`
+                    : ""}
+                </p>
+              )}
+              {dossier.charge_fiscale.composantes_indisponibles.length >
+                0 && (
+                <p className="dossier-note">
+                  Composantes indisponibles :{" "}
+                  {dossier.charge_fiscale.composantes_indisponibles
+                    .map((c) => COMPOSANTES_CHARGE_FISCALE_FR[c] ?? c)
+                    .join(", ")}
+                  .
                 </p>
               )}
             </section>
