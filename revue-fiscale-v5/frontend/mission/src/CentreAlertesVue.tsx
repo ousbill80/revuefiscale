@@ -38,6 +38,7 @@ const LIBELLES_TYPE: Record<string, string> = {
   budget_temps: "Budget temps",
   delai_lpf: "Délai LPF",
   completude_declarative: "Complétude déclarative",
+  coherence_ca: "Cohérence du chiffre d'affaires",
 };
 
 const LIBELLES_GRAVITE: Record<Gravite, string> = {

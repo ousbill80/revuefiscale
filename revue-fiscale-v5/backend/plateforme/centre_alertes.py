@@ -14,9 +14,11 @@ anciens > 30 j), :mod:`backend.plateforme.echeances_cabinet` (dates
 limites des 30 prochains jours),
 :mod:`backend.plateforme.rentabilite_mission` (budget temps en
 vigilance / dépassement), :mod:`backend.plateforme.controles_fiscaux`
-(délais de riposte LPF proches ou dépassés) et
+(délais de riposte LPF proches ou dépassés),
 :mod:`backend.plateforme.completude_declarative` (périodes mensuelles
-échues sans déclaration saisie). Aucun calcul métier n'est
+échues sans déclaration saisie) et
+:mod:`backend.plateforme.coherence_ca` (écart à expliquer entre CA
+comptable et CA reconstitué depuis la TVA). Aucun calcul métier n'est
 dupliqué : seules des fonctions PURES de conversion, tri, plafond et
 synthèse s'ajoutent ici.
 
@@ -28,8 +30,9 @@ via ``contexte_tenant`` — AUCUNE écriture, AUCUNE migration.
 """
 from __future__ import annotations
 
+from collections.abc import Callable
 from datetime import date
-from typing import Any, Callable, Final
+from typing import Any, Final
 
 from sqlalchemy import text
 from sqlalchemy.orm import Session
@@ -51,6 +54,7 @@ TYPES_ALERTE: Final[tuple[str, ...]] = (
     "budget_temps",
     "delai_lpf",
     "completude_declarative",
+    "coherence_ca",
 )
 
 # Plafond d'alertes restituées — vue de pilotage, pas un export.
@@ -63,13 +67,19 @@ PLAFOND_EVENEMENTS_LPF: Final[int] = 200
 # (chaque mission déclenche une lecture — coût borné).
 PLAFOND_MISSIONS_COMPLETUDE: Final[int] = 200
 
+# Plafond de missions examinées pour la cohérence du chiffre
+# d'affaires (chaque mission déclenche une lecture — coût borné).
+PLAFOND_MISSIONS_COHERENCE_CA: Final[int] = 200
+
 MENTION_NOTE: Final[str] = (
     "Centre d'alertes consultatif du cabinet — agrégation déterministe "
     "des signaux déjà calculés par les tableaux de bord existants : "
     "points convenus en retard ou anciens, échéances fiscales des 30 "
     "prochains jours, budget temps en vigilance ou dépassement, délais "
     "de riposte LPF proches ou dépassés, périodes mensuelles échues "
-    "sans déclaration saisie. Aucune alerte n'est envoyée "
+    "sans déclaration saisie, écarts à expliquer entre chiffre "
+    "d'affaires comptable et chiffre d'affaires reconstitué depuis la "
+    "TVA déclarée. Aucune alerte n'est envoyée "
     "par email : tout reste dans l'application. Ces signaux éclairent "
     "la priorisation — le fiscaliste apprécie et décide, rien n'est "
     "automatique."
@@ -132,8 +142,8 @@ def plafonner_alertes(items: list[dict[str, Any]]) -> list[dict[str, Any]]:
 
 def synthese_alertes(items: list[dict[str, Any]]) -> dict[str, Any]:
     """PUR — compteurs : total, par gravité, par type, clients."""
-    par_gravite = {g: 0 for g in GRAVITES}
-    par_type = {t: 0 for t in TYPES_ALERTE}
+    par_gravite = dict.fromkeys(GRAVITES, 0)
+    par_type = dict.fromkeys(TYPES_ALERTE, 0)
     for i in items:
         g = str(i.get("gravite") or "")
         t = str(i.get("type") or "")
@@ -412,6 +422,57 @@ def alertes_depuis_completude(
     return alertes
 
 
+def alertes_depuis_coherence_ca(
+    vues: list[dict[str, Any]],
+) -> list[dict[str, Any]]:
+    """PUR — écarts CA comptable / CA reconstitué → alertes coherence_ca.
+
+    ``vues`` : entrées ``{client, mission_id, coherence}`` où
+    ``coherence`` est la vue déjà construite par
+    :func:`backend.plateforme.coherence_ca.coherence_ca_mission`
+    (aucun recalcul ici). Statut « ecart_a_expliquer » → vigilance —
+    JAMAIS critique : la reconstitution est une approximation
+    mono-taux documentée, l'écart s'EXPLIQUE (exonérations, taux
+    réduits, décalages), il ne s'accuse pas. Cohérent ou indisponible
+    → rien.
+    """
+    from backend.plateforme.coherence_ca import STATUT_ECART
+
+    alertes: list[dict[str, Any]] = []
+    for m in vues:
+        vue = m.get("coherence") or {}
+        if not vue.get("disponible"):
+            continue
+        if str(vue.get("statut") or "") != STATUT_ECART:
+            continue
+        exercice = vue.get("exercice")
+        pct = vue.get("ecart_relatif_pct")
+        libelle = (
+            "écart CA comptable / CA reconstitué TVA — "
+            f"exercice {exercice}"
+        )
+        if pct not in (None, ""):
+            libelle += f", écart relatif {pct} %"
+        libelle += (
+            " — approximation mono-taux — écart à expliquer "
+            "(exonérations, taux réduits, décalages)"
+        )
+        alertes.append(
+            {
+                "type": "coherence_ca",
+                # JAMAIS critique — approximation assumée, non
+                # accusatoire : l'humain apprécie et décide.
+                "gravite": "vigilance",
+                "client": m.get("client"),
+                "mission_id": m.get("mission_id"),
+                "libelle": libelle,
+                "echeance": None,
+                "lien": "coherence_ca",
+            }
+        )
+    return alertes
+
+
 # ── Sources (chacune réutilise un module existant, RLS) ──────────────
 
 
@@ -497,7 +558,7 @@ def _source_lpf(
         # pas les alertes des autres missions.
         try:
             chronologie = construire_chronologie(entree["bruts"], jour)
-        except Exception:  # noqa: BLE001 — mission annexe tolérée
+        except Exception:  # noqa: BLE001, S112 — mission annexe tolérée
             continue
         chronologies.append(
             {
@@ -559,6 +620,57 @@ def _source_completude(
     return alertes_depuis_completude(vues)
 
 
+def _source_coherence_ca(
+    session: Session, tenant_id: int, jour: date
+) -> list[dict[str, Any]]:
+    """Cohérence du chiffre d'affaires des missions — module coherence_ca.
+
+    Missions non clôturées du tenant (plafonnées à
+    :data:`PLAFOND_MISSIONS_COHERENCE_CA`) : pour chacune, la vue est
+    celle DÉJÀ construite par
+    :func:`backend.plateforme.coherence_ca.coherence_ca_mission`
+    (aucun recalcul du croisement ici). Une mission disparue entre les
+    deux lectures est simplement omise.
+    """
+    from backend.plateforme.coherence_ca import (
+        ErreurCoherenceCaIntrouvable,
+        coherence_ca_mission,
+    )
+    from backend.plateforme.missions import STATUT_CLOTUREE
+
+    with contexte_tenant(session, tenant_id):
+        rows = session.execute(
+            text(
+                "SELECT m.id AS mission_id, "
+                "c.denomination AS client "
+                "FROM mission m "
+                "JOIN contribuable c ON c.id = m.contribuable_id "
+                "WHERE m.statut <> :clos "
+                "ORDER BY c.denomination, m.id "
+                "LIMIT :lim"
+            ),
+            {"clos": STATUT_CLOTUREE,
+             "lim": PLAFOND_MISSIONS_COHERENCE_CA},
+        ).mappings().all()
+
+    vues: list[dict[str, Any]] = []
+    for r in rows:
+        try:
+            vue = coherence_ca_mission(
+                session, tenant_id, int(r["mission_id"])
+            )
+        except ErreurCoherenceCaIntrouvable:
+            continue
+        vues.append(
+            {
+                "client": str(r["client"] or ""),
+                "mission_id": int(r["mission_id"]),
+                "coherence": vue,
+            }
+        )
+    return alertes_depuis_coherence_ca(vues)
+
+
 #: Sources agrégées : (nom, constructeur) — chacune est TOLÉRANTE.
 _SOURCES: Final[
     tuple[
@@ -571,6 +683,7 @@ _SOURCES: Final[
     ("budget_temps", _source_budget),
     ("delais_lpf", _source_lpf),
     ("completude_declarative", _source_completude),
+    ("coherence_ca", _source_coherence_ca),
 )
 
 
