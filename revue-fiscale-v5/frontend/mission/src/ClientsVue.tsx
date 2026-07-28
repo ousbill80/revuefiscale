@@ -826,6 +826,48 @@ type ComparaisonExercicesOut = {
   };
 };
 
+/** Trajectoire pluriannuelle — une entrée par exercice revu. */
+type HistoriqueExerciceRow = {
+  mission_id: number;
+  exercice: number;
+  statut: string;
+  exposition_totale: string;
+  nb_risques_ouverts: number;
+  taux_civisme: string | null;
+};
+
+type HistoriqueClientOut = {
+  contribuable_id: number;
+  denomination: string;
+  exercices: HistoriqueExerciceRow[];
+  tendance: {
+    exercice_premier: number | null;
+    exercice_dernier: number | null;
+    exposition: "hausse" | "baisse" | "stable" | null;
+    civisme: "amelioration" | "degradation" | "stable" | null;
+  };
+  note: string;
+};
+
+/** Libellés de tendance pluriannuelle — teinte sobre (rouge = dégradation). */
+const HISTCLI_EXPOSITION: Record<
+  "hausse" | "baisse" | "stable",
+  { label: string; cls: string }
+> = {
+  hausse: { label: "exposition en hausse", cls: "degradation" },
+  baisse: { label: "exposition en baisse", cls: "amelioration" },
+  stable: { label: "exposition stable", cls: "stable" },
+};
+
+const HISTCLI_CIVISME: Record<
+  "amelioration" | "degradation" | "stable",
+  { label: string; cls: string }
+> = {
+  amelioration: { label: "civisme en amélioration", cls: "amelioration" },
+  degradation: { label: "civisme en dégradation", cls: "degradation" },
+  stable: { label: "civisme stable", cls: "stable" },
+};
+
 type ClientDetail = ClientRow & {
   missions: MissionRow[];
   nb_missions: number;
@@ -1795,6 +1837,30 @@ export function ClientFicheVue({
     };
   }, [clientDetail.id, jeton, ficheTab]);
 
+  // Trajectoire pluriannuelle — toutes les missions du client (une
+  // entrée par exercice ; bloc masqué si < 2 exercices ou API en échec).
+  const [histCli, setHistCli] = useState<HistoriqueClientOut | null>(null);
+
+  useEffect(() => {
+    if (ficheTab !== "overview") return;
+    let annule = false;
+    void (async () => {
+      try {
+        const h = await api<HistoriqueClientOut>(
+          `/api/v1/contribuables/${clientDetail.id}/historique-pluriannuel`,
+          { jeton },
+        );
+        if (!annule)
+          setHistCli(h && Array.isArray(h.exercices) ? h : null);
+      } catch {
+        if (!annule) setHistCli(null);
+      }
+    })();
+    return () => {
+      annule = true;
+    };
+  }, [clientDetail.id, jeton, ficheTab]);
+
   // Alerte douce : TEE (régime de l'entreprenant) atypique pour une personne morale.
   const alerteRegimeTee =
     formeNorm === "pm" && clientDetail.regime_fiscal?.trim() === "tee";
@@ -2542,6 +2608,78 @@ export function ClientFicheVue({
               )}
               <p className="compex-note" role="note">
                 {comparaisonEx.note}
+              </p>
+            </section>
+          )}
+
+          {histCli && histCli.exercices.length >= 2 && (
+            <section
+              className="panel dense histcli-encart"
+              id={`fiche-${clientDetail.id}-historique-pluriannuel`}
+              aria-label="Trajectoire pluriannuelle du client (exposition et civisme)"
+            >
+              <div className="fiche2-echeances-head">
+                <h3 className="fiche2-titre">Trajectoire pluriannuelle</h3>
+                <span className="fiche2-echeances-hint">
+                  {histCli.exercices.length} exercices revus
+                  {histCli.tendance.exercice_premier != null &&
+                    histCli.tendance.exercice_dernier != null &&
+                    ` · ${histCli.tendance.exercice_premier} → ${histCli.tendance.exercice_dernier}`}
+                </span>
+              </div>
+
+              {histCli.tendance.exposition && (
+                <p
+                  className={`histcli-tendance histcli-tendance--${
+                    histCli.tendance.exposition === "hausse" ||
+                    histCli.tendance.civisme === "degradation"
+                      ? "degradation"
+                      : histCli.tendance.exposition === "baisse" ||
+                          histCli.tendance.civisme === "amelioration"
+                        ? "amelioration"
+                        : "stable"
+                  }`}
+                >
+                  <strong>Tendance de fond</strong>
+                  {" · "}
+                  {HISTCLI_EXPOSITION[histCli.tendance.exposition].label}
+                  {histCli.tendance.civisme
+                    ? ` · ${HISTCLI_CIVISME[histCli.tendance.civisme].label}`
+                    : " · civisme non mesurable"}
+                </p>
+              )}
+
+              <table className="histcli-table">
+                <thead>
+                  <tr>
+                    <th scope="col">Exercice</th>
+                    <th scope="col">Exposition (FCFA)</th>
+                    <th scope="col">Risques ouverts</th>
+                    <th scope="col">Civisme</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {histCli.exercices.map((ex) => (
+                    <tr key={ex.exercice} className="histcli-ligne">
+                      <th scope="row" className="histcli-exercice">
+                        {ex.exercice}
+                      </th>
+                      <td className="histcli-montant">
+                        {montantFcfa(ex.exposition_totale)}
+                      </td>
+                      <td className="histcli-nb">{ex.nb_risques_ouverts}</td>
+                      <td className="histcli-civisme">
+                        {ex.taux_civisme != null
+                          ? `${ex.taux_civisme} %`
+                          : "—"}
+                      </td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+
+              <p className="histcli-note" role="note">
+                {histCli.note}
               </p>
             </section>
           )}

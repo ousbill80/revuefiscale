@@ -3087,6 +3087,51 @@ def api_historique_contribuable(
         ) from e
 
 
+@router.get("/contribuables/{contribuable_id}/historique-pluriannuel")
+def api_historique_pluriannuel_contribuable(
+    contribuable_id: int,
+    utilisateur: UtilisateurDep,
+    session: Annotated[Session, Depends(session_abonne)],
+) -> dict:
+    """Trajectoire pluriannuelle du client (exposition et civisme).
+
+    Une entrée par exercice revu (mission la plus récente à exercice
+    égal, plafond 10) : exposition des risques encore ouverts nés de la
+    mission, taux de civisme fiscal si exploitable — et tendance de
+    fond premier / dernier exercice. Consultatif et déterministe.
+    404 si fiche hors tenant (RLS).
+    """
+    from backend.moteur.journal import append_journal
+    from backend.plateforme.historique_client import (
+        ErreurHistoriqueClient,
+        historique_client,
+    )
+
+    exiger_capacite(utilisateur, "lire")
+    try:
+        historique = historique_client(
+            session, utilisateur.tenant_id, contribuable_id
+        )
+    except ErreurHistoriqueClient as e:
+        raise HTTPException(
+            status_code=status.HTTP_404_NOT_FOUND, detail=str(e)
+        ) from e
+    append_journal(
+        session,
+        tenant_id=utilisateur.tenant_id,
+        mission_id=None,
+        acteur=utilisateur.email,
+        action="consultation_historique_client",
+        charge_utile={
+            "contribuable_id": contribuable_id,
+            "nb_exercices": len(historique["exercices"]),
+            "tendance_exposition": historique["tendance"]["exposition"],
+            "tendance_civisme": historique["tendance"]["civisme"],
+        },
+    )
+    return historique
+
+
 @router.get("/contribuables/{contribuable_id}/comparaison-exercices")
 def api_comparaison_exercices_contribuable(
     contribuable_id: int,

@@ -12239,6 +12239,82 @@ tr.row-active td {
   }
 }
 
+/* ── Fiche client — Trajectoire pluriannuelle (historique client) ────
+   Petite table exercice | exposition | risques ouverts | civisme, avec
+   la tendance de fond en tête. Teinte sobre reprise du bloc compex :
+   rouge = dégradation, vert = amélioration. Préfixe dédié histcli-. */
+.histcli-encart {
+  display: grid;
+  gap: 0.55rem;
+}
+
+.histcli-tendance {
+  margin: 0;
+  font-size: 0.8rem;
+  padding: 0.45rem 0.65rem;
+  border-radius: 0.5rem;
+  border: 1px solid transparent;
+}
+
+.histcli-tendance--degradation {
+  background: #fef2f2;
+  border-color: color-mix(in srgb, #b91c1c 25%, transparent);
+}
+
+.histcli-tendance--amelioration {
+  background: #f0fdf4;
+  border-color: color-mix(in srgb, #166534 25%, transparent);
+}
+
+.histcli-tendance--stable {
+  background: #f8fafc;
+  border-color: color-mix(in srgb, #64748b 25%, transparent);
+}
+
+.histcli-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 0.78rem;
+}
+
+.histcli-table th,
+.histcli-table td {
+  padding: 0.3rem 0.5rem;
+  text-align: right;
+  border-bottom: 1px solid color-mix(in srgb, #64748b 18%, transparent);
+}
+
+.histcli-table thead th {
+  font-size: 0.72rem;
+  text-transform: uppercase;
+  letter-spacing: 0.03em;
+  color: var(--muted, #64748b);
+}
+
+.histcli-table th[scope="row"],
+.histcli-table thead th:first-child {
+  text-align: left;
+}
+
+.histcli-exercice {
+  font-weight: 800;
+  color: var(--accent-deep, #115e59);
+}
+
+.histcli-montant,
+.histcli-nb,
+.histcli-civisme {
+  font-variant-numeric: tabular-nums;
+  color: var(--ink, #0f172a);
+}
+
+.histcli-note {
+  margin: 0;
+  font-size: 0.76rem;
+  font-style: italic;
+  color: var(--muted, #64748b);
+}
+
 /* ── Bilan de clôture (panneau consultatif de pré-clôture) ──────────
    Pattern rest-suivi (panneau outil) ; pastilles ok (vert #f0fdf4 /
    #166534) et attention (orange #fffbeb / #92400e) — palettes déjà
