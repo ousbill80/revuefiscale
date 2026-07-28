@@ -4548,6 +4548,111 @@ def api_saisir_declaration_tva(
         ) from e
 
 
+@router.get("/missions/{mission_id}/acomptes")
+def api_acomptes_mission(
+    mission_id: int,
+    utilisateur: UtilisateurDep,
+    session: Annotated[Session, Depends(session_abonne)],
+) -> dict:
+    """Suivi des acomptes IS et position de solde — lecture seule.
+
+    Totalise les versements saisis (acomptes IS, retenues à la source,
+    crédits reportés), les rapproche de l'IS dû estimé saisi par le
+    fiscaliste (le moteur n'expose pas d'IS estimé) et projette la
+    position (solde à payer ou crédit d'impôt à reporter, signalé si
+    important). Les comptes 441x/444x de la balance sont restitués à
+    titre informatif — vue strictement consultative, l'humain décide.
+    Se construit toujours (disponible=false sans IS dû estimé saisi).
+    404 si mission hors tenant (RLS).
+    """
+    from backend.moteur.journal import append_journal
+    from backend.plateforme.acomptes import (
+        ACTION_CONSULTATION,
+        ErreurAcomptesIntrouvable,
+        vue_acomptes_mission,
+    )
+
+    exiger_capacite(utilisateur, "lire")
+    try:
+        vue = vue_acomptes_mission(
+            session, utilisateur.tenant_id, mission_id
+        )
+    except ErreurAcomptesIntrouvable as e:
+        raise HTTPException(
+            status_code=status.HTTP_404_NOT_FOUND, detail=str(e)
+        ) from e
+    append_journal(
+        session,
+        tenant_id=utilisateur.tenant_id,
+        mission_id=mission_id,
+        acteur=utilisateur.email,
+        action=ACTION_CONSULTATION,
+        charge_utile={
+            "statut": vue["synthese"]["statut"],
+            "nb_versements": vue["synthese"]["nb_versements"],
+            "solde_important": vue["synthese"]["solde_important"],
+        },
+    )
+    return vue
+
+
+class AcompteImpotIn(BaseModel):
+    """Saisie d'un versement d'impôt de l'exercice OU de l'IS dû estimé.
+
+    ``nature`` : ``acompte_is``, ``retenue_source``, ``credit_reporte``
+    (date requise, référence de quittance facultative — re-saisir une
+    même nature à la même date remplace le montant, correction
+    humaine) ou ``is_du_estime`` (remplace l'IS dû estimé de la
+    mission, date ignorée). Montants en FCFA (chaînes ou nombres).
+    """
+
+    nature: str
+    montant: str | float | int | None = None
+    date_versement: str | None = None
+    reference_quittance: str | None = None
+
+
+@router.post("/missions/{mission_id}/acomptes")
+def api_saisir_acompte(
+    mission_id: int,
+    corps: AcompteImpotIn,
+    utilisateur: UtilisateurDep,
+    session: Annotated[Session, Depends(session_abonne)],
+) -> dict:
+    """Saisit un versement d'impôt ou l'IS dû estimé — clic explicite.
+
+    Nature, date (pour un versement) et montant ≥ 0 requis (422
+    sinon) ; mission hors tenant → 404 (RLS). Alimente la position de
+    solde IS consultative.
+    """
+    from backend.plateforme.acomptes import (
+        ErreurAcomptesIntrouvable,
+        ErreurAcomptesInvalide,
+        saisir_acompte,
+    )
+
+    exiger_capacite(utilisateur, "executer_mission")
+    try:
+        return saisir_acompte(
+            session,
+            utilisateur.tenant_id,
+            mission_id,
+            corps.nature,
+            corps.montant,
+            acteur=utilisateur.email,
+            date_versement=corps.date_versement,
+            reference_quittance=corps.reference_quittance,
+        )
+    except ErreurAcomptesIntrouvable as e:
+        raise HTTPException(
+            status_code=status.HTTP_404_NOT_FOUND, detail=str(e)
+        ) from e
+    except ErreurAcomptesInvalide as e:
+        raise HTTPException(
+            status_code=status.HTTP_422_UNPROCESSABLE_ENTITY, detail=str(e)
+        ) from e
+
+
 @router.get("/missions/{mission_id}/materialite")
 def api_materialite_mission(
     mission_id: int,

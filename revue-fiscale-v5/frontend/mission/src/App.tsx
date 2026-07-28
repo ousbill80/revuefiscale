@@ -72,6 +72,7 @@ import { PROCESS_TIPS } from "./processTips";
 import { PointsAnterieursVue } from "./PointsAnterieursVue";
 import { ControlesFiscauxVue } from "./ControlesFiscauxVue";
 import { RapprochementTvaVue } from "./RapprochementTvaVue";
+import { AcomptesVue } from "./AcomptesVue";
 import { MaterialiteVue } from "./MaterialiteVue";
 import { ProgrammeProposeVue } from "./ProgrammeProposeVue";
 import { RestitutionVue } from "./RestitutionVue";
@@ -6098,6 +6099,16 @@ export function App() {
                           balance) — la saisie des périodes déclarées
                           reste un clic explicite du fiscaliste. */}
                       <RapprochementTvaVue
+                        missionId={restitution.mission_id}
+                        jeton={session?.jeton}
+                        estLecteur={estLecteur}
+                      />
+                      {/* Suivi consultatif des acomptes IS versés et
+                          de la position de solde projetée (IS dû
+                          estimé saisi par le fiscaliste, comptes
+                          441x/444x informatifs) — la saisie reste un
+                          clic explicite du fiscaliste. */}
+                      <AcomptesVue
                         missionId={restitution.mission_id}
                         jeton={session?.jeton}
                         estLecteur={estLecteur}
