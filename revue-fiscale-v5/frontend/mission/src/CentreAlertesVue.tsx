@@ -39,6 +39,7 @@ const LIBELLES_TYPE: Record<string, string> = {
   delai_lpf: "Délai LPF",
   completude_declarative: "Complétude déclarative",
   coherence_ca: "Cohérence du chiffre d'affaires",
+  deficits_reportables: "Déficits reportables",
 };
 
 const LIBELLES_GRAVITE: Record<Gravite, string> = {
