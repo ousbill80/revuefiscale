@@ -42,6 +42,7 @@ const LIBELLES_TYPE: Record<string, string> = {
   deficits_reportables: "Déficits reportables",
   rapprochement_acomptes: "Rapprochement des acomptes IS",
   qualite_balance: "Qualité de balance",
+  evolution_charge_fiscale: "Évolution de la charge fiscale",
 };
 
 const LIBELLES_GRAVITE: Record<Gravite, string> = {

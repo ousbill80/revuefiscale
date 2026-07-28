@@ -27,7 +27,11 @@ préparation de la liquidation, approximation assumée, jamais un
 manquement) et :mod:`backend.plateforme.qualite_balance`
 (observations de qualité de la balance importée — balance
 déséquilibrée, sens inhabituels, comptes hors plan — à examiner,
-jamais une conclusion). Aucun calcul métier n'est
+jamais une conclusion) et
+:mod:`backend.plateforme.evolution_charge_fiscale` (variation
+pluriannuelle notable de la charge fiscale estimée du client —
+estimation indicative, chaque variation s'explique, jamais un
+reproche). Aucun calcul métier n'est
 dupliqué : seules des fonctions PURES de conversion, tri, plafond et
 synthèse s'ajoutent ici.
 
@@ -41,6 +45,7 @@ from __future__ import annotations
 
 from collections.abc import Callable
 from datetime import date
+from decimal import Decimal
 from typing import Any, Final
 
 from sqlalchemy import text
@@ -67,6 +72,7 @@ TYPES_ALERTE: Final[tuple[str, ...]] = (
     "deficits_reportables",
     "rapprochement_acomptes",
     "qualite_balance",
+    "evolution_charge_fiscale",
 )
 
 # Plafond d'alertes restituées — vue de pilotage, pas un export.
@@ -95,6 +101,15 @@ PLAFOND_MISSIONS_RAPPROCHEMENT_ACOMPTES: Final[int] = 200
 # (chaque mission déclenche une lecture — coût borné).
 PLAFOND_MISSIONS_QUALITE_BALANCE: Final[int] = 200
 
+# Plafond de clients examinés pour l'évolution de la charge fiscale
+# (une vue par client, dernier exercice — coût borné).
+PLAFOND_MISSIONS_EVOLUTION_CHARGE_FISCALE: Final[int] = 200
+
+#: Seuil (en %) au-delà duquel une variation pluriannuelle du total
+#: de charge fiscale estimée est signalée au centre d'alertes —
+#: en deçà, la variation reste consultable dans sa vue dédiée.
+SEUIL_VARIATION_NOTABLE_PCT: Final[Decimal] = Decimal("25")
+
 MENTION_NOTE: Final[str] = (
     "Centre d'alertes consultatif du cabinet — agrégation déterministe "
     "des signaux déjà calculés par les tableaux de bord existants : "
@@ -110,7 +125,10 @@ MENTION_NOTE: Final[str] = (
     "les quittances font foi), observations de qualité de la balance "
     "importée à examiner (équilibre global, sens inhabituels, comptes "
     "hors plan — chaque observation peut être justifiée, seul l'humain "
-    "conclut). Aucune alerte n'est envoyée "
+    "conclut), évolutions pluriannuelles notables de la charge fiscale "
+    "estimée du client (estimation indicative entre exercices "
+    "consécutifs — chaque variation s'explique, le fiscaliste "
+    "analyse). Aucune alerte n'est envoyée "
     "par email : tout reste dans l'application. Ces signaux éclairent "
     "la priorisation — le fiscaliste apprécie et décide, rien n'est "
     "automatique."
@@ -687,6 +705,72 @@ def alertes_depuis_qualite_balance(
     return alertes
 
 
+def alertes_depuis_evolution_charge_fiscale(
+    vues: list[dict[str, Any]],
+) -> list[dict[str, Any]]:
+    """PUR — variations notables → alertes evolution_charge_fiscale.
+
+    ``vues`` : entrées ``{client, mission_id, evolution}`` où
+    ``evolution`` est la vue déjà construite par
+    :func:`backend.plateforme.evolution_charge_fiscale.vue_evolution_charge_fiscale_mission`
+    (aucun recalcul ici, une vue par client — dernier exercice). Une
+    alerte « info » — JAMAIS vigilance ni critique : estimation
+    indicative pluriannuelle, une variation s'EXPLIQUE (activité,
+    taux, assiettes, exonérations), elle ne s'impute à personne — si
+    la DERNIÈRE variation du total de charge propre estimée est en
+    hausse ou en baisse d'au moins
+    :data:`SEUIL_VARIATION_NOTABLE_PCT` %. Sens stable, pourcentage
+    absent (base nulle), sous le seuil ou vue indisponible → rien.
+    """
+    from backend.plateforme.evolution_charge_fiscale import (
+        SENS_BAISSE,
+        SENS_HAUSSE,
+    )
+
+    alertes: list[dict[str, Any]] = []
+    for m in vues:
+        vue = m.get("evolution") or {}
+        if not vue.get("disponible"):
+            continue
+        variations = vue.get("variations") or []
+        if not variations:
+            continue
+        derniere = variations[-1] or {}
+        total = derniere.get("total") or {}
+        sens = str(total.get("sens") or "")
+        if sens not in (SENS_HAUSSE, SENS_BAISSE):
+            continue
+        pct = total.get("variation_relative_pct")
+        if pct in (None, ""):
+            continue
+        ampleur = abs(Decimal(str(pct)))
+        if ampleur < SEUIL_VARIATION_NOTABLE_PCT:
+            continue
+        mot = "hausse" if sens == SENS_HAUSSE else "baisse"
+        pct_fr = str(ampleur).replace(".", ",")
+        libelle = (
+            f"Charge fiscale estimée en {mot} de {pct_fr} % entre "
+            f"{derniere.get('exercice_precedent')} et "
+            f"{derniere.get('exercice')} — évolution à examiner avec "
+            "le client (estimation indicative)"
+        )
+        alertes.append(
+            {
+                "type": "evolution_charge_fiscale",
+                # JAMAIS vigilance ni critique — estimation indicative
+                # pluriannuelle, chaque variation s'explique : l'humain
+                # analyse et décide.
+                "gravite": "info",
+                "client": m.get("client"),
+                "mission_id": m.get("mission_id"),
+                "libelle": libelle,
+                "echeance": None,
+                "lien": "evolution_charge_fiscale",
+            }
+        )
+    return alertes
+
+
 # ── Sources (chacune réutilise un module existant, RLS) ──────────────
 
 
@@ -1038,6 +1122,60 @@ def _source_qualite_balance(
     return alertes_depuis_qualite_balance(vues)
 
 
+def _source_evolution_charge_fiscale(
+    session: Session, tenant_id: int, jour: date
+) -> list[dict[str, Any]]:
+    """Évolution de la charge fiscale — module evolution_charge_fiscale.
+
+    UNE vue par CLIENT (contribuable) porteur d'au moins une mission
+    non clôturée, sur la mission du DERNIER exercice (plafonné à
+    :data:`PLAFOND_MISSIONS_EVOLUTION_CHARGE_FISCALE`) : la vue est
+    celle DÉJÀ construite par
+    :func:`backend.plateforme.evolution_charge_fiscale.vue_evolution_charge_fiscale_mission`
+    (aucun recalcul de l'évolution ici). Une mission disparue entre
+    les deux lectures est simplement omise.
+    """
+    from backend.plateforme.evolution_charge_fiscale import (
+        ErreurEvolutionChargeFiscaleIntrouvable,
+        vue_evolution_charge_fiscale_mission,
+    )
+    from backend.plateforme.missions import STATUT_CLOTUREE
+
+    with contexte_tenant(session, tenant_id):
+        rows = session.execute(
+            text(
+                "SELECT DISTINCT ON (c.id) m.id AS mission_id, "
+                "c.denomination AS client "
+                "FROM mission m "
+                "JOIN contribuable c ON c.id = m.contribuable_id "
+                "WHERE m.statut <> :clos "
+                "ORDER BY c.id, m.exercice DESC, m.id DESC "
+                "LIMIT :lim"
+            ),
+            {"clos": STATUT_CLOTUREE,
+             "lim": PLAFOND_MISSIONS_EVOLUTION_CHARGE_FISCALE},
+        ).mappings().all()
+
+    vues: list[dict[str, Any]] = []
+    for r in rows:
+        # HORS contexte_tenant : la vue ouvre le sien (même pattern
+        # que la projection des panoramas dans le module réutilisé).
+        try:
+            vue = vue_evolution_charge_fiscale_mission(
+                session, tenant_id, int(r["mission_id"])
+            )
+        except ErreurEvolutionChargeFiscaleIntrouvable:
+            continue
+        vues.append(
+            {
+                "client": str(r["client"] or ""),
+                "mission_id": int(r["mission_id"]),
+                "evolution": vue,
+            }
+        )
+    return alertes_depuis_evolution_charge_fiscale(vues)
+
+
 #: Sources agrégées : (nom, constructeur) — chacune est TOLÉRANTE.
 _SOURCES: Final[
     tuple[
@@ -1054,6 +1192,7 @@ _SOURCES: Final[
     ("deficits_reportables", _source_deficits_reportables),
     ("rapprochement_acomptes", _source_rapprochement_acomptes),
     ("qualite_balance", _source_qualite_balance),
+    ("evolution_charge_fiscale", _source_evolution_charge_fiscale),
 )
 
 
