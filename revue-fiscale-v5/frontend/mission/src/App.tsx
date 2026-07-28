@@ -74,6 +74,7 @@ import { ControlesFiscauxVue } from "./ControlesFiscauxVue";
 import { RapprochementTvaVue } from "./RapprochementTvaVue";
 import { CompletudeDeclarativeVue } from "./CompletudeDeclarativeVue";
 import { CoherenceCaVue } from "./CoherenceCaVue";
+import { RetenueLoyersVue } from "./RetenueLoyersVue";
 import { DeductibiliteVue } from "./DeductibiliteVue";
 import { RapprochementSalairesVue } from "./RapprochementSalairesVue";
 import { AcomptesVue } from "./AcomptesVue";
@@ -6135,6 +6136,16 @@ export function App() {
                           l'administration. Approximation assumée,
                           écart « à expliquer », l'humain décide. */}
                       <CoherenceCaVue
+                        missionId={restitution.mission_id}
+                        jeton={session?.jeton}
+                      />
+                      {/* Retenue à la source sur loyers : charges
+                          locatives (comptes 622x de la balance) et
+                          retenue théorique maximale indicative à
+                          15 % — la qualité du bailleur (PP/PM,
+                          régime) n'est pas connue de la balance,
+                          seul l'humain qualifie et décide. */}
+                      <RetenueLoyersVue
                         missionId={restitution.mission_id}
                         jeton={session?.jeton}
                       />

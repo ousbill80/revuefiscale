@@ -52,6 +52,7 @@ BLOCS_DOSSIER: Final[tuple[str, ...]] = (
     "charge_fiscale",
     "completude_declarative",
     "coherence_ca",
+    "retenue_loyers",
 )
 
 MENTION_NOTE: Final[str] = (
@@ -523,6 +524,36 @@ def _bloc_coherence_ca(
     }
 
 
+def _bloc_retenue_loyers(
+    session: Session, tenant_id: int, mission_id: int
+) -> dict[str, Any]:
+    """Retenue sur loyers — synthèse de la vue consultative.
+
+    Projection SYNTHÉTIQUE de
+    :func:`backend.plateforme.retenue_loyers.vue_retenue_loyers_mission`
+    (même pattern que :func:`_bloc_coherence_ca`) : statut, loyers
+    bruts (comptes 622x), retenue théorique maximale indicative et
+    non-calculabilité de la répartition par bailleur — ni le détail
+    des comptes 622x ni les références, restitués par l'écran dédié.
+    Aucun recalcul ici.
+    """
+    from backend.plateforme.retenue_loyers import (
+        vue_retenue_loyers_mission,
+    )
+
+    r = vue_retenue_loyers_mission(session, tenant_id, mission_id)
+    return {
+        "statut": r.get("statut"),
+        "loyers_bruts": r.get("loyers_bruts"),
+        "taux_indicatif": r.get("taux_indicatif"),
+        "retenue_theorique_max": r.get("retenue_theorique_max"),
+        "repartition_calculable": (
+            r.get("repartition_par_bailleur") or {}
+        ).get("calculable"),
+        "note": r.get("note"),
+    }
+
+
 #: Blocs facultatifs : (clé, constructeur) — chacun est TOLÉRANT.
 _BLOCS_FACULTATIFS: Final[
     tuple[tuple[str, Callable[[Session, int, int], dict[str, Any] | None]], ...]
@@ -542,6 +573,7 @@ _BLOCS_FACULTATIFS: Final[
     ("charge_fiscale", _bloc_charge_fiscale),
     ("completude_declarative", _bloc_completude_declarative),
     ("coherence_ca", _bloc_coherence_ca),
+    ("retenue_loyers", _bloc_retenue_loyers),
 )
 
 

@@ -236,6 +236,15 @@ type CoherenceCaDossier = {
   note: string | null;
 };
 
+type RetenueLoyersDossier = {
+  statut: string | null;
+  loyers_bruts: string | null;
+  taux_indicatif: string | null;
+  retenue_theorique_max: string | null;
+  repartition_calculable: boolean | null;
+  note: string | null;
+};
+
 type DossierOut = {
   identite: IdentiteDossier | null;
   risques: RisquesDossier | null;
@@ -253,6 +262,7 @@ type DossierOut = {
   charge_fiscale: ChargeFiscaleDossier | null;
   completude_declarative: CompletudeDeclarativeDossier | null;
   coherence_ca: CoherenceCaDossier | null;
+  retenue_loyers: RetenueLoyersDossier | null;
   blocs_disponibles: number;
   genere_le: string;
   note: string;
@@ -351,6 +361,13 @@ const STATUTS_COHERENCE_CA_FR: Record<string, string> = {
     "Croisement indisponible — importez la balance (comptes 70x) et saisissez au moins une déclaration de TVA",
   coherent: "Cohérent — écart relatif dans le seuil indicatif",
   ecart_a_expliquer: "Écart à expliquer — l'humain apprécie",
+};
+
+const STATUTS_RETENUE_LOYERS_FR: Record<string, string> = {
+  indisponible:
+    "Vue indisponible — importez la balance (comptes 622x « locations et charges locatives »)",
+  a_qualifier:
+    "Retenue théorique maximale indicative — qualité des bailleurs à qualifier par l'humain",
 };
 
 const STATUTS_MATERIALITE_FR: Record<string, string> = {
@@ -1103,6 +1120,43 @@ export function DossierMissionVue({ missionId, jeton }: Props) {
                   Approximation assumée : reconstitution au seul taux normal
                   de 18 % — exonérations, taux réduits et opérations hors
                   champ ignorés. Un écart s'explique, il ne se conclut pas.
+                </p>
+              )}
+            </section>
+          )}
+
+          {dossier.retenue_loyers != null && (
+            <section className="dossier-section">
+              <h3 className="dossier-section-titre">
+                Retenue à la source sur loyers
+              </h3>
+              <p>
+                Statut :{" "}
+                {dossier.retenue_loyers.statut
+                  ? (STATUTS_RETENUE_LOYERS_FR[
+                      dossier.retenue_loyers.statut
+                    ] ?? dossier.retenue_loyers.statut)
+                  : "—"}
+                .
+              </p>
+              {dossier.retenue_loyers.statut !== "indisponible" && (
+                <p>
+                  Loyers bruts (comptes 622x) :{" "}
+                  {formatMontant(dossier.retenue_loyers.loyers_bruts)} —
+                  retenue théorique maximale indicative (15 %) :{" "}
+                  {formatMontant(
+                    dossier.retenue_loyers.retenue_theorique_max,
+                  )}
+                  .
+                </p>
+              )}
+              {dossier.retenue_loyers.repartition_calculable === false && (
+                <p className="dossier-note">
+                  La qualité du bailleur (personne physique ou morale,
+                  régime) conditionne la retenue et n'est pas connue de la
+                  balance : la répartition n'est pas calculée — seul
+                  l'humain qualifie les bailleurs. Un écart s'explique, il
+                  ne se conclut pas.
                 </p>
               )}
             </section>

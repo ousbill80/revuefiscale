@@ -4688,6 +4688,53 @@ def api_coherence_ca_mission(
     return vue
 
 
+@router.get("/missions/{mission_id}/retenue-loyers")
+def api_retenue_loyers_mission(
+    mission_id: int,
+    utilisateur: UtilisateurDep,
+    session: Annotated[Session, Depends(session_abonne)],
+) -> dict:
+    """Retenue à la source sur loyers — vue consultative depuis la balance.
+
+    Lit les charges locatives (comptes 622x) de la balance importée et
+    restitue la retenue théorique MAXIMALE indicative au taux courant
+    de 15 % — la qualité du bailleur (personne physique ou morale,
+    régime) conditionne la retenue réelle et n'est pas connue de la
+    balance : la répartition est restituée non calculable, seul
+    l'humain qualifie. Lecture seule ; se construit toujours
+    (disponible=false sans balance). 404 si mission hors tenant (RLS).
+    """
+    from backend.moteur.journal import append_journal
+    from backend.plateforme.retenue_loyers import (
+        ACTION_CONSULTATION,
+        ErreurRetenueLoyersIntrouvable,
+        vue_retenue_loyers_mission,
+    )
+
+    exiger_capacite(utilisateur, "lire")
+    try:
+        vue = vue_retenue_loyers_mission(
+            session, utilisateur.tenant_id, mission_id
+        )
+    except ErreurRetenueLoyersIntrouvable as e:
+        raise HTTPException(
+            status_code=status.HTTP_404_NOT_FOUND, detail=str(e)
+        ) from e
+    append_journal(
+        session,
+        tenant_id=utilisateur.tenant_id,
+        mission_id=mission_id,
+        acteur=utilisateur.email,
+        action=ACTION_CONSULTATION,
+        charge_utile={
+            "statut": vue["statut"],
+            "loyers_bruts": vue["loyers_bruts"],
+            "retenue_theorique_max": vue["retenue_theorique_max"],
+        },
+    )
+    return vue
+
+
 @router.get("/missions/{mission_id}/rapprochement-salaires")
 def api_rapprochement_salaires_mission(
     mission_id: int,
