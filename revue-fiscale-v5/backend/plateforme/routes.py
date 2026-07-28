@@ -4650,6 +4650,103 @@ def api_retenir_seuil_materialite(
         ) from e
 
 
+@router.get("/missions/{mission_id}/programme-propose")
+def api_programme_propose_mission(
+    mission_id: int,
+    utilisateur: UtilisateurDep,
+    session: Annotated[Session, Depends(session_abonne)],
+) -> dict:
+    """Programme de travail proposé — pont consultatif, lecture seule.
+
+    Propose des diligences déterministes déduites des comptes ciblés
+    par le seuil de matérialité retenu (mapping préfixe SYSCOHADA →
+    diligence type) et des risques non clos du contribuable. Les
+    propositions déjà couvertes par une diligence existante sont
+    signalées deja_couverte. Strictement consultatif — aucune écriture,
+    l'acceptation reste un clic explicite (POST). 404 si mission hors
+    tenant (RLS).
+    """
+    from backend.moteur.journal import append_journal
+    from backend.plateforme.programme_propose import (
+        ACTION_CONSULTATION,
+        ErreurProgrammeProposeIntrouvable,
+        programme_propose_mission,
+    )
+
+    exiger_capacite(utilisateur, "lire")
+    try:
+        vue = programme_propose_mission(
+            session, utilisateur.tenant_id, mission_id
+        )
+    except ErreurProgrammeProposeIntrouvable as e:
+        raise HTTPException(
+            status_code=status.HTTP_404_NOT_FOUND, detail=str(e)
+        ) from e
+    append_journal(
+        session,
+        tenant_id=utilisateur.tenant_id,
+        mission_id=mission_id,
+        acteur=utilisateur.email,
+        action=ACTION_CONSULTATION,
+        charge_utile={
+            "statut": vue["synthese"]["statut"],
+            "nb_propositions": vue["synthese"]["nb_propositions"],
+        },
+    )
+    return vue
+
+
+class ProgrammeProposeIn(BaseModel):
+    """Acceptation d'une diligence proposée — clic humain.
+
+    ``code`` : code de la proposition courante (PRO-CA, PRO-ETAT,
+    PRO-RSQ-TVA…). La diligence est créée dans le programme de travail
+    existant ; une proposition déjà couverte est signalée sans
+    écriture.
+    """
+
+    code: str
+
+
+@router.post("/missions/{mission_id}/programme-propose")
+def api_accepter_diligence_proposee(
+    mission_id: int,
+    corps: ProgrammeProposeIn,
+    utilisateur: UtilisateurDep,
+    session: Annotated[Session, Depends(session_abonne)],
+) -> dict:
+    """Accepte une diligence proposée — clic explicite.
+
+    Crée la diligence dans le programme de travail de la mission
+    (table diligence_mission). Code hors des propositions courantes →
+    422 ; mission hors tenant → 404 (RLS) ; proposition déjà couverte
+    → statut deja_couverte, aucune écriture.
+    """
+    from backend.plateforme.programme_propose import (
+        ErreurProgrammeProposeIntrouvable,
+        ErreurProgrammeProposeInvalide,
+        accepter_proposition,
+    )
+
+    exiger_capacite(utilisateur, "executer_mission")
+    try:
+        return accepter_proposition(
+            session,
+            utilisateur.tenant_id,
+            mission_id,
+            corps.code,
+            acteur=utilisateur.email,
+        )
+    except ErreurProgrammeProposeIntrouvable as e:
+        raise HTTPException(
+            status_code=status.HTTP_404_NOT_FOUND, detail=str(e)
+        ) from e
+    except ErreurProgrammeProposeInvalide as e:
+        raise HTTPException(
+            status_code=status.HTTP_422_UNPROCESSABLE_ENTITY, detail=str(e)
+        ) from e
+
+
 class EvenementControleFiscalIn(BaseModel):
     """Consignation d'un événement de contrôle fiscal / contentieux.
 

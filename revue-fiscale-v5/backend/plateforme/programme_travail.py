@@ -121,24 +121,52 @@ def _mission_existe(session: Session, mission_id: int) -> bool:
     )
 
 
+def inserer_diligence(
+    session: Session,
+    tenant_id: int,
+    mission_id: int,
+    phase: str,
+    code: str,
+    libelle: str,
+) -> bool:
+    """Insère UNE diligence du programme — idempotente, True si créée.
+
+    Point d'entrée UNIQUE de création dans ``diligence_mission``
+    (``ON CONFLICT DO NOTHING`` sur (tenant, mission, code)) — réutilisé
+    par l'initialisation du programme standard et par l'acceptation des
+    diligences proposées (:mod:`backend.plateforme.programme_propose`).
+    Le contexte tenant doit déjà être posé par l'appelant.
+    """
+    if phase not in PHASES_PROGRAMME:
+        raise ErreurProgrammeTravail(
+            f"phase inconnue « {phase} » — attendu : "
+            + ", ".join(PHASES_PROGRAMME)
+        )
+    cree = session.execute(
+        text(
+            "INSERT INTO diligence_mission "
+            "(tenant_id, mission_id, phase, code, libelle) "
+            "VALUES (:t, :m, :p, :c, :l) "
+            "ON CONFLICT (tenant_id, mission_id, code) DO NOTHING "
+            "RETURNING id"
+        ),
+        {
+            "t": tenant_id,
+            "m": mission_id,
+            "p": phase,
+            "c": code,
+            "l": libelle,
+        },
+    ).scalar_one_or_none()
+    return cree is not None
+
+
 def _inserer_diligences_manquantes(
     session: Session, tenant_id: int, mission_id: int
 ) -> None:
     for phase, code, libelle in PROGRAMME_STANDARD:
-        session.execute(
-            text(
-                "INSERT INTO diligence_mission "
-                "(tenant_id, mission_id, phase, code, libelle) "
-                "VALUES (:t, :m, :p, :c, :l) "
-                "ON CONFLICT (tenant_id, mission_id, code) DO NOTHING"
-            ),
-            {
-                "t": tenant_id,
-                "m": mission_id,
-                "p": phase,
-                "c": code,
-                "l": libelle,
-            },
+        inserer_diligence(
+            session, tenant_id, mission_id, phase, code, libelle
         )
 
 
@@ -171,15 +199,12 @@ def cocher_diligence(
 
     Cocher renseigne ``fait_par`` (email du collaborateur) et ``fait_le``
     (horodatage) ; décocher les remet à NULL. Code hors du programme
-    standard → :class:`ErreurProgrammeTravail` (422) ; mission hors
-    tenant → :class:`ErreurProgrammeIntrouvable` (404).
+    standard ET absent des diligences de la mission (une diligence
+    proposée acceptée — préfixe « PRO- » — reste cochable) →
+    :class:`ErreurProgrammeTravail` (422) ; mission hors tenant →
+    :class:`ErreurProgrammeIntrouvable` (404).
     """
     code = str(code or "").strip()
-    if code not in CODES_STANDARD:
-        raise ErreurProgrammeTravail(
-            f"diligence inconnue « {code} » — codes du programme standard : "
-            + ", ".join(sorted(CODES_STANDARD))
-        )
     fait_par = str(fait_par or "").strip()
     if fait and not fait_par:
         raise ErreurProgrammeTravail("fait_par obligatoire pour cocher")
@@ -191,6 +216,20 @@ def cocher_diligence(
             )
         # Initialisation paresseuse : on peut cocher avant tout GET.
         _inserer_diligences_manquantes(session, tenant_id, mission_id)
+        if code not in CODES_STANDARD:
+            existe = session.execute(
+                text(
+                    "SELECT 1 FROM diligence_mission "
+                    "WHERE mission_id = :m AND code = :c"
+                ),
+                {"m": mission_id, "c": code},
+            ).scalar_one_or_none()
+            if existe is None:
+                raise ErreurProgrammeTravail(
+                    f"diligence inconnue « {code} » — codes du "
+                    "programme standard : "
+                    + ", ".join(sorted(CODES_STANDARD))
+                )
         row = session.execute(
             text(
                 "UPDATE diligence_mission SET "

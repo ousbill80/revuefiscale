@@ -73,6 +73,7 @@ import { PointsAnterieursVue } from "./PointsAnterieursVue";
 import { ControlesFiscauxVue } from "./ControlesFiscauxVue";
 import { RapprochementTvaVue } from "./RapprochementTvaVue";
 import { MaterialiteVue } from "./MaterialiteVue";
+import { ProgrammeProposeVue } from "./ProgrammeProposeVue";
 import { RestitutionVue } from "./RestitutionVue";
 import { DossierMissionVue } from "./DossierMissionVue";
 import { LettreMissionVue } from "./LettreMissionVue";
@@ -6077,6 +6078,17 @@ export function App() {
                           retenue du seuil reste un clic explicite du
                           fiscaliste. */}
                       <MaterialiteVue
+                        missionId={restitution.mission_id}
+                        jeton={session?.jeton}
+                        estLecteur={estLecteur}
+                      />
+                      {/* Pont consultatif : diligences proposées
+                          depuis les comptes ciblés par la matérialité
+                          (mapping SYSCOHADA → diligence type) et les
+                          risques non clos — l'ajout au programme de
+                          travail reste un clic explicite du
+                          fiscaliste. */}
+                      <ProgrammeProposeVue
                         missionId={restitution.mission_id}
                         jeton={session?.jeton}
                         estLecteur={estLecteur}
