@@ -12088,6 +12088,159 @@ tr.row-active td {
   }
 }
 
+/* ── Points convenus en attente (tableau de bord cabinet) ────────────
+   Points « à faire » de tous les clients, du plus ancien au plus
+   récent — badge rouge quand le point attend depuis plus de 30 jours. */
+.pconvcab-zone {
+  margin: 1rem 0 0.5rem;
+}
+.pconvcab-head {
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
+  gap: 0.6rem;
+  flex-wrap: wrap;
+  margin-bottom: 0.6rem;
+}
+.pconvcab-title {
+  margin: 0;
+  font-size: 1rem;
+  font-weight: 800;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  color: var(--ink, #0f172a);
+}
+.pconvcab-title::before {
+  content: "— ";
+  color: var(--accent, #0f766e);
+}
+.pconvcab-sub {
+  margin: 0.15rem 0 0;
+  font-size: 0.78rem;
+  color: var(--muted, #64748b);
+}
+.pconvcab-card {
+  display: flex;
+  flex-direction: column;
+  gap: 0.6rem;
+  min-width: 0;
+}
+.pconvcab-synthese {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.4rem;
+}
+.pconvcab-chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.3rem;
+  padding: 0.2rem 0.55rem;
+  border: 1px solid var(--line, #e5e7eb);
+  border-radius: 999px;
+  font-size: 0.74rem;
+  color: var(--ink-soft, #1e293b);
+  background: #fff;
+}
+.pconvcab-chip.ancienne {
+  background: #fef2f2;
+  color: #b91c1c;
+  border-color: #fecaca;
+}
+.pconvcab-liste {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  display: flex;
+  flex-direction: column;
+  gap: 0.3rem;
+}
+.pconvcab-row {
+  flex: 1 1 auto;
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: stretch;
+  gap: 0.25rem;
+  padding: 0.4rem 0.6rem;
+  border: 1px solid var(--line, #e5e7eb);
+  border-radius: 8px;
+  background: #fff;
+  text-align: left;
+  cursor: pointer;
+  min-width: 0;
+}
+.pconvcab-row:hover {
+  border-color: var(--accent, #0f766e);
+  background: var(--accent-soft, #ecfdf8);
+}
+.pconvcab-ligne {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  min-width: 0;
+}
+/* Badge ancienneté — rouge quand le point attend depuis > 30 jours. */
+.pconvcab-badge {
+  flex: none;
+  display: inline-flex;
+  align-items: center;
+  padding: 0.15rem 0.5rem;
+  border-radius: 999px;
+  font-size: 0.72rem;
+  font-weight: 700;
+  white-space: nowrap;
+  background: #f8fafc;
+  color: var(--ink-soft, #1e293b);
+  border: 1px solid var(--line, #e5e7eb);
+}
+.pconvcab-badge.ancienne {
+  background: #fef2f2;
+  color: #b91c1c;
+  border-color: #fecaca;
+}
+.pconvcab-libelle {
+  font-size: 0.8rem;
+  font-weight: 600;
+  color: var(--ink, #0f172a);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+.pconvcab-meta {
+  font-size: 0.74rem;
+  color: var(--muted, #64748b);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+.pconvcab-vide {
+  margin: 0;
+  padding: 0.5rem 0.6rem;
+  border: 1px dashed var(--line, #e5e7eb);
+  border-radius: 8px;
+  font-size: 0.78rem;
+  color: var(--muted, #64748b);
+}
+.pconvcab-err {
+  margin: 0;
+  font-size: 0.78rem;
+  color: #b91c1c;
+}
+.pconvcab-note {
+  margin: 0;
+  font-size: 0.72rem;
+  font-style: italic;
+  color: var(--muted, #64748b);
+}
+@media (max-width: 720px) {
+  .pconvcab-ligne {
+    flex-wrap: wrap;
+  }
+  .pconvcab-meta {
+    white-space: normal;
+  }
+}
+
 /* ---- Fiche client — obligations à venir (agenda cabinet filtré client) ---- */
 /* Réutilise le langage agenda2- (lignes, badges, note) ; le préfixe
    fiche2-echeances- porte le conteneur et les éléments propres à la fiche. */

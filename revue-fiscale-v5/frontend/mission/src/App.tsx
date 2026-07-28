@@ -57,6 +57,7 @@ import { ActionsCabinetVue } from "./ActionsCabinetVue";
 import { RentabiliteCabinetVue } from "./RentabiliteCabinetVue";
 import { DelaisCabinetVue } from "./DelaisCabinetVue";
 import { ClotureCabinetVue } from "./ClotureCabinetVue";
+import { PointsConvenusCabinetVue } from "./PointsConvenusCabinetVue";
 import { CompletudeDataRoomVue } from "./CompletudeDataRoomVue";
 import { EquipeVue } from "./EquipeVue";
 import { FacturationVue } from "./FacturationVue";
@@ -4423,6 +4424,11 @@ export function App() {
               <DelaisCabinetVue jeton={session?.jeton ?? null} />
 
               <ClotureCabinetVue
+                jeton={session?.jeton ?? null}
+                onOuvrirMission={(id) => void ouvrirMission(id)}
+              />
+
+              <PointsConvenusCabinetVue
                 jeton={session?.jeton ?? null}
                 onOuvrirMission={(id) => void ouvrirMission(id)}
               />

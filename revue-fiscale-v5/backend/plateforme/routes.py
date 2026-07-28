@@ -4870,3 +4870,77 @@ def api_echeances_cabinet_csv(
         media_type="text/csv; charset=utf-8",
         headers={"Content-Disposition": f'attachment; filename="{nom}"'},
     )
+
+
+@router.get("/cabinet/points-convenus")
+def api_points_convenus_cabinet(
+    utilisateur: UtilisateurDep,
+    session: Annotated[Session, Depends(session_abonne)],
+) -> dict:
+    """Points convenus encore « à faire », tous clients confondus.
+
+    Vue transverse pour le cabinet : les points convenus au statut
+    « a_faire » des missions en cours ou clôturées, du plus ancien au
+    plus récent, pour relancer sans ouvrir chaque mission. Consultatif
+    et déterministe — l'humain décide dans la mission concernée.
+    """
+    from backend.moteur.journal import append_journal
+    from backend.plateforme.points_convenus_cabinet import (
+        points_convenus_cabinet,
+    )
+
+    exiger_capacite(utilisateur, "lire")
+    vue = points_convenus_cabinet(session, utilisateur.tenant_id)
+    append_journal(
+        session,
+        tenant_id=utilisateur.tenant_id,
+        mission_id=None,
+        acteur=utilisateur.email,
+        action="consultation_points_convenus_cabinet",
+        charge_utile={
+            "total": vue["synthese"]["total"],
+            "anciens_30j": vue["synthese"]["anciens_30j"],
+            "clients": vue["synthese"]["clients"],
+        },
+    )
+    return vue
+
+
+@router.get("/cabinet/points-convenus.csv")
+def api_points_convenus_cabinet_csv(
+    utilisateur: UtilisateurDep,
+    session: Annotated[Session, Depends(session_abonne)],
+) -> Response:
+    """Points convenus en attente au format CSV Excel FR (« ; »).
+
+    Mêmes données que la route JSON, prêtes à diffuser en réunion de
+    cabinet ou à retraiter dans un tableur : BOM UTF-8 pour l'ouverture
+    directe dans Excel. Déterministe — même tri que le tableau de bord.
+    """
+    from backend.moteur.journal import append_journal
+    from backend.plateforme.points_convenus_cabinet import (
+        generer_csv,
+        points_convenus_cabinet,
+    )
+
+    exiger_capacite(utilisateur, "lire")
+    vue = points_convenus_cabinet(session, utilisateur.tenant_id)
+    contenu = "\ufeff" + generer_csv(vue)
+    append_journal(
+        session,
+        tenant_id=utilisateur.tenant_id,
+        mission_id=None,
+        acteur=utilisateur.email,
+        action="consultation_points_convenus_cabinet_csv",
+        charge_utile={
+            "total": vue["synthese"]["total"],
+            "anciens_30j": vue["synthese"]["anciens_30j"],
+            "clients": vue["synthese"]["clients"],
+        },
+    )
+    nom = f"points-convenus-{vue['aujourd_hui']}.csv"
+    return Response(
+        content=contenu,
+        media_type="text/csv; charset=utf-8",
+        headers={"Content-Disposition": f'attachment; filename="{nom}"'},
+    )
