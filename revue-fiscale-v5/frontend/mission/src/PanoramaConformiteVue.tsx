@@ -159,7 +159,6 @@ export function PanoramaConformiteVue({ missionId, jeton }: Props) {
         </table>
       )}
 
-      <p className="matx-note muted">{etat.note}</p>
     </section>
   );
 }

@@ -199,7 +199,6 @@ export function ProgrammeProposeVue({
         </p>
       )}
 
-      <p className="matx-note muted">{etat.note}</p>
     </section>
   );
 }

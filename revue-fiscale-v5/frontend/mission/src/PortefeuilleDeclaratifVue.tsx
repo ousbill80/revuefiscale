@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
 import { api, telecharger } from "./api";
+import { InfoTip } from "./Tooltip";
 
 /** Suivi déclaratif du portefeuille (GET /api/v1/cabinet/portefeuille-declaratif). */
 type BlocImpot = {
@@ -134,11 +135,15 @@ export function PortefeuilleDeclaratifVue({ jeton, onOuvrirMission }: Props) {
     >
       <div className="ctrale-head">
         <div>
-          <h3 className="ctrale-title">Suivi déclaratif du portefeuille</h3>
+          <h3 className="ctrale-title label-with-tip">
+            Suivi déclaratif du portefeuille
+            <InfoTip
+              label="Pour chaque mission en cours, les périodes déclaratives saisies et celles restant à saisir (TVA, impôts sur salaires) — pour prioriser la collecte des pièces avec chaque client."
+              ariaLabel="Aide : suivi déclaratif du portefeuille"
+            />
+          </h3>
           <p className="ctrale-sub">
-            Pour chaque mission en cours, les périodes déclaratives saisies
-            et celles restant à saisir (TVA, impôts sur salaires) — pour
-            prioriser la collecte des pièces avec chaque client.
+            Périodes TVA et salaires par mission en cours.
           </p>
         </div>
         {vue && (
@@ -200,7 +205,8 @@ export function PortefeuilleDeclaratifVue({ jeton, onOuvrirMission }: Props) {
 
             {!vue.missions.length && (
               <p className="ctrale-vide">
-                Aucune mission ouverte à suivre pour le moment.
+                Aucune mission à suivre. Les missions en cours apparaîtront
+                ici avec leurs périodes déclaratives.
               </p>
             )}
 
@@ -212,7 +218,15 @@ export function PortefeuilleDeclaratifVue({ jeton, onOuvrirMission }: Props) {
                     <th>Exercice</th>
                     <th>TVA (saisies/attendues)</th>
                     <th>Salaires (saisies/attendues)</th>
-                    <th>État</th>
+                    <th className="label-with-tip">
+                      État
+                      <InfoTip
+                        label={
+                          "« périodes à saisir » : des périodes échues restent sans déclaration saisie.\n« à jour » : toutes les périodes échues sont saisies.\n« indisponible » : données de la mission momentanément inaccessibles."
+                        }
+                        ariaLabel="Aide : signification des états"
+                      />
+                    </th>
                   </tr>
                 </thead>
                 <tbody>

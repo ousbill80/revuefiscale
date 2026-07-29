@@ -324,7 +324,7 @@ export function RapprochementSalairesVue({
 
       <p className="rtva-note muted">
         Seuil de signification : {fmtMontant(etat.seuil_signification)}{" "}
-        FCFA. {etat.note}
+        FCFA.
       </p>
     </section>
   );

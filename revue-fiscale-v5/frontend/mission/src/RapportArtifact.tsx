@@ -317,7 +317,7 @@ export function RapportArtifact({ markdown }: Props) {
         <summary className="rapport-artifact-source-sum">
           <Chevron open={sourceOuverte} />
           <span>Source markdown</span>
-          <span className="rapport-artifact-source-hint">brut moteur</span>
+          <span className="rapport-artifact-source-hint">source brute</span>
         </summary>
         <pre className="rapport-artifact-source-pre">{markdown}</pre>
       </details>

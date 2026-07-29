@@ -346,8 +346,7 @@ export function MaterialiteVue({ missionId, jeton, estLecteur }: Props) {
                 ? "seuil manuel"
                 : "proposition confirmée"
             }, par ${retenu.decide_par}). `
-          : "Aucun seuil retenu pour l'instant. "}
-        {etat.note}
+          : "Aucun seuil retenu pour l'instant."}
       </p>
     </section>
   );

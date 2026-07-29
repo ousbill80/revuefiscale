@@ -333,7 +333,6 @@ export function ControlesFiscauxVue({ missionId, jeton, estLecteur }: Props) {
         </p>
       )}
 
-      <p className="cfx-note muted">{etat.note}</p>
     </section>
   );
 }

@@ -103,7 +103,7 @@ export function FacturationVue({ jeton, estAdmin }: Props) {
       const params = new URLSearchParams(window.location.search);
       if (params.get("paystack") === "1") {
         setMsg({
-          text: "Paiement reçu — actualisation en cours.",
+          text: "Paiement en ligne reçu — actualisation en cours.",
           err: false,
         });
         void charger();
@@ -222,7 +222,23 @@ export function FacturationVue({ jeton, estAdmin }: Props) {
               {factures.length === 0 && (
                 <tr>
                   <td colSpan={5} className="empty-cell">
-                    Aucune facture.
+                    <div className="equipe-empty">
+                      <p className="equipe-empty-title">
+                        Aucune facture pour le moment
+                      </p>
+                      <p className="equipe-empty-body">
+                        Vos factures d&apos;abonnement apparaîtront ici dès
+                        leur émission.
+                      </p>
+                      <button
+                        type="button"
+                        className="btn btn-ghost btn-sm"
+                        disabled={busy}
+                        onClick={() => void charger()}
+                      >
+                        Actualiser la liste
+                      </button>
+                    </div>
                   </td>
                 </tr>
               )}
@@ -235,7 +251,9 @@ export function FacturationVue({ jeton, estAdmin }: Props) {
                   </td>
                   <td>
                     {libelleStatut(f.statut)}
-                    {f.demande_paiement_ouverte ? " · en cours" : ""}
+                    {f.demande_paiement_ouverte
+                      ? " · demande de paiement ouverte"
+                      : ""}
                   </td>
                   <td>
                     <div className="row-actions">
@@ -248,7 +266,7 @@ export function FacturationVue({ jeton, estAdmin }: Props) {
                             disabled={busy}
                             onClick={() => void payerEnLigne(f)}
                           >
-                            Payer
+                            Payer en ligne
                           </button>
                         )}
                       <button

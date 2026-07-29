@@ -46,7 +46,7 @@ export const LIBELLES_IMPOT: Record<CodeImpotPivot, string> = {
  * Pas de liste CGI inventée : le millésime épinglé porte les règles.
  */
 export const PERIMETRE_EXONERATIONS_HINT =
-  "Exonérations et allègements applicables = ceux du référentiel épinglé (règles du millésime, y compris mentions a_confirmer). Aucune liste CGI n’est figée dans cet écran.";
+  "Exonérations et allègements applicables = ceux du référentiel épinglé (règles du millésime, y compris mentions « à confirmer »). Aucune liste CGI n’est figée dans cet écran.";
 
 /**
  * Hint cadrage — dons / libéralités.

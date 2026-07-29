@@ -165,7 +165,7 @@ export function PrescriptionVue({ missionId, jeton, onFermer }: Props) {
         <h3 className="rest-suivi-titre label-with-tip">
           Prescription des risques
           <InfoTip
-            label="Analyse déterministe du délai de reprise de droit commun : risques dont la prescription est acquise (à basculer au statut « prescrit »), proches de prescription (moins de 12 mois) et non prescrits. Consultative — l'humain décide de la bascule."
+            label="Analyse du délai de reprise de droit commun (pratique LPF CI : fin de la 3e année suivant celle au titre de laquelle l'impôt est dû ; des délais spéciaux existent) : risques dont la prescription est acquise (à basculer au statut « prescrit »), proches de prescription (moins de 12 mois) et non prescrits. Analyse consultative, à valider par le fiscaliste — la bascule reste une décision humaine."
             ariaLabel="Aide : prescription des risques"
           />
         </h3>
@@ -250,11 +250,6 @@ export function PrescriptionVue({ missionId, jeton, onFermer }: Props) {
             </>
           )}
 
-          {etat.hypothese && (
-            <p className="rest-prescription-hypothese muted">
-              {etat.hypothese}
-            </p>
-          )}
         </>
       )}
     </section>

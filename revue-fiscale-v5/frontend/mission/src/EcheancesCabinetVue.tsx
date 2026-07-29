@@ -139,8 +139,8 @@ export function EcheancesCabinetVue({ jeton, onOuvrirMission }: Props) {
 
             {!vue.items.length && (
               <p className="echcab-vide">
-                Aucune échéance fiscale dans les 30 prochains jours pour
-                les missions en cours.
+                Aucune échéance. Rien à préparer dans les 30 prochains
+                jours pour les missions en cours.
               </p>
             )}
 

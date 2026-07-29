@@ -209,7 +209,6 @@ export function RapprochementAcomptesVue({ missionId, jeton }: Props) {
         </ul>
       </details>
 
-      <p className="matx-note muted">{etat.note}</p>
     </section>
   );
 }

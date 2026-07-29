@@ -44,7 +44,7 @@ export const PROCESS_TIPS = {
   perimetreImpots:
     "Aucun coché = tous les impôts. Une sélection restreint le moteur aux codes pivot choisis (revue partielle).",
   perimetreExonerations:
-    "Exonérations et allègements = règles du référentiel épinglé uniquement. Cet écran n’invente aucune liste CGI ; les mentions a_confirmer restent à valider côté éditeur.",
+    "Exonérations et allègements = règles du référentiel épinglé uniquement. Cet écran n’invente aucune liste CGI ; les mentions « à confirmer » restent à valider côté éditeur.",
   perimetreDons:
     "Dons / libéralités : si le millésime contient une règle (ex. famille BIC dons), elle s’applique à l’exécution. Aucun plafond ni taux n’est affiché dans le cadrage.",
   exclusionsDeclarees:

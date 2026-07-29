@@ -151,7 +151,10 @@ export function RelancesCabinetVue({ jeton, onOuvrirMission }: Props) {
             </div>
 
             {!relances.items.length && (
-              <p className="relances2-vide">Aucune relance à faire.</p>
+              <p className="relances2-vide">
+                Aucune relance. Les demandes en attente dont la date de
+                relance planifiée est échue apparaîtront ici.
+              </p>
             )}
 
             {groupes.map((g) => (

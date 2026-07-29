@@ -134,7 +134,7 @@ export function ClotureCabinetVue({ jeton, onOuvrirMission }: Props) {
 
             {!prep.items.length && (
               <p className="cloturecab-vide">
-                Aucune mission en cours — rien à préparer pour la clôture.
+                Aucune mission en cours. Rien à préparer pour la clôture.
               </p>
             )}
 

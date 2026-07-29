@@ -136,7 +136,7 @@ export function MonTableauVue({ jeton, onOuvrirMission }: Props) {
             </h4>
             {vue.points.length === 0 && (
               <p className="montab-vide">
-                Aucun point convenu en attente sur vos missions.
+                Aucun point à traiter. Rien en attente sur vos missions.
               </p>
             )}
             <ul className="montab-liste">
@@ -177,8 +177,8 @@ export function MonTableauVue({ jeton, onOuvrirMission }: Props) {
             </h4>
             {vue.echeances.length === 0 && (
               <p className="montab-vide">
-                Aucune échéance fiscale dans les 30 prochains jours pour
-                vos missions en cours.
+                Aucune échéance. Rien dans les 30 prochains jours pour vos
+                missions en cours.
               </p>
             )}
             <ul className="montab-liste">

@@ -34,11 +34,39 @@ function dateHeureFr(iso: string): string {
   return heure ? `${jour} ${heure}` : jour;
 }
 
+/** Traduction des clés techniques des détails en libellés métier. */
+const LIBELLES_DETAILS: Record<string, string> = {
+  creation_mission: "Création de mission",
+  mission_id: "Mission",
+  contribuable_id: "Client",
+  contribuable: "Client",
+  utilisateur_id: "Utilisateur",
+  fichier: "Fichier",
+  format: "Format",
+  periode: "Période",
+  exercice: "Exercice",
+  statut: "Statut",
+  role: "Rôle",
+  email: "E-mail",
+  montant: "Montant",
+  note: "Note",
+  action: "Action",
+  page: "Page",
+};
+
+/** Repli lisible : `nb_documents` → « Nb documents ». */
+function libelleCle(cle: string): string {
+  const connu = LIBELLES_DETAILS[cle];
+  if (connu) return connu;
+  const texte = cle.replace(/_/g, " ").trim();
+  return texte ? texte.charAt(0).toUpperCase() + texte.slice(1) : cle;
+}
+
 function detailsTexte(
   details: Record<string, string | number | boolean | null>,
 ): string {
   return Object.entries(details)
-    .map(([cle, valeur]) => `${cle} : ${String(valeur ?? "—")}`)
+    .map(([cle, valeur]) => `${libelleCle(cle)} : ${String(valeur ?? "—")}`)
     .join(" · ");
 }
 
@@ -151,9 +179,9 @@ export function JournalCabinetVue({ jeton }: Props) {
         <div>
           <h3 className="ctrale-title">Journal d'activité du cabinet</h3>
           <p className="ctrale-sub">
-            Trace chronologique des événements enregistrés par
-            l'application — consultations, exécutions, documents produits —
-            pour la traçabilité professionnelle des diligences du cabinet.
+            Historique chronologique des actions réalisées dans
+            l'application — consultations, calculs, documents produits —
+            au service du journal d'activité du cabinet.
           </p>
         </div>
         {vue && (
@@ -204,7 +232,7 @@ export function JournalCabinetVue({ jeton }: Props) {
               type="text"
               value={filtreAction}
               onChange={(e) => setFiltreAction(e.target.value)}
-              placeholder="ex. creation_mission"
+              placeholder="code exact, ex. creation_mission"
               disabled={busy}
             />
           </label>
@@ -228,7 +256,7 @@ export function JournalCabinetVue({ jeton }: Props) {
               onClick={reinitialiserFiltres}
               disabled={busy}
             >
-              Tout afficher
+              Réinitialiser les filtres
             </button>
           )}
         </form>

@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
 import { api, telecharger } from "./api";
+import { InfoTip } from "./Tooltip";
 
 /** Centre d'alertes du cabinet (GET /api/v1/cabinet/alertes). */
 type Gravite = "critique" | "vigilance" | "info";
@@ -113,11 +114,15 @@ export function CentreAlertesVue({ jeton, onOuvrirMission }: Props) {
     <section className="ctrale-zone" aria-label="Centre d'alertes du cabinet">
       <div className="ctrale-head">
         <div>
-          <h3 className="ctrale-title">Centre d'alertes</h3>
+          <h3 className="ctrale-title label-with-tip">
+            Centre d'alertes
+            <InfoTip
+              label="Tous les signaux du cabinet en une liste : points convenus en retard, échéances fiscales proches, budget temps sous tension, délais LPF — rien ne part par email, tout reste ici."
+              ariaLabel="Aide : centre d'alertes"
+            />
+          </h3>
           <p className="ctrale-sub">
-            Tous les signaux du cabinet en une liste : points convenus en
-            retard, échéances fiscales proches, budget temps sous tension,
-            délais LPF — rien ne part par email, tout reste ici.
+            Signaux consolidés des missions en cours, tous clients confondus.
           </p>
         </div>
         {vue && (
@@ -157,13 +162,25 @@ export function CentreAlertesVue({ jeton, onOuvrirMission }: Props) {
               <span className="ctrale-chip critique">
                 <strong>{vue.synthese.par_gravite.critique ?? 0}</strong>{" "}
                 critique{(vue.synthese.par_gravite.critique ?? 0) > 1 ? "s" : ""}
+                <InfoTip
+                  label="Critique : échéance dépassée ou imminente — à traiter en priorité."
+                  ariaLabel="Aide : gravité critique"
+                />
               </span>
               <span className="ctrale-chip vigilance">
                 <strong>{vue.synthese.par_gravite.vigilance ?? 0}</strong>{" "}
                 vigilance
+                <InfoTip
+                  label="Vigilance : point à surveiller — une action est à prévoir avant la date limite."
+                  ariaLabel="Aide : gravité vigilance"
+                />
               </span>
               <span className="ctrale-chip">
                 <strong>{vue.synthese.par_gravite.info ?? 0}</strong> info
+                <InfoTip
+                  label="Info : signal purement informatif, sans urgence ni action attendue."
+                  ariaLabel="Aide : gravité info"
+                />
               </span>
               <span className="ctrale-chip">
                 <strong>{vue.synthese.clients}</strong> client
@@ -190,7 +207,7 @@ export function CentreAlertesVue({ jeton, onOuvrirMission }: Props) {
 
             {!vue.alertes.length && (
               <p className="ctrale-vide">
-                Aucune alerte : rien ne réclame votre attention aujourd'hui.
+                Aucune alerte. Rien ne réclame votre attention aujourd'hui.
               </p>
             )}
 

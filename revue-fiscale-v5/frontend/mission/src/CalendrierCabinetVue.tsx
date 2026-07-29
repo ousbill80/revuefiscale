@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
 import { api, telecharger } from "./api";
+import { InfoTip } from "./Tooltip";
 
 /** Calendrier fiscal du cabinet (GET /api/v1/cabinet/calendrier). */
 type ElementCalendrier = {
@@ -110,11 +111,15 @@ export function CalendrierCabinetVue({ jeton, onOuvrirMission }: Props) {
     >
       <div className="ctrale-head">
         <div>
-          <h3 className="ctrale-title">Calendrier fiscal du cabinet</h3>
+          <h3 className="ctrale-title label-with-tip">
+            Calendrier fiscal du cabinet
+            <InfoTip
+              label="Mois par mois, les échéances fiscales des missions en cours et les points convenus datés — pour planifier la charge du cabinet, sans ouvrir chaque mission."
+              ariaLabel="Aide : calendrier fiscal du cabinet"
+            />
+          </h3>
           <p className="ctrale-sub">
-            Mois par mois, les échéances fiscales des missions en cours et
-            les points convenus datés — pour planifier la charge du cabinet,
-            sans ouvrir chaque mission.
+            Échéances et points convenus datés, mois par mois.
           </p>
         </div>
         <div className="ctrale-exports">
@@ -196,7 +201,18 @@ export function CalendrierCabinetVue({ jeton, onOuvrirMission }: Props) {
 
             {!vue.mois.length && (
               <p className="ctrale-vide">
-                Aucune échéance sur l'horizon choisi.
+                Aucune échéance sur l'horizon choisi. Rien à planifier sur
+                cette période.{" "}
+                {horizon < 12 && (
+                  <button
+                    type="button"
+                    className="btn btn-ghost btn-sm"
+                    onClick={() => setHorizon(12)}
+                    disabled={busy}
+                  >
+                    Élargir à 12 mois
+                  </button>
+                )}
               </p>
             )}
 

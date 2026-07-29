@@ -73,11 +73,12 @@ const LIBELLES_GRAVITE: Record<string, string> = {
   info: "Info",
 };
 
+/** Libellés français des volets de la fiche (codes techniques de l'API). */
 const LIBELLES_VOLET: Record<string, string> = {
-  missions: "missions",
-  points_convenus: "points convenus",
-  evolution_charge_fiscale: "évolution de la charge fiscale",
-  alertes: "alertes",
+  missions: "Missions",
+  points_convenus: "Points convenus",
+  evolution_charge_fiscale: "Évolution de la charge fiscale",
+  alertes: "Alertes",
 };
 
 function dateFr(iso: string | null): string {
@@ -247,7 +248,10 @@ export function FicheClientVue({ jeton, contribuableId, onOuvrirMission }: Props
             <div className="calcab-mois">
               <h4 className="calcab-mois-titre">Missions par exercice</h4>
               {!fiche.missions.length && (
-                <p className="ctrale-vide">Aucune mission pour ce client.</p>
+                <p className="ctrale-vide">
+                  Aucune mission. Les missions de revue fiscale de ce client
+                  apparaîtront ici dès leur création depuis le portefeuille.
+                </p>
               )}
               <ul className="ctrale-liste">
                 {fiche.missions.map((m) => (
@@ -255,7 +259,7 @@ export function FicheClientVue({ jeton, contribuableId, onOuvrirMission }: Props
                     <button
                       type="button"
                       className="ctrale-row"
-                      title={`Ouvrir la mission #${m.mission_id}`}
+                      title={`Ouvrir la mission de l'exercice ${m.exercice}`}
                       disabled={!onOuvrirMission}
                       onClick={() => onOuvrirMission?.(m.mission_id)}
                     >
@@ -267,7 +271,7 @@ export function FicheClientVue({ jeton, contribuableId, onOuvrirMission }: Props
                           {libelleStatut(m.statut)}
                         </span>
                         <span className="ctrale-libelle">
-                          Mission #{m.mission_id}
+                          Mission de revue fiscale
                         </span>
                       </span>
                     </button>
@@ -282,7 +286,9 @@ export function FicheClientVue({ jeton, contribuableId, onOuvrirMission }: Props
               </h4>
               {!fiche.points_ouverts.length && (
                 <p className="ctrale-vide">
-                  Aucun point convenu en attente pour ce client.
+                  Aucun point convenu en attente. Les points actés avec le
+                  client lors des restitutions restent affichés ici tant
+                  qu'ils sont ouverts.
                 </p>
               )}
               <ul className="ctrale-liste">
@@ -317,7 +323,8 @@ export function FicheClientVue({ jeton, contribuableId, onOuvrirMission }: Props
               </h4>
               {!evolution && (
                 <p className="ctrale-vide">
-                  Évolution indisponible pour ce client.
+                  Aucune évolution disponible. Elle se calcule dès qu'un
+                  exercice revu porte une charge fiscale estimée.
                 </p>
               )}
               {evolution && !exercicesDisponibles.length && (
@@ -353,7 +360,9 @@ export function FicheClientVue({ jeton, contribuableId, onOuvrirMission }: Props
               </h4>
               {!fiche.alertes.length && (
                 <p className="ctrale-vide">
-                  Aucun signal du centre d'alertes ne concerne ce client.
+                  Aucune alerte. Aucun signal du centre d'alertes ne concerne
+                  ce client pour le moment — les nouveaux signaux liés à ses
+                  missions apparaîtront ici.
                 </p>
               )}
               <ul className="ctrale-liste">
@@ -365,7 +374,7 @@ export function FicheClientVue({ jeton, contribuableId, onOuvrirMission }: Props
                       disabled={!a.mission_id || !onOuvrirMission}
                       title={
                         a.mission_id
-                          ? `Ouvrir la mission #${a.mission_id}`
+                          ? "Ouvrir la mission concernée"
                           : a.libelle
                       }
                       onClick={() => {

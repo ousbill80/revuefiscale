@@ -454,7 +454,6 @@ export function ResultatFiscalVue({ missionId, jeton, estLecteur }: Props) {
         </details>
       )}
 
-      <p className="rtva-note muted">{etat.note}</p>
     </section>
   );
 }

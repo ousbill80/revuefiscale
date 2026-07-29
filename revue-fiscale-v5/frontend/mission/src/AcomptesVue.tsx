@@ -381,14 +381,14 @@ export function AcomptesVue({ missionId, jeton, estLecteur }: Props) {
             441x (État, impôt sur les bénéfices) :{" "}
             {fmtMontant(etat.balance.solde_441x)} FCFA · 444x :{" "}
             {fmtMontant(etat.balance.solde_444x)} FCFA — soldes annuels
-            mêlant acomptes et liquidations, à ventiler par l'humain.
+            mêlant acomptes et liquidations.
           </p>
         </details>
       )}
 
       <p className="rtva-note muted">
         Seuil de solde résiduel : {fmtMontant(etat.seuil_solde_residuel)}{" "}
-        FCFA. {etat.note}
+        FCFA.
       </p>
     </section>
   );

@@ -204,7 +204,6 @@ export function QualiteBalanceVue({ missionId, jeton }: Props) {
         </>
       )}
 
-      <p className="matx-note muted">{etat.note}</p>
     </section>
   );
 }

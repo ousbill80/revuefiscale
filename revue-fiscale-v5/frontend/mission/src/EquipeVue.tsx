@@ -375,15 +375,30 @@ export function EquipeVue({
                 >
                   {libelleStatutOutbox(inviteToken.emailEnvoi.statut || "?")}
                 </span>
-                {inviteToken.emailEnvoi.mode
-                  ? ` · mode ${inviteToken.emailEnvoi.mode}`
-                  : ""}
-                {inviteToken.emailEnvoi.outbox_id != null
-                  ? ` · outbox #${inviteToken.emailEnvoi.outbox_id}`
-                  : ""}
-                {inviteToken.emailEnvoi.statut === "simule_dev"
-                  ? " — RESEND_API_KEY absent, simulation locale."
-                  : ""}
+                {inviteToken.emailEnvoi.statut === "simule_dev" ? (
+                  <>
+                    {" "}
+                    — l&apos;envoi d&apos;e-mails n&apos;est pas configuré :
+                    l&apos;invitation est simulée. Transmettez le jeton
+                    ci-dessous à votre collègue.
+                  </>
+                ) : null}{" "}
+                <InfoTip
+                  label={`Détail technique : ${[
+                    inviteToken.emailEnvoi.mode
+                      ? `mode ${inviteToken.emailEnvoi.mode}`
+                      : null,
+                    inviteToken.emailEnvoi.outbox_id != null
+                      ? `envoi n°${inviteToken.emailEnvoi.outbox_id}`
+                      : null,
+                    inviteToken.emailEnvoi.statut === "simule_dev"
+                      ? "clé d'envoi (RESEND_API_KEY) absente"
+                      : null,
+                  ]
+                    .filter(Boolean)
+                    .join(" · ") || "aucun"}.`}
+                  ariaLabel="Aide : détail technique de l'envoi"
+                />
               </p>
             )}
             <code className="token-value" tabIndex={0}>
@@ -538,12 +553,17 @@ export function EquipeVue({
 
         {resendAbsent && (
           <p className="equipe-outbox-banner" role="status">
-            RESEND_API_KEY absent
-            {emailOutbox?.resend?.mode_sans_cle
-              ? ` · mode ${emailOutbox.resend.mode_sans_cle}`
-              : ""}
-            . Les e-mails sont simulés ou en échec — le jeton reste disponible
-            dans l&apos;UI.
+            Livraison d&apos;e-mails non configurée — les invitations sont
+            simulées. Le jeton reste disponible à l&apos;écran. Contactez votre
+            administrateur.{" "}
+            <InfoTip
+              label={`Détail technique : clé d'envoi (RESEND_API_KEY) absente${
+                emailOutbox?.resend?.mode_sans_cle
+                  ? ` · mode ${emailOutbox.resend.mode_sans_cle}`
+                  : ""
+              }.`}
+              ariaLabel="Aide : détail technique de la livraison d'e-mails"
+            />
           </p>
         )}
 

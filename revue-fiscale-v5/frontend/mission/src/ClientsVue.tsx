@@ -46,7 +46,7 @@ import {
   libelleStatut,
   type MissionRow,
 } from "./MissionsVue";
-import { Tooltip } from "./Tooltip";
+import { InfoTip, Tooltip } from "./Tooltip";
 
 export type ClientRow = {
   id: number;
@@ -405,9 +405,9 @@ export function ClientsVue({
             },
             {
               id: "incomplets" as const,
-              label: "Fiches incomplètes",
+              label: "Identité incomplète",
               value: stats.incomplets,
-              tip: "Identité légale incomplète (NCC, RCCM, siège, régime…).",
+              tip: "Clients dont l'identité légale est incomplète — au moins un champ manquant (NCC, RCCM, siège, régime fiscal…). Cliquez pour filtrer la liste.",
             },
           ] as const
         ).map((item) => (
@@ -454,7 +454,13 @@ export function ClientsVue({
           </select>
         </div>
         <div>
-          <label htmlFor="clients-completude">Identité</label>
+          <span className="label-with-tip">
+            <label htmlFor="clients-completude">Identité</label>
+            <InfoTip
+              label="Complétude de l'identité légale de la fiche client : une fiche « incomplète » a au moins un champ d'identité manquant (NCC, RCCM, siège, régime fiscal…)."
+              ariaLabel="Aide : filtre de complétude de l'identité"
+            />
+          </span>
           <select
             id="clients-completude"
             value={filtreCompletude}
@@ -531,7 +537,7 @@ export function ClientsVue({
                               [c.commune, c.siege_social]
                                 .map((x) => x?.trim())
                                 .filter(Boolean)
-                                .join(" · ") || `Fiche #${c.id}`,
+                                .join(" · ") || "Localisation non renseignée",
                               (() => {
                                 const quand = formaterCreationTrace(c.cree_le);
                                 if (!quand && !c.cree_par_email) return null;
@@ -622,7 +628,7 @@ export function ClientsVue({
                           <Tooltip label="Nouvelle mission préremplie avec cette identité.">
                             <button
                               type="button"
-                              className="btn btn-primary btn-sm"
+                              className="btn btn-ghost btn-sm"
                               onClick={() => onNouvelleMission(c)}
                             >
                               Mission
@@ -653,7 +659,7 @@ export function ClientsVue({
               {!estLecteur && !clients.length && (
                 <button
                   type="button"
-                  className="btn btn-primary btn-sm"
+                  className="btn btn-ghost btn-sm"
                   onClick={onNouveauClient}
                 >
                   Nouveau client
@@ -1628,7 +1634,7 @@ export function ClientFicheVue({
   async function reconduireMission(m: MissionRow) {
     if (!jeton || recondBusy !== null) return;
     const ok = window.confirm(
-      `Reconduire la mission #${m.id} sur l'exercice ${m.exercice + 1} ? ` +
+      `Reconduire la mission de l'exercice ${m.exercice} sur l'exercice ${m.exercice + 1} ? ` +
         "Une nouvelle mission sera créée pour ce client — profil repris, " +
         "honoraires repris à titre indicatif (modifiables ensuite).",
     );
@@ -1644,8 +1650,8 @@ export function ClientFicheVue({
         note: string;
       }>(`/api/v1/missions/${m.id}/reconduire`, { method: "POST", jeton });
       setRecondMsg(
-        `Mission reconduite : nouvelle mission #${r.nouvelle_mission_id} ` +
-          `créée sur l'exercice ${r.exercice} — ${r.note}.`,
+        `Mission reconduite : nouvelle mission créée sur l'exercice ` +
+          `${r.exercice} — ${r.note}.`,
       );
       onRafraichir?.();
     } catch (e) {
@@ -1944,7 +1950,7 @@ export function ClientFicheVue({
   const traceQuand = formaterCreationTrace(clientDetail.cree_le);
   const traceQui =
     clientDetail.cree_par_email?.trim() ||
-    (clientDetail.cree_par != null ? `utilisateur #${clientDetail.cree_par}` : null);
+    (clientDetail.cree_par != null ? "un utilisateur du cabinet" : null);
 
   function ouvrirEditionManquants() {
     changerFicheTab("overview");
@@ -2160,7 +2166,7 @@ export function ClientFicheVue({
             <span className="fiche2-bandeau-meta">
               {clientDetail.ncc?.trim()
                 ? `NCC ${clientDetail.ncc.trim()}`
-                : `Fiche #${clientDetail.id}`}
+                : "NCC non renseigné"}
             </span>
           </div>
 
@@ -2278,7 +2284,7 @@ export function ClientFicheVue({
               <Tooltip label="Lancer une mission préremplie avec cette fiche.">
                 <button
                   type="button"
-                  className="btn btn-primary btn-sm"
+                  className="btn btn-ghost btn-sm"
                   onClick={onNouvelleMission}
                 >
                   Nouvelle mission
@@ -2412,7 +2418,7 @@ export function ClientFicheVue({
                       <button
                         type="button"
                         className="agenda2-row"
-                        title={`Ouvrir la mission #${e.mission_id}`}
+                        title="Ouvrir la mission concernée"
                         onClick={() => onOuvrirMission(e.mission_id)}
                       >
                         <span className="fiche2-echeances-date">
@@ -2458,7 +2464,13 @@ export function ClientFicheVue({
               aria-label="Actions retenues en cours sur les missions du client"
             >
               <div className="fiche2-echeances-head">
-                <h3 className="fiche2-titre">Actions retenues en cours</h3>
+                <h3 className="fiche2-titre label-with-tip">
+                  Actions retenues en cours
+                  <InfoTip
+                    label="Suivi consultatif du plan d'actions — décisions du cabinet, le client reste seul décideur de la mise en œuvre."
+                    ariaLabel="Aide : actions retenues en cours"
+                  />
+                </h3>
                 <span className="fiche2-echeances-hint">
                   {totalActionsRetenues} à mettre en œuvre · toutes missions
                   {totalActionsRetenues > actionsRetenues.length
@@ -2475,7 +2487,7 @@ export function ClientFicheVue({
                     <button
                       type="button"
                       className="agenda2-row"
-                      title={`Ouvrir la mission #${a.mission_id}`}
+                      title="Ouvrir la mission concernée"
                       onClick={() => onOuvrirMission(a.mission_id)}
                     >
                       <span
@@ -2522,10 +2534,6 @@ export function ClientFicheVue({
                   {actionFaiteErr}
                 </p>
               )}
-              <p className="agenda2-note" role="note">
-                Suivi consultatif du plan d'actions — décisions du cabinet, le
-                client reste seul décideur de la mise en œuvre.
-              </p>
             </section>
           )}
 
@@ -2968,7 +2976,7 @@ export function ClientFicheVue({
                 {missionsFiltrees.map((m) => (
                   <li key={m.id}>
                     <Tooltip
-                      label={`Ouvrir la mission #${m.id} · exercice ${m.exercice}`}
+                      label={`Ouvrir la mission de l'exercice ${m.exercice}`}
                       side="bottom"
                     >
                       <button
@@ -2977,7 +2985,7 @@ export function ClientFicheVue({
                         onClick={() => onOuvrirMission(m.id)}
                       >
                         <span className="fiche2-mission-haut">
-                          <span className="fiche2-mission-id">#{m.id}</span>
+                          <span className="fiche2-mission-id">Mission</span>
                           <span className={`badge statut-${m.statut}`}>
                             {libelleStatut(m.statut)}
                           </span>

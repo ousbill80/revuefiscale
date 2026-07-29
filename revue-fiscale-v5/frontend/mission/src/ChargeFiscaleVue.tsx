@@ -222,7 +222,6 @@ export function ChargeFiscaleVue({ missionId, jeton }: Props) {
         </>
       )}
 
-      <p className="matx-note muted">{etat.note}</p>
     </section>
   );
 }

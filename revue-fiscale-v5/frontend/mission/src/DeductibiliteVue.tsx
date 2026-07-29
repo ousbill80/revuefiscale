@@ -238,7 +238,6 @@ export function DeductibiliteVue({ missionId, jeton }: Props) {
         </details>
       )}
 
-      <p className="matx-note muted">{etat.note}</p>
     </section>
   );
 }

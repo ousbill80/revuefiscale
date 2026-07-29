@@ -277,7 +277,7 @@ export function RapprochementTvaVue({ missionId, jeton, estLecteur }: Props) {
 
       <p className="rtva-note muted">
         Seuil de signification : {fmtMontant(etat.seuil_signification)}{" "}
-        FCFA. {etat.note}
+        FCFA.
       </p>
     </section>
   );

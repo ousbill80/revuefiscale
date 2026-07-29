@@ -143,7 +143,7 @@ export function CivismeVue({ missionId, jeton, onFermer, missionCloturee }: Prop
         <h3 className="rest-suivi-titre label-with-tip">
           Civisme déclaratif
           <InfoTip
-            label="Rapprochement déterministe entre l'échéancier fiscal théorique de l'exercice revu et les pièces collectées en data room : échéances couvertes, en attente ou manquantes, avec taux de civisme. Consultatif — l'application ne stocke pas les déclarations déposées."
+            label="Rapprochement entre l'échéancier fiscal théorique de l'exercice revu et les pièces collectées en data room : échéances couvertes, en attente ou manquantes, avec taux de civisme. L'application ne stocke pas les déclarations déposées : une échéance « manquante » signifie seulement qu'aucune pièce correspondante n'a été collectée — à vérifier par le fiscaliste."
             ariaLabel="Aide : civisme déclaratif"
           />
         </h3>
@@ -273,9 +273,6 @@ export function CivismeVue({ missionId, jeton, onFermer, missionCloturee }: Prop
             </ul>
           )}
 
-          {etat.note && (
-            <p className="rest-prescription-hypothese muted">{etat.note}</p>
-          )}
         </>
       )}
     </section>

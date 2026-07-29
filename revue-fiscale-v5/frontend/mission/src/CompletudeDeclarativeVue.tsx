@@ -209,7 +209,6 @@ export function CompletudeDeclarativeVue({ missionId, jeton }: Props) {
         </table>
       </details>
 
-      <p className="matx-note muted">{etat.note}</p>
     </section>
   );
 }

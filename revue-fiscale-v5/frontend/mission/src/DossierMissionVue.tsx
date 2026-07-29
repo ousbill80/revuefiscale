@@ -416,30 +416,30 @@ const STATUTS_COHERENCE_CA_FR: Record<string, string> = {
   indisponible:
     "Croisement indisponible — importez la balance (comptes 70x) et saisissez au moins une déclaration de TVA",
   coherent: "Cohérent — écart relatif dans le seuil indicatif",
-  ecart_a_expliquer: "Écart à expliquer — l'humain apprécie",
+  ecart_a_expliquer: "Écart à expliquer",
 };
 
 const STATUTS_RETENUE_LOYERS_FR: Record<string, string> = {
   indisponible:
     "Vue indisponible — importez la balance (comptes 622x « locations et charges locatives »)",
   a_qualifier:
-    "Retenue théorique maximale indicative — qualité des bailleurs à qualifier par l'humain",
+    "Retenue théorique maximale indicative — qualité des bailleurs à qualifier",
 };
 
 const STATUTS_RETENUE_HONORAIRES_FR: Record<string, string> = {
   indisponible:
     "Vue indisponible — importez la balance (comptes 632x « rémunérations d'intermédiaires et de conseils »)",
   a_qualifier:
-    "Retenue théorique maximale indicative — régime des prestataires à qualifier par l'humain",
+    "Retenue théorique maximale indicative — régime des prestataires à qualifier",
 };
 
 const STATUTS_QUALITE_BALANCE_FR: Record<string, string> = {
   indisponible:
     "Vue indisponible — importez la balance pour contrôler sa qualité",
   equilibree_sans_observation:
-    "Balance équilibrée, aucune observation — l'humain reste juge de la fiabilité",
+    "Balance équilibrée, aucune observation",
   observations_a_examiner:
-    "Observations à examiner — chacune peut être justifiée, l'humain conclut",
+    "Observations à examiner — chacune peut être justifiée",
 };
 
 const STATUTS_DEFICITS_REPORTABLES_FR: Record<string, string> = {
@@ -448,7 +448,7 @@ const STATUTS_DEFICITS_REPORTABLES_FR: Record<string, string> = {
   aucun_deficit:
     "Aucun déficit constaté sur les exercices suivis (résultats fiscaux théoriques)",
   deficits_a_suivre:
-    "Déficits à suivre — l'humain rapproche les liasses déposées",
+    "Déficits à suivre — à rapprocher des liasses déposées",
 };
 
 const STATUTS_RAPPROCHEMENT_ACOMPTES_FR: Record<string, string> = {
@@ -466,7 +466,7 @@ const STATUTS_EVOLUTION_CHARGE_FISCALE_FR: Record<string, string> = {
   indisponible:
     "Évolution indisponible — moins de deux exercices du client portent un panorama de charge fiscale estimée",
   evolution_disponible:
-    "Évolution disponible — les variations s'expliquent (activité, taux, assiettes, exonérations), l'humain analyse",
+    "Évolution disponible — les variations s'expliquent (activité, taux, assiettes, exonérations)",
 };
 
 const SENS_VARIATION_FR: Record<string, string> = {
@@ -1190,8 +1190,8 @@ export function DossierMissionVue({ missionId, jeton }: Props) {
                 </table>
               )}
               <p className="dossier-note">
-                La saisie dans l'outil ne prouve pas le dépôt effectif à la
-                DGI : seuls les quittances et accusés de dépôt font foi.
+                Seuls les quittances et accusés de dépôt font foi du dépôt
+                effectif à la DGI.
               </p>
             </section>
           )}
@@ -1222,9 +1222,8 @@ export function DossierMissionVue({ missionId, jeton }: Props) {
               )}
               {dossier.coherence_ca.approximation && (
                 <p className="dossier-note">
-                  Approximation assumée : reconstitution au seul taux normal
-                  de 18 % — exonérations, taux réduits et opérations hors
-                  champ ignorés. Un écart s'explique, il ne se conclut pas.
+                  Reconstitution au seul taux normal de 18 % (exonérations,
+                  taux réduits et opérations hors champ ignorés).
                 </p>
               )}
             </section>
@@ -1257,11 +1256,8 @@ export function DossierMissionVue({ missionId, jeton }: Props) {
               )}
               {dossier.retenue_loyers.repartition_calculable === false && (
                 <p className="dossier-note">
-                  La qualité du bailleur (personne physique ou morale,
-                  régime) conditionne la retenue et n'est pas connue de la
-                  balance : la répartition n'est pas calculée — seul
-                  l'humain qualifie les bailleurs. Un écart s'explique, il
-                  ne se conclut pas.
+                  Répartition non calculée : la qualité du bailleur n'est
+                  pas connue de la balance.
                 </p>
               )}
             </section>
@@ -1295,12 +1291,9 @@ export function DossierMissionVue({ missionId, jeton }: Props) {
               {dossier.retenue_honoraires.repartition_calculable ===
                 false && (
                 <p className="dossier-note">
-                  Le régime du prestataire (résident ou non, immatriculé
-                  ou non) conditionne la retenue et n'est pas connu de la
-                  balance : la répartition n'est pas calculée — seul
-                  l'humain qualifie les prestataires, les justificatifs
-                  de retenue et quittances font foi. Un écart s'explique,
-                  il ne se conclut pas.
+                  Répartition non calculée : le régime du prestataire n'est
+                  pas connu de la balance — justificatifs de retenue et
+                  quittances font foi.
                 </p>
               )}
             </section>
@@ -1336,10 +1329,9 @@ export function DossierMissionVue({ missionId, jeton }: Props) {
               )}
               {(dossier.qualite_balance.nb_observations ?? 0) > 0 && (
                 <p className="dossier-note">
-                  Ces observations orientent la revue — un sens
-                  inhabituel peut être justifié (découvert bancaire,
-                  avoirs, acomptes fournisseurs…) : le détail
-                  s'examine dans la vue dédiée, seul l'humain conclut.
+                  Un sens inhabituel peut être justifié (découvert
+                  bancaire, avoirs, acomptes fournisseurs…) : détail dans
+                  la vue dédiée.
                 </p>
               )}
             </section>
@@ -1389,11 +1381,8 @@ export function DossierMissionVue({ missionId, jeton }: Props) {
               )}
               {dossier.deficits_reportables.approximation && (
                 <p className="dossier-note">
-                  Approximation assumée : cumul à imputation théorique
-                  maximale — les imputations réellement pratiquées dans
-                  les liasses déposées ne sont pas connues de l'outil,
-                  seules les liasses font foi. Le délai de report dépend
-                  du CGI applicable : l'humain vérifie et décide.
+                  Cumul à imputation théorique maximale — seules les
+                  liasses déposées font foi des imputations pratiquées.
                 </p>
               )}
             </section>
@@ -1438,12 +1427,8 @@ export function DossierMissionVue({ missionId, jeton }: Props) {
               )}
               {dossier.rapprochement_acomptes.approximation && (
                 <p className="dossier-note">
-                  Approximation assumée : l'outil ne connaît que les
-                  acomptes saisis — les quittances font foi des
-                  versements réellement effectués. Le minimum de
-                  perception n'est pas calculé : le solde indicatif
-                  s'explique et se rapproche, il ne se conclut pas —
-                  l'humain liquide et décide.
+                  Solde calculé depuis les seuls acomptes saisis (les
+                  quittances font foi) — minimum de perception non calculé.
                 </p>
               )}
             </section>
@@ -1507,10 +1492,8 @@ export function DossierMissionVue({ missionId, jeton }: Props) {
                 </p>
               )}
               <p className="dossier-note">
-                Vue indicative fondée sur les charges THÉORIQUES
-                estimées — les variations s'expliquent (activité, taux,
-                assiettes, exonérations), les liasses font foi, l'humain
-                analyse.
+                Charges théoriques estimées — les liasses déposées font
+                foi.
               </p>
             </section>
           )}
