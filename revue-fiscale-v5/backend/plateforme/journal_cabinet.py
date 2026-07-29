@@ -118,6 +118,40 @@ LIBELLES_ACTION: Final[dict[str, str]] = {
     "consultation_courrier_relance_txt": (
         "Consultation du courrier de relance (texte)"
     ),
+    "consultation_acomptes_is": "Consultation des acomptes IS",
+    "consultation_coherence_ca": (
+        "Consultation de la cohérence du chiffre d'affaires"
+    ),
+    "consultation_completude_declarative": (
+        "Consultation de la complétude déclarative"
+    ),
+    "consultation_deductibilite": "Consultation de la déductibilité",
+    "consultation_deficits_reportables": (
+        "Consultation des déficits reportables"
+    ),
+    "consultation_evolution_charge_fiscale": (
+        "Consultation de l'évolution de la charge fiscale"
+    ),
+    "consultation_materialite": "Consultation de la matérialité",
+    "consultation_patente": "Consultation de la patente",
+    "consultation_programme_propose": (
+        "Consultation du programme de travail proposé"
+    ),
+    "consultation_qualite_balance": "Consultation de la qualité de la balance",
+    "consultation_rapprochement_acomptes": (
+        "Consultation du rapprochement des acomptes"
+    ),
+    "consultation_rapprochement_salaires": (
+        "Consultation du rapprochement des salaires"
+    ),
+    "consultation_rapprochement_tva": (
+        "Consultation du rapprochement de la TVA"
+    ),
+    "consultation_resultat_fiscal": "Consultation du résultat fiscal",
+    "consultation_retenue_honoraires": (
+        "Consultation de la retenue sur honoraires"
+    ),
+    "consultation_retenue_loyers": "Consultation de la retenue sur loyers",
     # Consultations client
     "consultation_fiche_client": "Consultation de la fiche client",
     "consultation_historique_client": "Consultation de l'historique client",

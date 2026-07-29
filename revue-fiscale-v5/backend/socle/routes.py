@@ -1,9 +1,10 @@
 """Routes socle : import balance, etats financiers, grand livre, FEC, pièces."""
 from __future__ import annotations
 
-from typing import Annotated
+from typing import Annotated, Literal
 
 from fastapi import APIRouter, Depends, HTTPException, Query, Request, status
+from pydantic import BaseModel, Field
 from sqlalchemy.orm import Session
 from starlette.datastructures import UploadFile as StarletteUploadFile
 
@@ -30,6 +31,7 @@ from backend.socle.pieces_service import (
     deposer_annexe,
     designer_source_active,
     enregistrer_source_apres_import,
+    importer_source_depuis_annexe,
     lister_pieces_mission,
     retirer_annexe,
 )
@@ -459,6 +461,52 @@ async def api_designer_source_active(
         raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST, detail=str(e)) from e
     except ErreurPiece as e:
         # 409 si source déjà définie sans confirmation
+        code = (
+            status.HTTP_409_CONFLICT
+            if "déjà définie" in str(e)
+            else status.HTTP_400_BAD_REQUEST
+        )
+        raise HTTPException(status_code=code, detail=str(e)) from e
+
+
+class SourceDepuisAnnexeIn(BaseModel):
+    piece_id: int = Field(ge=1)
+    type_piece: (
+        Literal["balance", "etats_financiers", "grand_livre", "fec"] | None
+    ) = None
+    confirmer: bool = False
+
+
+@router.post(
+    "/missions/{mission_id}/source-depuis-annexe",
+    response_model=DesigneSourceActiveOut,
+)
+def api_source_depuis_annexe(
+    mission_id: int,
+    corps: SourceDepuisAnnexeIn,
+    utilisateur: UtilisateurDep,
+    session: Annotated[Session, Depends(session_abonne)],
+) -> DesigneSourceActiveOut:
+    """Réutilise une pièce déjà déposée à la data room mission comme source active."""
+    exiger_capacite(utilisateur, "importer_balance")
+    try:
+        return importer_source_depuis_annexe(
+            session,
+            utilisateur.tenant_id,
+            mission_id,
+            piece_id=corps.piece_id,
+            type_piece=corps.type_piece,
+            confirmer=corps.confirmer,
+        )
+    except ErreurFiabilisation as e:
+        raise HTTPException(
+            status_code=status.HTTP_404_NOT_FOUND, detail=str(e)
+        ) from e
+    except ErreurLectureBalance as e:
+        raise HTTPException(
+            status_code=status.HTTP_400_BAD_REQUEST, detail=str(e)
+        ) from e
+    except ErreurPiece as e:
         code = (
             status.HTTP_409_CONFLICT
             if "déjà définie" in str(e)

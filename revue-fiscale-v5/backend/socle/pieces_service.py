@@ -29,7 +29,11 @@ from backend.socle.service import (
     fiabiliser_fec,
     fiabiliser_grand_livre,
 )
-from backend.socle.stockage_pieces import ecrire_piece, supprimer_fichier
+from backend.socle.stockage_pieces import (
+    chemin_absolu,
+    ecrire_piece,
+    supprimer_fichier,
+)
 
 TYPES_IMPORTABLES = frozenset(
     {"balance", "etats_financiers", "grand_livre", "fec"}
@@ -317,6 +321,48 @@ def enregistrer_source_apres_import(
         )
         session.flush()
         return _piece_out(row)
+
+
+def importer_source_depuis_annexe(
+    session: Session,
+    tenant_id: int,
+    mission_id: int,
+    *,
+    piece_id: int,
+    type_piece: str | None = None,
+    confirmer: bool = False,
+) -> DesigneSourceActiveOut:
+    """Réutilise une pièce déjà déposée à la data room mission comme source active."""
+    with contexte_tenant(session, tenant_id):
+        if not depot.mission_existe(session, mission_id):
+            raise ErreurFiabilisation(
+                f"mission {mission_id} introuvable pour ce tenant"
+            )
+        piece = depot.piece_par_id(session, piece_id)
+    if piece is None or int(piece["mission_id"]) != mission_id:
+        raise ErreurPiece(f"pièce {piece_id} introuvable pour cette mission")
+    tp = (type_piece or str(piece.get("type_piece") or "")).strip()
+    if tp not in TYPES_IMPORTABLES:
+        raise ErreurPiece(
+            f"type_piece « {tp or '—'} » ne peut pas alimenter solde_compte"
+        )
+    try:
+        brut = chemin_absolu(str(piece["chemin_stockage"])).read_bytes()
+    except OSError as e:
+        raise ErreurPiece(
+            f"Contenu de la pièce « {piece['nom_fichier']} » illisible "
+            "(fichier stocké absent ou corrompu)."
+        ) from e
+    return designer_source_active(
+        session,
+        tenant_id,
+        mission_id,
+        type_piece=tp,
+        nom_fichier=str(piece["nom_fichier"]),
+        contenu=brut,
+        content_type=piece.get("content_type"),
+        confirmer=confirmer,
+    )
 
 
 def retirer_annexe(

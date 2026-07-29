@@ -1,4 +1,4 @@
-/** Data Room — synthèse IA, coffre documentaire, mémoire client, timeline. */
+/** Data Room — synthèse IA, coffre documentaire, mémoire client. */
 import { useCallback, useEffect, useMemo, useState } from "react";
 import { api, apiUpload, telecharger } from "./api";
 import {
@@ -18,15 +18,6 @@ type MemoireEntree = {
   source_ref?: string | null;
   auteur?: string | null;
   cree_le?: string | null;
-};
-
-type EvenementTimeline = {
-  id: number;
-  horodatage?: string | null;
-  acteur: string;
-  action: string;
-  mission_id?: number | null;
-  charge_utile?: Record<string, unknown>;
 };
 
 const TYPES_ENTREE: { id: TypeEntreeMemoire; label: string }[] = [
@@ -128,21 +119,6 @@ function exercicePiece(p: PieceContribuable): string {
   return Number.isFinite(annee) ? String(annee) : "Sans date";
 }
 
-const ACTIONS_LABEL: Record<string, string> = {
-  creation_contribuable: "Création de la fiche contribuable",
-  creation_mission: "Création d’une mission",
-  cadrage_mission: "Cadrage de la mission",
-  changement_statut: "Changement de statut de mission",
-  ajout_memoire_client: "Ajout d’une entrée mémoire",
-  depot_piece_contribuable: "Dépôt d’une pièce au coffre documentaire",
-  retrait_memoire_client: "Retrait d’une entrée mémoire",
-  generation_synthese_client: "Génération d’une synthèse IA",
-};
-
-function libelleAction(action: string): string {
-  return ACTIONS_LABEL[action] || action.replace(/_/g, " ");
-}
-
 export function DataRoomPanel({
   jeton,
   contribuableId,
@@ -154,7 +130,6 @@ export function DataRoomPanel({
 }) {
   const [pieces, setPieces] = useState<PieceContribuable[]>([]);
   const [entrees, setEntrees] = useState<MemoireEntree[]>([]);
-  const [evenements, setEvenements] = useState<EvenementTimeline[]>([]);
   const [err, setErr] = useState<string | null>(null);
   const [busy, setBusy] = useState(false);
 
@@ -202,18 +177,6 @@ export function DataRoomPanel({
     }
   }, [contribuableId, jeton]);
 
-  const chargerTimeline = useCallback(async () => {
-    try {
-      const liste = await api<EvenementTimeline[]>(
-        `/api/v1/contribuables/${contribuableId}/timeline`,
-        { jeton },
-      );
-      setEvenements(Array.isArray(liste) ? liste : []);
-    } catch {
-      setEvenements([]);
-    }
-  }, [contribuableId, jeton]);
-
   const chargerVersions = useCallback(async () => {
     try {
       const liste = await api<SyntheseVersion[]>(
@@ -236,9 +199,8 @@ export function DataRoomPanel({
     setErr(null);
     void chargerPieces();
     void chargerMemoire();
-    void chargerTimeline();
     void chargerVersions();
-  }, [chargerPieces, chargerMemoire, chargerTimeline, chargerVersions]);
+  }, [chargerPieces, chargerMemoire, chargerVersions]);
 
   useEffect(() => {
     if (syntheseId == null) {
@@ -345,7 +307,6 @@ export function DataRoomPanel({
         if (terminee) {
           await chargerVersions();
           await chargerMemoire();
-          await chargerTimeline();
           return;
         }
       }
@@ -384,7 +345,6 @@ export function DataRoomPanel({
       );
       await chargerPieces();
       await chargerMemoire();
-      await chargerTimeline();
       await chargerVersions();
       void surveillerSynthese();
     }
@@ -430,7 +390,6 @@ export function DataRoomPanel({
       );
       setNoteContenu("");
       await chargerMemoire();
-      await chargerTimeline();
     } catch (e) {
       setErr(e instanceof Error ? e.message : String(e));
     } finally {
@@ -448,7 +407,6 @@ export function DataRoomPanel({
       );
       setConfirmationId(null);
       await chargerMemoire();
-      await chargerTimeline();
     } catch (e) {
       setErr(e instanceof Error ? e.message : String(e));
     } finally {
@@ -468,7 +426,6 @@ export function DataRoomPanel({
       setSyntheseId(creee.id);
       await chargerVersions();
       await chargerMemoire();
-      await chargerTimeline();
     } catch (e) {
       setErrSynthese(e instanceof Error ? e.message : String(e));
     } finally {
@@ -914,40 +871,6 @@ export function DataRoomPanel({
               ? "Aucune entrée pour ce filtre."
               : "Mémoire vide — elle s’alimentera au fil des extractions, missions et risques."}
           </p>
-        )}
-      </div>
-
-      <div className="panel dense clients-fiche-panel dataroom-section">
-        <div className="clients-fiche-section-head">
-          <div>
-            <p className="picker-kicker">Timeline</p>
-            <p className="picker-hint">
-              Derniers événements du journal d’audit liés à ce contribuable.
-            </p>
-          </div>
-        </div>
-        {evenements.length > 0 ? (
-          <ol className="dataroom-timeline">
-            {evenements.map((ev) => (
-              <li key={ev.id} className="dataroom-timeline-item">
-                <span className="dataroom-timeline-date">
-                  {formaterDateHeure(ev.horodatage)}
-                </span>
-                <span className="dataroom-timeline-corps">
-                  <strong>
-                    <TexteJuridique texte={libelleAction(ev.action)} />
-                  </strong>
-                  {ev.mission_id != null ? ` — mission #${ev.mission_id}` : ""}
-                  <span className="dataroom-timeline-acteur">
-                    {" "}
-                    · {ev.acteur}
-                  </span>
-                </span>
-              </li>
-            ))}
-          </ol>
-        ) : (
-          <p className="dataroom-vide">Aucun événement enregistré.</p>
         )}
       </div>
     </div>

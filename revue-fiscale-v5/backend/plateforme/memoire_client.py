@@ -220,9 +220,12 @@ def timeline_contribuable(
             ),
             {"c": contribuable_id, "ctxt": str(contribuable_id), "lim": lim},
         ).mappings().all()
+    from backend.plateforme.journal_cabinet import libelle_action
+
     evenements: list[dict[str, Any]] = []
     for r in rows:
         quand = r.get("horodatage")
+        action = str(r.get("action") or "")
         evenements.append(
             {
                 "id": int(r["id"]),
@@ -232,7 +235,9 @@ def timeline_contribuable(
                     else quand
                 ),
                 "acteur": str(r.get("acteur") or ""),
-                "action": str(r.get("action") or ""),
+                "action": action,
+                "libelle": libelle_action(action),
+                "consultation": action.startswith("consultation_"),
                 "mission_id": (
                     int(r["mission_id"])
                     if r.get("mission_id") is not None
