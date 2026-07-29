@@ -14988,6 +14988,74 @@ tr.row-active td {
   border-top: 1px solid var(--line-soft);
 }
 
+/* --- Agent fiscal (chat question/réponse sourcé) --- */
+.agent-chat-panel { margin-top: 0.85rem; }
+.agent-chat-hint { margin: 0 0 0.75rem; }
+.agent-chat-messages {
+  display: flex;
+  flex-direction: column;
+  gap: 0.65rem;
+  margin: 0 0 0.75rem;
+  padding: 0;
+  list-style: none;
+}
+.agent-chat-message {
+  padding: 0.6rem 0.75rem;
+  border: 1px solid var(--line, #e5e7eb);
+  border-radius: 8px;
+  background: var(--bg-stripe, #f1f5f9);
+}
+.agent-chat-question { margin: 0 0 0.4rem; font-weight: 650; font-size: 0.86rem; }
+.agent-chat-attente { margin: 0; font-style: italic; font-size: 0.8rem; }
+.agent-chat-reponse {
+  margin-top: 0.35rem;
+  padding: 0.55rem 0.65rem;
+  border-radius: 6px;
+  background: var(--surface-solid, #fff);
+  border-left: 3px solid var(--teal, #0f766e);
+}
+.agent-chat-reponse-hors-norme {
+  border-left-color: var(--warning, #b54708);
+}
+.agent-chat-bandeau {
+  margin: 0 0 0.5rem;
+  font-size: 0.8rem;
+  color: var(--warning, #b54708);
+}
+.agent-chat-reponse-texte {
+  margin: 0;
+  white-space: pre-wrap;
+  font-size: 0.86rem;
+  line-height: 1.45;
+}
+.agent-chat-references {
+  margin: 0.55rem 0 0;
+  padding-left: 1.1rem;
+  font-size: 0.78rem;
+  color: var(--muted, #64748b);
+}
+.agent-chat-references li { margin: 0.1rem 0; }
+.agent-chat-contexte { margin: 0.5rem 0 0; font-size: 0.74rem; font-style: italic; }
+.agent-chat-form {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: flex-start;
+  gap: 0.5rem;
+  padding: 0.5rem;
+  border: 1px dashed var(--line, #e5e7eb);
+  border-radius: 8px;
+}
+.agent-chat-textarea {
+  flex: 1;
+  min-width: 220px;
+  resize: vertical;
+  font: inherit;
+  font-size: 0.84rem;
+  padding: 0.4rem 0.5rem;
+  border: 1px solid var(--line, #e5e7eb);
+  border-radius: 6px;
+}
+
 @media (max-width: 640px) {
   .dash-groupe-sub {
     white-space: normal;

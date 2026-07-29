@@ -88,6 +88,7 @@ import { MaterialiteVue } from "./MaterialiteVue";
 import { ProgrammeProposeVue } from "./ProgrammeProposeVue";
 import { RestitutionVue } from "./RestitutionVue";
 import { DossierMissionVue } from "./DossierMissionVue";
+import { AgentChatVue } from "./AgentChatVue";
 import { FilConducteurVue } from "./FilConducteurVue";
 import { LettreMissionVue } from "./LettreMissionVue";
 import type { ResumeRisques } from "./RegistreRisques";
@@ -6536,6 +6537,17 @@ export function App() {
                             : undefined
                         }
                       />
+                      {/* Agent fiscal (questions/réponses sourcées sur le
+                          corpus juridique indexé) : panneau repliable
+                          persistant, accessible depuis n'importe quel
+                          onglet du poste de travail — aucune persistance
+                          serveur des échanges. */}
+                      {session?.jeton && (
+                        <AgentChatVue
+                          jeton={session.jeton}
+                          missionId={restitution.mission_id}
+                        />
+                      )}
                       {ongletMission === "cadrage" && (
                       <>
                       <ResponsableMissionVue

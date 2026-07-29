@@ -505,6 +505,50 @@ def api_lire_mission(
     return _mission_out(detail)
 
 
+class AgentQuestionIn(BaseModel):
+    question: str
+
+
+class AgentQuestionOut(BaseModel):
+    statut: str
+    texte: str
+    references: list[str]
+    citations: list[str]
+    contexte: str
+
+
+@router.post("/missions/{mission_id}/agent/question", response_model=AgentQuestionOut)
+def api_agent_question_mission(
+    mission_id: int,
+    corps: AgentQuestionIn,
+    utilisateur: UtilisateurDep,
+    session: Annotated[Session, Depends(session_abonne)],
+) -> AgentQuestionOut:
+    from backend.agent.boucle import repondre
+    from backend.plateforme.missions import ErreurMission, lire_mission
+
+    try:
+        detail = lire_mission(session, utilisateur.tenant_id, mission_id)
+    except ErreurMission as e:
+        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail=str(e)) from e
+
+    q = (corps.question or "").strip()
+    if not q:
+        raise HTTPException(
+            status_code=status.HTTP_422_UNPROCESSABLE_ENTITY, detail="Question requise"
+        )
+
+    rep = repondre(session, q, tenant_id=utilisateur.tenant_id)
+    contexte = f"Mission #{mission_id} — exercice {detail.get('exercice')}"
+    return AgentQuestionOut(
+        statut=rep.statut,
+        texte=rep.texte,
+        references=rep.references,
+        citations=rep.citations,
+        contexte=contexte,
+    )
+
+
 @router.get("/missions/{mission_id}/lettre-mission.docx")
 def api_lettre_mission_docx(
     mission_id: int,
