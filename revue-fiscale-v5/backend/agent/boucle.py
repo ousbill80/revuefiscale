@@ -1,6 +1,18 @@
-"""Boucle agent — regle-based, deterministe pour CI. Pas d appel LLM par defaut."""
+"""Boucle agent — regle-based, deterministe pour CI. LLM optionnel (redaction).
+
+Le chemin LLM (voir ``_tenter_redaction_llm``) n intervient que si un
+fournisseur est configure (``llm_providers.providers_configures()``) — en
+CI et par defaut, aucune cle n est presente et le comportement reste
+100% deterministe. Quand il intervient, le LLM ne fait que reformuler en
+prose les fragments deja retrouves et valides par le chemin regle-based :
+il ne recoit aucun outil de recherche libre, ne calcule rien, et toute
+citation qu il produit est revalidee par ``verifier_ancrage`` avant usage.
+Echec silencieux vers le texte deterministe existant en cas de probleme
+(timeout, JSON invalide, reference ou citation non ancree)."""
 from __future__ import annotations
 
+import json
+import logging
 import re
 from dataclasses import dataclass, field
 
@@ -9,7 +21,10 @@ from sqlalchemy.orm import Session
 from backend.agent.ancrage import verifier_ancrage
 from backend.agent.metrage import enregistre_appel
 from backend.agent.outils import lire_article, rechercher_corpus
-from backend.config import config
+from backend.agent.prompt import PROMPT_SYSTEME_AGENT_FISCAL
+from backend.socle import llm_providers
+
+logger = logging.getLogger(__name__)
 
 MESSAGE_ABSTENTION = (
     "Je ne peux pas répondre sans source dans le corpus"
@@ -81,11 +96,6 @@ def repondre(
     q_low = q.casefold()
     if any(m in q_low for m in ("invente", "inventer", "fabrique un article", "crée un article")):
         return _abstention(tenant_id, session, q)
-
-    # Chemin LLM optionnel — desactive en tests (pas de cle)
-    if config.modele_cle_api:
-        # Reserve : branche future. Par defaut CI reste deterministe.
-        pass
 
     hits = rechercher_corpus(session, q, limite=5, types=types_corpus)
     # Filtrer les hits trop faibles (chevauchement fortuit sur un mot commun).
@@ -181,12 +191,24 @@ def repondre(
         + "\n".join(parties)
         + "\n\n(Sources démo/fictives le cas échéant — non opposables.)"
     )
+    modele_utilise = "regle-based"
+
+    redaction_llm = _tenter_redaction_llm(q, refs_vues, textes_fragments)
+    if redaction_llm is not None:
+        prose, provider_id = redaction_llm
+        texte = (
+            prose
+            + "\n\n"
+            + "\n".join(parties)
+            + "\n\n(Sources démo/fictives le cas échéant — non opposables.)"
+        )
+        modele_utilise = f"llm:{provider_id}"
 
     if tenant_id:
         enregistre_appel(
             session,
             tenant_id=tenant_id,
-            modele="regle-based",
+            modele=modele_utilise,
             tokens_in=len(q.split()),
             tokens_out=len(texte.split()),
             usage="agent_question",
@@ -200,6 +222,76 @@ def repondre(
         fragments=hits,
         invention=False,
     )
+
+
+def _tenter_redaction_llm(
+    question: str,
+    refs_vues: list[str],
+    textes_fragments: list[str],
+) -> tuple[str, str] | None:
+    """Reformulation LLM best-effort des fragments deja valides — jamais bloquant.
+
+    Le LLM ne recoit ni outil de recherche ni acces au corpus au-dela des
+    fragments deja retrouves et valides par le chemin regle-based ci-dessus.
+    Retourne ``(prose, provider_id)`` si la prose est verifiee ancree et ne
+    mentionne aucune reference hors corpus deja valide, sinon ``None`` — le
+    texte deterministe existant reste alors utilise, sans jamais faire
+    echouer ``repondre``.
+    """
+    if not llm_providers.providers_configures():
+        return None
+
+    fragments_bloc = "\n\n".join(
+        f"[{ref}]\n{texte}"
+        for ref, texte in zip(refs_vues, textes_fragments, strict=True)
+    )
+    messages = [
+        {"role": "system", "content": PROMPT_SYSTEME_AGENT_FISCAL},
+        {
+            "role": "user",
+            "content": (
+                f"Question : {question}\n\n"
+                "Fragments disponibles (ne cite QUE ces textes, mot pour "
+                f"mot) :\n{fragments_bloc}"
+            ),
+        },
+    ]
+    try:
+        contenu, provider_id, _failover = llm_providers.appeler_chat(
+            messages,
+            capacite="chat",
+            temperature=0,
+            json_object=True,
+        )
+        data = json.loads(contenu)
+    except (llm_providers.ErreurLlm, json.JSONDecodeError, TypeError, ValueError) as e:
+        logger.warning("agent_llm_redaction_ignoree: %s", e)
+        return None
+
+    prose = str(data.get("reponse") or "").strip()
+    if not prose:
+        return None
+
+    citations_llm = [
+        str(c).strip() for c in (data.get("citations") or []) if str(c).strip()
+    ]
+    ancrage_llm = verifier_ancrage(citations_llm, textes_fragments)
+    if not ancrage_llm.ok:
+        logger.warning("agent_llm_redaction_rejetee: citation non ancree")
+        return None
+
+    # Anti-invention : aucune reference hors corpus deja valide ne doit
+    # apparaitre dans la prose (ex. un numero d article invente).
+    refs_mentionnees = {
+        m.group(1).strip().upper().replace(" ", "-")
+        for m in _RE_REF_DEMANDEE.finditer(prose)
+    }
+    refs_autorisees = {r.upper() for r in refs_vues}
+    if refs_mentionnees - refs_autorisees:
+        logger.warning("agent_llm_redaction_rejetee: reference hors corpus")
+        return None
+
+    return prose, provider_id
 
 
 def _extraire_citation(texte: str, max_len: int = 220) -> str:
