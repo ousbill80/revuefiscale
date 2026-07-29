@@ -47,10 +47,15 @@ const BANDEAU_STATUT: Partial<Record<StatutReponse, string>> = {
 
 type Props = {
   jeton: string;
-  missionId: number;
+  /** Si absent : assistant indépendant du cabinet (pas de mission ouverte). */
+  missionId?: number;
 };
 
 export function AgentChatVue({ jeton, missionId }: Props) {
+  const endpoint =
+    missionId != null
+      ? `/api/v1/missions/${missionId}/agent/question`
+      : "/api/v1/agent/question";
   const [messages, setMessages] = useState<MessageChat[]>([]);
   const [valeur, setValeur] = useState("");
   const [envoiEnCours, setEnvoiEnCours] = useState(false);
@@ -79,10 +84,11 @@ export function AgentChatVue({ jeton, missionId }: Props) {
     setValeur("");
     setEnvoiEnCours(true);
     try {
-      const reponse = await api<AgentQuestionOut>(
-        `/api/v1/missions/${missionId}/agent/question`,
-        { jeton, method: "POST", json: { question, historique } },
-      );
+      const reponse = await api<AgentQuestionOut>(endpoint, {
+        jeton,
+        method: "POST",
+        json: { question, historique },
+      });
       setMessages((m) =>
         m.map((msg) =>
           msg.id === id ? { ...msg, reponse, enCours: false } : msg,
@@ -101,7 +107,7 @@ export function AgentChatVue({ jeton, missionId }: Props) {
     } finally {
       setEnvoiEnCours(false);
     }
-  }, [valeur, envoiEnCours, jeton, missionId, messages]);
+  }, [valeur, envoiEnCours, jeton, endpoint, messages]);
 
   function surSoumission(e: FormEvent<HTMLFormElement>) {
     e.preventDefault();

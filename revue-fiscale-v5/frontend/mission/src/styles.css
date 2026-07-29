@@ -15081,6 +15081,79 @@ tr.row-active td {
   border-radius: 6px;
 }
 
+/* --- Assistant fiscal flottant (copilote global, tous écrans) --- */
+.assistant-flottant-bouton {
+  position: fixed;
+  right: 1.25rem;
+  bottom: 1.25rem;
+  z-index: 500;
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+  padding: 0.6rem 0.9rem;
+  border: none;
+  border-radius: 999px;
+  background: var(--teal, #0f766e);
+  color: #fff;
+  font: inherit;
+  font-weight: 650;
+  font-size: 0.82rem;
+  cursor: pointer;
+  box-shadow: 0 10px 24px rgba(15, 23, 42, 0.22);
+}
+.assistant-flottant-bouton svg { width: 18px; height: 18px; flex: none; }
+@media (max-width: 640px) {
+  .assistant-flottant-label { display: none; }
+  .assistant-flottant-bouton { padding: 0.65rem; right: 1rem; bottom: 1rem; }
+}
+.assistant-flottant-panneau {
+  position: fixed;
+  right: 1.25rem;
+  bottom: 5rem;
+  z-index: 500;
+  display: flex;
+  flex-direction: column;
+  width: min(420px, calc(100vw - 2rem));
+  max-height: min(70vh, 640px);
+  background: var(--surface-solid, #fff);
+  border: 1px solid var(--line, #e5e7eb);
+  border-radius: 12px;
+  box-shadow: 0 20px 48px rgba(15, 23, 42, 0.28);
+  overflow: hidden;
+}
+.assistant-flottant-tete {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0.6rem 0.75rem;
+  font-weight: 650;
+  font-size: 0.86rem;
+  border-bottom: 1px solid var(--line, #e5e7eb);
+  background: var(--bg-stripe, #f1f5f9);
+  flex: none;
+}
+.assistant-flottant-corps {
+  flex: 1 1 auto;
+  min-height: 0;
+  overflow: hidden;
+  padding: 0.6rem 0.75rem;
+  display: flex;
+}
+.assistant-flottant-corps .agent-chat-panel {
+  margin-top: 0;
+  min-height: 0;
+  max-height: none;
+  flex: 1 1 auto;
+}
+@media (max-width: 640px) {
+  .assistant-flottant-panneau {
+    right: 0.5rem;
+    left: 0.5rem;
+    bottom: 4.5rem;
+    width: auto;
+  }
+}
+
 @media (max-width: 640px) {
   .dash-groupe-sub {
     white-space: normal;

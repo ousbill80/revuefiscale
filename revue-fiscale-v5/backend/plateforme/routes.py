@@ -523,6 +523,34 @@ class AgentQuestionOut(BaseModel):
     contexte: str
 
 
+@router.post("/agent/question", response_model=AgentQuestionOut)
+def api_agent_question(
+    corps: AgentQuestionIn,
+    utilisateur: UtilisateurDep,
+    session: Annotated[Session, Depends(session_abonne)],
+) -> AgentQuestionOut:
+    """Assistant fiscal indépendant, accessible depuis tout le cabinet (pas
+    seulement depuis une mission ouverte) — même moteur regle-based que le
+    chemin mission, sans contexte de mission particulier."""
+    from backend.agent.boucle import repondre
+
+    q = (corps.question or "").strip()
+    if not q:
+        raise HTTPException(
+            status_code=status.HTTP_422_UNPROCESSABLE_ENTITY, detail="Question requise"
+        )
+
+    historique = [(t.question, t.reponse) for t in corps.historique[-6:]]
+    rep = repondre(session, q, tenant_id=utilisateur.tenant_id, historique=historique or None)
+    return AgentQuestionOut(
+        statut=rep.statut,
+        texte=rep.texte,
+        references=rep.references,
+        citations=rep.citations,
+        contexte="Assistant du cabinet",
+    )
+
+
 @router.post("/missions/{mission_id}/agent/question", response_model=AgentQuestionOut)
 def api_agent_question_mission(
     mission_id: int,

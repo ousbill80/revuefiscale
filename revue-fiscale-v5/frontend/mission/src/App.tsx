@@ -89,6 +89,7 @@ import { ProgrammeProposeVue } from "./ProgrammeProposeVue";
 import { RestitutionVue } from "./RestitutionVue";
 import { DossierMissionVue } from "./DossierMissionVue";
 import { AgentChatVue } from "./AgentChatVue";
+import { AssistantFlottant } from "./AssistantFlottant";
 import { FilConducteurVue } from "./FilConducteurVue";
 import { LettreMissionVue } from "./LettreMissionVue";
 import type { ResumeRisques } from "./RegistreRisques";
@@ -4158,6 +4159,7 @@ export function App() {
           <a href="#app-main" className="skip-link">
             Aller au contenu principal
           </a>
+          <AssistantFlottant jeton={session.jeton} />
           <header className="app-topbar">
             <div className="topbar-left">
               <button
