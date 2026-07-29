@@ -76,22 +76,13 @@ import { PhoneField } from "./PhoneField";
 import { PROCESS_TIPS } from "./processTips";
 import { MissionTabsNav, type OngletMission } from "./MissionTabsNav";
 import { PointsAnterieursVue } from "./PointsAnterieursVue";
-import { ControlesFiscauxVue } from "./ControlesFiscauxVue";
-import { RapprochementTvaVue } from "./RapprochementTvaVue";
-import { CompletudeDeclarativeVue } from "./CompletudeDeclarativeVue";
-import { CoherenceCaVue } from "./CoherenceCaVue";
-import { RetenueLoyersVue } from "./RetenueLoyersVue";
-import { RetenueHonorairesVue } from "./RetenueHonorairesVue";
-import { DeficitsReportablesVue } from "./DeficitsReportablesVue";
-import { RapprochementAcomptesVue } from "./RapprochementAcomptesVue";
-import { DeductibiliteVue } from "./DeductibiliteVue";
-import { RapprochementSalairesVue } from "./RapprochementSalairesVue";
-import { AcomptesVue } from "./AcomptesVue";
-import { ResultatFiscalVue } from "./ResultatFiscalVue";
-import { PatenteVue } from "./PatenteVue";
-import { ChargeFiscaleVue } from "./ChargeFiscaleVue";
-import { EvolutionChargeFiscaleVue } from "./EvolutionChargeFiscaleVue";
 import { PanoramaConformiteVue } from "./PanoramaConformiteVue";
+import { RevueGateSansBalance } from "./RevueGateSansBalance";
+import {
+  RevueVoletsFiscaux,
+  type ThemeRevueId,
+} from "./RevueVoletsFiscaux";
+import { themePourVolet } from "./revueVoletsRegistry";
 import { QualiteBalanceVue } from "./QualiteBalanceVue";
 import { MaterialiteVue } from "./MaterialiteVue";
 import { ProgrammeProposeVue } from "./ProgrammeProposeVue";
@@ -1031,6 +1022,8 @@ export function App() {
   const [restitution, setRestitution] = useState<Restitution | null>(null);
   const [missionId, setMissionId] = useState<number | null>(null);
   const [ongletMission, setOngletMission] = useState<OngletMission>("revue");
+  const [themeRevueDemande, setThemeRevueDemande] =
+    useState<ThemeRevueId | null>(null);
   const [versionEpinglee, setVersionEpinglee] = useState<{
     id: number;
     libelle?: string | null;
@@ -2638,6 +2631,15 @@ export function App() {
   function naviguerOnglet(o: OngletMission) {
     setOngletMission(o);
     if (missionId != null) ecrireHashMission(missionId, o);
+  }
+
+  function allerVoletsFiscauxRevue(theme?: ThemeRevueId) {
+    setThemeRevueDemande(theme ?? "tva");
+    requestAnimationFrame(() => {
+      document
+        .getElementById("revue-volets")
+        ?.scrollIntoView({ behavior: "smooth", block: "start" });
+    });
   }
 
   async function ouvrirMission(id: number, onglet?: OngletMission) {
@@ -4965,149 +4967,6 @@ export function App() {
 
                 <ChargeCabinetVue jeton={session?.jeton ?? null} />
               </DashGroupe>
-
-              <div className="dash-split">
-                <section className="panel dense list-panel">
-                  <div className="panel-head">
-                    <div>
-                      <h3 className="panel-title">Dernières missions</h3>
-                      <p className="panel-sub">
-                        Cliquez une ligne pour ouvrir la restitution.
-                      </p>
-                    </div>
-                    <Tooltip label="Voir toutes les missions du cabinet.">
-                      <button
-                        type="button"
-                        className="btn btn-ghost btn-sm"
-                        onClick={() => void naviguer("missions")}
-                      >
-                        Tout voir
-                      </button>
-                    </Tooltip>
-                  </div>
-                  <ul className="mission-list">
-                    {missions.slice(0, 6).map((m) => (
-                      <li key={m.id}>
-                        <Tooltip
-                          label={`Ouvrir la mission #${m.id} · ${m.contribuable_denomination} · exercice ${m.exercice}`}
-                          side="bottom"
-                        >
-                          <button
-                            type="button"
-                            className="mission-row"
-                            onClick={() => void ouvrirMission(m.id)}
-                          >
-                            <span className="mission-id">#{m.id}</span>
-                            <span className="mission-name">
-                              {m.contribuable_denomination}
-                            </span>
-                            <span className="mission-meta">
-                              Exercice {m.exercice}
-                            </span>
-                            <span className={`badge statut-${m.statut}`}>
-                              {libelleStatut(m.statut)}
-                            </span>
-                            {m.revue_partielle ? (
-                              <span className="badge badge-partielle">
-                                Revue partielle
-                              </span>
-                            ) : null}
-                          </button>
-                        </Tooltip>
-                      </li>
-                    ))}
-                    {!missions.length && (
-                      <li className="empty-state">
-                        Aucune mission pour l&apos;instant.
-                        {!estLecteur && (
-                          <>
-                            {" "}
-                            <button
-                              type="button"
-                              className="linkish"
-                              onClick={() => void naviguer("nouvelle")}
-                            >
-                              Créer la première mission
-                            </button>
-                          </>
-                        )}
-                      </li>
-                    )}
-                  </ul>
-                </section>
-
-                <section className="panel dense list-panel">
-                  <div className="panel-head">
-                    <div>
-                      <h3 className="panel-title">Portefeuille</h3>
-                      <p className="panel-sub">
-                        Contribuables cloisonnés par cabinet.
-                      </p>
-                    </div>
-                    <Tooltip label="Ouvrir la liste complète des clients.">
-                      <button
-                        type="button"
-                        className="btn btn-ghost btn-sm"
-                        onClick={() => void naviguer("clients")}
-                      >
-                        Tout voir
-                      </button>
-                    </Tooltip>
-                  </div>
-                  <ul className="mission-list client-list">
-                    {clients.slice(0, 6).map((c) => {
-                      const nMissions = missions.filter(
-                        (m) => m.contribuable_id === c.id,
-                      ).length;
-                      return (
-                        <li key={c.id}>
-                          <Tooltip
-                            label={
-                              nMissions
-                                ? `${nMissions} mission${nMissions > 1 ? "s" : ""} — voir le portefeuille.`
-                                : "Aucun dossier encore — créer une mission pour ce client."
-                            }
-                            side="bottom"
-                          >
-                            <button
-                              type="button"
-                              className="mission-row client-row"
-                              onClick={() => void naviguer("clients")}
-                            >
-                              <span className="mission-name">{c.denomination}</span>
-                              <span className="mission-meta">
-                                {c.ncc || c.forme || "—"}
-                              </span>
-                              <span className="client-count">
-                                {nMissions} miss.
-                              </span>
-                            </button>
-                          </Tooltip>
-                        </li>
-                      );
-                    })}
-                    {!clients.length && (
-                      <li className="empty-state">
-                        Aucun client pour l&apos;instant.
-                        {!estLecteur && (
-                          <>
-                            {" "}
-                            <button
-                              type="button"
-                              className="linkish"
-                              onClick={() => {
-                                void naviguer("client-nouveau");
-                              }}
-                            >
-                              Ajouter un client
-                            </button>
-                          </>
-                        )}
-                      </li>
-                    )}
-                  </ul>
-                </section>
-              </div>
             </div>
           )}
 
@@ -6311,6 +6170,12 @@ export function App() {
                       <FilConducteurVue
                         missionId={restitution.mission_id}
                         jeton={session?.jeton}
+                        onAllerVoletsFiscaux={
+                          restitution.execution_id != null &&
+                          ongletMission === "revue"
+                            ? () => allerVoletsFiscauxRevue()
+                            : undefined
+                        }
                       />
                       {ongletMission === "cadrage" && (
                       <>
@@ -6379,29 +6244,45 @@ export function App() {
                               }
                         }
                       />
-                      {/* Sans exécution (balance jamais importée), les
-                          vues fiscales dépendantes de la balance sont
-                          masquées : l'état vide unifié de RestitutionVue
-                          guide déjà l'import — on évite ~15 cartes
-                          « indisponibles ». Restent visibles les vues de
-                          suivi et celles offrant une saisie utilisable
-                          sans balance (déclarations TVA, acomptes). */}
                       {ongletMission === "revue" &&
-                        restitution.execution_id != null && (
-                      <>
-                      {/* Panorama consultatif de conformité :
-                          bandeau compact agrégeant les STATUTS (pas
-                          les montants) des vues fiscales ci-dessous,
-                          classés en niveaux d'attention — aucun
-                          score, le panorama oriente la lecture,
-                          chaque volet s'apprécie dans sa vue
-                          détaillée, l'humain décide. */}
-                      <PanoramaConformiteVue
-                        missionId={restitution.mission_id}
-                        jeton={session?.jeton}
-                      />
-                      </>
-                      )}
+                        (restitution.execution_id == null ? (
+                          <RevueGateSansBalance
+                            onAllerSources={() => naviguerOnglet("sources")}
+                            onReprendreImport={
+                              estLecteur
+                                ? undefined
+                                : () => {
+                                    setStep(2);
+                                    setMissionStatus({
+                                      msg: "Reprise de l'import — déposez la source active puis lancez la revue.",
+                                      err: false,
+                                    });
+                                  }
+                            }
+                            estLecteur={estLecteur}
+                          />
+                        ) : (
+                          <>
+                            <PanoramaConformiteVue
+                              missionId={restitution.mission_id}
+                              jeton={session?.jeton}
+                              onOuvrirTheme={(theme) =>
+                                allerVoletsFiscauxRevue(theme)
+                              }
+                              onOuvrirVolet={(volet) => {
+                                const theme = themePourVolet(volet);
+                                if (theme) allerVoletsFiscauxRevue(theme);
+                              }}
+                            />
+                            <RevueVoletsFiscaux
+                              missionId={restitution.mission_id}
+                              jeton={session?.jeton}
+                              estLecteur={estLecteur}
+                              themeDemande={themeRevueDemande}
+                              onThemeChange={setThemeRevueDemande}
+                            />
+                          </>
+                        ))}
                       {ongletMission === "sources" && (
                       /* Complétude documentaire de la data room :
                          même vue qu'à l'étape Sources du wizard —
@@ -6450,174 +6331,6 @@ export function App() {
                           travail reste un clic explicite du
                           fiscaliste. */}
                       <ProgrammeProposeVue
-                        missionId={restitution.mission_id}
-                        jeton={session?.jeton}
-                        estLecteur={estLecteur}
-                      />
-                      </>
-                      )}
-                      {ongletMission === "revue" && (
-                      <>
-                      {/* Rapprochement consultatif TVA déclarée /
-                          comptabilisée (comptes 443x/445x de la
-                          balance) — la saisie des périodes déclarées
-                          reste un clic explicite du fiscaliste. */}
-                      <RapprochementTvaVue
-                        missionId={restitution.mission_id}
-                        jeton={session?.jeton}
-                        estLecteur={estLecteur}
-                      />
-                      {restitution.execution_id != null && (
-                      <>
-                      {/* Complétude déclarative mensuelle : périodes
-                          échues de l'exercice sans déclaration saisie
-                          (TVA, impôts sur salaires) — consultatif, la
-                          saisie ne prouve pas le dépôt à la DGI,
-                          l'humain vérifie les quittances. */}
-                      <CompletudeDeclarativeVue
-                        missionId={restitution.mission_id}
-                        jeton={session?.jeton}
-                      />
-                      {/* Croisement consultatif CA comptable (70x) /
-                          CA reconstitué depuis la TVA collectée
-                          déclarée ÷ 18 % — le contrôle classique de
-                          la DGI, offert au réviseur avant
-                          l'administration. Approximation assumée,
-                          écart « à expliquer », l'humain décide. */}
-                      <CoherenceCaVue
-                        missionId={restitution.mission_id}
-                        jeton={session?.jeton}
-                      />
-                      {/* Retenue à la source sur loyers : charges
-                          locatives (comptes 622x de la balance) et
-                          retenue théorique maximale indicative à
-                          15 % — la qualité du bailleur (PP/PM,
-                          régime) n'est pas connue de la balance,
-                          seul l'humain qualifie et décide. */}
-                      <RetenueLoyersVue
-                        missionId={restitution.mission_id}
-                        jeton={session?.jeton}
-                      />
-                      {/* Retenue à la source sur honoraires :
-                          rémunérations d'intermédiaires et de
-                          conseils (comptes 632x de la balance) et
-                          retenue théorique maximale indicative à
-                          7,5 % — le régime du prestataire (résident
-                          ou non, immatriculé ou non) n'est pas connu
-                          de la balance, seul l'humain qualifie et
-                          décide. */}
-                      <RetenueHonorairesVue
-                        missionId={restitution.mission_id}
-                        jeton={session?.jeton}
-                      />
-                      {/* Suivi pluriannuel des déficits reportables :
-                          résultat fiscal théorique par exercice revu
-                          du client (tableau de passage existant) et
-                          cumul indicatif à imputation théorique
-                          maximale — approximation assumée, seules
-                          les liasses font foi, l'humain rapproche
-                          et décide. */}
-                      <DeficitsReportablesVue
-                        missionId={restitution.mission_id}
-                        jeton={session?.jeton}
-                      />
-                      {/* Rapprochement acomptes IS / IS théorique :
-                          l'IS théorique du tableau de passage (aucun
-                          recalcul) rapproché des acomptes saisis —
-                          solde indicatif de liquidation (reste à
-                          payer ou crédit d'impôt indicatif),
-                          approximation assumée : les quittances font
-                          foi, l'humain liquide et décide. */}
-                      <RapprochementAcomptesVue
-                        missionId={restitution.mission_id}
-                        jeton={session?.jeton}
-                      />
-                      {/* Revue consultative de déductibilité des
-                          charges (classe 6 de la balance) : points de
-                          vigilance de réintégration IS selon un
-                          référentiel déterministe du CGI ivoirien —
-                          aucun calcul automatique, les soldes restent
-                          à apprécier par le fiscaliste. */}
-                      <DeductibiliteVue
-                        missionId={restitution.mission_id}
-                        jeton={session?.jeton}
-                      />
-                      {/* Rapprochement consultatif des impôts sur
-                          salaires déclarés / masse salariale
-                          comptabilisée (comptes 66x, informatif
-                          447x/42x) — la saisie des périodes déclarées
-                          reste un clic explicite du fiscaliste. */}
-                      <RapprochementSalairesVue
-                        missionId={restitution.mission_id}
-                        jeton={session?.jeton}
-                        estLecteur={estLecteur}
-                      />
-                      </>
-                      )}
-                      {/* Suivi consultatif des acomptes IS versés et
-                          de la position de solde projetée (IS dû
-                          estimé saisi par le fiscaliste, comptes
-                          441x/444x informatifs) — la saisie reste un
-                          clic explicite du fiscaliste. */}
-                      <AcomptesVue
-                        missionId={restitution.mission_id}
-                        jeton={session?.jeton}
-                        estLecteur={estLecteur}
-                      />
-                      {restitution.execution_id != null && (
-                      <>
-                      {/* Tableau de passage consultatif résultat
-                          comptable → résultat fiscal (retraitements
-                          saisis, report déficitaire plafonné au
-                          bénéfice, IS théorique 25 %, signal IMF
-                          indicatif) — la reprise comme IS dû estimé
-                          reste un clic explicite du fiscaliste. */}
-                      <ResultatFiscalVue
-                        missionId={restitution.mission_id}
-                        jeton={session?.jeton}
-                        estLecteur={estLecteur}
-                      />
-                      {/* Estimation consultative de la contribution
-                          des patentes : droit sur le CA approché à
-                          0,5 % des comptes 70x (plancher 300 000
-                          FCFA, plafond indicatif) ; le droit sur la
-                          valeur locative n'est pas calculable depuis
-                          la balance — estimation partielle, lecture
-                          seule, l'humain décide. */}
-                      <PatenteVue
-                        missionId={restitution.mission_id}
-                        jeton={session?.jeton}
-                      />
-                      {/* Panorama consultatif de la charge fiscale
-                          estimée : agrégat des estimations déjà
-                          calculées par les écrans ci-dessus (IS
-                          théorique, patente partielle, impôts sur
-                          salaires et TVA déclarés, position
-                          d'acomptes) — aucun recalcul, total partiel
-                          hors TVA collectée, l'humain décide. */}
-                      <ChargeFiscaleVue
-                        missionId={restitution.mission_id}
-                        jeton={session?.jeton}
-                      />
-                      {/* Évolution pluriannuelle consultative de la
-                          charge fiscale : panorama de chaque exercice
-                          revu du client repris tel quel (aucun
-                          recalcul) et variations entre exercices
-                          consécutifs disponibles — les variations
-                          s'expliquent (activité, taux, assiettes,
-                          exonérations), les liasses font foi,
-                          l'humain analyse. */}
-                      <EvolutionChargeFiscaleVue
-                        missionId={restitution.mission_id}
-                        jeton={session?.jeton}
-                      />
-                      </>
-                      )}
-                      {/* Suivi consultatif des contrôles fiscaux et
-                          contentieux — délais de riposte LPF calculés,
-                          la consignation reste un clic explicite du
-                          fiscaliste. */}
-                      <ControlesFiscauxVue
                         missionId={restitution.mission_id}
                         jeton={session?.jeton}
                         estLecteur={estLecteur}

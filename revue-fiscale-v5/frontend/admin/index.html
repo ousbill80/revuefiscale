@@ -153,7 +153,7 @@
             <span class="demo-access-hint">Clic = remplir · double-clic = connexion</span>
           </div>
           <div class="demo-chips" role="group" aria-label="Accès démo">
-            <button type="button" class="demo-chip" data-demo="editorial">Remplir Editorial</button>
+            <button type="button" class="demo-chip" data-demo="editorial">Remplir Éditorial</button>
             <button type="button" class="demo-chip" data-demo="ops">Remplir Ops</button>
             <button type="button" class="demo-chip demo-chip-submit" data-demo-submit="editorial">Connexion démo</button>
           </div>
@@ -229,7 +229,7 @@
       </div>
       <div class="sidebar-foot">
         <p>Édité par 2AàZ</p>
-        <p>Domaine éditorial — pas de données abonné</p>
+        <p>Domaine éditorial — aucune donnée d'abonné</p>
       </div>
     </aside>
 
@@ -348,12 +348,12 @@
           </div>
         </div>
         <p class="hint" style="margin:0 0 0.75rem;color:var(--muted);font-size:0.82rem">
-          Seeds file : <code>make seed-editorial-pistes</code> (Annexe + CGI) — n’accepte /
+          Alimentation de la file : <code>make seed-editorial-pistes</code> (Annexe + CGI) — n’accepte /
           ne purge aucun YAML.
         </p>
         <div class="prop-seed-stats" id="prop-seed-stats" aria-live="polite">
-          <span class="chip">Annexe seedées : <strong id="prop-seed-annexe">—</strong></span>
-          <span class="chip">CGI seedées : <strong id="prop-seed-cgi">—</strong></span>
+          <span class="chip">Pistes Annexe : <strong id="prop-seed-annexe">—</strong></span>
+          <span class="chip">Pistes CGI : <strong id="prop-seed-cgi">—</strong></span>
           <span class="chip">Ouvertes : <strong id="prop-seed-ouvertes">—</strong></span>
           <span class="chip">Autres sources : <strong id="prop-seed-autres">—</strong></span>
         </div>
@@ -406,7 +406,7 @@
                 <span id="prop-d-struct" class="cell-muted" style="white-space:pre-wrap;font-size:0.78rem"></span>
               </p>
               <p>
-                <span class="cell-muted">retirer_a_confirmer_autorise</span><br>
+                <span class="cell-muted">Retrait de la mention <code>a_confirmer</code> autorisé</span><br>
                 <span id="prop-d-retirer-flag" class="badge badge-cat"></span>
               </p>
               <label class="check-row" for="prop-retirer-ac">
@@ -422,7 +422,7 @@
               </div>
               <p class="hint" style="margin-top:0.6rem;font-size:0.75rem;color:var(--muted)">
                 Accepter = statut seul. Patch = téléchargement YAML intact.
-                Appliquer = 1 champ / 1 mention (disabled si non autorisé).
+                Appliquer = 1 champ / 1 mention (désactivé si non autorisé).
               </p>
               <div id="prop-patch-box" class="hidden">
                 <p class="cell-muted" style="margin:0.5rem 0 0.25rem">Aperçu patch</p>
@@ -441,14 +441,14 @@
           <div>
             <p class="page-eyebrow">Signalements</p>
             <h1>Contestations</h1>
-            <p>Signalements abonnés (lecture — pas de balances).</p>
+            <p>Signalements des abonnés (lecture seule — aucune balance transmise).</p>
           </div>
           <div class="page-head-actions">
             <button type="button" class="btn btn-ghost" id="btn-cont">Actualiser</button>
           </div>
         </div>
         <div class="notice-banner is-info" role="note">
-          Traitement éditeur (réponse / changement de statut) : API write non branchée —
+          Traitement éditeur (réponse / changement de statut) : l’écriture n’est pas encore branchée —
           cette vue est une boîte de réception en lecture seule. Aucun faux bouton d’action.
         </div>
         <div class="panel panel-flush">
@@ -509,7 +509,7 @@
           <div class="stat"><div class="k">En revue</div><div class="v" id="stat-ac-revue">—</div></div>
         </div>
         <details class="stats-collapse" id="stats-ac-secondaires">
-          <summary>Stats secondaires (pistes · croisement)</summary>
+          <summary>Statistiques secondaires (pistes · croisement)</summary>
           <div class="stat-row">
             <div class="stat"><div class="k">Sourçable</div><div class="v" id="stat-ac-sourcable">—</div></div>
             <div class="stat"><div class="k">Bloqueur</div><div class="v" id="stat-ac-bloqueur">—</div></div>
@@ -545,29 +545,29 @@
           <label>Priorité
             <select id="filtre-ac-priorite">
               <option value="">Toutes</option>
-              <option value="sourcable">sourcable</option>
-              <option value="bloqueur">bloqueur</option>
-              <option value="hors_perimetre">hors_perimetre</option>
+              <option value="sourcable">Sourçable</option>
+              <option value="bloqueur">Bloqueur</option>
+              <option value="hors_perimetre">Hors périmètre</option>
             </select>
           </label>
           <label>Catégorie
             <select id="filtre-ac-categorie">
               <option value="">Toutes</option>
-              <option value="taux">taux</option>
-              <option value="seuil">seuil</option>
-              <option value="date">date</option>
-              <option value="agregat">agregat</option>
-              <option value="autre">autre</option>
+              <option value="taux">Taux</option>
+              <option value="seuil">Seuil</option>
+              <option value="date">Date</option>
+              <option value="agregat">Agrégat</option>
+              <option value="autre">Autre</option>
             </select>
           </label>
           <label>Statut workflow
             <select id="filtre-ac-statut">
               <option value="">Tous</option>
-              <option value="en_attente">en_attente</option>
-              <option value="en_revue">en_revue</option>
+              <option value="en_attente">En attente</option>
+              <option value="en_revue">En revue</option>
             </select>
           </label>
-          <label>rule_id
+          <label>Règle (rule_id)
             <input id="filtre-ac-regle" type="search" placeholder="ex. BIC-CHG-18G" />
           </label>
         </div>
@@ -816,12 +816,24 @@
       let data;
       try { data = text ? JSON.parse(text) : null; } catch { data = { detail: text }; }
       if (!res.ok) {
-        const detail = data && data.detail != null
-          ? (typeof data.detail === "string" ? data.detail : JSON.stringify(data.detail))
-          : res.statusText;
-        throw new Error(detail);
+        throw new Error(formatErreurApi(data, res));
       }
       return data;
+    }
+
+    function formatErreurApi(data, res) {
+      const d = data && data.detail != null ? data.detail : null;
+      if (typeof d === "string" && d.trim()) return d;
+      if (Array.isArray(d)) {
+        const msgs = d
+          .map((x) => (x && typeof x.msg === "string" ? x.msg : null))
+          .filter(Boolean);
+        if (msgs.length) return "Requête refusée : " + msgs.join(" · ");
+      }
+      if (res && res.status === 401) return "Session expirée ou identifiants invalides. Reconnectez-vous.";
+      if (res && res.status === 403) return "Accès refusé pour ce compte.";
+      if (d != null) return "Erreur du serveur : " + JSON.stringify(d);
+      return (res && res.statusText) || "Erreur inattendue. Réessayez.";
     }
 
     function showApp(on) {
@@ -979,7 +991,7 @@
       if (data.bloque || !(data.fragments || []).length) {
         el.innerHTML =
           "<p style='color:#b45309;margin:0'><strong>"
-          + escapeHtml(data.message || "pas de fragment CGI trouvé — reste bloqué")
+          + escapeHtml(data.message || "Pas de fragment CGI trouvé — reste bloqué")
           + "</strong></p>"
           + (data.requete
             ? "<p class='cell-muted' style='margin:0.35rem 0 0;font-size:0.75rem'>Requête : "
@@ -1084,7 +1096,7 @@
           : "Aucune suggestion structurée (statut / patch documentaire seulement)";
       }
       const autorise = retirerAutorise(cu);
-      $("prop-d-retirer-flag").textContent = autorise ? "true" : "false";
+      $("prop-d-retirer-flag").textContent = autorise ? "oui" : "non";
       $("prop-d-retirer-flag").className = "badge " + (autorise ? "badge-ok" : "badge-cat");
       const cb = $("prop-retirer-ac");
       cb.disabled = !autorise || p.statut !== "ouverte";
@@ -1156,7 +1168,7 @@
         tb.innerHTML = emptyStateRow(
           3,
           "File vide",
-          "Aucune proposition éditoriale en attente. Seeds : make seed-editorial-pistes."
+          "Aucune proposition éditoriale en attente. Alimentation : make seed-editorial-pistes."
         );
       } else if (!filtered.length) {
         tb.innerHTML = emptyStateRow(
@@ -1298,7 +1310,7 @@
         tb.innerHTML = emptyStateRow(
           5,
           "Aucune contestation",
-          "Les signalements abonnés apparaîtront ici. Traitement write non branché — lecture seule."
+          "Les signalements des abonnés apparaîtront ici. Traitement en écriture non branché — lecture seule."
         );
       }
       for (const c of rows) {
@@ -1465,7 +1477,7 @@
             else {
               setStatus(
                 $("status-ac-detail"),
-                "Proposition non seedée — " + seedHint,
+                "Proposition non générée — " + seedHint,
                 true
               );
             }
@@ -1473,7 +1485,7 @@
           btnProp.disabled = !pid;
           btnProp.textContent = pid
             ? "Ouvrir proposition #" + pid
-            : "Proposition non seedée (" + seedHint + ")";
+            : "Proposition non générée (" + seedHint + ")";
           lierOuvrirProposition(pid || null);
         }
       } else if (pisteWrap) {
@@ -1908,7 +1920,7 @@
           method: "POST",
           body: JSON.stringify({ version_id: Number($("version-id").value), fichier: $("fichier").value }),
         });
-        setStatus($("status"), "Règle chargée — regle_version_id=" + data.regle_version_id);
+        setStatus($("status"), "Règle chargée — version de règle n° " + data.regle_version_id);
       } catch (e) { setStatus($("status"), e.message, true); }
     };
 

@@ -12980,6 +12980,252 @@ tr.row-active td {
   font-style: italic;
 }
 
+/* ── Fil conducteur compact (replié par défaut) ──────────────────── */
+
+.fil-conducteur-compact {
+  margin-bottom: 0.5rem;
+  padding: 0.35rem 0.65rem;
+  border: 1px solid color-mix(in srgb, var(--teal) 14%, var(--line));
+  border-radius: 10px;
+  background: color-mix(in srgb, #ffffff 92%, var(--teal-soft));
+}
+
+.fil-conducteur-bar {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.4rem 0.75rem;
+}
+
+.fil-conducteur-toggle {
+  appearance: none;
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.35rem 0.5rem;
+  flex: 1 1 14rem;
+  min-width: 0;
+  margin: 0;
+  padding: 0.15rem 0;
+  border: none;
+  background: transparent;
+  font: inherit;
+  font-size: 0.78rem;
+  text-align: left;
+  color: var(--ink);
+  cursor: pointer;
+}
+
+.fil-conducteur-chevron {
+  flex: none;
+  font-size: 0.72rem;
+  color: var(--muted);
+}
+
+.fil-conducteur-resume {
+  min-width: 0;
+  line-height: 1.35;
+}
+
+.fil-conducteur-titre-inline {
+  font-weight: 750;
+}
+
+.fil-conducteur-corps {
+  margin-top: 0.45rem;
+  padding-top: 0.45rem;
+  border-top: 1px solid var(--line-soft, #f1f5f9);
+}
+
+.fil-conducteur-vue-switch {
+  display: inline-flex;
+  gap: 0.2rem;
+  padding: 0.12rem;
+  border: 1px solid var(--line, #e5e7eb);
+  border-radius: 7px;
+  background: var(--surface, #fff);
+}
+
+.fil-conducteur-vue-btn {
+  appearance: none;
+  border: none;
+  background: transparent;
+  color: var(--muted, #64748b);
+  font: inherit;
+  font-size: 0.72rem;
+  font-weight: 650;
+  padding: 0.22rem 0.55rem;
+  border-radius: 5px;
+  cursor: pointer;
+}
+
+.fil-conducteur-vue-btn.is-active {
+  color: var(--accent-deep, #115e59);
+  background: var(--accent-soft, #ecfdf8);
+  font-weight: 750;
+}
+
+.fil-conducteur-lien {
+  margin-left: auto;
+}
+
+.fil-conducteur-table td {
+  font-size: 0.78rem;
+}
+
+/* ── Gate Revue sans balance ─────────────────────────────────────── */
+
+.revue-gate-sans-balance {
+  margin-top: 0.75rem;
+}
+
+.revue-gate-actions {
+  margin-top: 0.65rem;
+}
+
+/* ── Registre vues fiscales (accordéon) ──────────────────────────── */
+
+.revue-volets {
+  margin-top: 0.75rem;
+}
+
+.revue-volets-titre {
+  margin: 0 0 0.25rem;
+  font-size: 0.92rem;
+  font-weight: 800;
+}
+
+.revue-volets-intro {
+  margin: 0 0 0.55rem;
+  font-size: 0.78rem;
+}
+
+.revue-volets-liste {
+  display: flex;
+  flex-direction: column;
+  gap: 0.35rem;
+}
+
+.revue-volet-theme {
+  border: 1px solid var(--line-soft, #f1f5f9);
+  border-radius: 8px;
+  background: var(--surface, #fff);
+}
+
+.revue-volet-summary {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.35rem 0.75rem;
+  padding: 0.45rem 0.65rem;
+  font-size: 0.82rem;
+  font-weight: 700;
+  cursor: pointer;
+  list-style: none;
+}
+
+.revue-volet-summary::-webkit-details-marker {
+  display: none;
+}
+
+.revue-volet-badge {
+  font-size: 0.68rem;
+  font-weight: 800;
+  padding: 0.08rem 0.45rem;
+  border-radius: 999px;
+  background: var(--accent-soft, #ecfdf8);
+  color: var(--accent-deep, #115e59);
+}
+
+.revue-volet-badge.warn {
+  background: #fffbeb;
+  color: #92400e;
+}
+
+.revue-volet-corps {
+  padding: 0 0.65rem 0.65rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.65rem;
+}
+
+/* ── Menu Plus (toolbar Analyser) ────────────────────────────────── */
+
+.dossier2-menu-plus {
+  position: relative;
+  display: inline-flex;
+}
+
+.dossier2-menu-plus > summary {
+  list-style: none;
+  cursor: pointer;
+}
+
+.dossier2-menu-plus > summary::-webkit-details-marker {
+  display: none;
+}
+
+.dossier2-menu-plus-panel {
+  position: absolute;
+  top: calc(100% + 0.25rem);
+  right: 0;
+  z-index: 12;
+  display: flex;
+  flex-direction: column;
+  gap: 0.15rem;
+  min-width: 11rem;
+  padding: 0.35rem;
+  border: 1px solid var(--line, #e5e7eb);
+  border-radius: 8px;
+  background: var(--surface, #fff);
+  box-shadow: var(--shadow-md);
+}
+
+.dossier2-menu-plus-panel .btn {
+  width: 100%;
+  justify-content: flex-start;
+}
+
+/* ── Panorama : lignes cliquables ────────────────────────────────── */
+
+.matx-tr-cliquable {
+  cursor: pointer;
+}
+
+.matx-tr-cliquable:hover {
+  background: var(--accent-soft, #ecfdf8);
+}
+
+/* ── Worklist tableau ────────────────────────────────────────────── */
+
+.rest-worklist-outils {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.4rem 0.65rem;
+}
+
+.rest-section-head.dossier2-sec-head {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 0.5rem 1rem;
+}
+
+.rest-worklist-filtres {
+  display: inline-flex;
+  flex-wrap: wrap;
+  gap: 0.2rem;
+}
+
+.rest-worklist-table td {
+  font-size: 0.78rem;
+  vertical-align: middle;
+}
+
 /* ── Complétude du socle documentaire (data room mission) ─────────── */
 
 .compdr {

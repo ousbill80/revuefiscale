@@ -32,7 +32,7 @@ def section_perimetre(meta: Mapping[str, Any]) -> list[str]:
     lignes: list[str] = [
         "## Périmètre déclaré",
         "",
-        f"- **Type d'engagement** : {libelle} (`{type_eng}`)",
+        f"- **Type d'engagement** : {libelle}",
     ]
     if perimetre is None:
         lignes.append(
@@ -829,7 +829,7 @@ def rendre_rapport_markdown(
         f"- **Contribuable** : {denomination}",
         f"- **NCC** : {ncc}",
         f"- **Exercice** : {exercice}",
-        f"- **Type d'engagement** : {libelle_eng} (`{type_eng}`)",
+        f"- **Type d'engagement** : {libelle_eng}",
         f"- **Version referentiel epinglee** : `{version_id}`",
         "",
     ]

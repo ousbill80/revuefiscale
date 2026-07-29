@@ -5,7 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
   <meta name="theme-color" content="#0f766e" />
   <meta name="color-scheme" content="light" />
-  <title>Revue Fiscale — Billing</title>
+  <title>Revue Fiscale — Facturation</title>
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700&family=Syne:wght@600;700;800&display=swap" rel="stylesheet" />
@@ -23,7 +23,7 @@
 <body>
   <div id="vue-login" class="login-screen">
     <aside class="login-aside" aria-hidden="true">
-      <p class="login-eyebrow">Billing</p>
+      <p class="login-eyebrow">Facturation</p>
       <div class="login-aside-brand">
         <svg class="brand-mark brand-mark--hero" viewBox="0 0 40 40" width="40" height="40" aria-hidden="true" focusable="false">
           <rect class="brand-mark__plate" x="1" y="1" width="38" height="38" rx="10" />
@@ -34,12 +34,12 @@
         </svg>
         <span class="login-aside-brand-text">Revue Fiscale</span>
       </div>
-      <p class="login-aside-tagline">Abonnés, quotas et facturation — l’outil de production de l’éditeur pour tous les cabinets.</p>
-      <p class="login-aside-foot">Édité par 2AàZ · Billing</p>
+      <p class="login-aside-tagline">Abonnés, quotas et facturation — l’outil de gestion de l’éditeur pour tous les cabinets.</p>
+      <p class="login-aside-foot">Édité par 2AàZ · Facturation</p>
     </aside>
     <section class="login-card">
       <div class="login-card-inner">
-        <p class="login-eyebrow">Billing</p>
+        <p class="login-eyebrow">Facturation</p>
         <div class="brand">
           <svg class="brand-mark brand-mark--card" viewBox="0 0 40 40" width="40" height="40" aria-hidden="true" focusable="false">
             <rect class="brand-mark__plate" x="1" y="1" width="38" height="38" rx="10" />
@@ -69,10 +69,10 @@
         <div id="demo-access" class="demo-access hidden" hidden>
           <div class="demo-access-head">
             <span class="demo-badge">Démo</span>
-            <span class="demo-access-hint">Clic = remplir · double-clic = connexion</span>
+            <span class="demo-access-hint">Un clic remplit le formulaire · un double-clic connecte</span>
           </div>
           <div class="demo-chips" role="group" aria-label="Accès démo">
-            <button type="button" class="demo-chip" data-demo="billing">Remplir Billing</button>
+            <button type="button" class="demo-chip" data-demo="billing">Remplir les identifiants</button>
             <button type="button" class="demo-chip demo-chip-submit" data-demo-submit="billing">Connexion démo</button>
           </div>
         </div>
@@ -88,8 +88,8 @@
           <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 7h16M4 12h16M4 17h16" stroke-linecap="round"/></svg>
         </button>
         <div class="brand-bar">Revue<span> Fiscale</span></div>
-        <span class="surface-pill">Billing</span>
-        <span class="surface-pill" id="badge-tarifs" title="Bornes techniques provisoires — pas une grille officielle" style="background:#fef3c7;color:#92400e;border:1px solid #f59e0b">Tarifs À CONFIRMER</span>
+        <span class="surface-pill">Facturation</span>
+        <span class="surface-pill" id="badge-tarifs" title="Montants provisoires — pas une grille tarifaire officielle" style="background:#fef3c7;color:#92400e;border:1px solid #f59e0b">Tarifs à confirmer</span>
       </div>
       <div class="topbar-search" aria-hidden="true">
         <svg viewBox="0 0 24 24"><circle cx="11" cy="11" r="7"/><path d="M20 20l-3.5-3.5" stroke-linecap="round"/></svg>
@@ -104,7 +104,7 @@
       </div>
     </header>
 
-    <aside class="sidebar" id="sidebar" aria-label="Navigation billing">
+    <aside class="sidebar" id="sidebar" aria-label="Navigation facturation">
       <div class="sidebar-collapse-row">
         <button type="button" class="btn-sidebar-collapse" id="btn-sidebar-collapse"
           aria-expanded="true" aria-controls="sidebar" title="Réduire le menu"
@@ -148,7 +148,7 @@
         <span class="nav-ico-wrap" aria-hidden="true">
           <svg class="nav-ico" viewBox="0 0 24 24"><path d="M4 6h16v12H4z"/><path d="M4 6l8 6 8-6" stroke-linecap="round"/></svg>
         </span>
-        <span class="nav-label-txt">Emails / Outbox</span>
+        <span class="nav-label-txt">Suivi des emails</span>
       </button>
       <div class="nav-label">Éditeur</div>
       <button type="button" class="side-nav-item nav-btn" data-view="tarifs-ac">
@@ -165,8 +165,8 @@
       </button>
       <div class="sidebar-foot">
         <p>Édité par 2AàZ</p>
-        <p>Données plateforme uniquement</p>
-        <p>Aucune mission abonné</p>
+        <p>Données de la plateforme uniquement</p>
+        <p>Aucune donnée de mission des abonnés</p>
       </div>
     </aside>
 
@@ -176,7 +176,7 @@
           <div>
             <p class="page-eyebrow">Portefeuille</p>
             <h1>Abonnés</h1>
-            <p>Tenants, paliers et quotas — sans données de mission.</p>
+            <p>Comptes, paliers et quotas — sans aucune donnée de mission.</p>
           </div>
           <button type="button" class="btn btn-ghost" id="btn-refresh">Actualiser</button>
         </div>
@@ -189,18 +189,18 @@
           <label>Statut
             <select id="filtre-abonne-statut">
               <option value="">Tous</option>
-              <option value="actif">actif</option>
-              <option value="suspendu">suspendu</option>
-              <option value="resilie">résilié</option>
+              <option value="actif">Actif</option>
+              <option value="suspendu">Suspendu</option>
+              <option value="resilie">Résilié</option>
             </select>
           </label>
           <label>Palier
             <select id="filtre-abonne-palier">
               <option value="">Tous</option>
-              <option value="essentiel">essentiel</option>
-              <option value="standard">standard</option>
-              <option value="premium">premium</option>
-              <option value="souverain">souverain</option>
+              <option value="essentiel">Essentiel</option>
+              <option value="standard">Standard</option>
+              <option value="premium">Premium</option>
+              <option value="souverain">Souverain</option>
             </select>
           </label>
         </div>
@@ -209,7 +209,7 @@
             <table>
               <thead>
                 <tr>
-                  <th>Id</th>
+                  <th>N°</th>
                   <th>Dénomination</th>
                   <th>Palier</th>
                   <th>Statut</th>
@@ -227,9 +227,9 @@
       <section id="view-creer" class="hidden">
         <div class="page-head">
           <div>
-            <p class="page-eyebrow">Onboarding</p>
+            <p class="page-eyebrow">Nouvel abonné</p>
             <h1>Créer un abonné</h1>
-            <p>Cabinet ou entreprise + admin initial + quota + abonnement.</p>
+            <p>Un cabinet ou une entreprise, son administrateur initial, son quota et son abonnement.</p>
           </div>
         </div>
         <div class="panel" style="max-width:480px">
@@ -241,7 +241,7 @@
               <option value="cabinet">Cabinet</option>
               <option value="entreprise">Entreprise</option>
             </select>
-            <p class="sub" style="margin:0 0 0.5rem;color:#92400e">Tarifs À CONFIRMER — montants techniques provisoires (voir /api/v1/billing/paliers).</p>
+            <p class="sub" style="margin:0 0 0.5rem;color:#92400e">Tarifs à confirmer — les montants affichés sont provisoires en attendant la grille officielle.</p>
             <label for="palier">Palier</label>
             <select id="palier">
               <option value="essentiel">Essentiel</option>
@@ -249,11 +249,11 @@
               <option value="premium">Premium</option>
               <option value="souverain">Souverain</option>
             </select>
-            <label for="email-admin">Email admin</label>
+            <label for="email-admin">Email de l&apos;administrateur</label>
             <input id="email-admin" type="email" required />
-            <label for="mdp-admin">Mot de passe admin</label>
+            <label for="mdp-admin">Mot de passe de l&apos;administrateur</label>
             <input id="mdp-admin" type="password" minlength="8" required />
-            <label for="note">Note (optionnel)</label>
+            <label for="note">Note (facultatif)</label>
             <input id="note" maxlength="500" />
             <div class="actions">
               <button type="submit" class="btn btn-primary btn-block">Créer l&apos;abonné</button>
@@ -268,7 +268,7 @@
           <div>
             <p class="page-eyebrow">Capacité</p>
             <h1>Usage</h1>
-            <p>Missions utilisées / incluses et métrage IA agrégé.</p>
+            <p>Missions utilisées sur missions incluses, et consommation IA agrégée.</p>
           </div>
           <button type="button" class="btn btn-ghost" id="btn-usage">Actualiser</button>
         </div>
@@ -276,7 +276,7 @@
           <div class="table-wrap">
             <table>
               <thead>
-                <tr><th>Tenant</th><th>Quota</th><th>Ratio</th><th>Alerte 80%</th><th>Métrage IA</th></tr>
+                <tr><th>Abonné</th><th>Quota</th><th>Taux d&apos;utilisation</th><th>Alerte 80&nbsp;%</th><th>Consommation IA</th></tr>
               </thead>
               <tbody id="usage-rows"></tbody>
             </table>
@@ -290,11 +290,11 @@
           <div>
             <p class="page-eyebrow">Commercial</p>
             <h1>Factures</h1>
-            <p>Montants d&apos;abonnement — <strong>À CONFIRMER</strong> (pas fiscaux). Badge « Tarifs À CONFIRMER » = bornes techniques provisoires, pas grille officielle.</p>
+            <p>Montants d&apos;abonnement provisoires, <strong>à confirmer</strong> par l&apos;éditeur. Il ne s&apos;agit pas de montants fiscaux.</p>
           </div>
           <div class="actions" style="margin:0">
             <button type="button" class="btn btn-ghost" id="btn-factures">Actualiser</button>
-            <button type="button" class="btn btn-ghost" id="btn-export-csv">Export CSV</button>
+            <button type="button" class="btn btn-ghost" id="btn-export-csv">Exporter en CSV</button>
           </div>
         </div>
         <div class="split">
@@ -303,10 +303,10 @@
               <label>Statut facture
                 <select id="filtre-facture-statut">
                   <option value="">Tous</option>
-                  <option value="brouillon">brouillon</option>
-                  <option value="emise">émise</option>
-                  <option value="payee">payée</option>
-                  <option value="annulee">annulée</option>
+                  <option value="brouillon">Brouillon</option>
+                  <option value="emise">Émise</option>
+                  <option value="payee">Payée</option>
+                  <option value="annulee">Annulée</option>
                 </select>
               </label>
             </div>
@@ -322,13 +322,13 @@
           </div>
           <div class="panel">
             <h2>Nouveau brouillon</h2>
-            <p class="sub">Depuis le palier courant du tenant.</p>
+            <p class="sub">Établi à partir du palier actuel de l&apos;abonné.</p>
             <label for="facture-tenant">Abonné</label>
             <select id="facture-tenant">
               <option value="">— Choisir un abonné —</option>
             </select>
             <div class="actions">
-              <button type="button" class="btn btn-primary btn-block" id="btn-creer-facture">Créer brouillon</button>
+              <button type="button" class="btn btn-primary btn-block" id="btn-creer-facture">Créer un brouillon</button>
             </div>
           </div>
         </div>
@@ -337,10 +337,11 @@
         <div class="page-head">
           <div>
             <p class="page-eyebrow">File commerciale</p>
-            <h1>Demandes abonnés</h1>
+            <h1>Demandes des abonnés</h1>
             <p>
-              Rapprochements paiement (signalement ≠ payée) et changements de palier
-              (acceptation via <code>patcher_tenant</code>). Aucun PSP.
+              Paiements signalés par les abonnés (à vérifier avant de marquer la facture payée)
+              et demandes de changement de palier, validés manuellement.
+              Aucun prestataire de paiement n&apos;est connecté.
             </p>
           </div>
           <button type="button" class="btn btn-ghost" id="btn-demandes">Actualiser</button>
@@ -352,7 +353,7 @@
               <table>
                 <thead>
                   <tr>
-                    <th>Id</th><th>Cabinet</th><th>Facture</th><th class="num">Montant</th>
+                    <th>N°</th><th>Cabinet</th><th>Facture</th><th class="num">Montant</th>
                     <th>Statut</th><th>Actions</th>
                   </tr>
                 </thead>
@@ -366,7 +367,7 @@
               <table>
                 <thead>
                   <tr>
-                    <th>Id</th><th>Cabinet</th><th>Actuel → Cible</th>
+                    <th>N°</th><th>Cabinet</th><th>Palier actuel → demandé</th>
                     <th>Statut</th><th>Actions</th>
                   </tr>
                 </thead>
@@ -380,9 +381,9 @@
       <section id="view-emails" class="hidden">
         <div class="page-head">
           <div>
-            <p class="page-eyebrow">Resend</p>
-            <h1>Outbox email</h1>
-            <p>Sans <code>RESEND_API_KEY</code> : emails <strong>simulés</strong> (dev) ou <strong>échec</strong> explicite (prod) — pas de faux envoi.</p>
+            <p class="page-eyebrow">Messagerie</p>
+            <h1>Suivi des emails</h1>
+            <p>Sans clé d&apos;envoi configurée, les emails sont <strong>simulés</strong> en développement ou marqués en <strong>échec</strong> explicite en production — jamais de faux envoi.</p>
           </div>
           <button type="button" class="btn btn-ghost" id="btn-emails">Actualiser</button>
         </div>
@@ -393,7 +394,7 @@
           <div class="table-wrap">
             <table>
               <thead>
-                <tr><th>Id</th><th>Destinataire</th><th>Sujet</th><th>Statut</th><th>Erreur / note</th><th>Créé</th></tr>
+                <tr><th>N°</th><th>Destinataire</th><th>Sujet</th><th>Statut</th><th>Erreur / note</th><th>Créé le</th></tr>
               </thead>
               <tbody id="emails-rows"></tbody>
             </table>
@@ -405,12 +406,12 @@
       <section id="view-tarifs-ac" class="hidden">
         <div class="page-head">
           <div>
-            <p class="page-eyebrow">Lecture seule — à valider 2AàZ</p>
-            <h1>Tarifs &amp; mentions (a_confirmer)</h1>
+            <p class="page-eyebrow">Lecture seule — à valider par 2AàZ</p>
+            <h1>Tarifs et mentions à confirmer</h1>
             <p>
-              Inventaire honnête des prix / quotas provisoires et des mentions facture
-              encore marquées À CONFIRMER. Aucune édition ici — saisie officielle via
-              <strong>Paramètres</strong> uniquement quand 2AàZ fournit les vraies valeurs.
+              Inventaire des prix, quotas et mentions de facture encore provisoires.
+              Aucune modification possible ici : la saisie officielle se fait dans
+              <strong>Paramètres</strong>, une fois les valeurs définitives fournies par 2AàZ.
             </p>
           </div>
           <button type="button" class="btn btn-ghost" id="btn-tarifs-ac">Actualiser</button>
@@ -429,8 +430,8 @@
         <div class="split" style="align-items:flex-start">
           <div class="panel panel-flush" style="flex:1.2">
             <div style="padding:0.85rem 1rem 0.35rem">
-              <h2 style="margin:0;font-size:1.05rem">Paliers (provisoires / saisis)</h2>
-              <p class="sub" style="margin:0.35rem 0 0">Prix mensuels XOF et quotas missions — pas une offre commerciale certifiée.</p>
+              <h2 style="margin:0;font-size:1.05rem">Paliers (provisoires ou saisis)</h2>
+              <p class="sub" style="margin:0.35rem 0 0">Prix mensuels en XOF et quotas de missions — pas une offre commerciale certifiée.</p>
             </div>
             <div class="table-wrap">
               <table>
@@ -448,8 +449,8 @@
           </div>
           <div class="panel panel-flush" style="flex:1">
             <div style="padding:0.85rem 1rem 0.35rem">
-              <h2 style="margin:0;font-size:1.05rem">Mentions légales facture</h2>
-              <p class="sub" style="margin:0.35rem 0 0">Valeurs effectives (saisie → env → À CONFIRMER). Pas d&apos;invention RCCM / IDU / TVA.</p>
+              <h2 style="margin:0;font-size:1.05rem">Mentions légales des factures</h2>
+              <p class="sub" style="margin:0.35rem 0 0">Valeurs effectivement utilisées. Aucune valeur (RCCM, IDU, TVA) n&apos;est inventée : sans saisie, le champ reste à confirmer.</p>
             </div>
             <div class="table-wrap">
               <table>
@@ -470,58 +471,57 @@
             <p class="page-eyebrow">Saisie éditeur — responsabilité 2AàZ</p>
             <h1>Paramètres commerciaux</h1>
             <p>
-              Paliers et mentions facture : <strong>saisie humaine</strong>.
-              Vides = À CONFIRMER. Aucune grille / RCCM inventés ici.
-              La clé Resend reste dans <code>.env</code> (jamais affichée).
+              Paliers et mentions de facture : <strong>saisie humaine</strong> uniquement.
+              Un champ laissé vide reste marqué « à confirmer » — aucune valeur n&apos;est inventée.
+              La clé d&apos;envoi d&apos;emails est configurée côté serveur et n&apos;est jamais affichée.
             </p>
           </div>
           <button type="button" class="btn btn-ghost" id="btn-parametres">Actualiser</button>
         </div>
 
         <div class="bandeau-a-confirmer" id="bandeau-param-ac">
-          À CONFIRMER — paliers et mentions facture sont une saisie humaine 2AàZ.
-          Champs vides = provisoire technique (pas une grille officielle).
-          Aucune invention RCCM / IDU / TVA. Resend reste dans <code>.env</code>.
+          À confirmer — les paliers et mentions de facture relèvent d&apos;une saisie humaine par 2AàZ.
+          Un champ vide reste provisoire (pas une grille officielle) et aucune valeur RCCM, IDU ou TVA n&apos;est inventée.
         </div>
 
         <div class="panel" style="margin-bottom:1rem">
-          <h2>Resend</h2>
+          <h2>Envoi d&apos;emails</h2>
           <p class="sub" id="param-resend-note">Chargement…</p>
           <p class="hint" style="font-size:0.8rem;color:var(--muted)">
-            Documenter dans <code>.env</code> : <code>RESEND_API_KEY</code> + <code>RESEND_FROM</code>
-            (voir <code>.env.example</code>). La clé n’est <strong>pas</strong> stockée ni renvoyée au frontend.
+            La clé d&apos;envoi (Resend) et l&apos;adresse expéditrice se configurent côté serveur,
+            dans le fichier d&apos;environnement <code>.env</code>. La clé n&apos;est <strong>jamais</strong> stockée ni affichée ici.
           </p>
         </div>
 
         <div class="split" style="align-items:flex-start">
           <div class="panel" style="flex:1.2">
-            <h2>Paliers (XOF / mois)</h2>
+            <h2>Paliers (XOF par mois)</h2>
             <p class="sub" id="param-paliers-avert">—</p>
             <div id="param-paliers-fields"></div>
             <div class="actions" style="margin-top:0.75rem">
-              <button type="button" class="btn btn-primary" id="btn-sauver-paliers">Enregistrer paliers</button>
+              <button type="button" class="btn btn-primary" id="btn-sauver-paliers">Enregistrer les paliers</button>
             </div>
             <div class="status" id="status-param-paliers"></div>
           </div>
           <div class="panel" style="flex:1">
-            <h2>Mentions légales facture</h2>
-            <p class="sub">Laisser vide = À CONFIRMER (env / défaut).</p>
+            <h2>Mentions légales des factures</h2>
+            <p class="sub">Un champ laissé vide reste marqué « à confirmer ».</p>
             <label for="m-raison">Raison sociale</label>
-            <input id="m-raison" placeholder="À CONFIRMER" />
+            <input id="m-raison" placeholder="À confirmer" />
             <label for="m-siege">Siège social</label>
-            <input id="m-siege" placeholder="À CONFIRMER" />
+            <input id="m-siege" placeholder="À confirmer" />
             <label for="m-rccm">RCCM</label>
-            <input id="m-rccm" placeholder="À CONFIRMER — ne pas inventer" />
+            <input id="m-rccm" placeholder="À confirmer — ne pas inventer" />
             <label for="m-idu">IDU</label>
-            <input id="m-idu" placeholder="À CONFIRMER" />
+            <input id="m-idu" placeholder="À confirmer" />
             <label for="m-banque">Compte bancaire</label>
-            <input id="m-banque" placeholder="À CONFIRMER" />
+            <input id="m-banque" placeholder="À confirmer" />
             <label for="m-regime">Régime TVA</label>
-            <input id="m-regime" placeholder="A_CONFIRMER" />
+            <input id="m-regime" placeholder="À confirmer" />
             <label for="m-taux">Taux TVA</label>
-            <input id="m-taux" placeholder="À CONFIRMER" />
+            <input id="m-taux" placeholder="À confirmer" />
             <div class="actions" style="margin-top:0.75rem">
-              <button type="button" class="btn btn-primary" id="btn-sauver-mentions">Enregistrer mentions</button>
+              <button type="button" class="btn btn-primary" id="btn-sauver-mentions">Enregistrer les mentions</button>
             </div>
             <div class="status" id="status-param-mentions"></div>
           </div>
@@ -571,7 +571,11 @@
         actif: "badge-ok", suspendu: "badge-suspendu", resilie: "badge-resilie",
         brouillon: "badge-brouillon", emise: "badge-emise", payee: "badge-payee", annulee: "badge-annulee",
       };
-      return `<span class="badge ${map[s] || "badge-brouillon"}">${s || "—"}</span>`;
+      const libelles = {
+        actif: "Actif", suspendu: "Suspendu", resilie: "Résilié",
+        brouillon: "Brouillon", emise: "Émise", payee: "Payée", annulee: "Annulée",
+      };
+      return `<span class="badge ${map[s] || "badge-brouillon"}">${libelles[s] || s || "—"}</span>`;
     }
 
     function escapeHtml(s) {
@@ -623,7 +627,7 @@
         const tbP = $("demandes-paiement");
         tbP.innerHTML = "";
         if (!paiements.length) {
-          tbP.innerHTML = "<tr><td colspan='6'>Aucune demande paiement</td></tr>";
+          tbP.innerHTML = "<tr><td colspan='6' class='empty-hint'>Aucune demande de paiement pour l'instant. Les paiements signalés par les abonnés apparaîtront ici.</td></tr>";
         }
         for (const d of paiements) {
           const tr = document.createElement("tr");
@@ -640,7 +644,7 @@
         const tbL = $("demandes-palier");
         tbL.innerHTML = "";
         if (!paliers.length) {
-          tbL.innerHTML = "<tr><td colspan='5'>Aucune demande palier</td></tr>";
+          tbL.innerHTML = "<tr><td colspan='5' class='empty-hint'>Aucune demande de changement de palier pour l'instant.</td></tr>";
         }
         for (const d of paliers) {
           const tr = document.createElement("tr");
@@ -654,7 +658,7 @@
           tbL.appendChild(tr);
         }
         setStatus($("status-demandes"),
-          `${paiements.length} paiement(s) · ${paliers.length} palier(s)`);
+          `${paiements.length} demande(s) de paiement · ${paliers.length} demande(s) de palier`);
       } catch (e) {
         setStatus($("status-demandes"), e.message, true);
       }
@@ -714,8 +718,8 @@
           const ac = !!c.a_confirmer;
           const srcLabel = {
             saisie_editeur: "Saisie éditeur",
-            env: "Variable env",
-            defaut_a_confirmer: "Défaut À CONFIRMER",
+            env: "Configuration serveur",
+            defaut_a_confirmer: "Valeur par défaut (à confirmer)",
           }[c.source] || (c.source || "—");
           tr.innerHTML =
             "<td class='cell-strong'>" + escapeHtml(c.libelle || c.cle) + "</td>" +
@@ -730,8 +734,8 @@
         setStatus(
           $("status-tarifs-ac"),
           (bloq.tarifs || bloq.mentions_facture)
-            ? "Bloqueurs ouverts — voir docs/15-bloqueurs-humains.md (pas d'invention ici)."
-            : "Tous les champs saisis côté éditeur (responsabilité 2AàZ)."
+            ? "Des éléments restent à confirmer par l'éditeur — aucune valeur n'est inventée en attendant."
+            : "Tous les champs ont été saisis par l'éditeur (responsabilité 2AàZ)."
         );
       } catch (err) {
         setStatus($("status-tarifs-ac"), err.message, true);
@@ -747,8 +751,8 @@
         const rn = $("param-resend-note");
         if (rn) {
           rn.innerHTML = resend.configure
-            ? "<strong>Resend configuré</strong> — from : " + escapeHtml(resend.from || "—")
-            : "<strong>RESEND_API_KEY absent</strong> — mode " +
+            ? "<strong>Envoi d'emails configuré</strong> — expéditeur : " + escapeHtml(resend.from || "—")
+            : "<strong>Clé d'envoi absente</strong> — mode actuel : " +
               escapeHtml(String(resend.mode_sans_cle || "?")) + ". " +
               escapeHtml(resend.note || "");
         }
@@ -770,10 +774,10 @@
           wrap.innerHTML =
             "<div style='font-weight:600;margin-bottom:0.25rem'>" + escapeHtml(pal) + "</div>" +
             "<label style='font-size:0.78rem'>Prix mensuel XOF</label>" +
-            "<input data-pal-prix='" + pal + "' type='text' inputmode='numeric' placeholder='vide = À CONFIRMER / provisoire' value='" +
+            "<input data-pal-prix='" + pal + "' type='text' inputmode='numeric' placeholder='Vide = à confirmer (provisoire)' value='" +
             escapeHtml(prix[pal] != null ? String(prix[pal]) : "") + "' />" +
-            "<label style='font-size:0.78rem'>Missions / mois</label>" +
-            "<input data-pal-miss='" + pal + "' type='number' min='0' placeholder='vide = provisoire technique' value='" +
+            "<label style='font-size:0.78rem'>Missions par mois</label>" +
+            "<input data-pal-miss='" + pal + "' type='number' min='0' placeholder='Vide = à confirmer (provisoire)' value='" +
             escapeHtml(miss[pal] != null ? String(miss[pal]) : "") + "' />";
           box.appendChild(wrap);
         }
@@ -786,8 +790,8 @@
         $("m-regime").value = ment.regime_tva || "";
         $("m-taux").value = ment.taux_tva || "";
         setStatus($("status-param-paliers"), paliers.tarifs_a_confirmer
-          ? "Tarifs encore À CONFIRMER (provisoire technique actif)."
-          : "Grille saisie éditeur active.");
+          ? "Tarifs encore à confirmer — grille provisoire active."
+          : "Grille tarifaire saisie par l'éditeur active.");
       } catch (err) {
         setStatus($("status-param-paliers"), err.message, true);
       }
@@ -802,26 +806,27 @@
         const note = $("resend-note");
         if (note) {
           note.innerHTML = resend.resend_configure
-            ? "<strong>Resend configuré</strong> — " + escapeHtml(resend.note || "")
-            : "<strong>RESEND_API_KEY absent</strong> — mode " + escapeHtml(String(resend.mode_sans_cle || "?")) +
+            ? "<strong>Envoi d'emails configuré</strong> — " + escapeHtml(resend.note || "")
+            : "<strong>Clé d'envoi absente</strong> — mode actuel : " + escapeHtml(String(resend.mode_sans_cle || "?")) +
               ". " + escapeHtml(resend.note || "") +
-              " Dernier email simulé / échec listé ci-dessous.";
+              " Les emails simulés ou en échec sont listés ci-dessous.";
         }
         const tb = $("emails-rows");
         tb.innerHTML = "";
         const rows = data.lignes || [];
         if (!rows.length) {
-          tb.innerHTML = `<tr><td colspan="6" class="empty-hint">Aucun email en outbox. Envoyez une invitation depuis /app pour voir une simulation.</td></tr>`;
+          tb.innerHTML = `<tr><td colspan="6" class="empty-hint">Aucun email pour l'instant. Les emails envoyés par la plateforme apparaîtront ici.</td></tr>`;
         }
         for (const r of rows) {
           const tr = document.createElement("tr");
           const st = r.statut || "";
           const badge = st === "simule_dev" ? "badge-draft" : (st === "envoye" ? "badge-ok" : "badge-suspendu");
+          const stLabel = { simule_dev: "Simulé (dev)", envoye: "Envoyé", echec: "Échec" }[st] || st || "—";
           tr.innerHTML = `
             <td class="num cell-muted">${r.id}</td>
             <td>${escapeHtml(r.destinataire)}</td>
             <td>${escapeHtml(r.sujet)}</td>
-            <td><span class="badge ${badge}">${escapeHtml(st)}</span></td>
+            <td><span class="badge ${badge}">${escapeHtml(stLabel)}</span></td>
             <td class="cell-muted" style="max-width:220px;white-space:normal">${escapeHtml(r.dernier_erreur || "—")}</td>
             <td class="cell-muted">${escapeHtml(fmtDate(r.cree_le) || "—")}</td>`;
           tb.appendChild(tr);
@@ -871,7 +876,7 @@
           <td class="num">${quota}</td>
           <td>
             <div class="actions" style="margin:0;gap:0.3rem">
-              <button type="button" class="btn btn-sm btn-ghost" data-act="palier" data-id="${t.tenant_id}" data-palier="${escapeAttr(t.palier)}">Palier</button>
+              <button type="button" class="btn btn-sm btn-ghost" data-act="palier" data-id="${t.tenant_id}" data-palier="${escapeAttr(t.palier)}">Changer de palier</button>
               ${t.statut === "suspendu"
                 ? `<button type="button" class="btn btn-sm btn-teal" data-act="reactiver" data-id="${t.tenant_id}">Réactiver</button>`
                 : `<button type="button" class="btn btn-sm btn-danger" data-act="suspendre" data-id="${t.tenant_id}">Suspendre</button>`}
@@ -989,7 +994,7 @@
             <td class="cell-muted">${escapeHtml(met)}</td>`;
           tb.appendChild(tr);
         }
-        setStatus($("status-usage"), rows.length ? rows.length + " tenant(s)" : "");
+        setStatus($("status-usage"), rows.length ? rows.length + " abonné(s)" : "");
       } catch (e) {
         setStatus($("status-usage"), e.message, true);
       }
@@ -1037,7 +1042,7 @@
             method: "POST",
             body: JSON.stringify({ marquer_facture_payee: true }),
           });
-          setStatus($("status-demandes"), "Demande paiement acceptée (facture payée).");
+          setStatus($("status-demandes"), "Demande de paiement acceptée — facture marquée payée.");
           await chargerDemandes();
           await chargerFactures();
         } else if (ref) {
@@ -1045,7 +1050,7 @@
             method: "POST",
             body: JSON.stringify({}),
           });
-          setStatus($("status-demandes"), "Demande paiement refusée.");
+          setStatus($("status-demandes"), "Demande de paiement refusée.");
           await chargerDemandes();
         }
       } catch (err) {
@@ -1062,7 +1067,7 @@
             method: "POST",
             body: JSON.stringify({}),
           });
-          setStatus($("status-demandes"), "Demande palier acceptée (patcher_tenant).");
+          setStatus($("status-demandes"), "Demande de changement de palier acceptée.");
           await chargerDemandes();
           await chargerTenants();
         } else if (ref) {
@@ -1070,7 +1075,7 @@
             method: "POST",
             body: JSON.stringify({}),
           });
-          setStatus($("status-demandes"), "Demande palier refusée.");
+          setStatus($("status-demandes"), "Demande de changement de palier refusée.");
           await chargerDemandes();
         }
       } catch (err) {
@@ -1097,8 +1102,8 @@
         });
         if (vides > 0) {
           const ok = confirm(
-            vides + " champ(s) palier vide(s).\n"
-            + "Les vides restent À CONFIRMER / provisoire technique.\n"
+            vides + " champ(s) de palier laissé(s) vide(s).\n"
+            + "Les champs vides resteront marqués « à confirmer » (valeurs provisoires).\n"
             + "Confirmer l’enregistrement ?"
           );
           if (!ok) {
@@ -1136,8 +1141,8 @@
         const vides = Object.values(payload).filter((v) => v == null || v === "").length;
         if (vides > 0) {
           const ok = confirm(
-            vides + " mention(s) vide(s).\n"
-            + "Les vides restent À CONFIRMER (pas d’invention RCCM / IDU / TVA).\n"
+            vides + " mention(s) laissée(s) vide(s).\n"
+            + "Les champs vides resteront marqués « à confirmer » — aucune valeur RCCM, IDU ou TVA ne sera inventée.\n"
             + "Confirmer l’enregistrement ?"
           );
           if (!ok) {
@@ -1195,7 +1200,7 @@
             creer_demo: false,
           }),
         });
-        setStatus($("status-creer"), `Créé · tenant #${data.tenant_id} · ${data.email_admin}`);
+        setStatus($("status-creer"), `Abonné créé (n°${data.tenant_id}) · administrateur : ${data.email_admin}`);
         $("form-creer").reset();
         $("palier").value = "standard";
         await chargerTenants();
@@ -1212,7 +1217,7 @@
       const act = btn.dataset.act;
       try {
         if (act === "suspendre") {
-          if (!confirm(`Suspendre le tenant #${id} ?`)) return;
+          if (!confirm(`Suspendre l'abonné n°${id} ?`)) return;
           await api(`/api/v1/billing/tenants/${id}`, {
             method: "PATCH", body: JSON.stringify({ statut: "suspendu" }),
           });
@@ -1238,7 +1243,7 @@
 
     $("btn-creer-facture").addEventListener("click", async () => {
       const tid = Number($("facture-tenant").value);
-      if (!tid) { setStatus($("status-factures"), "Choisissez un abonné", true); return; }
+      if (!tid) { setStatus($("status-factures"), "Choisissez d'abord un abonné dans la liste.", true); return; }
       try {
         const r = await api("/api/v1/billing/factures", {
           method: "POST", body: JSON.stringify({ tenant_id: tid }),
@@ -1255,7 +1260,7 @@
         const r = await fetch("/api/v1/billing/factures/export.csv", {
           headers: { Authorization: `Bearer ${jeton}` },
         });
-        if (!r.ok) throw new Error("export impossible");
+        if (!r.ok) throw new Error("L'export CSV a échoué. Veuillez réessayer.");
         const blob = await r.blob();
         const url = URL.createObjectURL(blob);
         const a = document.createElement("a");
@@ -1274,7 +1279,7 @@
           const r = await fetch(`/api/v1/billing/factures/${fid}/pdf`, {
             headers: { Authorization: `Bearer ${jeton}` },
           });
-          if (!r.ok) throw new Error("export PDF impossible");
+          if (!r.ok) throw new Error("Le téléchargement du PDF a échoué. Veuillez réessayer.");
           const blob = await r.blob();
           const url = URL.createObjectURL(blob);
           const a = document.createElement("a");

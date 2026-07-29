@@ -98,13 +98,13 @@
       </div>
     </header>
     <main class="client-main">
-      <p class="tagline">Consultation lecture seule de la restitution de mission. Aucune modification possible.</p>
+      <p class="tagline">Consultation en lecture seule des résultats de votre mission. Aucune modification n&apos;est possible.</p>
 
       <section class="panel" id="vue-token">
         <h2 style="margin:0 0 0.25rem;font-family:var(--font-brand);font-size:1rem">Accès sécurisé</h2>
-        <p class="sub">Collez le jeton fourni par votre cabinet pour ouvrir la restitution.</p>
-        <label for="token">Jeton d&apos;accès</label>
-        <input id="token" placeholder="Collez le jeton reçu du cabinet" autocomplete="off" />
+        <p class="sub">Collez le code d&apos;accès transmis par votre cabinet pour consulter vos résultats.</p>
+        <label for="token">Code d&apos;accès</label>
+        <input id="token" placeholder="Collez le code reçu de votre cabinet" autocomplete="off" />
         <div class="actions">
           <button type="button" class="btn btn-primary" id="btn-ouvrir" style="max-width:280px">Ouvrir la restitution</button>
         </div>
@@ -117,7 +117,7 @@
         <p id="empty-msg" class="sub" style="margin:0 0 0.75rem;line-height:1.5"></p>
         <p id="empty-meta" class="sub" style="margin:0"></p>
         <div class="actions">
-          <button type="button" class="btn btn-ghost" id="btn-autre-empty">Autre jeton</button>
+          <button type="button" class="btn btn-ghost" id="btn-autre-empty">Saisir un autre code d&apos;accès</button>
         </div>
       </section>
 
@@ -128,7 +128,7 @@
         <div class="metrics" id="metrics"></div>
         <pre class="rapport" id="rapport"></pre>
         <div class="actions">
-          <button type="button" class="btn btn-ghost" id="btn-autre">Autre jeton</button>
+          <button type="button" class="btn btn-ghost" id="btn-autre">Saisir un autre code d&apos;accès</button>
         </div>
       </section>
     </main>
@@ -150,7 +150,7 @@
 
     async function charger() {
       const token = $("token").value.trim();
-      if (!token) { $("status").textContent = "Jeton requis"; $("status").classList.add("err"); return; }
+      if (!token) { $("status").textContent = "Veuillez saisir le code d'accès reçu de votre cabinet."; $("status").classList.add("err"); return; }
       $("status").textContent = "Chargement…"; $("status").classList.remove("err");
       try {
         const r = await fetch(`/api/v1/client/${encodeURIComponent(token)}/restitution`);
@@ -164,17 +164,17 @@
             throw new Error(
               detail && detail !== "Not Found"
                 ? detail
-                : "Lien invalide ou expiré. Demandez un nouveau jeton à votre cabinet."
+                : "Ce lien est invalide ou a expiré. Demandez un nouveau code d'accès à votre cabinet."
             );
           }
           throw new Error(detail);
         }
         $("vue-token").classList.add("hidden");
         $("status").textContent = "";
-        const meta = `Mission #${data.mission_id}` + (data.email_contact ? ` · ${data.email_contact}` : "");
+        const meta = `Mission n°${data.mission_id}` + (data.email_contact ? ` · ${data.email_contact}` : "");
         if (data.sans_restitution || !data.restitution) {
           $("empty-msg").textContent = data.message
-            || "Cette mission n'a pas encore de restitution. Contactez votre cabinet.";
+            || "Les résultats de cette mission ne sont pas encore disponibles. Contactez votre cabinet pour en savoir plus.";
           $("empty-meta").textContent = meta;
           $("vue-empty").classList.remove("hidden");
           $("vue-rest").classList.add("hidden");
@@ -187,8 +187,8 @@
           <div class="metric"><div class="k">Réintégrations</div><div class="v">${fmt(p.total_reintegration)}</div></div>
           <div class="metric"><div class="k">Déductions</div><div class="v">${fmt(p.total_deduction)}</div></div>
           <div class="metric"><div class="k">Solde net</div><div class="v">${fmt(p.solde_net)}</div></div>
-          <div class="metric"><div class="k">Score risque</div><div class="v">${(rest.score_risque && rest.score_risque.score) ?? "—"}</div></div>`;
-        $("rapport").textContent = rest.rapport_markdown || "Pas de rapport disponible.";
+          <div class="metric"><div class="k">Score de risque</div><div class="v">${(rest.score_risque && rest.score_risque.score) ?? "—"}</div></div>`;
+        $("rapport").textContent = rest.rapport_markdown || "Le rapport n'est pas encore disponible.";
         $("vue-empty").classList.add("hidden");
         $("vue-rest").classList.remove("hidden");
       } catch (e) {

@@ -49,12 +49,21 @@ const LIBELLES_COURTS: Record<string, string> = {
   indisponible: "indisponible",
 };
 
+import { themePourVolet, type ThemeRevueId } from "./revueVoletsRegistry";
+
 type Props = {
   missionId: number;
   jeton?: string | null;
+  onOuvrirTheme?: (theme: ThemeRevueId) => void;
+  onOuvrirVolet?: (volet: string) => void;
 };
 
-export function PanoramaConformiteVue({ missionId, jeton }: Props) {
+export function PanoramaConformiteVue({
+  missionId,
+  jeton,
+  onOuvrirTheme,
+  onOuvrirVolet,
+}: Props) {
   const [etat, setEtat] = useState<PanoramaConformiteOut | null>(null);
 
   const charger = useCallback(async () => {
@@ -127,8 +136,36 @@ export function PanoramaConformiteVue({ missionId, jeton }: Props) {
             </tr>
           </thead>
           <tbody>
-            {etat.volets.map((v) => (
-              <tr key={v.volet}>
+            {etat.volets.map((v) => {
+              const theme = themePourVolet(v.volet);
+              const cliquable =
+                Boolean(onOuvrirVolet || (theme && onOuvrirTheme));
+              return (
+              <tr
+                key={v.volet}
+                className={cliquable ? "matx-tr-cliquable" : undefined}
+                onClick={
+                  cliquable
+                    ? () => {
+                        if (onOuvrirVolet) onOuvrirVolet(v.volet);
+                        else if (theme && onOuvrirTheme) onOuvrirTheme(theme);
+                      }
+                    : undefined
+                }
+                onKeyDown={
+                  cliquable
+                    ? (e) => {
+                        if (e.key === "Enter" || e.key === " ") {
+                          e.preventDefault();
+                          if (onOuvrirVolet) onOuvrirVolet(v.volet);
+                          else if (theme && onOuvrirTheme) onOuvrirTheme(theme);
+                        }
+                      }
+                    : undefined
+                }
+                tabIndex={cliquable ? 0 : undefined}
+                role={cliquable ? "link" : undefined}
+              >
                 <td className="matx-ref">{v.libelle}</td>
                 <td className="muted">
                   {v.statut_source
@@ -154,7 +191,8 @@ export function PanoramaConformiteVue({ missionId, jeton }: Props) {
                   ) : null}
                 </td>
               </tr>
-            ))}
+            );
+            })}
           </tbody>
         </table>
       )}

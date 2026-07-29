@@ -608,6 +608,10 @@ export function RestitutionVue({
 }: Props) {
   const rootRef = useRef<HTMLDivElement>(null);
   const [sectionActive, setSectionActive] = useState<SectionId>("synthese");
+  const [worklistModeTableau, setWorklistModeTableau] = useState(false);
+  const [filtreWorklistStatut, setFiltreWorklistStatut] = useState<
+    "tous" | "a_faire" | "en_cours"
+  >("tous");
   const [filtreRisque, setFiltreRisque] = useState<string>("tous");
   const [filtreTraitement, setFiltreTraitement] = useState<string>("tous");
   const [filtreAuditAction, setFiltreAuditAction] = useState<string>("tous");
@@ -2129,6 +2133,24 @@ export function RestitutionVue({
     return [...map.entries()].sort(([a], [b]) => a.localeCompare(b));
   }, [tachesServeur]);
 
+  const tachesWorklistFlat = useMemo(() => {
+    const rows: Array<{
+      impot: string;
+      t: (typeof tachesServeur)[0];
+    }> = [];
+    for (const [impot, list] of tachesParObjectif) {
+      for (const t of list) rows.push({ impot, t });
+    }
+    return rows;
+  }, [tachesParObjectif]);
+
+  const tachesWorklistFiltrees = useMemo(() => {
+    if (filtreWorklistStatut === "tous") return tachesWorklistFlat;
+    return tachesWorklistFlat.filter(
+      ({ t }) => t.statut === filtreWorklistStatut,
+    );
+  }, [tachesWorklistFlat, filtreWorklistStatut]);
+
   const tachesBloquees = useMemo(
     () => tachesServeur.filter((t) => t.statut === "bloquee"),
     [tachesServeur],
@@ -2698,59 +2720,6 @@ export function RestitutionVue({
             )}
             {surRevue && (
             <>
-            <Tooltip label="Échéancier fiscal de l'exercice revu : calendrier déterministe des obligations déclaratives et de paiement selon le régime du profil mission — dates indicatives, sans calcul d'impôt.">
-              <button
-                type="button"
-                className={`btn btn-ghost btn-sm dossier2-action rest-echeancier-btn${
-                  echeancierOuvert ? " is-actif" : ""
-                }`}
-                onClick={() =>
-                  togglePanneau(
-                    "echeancier",
-                    echeancierOuvert,
-                    setEcheancierOuvert,
-                  )
-                }
-                disabled={!jeton}
-                aria-expanded={echeancierOuvert}
-              >
-                Échéancier fiscal
-              </button>
-            </Tooltip>
-            <Tooltip label="Civisme déclaratif : rapprochement déterministe entre l'échéancier fiscal théorique de l'exercice revu et les pièces collectées en data room — taux de civisme, échéances couvertes, en attente ou manquantes. Consultatif : à vérifier auprès du client.">
-              <button
-                type="button"
-                className={`btn btn-ghost btn-sm dossier2-action rest-civisme-btn${
-                  civismeOuvert ? " is-actif" : ""
-                }`}
-                onClick={() =>
-                  togglePanneau("civisme", civismeOuvert, setCivismeOuvert)
-                }
-                disabled={!jeton}
-                aria-expanded={civismeOuvert}
-              >
-                Civisme déclaratif
-              </button>
-            </Tooltip>
-            <Tooltip label="Prescription des risques : analyse déterministe du délai de reprise de droit commun — risques prescrits à basculer, proches de prescription (<12 mois) et non prescrits, avec exposition prescrite. Consultative : l'humain décide.">
-              <button
-                type="button"
-                className={`btn btn-ghost btn-sm dossier2-action rest-prescription-btn${
-                  prescriptionOuverte ? " is-actif" : ""
-                }`}
-                onClick={() =>
-                  togglePanneau(
-                    "prescription",
-                    prescriptionOuverte,
-                    setPrescriptionOuverte,
-                  )
-                }
-                disabled={!jeton}
-                aria-expanded={prescriptionOuverte}
-              >
-                Prescription
-              </button>
-            </Tooltip>
             <Tooltip label="Plan d'actions post-revue : une action suggérée par risque non clos du client — déclaration rectificative, provision à documenter, justificatif à collecter ou point à discuter, avec priorité et motifs. Consultatif : le fiscaliste apprécie, le client décide.">
               <button
                 type="button"
@@ -2767,7 +2736,7 @@ export function RestitutionVue({
                 disabled={!jeton}
                 aria-expanded={planActionsOuvert}
               >
-                Plan d'actions
+                Plan d&apos;actions
               </button>
             </Tooltip>
             <Tooltip label="Demande de renseignements et de documents au client — questions de la revue analytique et pièces manquantes, numérotées pour réponse">
@@ -2785,6 +2754,69 @@ export function RestitutionVue({
                 {demandeErr}
               </span>
             )}
+            <details className="dossier2-menu-plus">
+              <summary className="btn btn-ghost btn-sm dossier2-action">
+                Plus
+              </summary>
+              <div className="dossier2-menu-plus-panel" role="menu">
+                <Tooltip label="Échéancier fiscal de l'exercice revu : calendrier déterministe des obligations déclaratives et de paiement selon le régime du profil mission — dates indicatives, sans calcul d'impôt.">
+                  <button
+                    type="button"
+                    className={`btn btn-ghost btn-sm dossier2-action rest-echeancier-btn${
+                      echeancierOuvert ? " is-actif" : ""
+                    }`}
+                    role="menuitem"
+                    onClick={() => {
+                      togglePanneau(
+                        "echeancier",
+                        echeancierOuvert,
+                        setEcheancierOuvert,
+                      );
+                    }}
+                    disabled={!jeton}
+                    aria-expanded={echeancierOuvert}
+                  >
+                    Échéancier fiscal
+                  </button>
+                </Tooltip>
+                <Tooltip label="Civisme déclaratif : rapprochement déterministe entre l'échéancier fiscal théorique de l'exercice revu et les pièces collectées en data room — taux de civisme, échéances couvertes, en attente ou manquantes. Consultatif : à vérifier auprès du client.">
+                  <button
+                    type="button"
+                    className={`btn btn-ghost btn-sm dossier2-action rest-civisme-btn${
+                      civismeOuvert ? " is-actif" : ""
+                    }`}
+                    role="menuitem"
+                    onClick={() => {
+                      togglePanneau("civisme", civismeOuvert, setCivismeOuvert);
+                    }}
+                    disabled={!jeton}
+                    aria-expanded={civismeOuvert}
+                  >
+                    Civisme déclaratif
+                  </button>
+                </Tooltip>
+                <Tooltip label="Prescription des risques : analyse déterministe du délai de reprise de droit commun — risques prescrits à basculer, proches de prescription (&lt;12 mois) et non prescrits, avec exposition prescrite. Consultative : l'humain décide.">
+                  <button
+                    type="button"
+                    className={`btn btn-ghost btn-sm dossier2-action rest-prescription-btn${
+                      prescriptionOuverte ? " is-actif" : ""
+                    }`}
+                    role="menuitem"
+                    onClick={() => {
+                      togglePanneau(
+                        "prescription",
+                        prescriptionOuverte,
+                        setPrescriptionOuverte,
+                      );
+                    }}
+                    disabled={!jeton}
+                    aria-expanded={prescriptionOuverte}
+                  >
+                    Prescription
+                  </button>
+                </Tooltip>
+              </div>
+            </details>
             </>
             )}
             {surTravaux && suivi && suivi.synthese.total > 0 && (
@@ -4943,13 +4975,6 @@ export function RestitutionVue({
       </section>
       )}
 
-      {surRevue && sansExecution && (
-        <p className="rest-rappel-sources" role="status">
-          Aucune exécution encore — importez la balance depuis l&apos;onglet
-          «&nbsp;Sources&nbsp;» pour produire le passage et les conclusions.
-        </p>
-      )}
-
       {surSources && sansExecution && (
         <section
           className="rest-onboarding"
@@ -5270,12 +5295,149 @@ export function RestitutionVue({
         {tachesParObjectif.length > 0 && (
           <section className="rest-section rest-worklist" aria-label="Worklist">
             <header className="rest-section-head dossier2-sec-head">
-              <h3>Tâches ouvertes</h3>
-              <p>
-                Groupées par objectif fiscal — plan dérivé (hors choix LLM).
-                Sous-seuil replié hors liste.
-              </p>
+              <div>
+                <h3>Tâches ouvertes</h3>
+                <p>
+                  Groupées par objectif fiscal — plan dérivé (hors choix LLM).
+                  Sous-seuil replié hors liste.
+                </p>
+              </div>
+              <div className="rest-worklist-outils">
+                <div
+                  className="fil-conducteur-vue-switch"
+                  role="group"
+                  aria-label="Mode d'affichage des tâches"
+                >
+                  <button
+                    type="button"
+                    className={`fil-conducteur-vue-btn${!worklistModeTableau ? " is-active" : ""}`}
+                    aria-pressed={!worklistModeTableau}
+                    onClick={() => setWorklistModeTableau(false)}
+                  >
+                    Groupes
+                  </button>
+                  <button
+                    type="button"
+                    className={`fil-conducteur-vue-btn${worklistModeTableau ? " is-active" : ""}`}
+                    aria-pressed={worklistModeTableau}
+                    onClick={() => setWorklistModeTableau(true)}
+                  >
+                    Tableau
+                  </button>
+                </div>
+                {worklistModeTableau && (
+                  <div
+                    className="rest-worklist-filtres"
+                    role="group"
+                    aria-label="Filtrer par statut"
+                  >
+                    {(
+                      [
+                        ["tous", "Toutes"],
+                        ["a_faire", "À faire"],
+                        ["en_cours", "En cours"],
+                      ] as const
+                    ).map(([id, label]) => (
+                      <button
+                        key={id}
+                        type="button"
+                        className={`pilotage-tableau-filtre${filtreWorklistStatut === id ? " is-active" : ""}`}
+                        aria-pressed={filtreWorklistStatut === id}
+                        onClick={() => setFiltreWorklistStatut(id)}
+                      >
+                        {label}
+                      </button>
+                    ))}
+                  </div>
+                )}
+              </div>
             </header>
+            {worklistModeTableau ? (
+              <div className="missions-table-wrap">
+                <table className="missions-table supervision-table rest-worklist-table">
+                  <thead className="missions-thead">
+                    <tr>
+                      <th>Objectif</th>
+                      <th>Règle</th>
+                      <th>Statut</th>
+                      <th>Pièce</th>
+                      <th>Assigné</th>
+                      <th>Action</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {tachesWorklistFiltrees.map(({ impot, t }) => (
+                      <tr key={t.id}>
+                        <td>{impot}</td>
+                        <td>
+                          <code>{t.regle_id || "—"}</code>
+                        </td>
+                        <td>
+                          <span className={`badge statut-${t.statut}`}>
+                            {t.statut}
+                          </span>
+                        </td>
+                        <td className="muted">{t.piece_attendue || "—"}</td>
+                        <td>
+                          {!estLecteur && jeton ? (
+                            <select
+                              className="field-input field-input-sm"
+                              value={t.assignee_a ?? ""}
+                              aria-label={`Assigner la tâche ${t.regle_id || t.id}`}
+                              onChange={(e) => {
+                                const v = e.target.value;
+                                void patchTache(t.id, {
+                                  assignee_a: v ? Number(v) : null,
+                                });
+                              }}
+                            >
+                              <option value="">Non assigné</option>
+                              {collaborateurs
+                                .filter((u) => u.actif !== false)
+                                .map((u) => (
+                                  <option key={u.id} value={u.id}>
+                                    {u.email}
+                                  </option>
+                                ))}
+                            </select>
+                          ) : t.assignee_a != null ? (
+                            <span className="muted">
+                              {collaborateurs.find((u) => u.id === t.assignee_a)
+                                ?.email ?? `#${t.assignee_a}`}
+                            </span>
+                          ) : (
+                            "—"
+                          )}
+                        </td>
+                        <td>
+                          {!estLecteur && jeton && t.statut === "a_faire" ? (
+                            <button
+                              type="button"
+                              className="btn ghost btn-xs"
+                              onClick={() =>
+                                void patchTache(t.id, { statut: "en_cours" })
+                              }
+                            >
+                              Prendre
+                            </button>
+                          ) : (
+                            "—"
+                          )}
+                        </td>
+                      </tr>
+                    ))}
+                    {!tachesWorklistFiltrees.length && (
+                      <tr>
+                        <td colSpan={6} className="pilotage-vide">
+                          Aucune tâche pour ce filtre.
+                        </td>
+                      </tr>
+                    )}
+                  </tbody>
+                </table>
+              </div>
+            ) : (
+            <>
             {tachesParObjectif.map(([impot, list]) => (
               <details key={impot} className="rest-obj-group" open>
                 <summary>
@@ -5339,6 +5501,8 @@ export function RestitutionVue({
                 </ul>
               </details>
             ))}
+            </>
+            )}
           </section>
         )}
         <section id="rest-synthese" className="rest-section">

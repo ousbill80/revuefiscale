@@ -493,7 +493,7 @@
         <div class="brand-mini">Revue<span> Fiscale</span></div>
         <div class="topbar-actions">
           <span class="chip" id="session-chip">Session</span>
-          <button type="button" class="btn btn-ghost btn-sm" id="btn-logout" aria-label="Déconnexion">Sortir</button>
+          <button type="button" class="btn btn-ghost btn-sm" id="btn-logout" aria-label="Sortir de la session">Sortir</button>
         </div>
       </div>
 
@@ -541,7 +541,7 @@
               <input id="type-entite" placeholder="ex. sa, obnl, startup" />
             </div>
           </div>
-          <label><input type="checkbox" id="cross-border" /> Opérations cross-border</label>
+          <label><input type="checkbox" id="cross-border" /> Opérations transfrontalières</label>
           <div class="cta-row desktop-only">
             <button type="button" class="btn btn-ghost" data-back="1">Retour</button>
             <button type="button" class="btn btn-primary" data-next="3">Continuer</button>
@@ -550,7 +550,7 @@
 
         <div id="s3" class="gate" hidden>
           <h2 class="section-title">Balance SYSCOHADA</h2>
-          <p class="section-sub">JSON équilibré (débit = crédit). Contrôles bloquants avant calcul.</p>
+          <p class="section-sub">La balance doit être équilibrée (débit = crédit). Des contrôles bloquants s'exécutent avant le calcul.</p>
           <label for="balance">Lignes (JSON)</label>
           <textarea id="balance" spellcheck="false">{
   "lignes": [
@@ -563,7 +563,7 @@
 }</textarea>
           <label for="balance-file">Ou fichier CSV / Excel (.xlsx)</label>
           <input id="balance-file" type="file" accept=".csv,.tsv,.txt,.xlsx,.xlsm" />
-          <p class="hint">Échantillon : <code>fixtures/balance_demo.csv</code></p>
+          <p class="hint">Colonnes attendues : compte, libellé, débit, crédit.</p>
           <div class="cta-row desktop-only">
             <button type="button" class="btn btn-ghost" data-back="2">Retour</button>
             <button type="button" class="btn btn-primary" id="btn-run">Lancer la revue</button>
@@ -589,7 +589,7 @@
       </div>
     </div>
 
-    <footer class="note">CGI Côte d'Ivoire · calcul déterministe · isolation multi-cabinets</footer>
+    <footer class="note">CGI Côte d'Ivoire · calculs traçables · données réservées à votre cabinet</footer>
   </div>
 
   <!-- Dock mobile -->
@@ -648,7 +648,7 @@
       $("gate-auth").style.display = "none";
       $("workspace").hidden = false;
       $("workspace").classList.add("on");
-      $("session-chip").textContent = (data.email || "session") + " · #" + tenantId;
+      $("session-chip").textContent = data.email || "Session active";
       setStep(1);
       setStatus($("auth-status"), "");
     }
@@ -810,7 +810,7 @@
             body: JSON.stringify(JSON.parse($("balance").value)),
           });
         }
-        setStatus(st, "Exécution du moteur…");
+        setStatus(st, "Calcul de la revue…");
         await api("/api/v1/missions/" + mission.id + "/executer", {
           method: "POST",
           body: JSON.stringify({ reponses: {} }),
@@ -821,8 +821,8 @@
         metrics.innerHTML =
           '<div class="metric"><div class="k">Réintégrations</div><div class="v">' + fmt(rest.passage.total_reintegration) + "</div></div>" +
           '<div class="metric"><div class="k">Déductions</div><div class="v">' + fmt(rest.passage.total_deduction) + "</div></div>" +
-          '<div class="metric"><div class="k">Mission</div><div class="v">#' + mission.id + "</div></div>";
-        setStatus(st, "Terminé — exécution " + (rest.execution_id ?? "—"));
+          '<div class="metric"><div class="k">Mission</div><div class="v">n° ' + mission.id + "</div></div>";
+        setStatus(st, "Revue terminée — le rapport est disponible ci-dessous.");
         rapport.textContent = rest.rapport_markdown;
         const base = API + "/api/v1/missions/" + mission.id + "/restitution/rapport";
         $("btn-docx").href = base + ".docx";
@@ -847,7 +847,7 @@
             ev.preventDefault();
             const url = $(id).href;
             const res = await fetch(url, { headers: jeton ? { Authorization: "Bearer " + jeton } : {} });
-            if (!res.ok) throw new Error("export impossible");
+            if (!res.ok) throw new Error("Le téléchargement du rapport a échoué. Réessayez.");
             const blob = await res.blob();
             const a = document.createElement("a");
             a.href = URL.createObjectURL(blob);

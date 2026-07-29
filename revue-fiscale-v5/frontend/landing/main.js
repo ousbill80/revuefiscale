@@ -156,7 +156,7 @@ function initHeroSlider(reduceMotion) {
 
     if (announce && live) {
       const title = slides[index].querySelector(".hero__title");
-      live.textContent = title ? title.textContent.trim() : `Slide ${index + 1}`;
+      live.textContent = title ? title.textContent.trim() : `Message ${index + 1}`;
     }
   }
 
