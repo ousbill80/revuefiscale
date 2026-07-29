@@ -205,6 +205,7 @@ LIBELLES_ACTION: Final[dict[str, str]] = {
         "Export du portefeuille déclaratif"
     ),
     "export_rentabilite_csv": "Export de la rentabilité (CSV)",
+    "export_rapport_activite": "Export du rapport d'activité du cabinet",
 }
 
 MENTION_NOTE: Final[str] = (

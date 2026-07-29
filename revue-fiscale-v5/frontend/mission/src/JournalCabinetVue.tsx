@@ -80,6 +80,25 @@ export function JournalCabinetVue({ jeton }: Props) {
     }
   }
 
+  /** Télécharge le rapport d'activité mensuel (.txt) — réunion. */
+  async function telechargerRapportActivite() {
+    if (!jeton || exportBusy) return;
+    setExportBusy(true);
+    setExportErr(null);
+    try {
+      const mois = new Date().toISOString().slice(0, 7);
+      await telecharger(
+        "/api/v1/cabinet/rapport-activite.txt",
+        jeton,
+        `rapport-activite-${mois}.txt`,
+      );
+    } catch {
+      setExportErr("Export indisponible pour le moment.");
+    } finally {
+      setExportBusy(false);
+    }
+  }
+
   useEffect(() => {
     if (!jeton) return;
     let annule = false;
@@ -156,6 +175,15 @@ export function JournalCabinetVue({ jeton }: Props) {
               title="Version tableur (CSV point-virgule, Excel)"
             >
               Télécharger (.csv)
+            </button>
+            <button
+              type="button"
+              className="btn btn-ghost btn-sm"
+              onClick={() => void telechargerRapportActivite()}
+              disabled={exportBusy}
+              title="Synthèse mensuelle pour la réunion de cabinet (mois courant)"
+            >
+              Rapport d'activité (.txt)
             </button>
             {exportErr && <span className="ctrale-err">{exportErr}</span>}
           </div>

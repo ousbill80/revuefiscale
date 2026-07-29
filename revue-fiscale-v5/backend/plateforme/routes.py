@@ -7252,3 +7252,87 @@ def api_export_journal_csv(
     return _export_journal_cabinet(
         utilisateur, session, action, acteur, "csv"
     )
+
+
+def _rapport_activite_cabinet(
+    utilisateur, session: Session, mois: str | None
+) -> dict:
+    """Corps du rapport d'activité mensuel — capacité admin, 422 si
+    le mois est illisible (format « AAAA-MM » attendu)."""
+    from backend.plateforme.rapport_activite import (
+        rapport_activite_cabinet,
+    )
+
+    exiger_capacite(
+        utilisateur,
+        "gerer_equipe",
+        detail=(
+            "seul un admin peut consulter le rapport d'activité "
+            "du cabinet"
+        ),
+    )
+    try:
+        return rapport_activite_cabinet(
+            session, utilisateur.tenant_id, mois=mois
+        )
+    except ValueError as e:
+        raise HTTPException(
+            status_code=status.HTTP_422_UNPROCESSABLE_ENTITY,
+            detail=str(e),
+        )
+
+
+@router.get("/cabinet/rapport-activite")
+def api_rapport_activite_cabinet(
+    utilisateur: UtilisateurDep,
+    session: Annotated[Session, Depends(session_abonne)],
+    mois: Annotated[str | None, Query(max_length=7)] = None,
+) -> dict:
+    """Rapport d'activité mensuel du cabinet — synthèse de réunion.
+
+    Compteurs AGRÉGÉS du mois « AAAA-MM » (défaut : mois courant) :
+    missions créées et clôturées, points convenus créés et soldés,
+    instantané du centre d'alertes par gravité (au jour d'édition —
+    pas un historique) et volume d'activité au journal par grande
+    famille d'actions. Pilotage COLLECTIF et consultatif : aucun
+    indicateur individuel, aucun email. Réservé à l'admin (même
+    capacité que le journal du cabinet). Mois illisible → 422.
+    CHOIX DOCUMENTÉ : cette consultation N'EST PAS journalisée —
+    seul l'export .txt (document emporté) l'est.
+    """
+    return _rapport_activite_cabinet(utilisateur, session, mois)
+
+
+@router.get("/cabinet/rapport-activite.txt")
+def api_export_rapport_activite_txt(
+    utilisateur: UtilisateurDep,
+    session: Annotated[Session, Depends(session_abonne)],
+    mois: Annotated[str | None, Query(max_length=7)] = None,
+) -> Response:
+    """Rapport d'activité mensuel en texte français (.txt, UTF-8).
+
+    MÊME corps que GET /cabinet/rapport-activite, rendu en document
+    imprimable pour la réunion de cabinet — admin, consultatif,
+    aucun email. L'export (document emporté) EST journalisé.
+    """
+    from backend.moteur.journal import append_journal
+    from backend.plateforme.rapport_activite import rendre_rapport_texte
+
+    corps = _rapport_activite_cabinet(utilisateur, session, mois)
+    contenu = rendre_rapport_texte(corps)
+    append_journal(
+        session,
+        tenant_id=utilisateur.tenant_id,
+        mission_id=None,
+        acteur=utilisateur.email,
+        action="export_rapport_activite",
+        charge_utile={"format": "txt", "mois": corps["mois"]},
+    )
+    nom = f"rapport-activite-{corps['mois']}.txt"
+    return Response(
+        content=contenu,
+        media_type="text/plain; charset=utf-8",
+        headers={
+            "Content-Disposition": f'attachment; filename="{nom}"'
+        },
+    )
