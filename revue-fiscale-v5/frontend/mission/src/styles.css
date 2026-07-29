@@ -1216,6 +1216,25 @@ body {
   --sidebar-w: var(--sidebar-w-collapsed);
 }
 
+.skip-link {
+  position: absolute;
+  top: -3rem;
+  left: 0.75rem;
+  z-index: 200;
+  padding: 0.55rem 0.9rem;
+  background: var(--ink);
+  color: #fff;
+  border-radius: var(--radius);
+  font-size: 0.82rem;
+  font-weight: 650;
+  text-decoration: none;
+  transition: top 0.12s ease;
+}
+
+.skip-link:focus-visible {
+  top: 0.75rem;
+}
+
 .app-topbar {
   grid-area: topbar;
   position: sticky;
@@ -2206,6 +2225,13 @@ textarea {
   align-items: flex-end;
   justify-content: space-between;
   gap: 0.75rem;
+  flex-wrap: wrap;
+}
+
+.wizard-head-actions {
+  display: flex;
+  gap: 0.4rem;
+  flex-shrink: 0;
 }
 
 .wizard-head .section-title {
@@ -2374,6 +2400,55 @@ textarea {
 .wizard-step.active .wizard-step-desc {
   color: var(--accent-deep);
   opacity: 0.8;
+}
+
+/* ---- Onglets du poste de travail mission (étape 3) ---- */
+
+.mission-tabs {
+  display: flex;
+  gap: 0.25rem;
+  margin: 0.75rem 0 0.25rem;
+  padding: 0.3rem;
+  background: var(--surface);
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+  box-shadow: var(--shadow-xs);
+  overflow-x: auto;
+}
+
+.mission-tab {
+  appearance: none;
+  flex: 1;
+  min-width: 0;
+  padding: 0.5rem 0.75rem;
+  border: 1px solid transparent;
+  border-radius: calc(var(--radius) - 4px);
+  background: transparent;
+  font: inherit;
+  font-size: 0.82rem;
+  font-weight: 650;
+  letter-spacing: -0.01em;
+  color: var(--muted);
+  text-align: center;
+  white-space: nowrap;
+  cursor: pointer;
+  transition: background 0.12s ease, color 0.12s ease;
+}
+
+.mission-tab:hover {
+  background: #fafbfc;
+  color: var(--ink-soft);
+}
+
+.mission-tab.active {
+  background: var(--accent-soft);
+  border-color: color-mix(in srgb, var(--accent) 22%, transparent);
+  color: var(--accent-deep);
+}
+
+.mission-tab:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: -2px;
 }
 
 .wizard-step-rail {
@@ -3663,6 +3738,26 @@ textarea {
   .sources-kinds {
     grid-template-columns: 1fr;
   }
+
+  /* Deux rangées de trois plutôt qu'un défilement horizontal : les six
+     étapes restent visibles d'un coup d'œil sur téléphone. */
+  .mission-tabs {
+    flex-wrap: wrap;
+  }
+
+  .mission-tab {
+    flex: 1 1 28%;
+    padding: 0.5rem 0.4rem;
+    font-size: 0.78rem;
+  }
+
+  .wizard-head-actions {
+    width: 100%;
+  }
+
+  .wizard-head-actions .btn {
+    flex: 1;
+  }
 }
 
 /* —— Restitution artefact —— */
@@ -4086,6 +4181,48 @@ textarea {
   margin: 0;
 }
 
+/* État vide guidé — mission sans exécution : carte d'accueil unique. */
+.rest-onboarding {
+  margin: 0;
+  padding: 1rem 1.15rem;
+  border: 1px solid color-mix(in srgb, var(--accent, #0f766e) 22%, transparent);
+  border-radius: var(--radius-sm, 6px);
+  background: var(--accent-soft, #ecfdf8);
+  color: var(--ink, #0f172a);
+}
+
+.rest-onboarding-titre {
+  margin: 0 0 0.2rem;
+  font-size: 0.95rem;
+  color: var(--accent-deep, #115e59);
+}
+
+.rest-onboarding-intro {
+  margin: 0 0 0.6rem;
+  font-size: 0.8rem;
+  color: var(--muted, #64748b);
+}
+
+.rest-onboarding-etapes {
+  margin: 0;
+  padding-left: 1.2rem;
+  display: grid;
+  gap: 0.45rem;
+  font-size: 0.84rem;
+  line-height: 1.4;
+}
+
+/* Rappel court onglet Revue — mission sans exécution : renvoie aux sources. */
+.rest-rappel-sources {
+  margin: 0;
+  padding: 0.55rem 0.85rem;
+  border: 1px solid color-mix(in srgb, var(--accent, #0f766e) 22%, transparent);
+  border-radius: var(--radius-sm, 6px);
+  background: var(--accent-soft, #ecfdf8);
+  color: var(--ink, #0f172a);
+  font-size: 0.84rem;
+}
+
 .rest-banner-relances {
   margin: 0 0 1rem;
   padding: 0.65rem 0.85rem;
@@ -4243,6 +4380,13 @@ textarea {
 
 .rest-score-soft {
   background: color-mix(in srgb, var(--sky) 75%, #fff);
+}
+
+/* Fond clair de .rest-score-soft : le gris --muted standard tombe
+   sous 4.5:1 (contrôle axe-core) — assombri localement. */
+.rest-score-soft .rest-kpi-foot,
+.rest-score-soft .rest-verdict-k {
+  color: #52606d;
 }
 
 .rest-kpi-foot {
@@ -9733,9 +9877,44 @@ tr.row-active td {
 
 /* ── Pilotage portefeuille (tableau de bord associé) ─────────────── */
 .pilotage-zone { margin: 1rem 0 0.5rem; }
-.pilotage-head { margin-bottom: 0.6rem; }
+.pilotage-head {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: flex-end;
+  justify-content: space-between;
+  gap: 0.55rem 1rem;
+  margin-bottom: 0.6rem;
+}
+.pilotage-head-text { min-width: 0; flex: 1 1 14rem; }
 .pilotage-title { margin: 0; font-size: 1rem; font-weight: 800; color: var(--ink, #0f172a); }
 .pilotage-sub { margin: 0.15rem 0 0; font-size: 0.78rem; color: var(--muted, #64748b); }
+.pilotage-vue-switch {
+  display: inline-flex;
+  flex: 0 0 auto;
+  gap: 0.2rem;
+  padding: 0.15rem;
+  border: 1px solid var(--line, #e5e7eb);
+  border-radius: 8px;
+  background: var(--surface, #fff);
+}
+.pilotage-vue-btn {
+  appearance: none;
+  border: none;
+  background: transparent;
+  color: var(--muted, #64748b);
+  font: inherit;
+  font-size: 0.74rem;
+  font-weight: 650;
+  padding: 0.28rem 0.65rem;
+  border-radius: 6px;
+  cursor: pointer;
+}
+.pilotage-vue-btn:hover { color: var(--ink, #0f172a); }
+.pilotage-vue-btn.is-active {
+  color: var(--accent-deep, #115e59);
+  background: var(--accent-soft, #ecfdf8);
+  font-weight: 750;
+}
 .pilotage-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 0.75rem; }
 .pilotage-card { display: flex; flex-direction: column; min-width: 0; }
 .pilotage-card-title { display: flex; align-items: center; justify-content: space-between; gap: 0.5rem; margin: 0 0 0.5rem; font-size: 0.8rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.04em; color: var(--ink-soft, #1e293b); }
@@ -9856,6 +10035,108 @@ tr.row-active td {
 .pilotage-badge.ok { background: #f0fdf4; color: #166534; border-color: #bbf7d0; }
 .supervision-table td .pilotage-badge { margin: 0 0.3rem 0.15rem 0; }
 .supervision-table td { font-size: 0.78rem; }
+
+/* ── Pilotage — tableau filtrable sous les cartes ────────────────── */
+.pilotage-tableau { margin-top: 0; }
+.pilotage-tableau-head {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.5rem 0.85rem;
+  margin-bottom: 0.45rem;
+}
+.pilotage-tableau-resume {
+  margin: 0;
+  font-size: 0.8rem;
+  color: var(--muted, #64748b);
+}
+.pilotage-tableau-resume strong {
+  font-weight: 800;
+  font-variant-numeric: tabular-nums;
+  color: var(--ink, #0f172a);
+}
+.pilotage-tableau-recherche {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  min-width: min(100%, 16rem);
+}
+.pilotage-tableau-recherche-lbl {
+  font-size: 0.72rem;
+  font-weight: 700;
+  color: var(--muted, #64748b);
+  white-space: nowrap;
+}
+.pilotage-tableau-recherche input {
+  flex: 1 1 10rem;
+  min-width: 0;
+  padding: 0.35rem 0.55rem;
+  border: 1px solid var(--line, #e5e7eb);
+  border-radius: 7px;
+  background: var(--surface, #fff);
+  font: inherit;
+  font-size: 0.8rem;
+  color: var(--ink, #0f172a);
+}
+.pilotage-tableau-recherche input:focus {
+  outline: 2px solid color-mix(in srgb, var(--accent, #0f766e) 45%, transparent);
+  outline-offset: 1px;
+}
+.pilotage-tableau-filtres {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.25rem;
+  margin-bottom: 0.55rem;
+}
+.pilotage-tableau-filtre {
+  appearance: none;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
+  border: 1px solid var(--line, #e5e7eb);
+  background: transparent;
+  color: var(--muted, #64748b);
+  font: inherit;
+  font-size: 0.72rem;
+  font-weight: 650;
+  padding: 0.28rem 0.55rem;
+  border-radius: 6px;
+  cursor: pointer;
+  transition:
+    background 0.12s ease,
+    color 0.12s ease,
+    border-color 0.12s ease;
+}
+.pilotage-tableau-filtre strong {
+  font-weight: 800;
+  font-variant-numeric: tabular-nums;
+}
+.pilotage-tableau-filtre:hover {
+  color: var(--ink, #0f172a);
+  border-color: var(--ink-soft, var(--line));
+}
+.pilotage-tableau-filtre.is-active {
+  color: var(--accent, #0f766e);
+  border-color: var(--accent, #0f766e);
+  background: var(--accent-soft, #ecfdf8);
+}
+.pilotage-tableau-type {
+  font-size: 0.72rem;
+  font-weight: 700;
+  color: var(--ink-soft, #475569);
+  white-space: nowrap;
+}
+.pilotage-tableau-detail {
+  color: var(--muted, #64748b);
+  overflow-wrap: anywhere;
+}
+.pilotage-tableau-metrique {
+  font-weight: 700;
+  font-variant-numeric: tabular-nums;
+  white-space: nowrap;
+}
+.pilotage-tableau-table td .pilotage-badge { margin-left: 0; }
 
 /* ── Restitution — note de synthèse de mission (executive summary IA) ── */
 .rest-note-btn { white-space: nowrap; }
@@ -13993,4 +14274,94 @@ tr.row-active td {
   background: #fffbeb;
   color: #b45309;
   border: 1px solid #fde68a;
+}
+
+/* —— Tableau de bord : groupes repliables (zones « Suivi déclaratif » & « Pilotage ») —— */
+.dash-groupe {
+  border: 1px solid var(--line);
+  border-radius: var(--radius-lg);
+  background: var(--surface);
+  overflow: hidden;
+}
+
+.dash-groupe.is-ouvert {
+  border-color: color-mix(in srgb, var(--accent) 24%, var(--line));
+}
+
+.dash-groupe-toggle {
+  display: flex;
+  align-items: center;
+  gap: 0.65rem;
+  width: 100%;
+  padding: 0.8rem 1rem;
+  border: 0;
+  background: transparent;
+  cursor: pointer;
+  text-align: left;
+  font: inherit;
+  color: var(--ink);
+  min-height: var(--touch);
+}
+
+.dash-groupe-toggle:hover,
+.dash-groupe-toggle:focus-visible {
+  background: var(--line-soft);
+}
+
+.dash-groupe-toggle:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: -2px;
+}
+
+.dash-groupe-chevron {
+  flex: none;
+  color: var(--accent);
+  font-size: 0.85rem;
+  transition: transform 0.15s ease;
+}
+
+.dash-groupe.is-ouvert .dash-groupe-chevron {
+  transform: rotate(90deg);
+}
+
+.dash-groupe-texte {
+  display: flex;
+  flex-direction: column;
+  gap: 0.1rem;
+  min-width: 0;
+  flex: 1;
+}
+
+.dash-groupe-titre {
+  font-weight: 700;
+  font-size: 0.95rem;
+}
+
+.dash-groupe-sub {
+  color: var(--muted);
+  font-size: 0.78rem;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.dash-groupe-etat {
+  flex: none;
+  color: var(--accent-deep);
+  font-size: 0.78rem;
+  font-weight: 600;
+}
+
+.dash-groupe-corps {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+  padding: 1rem;
+  border-top: 1px solid var(--line-soft);
+}
+
+@media (max-width: 640px) {
+  .dash-groupe-sub {
+    white-space: normal;
+  }
 }

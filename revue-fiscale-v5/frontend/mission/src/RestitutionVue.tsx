@@ -8,6 +8,7 @@ import {
   tipImpot,
 } from "./impotLabels";
 import { libelleStatut } from "./MissionsVue";
+import type { OngletMission } from "./MissionTabsNav";
 import { PROCESS_TIPS } from "./processTips";
 import { InfoTip, Tooltip } from "./Tooltip";
 import {
@@ -439,6 +440,8 @@ function badgeAnalytique(
 
 type Props = {
   restitution: Restitution;
+  /** Onglet mission actif : route toolbar, panneaux et sections cœur. */
+  onglet: OngletMission;
   jeton?: string | null;
   missionStatus?: { msg: string; err: boolean } | null;
   versionEpinglee?: { id: number; libelle?: string | null } | null;
@@ -569,7 +572,7 @@ const SECTIONS: Array<{ id: SectionId; label: string; tip: string }> = [
   {
     id: "synthese",
     label: "Synthèse",
-    tip: "Priorités de revue et pipeline de traitement — triage humain, hors montants moteur.",
+    tip: "Priorités de revue et pipeline de traitement — triage humain, sans impact sur les montants calculés.",
   },
   { id: "passage", label: "Passage", tip: PROCESS_TIPS.passage },
   {
@@ -583,6 +586,7 @@ const SECTIONS: Array<{ id: SectionId; label: string; tip: string }> = [
 
 export function RestitutionVue({
   restitution: r,
+  onglet,
   jeton,
   missionStatus,
   versionEpinglee,
@@ -1047,6 +1051,30 @@ export function RestitutionVue({
       onOuverture?.();
     }
   }
+
+  /**
+   * Routage par onglet mission : chaque groupe d'outils, panneau et
+   * section cœur n'apparaît que sur son onglet — navigation pure,
+   * aucun état ni logique métier modifiés.
+   */
+  const surCadrage = onglet === "cadrage";
+  const surSources = onglet === "sources";
+  const surTravaux = onglet === "travaux";
+  const surRevue = onglet === "revue";
+  const surRestitution = onglet === "restitution";
+  const surCloture = onglet === "cloture";
+
+  /**
+   * Onglet Sources : le panneau data room est l'objet même de l'onglet —
+   * ouverture automatique et rechargement des pièces à l'arrivée.
+   */
+  useEffect(() => {
+    if (onglet === "sources") {
+      setSourcesOuvert(true);
+      void rechargerPiecesMission();
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [onglet]);
 
   /** Recharge la liste des pièces de la mission (data room). */
   async function rechargerPiecesMission() {
@@ -2513,9 +2541,11 @@ export function RestitutionVue({
         role="toolbar"
         aria-label="Actions du dossier"
       >
+        {(surTravaux || surSources) && (
         <div className="dossier2-groupe" role="group" aria-label="Travailler">
           <span className="dossier2-groupe-lbl">Travailler</span>
           <div className="dossier2-groupe-actions">
+            {surSources && (
             <Tooltip label="Sources & data room de la mission : toutes les pièces du dossier (source active et annexes), avec dépôt de nouvelles pièces à tout moment — tout type, tout format.">
               <button
                 type="button"
@@ -2533,6 +2563,9 @@ export function RestitutionVue({
                 Sources &amp; data room
               </button>
             </Tooltip>
+            )}
+            {surTravaux && (
+            <>
             <Tooltip label="Programme de travail standard : diligences par phase que le collaborateur coche au fil de l'exécution — avancement par phase et global. Complète les visas de supervision.">
               <button
                 type="button"
@@ -2619,12 +2652,18 @@ export function RestitutionVue({
                 Temps passés
               </button>
             </Tooltip>
+            </>
+            )}
           </div>
         </div>
+        )}
 
+        {(surTravaux || surRevue) && (
         <div className="dossier2-groupe" role="group" aria-label="Analyser">
           <span className="dossier2-groupe-lbl">Analyser</span>
           <div className="dossier2-groupe-actions">
+            {surTravaux && (
+            <>
             <Tooltip label="Pilotage de mission : synthèse transverse en un coup d'œil — avancement du programme, contrôle de pré-clôture, temps passés, rentabilité, visas et conclusions de la dernière exécution.">
               <button
                 type="button"
@@ -2655,6 +2694,10 @@ export function RestitutionVue({
                 Délais
               </button>
             </Tooltip>
+            </>
+            )}
+            {surRevue && (
+            <>
             <Tooltip label="Échéancier fiscal de l'exercice revu : calendrier déterministe des obligations déclaratives et de paiement selon le régime du profil mission — dates indicatives, sans calcul d'impôt.">
               <button
                 type="button"
@@ -2742,7 +2785,9 @@ export function RestitutionVue({
                 {demandeErr}
               </span>
             )}
-            {suivi && suivi.synthese.total > 0 && (
+            </>
+            )}
+            {surTravaux && suivi && suivi.synthese.total > 0 && (
               <Tooltip label="Suivi des réponses client à la demande de renseignements : marquez chaque item reçu / sans objet, planifiez les relances.">
                 <button
                   type="button"
@@ -2772,14 +2817,16 @@ export function RestitutionVue({
             )}
           </div>
         </div>
+        )}
 
+        {surRestitution && (
         <div className="dossier2-groupe" role="group" aria-label="Restituer">
           <span className="dossier2-groupe-lbl">Restituer</span>
           <div className="dossier2-groupe-actions">
             <Tooltip label={PROCESS_TIPS.exportWord}>
               <button
                 type="button"
-                className="btn btn-ghost btn-sm dossier2-action"
+                className="btn btn-primary btn-sm dossier2-action"
                 onClick={() => onExport("docx")}
                 disabled={sansExecution}
               >
@@ -2903,8 +2950,10 @@ export function RestitutionVue({
             </Tooltip>
           </div>
         </div>
+        )}
 
-        {!estLecteur &&
+        {surCloture &&
+          !estLecteur &&
           (onLienClient ||
             (!estCloturee && onCloturer && !sansExecution) ||
             (estCloturee && onReouvrir)) && (
@@ -2965,7 +3014,7 @@ export function RestitutionVue({
                   <Tooltip label="Revue qualité de pré-clôture (consultative) puis clôture du dossier (statut serveur). Réouverture possible — l’épinglage référentiel est conservé.">
                     <button
                       type="button"
-                      className={`btn btn-ghost btn-sm dossier2-action${
+                      className={`btn btn-primary btn-sm dossier2-action${
                         ctrlClotureOuvert ? " is-actif" : ""
                       }`}
                       disabled={busy || ctrlClotureBusy}
@@ -3002,7 +3051,7 @@ export function RestitutionVue({
           )}
       </div>
 
-      {ctrlClotureOuvert && (
+      {surCloture && ctrlClotureOuvert && (
         <section
           className="rest-ctrl-cloture"
           aria-label="Contrôle qualité de pré-clôture"
@@ -3086,7 +3135,7 @@ export function RestitutionVue({
         </section>
       )}
 
-      {comparatifOuvert && (
+      {surTravaux && comparatifOuvert && (
         <section
           className="rest-comparatif"
           aria-label="Comparatif entre deux exécutions"
@@ -3257,7 +3306,7 @@ export function RestitutionVue({
         </section>
       )}
 
-      {suiviOuvert && (
+      {surTravaux && suiviOuvert && (
         <section
           className="rest-suivi"
           aria-label="Suivi des réponses client"
@@ -3644,7 +3693,7 @@ export function RestitutionVue({
                         <div className="rest-reponse-actions">
                           <button
                             type="button"
-                            className="btn btn-primary btn-sm"
+                            className="btn btn-sm"
                             disabled={
                               estLecteur ||
                               reponseBusy ||
@@ -3680,7 +3729,7 @@ export function RestitutionVue({
         </section>
       )}
 
-      {tempsOuvert && (
+      {surTravaux && tempsOuvert && (
         <section className="rest-suivi rest-temps" aria-label="Temps passés">
           <div className="rest-suivi-head">
             <h3 className="rest-suivi-titre label-with-tip">
@@ -3772,7 +3821,7 @@ export function RestitutionVue({
               </label>
               <button
                 type="button"
-                className="btn btn-primary btn-sm"
+                className="btn btn-sm"
                 disabled={tempsBusy || !tempsHeures.trim() || !tempsDate}
                 onClick={() => void saisirTemps()}
               >
@@ -3864,7 +3913,7 @@ export function RestitutionVue({
                 </label>
                 <button
                   type="button"
-                  className="btn btn-primary btn-sm"
+                  className="btn btn-sm"
                   disabled={rentaBusy}
                   onClick={() => void enregistrerRentabilite()}
                 >
@@ -3921,6 +3970,8 @@ export function RestitutionVue({
         </section>
       )}
 
+      {/* Non gaté sur l'onglet Sources : le bouton « Sources : N » du
+          bandeau (visible sur tous les onglets) doit pouvoir l'ouvrir. */}
       {sourcesOuvert && (
         <section
           className="rest-suivi rest-sources"
@@ -4028,7 +4079,7 @@ export function RestitutionVue({
         </section>
       )}
 
-      {progOuvert && (
+      {surTravaux && progOuvert && (
         <section
           className="rest-suivi rest-programme"
           aria-label="Programme de travail"
@@ -4107,7 +4158,7 @@ export function RestitutionVue({
         </section>
       )}
 
-      {pilotageOuvert && (
+      {surTravaux && pilotageOuvert && (
         <PilotageVue
           missionId={r.mission_id}
           jeton={jeton}
@@ -4126,7 +4177,7 @@ export function RestitutionVue({
         />
       )}
 
-      {echeancierOuvert && (
+      {surRevue && echeancierOuvert && (
         <EcheancierFiscalVue
           missionId={r.mission_id}
           jeton={jeton}
@@ -4134,7 +4185,8 @@ export function RestitutionVue({
         />
       )}
 
-      {civismeOuvert && (
+      {/* Aussi sur Travaux : PilotageVue (onglet Travaux) peut l'ouvrir. */}
+      {(surRevue || surTravaux) && civismeOuvert && (
         <CivismeVue
           missionId={r.mission_id}
           jeton={jeton}
@@ -4143,7 +4195,7 @@ export function RestitutionVue({
         />
       )}
 
-      {prescriptionOuverte && (
+      {surRevue && prescriptionOuverte && (
         <PrescriptionVue
           missionId={r.mission_id}
           jeton={jeton}
@@ -4151,7 +4203,8 @@ export function RestitutionVue({
         />
       )}
 
-      {planActionsOuvert && (
+      {/* Aussi sur Travaux : PilotageVue (onglet Travaux) peut l'ouvrir. */}
+      {(surRevue || surTravaux) && planActionsOuvert && (
         <PlanActionsVue
           missionId={r.mission_id}
           jeton={jeton}
@@ -4161,7 +4214,7 @@ export function RestitutionVue({
         />
       )}
 
-      {bilanClotureOuvert && (
+      {surCloture && bilanClotureOuvert && (
         <BilanClotureVue
           missionId={r.mission_id}
           jeton={jeton}
@@ -4169,7 +4222,7 @@ export function RestitutionVue({
         />
       )}
 
-      {chronologieOuverte && (
+      {surCloture && chronologieOuverte && (
         <ChronologieMissionVue
           missionId={r.mission_id}
           jeton={jeton}
@@ -4177,7 +4230,7 @@ export function RestitutionVue({
         />
       )}
 
-      {delaisOuvert && (
+      {surTravaux && delaisOuvert && (
         <DelaisMissionVue
           missionId={r.mission_id}
           jeton={jeton}
@@ -4185,7 +4238,7 @@ export function RestitutionVue({
         />
       )}
 
-      {visasOuvert && (
+      {surTravaux && visasOuvert && (
         <section
           className="rest-suivi rest-visas"
           aria-label="Visas de supervision"
@@ -4300,7 +4353,7 @@ export function RestitutionVue({
         </section>
       )}
 
-      {crOuvert && (
+      {surRestitution && crOuvert && (
         <section
           className="rest-cr"
           aria-label="Compte-rendu de la réunion de restitution"
@@ -4397,7 +4450,7 @@ export function RestitutionVue({
         </section>
       )}
 
-      {noteOuverte && (
+      {surRestitution && noteOuverte && (
         <section
           className="rest-note"
           aria-label="Note de synthèse de mission"
@@ -4578,7 +4631,6 @@ export function RestitutionVue({
           <p className="rest-ref-pin label-with-tip" role="status">
             Référentiel épinglé{" "}
             <strong>{refLibelle ?? "—"}</strong>
-            {refId != null ? ` · id=${refId}` : ""}
             <InfoTip
               label={PROCESS_TIPS.epingle}
               ariaLabel="Aide : épinglage du référentiel"
@@ -4662,6 +4714,7 @@ export function RestitutionVue({
         </dl>
       </header>
 
+      {surCadrage && (
       <section className="rest-cadrage engagement-block" aria-label="Cadrage mission">
         <div className="legal-block-head">
           <p className="picker-kicker label-with-tip">
@@ -4787,8 +4840,8 @@ export function RestitutionVue({
                 </>
               )}
               {" "}
-              — identifiants issus de la restitution / a_confirmer, sans
-              barème affiché ici.
+              — identifiants issus de la restitution (y compris règles à
+              confirmer), sans barème affiché ici.
             </p>
           )}
         </div>
@@ -4869,7 +4922,7 @@ export function RestitutionVue({
           <div className="cta-row" style={{ marginTop: "0.75rem" }}>
             <button
               type="button"
-              className="btn btn-primary btn-sm"
+              className="btn btn-sm btn-primary"
               disabled={cadrageBusy}
               onClick={() => void sauverCadrage()}
             >
@@ -4888,27 +4941,55 @@ export function RestitutionVue({
           </p>
         ) : null}
       </section>
-
-      {sansExecution && (
-        <div className="a-confirmer-banner rest-banner" role="status">
-          <p>
-            <strong>Aucune exécution encore</strong> — importez une balance et
-            lancez la revue pour produire le passage et les conclusions.
-          </p>
-          {!estLecteur && onReprendreImport && (
-            <div className="cta-row" style={{ marginTop: "0.6rem" }}>
-              <button
-                type="button"
-                className="btn btn-primary btn-sm"
-                onClick={onReprendreImport}
-              >
-                Reprendre l&apos;import
-              </button>
-            </div>
-          )}
-        </div>
       )}
 
+      {surRevue && sansExecution && (
+        <p className="rest-rappel-sources" role="status">
+          Aucune exécution encore — importez la balance depuis l&apos;onglet
+          «&nbsp;Sources&nbsp;» pour produire le passage et les conclusions.
+        </p>
+      )}
+
+      {surSources && sansExecution && (
+        <section
+          className="rest-onboarding"
+          role="status"
+          aria-label="Démarrer la revue"
+        >
+          <h3 className="rest-onboarding-titre">Démarrez la revue</h3>
+          <p className="rest-onboarding-intro">
+            Aucune exécution encore — trois étapes pour produire le passage et
+            les conclusions.
+          </p>
+          <ol className="rest-onboarding-etapes">
+            <li>
+              <strong>Importez la balance</strong> — la source active alimente
+              tous les contrôles.
+              {!estLecteur && onReprendreImport && (
+                <div className="cta-row" style={{ marginTop: "0.45rem" }}>
+                  <button
+                    type="button"
+                    className="btn btn-primary btn-sm"
+                    onClick={onReprendreImport}
+                  >
+                    Reprendre l&apos;import
+                  </button>
+                </div>
+              )}
+            </li>
+            <li>
+              <strong>Retenez le seuil de matérialité</strong> — pour cibler
+              les travaux significatifs.
+            </li>
+            <li>
+              <strong>Lancez la revue</strong> — passage, conclusions et
+              rapport apparaîtront ici.
+            </li>
+          </ol>
+        </section>
+      )}
+
+      {!sansExecution && (
       <section className="rest-verdict" aria-label="Verdict fiscal">
         <div className="rest-verdict-grid">
           <div className="rest-verdict-main">
@@ -4925,7 +5006,7 @@ export function RestitutionVue({
               {fmtMontant(r.passage.solde_net)}
             </strong>
             <span className="rest-verdict-hint">
-              Réintégrations − déductions · montants moteur
+              Réintégrations − déductions
             </span>
           </div>
           <div className="rest-verdict-sides">
@@ -4996,6 +5077,7 @@ export function RestitutionVue({
           il ne modifie pas les montants du moteur.
         </p>
       </section>
+      )}
 
       <div className="rest-alerts">
         <button
@@ -5008,7 +5090,8 @@ export function RestitutionVue({
             Contexte &amp; alertes
             {(r.a_confirmer_total ?? 0) > 0 && (
               <em className="rest-alerts-chip">
-                {r.a_confirmer_total} a_confirmer
+                {r.a_confirmer_total} règle
+                {(r.a_confirmer_total ?? 0) > 1 ? "s" : ""} à confirmer
               </em>
             )}
             {(lienMsg || lienUrl) && (
@@ -5028,7 +5111,7 @@ export function RestitutionVue({
                   <p className="label-with-tip">
                     <strong>
                       {r.a_confirmer_total} mention
-                      {(r.a_confirmer_total ?? 0) > 1 ? "s" : ""} a_confirmer
+                      {(r.a_confirmer_total ?? 0) > 1 ? "s" : ""} à confirmer
                     </strong>
                     <span className="a-confirmer-banner-short">
                       {" "}
@@ -5036,7 +5119,7 @@ export function RestitutionVue({
                     </span>
                     <InfoTip
                       label={PROCESS_TIPS.aConfirmer}
-                      ariaLabel="Aide : mentions a_confirmer"
+                      ariaLabel="Aide : mentions à confirmer"
                     />
                   </p>
                   <button
@@ -5120,7 +5203,7 @@ export function RestitutionVue({
                       {onCopierLien && (
                         <button
                           type="button"
-                          className="btn btn-primary btn-sm"
+                          className="btn btn-sm"
                           onClick={onCopierLien}
                         >
                           Copier le lien
@@ -5141,8 +5224,14 @@ export function RestitutionVue({
         )}
       </div>
 
+      {(surRevue || surRestitution) && !sansExecution && (
+      <>
       <nav className="rest-rail" aria-label="Sections de la restitution">
-        {SECTIONS.map((s) => {
+        {SECTIONS.filter((s) =>
+          surRevue
+            ? s.id === "synthese" || s.id === "passage" || s.id === "risques"
+            : s.id === "rapport" || s.id === "audit",
+        ).map((s) => {
           const active = sectionActive === s.id;
           const label =
             s.id === "risques" ? `Risques (${conclusions.length})` : s.label;
@@ -5162,6 +5251,8 @@ export function RestitutionVue({
       </nav>
 
       <div className="rest-body">
+        {surRevue && (
+        <>
         {relancesClient.length > 0 && (
           <aside className="rest-banner-relances" role="status">
             <strong>Relances client</strong>
@@ -5671,8 +5762,8 @@ export function RestitutionVue({
                 )}
                 {(r.a_confirmer_total ?? 0) > 0 && (
                   <li>
-                    Mentions <code>a_confirmer</code> présentes — vérifier la
-                    file éditoriale avant d’opposer un paramètre.
+                    Des règles à confirmer au CGI sont présentes — vérifier la
+                    référence avant d’opposer un paramètre.
                   </li>
                 )}
               </ul>
@@ -5740,7 +5831,7 @@ export function RestitutionVue({
               />
             </h3>
             <p>
-              Agrégation déterministe — source unique des montants moteur.
+              Agrégation automatique — source unique des montants affichés.
             </p>
           </header>
           <div className="rest-passage-toolbar">
@@ -6100,7 +6191,11 @@ export function RestitutionVue({
             )}
           </ul>
         </section>
+        </>
+        )}
 
+        {surRestitution && (
+        <>
         <section id="rest-rapport" className="rest-section">
           <header className="rest-section-head dossier2-sec-head">
             <h3 className="label-with-tip">
@@ -6237,7 +6332,7 @@ export function RestitutionVue({
               <p>Chargez le journal d’audit de la mission.</p>
               <button
                 type="button"
-                className="btn btn-primary btn-sm"
+                className="btn btn-sm"
                 disabled={busy}
                 onClick={onAudit}
               >
@@ -6246,7 +6341,11 @@ export function RestitutionVue({
             </div>
           )}
         </section>
+        </>
+        )}
       </div>
+      </>
+      )}
     </div>
   );
 }

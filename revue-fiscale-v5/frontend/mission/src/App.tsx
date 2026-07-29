@@ -57,6 +57,7 @@ import { BriefCabinetBouton } from "./BriefCabinetBouton";
 import { CentreAlertesVue } from "./CentreAlertesVue";
 import { EcheancesCabinetVue } from "./EcheancesCabinetVue";
 import { MonTableauVue } from "./MonTableauVue";
+import { PilotagePortefeuilleTableau } from "./PilotagePortefeuilleTableau";
 import { RelancesCabinetVue } from "./RelancesCabinetVue";
 import { ActionsCabinetVue } from "./ActionsCabinetVue";
 import { RentabiliteCabinetVue } from "./RentabiliteCabinetVue";
@@ -73,6 +74,7 @@ import {
 } from "./PiecesContribuable";
 import { PhoneField } from "./PhoneField";
 import { PROCESS_TIPS } from "./processTips";
+import { MissionTabsNav, type OngletMission } from "./MissionTabsNav";
 import { PointsAnterieursVue } from "./PointsAnterieursVue";
 import { ControlesFiscauxVue } from "./ControlesFiscauxVue";
 import { RapprochementTvaVue } from "./RapprochementTvaVue";
@@ -492,6 +494,29 @@ function lireVueDeepLink(): { type: "fiche"; id: number } | null {
   return null;
 }
 
+/**
+ * Deep-link poste de travail mission :
+ * `#mission-{id}/{cadrage|sources|travaux|revue|restitution|cloture}`.
+ * `#mission-{id}` sans segment reste valide (onglet « revue » par défaut).
+ */
+function lireMissionDeepLink(): { id: number; onglet: OngletMission } | null {
+  try {
+    const m =
+      /^#mission-(\d+)(?:\/(cadrage|sources|travaux|revue|restitution|cloture))?$/.exec(
+        window.location.hash || "",
+      );
+    if (m) {
+      const id = Number(m[1]);
+      if (Number.isFinite(id) && id > 0) {
+        return { id, onglet: (m[2] as OngletMission | undefined) ?? "revue" };
+      }
+    }
+  } catch {
+    /* ignore */
+  }
+  return null;
+}
+
 type AuthTab = "conn" | "prov" | "invite";
 
 /** Deep-links auth : mail invitation (`?invitation=`) ou CTA inscription (`?inscription`). */
@@ -654,7 +679,7 @@ function ResponsableMissionVue({
           )}
           <button
             type="button"
-            className="btn btn-primary btn-sm resp-btn"
+            className="btn btn-sm resp-btn"
             disabled={busy || (choix.trim() || null) === courant}
             onClick={() => void affecter(choix.trim() || null)}
           >
@@ -795,6 +820,73 @@ function ChargeCabinetVue({ jeton }: { jeton?: string | null }) {
   );
 }
 
+/**
+ * Groupe repliable du tableau de bord — les sections enfants ne sont montées
+ * que lorsque le groupe est ouvert (évite les fetches inutiles). L'état
+ * ouvert/replié est persisté par cabinet dans localStorage.
+ */
+function DashGroupe({
+  id,
+  titre,
+  sousTitre,
+  children,
+}: {
+  id: string;
+  titre: string;
+  sousTitre: string;
+  children: ReactNode;
+}) {
+  const cle = `rf_dash_groupe_${id}`;
+  const [ouvert, setOuvert] = useState<boolean>(() => {
+    try {
+      return localStorage.getItem(cle) === "1";
+    } catch {
+      return false;
+    }
+  });
+  const basculer = () => {
+    setOuvert((o) => {
+      const suivant = !o;
+      try {
+        localStorage.setItem(cle, suivant ? "1" : "0");
+      } catch {
+        /* stockage indisponible — état non persisté */
+      }
+      return suivant;
+    });
+  };
+  return (
+    <section
+      className={`dash-groupe${ouvert ? " is-ouvert" : ""}`}
+      aria-label={titre}
+    >
+      <button
+        type="button"
+        className="dash-groupe-toggle"
+        aria-expanded={ouvert}
+        aria-controls={`dash-groupe-corps-${id}`}
+        onClick={basculer}
+      >
+        <span className="dash-groupe-chevron" aria-hidden="true">
+          ▸
+        </span>
+        <span className="dash-groupe-texte">
+          <span className="dash-groupe-titre">{titre}</span>
+          <span className="dash-groupe-sub">{sousTitre}</span>
+        </span>
+        <span className="dash-groupe-etat">
+          {ouvert ? "Replier" : "Déplier"}
+        </span>
+      </button>
+      {ouvert && (
+        <div className="dash-groupe-corps" id={`dash-groupe-corps-${id}`}>
+          {children}
+        </div>
+      )}
+    </section>
+  );
+}
+
 export function App() {
   const mobile = useMobile();
   const [session, setSession] = useState<SessionAuth | null>(lireSessionStockee);
@@ -899,6 +991,9 @@ export function App() {
     }>
   >([]);
   const [pilotage, setPilotage] = useState<PilotagePortefeuille | null>(null);
+  const [pilotageVue, setPilotageVue] = useState<"cartes" | "tableau">(
+    "cartes",
+  );
   const [supervision, setSupervision] = useState<SupervisionCabinet | null>(
     null,
   );
@@ -935,6 +1030,7 @@ export function App() {
   } | null>(null);
   const [restitution, setRestitution] = useState<Restitution | null>(null);
   const [missionId, setMissionId] = useState<number | null>(null);
+  const [ongletMission, setOngletMission] = useState<OngletMission>("revue");
   const [versionEpinglee, setVersionEpinglee] = useState<{
     id: number;
     libelle?: string | null;
@@ -1454,6 +1550,12 @@ export function App() {
     const dl = lireVueDeepLink();
     if (dl?.type === "fiche") {
       void ouvrirClient(dl.id);
+      return;
+    }
+    const dlm = lireMissionDeepLink();
+    if (dlm) {
+      setOngletMission(dlm.onglet);
+      void ouvrirMission(dlm.id, dlm.onglet);
     }
   }, [session]);
 
@@ -1462,13 +1564,24 @@ export function App() {
     if (!session) return;
     const onHash = () => {
       const dl = lireVueDeepLink();
-      if (!dl) return;
-      if (vue === "client" && clientDetail?.id === dl.id) return;
-      void ouvrirClient(dl.id);
+      if (dl) {
+        if (vue === "client" && clientDetail?.id === dl.id) return;
+        void ouvrirClient(dl.id);
+        return;
+      }
+      const dlm = lireMissionDeepLink();
+      if (dlm) {
+        setOngletMission(dlm.onglet);
+        // Recharge si autre mission, ou si la vue mission n'est plus
+        // affichée (back/forward navigateur depuis une autre vue).
+        if (missionId !== dlm.id || vue !== "nouvelle") {
+          void ouvrirMission(dlm.id, dlm.onglet);
+        }
+      }
     };
     window.addEventListener("hashchange", onHash);
     return () => window.removeEventListener("hashchange", onHash);
-  }, [session, vue, clientDetail?.id]);
+  }, [session, vue, clientDetail?.id, missionId]);
 
   useEffect(() => {
     if (!session?.jeton || contribIdExistant == null) {
@@ -1664,6 +1777,19 @@ export function App() {
   }
 
   function resetMission() {
+    // Efface le hash #mission-… périmé (sans déclencher hashchange ni
+    // ajouter d'entrée d'historique) : la mission est refermée.
+    try {
+      if (/^#mission-\d+/.test(window.location.hash || "")) {
+        window.history.replaceState(
+          null,
+          "",
+          window.location.pathname + window.location.search,
+        );
+      }
+    } catch {
+      /* ignore */
+    }
     setRestitution(null);
     setMissionId(null);
     setVersionEpinglee(null);
@@ -2321,7 +2447,7 @@ export function App() {
       const mission = await assurerMission(jeton, contribIdExistant);
       setMissionId(mission.id);
       setMissionStatus({
-        msg: `Mission #${mission.id} créée — référentiel épinglé id=${mission.version_referentiel_id}. Déposez la source comptable.`,
+        msg: `Mission #${mission.id} créée — référentiel épinglé. Déposez la source comptable.`,
         err: false,
       });
       setStep(2);
@@ -2356,7 +2482,7 @@ export function App() {
       }
 
       setMissionStatus({
-        msg: `Mission #${mission.id} — référentiel épinglé id=${mission.version_referentiel_id}. Import source active (${sourceMeta.label})…`,
+        msg: `Mission #${mission.id} — référentiel épinglé. Import source active (${sourceMeta.label})…`,
         err: false,
       });
       type RapportFiab = {
@@ -2496,12 +2622,33 @@ export function App() {
     }
   }
 
-  async function ouvrirMission(id: number) {
+  /** Écrit le hash mission (garde anti-boucle : rien si déjà en place). */
+  function ecrireHashMission(id: number, onglet: OngletMission) {
+    const cible = `mission-${id}/${onglet}`;
+    try {
+      if ((window.location.hash || "").replace(/^#/, "") !== cible) {
+        window.location.hash = cible;
+      }
+    } catch {
+      /* ignore */
+    }
+  }
+
+  /** Navigation entre onglets du poste de travail mission. */
+  function naviguerOnglet(o: OngletMission) {
+    setOngletMission(o);
+    if (missionId != null) ecrireHashMission(missionId, o);
+  }
+
+  async function ouvrirMission(id: number, onglet?: OngletMission) {
     if (!session) return;
     setBusy(true);
     setVue("nouvelle");
     setStep(3);
     setMissionId(id);
+    const cible = onglet ?? ongletMission;
+    if (onglet) setOngletMission(onglet);
+    ecrireHashMission(id, cible);
     try {
       const rest = await api<Restitution>(`/api/v1/missions/${id}/restitution`, {
         jeton: session.jeton,
@@ -3093,7 +3240,7 @@ export function App() {
     },
     {
       id: "nouvelle",
-      label: "Nouvelle mission",
+      label: missionId != null ? "Mission en cours" : "Nouvelle mission",
       group: "travail",
       hide: estLecteur,
       accent: true,
@@ -3782,6 +3929,9 @@ export function App() {
         <div
           className={`app-frame${sidebarCollapsed ? " sidebar-collapsed" : ""}`}
         >
+          <a href="#app-main" className="skip-link">
+            Aller au contenu principal
+          </a>
           <header className="app-topbar">
             <div className="topbar-left">
               <button
@@ -3956,8 +4106,8 @@ export function App() {
               )}
               <div className="sidebar-guarantees">
                 <span>Référentiel épinglé</span>
-                <span>RLS</span>
-                <span>Calcul déterministe</span>
+                <span>Données cloisonnées</span>
+                <span>Calculs traçables</span>
               </div>
               <div className="sidebar-tenant">
                 <span className="sidebar-tenant-name">
@@ -3970,7 +4120,7 @@ export function App() {
             </div>
           </aside>
 
-          <main className="app-main">
+          <main className="app-main" id="app-main" tabIndex={-1}>
             {onboarding && !onboarding.complete && !onboardingMasque && (
               <section className="onboarding-card" aria-label="Premiers pas">
                 <div className="onboarding-card-head">
@@ -4323,278 +4473,310 @@ export function App() {
                   aria-label="Pilotage portefeuille"
                 >
                   <div className="pilotage-head">
-                    <h3 className="pilotage-title">Pilotage portefeuille</h3>
-                    <p className="pilotage-sub">
-                      Risque cumulé, missions qui traînent, fiabilité des
-                      sources.
-                    </p>
-                  </div>
-                  <div className="pilotage-grid">
-                    <article className="panel dense pilotage-card">
-                      <h4 className="pilotage-card-title">
-                        Exposition par client
-                        <span className="pilotage-count">
-                          {pilotage.exposition_par_client.length}
-                        </span>
-                      </h4>
-                      <ul className="pilotage-list">
-                        {pilotage.exposition_par_client.map((e) => (
-                          <li key={e.contribuable_id}>
-                            <button
-                              type="button"
-                              className="pilotage-row"
-                              onClick={() =>
-                                void ouvrirClient(e.contribuable_id)
-                              }
-                            >
-                              <span className="pilotage-row-nom">
-                                {e.denomination}
-                              </span>
-                              <span className="pilotage-row-meta">
-                                {e.nb_risques_ouverts} risque
-                                {e.nb_risques_ouverts !== 1 ? "s" : ""} ·
-                                score {e.score}
-                              </span>
-                              <span className="pilotage-row-montant">
-                                {fmtMontant(e.exposition_ouverte)} FCFA
-                              </span>
-                            </button>
-                          </li>
-                        ))}
-                        {!pilotage.exposition_par_client.length && (
-                          <li className="pilotage-vide">
-                            Aucun risque ouvert au portefeuille.
-                          </li>
-                        )}
-                      </ul>
-                    </article>
-
-                    <article className="panel dense pilotage-card">
-                      <h4 className="pilotage-card-title">
-                        Missions inactives &gt;30 j
-                        <span className="pilotage-count">
-                          {pilotage.missions_a_cloturer.length}
-                        </span>
-                      </h4>
-                      <ul className="pilotage-list">
-                        {pilotage.missions_a_cloturer.map((m) => (
-                          <li key={m.mission_id}>
-                            <button
-                              type="button"
-                              className="pilotage-row"
-                              onClick={() => void ouvrirMission(m.mission_id)}
-                            >
-                              <span className="pilotage-row-nom">
-                                {m.denomination}
-                              </span>
-                              <span className="pilotage-row-meta">
-                                Exercice {m.exercice}
-                              </span>
-                              <span className="pilotage-row-alerte">
-                                {m.jours_inactivite} j d&apos;inactivité
-                              </span>
-                            </button>
-                          </li>
-                        ))}
-                        {!pilotage.missions_a_cloturer.length && (
-                          <li className="pilotage-vide">
-                            Aucune mission en cours inactive.
-                          </li>
-                        )}
-                      </ul>
-                    </article>
-
-                    <article className="panel dense pilotage-card">
-                      <h4 className="pilotage-card-title">
-                        Alertes fiabilité source
-                        <span className="pilotage-count">
-                          {pilotage.alertes_source.length}
-                        </span>
-                      </h4>
-                      <ul className="pilotage-list">
-                        {pilotage.alertes_source.map((a) => (
-                          <li key={a.mission_id}>
-                            <button
-                              type="button"
-                              className="pilotage-row"
-                              onClick={() => void ouvrirMission(a.mission_id)}
-                            >
-                              <span className="pilotage-row-nom">
-                                {a.denomination}
-                              </span>
-                              <span className="pilotage-row-meta">
-                                Exercice {a.exercice}
-                              </span>
-                              <span className="pilotage-row-alerte">
-                                {a.codes_alerte.join(", ")}
-                              </span>
-                            </button>
-                          </li>
-                        ))}
-                        {!pilotage.alertes_source.length && (
-                          <li className="pilotage-vide">
-                            Aucune alerte sur les sources FEC contrôlées.
-                          </li>
-                        )}
-                      </ul>
-                    </article>
-
-                    <article className="panel dense pilotage-card">
-                      <h4 className="pilotage-card-title">
-                        Risques en retard
-                        <span className="pilotage-count warn">
-                          {pilotage.risques_en_retard.total}
-                        </span>
-                      </h4>
-                      <ul className="pilotage-list">
-                        {pilotage.risques_en_retard.top.map((r) => (
-                          <li key={r.risque_id}>
-                            <button
-                              type="button"
-                              className="pilotage-row"
-                              onClick={() =>
-                                void ouvrirClient(r.contribuable_id)
-                              }
-                            >
-                              <span className="pilotage-row-nom">
-                                {r.denomination}
-                              </span>
-                              <span className="pilotage-row-meta">
-                                {r.libelle}
-                                {r.echeance ? ` · éch. ${r.echeance}` : ""}
-                              </span>
-                              <span className="pilotage-row-montant">
-                                {fmtMontant(r.montant_estime)} FCFA
-                              </span>
-                            </button>
-                          </li>
-                        ))}
-                        {!pilotage.risques_en_retard.total && (
-                          <li className="pilotage-vide">
-                            Aucun risque avec échéance dépassée.
-                          </li>
-                        )}
-                      </ul>
-                    </article>
-
-                    <article className="panel dense pilotage-card">
-                      <h4 className="pilotage-card-title">
-                        Échéances déclaratives
-                        <span
-                          className={
-                            pilotage.echeances_portefeuille.total
-                              ? "pilotage-count warn"
-                              : "pilotage-count"
-                          }
-                        >
-                          {pilotage.echeances_portefeuille.total}
-                        </span>
-                      </h4>
-                      <ul className="pilotage-list">
-                        {pilotage.echeances_portefeuille.lignes.map((e) => (
-                          <li
-                            key={`${e.contribuable_id}-${e.code}-${e.date_limite}`}
-                          >
-                            <button
-                              type="button"
-                              className="pilotage-row"
-                              onClick={() =>
-                                void ouvrirClient(e.contribuable_id)
-                              }
-                            >
-                              <span className="pilotage-row-nom">
-                                {fmtDateFr(e.date_limite)} · {e.denomination}
-                              </span>
-                              <span className="pilotage-row-meta">
-                                {e.libelle}
-                              </span>
-                              <span
-                                className={
-                                  e.statut === "depassee"
-                                    ? "pilotage-badge depasse"
-                                    : "pilotage-badge imminent"
-                                }
-                              >
-                                {e.statut === "depassee"
-                                  ? "Dépassé"
-                                  : "Imminent"}
-                              </span>
-                            </button>
-                          </li>
-                        ))}
-                        {!pilotage.echeances_portefeuille.total && (
-                          <li className="pilotage-vide">
-                            Aucune échéance déclarative imminente sur 30 jours.
-                          </li>
-                        )}
-                      </ul>
-                    </article>
-
-                    <article className="panel dense pilotage-card">
-                      <h4 className="pilotage-card-title">
-                        Relances client
-                        <span
-                          className={
-                            pilotage.relances_circularisation.items_a_relancer
-                              ? "pilotage-count warn"
-                              : "pilotage-count"
-                          }
-                        >
-                          {pilotage.relances_circularisation.items_a_relancer}
-                        </span>
-                      </h4>
-                      <p className="pilotage-relances-totaux">
-                        {pilotage.relances_circularisation.missions_concernees}{" "}
-                        mission(s) ·{" "}
-                        {pilotage.relances_circularisation.items_en_attente}{" "}
-                        item(s) en attente ·{" "}
-                        {pilotage.relances_circularisation.items_a_relancer} à
-                        relancer
+                    <div className="pilotage-head-text">
+                      <h3 className="pilotage-title">Pilotage portefeuille</h3>
+                      <p className="pilotage-sub">
+                        Risque cumulé, missions qui traînent, fiabilité des
+                        sources.
                       </p>
-                      <ul className="pilotage-list">
-                        {pilotage.relances_circularisation.missions.map(
-                          (m) => (
-                            <li key={m.mission_id}>
+                    </div>
+                    <div
+                      className="pilotage-vue-switch"
+                      role="group"
+                      aria-label="Mode d'affichage du pilotage"
+                    >
+                      <button
+                        type="button"
+                        className={`pilotage-vue-btn${pilotageVue === "cartes" ? " is-active" : ""}`}
+                        aria-pressed={pilotageVue === "cartes"}
+                        onClick={() => setPilotageVue("cartes")}
+                      >
+                        Cartes
+                      </button>
+                      <button
+                        type="button"
+                        className={`pilotage-vue-btn${pilotageVue === "tableau" ? " is-active" : ""}`}
+                        aria-pressed={pilotageVue === "tableau"}
+                        onClick={() => setPilotageVue("tableau")}
+                      >
+                        Tableau
+                      </button>
+                    </div>
+                  </div>
+                  {pilotageVue === "cartes" ? (
+                    <div className="pilotage-grid">
+                      <article className="panel dense pilotage-card">
+                        <h4 className="pilotage-card-title">
+                          Exposition par client
+                          <span className="pilotage-count">
+                            {pilotage.exposition_par_client.length}
+                          </span>
+                        </h4>
+                        <ul className="pilotage-list">
+                          {pilotage.exposition_par_client.map((e) => (
+                            <li key={e.contribuable_id}>
                               <button
                                 type="button"
                                 className="pilotage-row"
                                 onClick={() =>
-                                  void ouvrirMission(m.mission_id)
+                                  void ouvrirClient(e.contribuable_id)
                                 }
                               >
                                 <span className="pilotage-row-nom">
-                                  {m.client}
+                                  {e.denomination}
                                 </span>
                                 <span className="pilotage-row-meta">
-                                  Ex. {m.exercice} · {m.en_attente} en attente
-                                  · {m.recu} reçu(s)
-                                  {m.plus_ancienne_attente
-                                    ? ` · depuis ${fmtDateFr(m.plus_ancienne_attente)}`
-                                    : ""}
+                                  {e.nb_risques_ouverts} risque
+                                  {e.nb_risques_ouverts !== 1 ? "s" : ""} ·
+                                  score {e.score}
                                 </span>
-                                {m.a_relancer > 0 ? (
-                                  <span className="pilotage-badge relance">
-                                    {m.a_relancer} à relancer
-                                  </span>
-                                ) : (
-                                  <span className="pilotage-badge attente">
-                                    En attente
-                                  </span>
-                                )}
+                                <span className="pilotage-row-montant">
+                                  {fmtMontant(e.exposition_ouverte)} FCFA
+                                </span>
                               </button>
                             </li>
-                          ),
-                        )}
-                        {!pilotage.relances_circularisation
-                          .missions_concernees && (
-                          <li className="pilotage-vide">
-                            Aucune réponse client en attente sur les missions
-                            ouvertes.
-                          </li>
-                        )}
-                      </ul>
-                    </article>
-                  </div>
+                          ))}
+                          {!pilotage.exposition_par_client.length && (
+                            <li className="pilotage-vide">
+                              Aucun risque ouvert au portefeuille.
+                            </li>
+                          )}
+                        </ul>
+                      </article>
+
+                      <article className="panel dense pilotage-card">
+                        <h4 className="pilotage-card-title">
+                          Missions inactives &gt;30 j
+                          <span className="pilotage-count">
+                            {pilotage.missions_a_cloturer.length}
+                          </span>
+                        </h4>
+                        <ul className="pilotage-list">
+                          {pilotage.missions_a_cloturer.map((m) => (
+                            <li key={m.mission_id}>
+                              <button
+                                type="button"
+                                className="pilotage-row"
+                                onClick={() => void ouvrirMission(m.mission_id)}
+                              >
+                                <span className="pilotage-row-nom">
+                                  {m.denomination}
+                                </span>
+                                <span className="pilotage-row-meta">
+                                  Exercice {m.exercice}
+                                </span>
+                                <span className="pilotage-row-alerte">
+                                  {m.jours_inactivite} j d&apos;inactivité
+                                </span>
+                              </button>
+                            </li>
+                          ))}
+                          {!pilotage.missions_a_cloturer.length && (
+                            <li className="pilotage-vide">
+                              Aucune mission en cours inactive.
+                            </li>
+                          )}
+                        </ul>
+                      </article>
+
+                      <article className="panel dense pilotage-card">
+                        <h4 className="pilotage-card-title">
+                          Alertes fiabilité source
+                          <span className="pilotage-count">
+                            {pilotage.alertes_source.length}
+                          </span>
+                        </h4>
+                        <ul className="pilotage-list">
+                          {pilotage.alertes_source.map((a) => (
+                            <li key={a.mission_id}>
+                              <button
+                                type="button"
+                                className="pilotage-row"
+                                onClick={() => void ouvrirMission(a.mission_id)}
+                              >
+                                <span className="pilotage-row-nom">
+                                  {a.denomination}
+                                </span>
+                                <span className="pilotage-row-meta">
+                                  Exercice {a.exercice}
+                                </span>
+                                <span className="pilotage-row-alerte">
+                                  {a.codes_alerte.join(", ")}
+                                </span>
+                              </button>
+                            </li>
+                          ))}
+                          {!pilotage.alertes_source.length && (
+                            <li className="pilotage-vide">
+                              Aucune alerte sur les sources FEC contrôlées.
+                            </li>
+                          )}
+                        </ul>
+                      </article>
+
+                      <article className="panel dense pilotage-card">
+                        <h4 className="pilotage-card-title">
+                          Risques en retard
+                          <span className="pilotage-count warn">
+                            {pilotage.risques_en_retard.total}
+                          </span>
+                        </h4>
+                        <ul className="pilotage-list">
+                          {pilotage.risques_en_retard.top.map((r) => (
+                            <li key={r.risque_id}>
+                              <button
+                                type="button"
+                                className="pilotage-row"
+                                onClick={() =>
+                                  void ouvrirClient(r.contribuable_id)
+                                }
+                              >
+                                <span className="pilotage-row-nom">
+                                  {r.denomination}
+                                </span>
+                                <span className="pilotage-row-meta">
+                                  {r.libelle}
+                                  {r.echeance ? ` · éch. ${r.echeance}` : ""}
+                                </span>
+                                <span className="pilotage-row-montant">
+                                  {fmtMontant(r.montant_estime)} FCFA
+                                </span>
+                              </button>
+                            </li>
+                          ))}
+                          {!pilotage.risques_en_retard.total && (
+                            <li className="pilotage-vide">
+                              Aucun risque avec échéance dépassée.
+                            </li>
+                          )}
+                        </ul>
+                      </article>
+
+                      <article className="panel dense pilotage-card">
+                        <h4 className="pilotage-card-title">
+                          Échéances déclaratives
+                          <span
+                            className={
+                              pilotage.echeances_portefeuille.total
+                                ? "pilotage-count warn"
+                                : "pilotage-count"
+                            }
+                          >
+                            {pilotage.echeances_portefeuille.total}
+                          </span>
+                        </h4>
+                        <ul className="pilotage-list">
+                          {pilotage.echeances_portefeuille.lignes.map((e) => (
+                            <li
+                              key={`${e.contribuable_id}-${e.code}-${e.date_limite}`}
+                            >
+                              <button
+                                type="button"
+                                className="pilotage-row"
+                                onClick={() =>
+                                  void ouvrirClient(e.contribuable_id)
+                                }
+                              >
+                                <span className="pilotage-row-nom">
+                                  {fmtDateFr(e.date_limite)} · {e.denomination}
+                                </span>
+                                <span className="pilotage-row-meta">
+                                  {e.libelle}
+                                </span>
+                                <span
+                                  className={
+                                    e.statut === "depassee"
+                                      ? "pilotage-badge depasse"
+                                      : "pilotage-badge imminent"
+                                  }
+                                >
+                                  {e.statut === "depassee"
+                                    ? "Dépassé"
+                                    : "Imminent"}
+                                </span>
+                              </button>
+                            </li>
+                          ))}
+                          {!pilotage.echeances_portefeuille.total && (
+                            <li className="pilotage-vide">
+                              Aucune échéance déclarative imminente sur 30 jours.
+                            </li>
+                          )}
+                        </ul>
+                      </article>
+
+                      <article className="panel dense pilotage-card">
+                        <h4 className="pilotage-card-title">
+                          Relances client
+                          <span
+                            className={
+                              pilotage.relances_circularisation.items_a_relancer
+                                ? "pilotage-count warn"
+                                : "pilotage-count"
+                            }
+                          >
+                            {pilotage.relances_circularisation.items_a_relancer}
+                          </span>
+                        </h4>
+                        <p className="pilotage-relances-totaux">
+                          {pilotage.relances_circularisation.missions_concernees}{" "}
+                          mission(s) ·{" "}
+                          {pilotage.relances_circularisation.items_en_attente}{" "}
+                          item(s) en attente ·{" "}
+                          {pilotage.relances_circularisation.items_a_relancer} à
+                          relancer
+                        </p>
+                        <ul className="pilotage-list">
+                          {pilotage.relances_circularisation.missions.map(
+                            (m) => (
+                              <li key={m.mission_id}>
+                                <button
+                                  type="button"
+                                  className="pilotage-row"
+                                  onClick={() =>
+                                    void ouvrirMission(m.mission_id)
+                                  }
+                                >
+                                  <span className="pilotage-row-nom">
+                                    {m.client}
+                                  </span>
+                                  <span className="pilotage-row-meta">
+                                    Ex. {m.exercice} · {m.en_attente} en attente
+                                    · {m.recu} reçu(s)
+                                    {m.plus_ancienne_attente
+                                      ? ` · depuis ${fmtDateFr(m.plus_ancienne_attente)}`
+                                      : ""}
+                                  </span>
+                                  {m.a_relancer > 0 ? (
+                                    <span className="pilotage-badge relance">
+                                      {m.a_relancer} à relancer
+                                    </span>
+                                  ) : (
+                                    <span className="pilotage-badge attente">
+                                      En attente
+                                    </span>
+                                  )}
+                                </button>
+                              </li>
+                            ),
+                          )}
+                          {!pilotage.relances_circularisation
+                            .missions_concernees && (
+                            <li className="pilotage-vide">
+                              Aucune réponse client en attente sur les missions
+                              ouvertes.
+                            </li>
+                          )}
+                        </ul>
+                      </article>
+                    </div>
+                  ) : (
+                    <PilotagePortefeuilleTableau
+                      pilotage={pilotage}
+                      onOuvrirClient={(id) => void ouvrirClient(id)}
+                      onOuvrirMission={(id) => void ouvrirMission(id)}
+                    />
+                  )}
                 </section>
               )}
 
@@ -4710,27 +4892,13 @@ export function App() {
 
               <BriefCabinetBouton jeton={session?.jeton ?? null} />
 
-              <CentreAlertesVue
-                jeton={session?.jeton ?? null}
-                onOuvrirMission={(id) => void ouvrirMission(id)}
-              />
-
-              <CalendrierCabinetVue
-                jeton={session?.jeton ?? null}
-                onOuvrirMission={(id) => void ouvrirMission(id)}
-              />
-
-              <PortefeuilleDeclaratifVue
-                jeton={session?.jeton ?? null}
-                onOuvrirMission={(id) => void ouvrirMission(id)}
-              />
-
+              {/* Zone haute — action quotidienne, toujours visible */}
               <MonTableauVue
                 jeton={session?.jeton ?? null}
                 onOuvrirMission={(id) => void ouvrirMission(id)}
               />
 
-              <AgendaFiscalVue
+              <CentreAlertesVue
                 jeton={session?.jeton ?? null}
                 onOuvrirMission={(id) => void ouvrirMission(id)}
               />
@@ -4740,35 +4908,63 @@ export function App() {
                 onOuvrirMission={(id) => void ouvrirMission(id)}
               />
 
-              <RelancesCabinetVue
-                jeton={session?.jeton ?? null}
-                onOuvrirMission={(id) => void ouvrirMission(id)}
-              />
+              {/* Zones repliées — chargées uniquement à l'ouverture */}
+              <DashGroupe
+                id="declaratif"
+                titre="Suivi déclaratif"
+                sousTitre="Portefeuille déclaratif · Relances · Calendrier · Agenda fiscal"
+              >
+                <PortefeuilleDeclaratifVue
+                  jeton={session?.jeton ?? null}
+                  onOuvrirMission={(id) => void ouvrirMission(id)}
+                />
 
-              <ActionsCabinetVue
-                jeton={session?.jeton ?? null}
-                estLecteur={estLecteur}
-                onOuvrirMission={(id) => void ouvrirMission(id)}
-              />
+                <RelancesCabinetVue
+                  jeton={session?.jeton ?? null}
+                  onOuvrirMission={(id) => void ouvrirMission(id)}
+                />
 
-              <RentabiliteCabinetVue
-                jeton={session?.jeton ?? null}
-                onOuvrirMission={(id) => void ouvrirMission(id)}
-              />
+                <CalendrierCabinetVue
+                  jeton={session?.jeton ?? null}
+                  onOuvrirMission={(id) => void ouvrirMission(id)}
+                />
 
-              <DelaisCabinetVue jeton={session?.jeton ?? null} />
+                <AgendaFiscalVue
+                  jeton={session?.jeton ?? null}
+                  onOuvrirMission={(id) => void ouvrirMission(id)}
+                />
+              </DashGroupe>
 
-              <ClotureCabinetVue
-                jeton={session?.jeton ?? null}
-                onOuvrirMission={(id) => void ouvrirMission(id)}
-              />
+              <DashGroupe
+                id="pilotage"
+                titre="Pilotage du cabinet"
+                sousTitre="Rentabilité · Délais · Points convenus · Actions · Clôtures · Charge"
+              >
+                <RentabiliteCabinetVue
+                  jeton={session?.jeton ?? null}
+                  onOuvrirMission={(id) => void ouvrirMission(id)}
+                />
 
-              <PointsConvenusCabinetVue
-                jeton={session?.jeton ?? null}
-                onOuvrirMission={(id) => void ouvrirMission(id)}
-              />
+                <DelaisCabinetVue jeton={session?.jeton ?? null} />
 
-              <ChargeCabinetVue jeton={session?.jeton ?? null} />
+                <PointsConvenusCabinetVue
+                  jeton={session?.jeton ?? null}
+                  onOuvrirMission={(id) => void ouvrirMission(id)}
+                />
+
+                <ActionsCabinetVue
+                  jeton={session?.jeton ?? null}
+                  estLecteur={estLecteur}
+                  onOuvrirMission={(id) => void ouvrirMission(id)}
+                />
+
+                <ClotureCabinetVue
+                  jeton={session?.jeton ?? null}
+                  onOuvrirMission={(id) => void ouvrirMission(id)}
+                />
+
+                <ChargeCabinetVue jeton={session?.jeton ?? null} />
+              </DashGroupe>
 
               <div className="dash-split">
                 <section className="panel dense list-panel">
@@ -4845,7 +5041,7 @@ export function App() {
                     <div>
                       <h3 className="panel-title">Portefeuille</h3>
                       <p className="panel-sub">
-                        Contribuables cloisonnés (RLS).
+                        Contribuables cloisonnés par cabinet.
                       </p>
                     </div>
                     <Tooltip label="Ouvrir la liste complète des clients.">
@@ -5029,9 +5225,15 @@ export function App() {
             <div className="wizard">
               <header className="wizard-head">
                 <div>
-                  <p className="page-eyebrow">Nouvelle revue</p>
+                  <p className="page-eyebrow">
+                    {step === 3 ? "Dossier de mission" : "Nouvelle revue"}
+                  </p>
                   <h2 className="section-title label-with-tip">
-                    {STEPS[step - 1]?.lbl ?? "Mission"}
+                    {step === 3
+                      ? restitution?.identification?.contribuable_denomination ||
+                        contribNom ||
+                        "Résultat"
+                      : (STEPS[step - 1]?.lbl ?? "Mission")}
                     {step === 3 && (
                       <InfoTip
                         label={PROCESS_TIPS.artefact}
@@ -5054,15 +5256,37 @@ export function App() {
                       "Dossier de revue — synthèse, passage, risques et suivi."}
                   </p>
                 </div>
-                <div className="wizard-head-meta" aria-hidden="true">
-                  Étape {step}/{STEPS.length}
-                </div>
+                {step < 3 ? (
+                  <div className="wizard-head-meta" aria-hidden="true">
+                    Étape {step}/{STEPS.length}
+                  </div>
+                ) : (
+                  <div className="wizard-head-actions">
+                    <button
+                      type="button"
+                      className="btn btn-ghost btn-sm"
+                      onClick={() => setStep(1)}
+                    >
+                      Modifier le cadrage
+                    </button>
+                    <button
+                      type="button"
+                      className="btn btn-ghost btn-sm"
+                      onClick={() => setStep(2)}
+                    >
+                      Importer des pièces
+                    </button>
+                  </div>
+                )}
               </header>
 
-              <div className="wizard-progress" aria-hidden="true">
-                <i style={{ width: `${progressPct}%` }} />
-              </div>
+              {step < 3 && (
+                <div className="wizard-progress" aria-hidden="true">
+                  <i style={{ width: `${progressPct}%` }} />
+                </div>
+              )}
 
+              {step < 3 && (
               <nav className="wizard-steps" aria-label="Étapes de la mission">
                 {STEPS.map((s, idx) => {
                   const done = s.n < step || (s.n === 3 && !!restitution);
@@ -5100,6 +5324,7 @@ export function App() {
                   );
                 })}
               </nav>
+              )}
 
               {step === 1 && (
                 <CadrageMissionVue
@@ -5151,7 +5376,7 @@ export function App() {
                 {/* Rappel consultatif au démarrage / à la reprise de la
                     mission : points « à faire » hérités des exercices
                     antérieurs — affiché seulement s'il y en a. */}
-                {missionId != null && (
+                {missionId != null && step === 2 && (
                   <PointsAnterieursVue
                     missionId={missionId}
                     jeton={session?.jeton}
@@ -5161,7 +5386,7 @@ export function App() {
                 {/* Lettre de mission : document contractuel du CADRAGE —
                     disponible dès que la mission existe (statut cadrage),
                     et conservée aux étapes suivantes. */}
-                {missionId != null && (
+                {missionId != null && step === 2 && (
                   <LettreMissionVue
                     missionId={missionId}
                     jeton={session?.jeton}
@@ -6071,6 +6296,14 @@ export function App() {
                   <>
                     {restitution ? (
                       <>
+                      {/* Onglets du poste de travail mission : routage
+                          des vues satellites par étape du process —
+                          navigation pure, aucun contenu masqué n'est
+                          perdu (hash #mission-{id}/{onglet}). */}
+                      <MissionTabsNav
+                        ongletActif={ongletMission}
+                        onNaviguer={naviguerOnglet}
+                      />
                       {/* Fil conducteur consultatif EN TÊTE : guide
                           pas-à-pas du process de revue, dérivé des
                           modules existants — lecture seule, l'humain
@@ -6079,13 +6312,30 @@ export function App() {
                         missionId={restitution.mission_id}
                         jeton={session?.jeton}
                       />
+                      {ongletMission === "cadrage" && (
+                      <>
                       <ResponsableMissionVue
                         missionId={restitution.mission_id}
                         jeton={session?.jeton ?? null}
                         estLecteur={estLecteur}
                       />
+                      {/* Cadrage en poste de travail : rappel des points
+                          hérités + lettre de mission (mêmes vues qu'au
+                          wizard) — le formulaire détaillé est rendu par
+                          RestitutionVue sur ce même onglet. */}
+                      <PointsAnterieursVue
+                        missionId={restitution.mission_id}
+                        jeton={session?.jeton}
+                      />
+                      <LettreMissionVue
+                        missionId={restitution.mission_id}
+                        jeton={session?.jeton}
+                      />
+                      </>
+                      )}
                       <RestitutionVue
                         restitution={restitution}
+                        onglet={ongletMission}
                         jeton={session?.jeton}
                         missionStatus={missionStatus}
                         versionEpinglee={versionEpinglee}
@@ -6129,6 +6379,16 @@ export function App() {
                               }
                         }
                       />
+                      {/* Sans exécution (balance jamais importée), les
+                          vues fiscales dépendantes de la balance sont
+                          masquées : l'état vide unifié de RestitutionVue
+                          guide déjà l'import — on évite ~15 cartes
+                          « indisponibles ». Restent visibles les vues de
+                          suivi et celles offrant une saisie utilisable
+                          sans balance (déclarations TVA, acomptes). */}
+                      {ongletMission === "revue" &&
+                        restitution.execution_id != null && (
+                      <>
                       {/* Panorama consultatif de conformité :
                           bandeau compact agrégeant les STATUTS (pas
                           les montants) des vues fiscales ci-dessous,
@@ -6140,6 +6400,21 @@ export function App() {
                         missionId={restitution.mission_id}
                         jeton={session?.jeton}
                       />
+                      </>
+                      )}
+                      {ongletMission === "sources" && (
+                      /* Complétude documentaire de la data room :
+                         même vue qu'à l'étape Sources du wizard —
+                         disponible sans exécution. */
+                      <CompletudeDataRoomVue
+                        missionId={restitution.mission_id}
+                        jeton={session?.jeton}
+                        version={piecesMission.length}
+                      />
+                      )}
+                      {ongletMission === "sources" &&
+                        restitution.execution_id != null && (
+                      <>
                       {/* Contrôle qualité de la balance importée :
                           fiabilité de la matière première avant les
                           vues fiscales détaillées — équilibre
@@ -6153,6 +6428,11 @@ export function App() {
                         missionId={restitution.mission_id}
                         jeton={session?.jeton}
                       />
+                      </>
+                      )}
+                      {ongletMission === "travaux" &&
+                        restitution.execution_id != null && (
+                      <>
                       {/* Seuil de matérialité consultatif calculé
                           depuis la balance (1 % CA, 5 % résultat,
                           1 % total bilan) + ciblage des travaux — la
@@ -6174,6 +6454,10 @@ export function App() {
                         jeton={session?.jeton}
                         estLecteur={estLecteur}
                       />
+                      </>
+                      )}
+                      {ongletMission === "revue" && (
+                      <>
                       {/* Rapprochement consultatif TVA déclarée /
                           comptabilisée (comptes 443x/445x de la
                           balance) — la saisie des périodes déclarées
@@ -6183,6 +6467,8 @@ export function App() {
                         jeton={session?.jeton}
                         estLecteur={estLecteur}
                       />
+                      {restitution.execution_id != null && (
+                      <>
                       {/* Complétude déclarative mensuelle : périodes
                           échues de l'exercice sans déclaration saisie
                           (TVA, impôts sur salaires) — consultatif, la
@@ -6266,6 +6552,8 @@ export function App() {
                         jeton={session?.jeton}
                         estLecteur={estLecteur}
                       />
+                      </>
+                      )}
                       {/* Suivi consultatif des acomptes IS versés et
                           de la position de solde projetée (IS dû
                           estimé saisi par le fiscaliste, comptes
@@ -6276,6 +6564,8 @@ export function App() {
                         jeton={session?.jeton}
                         estLecteur={estLecteur}
                       />
+                      {restitution.execution_id != null && (
+                      <>
                       {/* Tableau de passage consultatif résultat
                           comptable → résultat fiscal (retraitements
                           saisis, report déficitaire plafonné au
@@ -6321,6 +6611,8 @@ export function App() {
                         missionId={restitution.mission_id}
                         jeton={session?.jeton}
                       />
+                      </>
+                      )}
                       {/* Suivi consultatif des contrôles fiscaux et
                           contentieux — délais de riposte LPF calculés,
                           la consignation reste un clic explicite du
@@ -6330,10 +6622,14 @@ export function App() {
                         jeton={session?.jeton}
                         estLecteur={estLecteur}
                       />
+                      </>
+                      )}
+                      {ongletMission === "restitution" && (
                       <DossierMissionVue
                         missionId={restitution.mission_id}
                         jeton={session?.jeton}
                       />
+                      )}
                       </>
                     ) : (
                       <>
@@ -6456,7 +6752,7 @@ export function App() {
                   )}
                   <button
                     type="button"
-                    className={`btn ${missionStatus?.err && !restitution ? "btn-ghost" : "btn-primary"}`}
+                    className={`btn ${restitution ? "btn-ghost" : missionStatus?.err ? "btn-ghost" : "btn-primary"}`}
                     onClick={resetMission}
                   >
                     Nouvelle mission
