@@ -106,6 +106,38 @@ def test_agent_question_mission_reponse_avec_citation(session):
     assert "2025" in corps["contexte"]
 
 
+def test_agent_question_mission_avec_historique(session):
+    _assurer_version(session)
+    seed_corpus_demo(session)
+    email = _cabinet(session)
+    client = TestClient(app)
+    h = _connexion(client, email)
+    mid = _mission_cadree(client, h)
+
+    r = client.post(
+        f"/api/v1/missions/{mid}/agent/question",
+        headers=h,
+        json={
+            "question": "Que dit l'article DEMO-18-G sur les dons ?",
+            "historique": [
+                {"question": "Bonjour", "reponse": "Bonjour, comment puis-je aider ?"},
+                {
+                    "question": "Peux-tu m'expliquer le régime des dons ?",
+                    "reponse": "Le régime des dons dépend du corpus applicable.",
+                },
+                {
+                    "question": "Et pour les entreprises soumises au réel ?",
+                    "reponse": "Le traitement suit les règles générales du CGI.",
+                },
+            ],
+        },
+    )
+    assert r.status_code == 200, r.text
+    corps = r.json()
+    assert corps["statut"] == "repondu"
+    assert "DEMO-18-G" in corps["references"]
+
+
 def test_agent_question_mission_abstention_hors_corpus(session):
     _assurer_version(session)
     seed_corpus_demo(session)

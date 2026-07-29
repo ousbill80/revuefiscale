@@ -78,11 +78,19 @@ def repondre(
     question: str,
     tenant_id: int | None = None,
     types_corpus: list[str] | None = None,
+    historique: list[tuple[str, str]] | None = None,
 ) -> ReponseAgent:
     """1. Cherche le corpus 2. Cite + ancre 3. Sinon s abstient. Jamais d invention.
 
     ``types_corpus`` : filtre optionnel (ex. ``["demo"]`` pour le harnais d'eval
     lorsque l'annexe / CGI réel est aussi indexé).
+
+    ``historique`` : tours precedents ``(question, reponse)`` de la conversation
+    en cours — transmis UNIQUEMENT au chemin de reformulation LLM optionnel
+    (``_tenter_redaction_llm``), pour un ton conversationnel cohérent. Ne modifie
+    JAMAIS la recherche lexicale ni l ancrage : chaque tour reste retrouve et
+    valide independamment sur la question courante seule, pour preserver les
+    garanties anti-invention deja testees.
     """
     q = (question or "").strip()
     if not q:
@@ -193,7 +201,7 @@ def repondre(
     )
     modele_utilise = "regle-based"
 
-    redaction_llm = _tenter_redaction_llm(q, refs_vues, textes_fragments)
+    redaction_llm = _tenter_redaction_llm(q, refs_vues, textes_fragments, historique)
     if redaction_llm is not None:
         prose, provider_id = redaction_llm
         texte = (
@@ -228,11 +236,16 @@ def _tenter_redaction_llm(
     question: str,
     refs_vues: list[str],
     textes_fragments: list[str],
+    historique: list[tuple[str, str]] | None = None,
 ) -> tuple[str, str] | None:
     """Reformulation LLM best-effort des fragments deja valides — jamais bloquant.
 
     Le LLM ne recoit ni outil de recherche ni acces au corpus au-dela des
     fragments deja retrouves et valides par le chemin regle-based ci-dessus.
+    ``historique`` (tours precedents question/reponse) n est ajoute qu a titre
+    de contexte conversationnel dans les messages envoyes au LLM — il n
+    influence ni la recherche, ni l ancrage, qui restent bases uniquement sur
+    ``question`` et les fragments deja valides.
     Retourne ``(prose, provider_id)`` si la prose est verifiee ancree et ne
     mentionne aucune reference hors corpus deja valide, sinon ``None`` — le
     texte deterministe existant reste alors utilise, sans jamais faire
@@ -245,8 +258,13 @@ def _tenter_redaction_llm(
         f"[{ref}]\n{texte}"
         for ref, texte in zip(refs_vues, textes_fragments, strict=True)
     )
-    messages = [
+    messages: list[dict[str, str]] = [
         {"role": "system", "content": PROMPT_SYSTEME_AGENT_FISCAL},
+    ]
+    for q_precedente, r_precedente in historique or []:
+        messages.append({"role": "user", "content": q_precedente})
+        messages.append({"role": "assistant", "content": r_precedente})
+    messages.append(
         {
             "role": "user",
             "content": (
@@ -254,8 +272,8 @@ def _tenter_redaction_llm(
                 "Fragments disponibles (ne cite QUE ces textes, mot pour "
                 f"mot) :\n{fragments_bloc}"
             ),
-        },
-    ]
+        }
+    )
     try:
         contenu, provider_id, _failover = llm_providers.appeler_chat(
             messages,

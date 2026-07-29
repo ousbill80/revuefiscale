@@ -505,8 +505,14 @@ def api_lire_mission(
     return _mission_out(detail)
 
 
+class TourConversationIn(BaseModel):
+    question: str
+    reponse: str
+
+
 class AgentQuestionIn(BaseModel):
     question: str
+    historique: list[TourConversationIn] = []
 
 
 class AgentQuestionOut(BaseModel):
@@ -538,7 +544,8 @@ def api_agent_question_mission(
             status_code=status.HTTP_422_UNPROCESSABLE_ENTITY, detail="Question requise"
         )
 
-    rep = repondre(session, q, tenant_id=utilisateur.tenant_id)
+    historique = [(t.question, t.reponse) for t in corps.historique[-6:]]
+    rep = repondre(session, q, tenant_id=utilisateur.tenant_id, historique=historique or None)
     contexte = f"Mission #{mission_id} — exercice {detail.get('exercice')}"
     return AgentQuestionOut(
         statut=rep.statut,

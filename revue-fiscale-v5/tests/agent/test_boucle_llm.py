@@ -68,6 +68,47 @@ def test_llm_redaction_valide_est_utilisee(
     assert "DEMO-18-G" in rep.references
 
 
+def test_llm_historique_transmis_en_contexte(
+    session, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    """Les tours precedents sont injectes comme messages user/assistant avant
+    la question courante — mais n influencent ni la recherche ni l ancrage."""
+    _configurer_provider_factice(monkeypatch)
+    seed_corpus_demo(session)
+
+    messages_captures: list[dict[str, str]] = []
+
+    def _appeler_chat_capture(messages, **_kwargs):
+        messages_captures.extend(messages)
+        return (
+            json.dumps(
+                {
+                    "reponse": "Suite de la conversation : les dons restent deductibles.",
+                    "citations": [],
+                }
+            ),
+            "provider-test",
+            (),
+        )
+
+    monkeypatch.setattr(boucle.llm_providers, "appeler_chat", _appeler_chat_capture)
+
+    rep = boucle.repondre(
+        session,
+        "Que dit l'article DEMO-18-G sur les dons ?",
+        historique=[("Bonjour", "Bonjour, comment puis-je vous aider ?")],
+    )
+    assert rep.statut == "repondu"
+    assert messages_captures[0]["role"] == "system"
+    assert messages_captures[1] == {"role": "user", "content": "Bonjour"}
+    assert messages_captures[2] == {
+        "role": "assistant",
+        "content": "Bonjour, comment puis-je vous aider ?",
+    }
+    assert messages_captures[3]["role"] == "user"
+    assert "DEMO-18-G" in messages_captures[3]["content"]
+
+
 def test_llm_reference_inventee_est_rejetee(
     session, monkeypatch: pytest.MonkeyPatch
 ) -> None:

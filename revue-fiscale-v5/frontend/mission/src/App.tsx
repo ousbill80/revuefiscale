@@ -6537,17 +6537,6 @@ export function App() {
                             : undefined
                         }
                       />
-                      {/* Agent fiscal (questions/réponses sourcées sur le
-                          corpus juridique indexé) : panneau repliable
-                          persistant, accessible depuis n'importe quel
-                          onglet du poste de travail — aucune persistance
-                          serveur des échanges. */}
-                      {session?.jeton && (
-                        <AgentChatVue
-                          jeton={session.jeton}
-                          missionId={restitution.mission_id}
-                        />
-                      )}
                       {ongletMission === "cadrage" && (
                       <>
                       <ResponsableMissionVue
@@ -6713,6 +6702,16 @@ export function App() {
                         missionId={restitution.mission_id}
                         jeton={session?.jeton}
                       />
+                      )}
+                      {/* Agent fiscal (questions/réponses sourcées sur le
+                          corpus juridique indexé) : onglet dédié en plein
+                          cadre — aucune persistance serveur des échanges,
+                          mémoire conversationnelle uniquement côté client. */}
+                      {session?.jeton && ongletMission === "assistant" && (
+                        <AgentChatVue
+                          jeton={session.jeton}
+                          missionId={restitution.mission_id}
+                        />
                       )}
                       </>
                     ) : (

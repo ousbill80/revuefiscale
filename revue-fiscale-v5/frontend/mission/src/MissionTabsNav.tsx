@@ -7,7 +7,8 @@ export type OngletMission =
   | "travaux"
   | "revue"
   | "restitution"
-  | "cloture";
+  | "cloture"
+  | "assistant";
 
 const ONGLETS: Array<{ id: OngletMission; libelle: string }> = [
   { id: "cadrage", libelle: "Cadrage" },
@@ -16,6 +17,7 @@ const ONGLETS: Array<{ id: OngletMission; libelle: string }> = [
   { id: "revue", libelle: "Revue" },
   { id: "restitution", libelle: "Restitution" },
   { id: "cloture", libelle: "Clôture" },
+  { id: "assistant", libelle: "Assistant IA" },
 ];
 
 /**
