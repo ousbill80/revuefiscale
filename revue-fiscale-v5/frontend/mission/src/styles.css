@@ -3066,7 +3066,79 @@ textarea {
   cursor: pointer;
 }
 
-/* —— Étape 2 « Sources & data room » — même langage que cadrage2-/dossier2- —— */
+/* —— Étape 2 « Sources » — même langage que cadrage2-/dossier2- —— */
+.sources2-fil {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.35rem;
+  margin: 0 0 0.85rem;
+  padding: 0.35rem 0;
+}
+
+.sources2-fil-etape {
+  padding: 0.35rem 0.65rem;
+  border: 1px solid var(--line);
+  border-radius: 999px;
+  background: var(--surface-solid);
+  font-size: 0.72rem;
+  font-weight: 650;
+  color: var(--muted);
+}
+
+.sources2-fil-etape--done {
+  color: var(--accent-deep);
+  border-color: color-mix(in srgb, var(--accent) 40%, var(--line));
+  background: var(--accent-soft);
+}
+
+.sources2-fil-etape--current {
+  color: var(--ink);
+  border-color: var(--accent);
+  font-weight: 800;
+}
+
+.sources2-fil-etape--locked {
+  opacity: 0.45;
+}
+
+.sources2-checklist-note {
+  margin: 0 0 0.55rem;
+  font-size: 0.78rem;
+  color: var(--muted);
+  line-height: 1.4;
+}
+
+.sources2-avance {
+  margin: 0.55rem 0;
+  border: 1px dashed var(--line);
+  border-radius: var(--radius);
+  padding: 0.45rem 0.65rem;
+  background: color-mix(in srgb, var(--surface-solid) 90%, var(--accent-soft));
+}
+
+.sources2-avance-toggle {
+  cursor: pointer;
+  font-size: 0.78rem;
+  font-weight: 650;
+  color: var(--muted);
+  user-select: none;
+}
+
+.sources2-avance-corps {
+  margin-top: 0.55rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.45rem;
+}
+
+.sources2-avance-tabs {
+  margin-bottom: 0;
+}
+
+.sources2-piece-utiliser {
+  flex-shrink: 0;
+}
+
 .sources2-intro {
   margin: 0 0 0.95rem;
   padding: 0.75rem 0.85rem;
@@ -9732,6 +9804,12 @@ tr.row-active td {
 .dataroom-timeline-item::before { content: ""; position: absolute; left: -1.22rem; top: 0.35rem; width: 8px; height: 8px; border-radius: 50%; background: var(--accent, #0f766e); }
 .dataroom-timeline-date { font-size: 0.72rem; color: var(--muted, #64748b); font-variant-numeric: tabular-nums; }
 .dataroom-timeline-acteur { color: var(--muted, #64748b); }
+.historique-timeline-consultations { margin-top: 0.85rem; }
+.historique-timeline-consultations .dataroom-timeline { margin-top: 0.6rem; }
+
+.historique-timeline {
+  margin-top: 1rem;
+}
 
 /* Data Room — synthèse IA (phase 2) */
 .dataroom-synthese-actions { display: flex; align-items: flex-end; gap: 0.6rem; flex-wrap: wrap; }
@@ -10336,12 +10414,237 @@ tr.row-active td {
 
 .cadrage2-section {
   transition: opacity 0.15s ease;
+  scroll-margin-top: 0.75rem;
 }
 
-.cadrage2-section.is-locked {
-  opacity: 0.4;
-  pointer-events: none;
-  user-select: none;
+.cadrage2-section.is-collapsed {
+  padding: 0.65rem 0.85rem;
+  border: 1px dashed var(--line);
+  border-radius: var(--radius-lg);
+  background: color-mix(in srgb, var(--surface-solid) 85%, var(--bg));
+}
+
+.cadrage2-section.is-collapsed .cadrage2-titre {
+  margin-bottom: 0.15rem;
+}
+
+.cadrage2-locked-hint {
+  margin: 0;
+  font-size: 0.8rem;
+  line-height: 1.45;
+  color: var(--muted);
+}
+
+/* Bandeau mobile — renvoie vers la lettre sous le fold (< 1100 px). */
+.cadrage2-lettre-bandeau {
+  display: none;
+}
+
+@media (max-width: 1100px) {
+  .cadrage2-lettre-bandeau {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 0.75rem;
+    width: 100%;
+    margin: 0 0 0.25rem;
+    padding: 0.65rem 0.85rem;
+    border: 1px solid color-mix(in srgb, var(--accent) 35%, var(--line));
+    border-radius: var(--radius-lg);
+    background: var(--surface-solid);
+    box-shadow: var(--shadow-xs);
+    font: inherit;
+    text-align: left;
+    cursor: pointer;
+    transition:
+      border-color 0.12s ease,
+      background 0.12s ease;
+  }
+
+  .cadrage2-lettre-bandeau:hover,
+  .cadrage2-lettre-bandeau:focus-visible {
+    border-color: var(--accent);
+    background: var(--accent-soft);
+    outline: none;
+  }
+
+  .cadrage2-lettre-bandeau-texte {
+    display: flex;
+    flex-direction: column;
+    gap: 0.1rem;
+    min-width: 0;
+  }
+
+  .cadrage2-lettre-bandeau-kicker {
+    font-size: 0.68rem;
+    font-weight: 700;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--muted);
+  }
+
+  .cadrage2-lettre-bandeau-titre {
+    font-size: 0.82rem;
+    font-weight: 650;
+    color: var(--ink);
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+
+  .cadrage2-lettre-bandeau-action {
+    flex: 0 0 auto;
+    font-size: 0.75rem;
+    font-weight: 700;
+    color: var(--accent-deep);
+    white-space: nowrap;
+  }
+}
+
+/* Fil conducteur interne — Client · Engagement · Périmètre */
+.cadrage2-fil {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.35rem;
+  margin: 0 0 0.5rem;
+  padding: 0.35rem 0;
+  position: sticky;
+  top: 0;
+  z-index: 5;
+  background: color-mix(in srgb, var(--bg) 92%, transparent);
+  backdrop-filter: blur(6px);
+}
+
+.cadrage2-fil-etape {
+  appearance: none;
+  padding: 0.35rem 0.65rem;
+  border: 1px solid var(--line);
+  border-radius: 999px;
+  background: var(--surface-solid);
+  font: inherit;
+  font-size: 0.72rem;
+  font-weight: 650;
+  color: var(--muted);
+  cursor: pointer;
+  transition:
+    border-color 0.12s ease,
+    background 0.12s ease,
+    color 0.12s ease;
+}
+
+.cadrage2-fil-etape:hover:not(:disabled),
+.cadrage2-fil-etape:focus-visible:not(:disabled) {
+  border-color: var(--accent);
+  color: var(--accent-deep);
+  outline: none;
+}
+
+.cadrage2-fil-etape--done {
+  color: var(--accent-deep);
+  border-color: color-mix(in srgb, var(--accent) 40%, var(--line));
+  background: var(--accent-soft);
+}
+
+.cadrage2-fil-etape--current {
+  color: var(--ink);
+  border-color: var(--accent);
+  font-weight: 800;
+}
+
+.cadrage2-fil-etape--locked {
+  opacity: 0.45;
+  cursor: not-allowed;
+}
+
+.cadrage2-sous-bloc {
+  display: flex;
+  flex-direction: column;
+  gap: 0.65rem;
+  padding: 0.85rem 0;
+  border-top: 1px solid var(--line-soft, #f1f5f9);
+}
+
+.cadrage2-sous-bloc:first-of-type {
+  border-top: 0;
+  padding-top: 0;
+}
+
+.cadrage2-pill--defaut {
+  border-color: color-mix(in srgb, var(--accent) 55%, var(--line));
+}
+
+.cadrage2-pill--defaut.is-on {
+  border-color: var(--accent-deep);
+}
+
+.cadrage2-pills-legende {
+  margin: 0;
+  padding: 0 0 0 1rem;
+  font-size: 0.76rem;
+  line-height: 1.45;
+  color: var(--muted);
+}
+
+.cadrage2-pills-legende li {
+  margin-bottom: 0.25rem;
+}
+
+.cadrage2-pills-legende strong {
+  color: var(--ink-soft);
+  font-weight: 700;
+}
+
+.cadrage2-autre-alerte {
+  margin: 0;
+  font-size: 0.78rem;
+}
+
+.cadrage2-perimetre-mode {
+  margin: 0 0 0.5rem;
+  padding: 0.5rem 0.65rem;
+  border-radius: var(--radius);
+  font-size: 0.82rem;
+  background: color-mix(in srgb, var(--accent-soft) 65%, var(--surface-solid));
+  border: 1px solid color-mix(in srgb, var(--accent) 25%, var(--line));
+  color: var(--ink);
+}
+
+.cadrage2-perimetre-mode.is-partiel {
+  background: #fffbeb;
+  border-color: #fde68a;
+}
+
+.cadrage2-perimetre-toggle {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.4rem;
+  margin-bottom: 0.65rem;
+}
+
+.cadrage2-perimetre-opt {
+  appearance: none;
+  padding: 0.45rem 0.85rem;
+  border: 1px solid var(--line);
+  border-radius: 999px;
+  background: var(--surface-solid);
+  font: inherit;
+  font-size: 0.8rem;
+  font-weight: 650;
+  color: var(--ink-soft);
+  cursor: pointer;
+}
+
+.cadrage2-perimetre-opt.is-on {
+  border-color: var(--accent);
+  background: var(--accent-soft);
+  color: var(--accent-deep);
+  font-weight: 800;
+}
+
+.cadrage2-perimetre-opt:hover,
+.cadrage2-perimetre-opt:focus-visible {
+  border-color: var(--accent);
+  outline: none;
 }
 
 /* Titres de section — petites capitales + trait d'accent. */
@@ -10460,10 +10763,20 @@ tr.row-active td {
 }
 
 .cadrage2-combo-vide {
-  margin: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 0.4rem;
   padding: 0.65rem 0.75rem;
+}
+
+.cadrage2-combo-vide p {
+  margin: 0;
   font-size: 0.8rem;
   color: var(--muted);
+}
+
+.cadrage2-combo-vide .linkish {
+  align-self: flex-start;
 }
 
 .cadrage2-client-carte {
@@ -10864,6 +11177,74 @@ tr.row-active td {
   font-size: 0.86rem;
 }
 
+.objectif-autocomplete {
+  position: relative;
+  flex: 1;
+  min-width: 0;
+}
+
+.objectif-autocomplete-liste {
+  position: absolute;
+  z-index: 40;
+  top: calc(100% + 0.25rem);
+  left: 0;
+  right: 0;
+  max-height: 14rem;
+  overflow-y: auto;
+  margin: 0;
+  padding: 0.25rem;
+  list-style: none;
+  background: var(--surface-solid);
+  border: 1px solid var(--line);
+  border-radius: var(--radius-lg);
+  box-shadow: var(--shadow-md);
+}
+
+.objectif-autocomplete-item {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 0.1rem;
+  width: 100%;
+  padding: 0.45rem 0.55rem;
+  border: 0;
+  border-radius: var(--radius);
+  background: transparent;
+  font: inherit;
+  text-align: left;
+  cursor: pointer;
+}
+
+.objectif-autocomplete-item:hover,
+.objectif-autocomplete-item:focus-visible {
+  background: var(--accent-soft);
+  outline: none;
+}
+
+.objectif-autocomplete-lib {
+  font-size: 0.82rem;
+  color: var(--ink);
+  line-height: 1.35;
+}
+
+.objectif-autocomplete-meta {
+  font-size: 0.68rem;
+  font-weight: 650;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  color: var(--muted);
+}
+
+.objectif-autocomplete-vide {
+  padding: 0.5rem 0.6rem;
+  font-size: 0.78rem;
+  color: var(--muted);
+}
+
+.objectifs-mission-liste-embed .label-with-tip {
+  margin-bottom: 0.35rem;
+}
+
 .cadrage2-obj-retirer {
   appearance: none;
   flex: 0 0 auto;
@@ -11187,6 +11568,7 @@ tr.row-active td {
 
   .cadrage2-doc-col {
     position: static;
+    scroll-margin-top: 0.75rem;
   }
 
   .cadrage2-doc {

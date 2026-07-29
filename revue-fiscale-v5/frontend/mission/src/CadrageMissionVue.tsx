@@ -20,7 +20,12 @@ import {
   tipImpot,
 } from "./impotLabels";
 import { PROCESS_TIPS } from "./processTips";
+import {
+  REFERENTIEL_JURIDIQUE,
+  MENTION_PRUDENCE,
+} from "./referentielJuridique";
 import { libelleStatut } from "./statuts";
+import { ObjectifsMissionListe } from "./ObjectifsMissionListe";
 import type { ResumeRisques } from "./RegistreRisques";
 import type { Contribuable } from "./App";
 import type { MissionRow } from "./MissionsVue";
@@ -68,6 +73,9 @@ const CODES_MASQUES_PAR_REGIME: Record<string, readonly string[]> = {
 /** Suggestions rondes du seuil de signification (FCFA). */
 const SEUILS_SUGGERES = [500_000, 1_000_000, 5_000_000] as const;
 
+const FICHE_PRESCRIPTION = REFERENTIEL_JURIDIQUE["L171 LPF"];
+const TIP_PRESCRIPTION_EXERCICE = `${FICHE_PRESCRIPTION.reference} — ${FICHE_PRESCRIPTION.resume} ${MENTION_PRUDENCE} Analyse consultative — à valider par le fiscaliste.`;
+
 function fmtFcfa(v: string): string {
   const n = Number(v.replace(/\s/g, "").replace(",", "."));
   if (!Number.isFinite(n) || n <= 0) return "";
@@ -110,8 +118,8 @@ export type CadrageMissionVueProps = {
   chargerContribuable: (c: Contribuable) => void;
   /** Désélectionne le client courant. */
   reinitialiserClient: () => void;
-  /** Navigation vers l'onglet Clients (création de fiche hors cadrage). */
-  onAllerClients: () => void;
+  /** Ouvre la création client avec retour au cadrage (brouillon conservé). */
+  onCreerClient: () => void;
   /** Ouvre une mission existante (bandeau doublon). */
   onOuvrirMission: (id: number) => void;
   /* ------- Engagement & exercice ------- */
@@ -147,6 +155,8 @@ export type CadrageMissionVueProps = {
   setCrossBorder: (v: boolean) => void;
   typeEntite: string;
   setTypeEntite: (v: string) => void;
+  /** Jeton session — suggestions objectifs depuis l'historique cabinet. */
+  jeton?: string | null;
   /* ------- Action ------- */
   onCreerMission: () => void;
 };
@@ -182,7 +192,22 @@ export function CadrageMissionVue(props: CadrageMissionVueProps) {
   const [listeOuverte, setListeOuverte] = useState(false);
   /* Saisie libre d'exercice : masquée par défaut, révélée via « Autre… ». */
   const [anneeLibreOuverte, setAnneeLibreOuverte] = useState(false);
+  const [modePerimetre, setModePerimetre] = useState<"complet" | "partiel">(
+    () => (perimetreImpots.length > 0 ? "partiel" : "complet"),
+  );
   const comboRef = useRef<HTMLDivElement | null>(null);
+  const docRef = useRef<HTMLElement | null>(null);
+
+  const scrollVersLettre = () => {
+    docRef.current?.scrollIntoView({ behavior: "smooth", block: "start" });
+  };
+
+  const scrollVersSection = (id: string) => {
+    document.getElementById(id)?.scrollIntoView({
+      behavior: "smooth",
+      block: "start",
+    });
+  };
 
   const client = useMemo(
     () => clients.find((c) => c.id === contribIdExistant) ?? null,
@@ -249,6 +274,10 @@ export function CadrageMissionVue(props: CadrageMissionVueProps) {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [regime]);
 
+  useEffect(() => {
+    if (perimetreImpots.length > 0) setModePerimetre("partiel");
+  }, [perimetreImpots.length]);
+
   /* ---- Doublon (client, exercice) sur les missions déjà chargées ---- */
   const missionExistante = useMemo(() => {
     if (contribIdExistant == null) return null;
@@ -261,6 +290,10 @@ export function CadrageMissionVue(props: CadrageMissionVueProps) {
     );
   }, [missions, contribIdExistant, exercice]);
 
+  const objectifsRemplis = objectifsLibelles
+    .map((o) => o.trim())
+    .filter(Boolean);
+
   /* ---- Complétude du cadrage ---- */
   const manquants: string[] = [];
   if (contribIdExistant == null) manquants.push("client du portefeuille");
@@ -268,6 +301,16 @@ export function CadrageMissionVue(props: CadrageMissionVueProps) {
   if (exerciceFutur) manquants.push("exercice clos (année achevée)");
   if (exercicePrescrit && !prescriptionConfirmee) {
     manquants.push("confirmation exercice prescrit");
+  }
+  if (
+    typeEngagement === "autre" &&
+    objectifsRemplis.length === 0 &&
+    !exclusionsDeclarees.trim()
+  ) {
+    manquants.push("objectif ou exclusion (engagement Autre)");
+  }
+  if (modePerimetre === "partiel" && perimetreImpots.length === 0) {
+    manquants.push("impôts à retenir (revue partielle)");
   }
   const brouillon = manquants.length > 0;
   const pretACreer = !brouillon && !busy && !quotaBloque;
@@ -277,9 +320,6 @@ export function CadrageMissionVue(props: CadrageMissionVueProps) {
   const engagement = ENGAGEMENTS.find((e) => e.value === typeEngagement);
   const estPP = client?.forme === "pp";
   const formeAffichee = estPP ? "EI" : forme;
-  const objectifsRemplis = objectifsLibelles
-    .map((o) => o.trim())
-    .filter(Boolean);
   const seuilAffiche = fmtFcfa(seuilSignification);
   const dateDuJour = new Date().toLocaleDateString("fr-FR", {
     day: "numeric",
@@ -314,13 +354,76 @@ export function CadrageMissionVue(props: CadrageMissionVueProps) {
     .toUpperCase();
   const refLettre = `LM-${exercice}-${nccClientCourt || "XXX"}`;
 
+  type FilEtat = "done" | "current" | "locked";
+  const filClient: FilEtat = client ? "done" : "current";
+  const filEngagement: FilEtat = !client
+    ? "locked"
+    : typeEngagement
+      ? "done"
+      : "current";
+  const filPerimetre: FilEtat =
+    !client || !typeEngagement ? "locked" : "current";
+
+  const filEtapes: Array<{
+    id: string;
+    label: string;
+    etat: FilEtat;
+  }> = [
+    { id: "cadrage2-client", label: "Client", etat: filClient },
+    { id: "cadrage2-engagement", label: "Engagement", etat: filEngagement },
+    { id: "cadrage2-perimetre", label: "Périmètre", etat: filPerimetre },
+  ];
+
   return (
     <div className="cadrage2">
       {/* ================================================= Formulaire */}
       <div className="cadrage2-form">
+        <button
+          type="button"
+          className="cadrage2-lettre-bandeau"
+          onClick={scrollVersLettre}
+          aria-label="Aller à la lettre de mission"
+        >
+          <span className="cadrage2-lettre-bandeau-texte">
+            <span className="cadrage2-lettre-bandeau-kicker">
+              Document d&apos;engagement
+            </span>
+            <span className="cadrage2-lettre-bandeau-titre">
+              {brouillon ? "Brouillon" : "Lettre prête"}
+              {engagement ? ` · ${engagement.titre}` : ""}
+              {client ? ` · exercice ${exercice}` : ""}
+            </span>
+          </span>
+          <span className="cadrage2-lettre-bandeau-action" aria-hidden="true">
+            Voir la lettre ↓
+          </span>
+        </button>
+
+        <nav
+          className="cadrage2-fil"
+          aria-label="Étapes du cadrage"
+        >
+          {filEtapes.map((etape) => (
+            <button
+              key={etape.id}
+              type="button"
+              className={`cadrage2-fil-etape cadrage2-fil-etape--${etape.etat}`}
+              aria-current={etape.etat === "current" ? "step" : undefined}
+              disabled={etape.etat === "locked"}
+              onClick={() => scrollVersSection(etape.id)}
+            >
+              {etape.label}
+            </button>
+          ))}
+        </nav>
+
         {/* ---------------------------------------------------- Client */}
-        <section className="cadrage2-section" aria-labelledby="cadrage2-client">
-          <h3 className="cadrage2-titre" id="cadrage2-client">
+        <section
+          className="cadrage2-section"
+          aria-labelledby="cadrage2-client-titre"
+          id="cadrage2-client"
+        >
+          <h3 className="cadrage2-titre" id="cadrage2-client-titre">
             Le client
           </h3>
           <p className="cadrage2-note">
@@ -412,45 +515,66 @@ export function CadrageMissionVue(props: CadrageMissionVueProps) {
                     </button>
                   ))}
                   {resultats.length === 0 && (
-                    <p className="cadrage2-combo-vide">
-                      {clients.length === 0
-                        ? "Portefeuille vide — créez d'abord un client."
-                        : `Aucun client ne correspond à « ${recherche} ».`}
-                    </p>
+                    <div className="cadrage2-combo-vide">
+                      <p>
+                        {clients.length === 0
+                          ? "Portefeuille vide — créez d'abord un client."
+                          : `Aucun client ne correspond à « ${recherche} ».`}
+                      </p>
+                      <button
+                        type="button"
+                        className="linkish"
+                        onClick={() => {
+                          setListeOuverte(false);
+                          props.onCreerClient();
+                        }}
+                      >
+                        Créer un client
+                      </button>
+                    </div>
                   )}
                 </div>
               )}
             </div>
           )}
 
-          <p className="cadrage2-lien-clients">
-            Client absent du portefeuille ?{" "}
-            <button
-              type="button"
-              className="linkish"
-              onClick={props.onAllerClients}
-            >
-              Créez-le dans l&apos;onglet Clients
-            </button>
-          </p>
+          {!listeOuverte && (
+            <p className="cadrage2-lien-clients">
+              Client absent du portefeuille ?{" "}
+              <button
+                type="button"
+                className="linkish"
+                onClick={props.onCreerClient}
+              >
+                Créer un client
+              </button>
+            </p>
+          )}
         </section>
 
         {/* ------------------------------------------------ Engagement */}
         <section
-          className={`cadrage2-section${client ? "" : " is-locked"}`}
-          aria-labelledby="cadrage2-engagement"
-          aria-disabled={!client}
+          className={`cadrage2-section${client ? "" : " is-collapsed"}`}
+          aria-labelledby="cadrage2-engagement-titre"
+          id="cadrage2-engagement"
         >
-          <h3 className="cadrage2-titre label-with-tip" id="cadrage2-engagement">
+          <h3 className="cadrage2-titre label-with-tip" id="cadrage2-engagement-titre">
             L&apos;engagement
             <InfoTip
               label={PROCESS_TIPS.typeEngagement}
               ariaLabel="Aide : type d'engagement"
             />
           </h3>
+          {!client ? (
+            <p className="cadrage2-locked-hint">
+              Choisissez d&apos;abord un client du portefeuille.
+            </p>
+          ) : (
+            <>
+          <div className="cadrage2-sous-bloc">
           <p className="cadrage2-note">
-            Ce que le cabinet s&apos;engage à faire — figé dès le passage de la
-            mission en cours.
+            Un seul contexte d&apos;engagement par mission — figé dès le passage
+            en cours.
           </p>
 
           <div
@@ -460,14 +584,16 @@ export function CadrageMissionVue(props: CadrageMissionVueProps) {
           >
             {ENGAGEMENTS.map((e) => {
               const on = typeEngagement === e.value;
+              const defaut = e.value === "preventive";
               return (
                 <button
                   key={e.value}
                   type="button"
                   role="radio"
                   aria-checked={on}
-                  title={e.desc}
-                  className={`cadrage2-pill${on ? " is-on" : ""}`}
+                  className={`cadrage2-pill${on ? " is-on" : ""}${
+                    defaut ? " cadrage2-pill--defaut" : ""
+                  }`}
                   onClick={() => props.setTypeEngagement(e.value)}
                 >
                   {e.titre}
@@ -480,8 +606,18 @@ export function CadrageMissionVue(props: CadrageMissionVueProps) {
               {engagement.desc}
             </p>
           ) : (
-            <p className="cadrage2-pill-desc is-vide">
-              Choix obligatoire — survolez une pill pour sa description.
+            <ul className="cadrage2-pills-legende" aria-label="Types d'engagement">
+              {ENGAGEMENTS.map((e) => (
+                <li key={e.value}>
+                  <strong>{e.titre}</strong> — {e.desc}
+                </li>
+              ))}
+            </ul>
+          )}
+          {typeEngagement === "autre" && (
+            <p className="status cadrage2-autre-alerte" role="status">
+              Précisez le cadrage dans les objectifs ou exclusions (section
+              Affiner).
             </p>
           )}
 
@@ -556,9 +692,12 @@ export function CadrageMissionVue(props: CadrageMissionVueProps) {
                   }
                 />
                 <span>
-                  <strong>
-                    Exercice antérieur à N-3 : en principe prescrit (art. L171
-                    s. LPF)
+                  <strong className="label-with-tip">
+                    Exercice antérieur à N-3 — revue volontaire
+                    <InfoTip
+                      label={TIP_PRESCRIPTION_EXERCICE}
+                      ariaLabel="Aide : prescription exercice"
+                    />
                   </strong>
                   <small>
                     Confirmez que la revue est volontaire (contentieux, contrôle
@@ -589,7 +728,10 @@ export function CadrageMissionVue(props: CadrageMissionVueProps) {
               </button>
             </div>
           )}
+          </div>
 
+          <div className="cadrage2-sous-bloc">
+            <p className="cadrage2-sous-titre">Profil fiscal</p>
           <div className="field-grid field-grid-2 cadrage2-profil">
             <SelectField
               id="cadrage-regime"
@@ -623,7 +765,8 @@ export function CadrageMissionVue(props: CadrageMissionVueProps) {
             )}
           </div>
           <p className="field-hint cadrage2-profil-hint">
-            Régime et forme préremplis depuis la fiche client — modifiables.
+            Régime et forme préremplis depuis la fiche client — modifiables ici,
+            figés sur la mission à l&apos;en_cours.
           </p>
 
           {props.resumeRisques && props.resumeRisques.total > 0 ? (
@@ -649,56 +792,101 @@ export function CadrageMissionVue(props: CadrageMissionVueProps) {
                 .
               </p>
             </div>
-          ) : props.pointsOuverts.length > 0 ? (
-            <div
-              className="points-ouverts-bandeau"
-              role="status"
-              aria-label="Points ouverts legacy"
-            >
-              <p className="picker-kicker">
-                Points ouverts legacy ({props.pointsOuverts.length})
-              </p>
-              <p className="picker-hint">
-                Ancien pont inter-exercices — basculé vers le registre risques
-                (R4). Lecture seule.
-              </p>
-              <ul className="points-ouverts-list">
-                {props.pointsOuverts.map((p) => (
-                  <li key={p.id}>
-                    <span className="badge">ouvert</span>
-                    {p.mission_source_id != null
-                      ? ` Mission #${p.mission_source_id} — `
-                      : " "}
-                    {p.texte}
-                  </li>
-                ))}
-              </ul>
-            </div>
           ) : null}
+          </div>
+            </>
+          )}
         </section>
 
         {/* ------------------------------------------------- Périmètre */}
         <section
-          className={`cadrage2-section${client && typeEngagement ? "" : " is-locked"}`}
-          aria-labelledby="cadrage2-perimetre"
-          aria-disabled={!(client && typeEngagement)}
+          className={`cadrage2-section${
+            client && typeEngagement ? "" : " is-collapsed"
+          }`}
+          aria-labelledby="cadrage2-perimetre-titre"
+          id="cadrage2-perimetre"
         >
-          <h3 className="cadrage2-titre label-with-tip" id="cadrage2-perimetre">
+          <h3 className="cadrage2-titre label-with-tip" id="cadrage2-perimetre-titre">
             Le périmètre
             <InfoTip
               label={PROCESS_TIPS.perimetreImpots}
               ariaLabel="Aide : périmètre impôts"
             />
           </h3>
+          {!(client && typeEngagement) ? (
+            <p className="cadrage2-locked-hint">
+              {!client
+                ? "Choisissez d'abord un client du portefeuille."
+                : "Choisissez le type d'engagement."}
+            </p>
+          ) : (
+            <>
+          <p
+            className={`cadrage2-perimetre-mode${
+              modePerimetre === "partiel" ? " is-partiel" : ""
+            }`}
+            role="status"
+          >
+            {modePerimetre === "partiel" && perimetreImpots.length > 0 ? (
+              <>
+                Revue <strong>partielle</strong> — {perimetreImpots.join(", ")}
+              </>
+            ) : modePerimetre === "partiel" ? (
+              <>
+                Revue <strong>partielle</strong> — choisissez les impôts à
+                retenir
+              </>
+            ) : (
+              <>
+                Revue <strong>complète</strong> — tous les impôts du
+                référentiel
+              </>
+            )}
+          </p>
+
+          <div
+            className="cadrage2-perimetre-toggle"
+            role="radiogroup"
+            aria-label="Étendue de la revue fiscale"
+          >
+            <button
+              type="button"
+              role="radio"
+              aria-checked={modePerimetre === "complet"}
+              className={`cadrage2-perimetre-opt${
+                modePerimetre === "complet" ? " is-on" : ""
+              }`}
+              onClick={() => {
+                setModePerimetre("complet");
+                props.setPerimetreImpots([]);
+              }}
+            >
+              Revue complète
+            </button>
+            <button
+              type="button"
+              role="radio"
+              aria-checked={modePerimetre === "partiel"}
+              className={`cadrage2-perimetre-opt${
+                modePerimetre === "partiel" ? " is-on" : ""
+              }`}
+              onClick={() => setModePerimetre("partiel")}
+            >
+              Revue partielle
+            </button>
+          </div>
+
+          {modePerimetre === "partiel" && (
+          <>
           <p className="cadrage2-note">
-            Par défaut, revue complète : tous les impôts du référentiel.
-            Activez des chips pour restreindre le périmètre.
+            Cochez les impôts <strong>retenus</strong> dans le périmètre des
+            travaux.
           </p>
 
           <div
             className="cadrage2-chips"
             role="group"
-            aria-label="Codes impôts du périmètre"
+            aria-label="Impôts retenus — revue partielle"
           >
             {codesVisibles.map((code) => {
               const checked = perimetreImpots.includes(code);
@@ -730,15 +918,17 @@ export function CadrageMissionVue(props: CadrageMissionVueProps) {
               TVA).
             </p>
           )}
-          <p className="field-hint">
-            {perimetreImpots.length > 0 ? (
-              <>
-                Revue <strong>partielle</strong> — {perimetreImpots.join(", ")}.
-              </>
-            ) : (
-              "Aucune chip active = revue complète."
-            )}
-          </p>
+          </>
+          )}
+
+          {modePerimetre === "complet" && codesMasques.length > 0 && (
+            <p className="cadrage2-note cadrage2-filtre-note" role="status">
+              {codesMasques.join(", ")} masqué
+              {codesMasques.length > 1 ? "s" : ""} — non applicable au régime{" "}
+              {regimeLabel.toLowerCase()} (cotisation synthétique, hors champ
+              TVA).
+            </p>
+          )}
           <p className="field-hint label-with-tip impot-ref-hints">
             {PERIMETRE_EXONERATIONS_HINT}
             <InfoTip
@@ -764,7 +954,7 @@ export function CadrageMissionVue(props: CadrageMissionVueProps) {
               value={seuilSignification}
               onChange={(e) => props.setSeuilSignification(e.target.value)}
               tip={PROCESS_TIPS.seuilSignification}
-              hint="Matérialité cabinet — optionnel."
+              hint="Figé à l'en_cours. Affinage possible ensuite dans Travaux › Matérialité."
             />
             <div
               className="cadrage2-seuil-suggestions"
@@ -817,60 +1007,13 @@ export function CadrageMissionVue(props: CadrageMissionVueProps) {
                 </span>
               </label>
               <div className="field cadrage2-affiner-pleine">
-                <p className="label-with-tip impot-perimetre-lbl">
-                  Objectifs de la mission
-                  <InfoTip
-                    label={PROCESS_TIPS.objectifsMission}
-                    ariaLabel="Aide : objectifs mission"
-                  />
-                </p>
-                <ul className="objectifs-edit-list">
-                  {objectifsLibelles.map((lib, idx) => (
-                    <li key={`obj-${idx}`}>
-                      <input
-                        className="field-input"
-                        type="text"
-                        value={lib}
-                        maxLength={500}
-                        placeholder={`Objectif ${idx + 1}`}
-                        aria-label={`Objectif ${idx + 1}`}
-                        onChange={(e) => {
-                          const v = e.target.value;
-                          props.setObjectifsLibelles((prev) =>
-                            prev.map((x, i) => (i === idx ? v : x)),
-                          );
-                        }}
-                      />
-                      <Tooltip label={`Retirer l'objectif ${idx + 1}`}>
-                        <button
-                          type="button"
-                          className="cadrage2-obj-retirer"
-                          disabled={objectifsLibelles.length <= 1}
-                          aria-label={`Retirer l'objectif ${idx + 1}`}
-                          onClick={() => {
-                            props.setObjectifsLibelles((prev) =>
-                              prev.length <= 1
-                                ? prev
-                                : prev.filter((_, i) => i !== idx),
-                            );
-                          }}
-                        >
-                          ×
-                        </button>
-                      </Tooltip>
-                    </li>
-                  ))}
-                </ul>
-                <button
-                  type="button"
-                  className="btn btn-ghost btn-sm"
-                  disabled={objectifsLibelles.length >= 50}
-                  onClick={() =>
-                    props.setObjectifsLibelles((prev) => [...prev, ""])
-                  }
-                >
-                  Ajouter un objectif
-                </button>
+                <ObjectifsMissionListe
+                  jeton={props.jeton}
+                  objectifsLibelles={objectifsLibelles}
+                  setObjectifsLibelles={props.setObjectifsLibelles}
+                  disabled={busy}
+                  className="objectifs-mission-liste-embed"
+                />
               </div>
               <div className="field cadrage2-affiner-pleine">
                 <label
@@ -895,11 +1038,15 @@ export function CadrageMissionVue(props: CadrageMissionVueProps) {
               </div>
             </div>
           </details>
+            </>
+          )}
         </section>
       </div>
 
       {/* ============================================ Document — lettre */}
       <aside
+        ref={docRef}
+        id="cadrage2-doc"
         className="cadrage2-doc-col"
         aria-label="Lettre de mission — document d'engagement"
       >
@@ -982,8 +1129,8 @@ export function CadrageMissionVue(props: CadrageMissionVueProps) {
                   <strong>{exercice}</strong>
                   {exercicePrescrit &&
                     (prescriptionConfirmee
-                      ? ", exercice en principe prescrit — revue volontaire confirmée par le cabinet"
-                      : ", exercice en principe prescrit — confirmation requise")}
+                      ? ", exercice antérieur à N-3 — revue volontaire confirmée par le cabinet"
+                      : ", exercice antérieur à N-3 — confirmation volontaire requise")}
                 </>
               )}
               .

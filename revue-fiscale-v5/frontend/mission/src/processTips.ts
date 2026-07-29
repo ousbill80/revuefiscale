@@ -42,7 +42,7 @@ export const PROCESS_TIPS = {
   typeEngagement:
     "Contexte de la lettre de mission (préventive, CAC, due diligence…). Oriente libellés et rapport — n’altère aucune formule.",
   perimetreImpots:
-    "Aucun coché = tous les impôts. Une sélection restreint le moteur aux codes pivot choisis (revue partielle).",
+    "Revue complète = tous les impôts du référentiel. En revue partielle, seuls les codes cochés alimentent le moteur.",
   perimetreExonerations:
     "Exonérations et allègements = règles du référentiel épinglé uniquement. Cet écran n’invente aucune liste CGI ; les mentions « à confirmer » restent à valider côté éditeur.",
   perimetreDons:
@@ -50,17 +50,21 @@ export const PROCESS_TIPS = {
   exclusionsDeclarees:
     "Exclusions narratives hors codes (ex. hors contrôles sur place). Figées dès le passage en cours.",
   seuilSignification:
-    "Seuil de matérialité du cabinet pour cette mission (FCFA). Pas un barème CGI — vide = pas de classement auto.",
+    "Seuil de matérialité du cabinet pour cette mission (FCFA). Figé à l’en_cours. Affinage possible ensuite dans Travaux › Matérialité. Pas un barème CGI — vide = pas de classement auto.",
   objectifsMission:
-    "Buts déclarés de la lettre de mission (plusieurs possibles). Libellés libres du cabinet — n’altèrent ni le filtre d’impôts ni les formules.",
+    "Buts déclarés de la lettre de mission (plusieurs possibles). Modèles proposés + objectifs déjà utilisés sur vos missions. N’altèrent ni le filtre d’impôts ni les formules.",
   epingleWizard:
     "À la création, la mission épingle une version du référentiel. Les recalculs ultérieurs restent sur cette version, pour un résultat stable.",
 
   /* ——— Sources ——— */
   sourceActive:
-    "Unique source des soldes (solde_compte). Le moteur lit ces montants de façon déterministe — pas d’IA dans le calcul.",
+    "Unique source des soldes comptables (solde_compte). Le moteur lit ces montants de façon déterministe — pas d’IA dans le calcul.",
   annexes:
-    "Pièces jointes pour la traçabilité du dossier. Elles n’alimentent pas solde_compte et n’écrasent pas la source active.",
+    "Annexes de la data room mission : traçabilité du dossier. Elles n’alimentent pas la source active et n’écrasent pas les soldes du moteur.",
+  dataRoomMission:
+    "Coffre-fort documentaire de la mission — toutes les pièces déposées ici. Distinct du coffre client et de la source active.",
+  coffreClient:
+    "Fichiers comptables déposés sur la fiche client (FEC, CSV, XLSX). Réutilisables comme source active sans re-téléversement.",
   balanceFichier:
     "CSV / Excel / JSON de soldes SYSCOHADA. Contrôles bloquants avant calcul — une source active unique par mission.",
   referentielEpingleFlux:

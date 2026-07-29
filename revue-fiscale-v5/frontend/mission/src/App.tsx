@@ -208,6 +208,16 @@ function fmtTaillePiece(octets: number): string {
   return `${Math.max(1, Math.round(octets / 1024))} Ko`;
 }
 
+function pieceMissionUtilisableCommeSource(p: PieceMission): boolean {
+  const tp = p.type_piece ?? "";
+  return (
+    tp === "balance" ||
+    tp === "fec" ||
+    tp === "grand_livre" ||
+    tp === "etats_financiers"
+  );
+}
+
 function typePieceDepuisSource(kind: SourceComptableKind): TypePieceApi {
   switch (kind) {
     case "balance":
@@ -285,6 +295,23 @@ type Vue =
   | "journal"
   | "facturation"
   | "compte";
+
+const CADRAGE_DRAFT_KEY = "rf-cadrage-draft";
+const CADRAGE_RETURN_KEY = "rf-cadrage-return";
+
+type CadrageDraft = {
+  exercice: number;
+  typeEngagement: string;
+  regime: string;
+  forme: string;
+  perimetreImpots: string[];
+  seuilSignification: string;
+  exclusionsDeclarees: string;
+  objectifsLibelles: string[];
+  crossBorder: boolean;
+  typeEntite: string;
+  prescriptionConfirmee: boolean;
+};
 
 export type Contribuable = {
   id: number;
@@ -990,7 +1017,7 @@ export function App() {
   );
   const [balanceJson, setBalanceJson] = useState(BALANCE_DEMO);
   const [balanceFile, setBalanceFile] = useState<File | null>(null);
-  const [balanceSource, setBalanceSource] = useState<"json" | "fichier">("json");
+  const [balanceSource, setBalanceSource] = useState<"json" | "fichier">("fichier");
   const [balanceFichierAnalyse, setBalanceFichierAnalyse] =
     useState<BalanceAnalyse | null>(null);
   const [balanceDrag, setBalanceDrag] = useState(false);
@@ -1002,12 +1029,15 @@ export function App() {
   const [sourceDataroomOnglet, setSourceDataroomOnglet] = useState(false);
   const [sourceDataroomPiece, setSourceDataroomPiece] =
     useState<PieceTabulaire | null>(null);
+  const [sourceMissionPiece, setSourceMissionPiece] =
+    useState<PieceMission | null>(null);
+  const [sourcesAvanceOuvert, setSourcesAvanceOuvert] = useState(false);
   const [dataroomPieces, setDataroomPieces] = useState<PieceTabulaire[]>([]);
   const [dataroomEtat, setDataroomEtat] = useState<
     "pret" | "chargement" | "erreur"
   >("pret");
   const [piecesMission, setPiecesMission] = useState<PieceMission[]>([]);
-  const [depotTypePiece, setDepotTypePiece] = useState<TypePieceApi>("autre");
+  const [depotTypePiece, setDepotTypePiece] = useState<TypePieceApi>("balance");
   const [depotDrag, setDepotDrag] = useState(false);
   const [depotBusy, setDepotBusy] = useState(false);
   const [depotMsg, setDepotMsg] = useState<string | null>(null);
@@ -1888,7 +1918,7 @@ export function App() {
   );
 
   const balanceAnalyseActive: BalanceAnalyse | null =
-    sourceComptable !== "balance" || sourceDataroomOnglet
+    sourceComptable !== "balance" || sourceDataroomOnglet || sourceMissionPiece
       ? null
       : balanceSource === "fichier"
         ? balanceFichierAnalyse
@@ -1905,25 +1935,33 @@ export function App() {
     SOURCES_COMPTABLES.find((s) => s.id === sourceComptable) ??
     SOURCES_COMPTABLES[0];
 
-  const sourcePret = sourceDataroomOnglet
-    ? !!sourceDataroomPiece
-    : sourceComptable === "balance"
-      ? balanceSource === "fichier"
-        ? !!balanceFile &&
-          (balanceExcelSeul || (balanceFichierAnalyse?.ok ?? false))
-        : balanceAnalyseJson.ok
-      : !!sourceAltFile;
+  const sourcePret = sourceMissionPiece
+    ? true
+    : sourceDataroomOnglet
+      ? !!sourceDataroomPiece
+      : sourceComptable === "balance"
+        ? balanceSource === "fichier"
+          ? !!balanceFile &&
+            (balanceExcelSeul || (balanceFichierAnalyse?.ok ?? false))
+          : balanceAnalyseJson.ok
+        : !!sourceAltFile;
 
   const peutLancerRevue = !busy && !quota?.bloque && sourcePret;
+
+  const sourcesFilDepose = piecesMission.length > 0;
+  const sourcesFilSource = sourcePret;
+  const sourcesFilLancer = peutLancerRevue;
 
   const checklistControleur: ChecklistItem[] = useMemo(() => {
     const regimeLbl =
       REGIMES_FISCAUX.find((r) => r.value === regime)?.label ?? regime;
     let balanceDetail: string;
-    if (sourceDataroomOnglet) {
+    if (sourceMissionPiece) {
+      balanceDetail = `Pièce mission « ${sourceMissionPiece.nom_fichier} » — réutilisation depuis la data room`;
+    } else if (sourceDataroomOnglet) {
       balanceDetail = sourceDataroomPiece
-        ? `Pièce Data Room « ${sourceDataroomPiece.nom_fichier} » — import via /source-depuis-piece`
-        : "Choisir une pièce comptable au Data Room du client";
+        ? `Pièce coffre client « ${sourceDataroomPiece.nom_fichier} » — import serveur à la confirmation`
+        : "Choisir une pièce comptable au coffre client";
     } else if (sourceComptable === "balance") {
       if (balanceExcelSeul) {
         balanceDetail = `Excel « ${balanceFile?.name ?? "—"} » — contrôle d’équilibre côté serveur`;
@@ -1938,14 +1976,14 @@ export function App() {
       }
     } else {
       balanceDetail = sourceAltFile
-        ? `Fichier « ${sourceAltFile.name} » prêt pour /${sourceMeta.route}`
+        ? `Fichier « ${sourceAltFile.name} » prêt pour import serveur`
         : `Déposer un fichier ${sourceMeta.short}`;
     }
     return checklistControleurAvantLancement({
       identiteComplet: completude.complet,
       identiteDetail: completude.complet
         ? `${contribNom || "—"} · ${regimeLbl} · identité ${completude.ok}/${completude.total}`
-        : `Manque : ${completude.manquants.join(", ") || "champs identité"}`,
+        : `Recommandé — manque : ${completude.manquants.join(", ") || "champs identité"}`,
       exercice: Number(exercice),
       balancePret: sourcePret,
       balanceDetail,
@@ -1973,8 +2011,8 @@ export function App() {
     sourceDataroomOnglet,
     sourceDataroomPiece,
     sourceMeta.label,
-    sourceMeta.route,
     sourceMeta.short,
+    sourceMissionPiece,
     sourcePret,
   ]);
 
@@ -1999,6 +2037,8 @@ export function App() {
     setSourceComptable("balance");
     setSourceAltFile(null);
     setSourceDataroomOnglet(false);
+    setSourceDataroomPiece(null);
+    setSourceMissionPiece(null);
     setSourceActiveFigee(true);
   }
 
@@ -2010,7 +2050,8 @@ export function App() {
     setSourceComptable("balance");
     setSourceAltFile(null);
     setSourceDataroomOnglet(false);
-    setSourceActiveFigee(true);
+    setSourceDataroomPiece(null);
+    setSourceMissionPiece(null);
     const nom = file.name.toLowerCase();
     if (nom.endsWith(".xlsx") || nom.endsWith(".xlsm")) {
       return;
@@ -2043,12 +2084,13 @@ export function App() {
         `Changer la source active ?\n\n` +
           `Actuelle : ${sourceMeta.label}\n` +
           `Nouvelle : ${meta?.label ?? kind}\n\n` +
-          "Une seule source alimente solde_compte. Le changement remplace les soldes — " +
+          "Une seule source alimente les soldes comptables. Le changement remplace les soldes — " +
           "les autres fichiers restent des annexes, sans fusion silencieuse.",
       );
       if (!ok) return;
     }
     setSourceComptable(kind);
+    setSourceMissionPiece(null);
     if (kind !== "balance") {
       setBalanceSource("fichier");
       setSourceAltFile(null);
@@ -2061,12 +2103,15 @@ export function App() {
     setSourceAltFile(file);
     if (file) {
       setSourceDataroomOnglet(false);
+      setSourceDataroomPiece(null);
+      setSourceMissionPiece(null);
       setSourceActiveFigee(true);
     }
   }
 
   function utiliserPieceDataroom(p: PieceTabulaire) {
     setSourceDataroomPiece(p);
+    setSourceMissionPiece(null);
     setBalanceFile(null);
     setBalanceFichierAnalyse(null);
     setSourceAltFile(null);
@@ -2074,6 +2119,26 @@ export function App() {
     if (p.format === "fec") {
       setSourceComptable("fec");
     } else if (p.format === "xlsx" || sourceComptable === "fec") {
+      setSourceComptable("balance");
+    }
+  }
+
+  function utiliserPieceMission(p: PieceMission) {
+    setSourceMissionPiece(p);
+    setSourceDataroomOnglet(false);
+    setSourceDataroomPiece(null);
+    setBalanceFile(null);
+    setBalanceFichierAnalyse(null);
+    setSourceAltFile(null);
+    setSourceActiveFigee(true);
+    const tp = p.type_piece ?? "balance";
+    if (tp === "fec") {
+      setSourceComptable("fec");
+    } else if (tp === "etats_financiers") {
+      setSourceComptable("etats-financiers");
+    } else if (tp === "grand_livre") {
+      setSourceComptable("grand-livre");
+    } else {
       setSourceComptable("balance");
     }
   }
@@ -2228,6 +2293,74 @@ export function App() {
     setSecteur("");
   }
 
+  function sauvegarderBrouillonCadrage() {
+    const draft: CadrageDraft = {
+      exercice,
+      typeEngagement,
+      regime,
+      forme,
+      perimetreImpots,
+      seuilSignification,
+      exclusionsDeclarees,
+      objectifsLibelles,
+      crossBorder,
+      typeEntite,
+      prescriptionConfirmee,
+    };
+    try {
+      sessionStorage.setItem(CADRAGE_DRAFT_KEY, JSON.stringify(draft));
+      sessionStorage.setItem(CADRAGE_RETURN_KEY, "1");
+    } catch {
+      /* quota privée */
+    }
+  }
+
+  function restaurerBrouillonCadrage(): boolean {
+    try {
+      const raw = sessionStorage.getItem(CADRAGE_DRAFT_KEY);
+      if (!raw) return false;
+      const d = JSON.parse(raw) as CadrageDraft;
+      setExercice(Number(d.exercice) || exercice);
+      setTypeEngagement(d.typeEngagement ?? "");
+      setRegime(d.regime ?? regime);
+      setForme(d.forme ?? forme);
+      setPerimetreImpots(Array.isArray(d.perimetreImpots) ? d.perimetreImpots : []);
+      setSeuilSignification(d.seuilSignification ?? "");
+      setExclusionsDeclarees(d.exclusionsDeclarees ?? "");
+      setObjectifsLibelles(
+        Array.isArray(d.objectifsLibelles) && d.objectifsLibelles.length > 0
+          ? d.objectifsLibelles
+          : [""],
+      );
+      setCrossBorder(!!d.crossBorder);
+      setTypeEntite(d.typeEntite ?? "");
+      setPrescriptionConfirmee(!!d.prescriptionConfirmee);
+      return true;
+    } catch {
+      return false;
+    } finally {
+      try {
+        sessionStorage.removeItem(CADRAGE_DRAFT_KEY);
+        sessionStorage.removeItem(CADRAGE_RETURN_KEY);
+      } catch {
+        /* ignore */
+      }
+    }
+  }
+
+  function allerCreerClientDepuisCadrage() {
+    sauvegarderBrouillonCadrage();
+    setDrawerOpen(false);
+    setVue("client-nouveau");
+  }
+
+  function retourCadrageDepuisClient() {
+    setVue("nouvelle");
+    setStep(1);
+    restaurerBrouillonCadrage();
+    setDrawerOpen(false);
+  }
+
   async function aller(
     v: Vue,
     opts?: { filtreStatut?: string; filtreExercice?: string },
@@ -2298,6 +2431,16 @@ export function App() {
     if (exercicePrescrit && !prescriptionConfirmee) {
       throw new Error(
         `L'exercice ${exercice} est a priori prescrit — confirmez la revue volontaire au cadrage.`,
+      );
+    }
+    const objectifsRemplis = objectifsLibelles.map((o) => o.trim()).filter(Boolean);
+    if (
+      typeEngagement === "autre" &&
+      objectifsRemplis.length === 0 &&
+      !exclusionsDeclarees.trim()
+    ) {
+      throw new Error(
+        "Engagement « Autre » — précisez au moins un objectif ou une exclusion au cadrage.",
       );
     }
   }
@@ -2491,9 +2634,29 @@ export function App() {
       const typePiece = typePieceDepuisSource(sourceComptable);
       let rapport: RapportFiab;
 
-      if (sourceDataroomOnglet) {
+      if (sourceMissionPiece) {
+        const designe = await api<DesigneOut>(
+          `/api/v1/missions/${mission.id}/source-depuis-annexe`,
+          {
+            method: "POST",
+            jeton,
+            json: {
+              piece_id: sourceMissionPiece.id,
+              type_piece: typePiece,
+              confirmer: true,
+            },
+          },
+        );
+        rapport = designe.rapport;
+        if (rapport.statut && rapport.statut !== "ok") {
+          const detail = (rapport.anomalies ?? []).slice(0, 3).join(" · ");
+          throw new Error(
+            `Import refusé (${rapport.statut})${detail ? ` — ${detail}` : ""}. Corrigez la source puis relancez.`,
+          );
+        }
+      } else if (sourceDataroomOnglet) {
         if (!sourceDataroomPiece) {
-          throw new Error("Pièce du Data Room manquante.");
+          throw new Error("Pièce du coffre client manquante.");
         }
         const designe = await api<DesigneOut>(
           `/api/v1/missions/${mission.id}/source-depuis-piece`,
@@ -2840,6 +3003,66 @@ export function App() {
       });
       setMissionStatus({
         msg: `Client #${cree.id} créé — complètez la mission.`,
+        err: false,
+      });
+    } catch (err) {
+      setMissionStatus({
+        msg: err instanceof Error ? err.message : String(err),
+        err: true,
+      });
+    } finally {
+      setBusy(false);
+    }
+  }
+
+  async function creerClientPuisRetourCadrage(
+    edit: ClientEditState,
+    sessionUpload: string,
+  ) {
+    if (!session) return;
+    setBusy(true);
+    setMissionStatus(null);
+    try {
+      const cree = await api<Contribuable>("/api/v1/contribuables", {
+        method: "POST",
+        jeton: session.jeton,
+        json: payloadContribuable(edit),
+      });
+      try {
+        await api("/api/v1/pieces-contribuable/rattacher", {
+          method: "POST",
+          jeton: session.jeton,
+          json: {
+            session_upload: sessionUpload,
+            contribuable_id: cree.id,
+          },
+        });
+      } catch {
+        /* pièces optionnelles */
+      }
+      await chargerDashboard(session.jeton);
+      setVue("nouvelle");
+      setStep(1);
+      restaurerBrouillonCadrage();
+      chargerContribuableDansWizard({
+        id: cree.id,
+        denomination: cree.denomination,
+        ncc: cree.ncc,
+        rccm: cree.rccm,
+        forme: cree.forme,
+        dfe: cree.dfe,
+        regime_fiscal: cree.regime_fiscal,
+        forme_juridique: cree.forme_juridique,
+        siege_social: cree.siege_social,
+        commune: cree.commune,
+        centre_impots: cree.centre_impots,
+        capital_social: cree.capital_social,
+        mois_cloture: cree.mois_cloture,
+        activite_principale: cree.activite_principale,
+        date_immatriculation: cree.date_immatriculation,
+      });
+      setMissionStatus({
+        msg: `Client #${cree.id} créé — reprenez le cadrage.`,
         err: false,
       });
     } catch (err) {
@@ -4993,9 +5216,25 @@ export function App() {
               jeton={session.jeton}
               busy={busy}
               clients={clients}
-              onRetour={() => void naviguer("clients")}
+              modeRetour={
+                typeof sessionStorage !== "undefined" &&
+                sessionStorage.getItem(CADRAGE_RETURN_KEY) === "1"
+                  ? "cadrage"
+                  : undefined
+              }
+              onRetour={() => {
+                if (
+                  typeof sessionStorage !== "undefined" &&
+                  sessionStorage.getItem(CADRAGE_RETURN_KEY) === "1"
+                ) {
+                  retourCadrageDepuisClient();
+                } else {
+                  void naviguer("clients");
+                }
+              }}
               onCreer={creerClientSeul}
               onCreerPuisMission={creerClientPuisMission}
+              onCreerPuisRetourCadrage={creerClientPuisRetourCadrage}
             />
           )}
 
@@ -5110,7 +5349,7 @@ export function App() {
                     {step === 1 &&
                       "On ne remplit pas un formulaire — on cadre une lettre de mission : le client, l’engagement, le périmètre."}
                     {step === 2 &&
-                      "Sources & data room de la mission — déposez des pièces de tout format, à tout moment ; une source comptable active unique alimente le moteur déterministe."}
+                      "Data room mission et source active — déposez des annexes à tout moment ; une seule source comptable alimente le moteur déterministe."}
                     {step === 3 &&
                       "Dossier de revue — synthèse, passage, risques et suivi."}
                   </p>
@@ -5197,7 +5436,7 @@ export function App() {
                   contribIdExistant={contribIdExistant}
                   chargerContribuable={chargerContribuableDansWizard}
                   reinitialiserClient={reinitialiserClientCadrage}
-                  onAllerClients={() => void naviguer("clients")}
+                  onCreerClient={allerCreerClientDepuisCadrage}
                   onOuvrirMission={(id) => void ouvrirMission(id)}
                   exercice={exercice}
                   setExercice={setExercice}
@@ -5225,6 +5464,7 @@ export function App() {
                   setCrossBorder={setCrossBorder}
                   typeEntite={typeEntite}
                   setTypeEntite={setTypeEntite}
+                  jeton={session?.jeton ?? null}
                   onCreerMission={() => void creerMissionDepuisCadrage()}
                 />
               )}
@@ -5257,18 +5497,53 @@ export function App() {
                     <div className="sources2-intro">
                       <p className="sources2-intro-lead">
                         La mission{missionId != null ? ` #${missionId}` : ""}{" "}
-                        dispose de sa <strong>data room</strong> : déposez des
-                        pièces de tout format, à tout moment — ici comme depuis
-                        le poste de travail. Seule la{" "}
+                        dispose de sa <strong>data room</strong> (annexes) :
+                        déposez des pièces de tout format, à tout moment — ici
+                        comme depuis le poste de travail. Seule la{" "}
                         <strong>source active</strong>
                         <InfoTip
                           label={PROCESS_TIPS.sourceActive}
                           ariaLabel="Aide : source active"
                         />{" "}
-                        alimente <code>solde_compte</code> ; les autres pièces
+                        alimente les soldes du moteur ; les autres pièces
                         enrichissent la revue sans écrasement.
                       </p>
                     </div>
+
+                    <nav
+                      className="sources2-fil"
+                      aria-label="Parcours sources"
+                    >
+                      <span
+                        className={`sources2-fil-etape sources2-fil-etape--${
+                          sourcesFilDepose ? "done" : "current"
+                        }`}
+                      >
+                        Déposer
+                      </span>
+                      <span
+                        className={`sources2-fil-etape sources2-fil-etape--${
+                          sourcesFilSource
+                            ? "done"
+                            : sourcesFilDepose
+                              ? "current"
+                              : "locked"
+                        }`}
+                      >
+                        Choisir source
+                      </span>
+                      <span
+                        className={`sources2-fil-etape sources2-fil-etape--${
+                          sourcesFilLancer
+                            ? "current"
+                            : sourcesFilSource
+                              ? "current"
+                              : "locked"
+                        }`}
+                      >
+                        Lancer
+                      </span>
+                    </nav>
 
                     <div className="wizard-context wizard-context-rich">
                       <div className="wizard-context-row">
@@ -5366,10 +5641,10 @@ export function App() {
                           id="sources2-dataroom-titre"
                           className="sources2-titre label-with-tip"
                         >
-                          Sources &amp; data room
+                          Data room mission (annexes)
                           <InfoTip
                             label={PROCESS_TIPS.annexes}
-                            ariaLabel="Aide : data room de la mission"
+                            ariaLabel="Aide : data room mission"
                           />
                         </h3>
                         <span className="sources2-pastille">
@@ -5491,6 +5766,20 @@ export function App() {
                                         : ""}
                                     </span>
                                   </div>
+                                  {pieceMissionUtilisableCommeSource(p) && (
+                                    <button
+                                      type="button"
+                                      className="btn btn-ghost btn-xs sources2-piece-utiliser"
+                                      onClick={() => utiliserPieceMission(p)}
+                                      disabled={
+                                        sourceMissionPiece?.id === p.id
+                                      }
+                                    >
+                                      {sourceMissionPiece?.id === p.id
+                                        ? "Source choisie"
+                                        : "Utiliser comme source"}
+                                    </button>
+                                  )}
                                 </li>
                               ))}
                             </ul>
@@ -5600,26 +5889,20 @@ export function App() {
                             type="button"
                             role="tab"
                             aria-selected={
-                              !sourceDataroomOnglet && balanceSource === "json"
-                            }
-                            className={`balance-source-tab${!sourceDataroomOnglet && balanceSource === "json" ? " active" : ""}`}
-                            onClick={() => {
-                              setSourceDataroomOnglet(false);
-                              setBalanceSource("json");
-                            }}
-                          >
-                            Éditeur JSON
-                          </button>
-                          <button
-                            type="button"
-                            role="tab"
-                            aria-selected={
                               !sourceDataroomOnglet &&
+                              !sourceMissionPiece &&
                               balanceSource === "fichier"
                             }
-                            className={`balance-source-tab${!sourceDataroomOnglet && balanceSource === "fichier" ? " active" : ""}`}
+                            className={`balance-source-tab${
+                              !sourceDataroomOnglet &&
+                              !sourceMissionPiece &&
+                              balanceSource === "fichier"
+                                ? " active"
+                                : ""
+                            }`}
                             onClick={() => {
                               setSourceDataroomOnglet(false);
+                              setSourceMissionPiece(null);
                               setBalanceSource("fichier");
                             }}
                           >
@@ -5630,61 +5913,121 @@ export function App() {
                             role="tab"
                             aria-selected={sourceDataroomOnglet}
                             className={`balance-source-tab${sourceDataroomOnglet ? " active" : ""}`}
-                            onClick={() => setSourceDataroomOnglet(true)}
+                            onClick={() => {
+                              setSourceMissionPiece(null);
+                              setSourceDataroomOnglet(true);
+                            }}
                           >
-                            Depuis le Data Room
+                            Coffre client
                           </button>
                         </div>
 
-                        <div className="balance-jeux">
-                          <p className="picker-kicker">Jeux FICTIF (calage)</p>
-                          <div className="picker-chips">
-                            {JEUX_BALANCE.map((j) => (
-                              <Tooltip key={j.id} label={j.hint} side="bottom">
-                                <button
-                                  type="button"
-                                  className={`picker-chip${jeuBalanceId === j.id && balanceSource === "json" ? " selected" : ""}`}
-                                  onClick={() => chargerJeuBalance(j.id)}
-                                >
-                                  <span className="picker-chip-name">
-                                    {j.label}
-                                  </span>
-                                  <span className="picker-chip-meta">
-                                    {j.hint}
-                                  </span>
-                                </button>
-                              </Tooltip>
-                            ))}
-                          </div>
-                        </div>
-
-                        {!sourceDataroomOnglet && balanceSource === "json" && (
-                          <div className="field field-area is-filled">
-                            <div className="field-control">
-                              <textarea
-                                id="balance"
-                                className="field-input field-textarea"
-                                spellCheck={false}
-                                value={balanceJson}
-                                onChange={(e) => {
-                                  setBalanceJson(e.target.value);
-                                  setJeuBalanceId("");
-                                  setSourceActiveFigee(true);
+                        <details
+                          className="sources2-avance"
+                          open={sourcesAvanceOuvert}
+                          onToggle={(e) =>
+                            setSourcesAvanceOuvert(
+                              (e.target as HTMLDetailsElement).open,
+                            )
+                          }
+                        >
+                          <summary className="sources2-avance-toggle">
+                            Mode avancé / démo
+                          </summary>
+                          <div className="sources2-avance-corps">
+                            <div
+                              className="balance-source-tabs sources2-avance-tabs"
+                              role="tablist"
+                            >
+                              <button
+                                type="button"
+                                role="tab"
+                                aria-selected={
+                                  !sourceDataroomOnglet &&
+                                  !sourceMissionPiece &&
+                                  balanceSource === "json"
+                                }
+                                className={`balance-source-tab${
+                                  !sourceDataroomOnglet &&
+                                  !sourceMissionPiece &&
+                                  balanceSource === "json"
+                                    ? " active"
+                                    : ""
+                                }`}
+                                onClick={() => {
+                                  setSourceDataroomOnglet(false);
+                                  setSourceMissionPiece(null);
+                                  setBalanceSource("json");
                                 }}
-                                placeholder=" "
-                              />
-                              <label className="field-label" htmlFor="balance">
-                                Lignes (JSON)
-                              </label>
+                              >
+                                Éditeur JSON
+                              </button>
                             </div>
-                            <p className="field-hint">
-                              Format :{" "}
-                              <code>{`{ "lignes": [{ "compte", "libelle", "debit", "credit" }] }`}</code>
-                            </p>
-                          </div>
-                        )}
 
-                        {!sourceDataroomOnglet && balanceSource === "fichier" && (
+                            <div className="balance-jeux">
+                              <p className="picker-kicker">
+                                Jeux FICTIF (calage)
+                              </p>
+                              <div className="picker-chips">
+                                {JEUX_BALANCE.map((j) => (
+                                  <Tooltip
+                                    key={j.id}
+                                    label={j.hint}
+                                    side="bottom"
+                                  >
+                                    <button
+                                      type="button"
+                                      className={`picker-chip${jeuBalanceId === j.id && balanceSource === "json" ? " selected" : ""}`}
+                                      onClick={() => chargerJeuBalance(j.id)}
+                                    >
+                                      <span className="picker-chip-name">
+                                        {j.label}
+                                      </span>
+                                      <span className="picker-chip-meta">
+                                        {j.hint}
+                                      </span>
+                                    </button>
+                                  </Tooltip>
+                                ))}
+                              </div>
+                            </div>
+
+                            {!sourceDataroomOnglet &&
+                              !sourceMissionPiece &&
+                              balanceSource === "json" && (
+                              <div className="field field-area is-filled">
+                                <div className="field-control">
+                                  <textarea
+                                    id="balance"
+                                    className="field-input field-textarea"
+                                    spellCheck={false}
+                                    value={balanceJson}
+                                    onChange={(e) => {
+                                      setBalanceJson(e.target.value);
+                                      setJeuBalanceId("");
+                                      setSourceActiveFigee(true);
+                                    }}
+                                    placeholder=" "
+                                  />
+                                  <label
+                                    className="field-label"
+                                    htmlFor="balance"
+                                  >
+                                    Lignes (JSON)
+                                  </label>
+                                </div>
+                                <p className="field-hint">
+                                  Format :{" "}
+                                  <code>{`{ "lignes": [{ "compte", "libelle", "debit", "credit" }] }`}</code>
+                                </p>
+                              </div>
+                            )}
+                          </div>
+                        </details>
+
+                        {!sourceDataroomOnglet &&
+                          !sourceMissionPiece &&
+                          balanceSource === "fichier" && (
                           <div
                             className={`field-upload balance-drop${balanceDrag ? " drag" : ""}${balanceFile ? " has-file" : ""}`}
                             onDragOver={(e) => {
@@ -5726,10 +6069,7 @@ export function App() {
                               <button
                                 type="button"
                                 className="linkish balance-clear"
-                                onClick={() => {
-                                  lireFichierBalance(null);
-                                  setBalanceSource("json");
-                                }}
+                                onClick={() => lireFichierBalance(null)}
                               >
                                 Retirer le fichier
                               </button>
@@ -5754,7 +6094,10 @@ export function App() {
                           role="tab"
                           aria-selected={!sourceDataroomOnglet}
                           className={`balance-source-tab${!sourceDataroomOnglet ? " active" : ""}`}
-                          onClick={() => setSourceDataroomOnglet(false)}
+                          onClick={() => {
+                            setSourceDataroomOnglet(false);
+                            setSourceMissionPiece(null);
+                          }}
                         >
                           Fichier {sourceMeta.short}
                         </button>
@@ -5763,9 +6106,12 @@ export function App() {
                           role="tab"
                           aria-selected={sourceDataroomOnglet}
                           className={`balance-source-tab${sourceDataroomOnglet ? " active" : ""}`}
-                          onClick={() => setSourceDataroomOnglet(true)}
+                          onClick={() => {
+                            setSourceMissionPiece(null);
+                            setSourceDataroomOnglet(true);
+                          }}
                         >
-                          Depuis le Data Room
+                          Coffre client
                         </button>
                       </div>
                     )}
@@ -5797,7 +6143,7 @@ export function App() {
                           </span>
                           <span className="field-upload-meta">
                             {sourceAltFile
-                              ? `${Math.round(sourceAltFile.size / 1024)} Ko — import via /source-active`
+                              ? `${Math.round(sourceAltFile.size / 1024)} Ko — import serveur à la confirmation`
                               : `Formats : ${sourceMeta.accept} — validation serveur à l’import (pas de faux succès local)`}
                           </span>
                         </label>
@@ -5832,22 +6178,21 @@ export function App() {
                         {contribIdExistant == null ? (
                           <p className="sources-dataroom-vide">
                             Sélectionnez un client existant à l’étape 1 — le
-                            Data Room appartient à la fiche client.
+                            coffre appartient à la fiche client.
                           </p>
                         ) : dataroomEtat === "chargement" ? (
                           <p className="sources-dataroom-vide" role="status">
-                            Chargement du Data Room…
+                            Chargement du coffre client…
                           </p>
                         ) : dataroomEtat === "erreur" ? (
                           <p className="sources-dataroom-erreur" role="alert">
-                            Impossible de charger le Data Room du client —
-                            rouvrez l’étape ou réessayez depuis la fiche
-                            client.
+                            Impossible de charger le coffre client — rouvrez
+                            l’étape ou réessayez depuis la fiche client.
                           </p>
                         ) : dataroomPieces.length === 0 ? (
                           <p className="sources-dataroom-vide">
-                            Aucun fichier comptable au Data Room — déposez un
-                            FEC au coffre du client.
+                            Aucun fichier comptable au coffre — déposez un FEC
+                            sur la fiche client.
                           </p>
                         ) : (
                           <ul className="sources-dataroom-liste">
@@ -5893,12 +6238,22 @@ export function App() {
                               <strong>
                                 {sourceDataroomPiece.nom_fichier}
                               </strong>{" "}
-                              (Data Room). L’import passe par le même pipeline
-                              serveur (<code>/source-depuis-piece</code>) —
-                              aucun re-téléversement.
+                              (coffre client). L’import sera confirmé côté
+                              serveur — aucun re-téléversement.
                             </p>
                           </div>
                         )}
+                      </div>
+                    )}
+
+                    {sourceMissionPiece && (
+                      <div className="balance-insight ok" role="status">
+                        <p className="sources-alt-ready">
+                          Source active prête :{" "}
+                          <strong>{sourceMissionPiece.nom_fichier}</strong>{" "}
+                          (data room mission). Réutilisation de la pièce déjà
+                          déposée — import serveur à la confirmation.
+                        </p>
                       </div>
                     )}
 
@@ -6065,8 +6420,7 @@ export function App() {
                           Source active prête :{" "}
                           <strong>{sourceAltFile.name}</strong>. Le contrôle
                           d’équilibre / format sera fait par le serveur à
-                          l’import (<code>/source-active</code>) — pas de
-                          validation fiscale inventée ici.
+                          l’import — pas de validation fiscale inventée ici.
                         </p>
                       </div>
                     )}
@@ -6081,6 +6435,11 @@ export function App() {
                           Avant lancement — cadrage, pas de règle fiscale
                         </span>
                       </div>
+                      <p className="sources2-checklist-note">
+                        Seule la source comptable bloque le lancement —
+                        identité et annexes sont recommandées mais non
+                        bloquantes.
+                      </p>
                       <ul className="ctrl-checklist">
                         {checklistControleur.map((item) => (
                           <li

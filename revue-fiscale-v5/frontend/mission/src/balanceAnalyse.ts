@@ -449,7 +449,7 @@ export function checklistControleurAvantLancement(
     {
       id: "identite",
       label: "Identité légale",
-      statut: input.identiteComplet ? "ok" : "ko",
+      statut: input.identiteComplet ? "ok" : "warn",
       detail: input.identiteDetail,
     },
     {

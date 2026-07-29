@@ -34,6 +34,7 @@ import {
 } from "./PiecesContribuable";
 import { DataRoomPanel } from "./DataRoomPanel";
 import { HistoriqueContribuablePanel } from "./HistoriqueContribuable";
+import { ContribuableTimelinePanel } from "./ContribuableTimelinePanel";
 import { FicheClientVue } from "./FicheClientVue";
 import {
   RegistreRisquesVue,
@@ -1383,6 +1384,8 @@ type CreationProps = {
   busy: boolean;
   /** Portefeuille chargé — détection doublon NCC (avertissement doux). */
   clients?: ClientRow[];
+  /** Retour vers le wizard cadrage (brouillon conservé). */
+  modeRetour?: "cadrage";
   onRetour: () => void;
   onCreer: (
     payload: ClientEditState,
@@ -1392,15 +1395,21 @@ type CreationProps = {
     payload: ClientEditState,
     sessionUpload: string,
   ) => Promise<void>;
+  onCreerPuisRetourCadrage?: (
+    payload: ClientEditState,
+    sessionUpload: string,
+  ) => Promise<void>;
 };
 
 export function ClientCreationVue({
   jeton,
   busy,
   clients,
+  modeRetour,
   onRetour,
   onCreer,
   onCreerPuisMission,
+  onCreerPuisRetourCadrage,
 }: CreationProps) {
   const [edit, setEdit] = useState<ClientEditState>(() =>
     etatInitialClientEdit("pm"),
@@ -1420,7 +1429,7 @@ export function ClientCreationVue({
 
   async function soumettre(
     e: FormEvent,
-    suite: "fiche" | "mission",
+    suite: "fiche" | "mission" | "cadrage",
   ) {
     e.preventDefault();
     setErreurLocale(null);
@@ -1437,7 +1446,9 @@ export function ClientCreationVue({
       return;
     }
     if (suite === "mission") await onCreerPuisMission(edit, sessionUpload);
-    else await onCreer(edit, sessionUpload);
+    else if (suite === "cadrage" && onCreerPuisRetourCadrage) {
+      await onCreerPuisRetourCadrage(edit, sessionUpload);
+    } else await onCreer(edit, sessionUpload);
   }
 
   return (
@@ -1452,9 +1463,15 @@ export function ClientCreationVue({
           </p>
         </div>
         <div className="page-actions">
-          <Tooltip label="Retour au portefeuille clients.">
+          <Tooltip
+            label={
+              modeRetour === "cadrage"
+                ? "Retour au cadrage de mission (brouillon conservé)."
+                : "Retour au portefeuille clients."
+            }
+          >
             <button type="button" className="btn btn-ghost" onClick={onRetour}>
-              Annuler
+              {modeRetour === "cadrage" ? "Retour au cadrage" : "Annuler"}
             </button>
           </Tooltip>
         </div>
@@ -1495,16 +1512,29 @@ export function ClientCreationVue({
           <button type="submit" className="btn btn-primary" disabled={busy}>
             Enregistrer le client
           </button>
-          <Tooltip label="Créer la fiche puis ouvrir le wizard mission prérempli.">
-            <button
-              type="button"
-              className="btn btn-ghost"
-              disabled={busy}
-              onClick={(e) => void soumettre(e, "mission")}
-            >
-              Enregistrer et lancer une mission
-            </button>
-          </Tooltip>
+          {modeRetour === "cadrage" && onCreerPuisRetourCadrage ? (
+            <Tooltip label="Créer la fiche puis reprendre le cadrage de mission.">
+              <button
+                type="button"
+                className="btn btn-ghost"
+                disabled={busy}
+                onClick={(e) => void soumettre(e, "cadrage")}
+              >
+                Enregistrer et revenir au cadrage
+              </button>
+            </Tooltip>
+          ) : (
+            <Tooltip label="Créer la fiche puis ouvrir le wizard mission prérempli.">
+              <button
+                type="button"
+                className="btn btn-ghost"
+                disabled={busy}
+                onClick={(e) => void soumettre(e, "mission")}
+              >
+                Enregistrer et lancer une mission
+              </button>
+            </Tooltip>
+          )}
           {!apiMin.ok && (
             <span className="cta-hint cta-hint-manquants">
               Manque : {apiMin.manquants.join(" · ")}
@@ -2197,7 +2227,7 @@ export function ClientFicheVue({
                 {(resumeRisques?.ouverts ?? 0) !== 1 ? "s" : ""}
               </button>
             </Tooltip>
-            <Tooltip label="Ouvrir la Data Room (pièces, mémoire, timeline).">
+            <Tooltip label="Ouvrir la Data Room (pièces, mémoire, synthèse IA).">
               <button
                 type="button"
                 className="fiche2-indic"
@@ -2881,6 +2911,10 @@ export function ClientFicheVue({
             jeton={jeton}
             contribuableId={clientDetail.id}
             onOuvrirMission={onOuvrirMission}
+          />
+          <ContribuableTimelinePanel
+            jeton={jeton}
+            contribuableId={clientDetail.id}
           />
         </div>
       )}
