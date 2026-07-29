@@ -154,3 +154,45 @@ def remplacer_objectifs_mission(
             )
         session.flush()
         return lister_objectifs_en_contexte(session, mission_id)
+
+
+def suggestions_objectifs_mission(
+    session: Session,
+    tenant_id: int,
+    *,
+    q: str = "",
+    limit: int = 12,
+) -> list[dict[str, Any]]:
+    """Libellés déjà utilisés par le cabinet — fréquence puis récence (RLS)."""
+    lim = min(max(1, int(limit)), 30)
+    recherche = (q or "").strip()
+    with contexte_tenant(session, tenant_id):
+        if recherche:
+            rows = session.execute(
+                text(
+                    "SELECT mo.libelle, COUNT(*) AS usage, "
+                    "MAX(mo.maj_le) AS dernier "
+                    "FROM mission_objectif mo "
+                    "WHERE mo.libelle ILIKE :pat "
+                    "GROUP BY mo.libelle "
+                    "ORDER BY usage DESC, dernier DESC "
+                    "LIMIT :lim"
+                ),
+                {"pat": f"%{recherche}%", "lim": lim},
+            ).mappings().all()
+        else:
+            rows = session.execute(
+                text(
+                    "SELECT mo.libelle, COUNT(*) AS usage, "
+                    "MAX(mo.maj_le) AS dernier "
+                    "FROM mission_objectif mo "
+                    "GROUP BY mo.libelle "
+                    "ORDER BY usage DESC, dernier DESC "
+                    "LIMIT :lim"
+                ),
+                {"lim": lim},
+            ).mappings().all()
+    return [
+        {"libelle": str(r["libelle"]), "usage": int(r["usage"] or 0)}
+        for r in rows
+    ]

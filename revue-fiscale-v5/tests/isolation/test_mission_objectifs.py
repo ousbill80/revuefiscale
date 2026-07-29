@@ -159,6 +159,50 @@ def test_objectifs_crud_et_gel_cadrage(session, client_cabinet):
     assert refuse.status_code == 409, refuse.text
 
 
+def test_suggestions_objectifs_cabinet(session, client_cabinet):
+    """GET /objectifs-mission/suggestions — historique distinct du tenant."""
+    client, h, _tid = client_cabinet
+    cid = _creer_contribuable(client, h, ncc="CI-OBJ-SUGG")
+    cid2 = _creer_contribuable(client, h, ncc="CI-OBJ-SUGG-2")
+
+    for lib, contribuable_id, exercice in (
+        ("Revue TVA T4", cid, 2025),
+        ("Revue TVA T4", cid2, 2025),
+        ("Contrôle RAS salaires", cid, 2024),
+    ):
+        created = client.post(
+            "/api/v1/missions",
+            headers=h,
+            json={
+                "contribuable_id": contribuable_id,
+                "exercice": exercice,
+                "profil": {"regime": "reel", "forme_juridique": "SA"},
+                "type_engagement": "preventive",
+                "objectifs": [{"libelle": lib}],
+            },
+        )
+        assert created.status_code == 200, created.text
+
+    sugg = client.get(
+        "/api/v1/objectifs-mission/suggestions",
+        headers=h,
+    )
+    assert sugg.status_code == 200, sugg.text
+    libelles = [r["libelle"] for r in sugg.json()]
+    assert "Revue TVA T4" in libelles
+    assert "Contrôle RAS salaires" in libelles
+    tva = next(r for r in sugg.json() if r["libelle"] == "Revue TVA T4")
+    assert int(tva["usage"]) >= 2
+
+    filtre = client.get(
+        "/api/v1/objectifs-mission/suggestions",
+        headers=h,
+        params={"q": "RAS"},
+    )
+    assert filtre.status_code == 200
+    assert all("RAS" in r["libelle"] for r in filtre.json())
+
+
 def test_objectifs_lecteur_403_ecriture(session, client_cabinet):
     """RBAC : lecteur lit, ne remplace pas."""
     from backend.plateforme.auth import hasher_mot_de_passe

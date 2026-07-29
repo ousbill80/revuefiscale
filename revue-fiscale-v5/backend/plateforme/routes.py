@@ -294,6 +294,11 @@ class MissionObjectifIn(BaseModel):
     ordre: int | None = None
 
 
+class MissionObjectifSuggestionOut(BaseModel):
+    libelle: str
+    usage: int = 0
+
+
 class ObjectifFiscalOut(BaseModel):
     id: int
     mission_id: int
@@ -2041,6 +2046,34 @@ def api_patcher_cadrage_mission(
         },
     )
     return _mission_out(detail)
+
+
+@router.get(
+    "/objectifs-mission/suggestions",
+    response_model=list[MissionObjectifSuggestionOut],
+)
+def api_suggestions_objectifs_mission(
+    utilisateur: UtilisateurDep,
+    session: Annotated[Session, Depends(session_abonne)],
+    q: str = "",
+    limit: int = 12,
+) -> list[MissionObjectifSuggestionOut]:
+    """Objectifs déjà saisis sur d'autres missions du cabinet (auto-apprentissage)."""
+    from backend.plateforme.objectifs import suggestions_objectifs_mission
+
+    rows = suggestions_objectifs_mission(
+        session,
+        utilisateur.tenant_id,
+        q=q,
+        limit=limit,
+    )
+    return [
+        MissionObjectifSuggestionOut(
+            libelle=str(r["libelle"]),
+            usage=int(r["usage"]),
+        )
+        for r in rows
+    ]
 
 
 @router.get(
