@@ -15114,7 +15114,7 @@ tr.row-active td {
   display: flex;
   flex-direction: column;
   width: min(420px, calc(100vw - 2rem));
-  max-height: min(70vh, 640px);
+  height: min(70vh, 640px);
   background: var(--surface-solid, #fff);
   border: 1px solid var(--line, #e5e7eb);
   border-radius: 12px;
