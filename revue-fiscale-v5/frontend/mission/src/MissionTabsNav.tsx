@@ -17,7 +17,7 @@ const ONGLETS: Array<{ id: OngletMission; libelle: string }> = [
   { id: "revue", libelle: "Revue" },
   { id: "restitution", libelle: "Restitution" },
   { id: "cloture", libelle: "Clôture" },
-  { id: "assistant", libelle: "Assistant IA" },
+  { id: "assistant", libelle: "Agent fiscal" },
 ];
 
 /**

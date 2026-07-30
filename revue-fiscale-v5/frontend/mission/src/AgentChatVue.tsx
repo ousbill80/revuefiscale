@@ -47,11 +47,13 @@ const BANDEAU_STATUT: Partial<Record<StatutReponse, string>> = {
 
 type Props = {
   jeton: string;
-  /** Si absent : assistant indépendant du cabinet (pas de mission ouverte). */
+  /** Si absent : agent fiscal indépendant du cabinet (pas de mission ouverte). */
   missionId?: number;
+  /** Panneau flottant : l'en-tête est porté par le conteneur parent. */
+  sansEntete?: boolean;
 };
 
-export function AgentChatVue({ jeton, missionId }: Props) {
+export function AgentChatVue({ jeton, missionId, sansEntete = false }: Props) {
   const endpoint =
     missionId != null
       ? `/api/v1/missions/${missionId}/agent/question`
@@ -61,10 +63,22 @@ export function AgentChatVue({ jeton, missionId }: Props) {
   const [envoiEnCours, setEnvoiEnCours] = useState(false);
   const compteurId = useRef(0);
   const finMessages = useRef<HTMLDivElement | null>(null);
+  const zoneSaisie = useRef<HTMLTextAreaElement | null>(null);
+
+  const ajusterHauteurSaisie = useCallback(() => {
+    const zone = zoneSaisie.current;
+    if (!zone) return;
+    zone.style.height = "auto";
+    zone.style.height = `${Math.min(zone.scrollHeight, 128)}px`;
+  }, []);
 
   useEffect(() => {
     finMessages.current?.scrollIntoView({ block: "end" });
   }, [messages]);
+
+  useEffect(() => {
+    ajusterHauteurSaisie();
+  }, [valeur, ajusterHauteurSaisie]);
 
   const envoyer = useCallback(async () => {
     const question = valeur.trim();
@@ -122,89 +136,115 @@ export function AgentChatVue({ jeton, missionId }: Props) {
   }
 
   return (
-    <div className="panel dense agent-chat-panel">
-      <h2 className="section-title agent-chat-title">
-        Assistant IA — agent fiscal
-      </h2>
-      <p className="picker-hint agent-chat-hint">
-        Réponses sourcées sur le corpus juridique indexé, avec citations et
-        références d&apos;articles — l&apos;agent s&apos;abstient lorsque
-        aucune source fiable n&apos;est disponible.
-      </p>
-      <div className="agent-chat-scroll">
-        {messages.length === 0 ? (
-          <p className="empty-state agent-chat-vide">
-            Posez une question fiscale à l&apos;agent pour commencer.
-          </p>
-        ) : (
-          <ol className="agent-chat-messages">
-            {messages.map((msg) => (
-              <li key={msg.id} className="agent-chat-message">
-                <p className="agent-chat-question">{msg.question}</p>
-                {msg.enCours && (
-                  <p className="muted agent-chat-attente">
-                    L&apos;agent recherche une réponse…
-                  </p>
-                )}
-                {msg.erreur && <p className="status err">{msg.erreur}</p>}
-                {msg.reponse && (
-                  <div
-                    className={`agent-chat-reponse${
-                      msg.reponse.statut !== "repondu"
-                        ? " agent-chat-reponse-hors-norme"
-                        : ""
-                    }`}
-                  >
-                    {BANDEAU_STATUT[msg.reponse.statut] && (
-                      <p className="agent-chat-bandeau">
-                        {BANDEAU_STATUT[msg.reponse.statut]}
-                      </p>
-                    )}
-                    {msg.reponse.texte && (
-                      <p className="agent-chat-reponse-texte">
-                        <TexteJuridique texte={msg.reponse.texte} />
-                      </p>
-                    )}
-                    {msg.reponse.references.length > 0 && (
-                      <ul className="agent-chat-references">
-                        {msg.reponse.references.map((ref, i) => (
-                          <li key={`${msg.id}-ref-${i}`}>{ref}</li>
-                        ))}
-                      </ul>
-                    )}
-                    {msg.reponse.contexte && (
-                      <p className="agent-chat-contexte muted">
-                        {msg.reponse.contexte}
-                      </p>
-                    )}
-                  </div>
-                )}
-              </li>
-            ))}
-          </ol>
-        )}
-        <div ref={finMessages} />
+    <div
+      className={`panel dense agent-chat-panel${sansEntete ? " agent-chat-panel-compact" : ""}`}
+    >
+      {!sansEntete && (
+        <header className="agent-chat-entete">
+          <p className="picker-kicker">AGENT FISCAL</p>
+          <h2 className="section-title agent-chat-title">Agent fiscal</h2>
+        </header>
+      )}
+      <div className="agent-chat-corps">
+        <div className="agent-chat-scroll">
+          {messages.length === 0 ? (
+            <p className="empty-state agent-chat-vide">
+              Posez une question fiscale à l&apos;agent pour commencer.
+            </p>
+          ) : (
+            <ol className="agent-chat-messages">
+              {messages.map((msg) => (
+                <li key={msg.id} className="agent-chat-message">
+                  <p className="agent-chat-question">{msg.question}</p>
+                  {msg.enCours && (
+                    <p className="muted agent-chat-attente">
+                      L&apos;agent recherche une réponse…
+                    </p>
+                  )}
+                  {msg.erreur && <p className="status err">{msg.erreur}</p>}
+                  {msg.reponse && (
+                    <div
+                      className={`agent-chat-reponse${
+                        msg.reponse.statut !== "repondu"
+                          ? " agent-chat-reponse-hors-norme"
+                          : ""
+                      }`}
+                    >
+                      {BANDEAU_STATUT[msg.reponse.statut] && (
+                        <p className="agent-chat-bandeau">
+                          {BANDEAU_STATUT[msg.reponse.statut]}
+                        </p>
+                      )}
+                      {msg.reponse.texte && (
+                        <p className="agent-chat-reponse-texte">
+                          <TexteJuridique texte={msg.reponse.texte} />
+                        </p>
+                      )}
+                      {msg.reponse.references.length > 0 && (
+                        <ul className="agent-chat-references">
+                          {msg.reponse.references.map((ref, i) => (
+                            <li key={`${msg.id}-ref-${i}`}>{ref}</li>
+                          ))}
+                        </ul>
+                      )}
+                      {msg.reponse.contexte && (
+                        <p className="agent-chat-contexte muted">
+                          {msg.reponse.contexte}
+                        </p>
+                      )}
+                    </div>
+                  )}
+                </li>
+              ))}
+            </ol>
+          )}
+          <div ref={finMessages} />
+        </div>
+        <form className="agent-chat-form" onSubmit={surSoumission}>
+          <div className="agent-chat-composer">
+            <textarea
+              ref={zoneSaisie}
+              className="agent-chat-textarea"
+              rows={1}
+              maxLength={2000}
+              placeholder="Posez votre question fiscale… (Entrée pour envoyer, Maj+Entrée pour un retour à la ligne)"
+              aria-label="Question à l'agent fiscal"
+              value={valeur}
+              onChange={(e) => setValeur(e.target.value)}
+              onKeyDown={surClavier}
+              disabled={envoiEnCours}
+            />
+            <button
+              type="submit"
+              className="agent-chat-send"
+              disabled={envoiEnCours || !valeur.trim()}
+              aria-label={envoiEnCours ? "Envoi en cours" : "Envoyer la question"}
+            >
+              {envoiEnCours ? (
+                <span className="agent-chat-send-spinner" aria-hidden="true" />
+              ) : (
+                <svg
+                  className="agent-chat-send-icon"
+                  viewBox="0 0 24 24"
+                  aria-hidden="true"
+                >
+                  <path
+                    d="M4 12h12M14 8l4 4-4 4"
+                    fill="none"
+                    stroke="currentColor"
+                    strokeWidth="2"
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                  />
+                </svg>
+              )}
+              <span className="agent-chat-send-label">
+                {envoiEnCours ? "Envoi…" : "Envoyer"}
+              </span>
+            </button>
+          </div>
+        </form>
       </div>
-      <form className="agent-chat-form" onSubmit={surSoumission}>
-        <textarea
-          className="agent-chat-textarea"
-          rows={2}
-          maxLength={2000}
-          placeholder="Poser une question fiscale à l'agent (ex. « Quel est le régime de TVA applicable à… »)"
-          aria-label="Question à l'agent fiscal"
-          value={valeur}
-          onChange={(e) => setValeur(e.target.value)}
-          onKeyDown={surClavier}
-          disabled={envoiEnCours}
-        />
-        <button
-          type="submit"
-          className="btn btn-primary btn-sm"
-          disabled={envoiEnCours || !valeur.trim()}
-        >
-          {envoiEnCours ? "Envoi…" : "Envoyer"}
-        </button>
-      </form>
     </div>
   );
 }
